@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "package": "me.mixces.animatium.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ArmorFeatureRendererMixin",
+    "CameraMixin",
+    "ClientPlayerInteractionManagerMixin",
+    "EntryListWidgetMixin",
+    "EquipmentRendererMixin",
+    "HeldItemRendererMixin",
+    "LivingEntityRendererMixin",
+    "MinecraftClientMixin",
+    "PlayerEntityRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "LivingEntityMixin",
+    "PlayerEntityMixin"
+  ]
+}

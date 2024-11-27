@@ -12,15 +12,15 @@
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/modid/icon.png",
+	"icon": "assets/animatium/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.example.ExampleMod"
+			"me.mixces.animatium.Animatium"
 		]
 	},
 	"mixins": [
-		"modid.mixins.json"
+		"animatium.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.16.7",
