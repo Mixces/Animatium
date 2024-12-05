@@ -18,7 +18,7 @@ public class ArmorFeatureRendererMixin {
             at = @At("HEAD")
     )
     private void animatium$captureEntityState(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, BipedEntityRenderState bipedEntityRenderState, float f, float g, CallbackInfo ci) {
-        ArmorFeatureRendererHook.bipedEntityRenderState = bipedEntityRenderState;
+        ArmorFeatureRendererHook.bipedEntityRenderState.set(bipedEntityRenderState);
     }
 
     @Inject(
@@ -26,6 +26,6 @@ public class ArmorFeatureRendererMixin {
             at = @At("TAIL")
     )
     private void animatium$releaseEntityState(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, BipedEntityRenderState bipedEntityRenderState, float f, float g, CallbackInfo ci) {
-        ArmorFeatureRendererHook.bipedEntityRenderState = null;
+        ArmorFeatureRendererHook.bipedEntityRenderState.remove();
     }
 }

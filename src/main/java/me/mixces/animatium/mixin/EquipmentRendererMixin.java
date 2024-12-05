@@ -38,7 +38,7 @@ public class EquipmentRendererMixin {
             )
     )
     private VertexConsumer animatium$armorTrimTint(Sprite instance, VertexConsumer consumer, Operation<VertexConsumer> original, @Local(argsOnly = true) VertexConsumerProvider vertexConsumers) {
-        if (ArmorFeatureRendererHook.bipedEntityRenderState.hurt) {
+        if (ArmorFeatureRendererHook.bipedEntityRenderState.get().hurt) {
             return instance.getTextureSpecificVertexConsumer(vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCullZOffset(instance.getAtlasId())));
         }
         return original.call(instance, consumer);
@@ -53,6 +53,6 @@ public class EquipmentRendererMixin {
             index = 3
     )
     private int animatium$armorTint2(int light) {
-        return OverlayTexture.packUv(OverlayTexture.getU(0.0f), OverlayTexture.getV(ArmorFeatureRendererHook.bipedEntityRenderState.hurt));
+        return OverlayTexture.packUv(OverlayTexture.getU(0.0f), OverlayTexture.getV(ArmorFeatureRendererHook.bipedEntityRenderState.get().hurt));
     }
 }

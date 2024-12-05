@@ -4,20 +4,34 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "ArmorFeatureRendererMixin",
+    "BipedEntityModelMixin",
     "CameraMixin",
+    "ClientPlayerEntityMixin",
     "ClientPlayerInteractionManagerMixin",
+    "ClientPlayNetworkHandlerMixin",
+    "EntityRenderDispatcherMixin",
     "EntryListWidgetMixin",
     "EquipmentRendererMixin",
+    "FishingBobberEntityRendererMixin",
+    "FlyingItemEntityRendererMixin",
+    "GameRendererMixin",
     "HeldItemRendererMixin",
+    "InGameHudMixin",
+    "InputMixin",
     "LivingEntityRendererMixin",
     "MinecraftClientMixin",
-    "PlayerEntityRendererMixin"
+    "PlayerEntityRendererMixin",
+    "access.ICameraMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
+    "EntityMixin",
     "LivingEntityMixin",
-    "PlayerEntityMixin"
+    "PlayerEntityMixin",
+    "PotionItemMixin",
+    "access.IEntityMixin",
+    "access.ILivingEntityMixin"
   ]
 }

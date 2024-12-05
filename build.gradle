@@ -25,6 +25,8 @@ loom {
 	runs {
 		remove server
 	}
+
+	accessWidenerPath = file("src/main/resources/animatium.accesswidener")
 }
 
 dependencies {
