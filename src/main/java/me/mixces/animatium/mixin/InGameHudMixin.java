@@ -1,6 +1,7 @@
 package me.mixces.animatium.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import me.mixces.animatium.Animatium;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,7 +18,7 @@ public abstract class InGameHudMixin {
             cancellable = true
     )
     private void legacyAnimations$cancelBlinking(DrawContext context, InGameHud.HeartType type, int x, int y, boolean hardcore, boolean blinking, boolean half, CallbackInfo ci) {
-        if (blinking && type != InGameHud.HeartType.CONTAINER) {
+        if (Animatium.CONFIG.OLD_HEART_FLASHING && blinking && type != InGameHud.HeartType.CONTAINER) {
             ci.cancel();
         }
     }
@@ -30,6 +31,6 @@ public abstract class InGameHudMixin {
             )
     )
     private boolean legacyAnimations$removePerspectiveCheck(boolean original) {
-        return true;
+        return Animatium.CONFIG.THIRD_PERSON_CROSSHAIR || original;
     }
 }

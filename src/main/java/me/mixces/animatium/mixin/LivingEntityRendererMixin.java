@@ -1,6 +1,7 @@
 package me.mixces.animatium.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import me.mixces.animatium.Animatium;
 import me.mixces.animatium.hook.EntityRenderDispatcherHook;
 import me.mixces.animatium.mixin.access.ICameraMixin;
 import net.minecraft.client.MinecraftClient;
@@ -27,7 +28,7 @@ public class LivingEntityRendererMixin<S extends LivingEntityRenderState> {
             )
     )
     private boolean animatium$bypassAliveCheck(boolean original) {
-        return true;
+        return Animatium.CONFIG.OLD_DEATH_LIMBS || original;
     }
 
     @Inject(
@@ -39,11 +40,13 @@ public class LivingEntityRendererMixin<S extends LivingEntityRenderState> {
             )
     )
     private void animatium$thirdPersonSneak(S livingEntityRenderState, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
-        final Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
-        if (livingEntityRenderState instanceof PlayerEntityRenderState && MinecraftClient.getInstance().player != null) {
-            if (((PlayerEntityRenderState) livingEntityRenderState).id == MinecraftClient.getInstance().player.getId()) {
-                final float lerpCamera = MathHelper.lerp(EntityRenderDispatcherHook.tickDelta.get(), ((ICameraMixin) camera).getLastCameraY(), ((ICameraMixin) camera).getCameraY());
-                matrixStack.translate(0.0F, 1.62F - lerpCamera, 0.0F);
+        if (Animatium.CONFIG.THIRD_PERSON_SNEAKING) {
+            final Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
+            if (livingEntityRenderState instanceof PlayerEntityRenderState && MinecraftClient.getInstance().player != null) {
+                if (((PlayerEntityRenderState) livingEntityRenderState).id == MinecraftClient.getInstance().player.getId()) {
+                    final float lerpCamera = MathHelper.lerp(EntityRenderDispatcherHook.tickDelta.get(), ((ICameraMixin) camera).getLastCameraY(), ((ICameraMixin) camera).getCameraY());
+                    matrixStack.translate(0.0F, 1.62F - lerpCamera, 0.0F);
+                }
             }
         }
     }

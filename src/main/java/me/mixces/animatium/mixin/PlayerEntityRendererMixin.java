@@ -1,6 +1,7 @@
 package me.mixces.animatium.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import me.mixces.animatium.Animatium;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.util.math.MathHelper;
 import org.objectweb.asm.Opcodes;
@@ -20,7 +21,7 @@ public abstract class PlayerEntityRendererMixin {
             )
     )
     private boolean animatium$disableSneakOffset(boolean original) {
-        return false;
+        return !Animatium.CONFIG.THIRD_PERSON_SNEAKING && original;
     }
 
     //todo: fix cape logic

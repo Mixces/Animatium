@@ -1,5 +1,6 @@
 package me.mixces.animatium.mixin;
 
+import me.mixces.animatium.Animatium;
 import net.minecraft.client.input.Input;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,6 +20,8 @@ public class InputMixin {
             cancellable = true
     )
     private void animatium$oldMomentum(CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(movementForward >= 0.8);
+        if (Animatium.CONFIG.OLD_MOMENTUM) {
+            cir.setReturnValue(movementForward >= 0.8);
+        }
     }
 }

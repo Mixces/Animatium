@@ -1,0 +1,21 @@
+{
+  "text.autoconfig.animatium.title": "Animatium",
+
+  "text.autoconfig.animatium.option.OLD_BODY_ROTATION": "Old Body Rotation",
+  "text.autoconfig.animatium.option.ARMOR_TINT": "Armor Tint",
+  "text.autoconfig.animatium.option.OLD_EYE_HEIGHT": "Old Eye Height",
+  "text.autoconfig.animatium.option.OLD_SNEAKING_SPEED": "Old Sneaking Speed",
+  "text.autoconfig.animatium.option.THIRD_PERSON_SNEAKING": "Third Person Sneaking",
+  "text.autoconfig.animatium.option.OLD_PARALLAX" : "Old Parallax",
+  "text.autoconfig.animatium.option.NO_HEAD_SMOOTHNESS": "No Head Smoothness",
+  "text.autoconfig.animatium.option.OLD_MINING_PROGRESS" : "Old Mining Progress",
+  "text.autoconfig.animatium.option.PUNCH_DURING_USAGE": "Punch During Usage",
+  "text.autoconfig.animatium.option.OLD_MOMENTUM": "Old Momentum",
+  "text.autoconfig.animatium.option.NO_BLOCKING_DELAY": "No Blocking Delay",
+  "text.autoconfig.animatium.option.OLD_VIEW_BOBBING": "Old View Bobbing",
+  "text.autoconfig.animatium.option.OLD_FLYING": "Old Flying",
+  "text.autoconfig.animatium.option.OLD_DEATH_LIMBS": "Old Death Limbs",
+  "text.autoconfig.animatium.option.OLD_HEART_FLASHING": "Old Heart Flashing",
+  "text.autoconfig.animatium.option.THIRD_PERSON_CROSSHAIR": "Third Person Crosshair",
+  "text.autoconfig.animatium.option.SHOW_POTION_GLINT": "Show Potion Glint"
+}

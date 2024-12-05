@@ -17,6 +17,9 @@
 	"entrypoints": {
 		"main": [
 			"me.mixces.animatium.Animatium"
+		],
+		"modmenu": [
+			"me.mixces.animatium.config.ModMenuIntegration"
 		]
 	},
 	"mixins": [

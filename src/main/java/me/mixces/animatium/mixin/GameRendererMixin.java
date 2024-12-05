@@ -1,5 +1,6 @@
 package me.mixces.animatium.mixin;
 
+import me.mixces.animatium.Animatium;
 import me.mixces.animatium.duck.PlayerPitchInterface;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
@@ -30,9 +31,11 @@ public class GameRendererMixin {
             )
     )
     private void animatium$addOldPitchRotation(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
-        final float prevPlayerPitch = ((PlayerPitchInterface) client.getCameraEntity()).animatium$getPrevPlayerPitch();
-        final float playerPitch = ((PlayerPitchInterface) client.getCameraEntity()).animatium$getPlayerPitch();
-        final float h = MathHelper.lerp(tickDelta, prevPlayerPitch, playerPitch);
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(h));
+        if (Animatium.CONFIG.OLD_VIEW_BOBBING) {
+            final float prevPlayerPitch = ((PlayerPitchInterface) client.getCameraEntity()).animatium$getPrevPlayerPitch();
+            final float playerPitch = ((PlayerPitchInterface) client.getCameraEntity()).animatium$getPlayerPitch();
+            final float h = MathHelper.lerp(tickDelta, prevPlayerPitch, playerPitch);
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(h));
+        }
     }
 }

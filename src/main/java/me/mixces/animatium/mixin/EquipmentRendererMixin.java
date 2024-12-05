@@ -3,6 +3,7 @@ package me.mixces.animatium.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import me.mixces.animatium.Animatium;
 import me.mixces.animatium.hook.ArmorFeatureRendererHook;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -27,7 +28,7 @@ public class EquipmentRendererMixin {
             )
     )
     private RenderLayer animatium$armorTint(Identifier texture, Operation<RenderLayer> original) {
-        return RenderLayer.getEntityCutoutNoCullZOffset(texture);
+        return Animatium.CONFIG.ARMOR_TINT ? RenderLayer.getEntityCutoutNoCullZOffset(texture) : original.call(texture);
     }
 
     @WrapOperation(
@@ -38,7 +39,7 @@ public class EquipmentRendererMixin {
             )
     )
     private VertexConsumer animatium$armorTrimTint(Sprite instance, VertexConsumer consumer, Operation<VertexConsumer> original, @Local(argsOnly = true) VertexConsumerProvider vertexConsumers) {
-        if (ArmorFeatureRendererHook.bipedEntityRenderState.get().hurt) {
+        if (Animatium.CONFIG.ARMOR_TINT && ArmorFeatureRendererHook.bipedEntityRenderState.get().hurt) {
             return instance.getTextureSpecificVertexConsumer(vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCullZOffset(instance.getAtlasId())));
         }
         return original.call(instance, consumer);
@@ -53,6 +54,8 @@ public class EquipmentRendererMixin {
             index = 3
     )
     private int animatium$armorTint2(int light) {
-        return OverlayTexture.packUv(OverlayTexture.getU(0.0f), OverlayTexture.getV(ArmorFeatureRendererHook.bipedEntityRenderState.get().hurt));
+        return Animatium.CONFIG.ARMOR_TINT ?
+                OverlayTexture.packUv(OverlayTexture.getU(0.0f), OverlayTexture.getV(ArmorFeatureRendererHook.bipedEntityRenderState.get().hurt)) :
+                light;
     }
 }

@@ -2,6 +2,7 @@ package me.mixces.animatium.mixin;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.authlib.GameProfile;
+import me.mixces.animatium.Animatium;
 import me.mixces.animatium.mixin.access.IEntityMixin;
 import me.mixces.animatium.mixin.access.ILivingEntityMixin;
 import net.minecraft.entity.*;
@@ -45,15 +46,17 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             at = @At("TAIL")
     )
     private void animatium$modifyEyeHeight(World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) {
-        /* trick to modify immutablemap */
-        Map<EntityPose, EntityDimensions> modifiableMap = new EnumMap<>(POSE_DIMENSIONS);
-        modifiableMap.put(
-                EntityPose.CROUCHING,
-                EntityDimensions.changing(0.6F, 1.5F)
-                        .withEyeHeight(1.54F)
-                        .withAttachments(EntityAttachments.builder().add(EntityAttachmentType.VEHICLE, VEHICLE_ATTACHMENT_POS))
-        );
-        POSE_DIMENSIONS = ImmutableMap.copyOf(modifiableMap);
+        if (Animatium.CONFIG.OLD_EYE_HEIGHT) {
+            /* trick to modify immutablemap */
+            Map<EntityPose, EntityDimensions> modifiableMap = new EnumMap<>(POSE_DIMENSIONS);
+            modifiableMap.put(
+                    EntityPose.CROUCHING,
+                    EntityDimensions.changing(0.6F, 1.5F)
+                            .withEyeHeight(1.54F)
+                            .withAttachments(EntityAttachments.builder().add(EntityAttachmentType.VEHICLE, VEHICLE_ATTACHMENT_POS))
+            );
+            POSE_DIMENSIONS = ImmutableMap.copyOf(modifiableMap);
+        }
     }
 
     @Inject(
@@ -83,6 +86,6 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin {
             )
     )
     private boolean animatium$sneakFlying(PlayerAbilities instance) {
-        return false;
+        return !Animatium.CONFIG.OLD_FLYING && instance.flying;
     }
 }

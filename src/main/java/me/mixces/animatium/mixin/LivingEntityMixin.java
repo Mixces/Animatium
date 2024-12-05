@@ -2,6 +2,7 @@ package me.mixces.animatium.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import me.mixces.animatium.Animatium;
 import me.mixces.animatium.duck.PlayerPitchInterface;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -38,6 +39,8 @@ public abstract class LivingEntityMixin extends Entity implements PlayerPitchInt
     @Shadow
     public float headYaw;
 
+    @Shadow public abstract void remove(RemovalReason reason);
+
     @Unique
     public float animatium$prevCameraPitch;
 
@@ -54,19 +57,10 @@ public abstract class LivingEntityMixin extends Entity implements PlayerPitchInt
             cancellable = true
     )
     private void animatium$removeShieldDelay(CallbackInfoReturnable<Boolean> cir) {
-        final UseAction action = activeItemStack.getItem().getUseAction(activeItemStack);
-        cir.setReturnValue(isUsingItem() && action == UseAction.BLOCK);
-    }
-
-    @WrapOperation(
-            method = "tick",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/util/math/MathHelper;abs(F)F"
-            )
-    )
-    private float animatium$bypassRotationBounds(float value, Operation<Float> original) {
-        return 0.0F;
+        if (Animatium.CONFIG.NO_BLOCKING_DELAY) {
+            final UseAction action = activeItemStack.getItem().getUseAction(activeItemStack);
+            cir.setReturnValue(isUsingItem() && action == UseAction.BLOCK);
+        }
     }
 
     @Inject(
@@ -82,6 +76,17 @@ public abstract class LivingEntityMixin extends Entity implements PlayerPitchInt
         animatium$prevCameraPitch = animatium$cameraPitch;
     }
 
+    @WrapOperation(
+            method = "tick",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/math/MathHelper;abs(F)F"
+            )
+    )
+    private float animatium$bypassRotationBounds(float value, Operation<Float> original) {
+        return Animatium.CONFIG.OLD_BODY_ROTATION ? 0.0F : original.call(value);
+    }
+
     @Redirect(
             method = "turnHead",
             at = @At(
@@ -90,12 +95,16 @@ public abstract class LivingEntityMixin extends Entity implements PlayerPitchInt
             )
     )
     public float animatium$oldBodyInterpolation(float g) {
-        g = MathHelper.clamp(g, -75.0F, 75.0F);
-        bodyYaw = getYaw() - g;
-        if (g * g > 2500.0F) {
-            bodyYaw += g * 0.2F;
+        if (Animatium.CONFIG.OLD_BODY_ROTATION) {
+            g = MathHelper.clamp(g, -75.0F, 75.0F);
+            bodyYaw = getYaw() - g;
+            if (g * g > 2500.0F) {
+                bodyYaw += g * 0.2F;
+            }
+            return Float.MIN_VALUE;
+        } else {
+            return Math.abs(g);
         }
-        return Float.MIN_VALUE;
     }
 
     @Inject(
@@ -103,7 +112,9 @@ public abstract class LivingEntityMixin extends Entity implements PlayerPitchInt
             at = @At("TAIL")
     )
     public void animatium$removeHeadYawLerp(int headTrackingIncrements, double serverHeadYaw, CallbackInfo ci) {
-        headYaw = (float) serverHeadYaw;
+        if (Animatium.CONFIG.NO_HEAD_SMOOTHNESS) {
+            headYaw = (float) serverHeadYaw;
+        }
     }
 
     @Override

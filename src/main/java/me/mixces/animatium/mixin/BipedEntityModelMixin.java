@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import me.mixces.animatium.Animatium;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -19,6 +20,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BipedEntityModel.class)
 public abstract class BipedEntityModelMixin<T extends BipedEntityRenderState> extends EntityModel<T> {
+
+    @Shadow
+    protected abstract BipedEntityModel.ArmPose getArmPose(T state, Arm arm);
 
     @Shadow
     @Final
@@ -47,9 +51,6 @@ public abstract class BipedEntityModelMixin<T extends BipedEntityRenderState> ex
     protected BipedEntityModelMixin(ModelPart root) {
         super(root);
     }
-
-    @Shadow
-    protected abstract BipedEntityModel.ArmPose getArmPose(T state, Arm arm);
 
     @Inject(
             method = "setAngles(Lnet/minecraft/client/render/entity/state/BipedEntityRenderState;)V",
@@ -92,22 +93,24 @@ public abstract class BipedEntityModelMixin<T extends BipedEntityRenderState> ex
             )
     )
     private void animatium$oldSneakPosition(T bipedEntityRenderState, CallbackInfo ci) {
-        if (bipedEntityRenderState.isInSneakingPose) {
-            body.pitch = 0.5F;
-            rightArm.pitch += 0.4F;
-            leftArm.pitch += 0.4F;
-            rightLeg.pivotZ = 4.0F;
-            leftLeg.pivotZ = 4.0F;
-            rightLeg.pivotY = 9.0F;
-            leftLeg.pivotY = 9.0F;
-            head.pivotY = 1.0F;
-        } else {
-            body.pitch = 0.0F;
-            rightLeg.pivotZ = 0.1F;
-            leftLeg.pivotZ = 0.1F;
-            rightLeg.pivotY = 12.0F;
-            leftLeg.pivotY = 12.0F;
-            head.pivotY = 0.0F;
+        if (Animatium.CONFIG.THIRD_PERSON_SNEAKING) {
+            if (bipedEntityRenderState.isInSneakingPose) {
+                body.pitch = 0.5F;
+                rightArm.pitch += 0.4F;
+                leftArm.pitch += 0.4F;
+                rightLeg.pivotZ = 4.0F;
+                leftLeg.pivotZ = 4.0F;
+                rightLeg.pivotY = 9.0F;
+                leftLeg.pivotY = 9.0F;
+                head.pivotY = 1.0F;
+            } else {
+                body.pitch = 0.0F;
+                rightLeg.pivotZ = 0.1F;
+                leftLeg.pivotZ = 0.1F;
+                rightLeg.pivotY = 12.0F;
+                leftLeg.pivotY = 12.0F;
+                head.pivotY = 0.0F;
+            }
         }
     }
 
@@ -120,7 +123,7 @@ public abstract class BipedEntityModelMixin<T extends BipedEntityRenderState> ex
             )
     )
     private boolean animatium$disableSneakTranslations(BipedEntityRenderState instance, Operation<Boolean> original) {
-        return false;
+        return !Animatium.CONFIG.OLD_EYE_HEIGHT;
     }
 
     @WrapOperation(
@@ -132,7 +135,7 @@ public abstract class BipedEntityModelMixin<T extends BipedEntityRenderState> ex
                     ordinal = 3
             )
     )
-    public ModelPart animatium$mirrorSwing2(BipedEntityModel<T> instance, Operation<ModelPart> original, @Local ModelPart modelPart) {
+    public ModelPart animatium$mirrorSwing(BipedEntityModel<T> instance, Operation<ModelPart> original, @Local ModelPart modelPart) {
         return modelPart;
     }
 
@@ -144,7 +147,7 @@ public abstract class BipedEntityModelMixin<T extends BipedEntityRenderState> ex
                     ordinal = 5
             )
     )
-    public float animatium$mirrorSwing3(float original, @Local Arm arm) {
+    public float animatium$mirrorSwing2(float original, @Local Arm arm) {
         return (arm == Arm.LEFT ? -1 : 1) * original;
     }
 }

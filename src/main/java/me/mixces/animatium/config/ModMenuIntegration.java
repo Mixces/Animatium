@@ -1,7 +1,16 @@
 package me.mixces.animatium.config;
 
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+import me.shedaniel.autoconfig.AutoConfig;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
-//todo
+@Environment(EnvType.CLIENT)
 public class ModMenuIntegration implements ModMenuApi {
+
+    @Override
+    public ConfigScreenFactory<?> getModConfigScreenFactory() {
+        return parent -> AutoConfig.getConfigScreen(AnimatiumConfig.class, parent).get();
+    }
 }

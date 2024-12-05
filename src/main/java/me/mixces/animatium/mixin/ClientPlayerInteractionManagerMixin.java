@@ -1,6 +1,7 @@
 package me.mixces.animatium.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import me.mixces.animatium.Animatium;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,6 +35,8 @@ public abstract class ClientPlayerInteractionManagerMixin {
             cancellable = true
     )
     private void animatium$oldMiningProgress(CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue((int)(currentBreakingProgress * 10.0f) - 1);
+        if (Animatium.CONFIG.OLD_MINING_PROGRESS) {
+            cir.setReturnValue((int) (currentBreakingProgress * 10.0f) - 1);
+        }
     }
 }

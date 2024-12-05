@@ -1,5 +1,6 @@
 package me.mixces.animatium.mixin;
 
+import me.mixces.animatium.Animatium;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerAbilities;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,6 +19,6 @@ public class ClientPlayerEntityMixin {
             )
     )
     private boolean animatium$sneakFlying(PlayerAbilities instance) {
-        return false;
+        return !Animatium.CONFIG.OLD_FLYING && instance.flying;
     }
 }

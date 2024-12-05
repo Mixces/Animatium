@@ -1,5 +1,6 @@
 package me.mixces.animatium.mixin;
 
+import me.mixces.animatium.Animatium;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.item.Item;
@@ -17,7 +18,7 @@ public class PotionItemMixin extends Item {
     @Override
     public boolean hasGlint(ItemStack stack) {
         final PotionContentsComponent potionContents = stack.get(DataComponentTypes.POTION_CONTENTS);
-        if (potionContents != null) {
+        if (Animatium.CONFIG.SHOW_POTION_GLINT && potionContents != null) {
             return potionContents.hasEffects();
         }
         return false;

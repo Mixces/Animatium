@@ -1,9 +1,10 @@
 package me.mixces.animatium;
 
+import me.mixces.animatium.config.AnimatiumConfig;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Animatium implements ModInitializer {
 
@@ -20,13 +21,15 @@ public class Animatium implements ModInitializer {
 	item reequip
 	item pickup
 	remove thrown/dropped swing
+	debug menu
+	tab menu?
 	 */
 
-	public static final String MOD_ID = "animatium";
-	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	public static AnimatiumConfig CONFIG;
 
 	@Override
 	public void onInitialize() {
-		LOGGER.info("Animatium initialized!");
+		AutoConfig.register(AnimatiumConfig.class, GsonConfigSerializer::new);
+		CONFIG = AutoConfig.getConfigHolder(AnimatiumConfig.class).getConfig();
 	}
 }

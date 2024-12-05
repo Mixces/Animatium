@@ -2,6 +2,7 @@ package me.mixces.animatium.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import me.mixces.animatium.Animatium;
 import net.minecraft.client.render.Camera;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.BlockView;
@@ -32,7 +33,7 @@ public abstract class CameraMixin {
             )
     )
     private void animatium$oldEyeInterp(Camera instance, float value, Operation<Void> original) {
-        if (focusedEntity.getStandingEyeHeight() < cameraY) {
+        if (Animatium.CONFIG.OLD_SNEAKING_SPEED && focusedEntity.getStandingEyeHeight() < cameraY) {
             cameraY = focusedEntity.getStandingEyeHeight();
         } else {
             original.call(instance, value);
@@ -44,6 +45,8 @@ public abstract class CameraMixin {
             at = @At("TAIL")
     )
     private void animatium$addParallax(BlockView area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
-        moveBy(-0.1f, 0.0f, 0.0f);
+        if (Animatium.CONFIG.OLD_PARALLAX) {
+            moveBy(-0.1f, 0.0f, 0.0f);
+        }
     }
 }

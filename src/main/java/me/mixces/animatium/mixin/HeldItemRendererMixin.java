@@ -1,6 +1,7 @@
 package me.mixces.animatium.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import me.mixces.animatium.Animatium;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;
@@ -40,6 +41,8 @@ public abstract class HeldItemRendererMixin {
             )
     )
     private void animatium$addSwingOffset(AbstractClientPlayerEntity player, float tickDelta, float pitch, Hand hand, float swingProgress, ItemStack item, float equipProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci, @Local Arm arm) {
-        applySwingOffset(matrices, arm, swingProgress);
+        if (Animatium.CONFIG.PUNCH_DURING_USAGE) {
+            applySwingOffset(matrices, arm, swingProgress);
+        }
     }
 }
