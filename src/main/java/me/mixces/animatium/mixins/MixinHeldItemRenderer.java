@@ -8,11 +8,8 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ConsumableComponent;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.consume.UseAction;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.RotationAxis;
@@ -23,8 +20,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Objects;
 
 @Mixin(HeldItemRenderer.class)
 public abstract class MixinHeldItemRenderer {
@@ -51,13 +46,7 @@ public abstract class MixinHeldItemRenderer {
     private void removeBlockingEquipAnimation(Hand hand, CallbackInfo ci) {
         ClientPlayerEntity player = this.client.player;
         if (AnimatiumConfig.removeBlockingEquipAnimation && player != null && player.isUsingItem()) {
-            ItemStack activeStack = player.getActiveItem();
-            if (activeStack.contains(DataComponentTypes.CONSUMABLE)) {
-                ConsumableComponent consumableComponent = Objects.requireNonNull(activeStack.get(DataComponentTypes.CONSUMABLE));
-                if (consumableComponent.useAction() == UseAction.BLOCK) {
-                    ci.cancel();
-                }
-            }
+            ci.cancel();
         }
     }
 
