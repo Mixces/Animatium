@@ -6,6 +6,7 @@
 		"MixinBipedEntityModel",
 		"MixinBipedEntityRenderer",
 		"MixinCamera",
+		"MixinEntityRenderer",
 		"MixinGameRenderer",
 		"MixinHeldItemRenderer",
 		"MixinInGameHud",
@@ -13,7 +14,8 @@
 		"MixinLivingEntityRenderer",
 		"MixinMinecraftClient",
 		"MixinPlayerEntity",
-		"MixinPlayerEntityRenderer"
+		"MixinPlayerEntityRenderer",
+		"MixinTextRendererDrawer"
 	],
 	"injectors": {
 		"defaultRequire": 1

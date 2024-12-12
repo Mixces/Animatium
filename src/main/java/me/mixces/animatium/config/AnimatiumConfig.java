@@ -34,6 +34,12 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean showNametagInThirdperson = true; // Show the player nametag in thirdperson
 
     @Entry
+    public static boolean hideNameTagBackground = true; // Hide the nametag background
+
+    @Entry
+    public static boolean applyTextShadowToNametag = true; // Apply text shadow to nametag
+
+    @Entry
     public static boolean removeSmoothSneaking = true; // Removes the smooth sneaking animation, making it like 1.8-1.12.2
 
     @Entry
@@ -50,6 +56,9 @@ public class AnimatiumConfig extends MidnightConfig {
 
     @Entry
     public static boolean oldDeathLimbs = true; // from testing, the only difference is you always fall sideways?
+
+    @Entry
+    public static boolean fixTextStrikethroughStyle = true; // Changes the text strikethrough position to make it look like it did in <=1.12.2
 
     @Entry
     public static CameraVersion cameraVersion = CameraVersion.v1_8; // Change the camera position to be as it was in said version range
