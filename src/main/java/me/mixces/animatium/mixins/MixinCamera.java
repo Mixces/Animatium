@@ -36,7 +36,7 @@ public abstract class MixinCamera {
     @Inject(method = "update", at = @At(value = "TAIL"))
     private void oldCameraVersion(BlockView area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
         if (AnimatiumConfig.cameraVersion != AnimatiumConfig.CameraVersion.LATEST && !thirdPerson && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
-            // TODO: Fix accuracies for different states, like in bed, in third person, etc...
+            // TODO: Fix bed/sleeping position
             final int ordinal = AnimatiumConfig.cameraVersion.ordinal();
             if (ordinal <= AnimatiumConfig.CameraVersion.v1_14_v1_14_3.ordinal()) {
                 // <= 1.14.3
