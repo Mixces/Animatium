@@ -19,10 +19,10 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean lockBlockingArmRotation = true; // Locks the third-person blocking arm rotation
 
     @Entry
-    public static boolean removeBlockingEquipAnimation = true; // Fixes the blocking animation which plays the equip animation on use
+    public static boolean applyItemSwingUsage = true; // Block hitting (apply swing offset in item usage code)
 
     @Entry
-    public static boolean applyItemSwingUsage = true; // Block hitting (apply swing offset in item usage code)
+    public static boolean removeEquipAnimationOnItemUse = true; // Fixes the blocking animation which plays the equip animation on use, and others
 
     @Entry
     public static boolean fixVerticalBobbingTilt = true; // Fixes MC-225335

@@ -43,9 +43,9 @@ public abstract class MixinHeldItemRenderer {
     }
 
     @Inject(method = "resetEquipProgress", at = @At("HEAD"), cancellable = true)
-    private void removeBlockingEquipAnimation(Hand hand, CallbackInfo ci) {
+    private void removeEquipAnimationOnItemUse(Hand hand, CallbackInfo ci) {
         ClientPlayerEntity player = this.client.player;
-        if (AnimatiumConfig.removeBlockingEquipAnimation && player != null && player.isUsingItem()) {
+        if (AnimatiumConfig.removeEquipAnimationOnItemUse && player != null && player.isUsingItem()) {
             ci.cancel();
         }
     }
