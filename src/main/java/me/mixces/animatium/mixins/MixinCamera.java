@@ -35,19 +35,15 @@ public abstract class MixinCamera {
 
     @Inject(method = "update", at = @At(value = "TAIL"))
     private void oldCameraVersion(BlockView area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
-        if (AnimatiumConfig.cameraVersion != AnimatiumConfig.CameraVersion.LATEST) {
+        if (AnimatiumConfig.cameraVersion != AnimatiumConfig.CameraVersion.LATEST && !thirdPerson && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
             // TODO: Fix accuracies for different states, like in bed, in third person, etc...
             final int ordinal = AnimatiumConfig.cameraVersion.ordinal();
             if (ordinal <= AnimatiumConfig.CameraVersion.v1_14_v1_14_3.ordinal()) {
                 // <= 1.14.3
-                if (!thirdPerson && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
-                    this.moveBy(-0.05000000074505806F, 0.0F, 0.0F);
-                }
-
+                this.moveBy(-0.05000000074505806F, 0.0F, 0.0F);
                 // <= 1.13.2
                 if (ordinal <= AnimatiumConfig.CameraVersion.v1_9_v1_13_2.ordinal()) {
                     this.moveBy(0.1F, 0.0F, 0.0F);
-
                     // <= 1.8
                     if (ordinal == AnimatiumConfig.CameraVersion.v1_8.ordinal()) {
                         this.moveBy(-0.15F, 0, 0); // unfixing parallax
