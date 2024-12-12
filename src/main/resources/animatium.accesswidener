@@ -1,3 +1,2 @@
 accessWidener v2 named
-accessible method net/minecraft/entity/LivingEntity getHandSwingDuration ()I
 accessible class net/minecraft/client/gui/hud/InGameHud$HeartType

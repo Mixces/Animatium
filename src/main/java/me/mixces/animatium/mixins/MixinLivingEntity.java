@@ -44,8 +44,8 @@ public abstract class MixinLivingEntity extends Entity implements ViewBobbingSto
         }
     }
 
-    @Redirect(method = "turnHead", at = @At(value = "INVOKE", target = "Ljava/lang/Math;abs(F)F"))
-    private float removeHeadRotationInterpolation$turn(float g) {
+    @WrapOperation(method = "turnHead", at = @At(value = "INVOKE", target = "Ljava/lang/Math;abs(F)F"))
+    private float removeHeadRotationInterpolation(float g, Operation<Float> original) {
         if (AnimatiumConfig.rotateBackwardsWalking) {
             g = MathHelper.clamp(g, -75.0F, 75.0F);
             this.bodyYaw = this.getYaw() - g;
@@ -54,7 +54,7 @@ public abstract class MixinLivingEntity extends Entity implements ViewBobbingSto
             }
             return Float.MIN_VALUE;
         } else {
-            return Math.abs(g);
+            return original.call(g);
         }
     }
 
