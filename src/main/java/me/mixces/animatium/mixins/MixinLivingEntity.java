@@ -57,10 +57,12 @@ public abstract class MixinLivingEntity extends Entity implements ViewBobbingSto
         }
     }
 
-    @Inject(method = "lerpHeadYaw", at = @At("TAIL"))
-    public void removeHeadRotationInterpolation(int headTrackingIncrements, double serverHeadYaw, CallbackInfo ci) {
+    @WrapOperation(method = "lerpHeadYaw", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;lerpAngleDegrees(DDD)D"))
+    public double removeHeadRotationInterpolation(double delta, double start, double end, Operation<Double> original) {
         if (AnimatiumConfig.removeHeadRotationInterpolation) {
-            headYaw = (float) serverHeadYaw;
+            return end;
+        } else {
+            return original.call(delta, start, end);
         }
     }
 
