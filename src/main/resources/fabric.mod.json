@@ -1,25 +1,16 @@
 {
 	"schemaVersion": 1,
-	"id": "modid",
+	"id": "animatium",
 	"version": "${version}",
-	"name": "Example mod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
-	"authors": [
-		"Me!"
-	],
-	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
-	},
-	"license": "CC0-1.0",
+	"name": "Animatium",
+	"description": "Visual tweaks/qol settings for modern minecraft versions, aimed at 1.7/1.8 players.",
+	"authors": ["mixcesta", "lowercasebtw"],
+	"license": "LGPL-2.1",
 	"icon": "assets/animatium/icon.png",
-	"environment": "*",
+	"environment": "client",
 	"entrypoints": {
-		"main": [
+		"client": [
 			"me.mixces.animatium.Animatium"
-		],
-		"modmenu": [
-			"me.mixces.animatium.config.ModMenuIntegration"
 		]
 	},
 	"mixins": [
@@ -27,11 +18,7 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.16.7",
-		"minecraft": "~1.21.3",
-		"java": ">=21",
-		"fabric-api": "*"
-	},
-	"suggests": {
-		"another-mod": "*"
+		"minecraft": ">=1.21.4 <1.21.5",
+		"midnightlib": ">=1.6.6"
 	}
 }

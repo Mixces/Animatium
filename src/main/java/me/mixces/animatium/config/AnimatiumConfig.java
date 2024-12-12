@@ -1,26 +1,63 @@
 package me.mixces.animatium.config;
 
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
+import eu.midnightdust.lib.config.MidnightConfig;
 
-@Config(name = "animatium")
-public class AnimatiumConfig implements ConfigData {
+public class AnimatiumConfig extends MidnightConfig {
+    @Entry
+    public static boolean rotateBackwardsWalking = true; // Backwards walking rotating the body like in <=1.11
 
-    public boolean OLD_BODY_ROTATION = true;
-    public boolean ARMOR_TINT = true;
-    public boolean OLD_EYE_HEIGHT = true;
-    public boolean OLD_SNEAKING_SPEED = true;
-    public boolean THIRD_PERSON_SNEAKING = true;
-    public boolean OLD_PARALLAX = true;
-    public boolean NO_HEAD_SMOOTHNESS = true;
-    public boolean OLD_MINING_PROGRESS = true;
-    public boolean PUNCH_DURING_USAGE = true;
-    public boolean OLD_MOMENTUM = true;
-    public boolean NO_BLOCKING_DELAY = true;
-    public boolean OLD_VIEW_BOBBING = true;
-    public boolean OLD_FLYING = true;
-    public boolean OLD_DEATH_LIMBS = true;
-    public boolean OLD_HEART_FLASHING = true;
-    public boolean THIRD_PERSON_CROSSHAIR = true;
-    public boolean SHOW_POTION_GLINT = true;
+    @Entry
+    public static boolean uncapBlockingHeadRotation = true; // Reverts the change in 1.20.2, making head rotation when blocking as it used to be
+
+    @Entry
+    public static boolean removeHeadRotationInterpolation = true; // Removes the head rotation interpolation
+
+    @Entry
+    public static boolean tiltItemPositions = true; // Tilt items to look like they do in 1.7
+
+    @Entry
+    public static boolean lockBlockingArmRotation = true; // Locks the third-person blocking arm rotation
+
+    @Entry
+    public static boolean removeBlockingEquipAnimation = true; // Fixes the blocking animation which plays the equip animation on use
+
+    @Entry
+    public static boolean applyItemSwingUsage = true; // Block hitting (apply swing offset in item usage code)
+
+    @Entry
+    public static boolean fixVerticalBobbingTilt = true; // Fixes MC-225335
+
+    @Entry
+    public static boolean showCrosshairInThirdperson = true; // Show crosshair whilst in thirdperson like in <=1.8
+
+    @Entry
+    public static boolean showNametagInThirdperson = true; // Show the player nametag in thirdperson
+
+    @Entry
+    public static boolean removeSmoothSneaking = true; // Removes the smooth sneaking animation, making it like 1.8-1.12.2
+
+    @Entry
+    public static boolean oldSneakEyeHeight = true; // Changes the sneak eye height to be as it was <=1.13.2
+
+    @Entry
+    public static boolean fixSneakingFeetPosition = true; // Fixes the sneaking model offset to be like <=1.11
+
+    @Entry
+    public static boolean sneakAnimationWhileFlying = true; // Shows the sneaking animation in third-person whilst flying down like in <=1.13
+
+    @Entry
+    public static boolean removeHeartFlash = true; // Remove heart blinking like in <=1.7
+
+    @Entry
+    public static boolean oldDeathLimbs = true; // from testing, the only difference is you always fall sideways?
+
+    @Entry
+    public static CameraVersion cameraVersion = CameraVersion.v1_8; // Change the camera position to be as it was in said version range
+
+    public enum CameraVersion {
+        v1_8,
+        v1_9_v1_13_2,
+        v1_14_v1_14_3,
+        LATEST
+    }
 }
