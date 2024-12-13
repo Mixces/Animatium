@@ -10,11 +10,6 @@ import java.util.Map;
 
 @Mixin(PlayerEntity.class)
 public interface PlayerEntityAccessor {
-    @Accessor("STANDING_DIMENSIONS")
-    static EntityDimensions getStandingDimensions() {
-        return null;
-    }
-
     @Accessor("POSE_DIMENSIONS")
     static Map<EntityPose, EntityDimensions> getPoseDimensions() {
         return null;
