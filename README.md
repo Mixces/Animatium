@@ -8,119 +8,123 @@ Currently, there are no releases. If you want to use a development build, you ca
 # Available Config Categories
 ## 💨 Sneaking
 - [X] removeSmoothSneaking
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] oldSneakAnimationInterpolation
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] oldSneakEyeHeight
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] fixSneakingFeetPosition
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] oldSneakingFeetPosition
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] syncPlayerModelWithEyeHeight
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] sneakAnimationWhileFlying
-    - TODO
+    - Description: TODO
     - Type: BOOLEAN
 
 ## 🪶 Quality of Life
 - [X] minimalViewBobbing
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] showNametagInThirdperson
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] hideNameTagBackground
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] applyTextShadowToNametag
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] fixMirrorArmSwing
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] persistentBlockOutline
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [ ] forceItemGlintOnEntity
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 
 ## 🏃 Movement
 - [X] rotateBackwardsWalking
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] uncapBlockingHeadRotation
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] removeHeadRotationInterpolation
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] fixVerticalBobbingTilt
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] oldDeathLimbs
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] fixBowArmMovement
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [ ] oldCapeMovement
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 
 ## 🛠️ Old Settings
 - [X] tiltItemPositions
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] lockBlockingArmRotation
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] applyItemSwingUsage
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] removeEquipAnimationOnItemUse
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] showCrosshairInThirdperson
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] removeHeartFlash
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] fixTextStrikethroughStyle
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] centerScrollableListWidgets
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] oldBlueVoidSky
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] oldSkyHorizonHeight
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] oldCloudHeight
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] oldButtonTextColors
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] removeDebugHudBackground
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] debugHudTextShadow
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] oldChatPosition
-  - TODO
+  - Description: TODO
   - Type: BOOLEAN
 - [X] cameraVersion
-  - TODO
-  - Type: ENUM (v1_8, v1_9_v1_13_2, v1_14_v1_14_3, LATEST)
+  - Description: TODO
+  - Type: ENUM 
+    - 1.8 and below (v1_8)
+    - 1.9 through to 1.13.2 (v1_9_v1_13_2)
+    - 1.14 through to 1.14.3 (v1_14_v1_14_3)
+    - LATEST
