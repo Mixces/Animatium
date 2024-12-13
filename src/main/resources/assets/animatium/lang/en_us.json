@@ -59,6 +59,8 @@
 	"animatium.midnightconfig.oldSkyHorizonHeight.tooltip": "TODO",
 	"animatium.midnightconfig.oldCloudHeight": "Bring back the old cloud height",
 	"animatium.midnightconfig.oldCloudHeight.tooltip": "TODO",
+	"animatium.midnightconfig.oldButtonTextColors": "Bring back the old button text colors",
+	"animatium.midnightconfig.oldButtonTextColors.tooltip": "TODO",
 	"animatium.midnightconfig.cameraVersion": "Change camera position to be as it was in",
 	"animatium.midnightconfig.cameraVersion.tooltip": "TODO",
 

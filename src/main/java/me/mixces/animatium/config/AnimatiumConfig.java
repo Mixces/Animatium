@@ -92,6 +92,9 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean oldCloudHeight = true; // Changes the cloud height back to 128 like in <=1.16.5
 
     @Entry
+    public static boolean oldButtonTextColors = true; // Bring back the old yellow hover/grayish text colors like in <=1.14.4
+
+    @Entry
     public static CameraVersion cameraVersion = CameraVersion.v1_8; // Change the camera position to be as it was in said version range
 
     public enum CameraVersion {
