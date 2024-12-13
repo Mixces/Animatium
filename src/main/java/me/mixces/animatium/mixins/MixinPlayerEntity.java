@@ -28,6 +28,9 @@ public abstract class MixinPlayerEntity extends LivingEntity {
     @Final
     private static Map<EntityPose, EntityDimensions> POSE_DIMENSIONS;
 
+    @Shadow
+    protected abstract boolean canChangeIntoPose(EntityPose pose);
+
     protected MixinPlayerEntity(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -48,13 +51,21 @@ public abstract class MixinPlayerEntity extends LivingEntity {
         }
     }
 
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void animatium$updateDimensions(CallbackInfo ci) {
+        if (AnimatiumConfig.oldSneakEyeHeight) {
+            calculateDimensions();
+        }
+    }
+
     @Inject(method = "getBaseDimensions", at = @At("HEAD"), cancellable = true)
     private void animatium$oldSneakEyeHeight(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
         if (AnimatiumConfig.oldSneakEyeHeight && pose.equals(EntityPose.CROUCHING)) {
             // Changes the sneak height to the one from <=1.13.2 on Hypixel & Loyisa
             boolean oldMechanics = Animatium.shouldApplyOldSneaking();
             // TODO: Fix camera on servers that aren't hypixel
-            cir.setReturnValue(POSE_DIMENSIONS.getOrDefault(oldMechanics ? null : pose, STANDING_DIMENSIONS).withEyeHeight(1.54F));
+            float eyeHeight = canChangeIntoPose(EntityPose.STANDING) ? 1.54F : 1.27F;
+            cir.setReturnValue(POSE_DIMENSIONS.getOrDefault(oldMechanics ? null : pose, STANDING_DIMENSIONS).withEyeHeight(eyeHeight));
         }
     }
 }
