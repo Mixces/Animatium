@@ -6,6 +6,7 @@
 		"MixinBipedEntityModel",
 		"MixinBipedEntityRenderer",
 		"MixinCamera",
+		"MixinDebugHud",
 		"MixinEntityRenderer",
 		"MixinGameRenderer",
 		"MixinHeldItemRenderer",

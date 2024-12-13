@@ -61,6 +61,10 @@
 	"animatium.midnightconfig.oldCloudHeight.tooltip": "TODO",
 	"animatium.midnightconfig.oldButtonTextColors": "Bring back the old button text colors",
 	"animatium.midnightconfig.oldButtonTextColors.tooltip": "TODO",
+	"animatium.midnightconfig.removeDebugHudBackground": "Remove the F3 debug hud background",
+	"animatium.midnightconfig.removeDebugHudBackground.tooltip": "TODO",
+	"animatium.midnightconfig.debugHudTextShadow": "Add text-shadow to F3 debug hud text",
+	"animatium.midnightconfig.debugHudTextShadow.tooltip": "TODO",
 	"animatium.midnightconfig.cameraVersion": "Change camera position to be as it was in",
 	"animatium.midnightconfig.cameraVersion.tooltip": "TODO",
 

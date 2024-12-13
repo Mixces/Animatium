@@ -95,6 +95,12 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean oldButtonTextColors = true; // Bring back the old yellow hover/grayish text colors like in <=1.14.4
 
     @Entry
+    public static boolean removeDebugHudBackground = true; // Remove the F3 Debug Hud background
+
+    @Entry
+    public static boolean debugHudTextShadow = true; // Add text-shadow to F3 Debug Hud
+
+    @Entry
     public static CameraVersion cameraVersion = CameraVersion.v1_8; // Change the camera position to be as it was in said version range
 
     public enum CameraVersion {
