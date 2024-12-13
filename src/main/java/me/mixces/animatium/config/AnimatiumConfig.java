@@ -67,6 +67,10 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean fixBowArmMovement = true; // Fixes arm movement in third-person when using the bow
 
     @Entry
+    // TODO/NOTE: Currently not accurate/broken
+    public static boolean oldCapeMovement = false; // Changes the cape model movement to be how it used to be
+
+    @Entry
     public static CameraVersion cameraVersion = CameraVersion.v1_8; // Change the camera position to be as it was in said version range
 
     public enum CameraVersion {

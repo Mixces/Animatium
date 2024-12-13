@@ -43,6 +43,8 @@
 	"animatium.midnightconfig.centerScrollableListWidgets.tooltip": "TODO",
 	"animatium.midnightconfig.fixBowArmMovement": "Fix third-person bow arm movement",
 	"animatium.midnightconfig.fixBowArmMovement.tooltip": "TODO",
+	"animatium.midnightconfig.oldCapeMovement": "Old cape model movement",
+	"animatium.midnightconfig.oldCapeMovement.tooltip": "TODO",
 	"animatium.midnightconfig.cameraVersion": "Change camera position to be as it was in",
 	"animatium.midnightconfig.cameraVersion.tooltip": "TODO",
 
