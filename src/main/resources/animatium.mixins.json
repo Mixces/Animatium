@@ -3,9 +3,6 @@
 	"package": "me.mixces.animatium.mixins",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"accessor.CameraAccessor",
-		"accessor.ClientWorldPropertiesAccessor",
-		"accessor.SkyRenderingAccessor",
 		"MixinBipedEntityModel",
 		"MixinBipedEntityRenderer",
 		"MixinCamera",
@@ -24,9 +21,15 @@
 		"MixinScrollableWidget",
 		"MixinSliderWidget",
 		"MixinTextRendererDrawer",
-		"MixinWorldRenderer"
+		"MixinWorldRenderer",
+		"accessor.CameraAccessor",
+		"accessor.ClientWorldPropertiesAccessor",
+		"accessor.SkyRenderingAccessor"
 	],
 	"injectors": {
 		"defaultRequire": 1
-	}
+	},
+	"mixins": [
+		"accessor.PlayerEntityAccessor"
+	]
 }
