@@ -45,6 +45,9 @@ public class AnimatiumConfig extends MidnightConfig {
     @Entry(category = "qol")
     public static boolean persistentBlockOutline = true; // Always show block outline, no matter the gamemode or state
 
+    @Entry(category = "qol")
+    public static boolean forceItemGlintOnEntity = true; // Makes the entity glint use the same texture as the item glint like in <=1.19
+
     // Animatium Config
     @Entry
     public static boolean rotateBackwardsWalking = true; // Backwards walking rotating the body like in <=1.11
@@ -109,6 +112,9 @@ public class AnimatiumConfig extends MidnightConfig {
 
     @Entry
     public static boolean debugHudTextShadow = true; // Add text-shadow to F3 Debug Hud
+
+    @Entry
+    public static boolean oldChatPosition = true; // Moves chat down 12 pixels like in <=1.8
 
     @Entry
     public static CameraVersion cameraVersion = CameraVersion.v1_8; // Change the camera position to be as it was in said version range

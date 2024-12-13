@@ -30,6 +30,8 @@
 	"animatium.midnightconfig.fixMirrorArmSwing.tooltip": "TODO",
 	"animatium.midnightconfig.persistentBlockOutline": "Always show block outline (Persistent)",
 	"animatium.midnightconfig.persistentBlockOutline.tooltip": "TODO",
+	"animatium.midnightconfig.forceItemGlintOnEntity": "Force item glint on armor glint",
+	"animatium.midnightconfig.forceItemGlintOnEntity.tooltip": "TODO",
 
 
 	"animatium.midnightconfig.rotateBackwardsWalking": "Rotate body whilst walking backwards",
@@ -74,6 +76,8 @@
 	"animatium.midnightconfig.removeDebugHudBackground.tooltip": "TODO",
 	"animatium.midnightconfig.debugHudTextShadow": "Add text-shadow to F3 debug hud text",
 	"animatium.midnightconfig.debugHudTextShadow.tooltip": "TODO",
+	"animatium.midnightconfig.oldChatPosition": "Old chat position (1.8)",
+	"animatium.midnightconfig.oldChatPosition.tooltip": "TODO",
 	"animatium.midnightconfig.cameraVersion": "Change camera position to be as it was in",
 	"animatium.midnightconfig.cameraVersion.tooltip": "TODO",
 
