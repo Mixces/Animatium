@@ -43,6 +43,9 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean removeSmoothSneaking = true; // Removes the smooth sneaking animation, making it like 1.8-1.12.2
 
     @Entry
+    public static boolean oldSneakAnimationInterpolation = true; // Brings back the <=1.7 sneak animation interpolation
+
+    @Entry
     public static boolean oldSneakEyeHeight = true; // Changes the sneak eye height to be as it was <=1.13.2
 
     @Entry

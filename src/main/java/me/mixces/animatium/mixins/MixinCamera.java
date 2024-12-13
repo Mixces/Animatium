@@ -1,10 +1,13 @@
 package me.mixces.animatium.mixins;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import me.mixces.animatium.config.AnimatiumConfig;
 import net.minecraft.client.render.Camera;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.BlockView;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -30,6 +33,15 @@ public abstract class MixinCamera {
         if (AnimatiumConfig.removeSmoothSneaking) {
             this.lastCameraY = cameraY;
             this.cameraY = this.focusedEntity.getStandingEyeHeight();
+        }
+    }
+
+    @WrapOperation(method = "updateEyeHeight", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/render/Camera;cameraY:F"))
+    private void animatium$oldSneakAnimationInterpolation(Camera instance, float value, Operation<Void> original) {
+        if (AnimatiumConfig.oldSneakAnimationInterpolation && !AnimatiumConfig.removeSmoothSneaking && focusedEntity.getStandingEyeHeight() < cameraY) {
+            cameraY = focusedEntity.getStandingEyeHeight();
+        } else {
+            original.call(instance, value);
         }
     }
 

@@ -27,6 +27,8 @@
 	"animatium.midnightconfig.applyTextShadowToNametag.tooltip": "TODO",
 	"animatium.midnightconfig.removeSmoothSneaking": "Remove the smooth first-person sneak animation",
 	"animatium.midnightconfig.removeSmoothSneaking.tooltip": "TODO",
+	"animatium.midnightconfig.oldSneakAnimationInterpolation": "Bring back the old sneaking animation interpolation",
+	"animatium.midnightconfig.oldSneakAnimationInterpolation.tooltip": "TODO",
 	"animatium.midnightconfig.oldSneakEyeHeight": "Revert to old sneaking height",
 	"animatium.midnightconfig.oldSneakEyeHeight.tooltip": "TODO",
 	"animatium.midnightconfig.fixSneakingFeetPosition": "Fix sneaking model offset",
