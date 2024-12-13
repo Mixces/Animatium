@@ -3,7 +3,7 @@ erm what the sigma
 ## License
 This project is licensed under the LGPL-2.1 license.
 ## Download
-Currently, there is no releases. If you want to use a development build, you can get them [here](https://github.com/Legacy-Visuals-Project/Animatium/actions).
+Currently, there are no releases. If you want to use a development build, you can get them [here](https://github.com/Legacy-Visuals-Project/Animatium/actions).
 
 # Available Config Categories
 ## 💨 Sneaking
