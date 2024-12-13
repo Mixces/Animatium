@@ -48,16 +48,30 @@ public class AnimatiumConfig extends MidnightConfig {
     @Entry(category = "qol")
     public static boolean forceItemGlintOnEntity = true; // Makes the entity glint use the same texture as the item glint like in <=1.19
 
-    // Animatium Config
-    @Entry
+    // Movement
+    @Entry(category = "movement")
     public static boolean rotateBackwardsWalking = true; // Backwards walking rotating the body like in <=1.11
 
-    @Entry
+    @Entry(category = "movement")
     public static boolean uncapBlockingHeadRotation = true; // Reverts the change in 1.20.2, making head rotation when blocking as it used to be
 
-    @Entry
+    @Entry(category = "movement")
     public static boolean removeHeadRotationInterpolation = true; // Removes the head rotation interpolation
 
+    @Entry(category = "movement")
+    public static boolean fixVerticalBobbingTilt = true; // Fixes MC-225335
+
+    @Entry(category = "movement")
+    public static boolean oldDeathLimbs = true; // from testing, the only difference is you always fall sideways?
+
+    @Entry(category = "movement")
+    public static boolean fixBowArmMovement = true; // Fixes arm movement in third-person when using the bow
+
+    @Entry(category = "movement")
+    // TODO/NOTE: Currently not accurate/broken
+    public static boolean oldCapeMovement = false; // Changes the cape model movement to be how it used to be
+
+    // Animatium Config
     @Entry
     public static boolean tiltItemPositions = true; // Tilt items to look like they do in 1.7
 
@@ -71,29 +85,16 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean removeEquipAnimationOnItemUse = true; // Fixes the blocking animation which plays the equip animation on use, and others
 
     @Entry
-    public static boolean fixVerticalBobbingTilt = true; // Fixes MC-225335
-
-    @Entry
     public static boolean showCrosshairInThirdperson = true; // Show crosshair whilst in thirdperson like in <=1.8
 
     @Entry
     public static boolean removeHeartFlash = true; // Remove heart blinking like in <=1.7
 
     @Entry
-    public static boolean oldDeathLimbs = true; // from testing, the only difference is you always fall sideways?
-
-    @Entry
     public static boolean fixTextStrikethroughStyle = true; // Changes the text strikethrough position to make it look like it did in <=1.12.2
 
     @Entry
     public static boolean centerScrollableListWidgets = true; // Center scrollable list widgets like <=1.7
-
-    @Entry
-    public static boolean fixBowArmMovement = true; // Fixes arm movement in third-person when using the bow
-
-    @Entry
-    // TODO/NOTE: Currently not accurate/broken
-    public static boolean oldCapeMovement = false; // Changes the cape model movement to be how it used to be
 
     @Entry
     public static boolean oldBlueVoidSky = true; // (MC-257056) Brings back the forgotten blue void part of the sky
