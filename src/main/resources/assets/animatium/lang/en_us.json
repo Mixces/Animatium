@@ -53,6 +53,12 @@
 	"animatium.midnightconfig.fixMirrorArmSwing.tooltip": "TODO",
 	"animatium.midnightconfig.persistentBlockOutline": "Always show block outline (Persistent)",
 	"animatium.midnightconfig.persistentBlockOutline.tooltip": "TODO",
+	"animatium.midnightconfig.oldBlueVoidSky": "Bring back the old blue void skybox",
+	"animatium.midnightconfig.oldBlueVoidSky.tooltip": "TODO",
+	"animatium.midnightconfig.oldSkyHorizonHeight": "Revert the 1.17 sky horizon height",
+	"animatium.midnightconfig.oldSkyHorizonHeight.tooltip": "TODO",
+	"animatium.midnightconfig.oldCloudHeight": "Bring back the old cloud height",
+	"animatium.midnightconfig.oldCloudHeight.tooltip": "TODO",
 	"animatium.midnightconfig.cameraVersion": "Change camera position to be as it was in",
 	"animatium.midnightconfig.cameraVersion.tooltip": "TODO",
 

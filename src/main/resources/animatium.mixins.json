@@ -18,7 +18,9 @@
 		"MixinPlayerEntityRenderer",
 		"MixinScrollableWidget",
 		"MixinTextRendererDrawer",
-		"MixinWorldRenderer"
+		"MixinWorldRenderer",
+		"accessor.ClientWorldPropertiesAccessor",
+		"accessor.SkyRenderingAccessor"
 	],
 	"injectors": {
 		"defaultRequire": 1

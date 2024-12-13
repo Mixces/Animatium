@@ -83,6 +83,15 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean persistentBlockOutline = true; // Always show block outline, no matter the gamemode or state
 
     @Entry
+    public static boolean oldBlueVoidSky = true; // (MC-257056) Brings back the forgotten blue void part of the sky
+
+    @Entry
+    public static boolean oldSkyHorizonHeight = true; // Changes the horizon height to how it was in <=1.16.5
+
+    @Entry
+    public static boolean oldCloudHeight = true; // Changes the cloud height back to 128 like in <=1.16.5
+
+    @Entry
     public static CameraVersion cameraVersion = CameraVersion.v1_8; // Change the camera position to be as it was in said version range
 
     public enum CameraVersion {
