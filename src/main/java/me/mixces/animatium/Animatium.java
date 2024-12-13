@@ -27,6 +27,8 @@ public class Animatium implements ClientModInitializer {
 
             if ((brand.toLowerCase().contains("hypixel") || brand.toLowerCase().contains("hygot"))) {
                 return true;
+            } else if (brand.contains("1.8")) {
+                return true;
             } else {
                 ServerInfo serverInfo = networkHandler.getServerInfo();
                 return serverInfo != null && serverInfo.address.contains("loyisa");
