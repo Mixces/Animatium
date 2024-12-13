@@ -51,7 +51,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
         }
     }
 
-    @Inject(method = "tick", at = @At("HEAD"))
+    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;updatePose()V"))
     private void animatium$updateDimensions(CallbackInfo ci) {
         if (AnimatiumConfig.oldSneakEyeHeight) {
             calculateDimensions();
