@@ -1,9 +1,9 @@
-# <center> Animatium </center>
+# Animatium
 erm what the sigma
 ## License
 This project is licensed under the LGPL-2.1 license.
 
-# <center> Available Config Categories </center>
+# Available Config Categories
 ## 💨 Sneaking
 - [X] removeSmoothSneaking
 - [X] oldSneakAnimationInterpolation
