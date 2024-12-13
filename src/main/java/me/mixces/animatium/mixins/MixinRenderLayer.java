@@ -23,7 +23,7 @@ public abstract class MixinRenderLayer {
             VertexFormat.DrawMode.QUADS,
             1536,
             RenderLayer.MultiPhaseParameters.builder()
-                    .program(RenderLayer.GLINT_PROGRAM) // Future TODO/NOTE: Whats the different in GLINT_PROGRAM & ENTITY_GLINT_PROGRAM
+                    .program(RenderLayer.ARMOR_ENTITY_GLINT_PROGRAM)
                     .texture(new RenderPhase.Texture(ItemRenderer.ITEM_ENCHANTMENT_GLINT, TriState.DEFAULT, false))
                     .writeMaskState(RenderLayer.COLOR_MASK)
                     .cull(RenderLayer.DISABLE_CULLING)
@@ -36,8 +36,8 @@ public abstract class MixinRenderLayer {
 
     @Inject(method = "getArmorEntityGlint", at = @At("RETURN"), cancellable = true)
     private static void animatium$forceItemGlintOnEntity(CallbackInfoReturnable<RenderLayer> cir) {
-        if (AnimatiumConfig.forceItemGlintOnEntity) {
-            cir.setReturnValue(animatium$customEntityGlint);
-        }
+//        if (AnimatiumConfig.forceItemGlintOnEntity) {
+//            cir.setReturnValue(animatium$customEntityGlint);
+//        }
     }
 }
