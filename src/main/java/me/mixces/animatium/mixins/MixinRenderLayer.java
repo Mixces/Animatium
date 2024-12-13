@@ -30,7 +30,7 @@ public abstract class MixinRenderLayer {
                     .transparency(RenderLayer.GLINT_TRANSPARENCY)
                     .texturing(RenderLayer.ENTITY_GLINT_TEXTURING)
                     .layering(RenderLayer.VIEW_OFFSET_Z_LAYERING)
-                    .build(false)
+                    .build(RenderLayer.OutlineMode.NONE)
     );
 
     @Unique
@@ -47,9 +47,10 @@ public abstract class MixinRenderLayer {
                     .depthTest(RenderLayer.EQUAL_DEPTH_TEST)
                     .transparency(RenderLayer.GLINT_TRANSPARENCY)
                     .texturing(RenderLayer.ENTITY_GLINT_TEXTURING)
-                    .build(false)
+                    .build(RenderLayer.OutlineMode.NONE)
     );
 
+    // TODO/NOTE: works fine until setting is changed
     @Inject(method = "getArmorEntityGlint", at = @At("RETURN"), cancellable = true)
     private static void animatium$forceItemGlintOnEntityArmor(CallbackInfoReturnable<RenderLayer> cir) {
 //        if (AnimatiumConfig.forceItemGlintOnEntity) {
