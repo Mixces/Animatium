@@ -17,6 +17,8 @@
 	"animatium.midnightconfig.removeEquipAnimationOnItemUse.tooltip": "TODO",
 	"animatium.midnightconfig.fixVerticalBobbingTilt": "Bring back bobbing tilt (Fixes MC-225335)",
 	"animatium.midnightconfig.fixVerticalBobbingTilt.tooltip": "TODO",
+	"animatium.midnightconfig.minimalViewBobbing": "Minimal view bobbing",
+	"animatium.midnightconfig.minimalViewBobbing.tooltip": "TODO",
 	"animatium.midnightconfig.showCrosshairInThirdperson": "Show crosshair in third-person",
 	"animatium.midnightconfig.showCrosshairInThirdperson.tooltip": "TODO",
 	"animatium.midnightconfig.showNametagInThirdperson": "Show nametag in third-person",
@@ -49,6 +51,8 @@
 	"animatium.midnightconfig.oldCapeMovement.tooltip": "TODO",
 	"animatium.midnightconfig.fixMirrorArmSwing": "Fix arm swing mirroring",
 	"animatium.midnightconfig.fixMirrorArmSwing.tooltip": "TODO",
+	"animatium.midnightconfig.persistentBlockOutline": "Always show block outline (Persistent)",
+	"animatium.midnightconfig.persistentBlockOutline.tooltip": "TODO",
 	"animatium.midnightconfig.cameraVersion": "Change camera position to be as it was in",
 	"animatium.midnightconfig.cameraVersion.tooltip": "TODO",
 

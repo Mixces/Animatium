@@ -28,6 +28,9 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean fixVerticalBobbingTilt = true; // Fixes MC-225335
 
     @Entry
+    public static boolean minimalViewBobbing = true; // Remove bobbing from the world
+
+    @Entry
     public static boolean showCrosshairInThirdperson = true; // Show crosshair whilst in thirdperson like in <=1.8
 
     @Entry
@@ -75,6 +78,9 @@ public class AnimatiumConfig extends MidnightConfig {
 
     @Entry
     public static boolean fixMirrorArmSwing = true; // Fixes arm swing mirroring
+
+    @Entry
+    public static boolean persistentBlockOutline = true; // Always show block outline, no matter the gamemode or state
 
     @Entry
     public static CameraVersion cameraVersion = CameraVersion.v1_8; // Change the camera position to be as it was in said version range
