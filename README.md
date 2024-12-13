@@ -4,7 +4,7 @@ erm what the sigma
 This project is licensed under the LGPL-2.1 license.
 
 # Available Config Categories
-## Sneaking
+## 💨 Sneaking
 - [X] removeSmoothSneaking
 - [X] oldSneakAnimationInterpolation
 - [X] oldSneakEyeHeight
@@ -13,7 +13,7 @@ This project is licensed under the LGPL-2.1 license.
 - [X] syncPlayerModelWithEyeHeight
 - [X] sneakAnimationWhileFlying
 
-## Quality of Life
+## 🪶 Quality of Life
 - [X] minimalViewBobbing
 - [X] showNametagInThirdperson
 - [X] hideNameTagBackground
@@ -22,7 +22,7 @@ This project is licensed under the LGPL-2.1 license.
 - [X] persistentBlockOutline
 - [ ] forceItemGlintOnEntity
 
-## Movement
+## 🏃 Movement
 - [X] rotateBackwardsWalking
 - [X] uncapBlockingHeadRotation
 - [X] removeHeadRotationInterpolation
@@ -31,7 +31,7 @@ This project is licensed under the LGPL-2.1 license.
 - [X] fixBowArmMovement
 - [ ] oldCapeMovement
 
-## Old Settings
+## 🛠️ Old Settings
 - [X] tiltItemPositions
 - [X] lockBlockingArmRotation
 - [X] applyItemSwingUsage
