@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import me.mixces.animatium.config.AnimatiumConfig;
 import me.mixces.animatium.mixins.accessor.CameraAccessor;
+import me.mixces.animatium.mixins.accessor.PlayerEntityAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.Camera;
@@ -20,6 +21,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Objects;
+
 @Mixin(LivingEntityRenderer.class)
 public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderState> {
     @Inject(method = "render(Lnet/minecraft/client/render/entity/state/LivingEntityRenderState;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;translate(FFF)V", ordinal = 1))
@@ -31,7 +34,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
                 Camera camera = client.gameRenderer.getCamera();
                 CameraAccessor cameraAccessor = (CameraAccessor) camera;
                 float cameraLerpValue = MathHelper.lerp(camera.getLastTickDelta(), cameraAccessor.getLastCameraY(), cameraAccessor.getCameraY());
-                matrixStack.translate(0.0F, player.getStandingEyeHeight() - cameraLerpValue, 0.0F);
+                matrixStack.translate(0.0F, Objects.requireNonNull(PlayerEntityAccessor.getStandingDimensions()).eyeHeight() - cameraLerpValue, 0.0F);
             }
         }
     }
