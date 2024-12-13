@@ -31,9 +31,6 @@ public abstract class MixinLivingEntity extends Entity implements ViewBobbingSto
     @Shadow
     public float bodyYaw;
 
-    @Shadow
-    public float headYaw;
-
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;abs(F)F"))
     private float rotateBackwardsWalking(float value, Operation<Float> original) {
         if (AnimatiumConfig.rotateBackwardsWalking) {

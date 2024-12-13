@@ -13,8 +13,10 @@
 		"MixinLivingEntity",
 		"MixinLivingEntityRenderer",
 		"MixinMinecraftClient",
+		"MixinMultiplayerScreen",
 		"MixinPlayerEntity",
 		"MixinPlayerEntityRenderer",
+		"MixinScrollableWidget",
 		"MixinTextRendererDrawer"
 	],
 	"injectors": {
