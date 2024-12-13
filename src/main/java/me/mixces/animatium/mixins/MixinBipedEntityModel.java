@@ -40,6 +40,18 @@ public abstract class MixinBipedEntityModel<T extends BipedEntityRenderState> ex
     @Final
     public ModelPart head;
 
+    @Shadow
+    @Final
+    public ModelPart body;
+
+    @Shadow
+    @Final
+    public ModelPart rightLeg;
+
+    @Shadow
+    @Final
+    public ModelPart leftLeg;
+
     @WrapOperation(method = "positionBlockingArm", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;clamp(FFF)F"))
     private float animatium$lockBlockingArmRotation(float value, float min, float max, Operation<Float> original) {
         if (AnimatiumConfig.lockBlockingArmRotation) {
@@ -47,6 +59,24 @@ public abstract class MixinBipedEntityModel<T extends BipedEntityRenderState> ex
         } else {
             return original.call(value, min, max);
         }
+    }
+
+    @WrapOperation(method = "setAngles(Lnet/minecraft/client/render/entity/state/BipedEntityRenderState;)V", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/render/entity/state/BipedEntityRenderState;isInSneakingPose:Z"))
+    private boolean animatium$oldSneakingFeetPosition(BipedEntityRenderState instance, Operation<Boolean> original) {
+        if (AnimatiumConfig.oldSneakingFeetPosition) {
+            if (instance.isInSneakingPose) {
+                body.pitch = 0.5F;
+                rightArm.pitch += 0.4F;
+                leftArm.pitch += 0.4F;
+                rightLeg.pivotZ = 4.0F;
+                leftLeg.pivotZ = 4.0F;
+                rightLeg.pivotY = 9.0F;
+                leftLeg.pivotY = 9.0F;
+                head.pivotY = 1.0F;
+            }
+            return false;
+        }
+        return true;
     }
 
     @Inject(method = "setAngles(Lnet/minecraft/client/render/entity/state/BipedEntityRenderState;)V", at = @At(value = "CONSTANT", args = "floatValue=0.0", ordinal = 1))

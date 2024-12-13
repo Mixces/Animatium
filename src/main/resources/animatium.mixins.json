@@ -1,31 +1,32 @@
 {
-	"required": true,
-	"package": "me.mixces.animatium.mixins",
-	"compatibilityLevel": "JAVA_21",
-	"client": [
-		"MixinBipedEntityModel",
-		"MixinBipedEntityRenderer",
-		"MixinCamera",
-		"MixinDebugHud",
-		"MixinEntityRenderer",
-		"MixinGameRenderer",
-		"MixinHeldItemRenderer",
-		"MixinInGameHud",
-		"MixinLivingEntity",
-		"MixinLivingEntityRenderer",
-		"MixinMinecraftClient",
-		"MixinMultiplayerScreen",
-		"MixinPlayerEntity",
-		"MixinPlayerEntityRenderer",
-		"MixinPressableWidget",
-		"MixinScrollableWidget",
-		"MixinSliderWidget",
-		"MixinTextRendererDrawer",
-		"MixinWorldRenderer",
-		"accessor.ClientWorldPropertiesAccessor",
-		"accessor.SkyRenderingAccessor"
-	],
-	"injectors": {
-		"defaultRequire": 1
+  "required": true,
+  "package": "me.mixces.animatium.mixins",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MixinBipedEntityModel",
+    "MixinBipedEntityRenderer",
+    "MixinCamera",
+    "MixinDebugHud",
+    "MixinEntityRenderer",
+    "MixinGameRenderer",
+    "MixinHeldItemRenderer",
+    "MixinInGameHud",
+    "MixinLivingEntity",
+    "MixinLivingEntityRenderer",
+    "MixinMinecraftClient",
+    "MixinMultiplayerScreen",
+    "MixinPlayerEntity",
+    "MixinPlayerEntityRenderer",
+    "MixinPressableWidget",
+    "MixinScrollableWidget",
+    "MixinSliderWidget",
+    "MixinTextRendererDrawer",
+    "MixinWorldRenderer",
+    "accessor.ClientWorldPropertiesAccessor",
+    "accessor.CameraAccessor",
+    "accessor.SkyRenderingAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
 	}
 }

@@ -42,19 +42,26 @@ public class AnimatiumConfig extends MidnightConfig {
     @Entry
     public static boolean applyTextShadowToNametag = true; // Apply text shadow to nametag
 
-    @Entry
+    @Entry(category = "Sneaking")
     public static boolean removeSmoothSneaking = true; // Removes the smooth sneaking animation, making it like 1.8-1.12.2
 
-    @Entry
+    @Entry(category = "Sneaking")
     public static boolean oldSneakAnimationInterpolation = true; // Brings back the <=1.7 sneak animation interpolation
 
-    @Entry
+    @Entry(category = "Sneaking")
     public static boolean oldSneakEyeHeight = true; // Changes the sneak eye height to be as it was <=1.13.2
 
-    @Entry
+    @Entry(category = "Sneaking")
     public static boolean fixSneakingFeetPosition = true; // Fixes the sneaking model offset to be like <=1.11
 
-    @Entry
+    @Entry(category = "Sneaking")
+    //TODO/NOTE: Might need a better name
+    public static boolean oldSneakingFeetPosition = true; // Fixes the sneaking model offset to be like <1.14?
+
+    @Entry(category = "Sneaking")
+    public static boolean syncPlayerModelWithEyeHeight = true; // Synchronizes the player model to the eye height <=1.7
+
+    @Entry(category = "Sneaking")
     public static boolean sneakAnimationWhileFlying = true; // Shows the sneaking animation in third-person whilst flying down like in <=1.13
 
     @Entry

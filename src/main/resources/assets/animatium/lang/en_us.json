@@ -1,6 +1,8 @@
 {
 	"animatium.midnightconfig.title": "Animatium Config",
 
+	"animatium.midnightconfig.category.Sneaking": "Sneaking",
+
 	"animatium.midnightconfig.rotateBackwardsWalking": "Rotate body whilst walking backwards",
 	"animatium.midnightconfig.rotateBackwardsWalking.tooltip": "TODO",
 	"animatium.midnightconfig.uncapBlockingHeadRotation": "Reverts head rotation whilst blocking",
@@ -35,6 +37,10 @@
 	"animatium.midnightconfig.oldSneakEyeHeight.tooltip": "TODO",
 	"animatium.midnightconfig.fixSneakingFeetPosition": "Fix sneaking model offset",
 	"animatium.midnightconfig.fixSneakingFeetPosition.tooltip": "TODO",
+	"animatium.midnightconfig.oldSneakingFeetPosition": "Bring back the old sneaking feet position",
+	"animatium.midnightconfig.oldSneakingFeetPosition.tooltip": "TODO",
+	"animatium.midnightconfig.syncPlayerModelWithEyeHeight": "Synchronize the player model to the eye height",
+	"animatium.midnightconfig.syncPlayerModelWithEyeHeight.tooltip": "TODO",
 	"animatium.midnightconfig.sneakAnimationWhileFlying": "Show the sneaking animation whilst flying in third-person",
 	"animatium.midnightconfig.sneakAnimationWhileFlying.tooltip": "TODO",
 	"animatium.midnightconfig.removeHeartFlash": "Remove hearts flashing when taking damage",
