@@ -5,7 +5,7 @@ import eu.midnightdust.lib.config.MidnightConfig;
 public class AnimatiumConfig extends MidnightConfig {
     // Sneaking
     @Entry(category = "sneaking")
-    public static boolean removeSmoothSneaking = true; // Removes the smooth sneaking animation, making it like 1.8-1.12.2
+    public static boolean removeSmoothSneaking = false; // Removes the smooth sneaking animation, making it like 1.8-1.12.2
 
     @Entry(category = "sneaking")
     public static boolean oldSneakAnimationInterpolation = true; // Brings back the <=1.7 sneak animation interpolation
@@ -18,10 +18,10 @@ public class AnimatiumConfig extends MidnightConfig {
 
     @Entry(category = "sneaking")
     //TODO/NOTE: Might need a better name
-    public static boolean oldSneakingFeetPosition = true; // Fixes the sneaking model offset to be like <1.14?
+    public static boolean oldSneakingFeetPosition = false; // Fixes the sneaking model offset to be like <1.14?
 
     @Entry(category = "sneaking")
-    public static boolean syncPlayerModelWithEyeHeight = true; // Synchronizes the player model to the eye height <=1.7
+    public static boolean syncPlayerModelWithEyeHeight = false; // Synchronizes the player model to the eye height <=1.7
 
     @Entry(category = "sneaking")
     public static boolean sneakAnimationWhileFlying = true; // Shows the sneaking animation in third-person whilst flying down like in <=1.13

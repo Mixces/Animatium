@@ -14,7 +14,6 @@ import net.minecraft.client.render.entity.state.LivingEntityRenderState;
 import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,7 +31,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
                 Camera camera = client.gameRenderer.getCamera();
                 CameraAccessor cameraAccessor = (CameraAccessor) camera;
                 float cameraLerpValue = MathHelper.lerp(camera.getLastTickDelta(), cameraAccessor.getLastCameraY(), cameraAccessor.getCameraY());
-                matrixStack.translate(0.0F, PlayerEntity.STANDING_DIMENSIONS.eyeHeight() - cameraLerpValue, 0.0F);
+                matrixStack.translate(0.0F, player.getStandingEyeHeight() - cameraLerpValue, 0.0F);
             }
         }
     }

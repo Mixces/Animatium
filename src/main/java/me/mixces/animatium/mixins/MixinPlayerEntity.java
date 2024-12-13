@@ -20,8 +20,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 
-import static net.minecraft.entity.player.PlayerEntity.STANDING_DIMENSIONS;
-
 @Mixin(PlayerEntity.class)
 public abstract class MixinPlayerEntity extends LivingEntity {
     @Shadow
@@ -61,12 +59,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
     @Inject(method = "getBaseDimensions", at = @At("HEAD"), cancellable = true)
     private void animatium$oldSneakEyeHeight(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
         if (AnimatiumConfig.oldSneakEyeHeight && pose.equals(EntityPose.CROUCHING)) {
-            // Changes the sneak height to the one from <=1.13.2 on Hypixel & Loyisa
-            boolean oldMechanics = Animatium.isLegacySupportedVersion();
-            // TODO: Fix camera on servers that aren't hypixel
-            EntityDimensions dimensions = POSE_DIMENSIONS.getOrDefault(oldMechanics ? null : pose, STANDING_DIMENSIONS);
-            float eyeHeight = canChangeIntoPose(EntityPose.STANDING) ? 1.54F : dimensions.eyeHeight();
-            cir.setReturnValue(dimensions.withEyeHeight(eyeHeight));
+            cir.setReturnValue(Animatium.getLegacySneakingDimensions((PlayerEntity) (Object) this, pose));
         }
     }
 }
