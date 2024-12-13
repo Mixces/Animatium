@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -43,7 +44,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
         if (AnimatiumConfig.fixVerticalBobbingTilt) {
             ViewBobbingStorage bobbingAccessor = (ViewBobbingStorage) this;
             float g = this.isOnGround() || this.getHealth() <= 0.0F ? 0.0F : (float) (Math.atan(-this.getVelocity().y * (double) 0.2F) * 15.0F);
-            bobbingAccessor.animatium$setBobbingTilt(bobbingAccessor.animatium$getBobbingTilt() + (g - bobbingAccessor.animatium$getBobbingTilt()) * 0.8F);
+            bobbingAccessor.animatium$setBobbingTilt(MathHelper.lerp(0.8F, bobbingAccessor.animatium$getBobbingTilt(), g));
         }
     }
 
