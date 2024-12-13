@@ -71,7 +71,7 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean oldCapeMovement = false; // Changes the cape model movement to be how it used to be
 
     @Entry
-    public static boolean fixMirrorArmSwing = false; // Fixes arm swing mirroring
+    public static boolean fixMirrorArmSwing = true; // Fixes arm swing mirroring
 
     @Entry
     public static CameraVersion cameraVersion = CameraVersion.v1_8; // Change the camera position to be as it was in said version range

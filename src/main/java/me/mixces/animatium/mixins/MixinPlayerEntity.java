@@ -1,9 +1,8 @@
 package me.mixces.animatium.mixins;
 
+import me.mixces.animatium.Animatium;
 import me.mixces.animatium.config.AnimatiumConfig;
 import me.mixces.animatium.util.ViewBobbingStorage;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -51,18 +50,8 @@ public abstract class MixinPlayerEntity extends LivingEntity {
     @Inject(method = "getBaseDimensions", at = @At("HEAD"), cancellable = true)
     private void animatium$oldSneakEyeHeight(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
         if (AnimatiumConfig.oldSneakEyeHeight && pose.equals(EntityPose.CROUCHING)) {
-            MinecraftClient client = MinecraftClient.getInstance();
-            boolean oldMechanics = false;
-
-            // Changes the sneak height to the one from <=1.13.2 on Hypixel
-            ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
-            if (networkHandler != null) {
-                String brand = networkHandler.getBrand();
-                if (brand != null && (brand.toLowerCase().contains("hypixel") || brand.toLowerCase().contains("hygot"))) {
-                    oldMechanics = true;
-                }
-            }
-
+            // Changes the sneak height to the one from <=1.13.2 on Hypixel & Loyisa
+            boolean oldMechanics = Animatium.shouldApplyOldSneaking();
             // TODO: Fix camera on servers that aren't hypixel
             cir.setReturnValue(POSE_DIMENSIONS.getOrDefault(oldMechanics ? null : pose, STANDING_DIMENSIONS).withEyeHeight(1.54F));
         }
