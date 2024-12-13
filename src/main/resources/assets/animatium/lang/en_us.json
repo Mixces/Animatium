@@ -39,6 +39,10 @@
 	"animatium.midnightconfig.oldDeathLimbs.tooltip": "TODO",
 	"animatium.midnightconfig.fixTextStrikethroughStyle": "Fix text strikethrough style",
 	"animatium.midnightconfig.fixTextStrikethroughStyle.tooltip": "TODO",
+	"animatium.midnightconfig.centerScrollableListWidgets": "Center scrollable list widgets",
+	"animatium.midnightconfig.centerScrollableListWidgets.tooltip": "TODO",
+	"animatium.midnightconfig.fixBowArmMovement": "Fix third-person bow arm movement",
+	"animatium.midnightconfig.fixBowArmMovement.tooltip": "TODO",
 	"animatium.midnightconfig.cameraVersion": "Change camera position to be as it was in",
 	"animatium.midnightconfig.cameraVersion.tooltip": "TODO",
 

@@ -26,7 +26,7 @@ public abstract class MixinCamera {
     protected abstract void moveBy(float f, float g, float h);
 
     @Inject(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/Camera;setRotation(FF)V", shift = At.Shift.BEFORE))
-    private void removeSmoothSneaking(CallbackInfo ci) {
+    private void animatium$removeSmoothSneaking(CallbackInfo ci) {
         if (AnimatiumConfig.removeSmoothSneaking) {
             this.lastCameraY = cameraY;
             this.cameraY = this.focusedEntity.getStandingEyeHeight();
@@ -34,7 +34,7 @@ public abstract class MixinCamera {
     }
 
     @Inject(method = "update", at = @At(value = "TAIL"))
-    private void oldCameraVersion(BlockView area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
+    private void animatium$oldCameraVersion(BlockView area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
         if (AnimatiumConfig.cameraVersion != AnimatiumConfig.CameraVersion.LATEST && !thirdPerson && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
             // TODO: Fix bed/sleeping position
             final int ordinal = AnimatiumConfig.cameraVersion.ordinal();

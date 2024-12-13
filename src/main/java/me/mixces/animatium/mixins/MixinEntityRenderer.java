@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 @Mixin(EntityRenderer.class)
 public abstract class MixinEntityRenderer {
     @WrapOperation(method = "renderLabelIfPresent", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/GameOptions;getTextBackgroundOpacity(F)F"))
-    private float hideNameTagBackground(GameOptions instance, float fallback, Operation<Float> original) {
+    private float animatium$hideNameTagBackground(GameOptions instance, float fallback, Operation<Float> original) {
         if (AnimatiumConfig.hideNameTagBackground) {
             return 0F;
         } else {
@@ -21,7 +21,7 @@ public abstract class MixinEntityRenderer {
     }
 
     @ModifyArg(method = "renderLabelIfPresent", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;draw(Lnet/minecraft/text/Text;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;II)I"), index = 4)
-    private boolean applyTextShadowToNametag(boolean shadow) {
+    private boolean animatium$applyTextShadowToNametag(boolean shadow) {
         if (AnimatiumConfig.applyTextShadowToNametag) {
             return true;
         } else {

@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(BipedEntityRenderer.class)
 public abstract class MixinBipedEntityRenderer {
     @WrapOperation(method = "updateBipedRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;isInSneakingPose()Z"))
-    private static boolean sneakAnimationWhileFlying(LivingEntity instance, Operation<Boolean> original) {
+    private static boolean animatium$sneakAnimationWhileFlying(LivingEntity instance, Operation<Boolean> original) {
         if (AnimatiumConfig.sneakAnimationWhileFlying) {
             return instance.isSneaking() || instance.isInSneakingPose();
         } else {

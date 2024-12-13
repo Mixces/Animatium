@@ -20,6 +20,10 @@ import java.util.function.Function;
 
 @Mixin(BipedEntityModel.class)
 public abstract class MixinBipedEntityModel<T extends BipedEntityRenderState> extends EntityModel<T> {
+    protected MixinBipedEntityModel(ModelPart modelPart, Function<Identifier, RenderLayer> function) {
+        super(modelPart, function);
+    }
+
     @Shadow
     @Final
     public ModelPart rightArm;
@@ -32,12 +36,8 @@ public abstract class MixinBipedEntityModel<T extends BipedEntityRenderState> ex
     @Final
     public ModelPart head;
 
-    protected MixinBipedEntityModel(ModelPart modelPart, Function<Identifier, RenderLayer> function) {
-        super(modelPart, function);
-    }
-
     @WrapOperation(method = "positionBlockingArm", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;clamp(FFF)F"))
-    private float lockBlockingArmRotation(float value, float min, float max, Operation<Float> original) {
+    private float animatium$lockBlockingArmRotation(float value, float min, float max, Operation<Float> original) {
         if (AnimatiumConfig.lockBlockingArmRotation) {
             return 0.0F;
         } else {
@@ -46,31 +46,29 @@ public abstract class MixinBipedEntityModel<T extends BipedEntityRenderState> ex
     }
 
     @Inject(method = "setAngles(Lnet/minecraft/client/render/entity/state/BipedEntityRenderState;)V", at = @At(value = "CONSTANT", args = "floatValue=0.0", ordinal = 1))
-    private void fixIncorrectArmPlacement(T bipedEntityRenderState, CallbackInfo ci) {
-        final BipedEntityModel.ArmPose BOW_AND_ARROW = BipedEntityModel.ArmPose.BOW_AND_ARROW;
-        BipedEntityModel.ArmPose armPose = bipedEntityRenderState.leftArmPose;
-        BipedEntityModel.ArmPose armPose2 = bipedEntityRenderState.rightArmPose;
+    private void animatium$fixBowArmMovement(T bipedEntityRenderState, CallbackInfo ci) {
+        if (AnimatiumConfig.fixBowArmMovement) {
+            final BipedEntityModel.ArmPose BOW_AND_ARROW = BipedEntityModel.ArmPose.BOW_AND_ARROW;
+            BipedEntityModel.ArmPose armPose = bipedEntityRenderState.leftArmPose;
+            BipedEntityModel.ArmPose armPose2 = bipedEntityRenderState.rightArmPose;
+            final boolean isRightArmPose = armPose2 == BOW_AND_ARROW;
+            final boolean isLeftArmPose = armPose == BOW_AND_ARROW;
+            if (isRightArmPose || isLeftArmPose) {
+                if (isRightArmPose) {
+                    rightArm.roll = 0.0F;
+                    rightArm.yaw = -0.1F + head.yaw;
+                    leftArm.yaw = 0.1F + head.yaw + 0.4F;
+                }
 
-        final boolean isRightArmPose = armPose2 == BOW_AND_ARROW;
-        final boolean isLeftArmPose = armPose == BOW_AND_ARROW;
+                if (isLeftArmPose) {
+                    leftArm.roll = 0.0F;
+                    rightArm.yaw = -0.1F + head.yaw - 0.4F;
+                    leftArm.yaw = 0.1F + head.yaw;
+                }
 
-        if (!isRightArmPose && !isLeftArmPose) {
-            return;
+                rightArm.pitch = (float) (-Math.PI / 2) + head.pitch;
+                leftArm.pitch = (float) (-Math.PI / 2) + head.pitch;
+            }
         }
-
-        if (isRightArmPose) {
-            rightArm.roll = 0.0F;
-            rightArm.yaw = -0.1F + head.yaw;
-            leftArm.yaw = 0.1F + head.yaw + 0.4F;
-        }
-
-        if (isLeftArmPose) {
-            leftArm.roll = 0.0F;
-            rightArm.yaw = -0.1F + head.yaw - 0.4F;
-            leftArm.yaw = 0.1F + head.yaw;
-        }
-
-        rightArm.pitch = (float) (-Math.PI / 2) + head.pitch;
-        leftArm.pitch = (float) (-Math.PI / 2) + head.pitch;
     }
 }

@@ -33,14 +33,14 @@ public abstract class MixinPlayerEntity extends LivingEntity {
     }
 
     @Inject(method = "getMaxRelativeHeadRotation", at = @At(value = "RETURN"), cancellable = true)
-    private void uncapBlockingHeadRotation(CallbackInfoReturnable<Float> cir) {
+    private void animatium$uncapBlockingHeadRotation(CallbackInfoReturnable<Float> cir) {
         if (AnimatiumConfig.uncapBlockingHeadRotation) {
             cir.setReturnValue(50F);
         }
     }
 
     @Inject(method = "tickMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;setMovementSpeed(F)V", shift = At.Shift.AFTER))
-    private void updateBobbingTiltValues(CallbackInfo ci) {
+    private void animatium$updateBobbingTiltValues(CallbackInfo ci) {
         if (AnimatiumConfig.fixVerticalBobbingTilt) {
             ViewBobbingStorage bobbingAccessor = (ViewBobbingStorage) this;
             float g = this.isOnGround() || this.getHealth() <= 0.0F ? 0.0F : (float) (Math.atan(-this.getVelocity().y * (double) 0.2F) * 15.0F);
@@ -49,7 +49,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
     }
 
     @Inject(method = "getBaseDimensions", at = @At("HEAD"), cancellable = true)
-    private void oldSneakEyeHeight(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
+    private void animatium$oldSneakEyeHeight(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
         if (AnimatiumConfig.oldSneakEyeHeight && pose.equals(EntityPose.CROUCHING)) {
             MinecraftClient client = MinecraftClient.getInstance();
             boolean oldMechanics = false;

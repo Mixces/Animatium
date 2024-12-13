@@ -22,7 +22,7 @@ public abstract class MixinGameRenderer {
     private MinecraftClient client;
 
     @Inject(method = "bobView", at = @At("TAIL"))
-    private void fixVerticalBobbingTilt(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
+    private void animatium$fixVerticalBobbingTilt(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
         if (AnimatiumConfig.fixVerticalBobbingTilt && this.client.getCameraEntity() instanceof PlayerEntity playerEntity) {
             ViewBobbingStorage bobbingAccessor = (ViewBobbingStorage) playerEntity;
             float j = MathHelper.lerp(tickDelta, bobbingAccessor.animatium$getPreviousBobbingTilt(), bobbingAccessor.animatium$getBobbingTilt());

@@ -34,30 +34,28 @@ public abstract class MixinMinecraftClient {
     public HitResult crosshairTarget;
 
     @Inject(method = "tick", at = @At("TAIL"))
-    private void applySwingWhilstMining(CallbackInfo ci) {
-        if (!AnimatiumConfig.applyItemSwingUsage) {
-            return;
-        }
+    private void animatium$applySwingWhilstMining(CallbackInfo ci) {
+        if (AnimatiumConfig.applyItemSwingUsage) {
+            ClientPlayerEntity player = this.player;
+            if (player == null || player.getStackInHand(player.getActiveHand()) == null || !player.isUsingItem() || !this.options.attackKey.isPressed()) {
+                return;
+            }
 
-        ClientPlayerEntity player = this.player;
-        if (player == null || player.getStackInHand(player.getActiveHand()) == null || !player.isUsingItem() || !this.options.attackKey.isPressed()) {
-            return;
-        }
-
-        // TODO: Possible setting to allow swinging without having to look at a block?
-        if (this.crosshairTarget != null && this.crosshairTarget.getType() == HitResult.Type.BLOCK) {
-            // NOTE: Clientside fake swinging, doesn't send a packet
-            if (!player.handSwinging || player.handSwingTicks >= getHandSwingDuration(player) / 2 || player.handSwingTicks < 0) {
-                player.handSwingTicks = -1;
-                player.handSwinging = true;
-                player.preferredHand = player.getActiveHand();
+            // TODO: Possible setting to allow swinging without having to look at a block?
+            if (this.crosshairTarget != null && this.crosshairTarget.getType() == HitResult.Type.BLOCK) {
+                // NOTE: Clientside fake swinging, doesn't send a packet
+                if (!player.handSwinging || player.handSwingTicks >= animatium$getHandSwingDuration(player) / 2 || player.handSwingTicks < 0) {
+                    player.handSwingTicks = -1;
+                    player.handSwinging = true;
+                    player.preferredHand = player.getActiveHand();
+                }
             }
         }
     }
 
     // Fixes crash & doesn't require accesswidener
     @Unique
-    public final int getHandSwingDuration(LivingEntity entity) {
+    public final int animatium$getHandSwingDuration(LivingEntity entity) {
         if (StatusEffectUtil.hasHaste(entity)) {
             return 6 - (1 + StatusEffectUtil.getHasteAmplifier(entity));
         } else {

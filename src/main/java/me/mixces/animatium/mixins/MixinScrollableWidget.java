@@ -1,5 +1,6 @@
 package me.mixces.animatium.mixins;
 
+import me.mixces.animatium.config.AnimatiumConfig;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.ScrollableWidget;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,8 +22,8 @@ public abstract class MixinScrollableWidget {
     public abstract int getMaxScrollY();
 
     @Inject(method = "setScrollY", at = @At("HEAD"), cancellable = true)
-    private void allowNegativeScrolling(double scrollY, CallbackInfo ci) {
-        if ((ScrollableWidget) (Object) this instanceof EntryListWidget<?> entryListWidget) {
+    private void animatium$allowNegativeScrolling(double scrollY, CallbackInfo ci) {
+        if (AnimatiumConfig.centerScrollableListWidgets && (ScrollableWidget) (Object) this instanceof EntryListWidget<?> entryListWidget) {
             ci.cancel();
             int maxScrollY = getMaxScrollY();
             if (maxScrollY < 0)
@@ -34,8 +35,8 @@ public abstract class MixinScrollableWidget {
     }
 
     @Inject(method = "getMaxScrollY", at = @At("HEAD"), cancellable = true)
-    public void modifyMaxScroll(CallbackInfoReturnable<Integer> cir) {
-        if ((ScrollableWidget) (Object) this instanceof EntryListWidget<?> entryListWidget) {
+    public void animatium$modifyMaxScroll(CallbackInfoReturnable<Integer> cir) {
+        if (AnimatiumConfig.centerScrollableListWidgets && (ScrollableWidget) (Object) this instanceof EntryListWidget<?> entryListWidget) {
             cir.setReturnValue(this.getContentsHeightWithPadding() - entryListWidget.getHeight());
         }
     }

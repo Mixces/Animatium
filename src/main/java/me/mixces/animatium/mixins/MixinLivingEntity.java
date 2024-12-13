@@ -32,7 +32,7 @@ public abstract class MixinLivingEntity extends Entity implements ViewBobbingSto
     public float bodyYaw;
 
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;abs(F)F"))
-    private float rotateBackwardsWalking(float value, Operation<Float> original) {
+    private float animatium$rotateBackwardsWalking(float value, Operation<Float> original) {
         if (AnimatiumConfig.rotateBackwardsWalking) {
             return 0F;
         } else {
@@ -41,7 +41,7 @@ public abstract class MixinLivingEntity extends Entity implements ViewBobbingSto
     }
 
     @WrapOperation(method = "turnHead", at = @At(value = "INVOKE", target = "Ljava/lang/Math;abs(F)F"))
-    private float removeHeadRotationInterpolation(float g, Operation<Float> original) {
+    private float animatium$removeHeadRotationInterpolation(float g, Operation<Float> original) {
         if (AnimatiumConfig.rotateBackwardsWalking) {
             g = MathHelper.clamp(g, -75.0F, 75.0F);
             this.bodyYaw = this.getYaw() - g;
@@ -55,7 +55,7 @@ public abstract class MixinLivingEntity extends Entity implements ViewBobbingSto
     }
 
     @WrapOperation(method = "lerpHeadYaw", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;lerpAngleDegrees(DDD)D"))
-    public double removeHeadRotationInterpolation(double delta, double start, double end, Operation<Double> original) {
+    public double animatium$removeHeadRotationInterpolation(double delta, double start, double end, Operation<Double> original) {
         if (AnimatiumConfig.removeHeadRotationInterpolation) {
             return end;
         } else {
@@ -64,7 +64,7 @@ public abstract class MixinLivingEntity extends Entity implements ViewBobbingSto
     }
 
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;tickStatusEffects()V", shift = At.Shift.BEFORE))
-    private void updatePreviousBobbingTiltValue(CallbackInfo ci) {
+    private void animatium$updatePreviousBobbingTiltValue(CallbackInfo ci) {
         if (AnimatiumConfig.fixVerticalBobbingTilt) {
             this.animatium$setPreviousBobbingTilt(this.animatium$getBobbingTilt());
         }

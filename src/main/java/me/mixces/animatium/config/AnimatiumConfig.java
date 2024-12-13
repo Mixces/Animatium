@@ -61,6 +61,12 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean fixTextStrikethroughStyle = true; // Changes the text strikethrough position to make it look like it did in <=1.12.2
 
     @Entry
+    public static boolean centerScrollableListWidgets = true; // Center scrollable list widgets like <=1.7
+
+    @Entry
+    public static boolean fixBowArmMovement = true; // Fixes arm movement in third-person when using the bow
+
+    @Entry
     public static CameraVersion cameraVersion = CameraVersion.v1_8; // Change the camera position to be as it was in said version range
 
     public enum CameraVersion {

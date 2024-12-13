@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(PlayerEntityRenderer.class)
 public abstract class MixinPlayerEntityRenderer {
     @WrapOperation(method = "getPositionOffset(Lnet/minecraft/client/render/entity/state/PlayerEntityRenderState;)Lnet/minecraft/util/math/Vec3d;", at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/entity/state/PlayerEntityRenderState;isInSneakingPose:Z"))
-    private boolean fixSneakingFeetPosition(PlayerEntityRenderState instance, Operation<Boolean> original) {
+    private boolean animatium$fixSneakingFeetPosition(PlayerEntityRenderState instance, Operation<Boolean> original) {
         if (AnimatiumConfig.fixSneakingFeetPosition) {
             return false;
         } else {

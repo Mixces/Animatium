@@ -12,14 +12,8 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(LivingEntityRenderer.class)
 public abstract class MixinLivingEntityRenderer {
-    @ModifyExpressionValue(
-            method = "updateRenderState(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/client/render/entity/state/LivingEntityRenderState;F)V",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;isAlive()Z"
-            )
-    )
-    private boolean oldDeathLimbs(boolean original) {
+    @ModifyExpressionValue(method = "updateRenderState(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/client/render/entity/state/LivingEntityRenderState;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;isAlive()Z"))
+    private boolean animatium$oldDeathLimbs(boolean original) {
         if (AnimatiumConfig.oldDeathLimbs) {
             return true;
         } else {
@@ -28,7 +22,7 @@ public abstract class MixinLivingEntityRenderer {
     }
 
     @WrapOperation(method = "hasLabel(Lnet/minecraft/entity/LivingEntity;D)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;getCameraEntity()Lnet/minecraft/entity/Entity;"))
-    private Entity showNametagInThirdperson(MinecraftClient instance, Operation<Entity> original) {
+    private Entity animatium$showNametagInThirdperson(MinecraftClient instance, Operation<Entity> original) {
         if (AnimatiumConfig.showNametagInThirdperson) {
             return null;
         } else {
