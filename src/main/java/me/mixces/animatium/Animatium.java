@@ -12,7 +12,7 @@ public class Animatium implements ClientModInitializer {
         AnimatiumConfig.init("animatium", AnimatiumConfig.class);
     }
 
-    public static boolean shouldApplyOldSneaking() {
+    public static boolean isLegacySupportedVersion() {
         if (AnimatiumConfig.oldSneakEyeHeight) {
             MinecraftClient client = MinecraftClient.getInstance();
             ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();

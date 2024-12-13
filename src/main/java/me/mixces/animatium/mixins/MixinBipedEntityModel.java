@@ -52,57 +52,21 @@ public abstract class MixinBipedEntityModel<T extends BipedEntityRenderState> ex
     @Final
     public ModelPart leftLeg;
 
-    @WrapOperation(method = "positionBlockingArm", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;clamp(FFF)F"))
-    private float animatium$lockBlockingArmRotation(float value, float min, float max, Operation<Float> original) {
-        if (AnimatiumConfig.lockBlockingArmRotation) {
-            return 0.0F;
-        } else {
-            return original.call(value, min, max);
-        }
-    }
-
     @WrapOperation(method = "setAngles(Lnet/minecraft/client/render/entity/state/BipedEntityRenderState;)V", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/render/entity/state/BipedEntityRenderState;isInSneakingPose:Z"))
     private boolean animatium$oldSneakingFeetPosition(BipedEntityRenderState instance, Operation<Boolean> original) {
-        if (AnimatiumConfig.oldSneakingFeetPosition) {
-            if (instance.isInSneakingPose) {
-                body.pitch = 0.5F;
-                rightArm.pitch += 0.4F;
-                leftArm.pitch += 0.4F;
-                rightLeg.pivotZ = 4.0F;
-                leftLeg.pivotZ = 4.0F;
-                rightLeg.pivotY = 9.0F;
-                leftLeg.pivotY = 9.0F;
-                head.pivotY = 1.0F;
-            }
+        if (AnimatiumConfig.oldSneakingFeetPosition && instance.isInSneakingPose) {
+            // Values sourced from older versions
+            body.pitch = 0.5F;
+            rightArm.pitch += 0.4F;
+            leftArm.pitch += 0.4F;
+            rightLeg.pivotZ = 4.0F;
+            leftLeg.pivotZ = 4.0F;
+            rightLeg.pivotY = 9.0F;
+            leftLeg.pivotY = 9.0F;
+            head.pivotY = 1.0F;
             return false;
-        }
-        return true;
-    }
-
-    @Inject(method = "setAngles(Lnet/minecraft/client/render/entity/state/BipedEntityRenderState;)V", at = @At(value = "CONSTANT", args = "floatValue=0.0", ordinal = 1))
-    private void animatium$fixBowArmMovement(T bipedEntityRenderState, CallbackInfo ci) {
-        if (AnimatiumConfig.fixBowArmMovement) {
-            final BipedEntityModel.ArmPose BOW_AND_ARROW = BipedEntityModel.ArmPose.BOW_AND_ARROW;
-            BipedEntityModel.ArmPose armPose = bipedEntityRenderState.leftArmPose;
-            BipedEntityModel.ArmPose armPose2 = bipedEntityRenderState.rightArmPose;
-            final boolean isRightArmPose = armPose2 == BOW_AND_ARROW;
-            final boolean isLeftArmPose = armPose == BOW_AND_ARROW;
-            if (isRightArmPose || isLeftArmPose) {
-                if (isRightArmPose) {
-                    rightArm.roll = 0.0F;
-                    rightArm.yaw = -0.1F + head.yaw;
-                    leftArm.yaw = 0.1F + head.yaw + 0.4F;
-                }
-
-                if (isLeftArmPose) {
-                    leftArm.roll = 0.0F;
-                    rightArm.yaw = -0.1F + head.yaw - 0.4F;
-                    leftArm.yaw = 0.1F + head.yaw;
-                }
-
-                rightArm.pitch = (float) (-Math.PI / 2) + head.pitch;
-                leftArm.pitch = (float) (-Math.PI / 2) + head.pitch;
-            }
+        } else {
+            return original.call(instance);
         }
     }
 
@@ -121,6 +85,41 @@ public abstract class MixinBipedEntityModel<T extends BipedEntityRenderState> ex
             return (arm == Arm.LEFT ? -1 : 1) * original;
         } else {
             return original;
+        }
+    }
+
+    @WrapOperation(method = "positionBlockingArm", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;clamp(FFF)F"))
+    private float animatium$lockBlockingArmRotation(float value, float min, float max, Operation<Float> original) {
+        if (AnimatiumConfig.lockBlockingArmRotation) {
+            return 0.0F;
+        } else {
+            return original.call(value, min, max);
+        }
+    }
+
+    @Inject(method = "setAngles(Lnet/minecraft/client/render/entity/state/BipedEntityRenderState;)V", at = @At(value = "CONSTANT", args = "floatValue=0.0", ordinal = 1))
+    private void animatium$fixBowArmMovement(T bipedEntityRenderState, CallbackInfo ci) {
+        if (AnimatiumConfig.fixBowArmMovement) {
+            BipedEntityModel.ArmPose leftArmPose = bipedEntityRenderState.leftArmPose;
+            BipedEntityModel.ArmPose rightArmPose = bipedEntityRenderState.rightArmPose;
+            final boolean isRightArmPose = rightArmPose == BipedEntityModel.ArmPose.BOW_AND_ARROW;
+            final boolean isLeftArmPose = leftArmPose == BipedEntityModel.ArmPose.BOW_AND_ARROW;
+            if (isRightArmPose || isLeftArmPose) {
+                if (isRightArmPose) {
+                    rightArm.roll = 0.0F;
+                    rightArm.yaw = -0.1F + head.yaw;
+                    leftArm.yaw = 0.1F + head.yaw + 0.4F;
+                }
+
+                if (isLeftArmPose) {
+                    leftArm.roll = 0.0F;
+                    rightArm.yaw = -0.1F + head.yaw - 0.4F;
+                    leftArm.yaw = 0.1F + head.yaw;
+                }
+
+                rightArm.pitch = (float) (-Math.PI / 2) + head.pitch;
+                leftArm.pitch = (float) (-Math.PI / 2) + head.pitch;
+            }
         }
     }
 }

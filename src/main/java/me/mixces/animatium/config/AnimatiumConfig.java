@@ -3,6 +3,49 @@ package me.mixces.animatium.config;
 import eu.midnightdust.lib.config.MidnightConfig;
 
 public class AnimatiumConfig extends MidnightConfig {
+    // Sneaking
+    @Entry(category = "sneaking")
+    public static boolean removeSmoothSneaking = true; // Removes the smooth sneaking animation, making it like 1.8-1.12.2
+
+    @Entry(category = "sneaking")
+    public static boolean oldSneakAnimationInterpolation = true; // Brings back the <=1.7 sneak animation interpolation
+
+    @Entry(category = "sneaking")
+    public static boolean oldSneakEyeHeight = true; // Changes the sneak eye height to be as it was <=1.13.2
+
+    @Entry(category = "sneaking")
+    public static boolean fixSneakingFeetPosition = true; // Fixes the sneaking model offset to be like <=1.11
+
+    @Entry(category = "sneaking")
+    //TODO/NOTE: Might need a better name
+    public static boolean oldSneakingFeetPosition = true; // Fixes the sneaking model offset to be like <1.14?
+
+    @Entry(category = "sneaking")
+    public static boolean syncPlayerModelWithEyeHeight = true; // Synchronizes the player model to the eye height <=1.7
+
+    @Entry(category = "sneaking")
+    public static boolean sneakAnimationWhileFlying = true; // Shows the sneaking animation in third-person whilst flying down like in <=1.13
+
+    // QOL
+    @Entry(category = "qol")
+    public static boolean minimalViewBobbing = true; // Remove bobbing from the world
+
+    @Entry(category = "qol")
+    public static boolean showNametagInThirdperson = true; // Show the player nametag in thirdperson
+
+    @Entry(category = "qol")
+    public static boolean hideNameTagBackground = true; // Hide the nametag background
+
+    @Entry(category = "qol")
+    public static boolean applyTextShadowToNametag = true; // Apply text shadow to nametag
+
+    @Entry(category = "qol")
+    public static boolean fixMirrorArmSwing = true; // Fixes arm swing mirroring
+
+    @Entry(category = "qol")
+    public static boolean persistentBlockOutline = true; // Always show block outline, no matter the gamemode or state
+
+    // Animatium Config
     @Entry
     public static boolean rotateBackwardsWalking = true; // Backwards walking rotating the body like in <=1.11
 
@@ -28,41 +71,7 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean fixVerticalBobbingTilt = true; // Fixes MC-225335
 
     @Entry
-    public static boolean minimalViewBobbing = true; // Remove bobbing from the world
-
-    @Entry
     public static boolean showCrosshairInThirdperson = true; // Show crosshair whilst in thirdperson like in <=1.8
-
-    @Entry
-    public static boolean showNametagInThirdperson = true; // Show the player nametag in thirdperson
-
-    @Entry
-    public static boolean hideNameTagBackground = true; // Hide the nametag background
-
-    @Entry
-    public static boolean applyTextShadowToNametag = true; // Apply text shadow to nametag
-
-    @Entry(category = "Sneaking")
-    public static boolean removeSmoothSneaking = true; // Removes the smooth sneaking animation, making it like 1.8-1.12.2
-
-    @Entry(category = "Sneaking")
-    public static boolean oldSneakAnimationInterpolation = true; // Brings back the <=1.7 sneak animation interpolation
-
-    @Entry(category = "Sneaking")
-    public static boolean oldSneakEyeHeight = true; // Changes the sneak eye height to be as it was <=1.13.2
-
-    @Entry(category = "Sneaking")
-    public static boolean fixSneakingFeetPosition = true; // Fixes the sneaking model offset to be like <=1.11
-
-    @Entry(category = "Sneaking")
-    //TODO/NOTE: Might need a better name
-    public static boolean oldSneakingFeetPosition = true; // Fixes the sneaking model offset to be like <1.14?
-
-    @Entry(category = "Sneaking")
-    public static boolean syncPlayerModelWithEyeHeight = true; // Synchronizes the player model to the eye height <=1.7
-
-    @Entry(category = "Sneaking")
-    public static boolean sneakAnimationWhileFlying = true; // Shows the sneaking animation in third-person whilst flying down like in <=1.13
 
     @Entry
     public static boolean removeHeartFlash = true; // Remove heart blinking like in <=1.7
@@ -82,12 +91,6 @@ public class AnimatiumConfig extends MidnightConfig {
     @Entry
     // TODO/NOTE: Currently not accurate/broken
     public static boolean oldCapeMovement = false; // Changes the cape model movement to be how it used to be
-
-    @Entry
-    public static boolean fixMirrorArmSwing = true; // Fixes arm swing mirroring
-
-    @Entry
-    public static boolean persistentBlockOutline = true; // Always show block outline, no matter the gamemode or state
 
     @Entry
     public static boolean oldBlueVoidSky = true; // (MC-257056) Brings back the forgotten blue void part of the sky

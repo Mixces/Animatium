@@ -23,6 +23,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntityRenderer.class)
 public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderState> {
+    @Inject(method = "render(Lnet/minecraft/client/render/entity/state/LivingEntityRenderState;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;translate(FFF)V", ordinal = 1))
+    private void animatium$syncPlayerModelWithEyeHeight(S livingEntityRenderState, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
+        if (AnimatiumConfig.syncPlayerModelWithEyeHeight) {
+            MinecraftClient client = MinecraftClient.getInstance();
+            ClientPlayerEntity player = client.player;
+            if (livingEntityRenderState instanceof PlayerEntityRenderState state && player != null && state.id == player.getId()) {
+                Camera camera = client.gameRenderer.getCamera();
+                CameraAccessor cameraAccessor = (CameraAccessor) camera;
+                float cameraLerpValue = MathHelper.lerp(camera.getLastTickDelta(), cameraAccessor.getLastCameraY(), cameraAccessor.getCameraY());
+                matrixStack.translate(0.0F, PlayerEntity.STANDING_DIMENSIONS.eyeHeight() - cameraLerpValue, 0.0F);
+            }
+        }
+    }
+
     @ModifyExpressionValue(method = "updateRenderState(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/client/render/entity/state/LivingEntityRenderState;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;isAlive()Z"))
     private boolean animatium$oldDeathLimbs(boolean original) {
         if (AnimatiumConfig.oldDeathLimbs) {
@@ -38,19 +52,6 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
             return null;
         } else {
             return original.call(instance);
-        }
-    }
-
-    @Inject(method = "render(Lnet/minecraft/client/render/entity/state/LivingEntityRenderState;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;translate(FFF)V", ordinal = 1))
-    private void animatium$syncPlayerModelWithEyeHeight(S livingEntityRenderState, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
-        if (AnimatiumConfig.syncPlayerModelWithEyeHeight) {
-            ClientPlayerEntity player = MinecraftClient.getInstance().player;
-            Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
-            CameraAccessor cameraAccessor = (CameraAccessor) camera;
-            if (livingEntityRenderState instanceof PlayerEntityRenderState state && player != null && state.id == player.getId()) {
-                float cameraLerped = MathHelper.lerp(camera.getLastTickDelta(), cameraAccessor.getLastCameraY(), cameraAccessor.getCameraY());
-                matrixStack.translate(0.0F, PlayerEntity.STANDING_DIMENSIONS.eyeHeight() - cameraLerped, 0.0F);
-            }
         }
     }
 }
