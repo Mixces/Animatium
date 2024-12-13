@@ -64,7 +64,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
             // Changes the sneak height to the one from <=1.13.2 on Hypixel & Loyisa
             boolean oldMechanics = Animatium.shouldApplyOldSneaking();
             // TODO: Fix camera on servers that aren't hypixel
-            float eyeHeight = canChangeIntoPose(EntityPose.STANDING) ? 1.54F : POSE_DIMENSIONS.get(EntityPose.CROUCHING).eyeHeight();
+            float eyeHeight = canChangeIntoPose(EntityPose.STANDING) ? 1.54F : POSE_DIMENSIONS.get(pose).eyeHeight();
             cir.setReturnValue(POSE_DIMENSIONS.getOrDefault(oldMechanics ? null : pose, STANDING_DIMENSIONS).withEyeHeight(eyeHeight));
         }
     }
