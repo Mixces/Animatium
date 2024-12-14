@@ -15,8 +15,8 @@ public abstract class MixinClientPlayerInteractionManager {
 
     @Inject(method = "getBlockBreakingProgress", at = @At(value = "RETURN"), cancellable = true)
     private void animatium$oldBlockMiningProgress(CallbackInfoReturnable<Integer> cir) {
-        if (AnimatiumConfig.oldBlockMiningProgress) {
-            cir.setReturnValue((int) (this.currentBreakingProgress * 10.0f) - 1);
+        if (AnimatiumConfig.oldBlockMiningProgress && currentBreakingProgress > 0.0F) {
+            cir.setReturnValue((int) (this.currentBreakingProgress * 10.0f));
         }
     }
 }
