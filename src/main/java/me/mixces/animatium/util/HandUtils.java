@@ -7,15 +7,7 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 
 public class HandUtils {
-    private final EntityRenderDispatcher dispatcher;
-    private final ClientPlayerEntity player;
-    
-    public HandUtils(ClientPlayerEntity player, EntityRenderDispatcher dispatcher) {
-        this.player = player;
-        this.dispatcher = dispatcher;
-    }
-    
-    public int handMultiplier() {
+    public static int handMultiplier(ClientPlayerEntity player, EntityRenderDispatcher dispatcher) {
         Hand hand = MoreObjects.firstNonNull(player.preferredHand, Hand.MAIN_HAND);
         Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
         int i = dispatcher.gameOptions.getPerspective().isFirstPerson() ? 1 : -1;
