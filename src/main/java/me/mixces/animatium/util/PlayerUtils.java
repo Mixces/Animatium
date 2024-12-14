@@ -18,9 +18,7 @@ public class PlayerUtils {
     }
 
     public static Vec3d lerpPlayerWithEyeHeight(PlayerEntity entity, float tickDelta, float eyeHeight) {
-        double d = MathHelper.lerp(tickDelta, entity.prevX, entity.getX());
-        double e = MathHelper.lerp(tickDelta, entity.prevY, entity.getY()) + eyeHeight;
-        double f = MathHelper.lerp(tickDelta, entity.prevZ, entity.getZ());
-        return new Vec3d(d, e, f);
+        Vec3d lerpedPos = entity.getLerpedPos(tickDelta);
+        return new Vec3d(lerpedPos.x, lerpedPos.y + eyeHeight, lerpedPos.z);
     }
 }
