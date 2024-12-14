@@ -1,7 +1,7 @@
 package me.mixces.animatium.mixins;
 
 import me.mixces.animatium.config.AnimatiumConfig;
-import me.mixces.animatium.util.HandUtils;
+import me.mixces.animatium.util.PlayerUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -23,10 +23,11 @@ public abstract class MixinFlyingItemEntityRenderer<T extends Entity & FlyingIte
     }
 
     @Inject(method = "render(Lnet/minecraft/client/render/entity/state/FlyingItemEntityRenderState;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/ItemRenderState;render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;II)V"))
-    private void animatium$oldProjectilePosition(FlyingItemEntityRenderState flyingItemEntityRenderState, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
+    private void animatium$oldProjectilePosition(FlyingItemEntityRenderState flyingItemEntityRenderState, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
         if (AnimatiumConfig.oldProjectilePosition) {
             assert MinecraftClient.getInstance().player != null;
-            matrixStack.translate(HandUtils.handMultiplier(MinecraftClient.getInstance().player, dispatcher) * 0.25F, 0.0F, 0.25F);
+            int direction = PlayerUtils.handMultiplier(MinecraftClient.getInstance().player, dispatcher);
+            matrices.translate(direction * 0.25F, 0.0F, 0.25F);
         }
     }
 }

@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LivingEntityRenderer.class)
 public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderState> {
     @Inject(method = "render(Lnet/minecraft/client/render/entity/state/LivingEntityRenderState;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;translate(FFF)V", ordinal = 1))
-    private void animatium$syncPlayerModelWithEyeHeight(S livingEntityRenderState, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
+    private void animatium$syncPlayerModelWithEyeHeight(S livingEntityRenderState, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
         if (AnimatiumConfig.syncPlayerModelWithEyeHeight) {
             MinecraftClient client = MinecraftClient.getInstance();
             ClientPlayerEntity player = client.player;
@@ -32,7 +32,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
                 Camera camera = client.gameRenderer.getCamera();
                 CameraAccessor cameraAccessor = (CameraAccessor) camera;
                 float cameraLerpValue = MathHelper.lerp(camera.getLastTickDelta(), cameraAccessor.getLastCameraY(), cameraAccessor.getCameraY());
-                matrixStack.translate(0.0F, PlayerEntity.STANDING_DIMENSIONS.eyeHeight() - cameraLerpValue, 0.0F);
+                matrices.translate(0.0F, PlayerEntity.STANDING_DIMENSIONS.eyeHeight() - cameraLerpValue, 0.0F);
             }
         }
     }

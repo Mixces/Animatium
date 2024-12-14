@@ -34,12 +34,15 @@ public abstract class MixinHeldItemRenderer {
 
     @WrapOperation(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", ordinal = 1))
     private void animatium$postBowTransform(MatrixStack instance, float x, float y, float z, Operation<Void> original, @Local(argsOnly = true) AbstractClientPlayerEntity player, @Local(argsOnly = true) Hand hand) {
+        final Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
+        final int direction = arm == Arm.RIGHT ? 1 : -1;
         if (AnimatiumConfig.tiltItemPositions) {
-            final Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
-            final int direction = arm == Arm.RIGHT ? 1 : -1;
             instance.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * -335));
             instance.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -50.0F));
-            original.call(instance, x, y, z);
+        }
+
+        original.call(instance, x, y, z);
+        if (AnimatiumConfig.tiltItemPositions) {
             instance.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 50.0F));
             instance.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * 335));
         }
