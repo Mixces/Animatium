@@ -121,6 +121,9 @@ Currently, there are no releases. If you want to use a development build, you ca
 - [X] oldChatPosition
   - Description: TODO
   - Type: BOOLEAN
+- [X] oldProjectilePosition
+  - Description: TODO
+  - Type: BOOLEAN
 - [X] disableProjectileAgeCheck
   - Description: TODO
   - Type: BOOLEAN

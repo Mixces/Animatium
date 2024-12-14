@@ -80,6 +80,8 @@
 	"animatium.midnightconfig.debugHudTextShadow.tooltip": "TODO",
 	"animatium.midnightconfig.oldChatPosition": "Old chat position (1.8)",
 	"animatium.midnightconfig.oldChatPosition.tooltip": "TODO",
+	"animatium.midnightconfig.oldProjectilePosition": "Bring back the old projectile position",
+	"animatium.midnightconfig.oldProjectilePosition.tooltip": "TODO",
 	"animatium.midnightconfig.disableProjectileAgeCheck": "Render projectile at all ages",
 	"animatium.midnightconfig.disableProjectileAgeCheck.tooltip": "TODO",
 	"animatium.midnightconfig.oldFishingBobberPosition": "Bring back the old fishing bobber position",

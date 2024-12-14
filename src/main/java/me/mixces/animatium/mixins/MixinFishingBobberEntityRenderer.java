@@ -33,16 +33,17 @@ public abstract class MixinFishingBobberEntityRenderer extends EntityRenderer<Fi
     }
 
     @Inject(method = "render(Lnet/minecraft/client/render/entity/state/FishingBobberEntityState;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;peek()Lnet/minecraft/client/util/math/MatrixStack$Entry;", ordinal = 0))
-    private void animatium$shiftFishingBobber(FishingBobberEntityState fishingBobberEntityState, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
+    private void animatium$oldFishingBobberPosition(FishingBobberEntityState fishingBobberEntityState, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
         if (AnimatiumConfig.oldFishingBobberPosition) {
-            HandUtils instance = new HandUtils(MinecraftClient.getInstance().player, dispatcher);
+            assert MinecraftClient.getInstance().player != null;
+            int multiplier = HandUtils.handMultiplier(MinecraftClient.getInstance().player, dispatcher);
             //TODO: Fix line
-            matrixStack.translate(instance.handMultiplier() * 0.5F, 0.0F, 0.0F);
+            matrixStack.translate(multiplier * 0.5F, 0.0F, 0.0F);
         }
     }
 
     @WrapOperation(method = "getHandPos", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getCameraPosVec(F)Lnet/minecraft/util/math/Vec3d;"))
-    private Vec3d animatium$useInterpolatedEyeHeight(PlayerEntity instance, float v, Operation<Vec3d> original) {
+    private Vec3d animatium$fishingRodLineInterpolation(PlayerEntity instance, float v, Operation<Vec3d> original) {
         if (AnimatiumConfig.fishingRodLineInterpolation) {
             CameraAccessor cameraAccessor = (CameraAccessor) dispatcher.camera;
             float eyeHeight = MathHelper.lerp(v, cameraAccessor.getLastCameraY(), cameraAccessor.getCameraY());
@@ -52,12 +53,12 @@ public abstract class MixinFishingBobberEntityRenderer extends EntityRenderer<Fi
     }
 
     @ModifyExpressionValue(method = "getHandPos", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;isInSneakingPose()Z"))
-    private boolean animatium$removeLineOffset(boolean original) {
+    private boolean animatium$noMoveFishingRodLine(boolean original) {
         return !AnimatiumConfig.noMoveFishingRodLine && original;
     }
 
     @ModifyExpressionValue(method = "getHandPos", at = @At(value = "CONSTANT", args = "doubleValue=0.8"))
-    private double animatium$moveLineHorizontally(double original) {
+    private double animatium$oldFishingRodLinePositionThirdPerson(double original) {
         return original + (AnimatiumConfig.oldFishingRodLinePositionThirdPerson ? 0.05 : 0.0);
     }
 
@@ -67,9 +68,9 @@ public abstract class MixinFishingBobberEntityRenderer extends EntityRenderer<Fi
     }
 
     @ModifyArg(method = "updateRenderState(Lnet/minecraft/entity/projectile/FishingBobberEntity;Lnet/minecraft/client/render/entity/state/FishingBobberEntityState;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/FishingBobberEntityRenderer;getHandPos(Lnet/minecraft/entity/player/PlayerEntity;FF)Lnet/minecraft/util/math/Vec3d;"), index = 1)
-    private float animatium$mirrorRodSwing(float f) {
-        HandUtils instance = new HandUtils(MinecraftClient.getInstance().player, dispatcher);
-        int multiplier = instance.handMultiplier();
+    private float animatium$fixCastLineSwing(float f) {
+        assert MinecraftClient.getInstance().player != null;
+        int multiplier = HandUtils.handMultiplier(MinecraftClient.getInstance().player, dispatcher);
         return f * (AnimatiumConfig.fixCastLineSwing ? multiplier : 1);
     }
 

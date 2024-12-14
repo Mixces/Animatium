@@ -118,10 +118,13 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean oldChatPosition = true; // Moves chat down 12 pixels like in <=1.8
 
     @Entry
+    public static boolean oldProjectilePosition = true; // Brings back old projectile position <=1.8
+
+    @Entry
     public static boolean disableProjectileAgeCheck = true; // Render projectile at all ages <=1.15?
 
     @Entry
-    public static boolean oldFishingBobberPosition = true; // Brings back old fishing bobber position <=1.8?
+    public static boolean oldFishingBobberPosition = true; // Brings back old fishing bobber position <=1.8
 
     @Entry
     public static boolean fishingRodLineInterpolation = true; // Correctly interpolates the fishing rod cast line with the eye height <1.14?
