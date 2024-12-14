@@ -1,5 +1,7 @@
 package me.mixces.animatium.mixins;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import me.mixces.animatium.config.AnimatiumConfig;
 import net.minecraft.client.MinecraftClient;
@@ -30,23 +32,16 @@ public abstract class MixinHeldItemRenderer {
     @Shadow
     protected abstract void applySwingOffset(MatrixStack matrices, Arm arm, float swingProgress);
 
-    @Inject(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", ordinal = 1))
-    private void animatium$preBowTransform(AbstractClientPlayerEntity player, float tickDelta, float pitch, Hand hand, float swingProgress, ItemStack item, float equipProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
+    @WrapOperation(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", ordinal = 1))
+    private void animatium$postBowTransform(MatrixStack instance, float x, float y, float z, Operation<Void> original, @Local(argsOnly = true) AbstractClientPlayerEntity player, @Local(argsOnly = true) Hand hand) {
         if (AnimatiumConfig.tiltItemPositions) {
             final Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
             final int direction = arm == Arm.RIGHT ? 1 : -1;
-            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * -335));
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -50.0F));
-        }
-    }
-
-    @Inject(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", ordinal = 1, shift = At.Shift.AFTER))
-    private void animatium$postBowTransform(AbstractClientPlayerEntity player, float tickDelta, float pitch, Hand hand, float swingProgress, ItemStack item, float equipProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
-        if (AnimatiumConfig.tiltItemPositions) {
-            final Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
-            final int direction = arm == Arm.RIGHT ? 1 : -1;
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 50.0F));
-            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * 335));
+            instance.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * -335));
+            instance.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -50.0F));
+            original.call(instance, x, y, z);
+            instance.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 50.0F));
+            instance.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * 335));
         }
     }
 
