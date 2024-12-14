@@ -145,6 +145,9 @@ Currently, there are no releases. If you want to use a development build, you ca
 - [X] fixCastLineSwing
   - Description: TODO
   - Type: BOOLEAN
+- [X] oldBlockMiningProgress
+  - Description: TODO
+  - Type: BOOLEAN
 - [X] cameraVersion
   - Description: TODO
   - Type: ENUM 

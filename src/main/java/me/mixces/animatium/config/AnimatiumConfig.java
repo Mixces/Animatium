@@ -142,6 +142,9 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean fixCastLineSwing = true; // Fixes the swing logic for casting the fishing rod
 
     @Entry
+    public static boolean oldBlockMiningProgress = true; // Bring back the old block mining progress <=1.18?
+
+    @Entry
     public static CameraVersion cameraVersion = CameraVersion.v1_8; // Change the camera position to be as it was in said version range
 
     public enum CameraVersion {

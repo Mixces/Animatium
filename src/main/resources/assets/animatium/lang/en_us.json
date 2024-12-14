@@ -96,6 +96,8 @@
 	"animatium.midnightconfig.fixCastLineCheck.tooltip": "TODO",
 	"animatium.midnightconfig.fixCastLineSwing": "Fix left handed fishing rod swing bug",
 	"animatium.midnightconfig.fixCastLineSwing.tooltip": "TODO",
+	"animatium.midnightconfig.oldBlockMiningProgress": "Bring back the old block mining progress",
+	"animatium.midnightconfig.oldBlockMiningProgress.tooltip": "TODO",
 	"animatium.midnightconfig.cameraVersion": "Change camera position to be as it was in",
 	"animatium.midnightconfig.cameraVersion.tooltip": "TODO",
 
