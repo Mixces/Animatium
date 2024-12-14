@@ -35,8 +35,8 @@ public abstract class MixinFishingBobberEntityRenderer extends EntityRenderer<Fi
     private void animatium$oldFishingBobberPosition(FishingBobberEntityState fishingBobberEntityState, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
         if (AnimatiumConfig.oldFishingBobberPosition) {
             assert MinecraftClient.getInstance().player != null;
-            int multiplier = PlayerUtils.handMultiplier(MinecraftClient.getInstance().player, dispatcher);
-            //TODO: Fix line
+            int multiplier = PlayerUtils.getHandMultiplier(MinecraftClient.getInstance().player);
+            // TODO: Fix line
             matrices.translate(multiplier * 0.5F, 0.0F, 0.0F);
         }
     }
@@ -70,7 +70,7 @@ public abstract class MixinFishingBobberEntityRenderer extends EntityRenderer<Fi
     @ModifyArg(method = "updateRenderState(Lnet/minecraft/entity/projectile/FishingBobberEntity;Lnet/minecraft/client/render/entity/state/FishingBobberEntityState;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/FishingBobberEntityRenderer;getHandPos(Lnet/minecraft/entity/player/PlayerEntity;FF)Lnet/minecraft/util/math/Vec3d;"), index = 1)
     private float animatium$fixCastLineSwing(float f) {
         assert MinecraftClient.getInstance().player != null;
-        int multiplier = PlayerUtils.handMultiplier(MinecraftClient.getInstance().player, dispatcher);
+        int multiplier = PlayerUtils.getHandMultiplier(MinecraftClient.getInstance().player);
         return f * (AnimatiumConfig.fixCastLineSwing ? multiplier : 1);
     }
 }
