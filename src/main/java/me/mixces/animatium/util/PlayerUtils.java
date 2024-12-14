@@ -6,7 +6,6 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 public class PlayerUtils {
@@ -18,7 +17,6 @@ public class PlayerUtils {
     }
 
     public static Vec3d lerpPlayerWithEyeHeight(PlayerEntity entity, float tickDelta, float eyeHeight) {
-        Vec3d lerpedPos = entity.getLerpedPos(tickDelta);
-        return new Vec3d(lerpedPos.x, lerpedPos.y + eyeHeight, lerpedPos.z);
+        return entity.getLerpedPos(tickDelta).add(0, eyeHeight, 0);
     }
 }
