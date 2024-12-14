@@ -10,6 +10,7 @@
 		"MixinDebugHud",
 		"MixinEntityRenderer",
 		"MixinEntryListWidget",
+		"MixinFishingBobberEntityRenderer",
 		"MixinGameRenderer",
 		"MixinHeldItemRenderer",
 		"MixinInGameHud",
@@ -23,16 +24,15 @@
 		"MixinScrollableWidget",
 		"MixinSliderWidget",
 		"MixinTextRendererDrawer",
+		"MixinThrownEntity",
 		"MixinWorldRenderer",
 		"accessor.CameraAccessor",
 		"accessor.ClientWorldPropertiesAccessor",
 		"accessor.EntryListWidgetAccessor",
+		"accessor.PlayerEntityAccessor",
 		"accessor.SkyRenderingAccessor"
 	],
 	"injectors": {
 		"defaultRequire": 1
-	},
-	"mixins": [
-		"accessor.PlayerEntityAccessor"
-	]
+	}
 }

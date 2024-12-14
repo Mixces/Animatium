@@ -121,6 +121,27 @@ Currently, there are no releases. If you want to use a development build, you ca
 - [X] oldChatPosition
   - Description: TODO
   - Type: BOOLEAN
+- [X] disableProjectileAgeCheck
+  - Description: TODO
+  - Type: BOOLEAN
+- [X] oldFishingBobberPosition
+  - Description: TODO
+  - Type: BOOLEAN
+- [X] fishingRodLineInterpolation 
+  - Description: TODO
+  - Type: BOOLEAN
+- [X] noMoveFishingRodLine
+  - Description: TODO
+  - Type: BOOLEAN
+- [X] oldFishingRodLinePositionThirdPerson
+  - Description: TODO
+  - Type: BOOLEAN
+- [X] fixCastLineCheck 
+  - Description: TODO
+  - Type: BOOLEAN
+- [X] fixCastLineSwing
+  - Description: TODO
+  - Type: BOOLEAN
 - [X] cameraVersion
   - Description: TODO
   - Type: ENUM 

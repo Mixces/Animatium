@@ -118,6 +118,27 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean oldChatPosition = true; // Moves chat down 12 pixels like in <=1.8
 
     @Entry
+    public static boolean disableProjectileAgeCheck = true; // Render projectile at all ages <=1.15?
+
+    @Entry
+    public static boolean oldFishingBobberPosition = true; // Brings back old fishing bobber position <=1.8?
+
+    @Entry
+    public static boolean fishingRodLineInterpolation = true; // Correctly interpolates the fishing rod cast line with the eye height <1.14?
+
+    @Entry
+    public static boolean noMoveFishingRodLine = true; // Does not move the fishing rod cast line while sneaking when viewed in the third person mode <=1.7
+
+    @Entry
+    public static boolean oldFishingRodLinePositionThirdPerson = true; // Adjusts the position of the fishing rod cast line horizontally like in <=1.7
+
+    @Entry
+    public static boolean fixCastLineCheck = true; // Fixes the arm logic for casting the fishing rod
+
+    @Entry
+    public static boolean fixCastLineSwing = true; // Fixes the swing logic for casting the fishing rod
+
+    @Entry
     public static CameraVersion cameraVersion = CameraVersion.v1_8; // Change the camera position to be as it was in said version range
 
     public enum CameraVersion {
