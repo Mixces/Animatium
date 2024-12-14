@@ -1,6 +1,7 @@
 package me.mixces.animatium.mixins;
 
 import me.mixces.animatium.config.AnimatiumConfig;
+import me.mixces.animatium.mixins.accessor.EntryListWidgetAccessor;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.ScrollableWidget;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,7 +29,7 @@ public abstract class MixinScrollableWidget {
             int maxScrollY = getMaxScrollY();
             if (maxScrollY < 0)
                 maxScrollY /= 2;
-            if (!entryListWidget.centerListVertically && maxScrollY < 0)
+            if (!((EntryListWidgetAccessor) entryListWidget).shouldCenterVertically() && maxScrollY < 0)
                 maxScrollY = 0;
             this.scrollY = Math.min(Math.max(0, scrollY), maxScrollY);
         }
