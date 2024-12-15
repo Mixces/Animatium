@@ -3,7 +3,6 @@ package me.mixces.animatium.mixins;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import me.mixces.animatium.config.AnimatiumConfig;
 import me.mixces.animatium.mixins.accessor.CameraAccessor;
 import me.mixces.animatium.util.PlayerUtils;
@@ -63,8 +62,14 @@ public abstract class MixinFishingBobberEntityRenderer extends EntityRenderer<Fi
     }
 
     @WrapOperation(method = "getArmHoldingRod", at = @At(value = "CONSTANT", args = "classValue=net/minecraft/item/FishingRodItem"))
-    private static boolean animatium$fixCastLineCheck(Object object, Operation<Boolean> original, @Local(argsOnly = true) PlayerEntity player) {
-        return original.call(object) || (AnimatiumConfig.fixCastLineCheck && !(player.getOffHandStack().getItem() instanceof FishingRodItem));
+    private static boolean animatium$fixCastLineCheck(Object object, Operation<Boolean> original) {
+        boolean value = original.call(object);
+        if (AnimatiumConfig.fixCastLineCheck) {
+            MinecraftClient client = MinecraftClient.getInstance();
+            assert client.player != null;
+            value = value && !(client.player.getOffHandStack().getItem() instanceof FishingRodItem);
+        }
+        return value;
     }
 
     @ModifyArg(method = "updateRenderState(Lnet/minecraft/entity/projectile/FishingBobberEntity;Lnet/minecraft/client/render/entity/state/FishingBobberEntityState;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/FishingBobberEntityRenderer;getHandPos(Lnet/minecraft/entity/player/PlayerEntity;FF)Lnet/minecraft/util/math/Vec3d;"), index = 1)
