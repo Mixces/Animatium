@@ -10,17 +10,14 @@ import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.player.PlayerEntity;
 
-import java.util.Objects;
-
 public class Animatium implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         AnimatiumConfig.init("animatium", AnimatiumConfig.class);
     }
 
-    public static EntityDimensions getLegacySneakingDimensions(PlayerEntity player, EntityPose defaultPose) {
+    public static EntityDimensions getLegacySneakingDimensions(PlayerEntity player, EntityDimensions dimensions) {
         // Changes the sneak height to the one from <=1.13.2 on Hypixel & Loyisa & Bedwars Practice
-        EntityDimensions dimensions = Objects.requireNonNull(PlayerEntityAccessor.getPoseDimensions()).getOrDefault(isLegacySupportedVersion() ? null : defaultPose, PlayerEntity.STANDING_DIMENSIONS);
         if (((PlayerEntityAccessor) player).canChangeIntoPose$(EntityPose.STANDING)) {
             return dimensions.withEyeHeight(1.54F); // TODO: Get vanilla sneaking eye height for compat
         } else {

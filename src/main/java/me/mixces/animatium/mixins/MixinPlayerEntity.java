@@ -45,10 +45,11 @@ public abstract class MixinPlayerEntity extends LivingEntity {
         }
     }
 
-    @Inject(method = "getBaseDimensions", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getBaseDimensions", at = @At("RETURN"), cancellable = true)
     private void animatium$oldSneakEyeHeight(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
         if (AnimatiumConfig.oldSneakEyeHeight && pose.equals(EntityPose.CROUCHING)) {
-            cir.setReturnValue(Animatium.getLegacySneakingDimensions((PlayerEntity) (Object) this, pose));
+            cir.setReturnValue(Animatium.getLegacySneakingDimensions((PlayerEntity) (Object) this, cir.getReturnValue()))
+            ;
         }
     }
 }
