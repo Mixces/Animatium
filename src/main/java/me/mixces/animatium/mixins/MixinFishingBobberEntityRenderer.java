@@ -61,16 +61,16 @@ public abstract class MixinFishingBobberEntityRenderer extends EntityRenderer<Fi
         return original + (AnimatiumConfig.oldFishingRodLinePositionThirdPerson ? 0.05 : 0.0);
     }
 
-    @WrapOperation(method = "getArmHoldingRod", at = @At(value = "CONSTANT", args = "classValue=net/minecraft/item/FishingRodItem"))
-    private static boolean animatium$fixCastLineCheck(Object object, Operation<Boolean> original) {
-        boolean value = original.call(object);
-        if (AnimatiumConfig.fixCastLineCheck) {
-            MinecraftClient client = MinecraftClient.getInstance();
-            assert client.player != null;
-            value = value && !(client.player.getOffHandStack().getItem() instanceof FishingRodItem);
-        }
-        return value;
-    }
+//    @WrapOperation(method = "getArmHoldingRod", at = @At(value = "CONSTANT", args = "classValue=net/minecraft/item/FishingRodItem"))
+//    private static boolean animatium$fixCastLineCheck(Object object, Operation<Boolean> original) {
+//        boolean value = original.call(object);
+//        if (AnimatiumConfig.fixCastLineCheck) {
+//            MinecraftClient client = MinecraftClient.getInstance();
+//            assert client.player != null;
+//            value = value && !(client.player.getOffHandStack().getItem() instanceof FishingRodItem);
+//        }
+//        return value;
+//    }
 
     @ModifyArg(method = "updateRenderState(Lnet/minecraft/entity/projectile/FishingBobberEntity;Lnet/minecraft/client/render/entity/state/FishingBobberEntityState;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/FishingBobberEntityRenderer;getHandPos(Lnet/minecraft/entity/player/PlayerEntity;FF)Lnet/minecraft/util/math/Vec3d;"), index = 1)
     private float animatium$fixCastLineSwing(float f) {
