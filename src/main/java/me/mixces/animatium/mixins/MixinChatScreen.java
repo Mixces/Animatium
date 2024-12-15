@@ -1,26 +1,25 @@
 package me.mixces.animatium.mixins;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import me.mixces.animatium.config.AnimatiumConfig;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.screen.ChatScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ChatScreen.class)
 public abstract class MixinChatScreen {
-    @Inject(method = "render", at = @At(value = "HEAD"))
-    private void animatium$oldChatPosition(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (AnimatiumConfig.oldChatPosition) {
-            context.getMatrices().translate(0F, 12F, 0F);
-        }
-    }
-
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/ChatHud;render(Lnet/minecraft/client/gui/DrawContext;IIIZ)V", shift = At.Shift.AFTER))
-    private void animatium$oldChatPosition$undo(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/ChatHud;render(Lnet/minecraft/client/gui/DrawContext;IIIZ)V"))
+    private void animatium$oldChatPosition$undo(ChatHud instance, DrawContext context, int currentTick, int mouseX, int mouseY, boolean focused, Operation<Void> original) {
         if (AnimatiumConfig.oldChatPosition) {
             context.getMatrices().translate(0F, -12F, 0F);
+        }
+
+        original.call(instance, context, currentTick, mouseX, mouseY, focused);
+        if (AnimatiumConfig.oldChatPosition) {
+            context.getMatrices().translate(0F, 12F, 0F);
         }
     }
 }
