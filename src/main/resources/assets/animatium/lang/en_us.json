@@ -30,6 +30,8 @@
 	"animatium.midnightconfig.fixMirrorArmSwing.tooltip": "TODO",
 	"animatium.midnightconfig.persistentBlockOutline": "Always show block outline (Persistent)",
 	"animatium.midnightconfig.persistentBlockOutline.tooltip": "TODO",
+	"animatium.midnightconfig.alwaysAllowUsageSwinging": "Always allow item usage swing whilst holding left-click",
+	"animatium.midnightconfig.alwaysAllowUsageSwinging.tooltip": "TODO",
 	"animatium.midnightconfig.forceItemGlintOnEntity": "Force item glint on armor glint",
 	"animatium.midnightconfig.forceItemGlintOnEntity.tooltip": "TODO",
 
