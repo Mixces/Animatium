@@ -17,7 +17,7 @@ public class Animatium implements ClientModInitializer {
     }
 
     public static EntityDimensions getLegacySneakingDimensions(PlayerEntity player, EntityDimensions dimensions) {
-        // Changes the sneak height to the one from <=1.13.2 on Hypixel & Loyisa & Bedwars Practice
+        // Changes the sneak height to the one from <=1.13.2 on Hypixel & Loyisa & Bedwars Practice & Bridger Land
         if (((PlayerEntityAccessor) player).canChangeIntoPose$(EntityPose.STANDING) && isLegacySupportedVersion()) {
             return PlayerEntity.STANDING_DIMENSIONS.withEyeHeight(1.62F);
         } else {
@@ -38,13 +38,11 @@ public class Animatium implements ClientModInitializer {
                 return false;
             }
 
-            if (brand.toLowerCase().contains("hypixel") || brand.toLowerCase().contains("hygot")) {
-                return true;
-            } else if (brand.contains("1.8")) {
+            if (brand.toLowerCase().contains("hypixel") || brand.toLowerCase().contains("hygot") || brand.contains("1.8")) {
                 return true;
             } else {
                 ServerInfo serverInfo = networkHandler.getServerInfo();
-                return serverInfo != null && (serverInfo.address.contains("loyisa") || serverInfo.address.contains("bedwarspractice"));
+                return serverInfo != null && (serverInfo.address.contains("loyisa") || serverInfo.address.contains("bedwarspractice") || serverInfo.address.contains("bridger.land"));
             }
         }
 
