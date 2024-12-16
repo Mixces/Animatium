@@ -49,6 +49,9 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean alwaysAllowUsageSwinging = true; // Allows you to hold left click whilst using item to swing the arm always, not just when looking at a block
 
     @Entry(category = "qol")
+    public static boolean alwaysShowSharpParticles = true; // Always show sharp particles when damaging a entity
+
+    @Entry(category = "qol")
     public static boolean forceItemGlintOnEntity = true; // Makes the entity glint use the same texture as the item glint like in <=1.19
 
     // Movement

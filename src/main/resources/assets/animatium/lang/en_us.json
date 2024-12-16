@@ -32,6 +32,8 @@
 	"animatium.midnightconfig.persistentBlockOutline.tooltip": "TODO",
 	"animatium.midnightconfig.alwaysAllowUsageSwinging": "Always allow item usage swing whilst holding left-click",
 	"animatium.midnightconfig.alwaysAllowUsageSwinging.tooltip": "TODO",
+	"animatium.midnightconfig.alwaysShowSharpParticles": "Always show sharp particles on damage",
+	"animatium.midnightconfig.alwaysShowSharpParticles.tooltip": "TODO",
 	"animatium.midnightconfig.forceItemGlintOnEntity": "Force item glint on armor glint",
 	"animatium.midnightconfig.forceItemGlintOnEntity.tooltip": "TODO",
 
