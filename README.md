@@ -46,7 +46,7 @@ Currently, there are no releases. If you want to use a development build, you ca
   - Description: TODO
   - Type: BOOLEAN
 - [X] persistentBlockOutline
-  - Description: Always show block outline, no matter the gamemode or state
+  - Description: Always show block outline, no matter the gamemode or state.
   - Type: BOOLEAN
 - [X] alwaysAllowUsageSwinging
   - Description: Allows you to hold left click whilst using item to swing the arm always, not just when looking at a block.
