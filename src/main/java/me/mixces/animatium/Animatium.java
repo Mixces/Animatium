@@ -18,8 +18,8 @@ public class Animatium implements ClientModInitializer {
 
     public static EntityDimensions getLegacySneakingDimensions(PlayerEntity player, EntityDimensions dimensions) {
         // Changes the sneak height to the one from <=1.13.2 on Hypixel & Loyisa & Bedwars Practice
-        if (((PlayerEntityAccessor) player).canChangeIntoPose$(EntityPose.STANDING)) {
-            return dimensions.withEyeHeight(1.54F); // TODO: Get vanilla sneaking eye height for compat
+        if (((PlayerEntityAccessor) player).canChangeIntoPose$(EntityPose.STANDING) && isLegacySupportedVersion()) {
+            return PlayerEntity.STANDING_DIMENSIONS.withEyeHeight(1.62F);
         } else {
             return dimensions;
         }
