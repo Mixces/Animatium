@@ -46,10 +46,18 @@ Currently, there are no releases. If you want to use a development build, you ca
   - Description: TODO
   - Type: BOOLEAN
 - [X] persistentBlockOutline
-  - Description: TODO
+  - Description: Always show block outline, no matter the gamemode or state
+  - Type: BOOLEAN
+- [X] alwaysAllowUsageSwinging
+  - Description: Allows you to hold left click whilst using item to swing the arm always, not just when looking at a block.
+  - Type: BOOLEAN
+  - Requires:
+    - applyItemSwingUsage
+- [X] alwaysShowSharpParticles
+  - Description: Always show sharp particles when damaging an entity
   - Type: BOOLEAN
 - [ ] forceItemGlintOnEntity
-  - Description: TODO
+  - Description: Makes the entity glint use the same texture as the item glint like in <=1.19
   - Type: BOOLEAN
 
 ## 🏃 Movement
