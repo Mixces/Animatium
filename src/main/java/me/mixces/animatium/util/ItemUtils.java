@@ -3,7 +3,7 @@ package me.mixces.animatium.util;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ModelTransformationMode;
 
-public class ItemUtils {
+public abstract class ItemUtils {
     private static final ThreadLocal<ItemStack> stack = ThreadLocal.withInitial(() -> null);
     private static final ThreadLocal<ModelTransformationMode> transformationMode = ThreadLocal.withInitial(() -> null);
 
