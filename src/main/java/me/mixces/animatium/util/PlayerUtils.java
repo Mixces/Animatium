@@ -2,7 +2,6 @@ package me.mixces.animatium.util;
 
 import com.google.common.base.MoreObjects;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.effect.StatusEffects;
@@ -14,8 +13,6 @@ import net.minecraft.util.math.Vec3d;
 import java.util.Objects;
 
 public class PlayerUtils {
-    private static final ThreadLocal<Entity> entity = ThreadLocal.withInitial(() -> null);
-
     public static int getHandMultiplier(PlayerEntity player) {
         Hand hand = MoreObjects.firstNonNull(player.preferredHand, Hand.MAIN_HAND);
         Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
@@ -45,17 +42,5 @@ public class PlayerUtils {
         } else {
             return entity.hasStatusEffect(StatusEffects.MINING_FATIGUE) ? 6 + (1 + Objects.requireNonNull(entity.getStatusEffect(StatusEffects.MINING_FATIGUE)).getAmplifier()) * 2 : 6;
         }
-    }
-
-    public static void setEntity(Entity entity) {
-        PlayerUtils.entity.set(entity);
-    }
-
-    public static void clearEntity() {
-        entity.remove();
-    }
-
-    public static Entity getEntity() {
-        return entity.get();
     }
 }

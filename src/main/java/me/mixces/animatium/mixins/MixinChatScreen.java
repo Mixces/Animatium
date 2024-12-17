@@ -17,6 +17,7 @@ public abstract class MixinChatScreen {
             context.getMatrices().translate(0F, -12F, 0F);
         }
 
+        // TODO: fix mouse pos offset
         original.call(instance, context, currentTick, mouseX, mouseY, focused);
         if (AnimatiumConfig.oldChatPosition) {
             context.getMatrices().translate(0F, 12F, 0F);

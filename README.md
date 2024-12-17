@@ -135,9 +135,6 @@ Currently, there are no releases. If you want to use a development build, you ca
 - [X] disableProjectileAgeCheck
   - Description: TODO
   - Type: BOOLEAN
-- [X] oldFishingBobberPosition
-  - Description: TODO
-  - Type: BOOLEAN
 - [X] fishingRodLineInterpolation 
   - Description: TODO
   - Type: BOOLEAN

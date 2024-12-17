@@ -77,83 +77,83 @@ public class AnimatiumConfig extends MidnightConfig {
     // TODO/NOTE: Currently not accurate/broken
     public static boolean oldCapeMovement = false; // Changes the cape model movement to be how it used to be
 
-    // Animatium Config
-    @Entry
-    public static boolean tiltItemPositions = true; // Tilt items to look like they do in 1.7
-
-    @Entry
-    public static boolean lockBlockingArmRotation = true; // Locks the third-person blocking arm rotation
-
-    @Entry
-    public static boolean applyItemSwingUsage = true; // Block hitting (apply swing offset in item usage code)
-
-    @Entry
-    public static boolean removeEquipAnimationOnItemUse = true; // Fixes the blocking animation which plays the equip animation on use, and others
-
-    @Entry
-    public static boolean showCrosshairInThirdperson = true; // Show crosshair whilst in thirdperson like in <=1.8
-
-    @Entry
-    public static boolean removeHeartFlash = true; // Remove heart blinking like in <=1.7
-
-    @Entry
-    public static boolean fixTextStrikethroughStyle = true; // Changes the text strikethrough position to make it look like it did in <=1.12.2
-
-    @Entry
-    public static boolean centerScrollableListWidgets = true; // Center scrollable list widgets like <=1.7
-
-    @Entry
-    public static boolean oldBlueVoidSky = true; // (MC-257056) Brings back the forgotten blue void part of the sky
-
-    @Entry
-    public static boolean oldSkyHorizonHeight = true; // Changes the horizon height to how it was in <=1.16.5
-
-    @Entry
-    public static boolean oldCloudHeight = true; // Changes the cloud height back to 128 like in <=1.16.5
-
-    @Entry
-    public static boolean oldButtonTextColors = true; // Bring back the old yellow hover/grayish text colors like in <=1.14.4
-
-    @Entry
-    public static boolean removeDebugHudBackground = true; // Remove the F3 Debug Hud background
-
-    @Entry
-    public static boolean debugHudTextShadow = true; // Add text-shadow to F3 Debug Hud
-
-    @Entry
-    public static boolean oldChatPosition = true; // Moves chat down 12 pixels like in <=1.8
-
-    @Entry
-    public static boolean oldProjectilePosition = true; // Brings back old projectile position <=1.8
-
-    @Entry
-    public static boolean disableProjectileAgeCheck = true; // Render projectile at all ages <=1.15?
-
-    @Entry
-    public static boolean oldFishingBobberPosition = true; // Brings back old fishing bobber position <=1.8
-
-    @Entry
+    @Entry(category = "fishing_rod")
     public static boolean oldFishingRodTextureStackCheck = true; // Brings back old fishing rod stack texture check <=1.8
 
-    @Entry
+    @Entry(category = "fishing_rod")
     public static boolean fishingRodLineInterpolation = true; // Correctly interpolates the fishing rod cast line with the eye height <1.14?
 
-    @Entry
+    @Entry(category = "fishing_rod")
     public static boolean noMoveFishingRodLine = true; // Does not move the fishing rod cast line while sneaking when viewed in the third person mode <=1.7
 
-    @Entry
+    @Entry(category = "fishing_rod")
     public static boolean oldFishingRodLinePositionThirdPerson = true; // Adjusts the position of the fishing rod cast line horizontally like in <=1.7
 
-    @Entry
+    @Entry(category = "fishing_rod")
     public static boolean fixCastLineCheck = true; // Fixes the arm logic for casting the fishing rod
 
-    @Entry
+    @Entry(category = "fishing_rod")
     public static boolean fixCastLineSwing = true; // Fixes the swing logic for casting the fishing rod
 
-    @Entry
+    // Other
+    @Entry(category = "other")
+    public static boolean tiltItemPositions = true; // Tilt items to look like they do in 1.7
+
+    @Entry(category = "other")
+    public static boolean lockBlockingArmRotation = true; // Locks the third-person blocking arm rotation
+
+    @Entry(category = "other")
+    public static boolean applyItemSwingUsage = true; // Block hitting (apply swing offset in item usage code)
+
+    @Entry(category = "other")
+    public static boolean removeEquipAnimationOnItemUse = true; // Fixes the blocking animation which plays the equip animation on use, and others
+
+    @Entry(category = "other")
+    public static boolean showCrosshairInThirdperson = true; // Show crosshair whilst in thirdperson like in <=1.8
+
+    @Entry(category = "other")
+    public static boolean removeHeartFlash = true; // Remove heart blinking like in <=1.7
+
+    @Entry(category = "other")
+    public static boolean fixTextStrikethroughStyle = true; // Changes the text strikethrough position to make it look like it did in <=1.12.2
+
+    @Entry(category = "other")
+    public static boolean centerScrollableListWidgets = true; // Center scrollable list widgets like <=1.7
+
+    @Entry(category = "other")
+    public static boolean oldBlueVoidSky = true; // (MC-257056) Brings back the forgotten blue void part of the sky
+
+    @Entry(category = "other")
+    public static boolean oldSkyHorizonHeight = true; // Changes the horizon height to how it was in <=1.16.5
+
+    @Entry(category = "other")
+    public static boolean oldCloudHeight = true; // Changes the cloud height back to 128 like in <=1.16.5
+
+    @Entry(category = "other")
+    public static boolean oldButtonTextColors = true; // Bring back the old yellow hover/grayish text colors like in <=1.14.4
+
+    @Entry(category = "other")
+    public static boolean removeDebugHudBackground = true; // Remove the F3 Debug Hud background
+
+    @Entry(category = "other")
+    public static boolean debugHudTextShadow = true; // Add text-shadow to F3 Debug Hud
+
+    @Entry(category = "other")
+    public static boolean oldChatPosition = true; // Moves chat down 12 pixels like in <=1.8
+
+    @Entry(category = "other")
+    public static boolean oldProjectilePosition = true; // Brings back old projectile position <=1.8
+
+    @Entry(category = "other")
+    public static boolean disableProjectileAgeCheck = true; // Render projectile at all ages <=1.15?
+
+    @Entry(category = "other")
     public static boolean oldBlockMiningProgress = true; // Bring back the old block mining progress <=1.18?
 
-    @Entry
+    @Entry(category = "other")
+    public static boolean disableItemUsingTextureInGui = true; // Disables the item usage texture in the GUI like in <=1.8 (mainly rod/bow)
+
+    @Entry(category = "other")
     public static CameraVersion cameraVersion = CameraVersion.v1_8; // Change the camera position to be as it was in said version range
 
     public enum CameraVersion {

@@ -1,5 +1,6 @@
 package me.mixces.animatium.mixins;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import me.mixces.animatium.config.AnimatiumConfig;
@@ -32,11 +33,9 @@ public abstract class MixinGameRenderer {
         }
     }
 
-    @WrapOperation(method = "renderWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;bobView(Lnet/minecraft/client/util/math/MatrixStack;F)V"))
-    private void animatium$minimalViewBobbing(GameRenderer instance, MatrixStack matrices, float tickDelta, Operation<Void> original) {
-        if (!AnimatiumConfig.minimalViewBobbing) {
-            original.call(instance, matrices, tickDelta);
-        }
+    @WrapWithCondition(method = "renderWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;bobView(Lnet/minecraft/client/util/math/MatrixStack;F)V"))
+    private boolean animatium$minimalViewBobbing(GameRenderer instance, MatrixStack matrices, float tickDelta) {
+        return !AnimatiumConfig.minimalViewBobbing;
     }
 
     @WrapOperation(method = "renderWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;shouldRenderBlockOutline()Z"))

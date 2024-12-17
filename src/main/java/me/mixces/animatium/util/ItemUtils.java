@@ -3,25 +3,24 @@ package me.mixces.animatium.util;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ModelTransformationMode;
 
+import java.util.Optional;
+
 public abstract class ItemUtils {
-    private static final ThreadLocal<ItemStack> stack = ThreadLocal.withInitial(() -> null);
-    private static final ThreadLocal<ModelTransformationMode> transformationMode = ThreadLocal.withInitial(() -> null);
+    private static final ThreadLocal<ItemStack> STACK = ThreadLocal.withInitial(() -> null);
+    private static final ThreadLocal<ModelTransformationMode> TRANSFORMATION_MODE = ThreadLocal.withInitial(() -> null);
 
     public static void set(ItemStack stack, ModelTransformationMode transformationMode) {
-        ItemUtils.stack.set(stack);
-        ItemUtils.transformationMode.set(transformationMode);
+        ItemUtils.STACK.remove();
+        ItemUtils.TRANSFORMATION_MODE.remove();
+        ItemUtils.STACK.set(stack);
+        ItemUtils.TRANSFORMATION_MODE.set(transformationMode);
     }
 
-    public static void clear() {
-        ItemUtils.stack.remove();
-        ItemUtils.transformationMode.remove();
+    public static Optional<ItemStack> getStack() {
+        return Optional.ofNullable(STACK.get());
     }
 
-    public static ItemStack getStack() {
-        return stack.get();
-    }
-
-    public static ModelTransformationMode getTransformMode() {
-        return transformationMode.get();
+    public static Optional<ModelTransformationMode> getTransformMode() {
+        return Optional.ofNullable(TRANSFORMATION_MODE.get());
     }
 }

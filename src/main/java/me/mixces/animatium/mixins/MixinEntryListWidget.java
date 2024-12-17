@@ -1,5 +1,6 @@
 package me.mixces.animatium.mixins;
 
+import me.mixces.animatium.config.AnimatiumConfig;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.ScrollableWidget;
@@ -12,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinEntryListWidget {
     @Inject(method = "renderWidget", at = @At("HEAD"))
     private void animatium$updateScroll(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        ((ScrollableWidget) (Object) this).refreshScroll();
+        if (AnimatiumConfig.centerScrollableListWidgets) {
+            ((ScrollableWidget) (Object) this).refreshScroll();
+        }
     }
 }

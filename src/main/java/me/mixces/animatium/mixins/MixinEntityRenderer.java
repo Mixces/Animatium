@@ -3,17 +3,26 @@ package me.mixces.animatium.mixins;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import me.mixces.animatium.config.AnimatiumConfig;
+import me.mixces.animatium.util.EntityUtils;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.state.EntityRenderState;
 import net.minecraft.client.render.entity.state.LivingEntityRenderState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityRenderer.class)
 public abstract class MixinEntityRenderer {
+    @Inject(method = "updateRenderState", at = @At("TAIL"))
+    private <T extends Entity, S extends EntityRenderState> void animatium$saveEntityByState(T entity, S state, float tickDelta, CallbackInfo ci) {
+        EntityUtils.setEntityByState(state, entity);
+    }
+
     @WrapOperation(method = "renderLabelIfPresent", at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/entity/state/EntityRenderState;sneaking:Z"))
     private boolean animatium$sneakAnimationWhileFlying(EntityRenderState instance, Operation<Boolean> original) {
         if (AnimatiumConfig.sneakAnimationWhileFlying && instance instanceof LivingEntityRenderState livingEntityRenderState) {
