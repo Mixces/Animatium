@@ -1,0 +1,23 @@
+package me.mixces.animatium.mixins;
+
+import me.mixces.animatium.util.ItemUtils;
+import net.minecraft.client.item.ItemModelManager;
+import net.minecraft.client.render.item.ItemRenderState;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ModelTransformationMode;
+import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(ItemModelManager.class)
+public class MixinItemModelManager {
+
+    @Inject(method = "update(Lnet/minecraft/client/render/item/ItemRenderState;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ModelTransformationMode;ZLnet/minecraft/world/World;Lnet/minecraft/entity/LivingEntity;I)V", at = @At("HEAD"))
+    private void animatium$set(ItemRenderState renderState, ItemStack stack, ModelTransformationMode transformationMode, boolean leftHand, World world, LivingEntity entity, int seed, CallbackInfo ci) {
+        ItemUtils.clear();
+        ItemUtils.set(stack, transformationMode);
+    }
+}

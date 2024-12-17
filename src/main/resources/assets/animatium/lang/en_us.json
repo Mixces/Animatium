@@ -90,6 +90,8 @@
 	"animatium.midnightconfig.disableProjectileAgeCheck.tooltip": "TODO",
 	"animatium.midnightconfig.oldFishingBobberPosition": "Bring back the old fishing bobber position",
 	"animatium.midnightconfig.oldFishingBobberPosition.tooltip": "TODO",
+	"animatium.midnightconfig.oldFishingRodTextureStackCheck": "Disable fishing rod stack check",
+	"animatium.midnightconfig.oldFishingRodTextureStackCheck.tooltip": "TODO",
 	"animatium.midnightconfig.fishingRodLineInterpolation": "Correctly interpolate the fishing rod cast line with the eye height",
 	"animatium.midnightconfig.fishingRodLineInterpolation.tooltip": "TODO",
 	"animatium.midnightconfig.noMoveFishingRodLine": "Disable fishing line movement while sneaking in third person",

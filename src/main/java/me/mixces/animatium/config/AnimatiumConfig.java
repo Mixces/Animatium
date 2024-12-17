@@ -133,6 +133,9 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean oldFishingBobberPosition = true; // Brings back old fishing bobber position <=1.8
 
     @Entry
+    public static boolean oldFishingRodTextureStackCheck = true; // Brings back old fishing rod stack texture check <=1.8
+
+    @Entry
     public static boolean fishingRodLineInterpolation = true; // Correctly interpolates the fishing rod cast line with the eye height <1.14?
 
     @Entry

@@ -11,6 +11,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.FishingRodItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
@@ -54,6 +55,9 @@ public abstract class MixinHeldItemRenderer {
             final Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
             final int direction = arm == Arm.RIGHT ? 1 : -1;
             final float scale = 0.7585F / 0.86F;
+            if (stack.getItem() instanceof FishingRodItem) {
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 180.0F));
+            }
             matrices.scale(scale, scale, scale);
             matrices.translate(direction * -0.084F, 0.059F, 0.08F);
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 5.0F));
