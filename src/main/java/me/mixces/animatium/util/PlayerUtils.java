@@ -17,7 +17,7 @@ import java.util.Objects;
 
 import static me.mixces.animatium.Animatium.isLegacySupportedVersion;
 
-public class PlayerUtils {
+public abstract class PlayerUtils {
     public static int getHandMultiplier(PlayerEntity player) {
         Hand hand = MoreObjects.firstNonNull(player.preferredHand, Hand.MAIN_HAND);
         Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();

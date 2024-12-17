@@ -11,9 +11,7 @@
 		"accessor.EntryListWidgetAccessor",
 		"accessor.PlayerEntityAccessor",
 		"accessor.SkyRenderingAccessor",
-		"world.entity.MixinLivingEntity",
-		"world.entity.MixinPlayerEntity",
-		"world.entity.MixinThrownEntity",
+		"model.entity.MixinBipedEntityModel",
 		"model.item.MixinFishingRodCastProperty",
 		"model.item.MixinItemModelManager",
 		"model.item.MixinItemRenderLayerState",
@@ -25,10 +23,10 @@
 		"renderer.entity.MixinEntityRenderer",
 		"renderer.entity.MixinFishingBobberEntityRenderer",
 		"renderer.entity.MixinFlyingItemEntityRenderer",
+		"renderer.entity.MixinItemEntityRenderer",
 		"renderer.entity.MixinLivingEntityRenderer",
 		"renderer.entity.MixinPlayerEntityRenderer",
 		"renderer.item.MixinHeldItemRenderer",
-		"model.entity.MixinBipedEntityModel",
 		"screen.MixinChatScreen",
 		"screen.MixinDebugHud",
 		"screen.MixinEntryListWidget",
@@ -37,7 +35,10 @@
 		"screen.MixinTextRendererDrawer",
 		"screen.widget.MixinPressableWidget",
 		"screen.widget.MixinScrollableWidget",
-		"screen.widget.MixinSliderWidget"
+		"screen.widget.MixinSliderWidget",
+		"world.entity.MixinLivingEntity",
+		"world.entity.MixinPlayerEntity",
+		"world.entity.MixinThrownEntity"
 	],
 	"injectors": {
 		"defaultRequire": 1

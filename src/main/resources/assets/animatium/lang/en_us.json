@@ -110,6 +110,8 @@
 	"animatium.midnightconfig.disableInventoryEntityScissor.tooltip": "TODO",
 	"animatium.midnightconfig.disableCameraTransparentPassthrough": "Disable third-person camera block passthrough",
 	"animatium.midnightconfig.disableCameraTransparentPassthrough.tooltip": "TODO",
+	"animatium.midnightconfig.itemDropsFaceCamera": "Make item entities use camera yaw / face camera",
+	"animatium.midnightconfig.itemDropsFaceCamera.tooltip": "TODO",
 	"animatium.midnightconfig.cameraVersion": "Change camera position to be as it was in",
 	"animatium.midnightconfig.cameraVersion.tooltip": "TODO",
 

@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class EntityUtils {
+public abstract class EntityUtils {
     private static final Map<EntityRenderState, Entity> STATE_TO_ENTITY = new HashMap<>();
 
     public static void setEntityByState(EntityRenderState state, Entity entity) {
