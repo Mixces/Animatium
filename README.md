@@ -83,6 +83,26 @@ Currently, there are no releases. If you want to use a development build, you ca
   - Description: TODO
   - Type: BOOLEAN
 
+## 🎣 Fishing Rod
+- [X] oldFishingRodTextureStackCheck
+  - Description: TODO
+  - Type: BOOLEAN
+- [X] fishingRodLineInterpolation
+  - Description: TODO
+  - Type: BOOLEAN
+- [X] noMoveFishingRodLine
+  - Description: TODO
+  - Type: BOOLEAN
+- [X] oldFishingRodLinePositionThirdPerson
+  - Description: TODO
+  - Type: BOOLEAN
+- [X] fixCastLineCheck
+  - Description: TODO
+  - Type: BOOLEAN
+- [X] fixCastLineSwing
+  - Description: TODO
+  - Type: BOOLEAN
+
 ## 🛠️ Old Settings
 - [X] tiltItemPositions
   - Description: TODO
@@ -133,21 +153,6 @@ Currently, there are no releases. If you want to use a development build, you ca
   - Description: TODO
   - Type: BOOLEAN
 - [X] disableProjectileAgeCheck
-  - Description: TODO
-  - Type: BOOLEAN
-- [X] fishingRodLineInterpolation 
-  - Description: TODO
-  - Type: BOOLEAN
-- [X] noMoveFishingRodLine
-  - Description: TODO
-  - Type: BOOLEAN
-- [X] oldFishingRodLinePositionThirdPerson
-  - Description: TODO
-  - Type: BOOLEAN
-- [X] fixCastLineCheck 
-  - Description: TODO
-  - Type: BOOLEAN
-- [X] fixCastLineSwing
   - Description: TODO
   - Type: BOOLEAN
 - [X] oldBlockMiningProgress
