@@ -108,6 +108,8 @@
 	"animatium.midnightconfig.disableItemUsingTextureInGui.tooltip": "TODO",
 	"animatium.midnightconfig.disableInventoryEntityScissor": "Allow full entity model rendering in inventory",
 	"animatium.midnightconfig.disableInventoryEntityScissor.tooltip": "TODO",
+	"animatium.midnightconfig.disableCameraTransparentPassthrough": "Disable third-person camera block passthrough",
+	"animatium.midnightconfig.disableCameraTransparentPassthrough.tooltip": "TODO",
 	"animatium.midnightconfig.cameraVersion": "Change camera position to be as it was in",
 	"animatium.midnightconfig.cameraVersion.tooltip": "TODO",
 

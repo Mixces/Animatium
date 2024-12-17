@@ -164,6 +164,9 @@ Currently, there are no releases. If you want to use a development build, you ca
 - [X] disableInventoryEntityScissor
   - Description: Allows the inventory entity model to render fully
   - Type: BOOLEAN
+- [X] disableCameraTransparentPassthrough
+  - Description: Stops camera passthrough in thirdperson in glass/etc
+  - Type: BOOLEAN
 - [X] cameraVersion
   - Description: TODO
   - Type: ENUM 

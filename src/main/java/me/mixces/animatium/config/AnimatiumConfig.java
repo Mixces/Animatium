@@ -157,6 +157,9 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean disableInventoryEntityScissor = true; // Allows the inventory entity model to render fully
 
     @Entry(category = "other")
+    public static boolean disableCameraTransparentPassthrough = true; // Stops camera passthrough in thirdperson in glass/etc
+
+    @Entry(category = "other")
     public static CameraVersion cameraVersion = CameraVersion.v1_8; // Change the camera position to be as it was in said version range
 
     public enum CameraVersion {

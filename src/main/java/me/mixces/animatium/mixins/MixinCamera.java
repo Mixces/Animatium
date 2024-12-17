@@ -7,6 +7,7 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.RaycastContext;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -42,6 +43,16 @@ public abstract class MixinCamera {
             cameraY = focusedEntity.getStandingEyeHeight();
         } else {
             original.call(instance, value);
+        }
+    }
+
+    // TODO/NOTE: Could we also just do this in TransparentBlock?
+    @WrapOperation(method = "clipToSpace", at = @At(value = "FIELD", target = "Lnet/minecraft/world/RaycastContext$ShapeType;VISUAL:Lnet/minecraft/world/RaycastContext$ShapeType;"))
+    private RaycastContext.ShapeType animatium$disableCameraTransparentPassthrough(Operation<RaycastContext.ShapeType> original) {
+        if (AnimatiumConfig.disableCameraTransparentPassthrough) {
+            return RaycastContext.ShapeType.OUTLINE;
+        } else {
+            return original.call();
         }
     }
 
