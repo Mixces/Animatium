@@ -2,6 +2,7 @@ package me.mixces.animatium.mixins.world.entity;
 
 import me.mixces.animatium.Animatium;
 import me.mixces.animatium.config.AnimatiumConfig;
+import me.mixces.animatium.util.PlayerUtils;
 import me.mixces.animatium.util.ViewBobbingStorage;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
@@ -59,7 +60,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
     @Inject(method = "getBaseDimensions", at = @At("RETURN"), cancellable = true)
     private void animatium$oldSneakEyeHeight(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
         if (AnimatiumConfig.oldSneakEyeHeight && pose.equals(EntityPose.CROUCHING)) {
-            cir.setReturnValue(Animatium.getLegacySneakingDimensions((PlayerEntity) (Object) this, pose));
+            cir.setReturnValue(PlayerUtils.getLegacySneakingDimensions((PlayerEntity) (Object) this, pose));
         }
     }
 }
