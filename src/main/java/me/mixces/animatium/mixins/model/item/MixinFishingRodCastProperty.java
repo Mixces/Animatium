@@ -1,4 +1,4 @@
-package me.mixces.animatium.mixins.model;
+package me.mixces.animatium.mixins.model.item;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;

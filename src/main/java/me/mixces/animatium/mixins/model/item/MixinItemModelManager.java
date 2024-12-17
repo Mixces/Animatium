@@ -1,4 +1,4 @@
-package me.mixces.animatium.mixins.model;
+package me.mixces.animatium.mixins.model.item;
 
 import me.mixces.animatium.util.ItemUtils;
 import net.minecraft.client.item.ItemModelManager;

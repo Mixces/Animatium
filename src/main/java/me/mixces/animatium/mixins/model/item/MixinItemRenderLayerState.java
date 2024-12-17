@@ -1,4 +1,4 @@
-package me.mixces.animatium.mixins.model;
+package me.mixces.animatium.mixins.model.item;
 
 import me.mixces.animatium.config.AnimatiumConfig;
 import me.mixces.animatium.util.ItemUtils;

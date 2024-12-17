@@ -1,4 +1,4 @@
-package me.mixces.animatium.mixins.entity;
+package me.mixces.animatium.mixins.world.entity;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

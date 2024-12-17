@@ -1,4 +1,4 @@
-package me.mixces.animatium.mixins.renderer.model;
+package me.mixces.animatium.mixins.model.entity;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
