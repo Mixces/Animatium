@@ -45,7 +45,10 @@ public class Animatium implements ClientModInitializer {
                 return true;
             } else {
                 ServerInfo serverInfo = networkHandler.getServerInfo();
-                return serverInfo != null && (serverInfo.address.contains("loyisa") || serverInfo.address.contains("bedwarspractice") || serverInfo.address.contains("bridger.land"));
+                return serverInfo != null &&
+                        (serverInfo.address.contains("loyisa") ||
+                                serverInfo.address.contains("bedwarspractice") ||
+                                serverInfo.address.contains("bridger.land"));
             }
         }
 

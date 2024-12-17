@@ -17,6 +17,7 @@
 		"MixinGameRenderer",
 		"MixinHeldItemRenderer",
 		"MixinInGameHud",
+		"MixinInventoryScreen",
 		"MixinItemModelManager",
 		"MixinItemRenderLayerState",
 		"MixinLivingEntity",

@@ -106,6 +106,8 @@
 	"animatium.midnightconfig.oldBlockMiningProgress.tooltip": "TODO",
 	"animatium.midnightconfig.disableItemUsingTextureInGui": "Disable item usage texture in GUI",
 	"animatium.midnightconfig.disableItemUsingTextureInGui.tooltip": "TODO",
+	"animatium.midnightconfig.disableInventoryEntityScissor": "Allow full entity model rendering in inventory",
+	"animatium.midnightconfig.disableInventoryEntityScissor.tooltip": "TODO",
 	"animatium.midnightconfig.cameraVersion": "Change camera position to be as it was in",
 	"animatium.midnightconfig.cameraVersion.tooltip": "TODO",
 

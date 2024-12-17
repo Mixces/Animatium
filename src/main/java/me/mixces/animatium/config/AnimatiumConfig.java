@@ -151,7 +151,10 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean oldBlockMiningProgress = true; // Bring back the old block mining progress <=1.18?
 
     @Entry(category = "other")
-    public static boolean disableItemUsingTextureInGui = true; // Disables the item usage texture in the GUI like in <=1.8 (mainly rod/bow)
+    public static boolean disableItemUsingTextureInGui = true; // Disables the item usage texture in the GUI like in <=1.8 (mainly rod/bow/crossbow)
+
+    @Entry(category = "other")
+    public static boolean disableInventoryEntityScissor = true; // Allows the inventory entity model to render fully
 
     @Entry(category = "other")
     public static CameraVersion cameraVersion = CameraVersion.v1_8; // Change the camera position to be as it was in said version range

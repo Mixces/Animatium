@@ -153,6 +153,12 @@ Currently, there are no releases. If you want to use a development build, you ca
 - [X] oldBlockMiningProgress
   - Description: TODO
   - Type: BOOLEAN
+- [X] disableItemUsingTextureInGui
+  - Description: Disables the item usage texture in the GUI like in <=1.8 (mainly rod/bow/crossbow)
+  - Type: BOOLEAN
+- [X] disableInventoryEntityScissor
+  - Description: Allows the inventory entity model to render fully
+  - Type: BOOLEAN
 - [X] cameraVersion
   - Description: TODO
   - Type: ENUM 
