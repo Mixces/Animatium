@@ -9,6 +9,7 @@
     "MixinChatScreen",
     "MixinClientPlayerInteractionManager",
     "MixinDebugHud",
+    "MixinEntityRenderDispatcher",
     "MixinEntityRenderer",
     "MixinEntryListWidget",
     "MixinFishingBobberEntityRenderer",

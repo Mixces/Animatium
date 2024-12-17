@@ -33,7 +33,7 @@ public abstract class MixinFishingBobberEntityRenderer extends EntityRenderer<Fi
 
     @Inject(method = "render(Lnet/minecraft/client/render/entity/state/FishingBobberEntityState;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;peek()Lnet/minecraft/client/util/math/MatrixStack$Entry;", ordinal = 0))
     private void animatium$oldFishingBobberPosition(FishingBobberEntityState fishingBobberEntityState, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
-        if (AnimatiumConfig.oldFishingBobberPosition) {
+        if (AnimatiumConfig.oldFishingBobberPosition && ((FishingBobberEntity) PlayerUtils.getEntity()).getHookedEntity() == null) {
             assert MinecraftClient.getInstance().player != null;
             int multiplier = PlayerUtils.getHandMultiplier(MinecraftClient.getInstance().player);
             // TODO: Fix line
