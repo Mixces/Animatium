@@ -1,4 +1,4 @@
-package me.mixces.animatium.mixins;
+package me.mixces.animatium.mixins.renderer.entity;
 
 import me.mixces.animatium.config.AnimatiumConfig;
 import me.mixces.animatium.util.PlayerUtils;

@@ -1,4 +1,4 @@
-package me.mixces.animatium.mixins;
+package me.mixces.animatium.mixins.entity;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import me.mixces.animatium.config.AnimatiumConfig;

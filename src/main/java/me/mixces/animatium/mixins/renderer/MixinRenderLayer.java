@@ -1,4 +1,4 @@
-package me.mixces.animatium.mixins;
+package me.mixces.animatium.mixins.renderer;
 
 import net.minecraft.client.render.RenderLayer;
 import org.spongepowered.asm.mixin.Mixin;
