@@ -1,37 +1,39 @@
 package me.mixces.animatium.mixins.world.entity;
 
-import me.mixces.animatium.Animatium;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import me.mixces.animatium.config.AnimatiumConfig;
 import me.mixces.animatium.util.PlayerUtils;
 import me.mixces.animatium.util.ViewBobbingStorage;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
 public abstract class MixinPlayerEntity extends LivingEntity {
+    @Shadow
+    public abstract void addEnchantedHitParticles(Entity target);
+
     protected MixinPlayerEntity(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    @ModifyConstant(method = "attack", constant = @Constant(floatValue = 0.0F, ordinal = 6))
-    private float animatium$alwaysShowSharpParticles(float original) {
+    @Inject(method = "attack", at = @At("HEAD"))
+    private void animatium$alwaysShowSharpParticles(Entity target, CallbackInfo ci) {
         if (AnimatiumConfig.getInstance().alwaysShowSharpParticles) {
-            return -1;
-        } else {
-            return original;
+            this.addEnchantedHitParticles(target);
         }
+    }
+
+    @WrapWithCondition(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;addEnchantedHitParticles(Lnet/minecraft/entity/Entity;)V"))
+    private boolean animatium$disableDefaultSharpParticles(PlayerEntity instance, Entity target) {
+        return !AnimatiumConfig.getInstance().alwaysShowSharpParticles;
     }
 
     @Inject(method = "getMaxRelativeHeadRotation", at = @At(value = "RETURN"), cancellable = true)
