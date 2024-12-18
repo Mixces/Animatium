@@ -27,6 +27,7 @@
 		"renderer.entity.MixinLivingEntityRenderer",
 		"renderer.entity.MixinPlayerEntityRenderer",
 		"renderer.item.MixinHeldItemRenderer",
+		"renderer.item.MixinItemRenderer",
 		"screen.MixinChatScreen",
 		"screen.MixinDebugHud",
 		"screen.MixinEntryListWidget",

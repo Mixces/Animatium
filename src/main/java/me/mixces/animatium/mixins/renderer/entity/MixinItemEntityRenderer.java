@@ -23,7 +23,7 @@ import java.util.Optional;
 @Mixin(ItemEntityRenderer.class)
 public abstract class MixinItemEntityRenderer {
     @WrapOperation(method = "render(Lnet/minecraft/client/render/entity/state/ItemEntityRenderState;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ItemEntity;getRotation(FF)F"))
-    private float animatium$itemDrops2D(float age, float uniqueOffset, Operation<Float> original, @Local(argsOnly = true) ItemEntityRenderState itemEntityRenderState, @Local(argsOnly = true) MatrixStack matrixStack) {
+    private float animatium$itemDropsFaceCamera(float age, float uniqueOffset, Operation<Float> original, @Local(argsOnly = true) ItemEntityRenderState itemEntityRenderState, @Local(argsOnly = true) MatrixStack matrixStack) {
         if (AnimatiumConfig.itemDropsFaceCamera) {
             Optional<Entity> optionalEntity = EntityUtils.getEntityByState(itemEntityRenderState);
             if (optionalEntity.isPresent()) {
