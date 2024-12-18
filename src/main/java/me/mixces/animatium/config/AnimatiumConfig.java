@@ -121,6 +121,9 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean centerScrollableListWidgets = true; // Center scrollable list widgets like <=1.7
 
     @Entry(category = "other")
+    public static boolean oldListWidgetSelectedBorderColor = true; // Returns the old list widget selected border color from <=1.15?
+
+    @Entry(category = "other")
     public static boolean oldBlueVoidSky = true; // (MC-257056) Brings back the forgotten blue void part of the sky
 
     @Entry(category = "other")

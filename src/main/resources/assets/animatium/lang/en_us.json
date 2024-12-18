@@ -84,6 +84,8 @@
 	"animatium.midnightconfig.fixTextStrikethroughStyle.tooltip": "TODO",
 	"animatium.midnightconfig.centerScrollableListWidgets": "Center scrollable list widgets",
 	"animatium.midnightconfig.centerScrollableListWidgets.tooltip": "TODO",
+	"animatium.midnightconfig.oldListWidgetSelectedBorderColor": "Old list widget selected border color",
+	"animatium.midnightconfig.oldListWidgetSelectedBorderColor.tooltip": "TODO",
 	"animatium.midnightconfig.oldBlueVoidSky": "Bring back the old blue void skybox",
 	"animatium.midnightconfig.oldBlueVoidSky.tooltip": "TODO",
 	"animatium.midnightconfig.oldSkyHorizonHeight": "Revert the 1.17 sky horizon height",

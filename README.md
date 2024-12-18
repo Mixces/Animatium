@@ -139,7 +139,10 @@ them [here](https://github.com/Legacy-Visuals-Project/Animatium/actions).
     - Description: TODO
     - Type: BOOLEAN
 - [X] centerScrollableListWidgets
-    - Description: TODO
+    - Description: Center scrollable list widgets like <=1.7
+    - Type: BOOLEAN
+- [X] oldListWidgetSelectedBorderColor
+    - Description: Returns the old list widget selected border color from <=1.15?
     - Type: BOOLEAN
 - [X] oldBlueVoidSky
     - Description: TODO
