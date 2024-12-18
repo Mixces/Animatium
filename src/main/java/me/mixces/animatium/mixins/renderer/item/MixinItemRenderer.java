@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Mixin(ItemRenderer.class)
 public abstract class MixinItemRenderer {
     @WrapOperation(method = "renderBakedItemModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/BakedModel;getQuads(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/Direction;Lnet/minecraft/util/math/random/Random;)Ljava/util/List;", ordinal = 1))
-    private static List<BakedQuad> overflowAnimations$changeToSprite(BakedModel instance, BlockState state, Direction direction, Random random, Operation<List<BakedQuad>> original) {
+    private static List<BakedQuad> animatium$itemDrops2D(BakedModel instance, BlockState state, Direction direction, Random random, Operation<List<BakedQuad>> original) {
         List<BakedQuad> quads = original.call(instance, state, direction, random);
         Optional<ModelTransformationMode> optionalModelTransformationMode = ItemUtils.getTransformMode();
         if (AnimatiumConfig.itemDrops2D && !instance.hasDepth() && optionalModelTransformationMode.isPresent() && optionalModelTransformationMode.get() == ModelTransformationMode.GROUND) {
