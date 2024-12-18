@@ -13,14 +13,14 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(UsingItemProperty.class)
 public abstract class MixinUsingItemProperty {
-//    @ModifyReturnValue(method = "getValue", at = @At(value = "RETURN"))
-//    private boolean animatium$getValue(boolean original, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) ModelTransformationMode modelTransformationMode) {
-//        if (AnimatiumConfig.getInstance().disableItemUsingTextureInGui &&
-//                (stack.getItem() instanceof BowItem || stack.getItem() instanceof CrossbowItem) &&
-//                modelTransformationMode == ModelTransformationMode.GUI) {
-//            return false;
-//        } else {
-//            return original;
-//        }
-//    }
+    @ModifyReturnValue(method = "getValue", at = @At(value = "RETURN"))
+    private boolean animatium$getValue(boolean original, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) ModelTransformationMode modelTransformationMode) {
+        if (AnimatiumConfig.getInstance().disableItemUsingTextureInGui &&
+                (stack.getItem() instanceof BowItem || stack.getItem() instanceof CrossbowItem) &&
+                modelTransformationMode == ModelTransformationMode.GUI) {
+            return false;
+        } else {
+            return original;
+        }
+    }
 }
