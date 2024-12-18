@@ -4,13 +4,19 @@
 	"version": "${version}",
 	"name": "Animatium",
 	"description": "Visual tweaks/qol settings for modern minecraft versions, aimed at 1.7/1.8 players.",
-	"authors": ["mixcesta", "lowercasebtw"],
+	"authors": [
+		"mixcesta",
+		"lowercasebtw"
+	],
 	"license": "LGPL-2.1",
 	"icon": "assets/animatium/icon.png",
 	"environment": "client",
 	"entrypoints": {
 		"client": [
 			"me.mixces.animatium.Animatium"
+		],
+		"modmenu": [
+			"me.mixces.animatium.config.ModMenuIntegration"
 		]
 	},
 	"mixins": [
@@ -19,6 +25,6 @@
 	"depends": {
 		"fabricloader": ">=0.16.7",
 		"minecraft": ">=1.21.4 <1.21.5",
-		"midnightlib": ">=1.6.6"
+		"yet_another_config_lib_v3": ">=3.6.2"
 	}
 }

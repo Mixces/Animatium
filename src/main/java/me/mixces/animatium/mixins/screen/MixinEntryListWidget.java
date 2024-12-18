@@ -22,14 +22,14 @@ public abstract class MixinEntryListWidget {
 
     @Inject(method = "renderWidget", at = @At("HEAD"))
     private void animatium$updateScroll(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (AnimatiumConfig.centerScrollableListWidgets) {
+        if (AnimatiumConfig.getInstance().centerScrollableListWidgets) {
             ((ScrollableWidget) (Object) this).refreshScroll();
         }
     }
 
     @WrapOperation(method = "renderEntry", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/EntryListWidget;isFocused()Z"))
     private boolean animatium$oldListWidgetSelectedBorderColor(EntryListWidget<?> instance, Operation<Boolean> original) {
-        if (AnimatiumConfig.oldListWidgetSelectedBorderColor) {
+        if (AnimatiumConfig.getInstance().oldListWidgetSelectedBorderColor) {
             return false;
         } else {
             return original.call(instance);

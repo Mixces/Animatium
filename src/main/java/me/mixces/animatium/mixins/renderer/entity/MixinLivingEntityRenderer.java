@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderState> {
     @Inject(method = "render(Lnet/minecraft/client/render/entity/state/LivingEntityRenderState;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;translate(FFF)V", ordinal = 1))
     private void animatium$syncPlayerModelWithEyeHeight(S livingEntityRenderState, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
-        if (AnimatiumConfig.syncPlayerModelWithEyeHeight) {
+        if (AnimatiumConfig.getInstance().syncPlayerModelWithEyeHeight) {
             MinecraftClient client = MinecraftClient.getInstance();
             ClientPlayerEntity player = client.player;
             if (livingEntityRenderState instanceof PlayerEntityRenderState state && player != null && state.id == player.getId()) {
@@ -39,7 +39,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
 
     @ModifyExpressionValue(method = "updateRenderState(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/client/render/entity/state/LivingEntityRenderState;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;isAlive()Z"))
     private boolean animatium$oldDeathLimbs(boolean original) {
-        if (AnimatiumConfig.oldDeathLimbs) {
+        if (AnimatiumConfig.getInstance().oldDeathLimbs) {
             return true;
         } else {
             return original;
@@ -48,7 +48,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
 
     @WrapOperation(method = "hasLabel(Lnet/minecraft/entity/LivingEntity;D)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;getCameraEntity()Lnet/minecraft/entity/Entity;"))
     private Entity animatium$showNametagInThirdperson(MinecraftClient instance, Operation<Entity> original) {
-        if (AnimatiumConfig.showNametagInThirdperson) {
+        if (AnimatiumConfig.getInstance().showNametagInThirdperson) {
             return null;
         } else {
             return original.call(instance);

@@ -14,7 +14,7 @@ public abstract class MixinTextRendererDrawer {
 
     @ModifyArg(method = "accept", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/BakedGlyph$Rectangle;<init>(FFFFFIIF)V", ordinal = 0), index = 1)
     private float animatium$fixTextStrikethroughStyle$minY(float minY) {
-        if (AnimatiumConfig.fixTextStrikethroughStyle) {
+        if (AnimatiumConfig.getInstance().fixTextStrikethroughStyle) {
             return minY - animatium$strikethroughOffset;
         } else {
             return minY;
@@ -23,7 +23,7 @@ public abstract class MixinTextRendererDrawer {
 
     @ModifyArg(method = "accept", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/BakedGlyph$Rectangle;<init>(FFFFFIIF)V", ordinal = 0), index = 3)
     private float animatium$fixTextStrikethroughStyle$maxY(float maxY) {
-        if (AnimatiumConfig.fixTextStrikethroughStyle) {
+        if (AnimatiumConfig.getInstance().fixTextStrikethroughStyle) {
             return maxY - animatium$strikethroughOffset;
         } else {
             return maxY;

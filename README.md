@@ -16,181 +16,186 @@ them [here](https://github.com/Legacy-Visuals-Project/Animatium/actions).
 ## 💨 Sneaking
 
 - [X] removeSmoothSneaking
-    - Description: TODO
+    - Description: Removes the smooth sneaking camera animation, making it like it was in 1.8-1.12.2.
     - Type: BOOLEAN
 - [X] oldSneakAnimationInterpolation
-    - Description: TODO
+    - Description: Brings back the <=1.7.x sneaking camera animation interpolation.
     - Type: BOOLEAN
 - [X] oldSneakEyeHeight
-    - Description: TODO
+    - Description: Changes the sneak eye height to be as it was <=1.13.2.
     - Type: BOOLEAN
 - [X] fixSneakingFeetPosition
-    - Description: TODO
+    - Description: Fixes the sneaking model offset to be like <=1.11.x.
     - Type: BOOLEAN
 - [X] oldSneakingFeetPosition
-    - Description: TODO
+    - Description: Fixes the sneaking model offset to be like <1.14?
     - Type: BOOLEAN
 - [X] syncPlayerModelWithEyeHeight
-    - Description: TODO
+    - Description: Synchronizes the player model to the eye height like in <=1.7.x.
     - Type: BOOLEAN
 - [X] sneakAnimationWhileFlying
-    - Description: TODO
+    - Description: Shows the sneaking animation in third-person whilst flying down like in <=1.13.x.
     - Type: BOOLEAN
 
 ## 🪶 Quality of Life
 
 - [X] minimalViewBobbing
-    - Description: TODO
+    - Description: Removes the view bobbing from tilting the world.
     - Type: BOOLEAN
 - [X] showNametagInThirdperson
-    - Description: TODO
+    - Description: Show the player nametag whilst in third-person.
     - Type: BOOLEAN
 - [X] hideNameTagBackground
-    - Description: TODO
+    - Description: Remove the nametag background.
     - Type: BOOLEAN
 - [X] applyTextShadowToNametag
-    - Description: TODO
+    - Description: Make the nametag use text shadow.
     - Type: BOOLEAN
 - [X] fixMirrorArmSwing
-    - Description: TODO
+    - Description: Fix the left-arm swing mirroring.
     - Type: BOOLEAN
 - [X] persistentBlockOutline
     - Description: Always show block outline, no matter the gamemode or state.
     - Type: BOOLEAN
 - [X] alwaysAllowUsageSwinging
     - Description: Allows you to hold left click whilst using item to swing the arm always, not just when looking at a
-      block.
+      block. Requires applyItemSwingUsage to be enabled.
     - Type: BOOLEAN
     - Requires:
         - applyItemSwingUsage
 - [X] alwaysShowSharpParticles
-    - Description: Always show sharp particles when damaging an entity
+    - Description: Always show the sharpness particles when damaging/hitting an entity.
     - Type: BOOLEAN
 - [ ] forceItemGlintOnEntity
-    - Description: Makes the entity glint use the same texture as the item glint like in <=1.19
+    - Description: Makes the entity glint use the same texture as the item glint like it was in <=1.19.
     - Type: BOOLEAN
 
 ## 🏃 Movement
 
 - [X] rotateBackwardsWalking
-    - Description: TODO
+    - Description: Rotates the entity body sideways when walking backwards like it was in <=1.11.2.
     - Type: BOOLEAN
 - [X] uncapBlockingHeadRotation
-    - Description: TODO
+    - Description: Reverts the change in 1.20.2, making head rotation when blocking as it used to be.
     - Type: BOOLEAN
 - [X] removeHeadRotationInterpolation
-    - Description: TODO
+    - Description: Removes the head rotation interpolation like in <=1.7.x.
     - Type: BOOLEAN
 - [X] fixVerticalBobbingTilt
-    - Description: TODO
+    - Description: Brings back the camera tilting when falling/flying up like it was in <=1.13.x. (Fixes MC-225335)
     - Type: BOOLEAN
 - [X] oldDeathLimbs
-    - Description: TODO
+    - Description: Makes entities continue their animation even upon death.
     - Type: BOOLEAN
 - [X] fixBowArmMovement
-    - Description: TODO
+    - Description: Restores old player body movement in third-person when using the bow like in <=1.7?
     - Type: BOOLEAN
 - [ ] oldCapeMovement
-    - Description: TODO
+    - Description: Changes the cape model movement to be how it used to be in <=1.8? Currently broken and doesn't work
+      properly.
     - Type: BOOLEAN
 
 ## 🎣 Fishing Rod
 
 - [X] oldFishingRodTextureStackCheck
-    - Description: TODO
+    - Description: Brings back old fishing rod stack texture check from <=1.8.
     - Type: BOOLEAN
 - [X] fishingRodLineInterpolation
-    - Description: TODO
+    - Description: Correctly interpolates the fishing rod cast line with the eye height from <1.14?
     - Type: BOOLEAN
 - [X] noMoveFishingRodLine
-    - Description: TODO
+    - Description: Does not move the fishing rod cast line while sneaking when viewed in the third person mode from <
+      =1.7.
     - Type: BOOLEAN
 - [X] oldFishingRodLinePositionThirdPerson
-    - Description: TODO
+    - Description: Adjusts the position of the fishing rod cast line horizontally like in <=1.7.
     - Type: BOOLEAN
 - [X] fixCastLineCheck
-    - Description: TODO
+    - Description: Fixes the arm logic for casting the fishing rod.
     - Type: BOOLEAN
 - [X] fixCastLineSwing
-    - Description: TODO
+    - Description: Fixes the swing logic for casting the fishing rod.
     - Type: BOOLEAN
 
 ## 🛠️ Old Settings
 
 - [X] tiltItemPositions
-    - Description: TODO
+    - Description: Tilts the held item position to make held items look like they did in <=1.7.x.
     - Type: BOOLEAN
 - [X] lockBlockingArmRotation
-    - Description: TODO
+    - Description: Locks the third-person blocking arm rotation.
     - Type: BOOLEAN
 - [X] applyItemSwingUsage
-    - Description: TODO
+    - Description: Block hitting (apply swing offset in item usage code).
     - Type: BOOLEAN
 - [X] removeEquipAnimationOnItemUse
-    - Description: TODO
+    - Description: Fixes the blocking animation which plays the equip animation on use, and others.
     - Type: BOOLEAN
 - [X] showCrosshairInThirdperson
-    - Description: TODO
+    - Description: Show crosshair whilst in thirdperson like in <=1.8.x.
     - Type: BOOLEAN
 - [X] removeHeartFlash
-    - Description: TODO
+    - Description: Remove heart blinking like in <=1.7.x.
     - Type: BOOLEAN
 - [X] fixTextStrikethroughStyle
-    - Description: TODO
+    - Description: Changes the text strikethrough position to make it look like it did in <=1.12.2.
     - Type: BOOLEAN
 - [X] centerScrollableListWidgets
-    - Description: Center scrollable list widgets like <=1.7
+    - Description: Center scrollable list widgets like <=1.7.x.
     - Type: BOOLEAN
 - [X] oldListWidgetSelectedBorderColor
     - Description: Returns the old list widget selected border color from <=1.15?
     - Type: BOOLEAN
 - [X] oldBlueVoidSky
-    - Description: TODO
+    - Description: Brings back the forgotten blue void part of the sky. Fixes MC-257056.
     - Type: BOOLEAN
 - [X] oldSkyHorizonHeight
-    - Description: TODO
+    - Description: Changes the horizon height to how it was in <=1.16.5.
     - Type: BOOLEAN
 - [X] oldCloudHeight
-    - Description: TODO
+    - Description: Changes the cloud height back to 128 like in <=1.16.5.
     - Type: BOOLEAN
 - [X] oldButtonTextColors
-    - Description: TODO
+    - Description: Bring back the old yellow hover/grayish text colors like in <=1.14.4.
     - Type: BOOLEAN
 - [X] removeDebugHudBackground
-    - Description: TODO
+    - Description: Remove the F3 Debug Hud background.
     - Type: BOOLEAN
 - [X] debugHudTextShadow
-    - Description: TODO
+    - Description: Add text-shadow to F3 Debug Hud.
     - Type: BOOLEAN
 - [X] oldChatPosition
-    - Description: TODO
+    - Description: Moves chat down 12 pixels like in <=1.8.x.
     - Type: BOOLEAN
 - [X] oldProjectilePosition
-    - Description: TODO
+    - Description: Brings back old projectile position <=1.8.x.
     - Type: BOOLEAN
 - [X] disableProjectileAgeCheck
-    - Description: TODO
+    - Description: Render projectile at all ages <=1.15?
     - Type: BOOLEAN
 - [X] oldBlockMiningProgress
-    - Description: TODO
+    - Description: Bring back the old block mining progress <=1.18?
     - Type: BOOLEAN
 - [X] disableItemUsingTextureInGui
-    - Description: Disables the item usage texture in the GUI like in <=1.8 (mainly rod/bow/crossbow)
+    - Description: Disables the item usage texture in the GUI like in <=1.8.x (mainly rod/bow/crossbow).
     - Type: BOOLEAN
 - [X] disableInventoryEntityScissor
-    - Description: Allows the inventory entity model to render fully
+    - Description: Allows the inventory entity model to render fully.
     - Type: BOOLEAN
 - [X] disableCameraTransparentPassthrough
-    - Description: Stops camera passthrough in thirdperson in glass/etc
+    - Description: Stops camera passthrough in thirdperson in glass/etc.
     - Type: BOOLEAN
 - [X] itemDropsFaceCamera
-    - Description: Makes item entities face the camera / use camera yaw like <=1.7 when fast graphics
+    - Description: Makes item entities face the camera / use camera yaw like <=1.7.x when fast graphics.
     - Type: BOOLEAN
 - [X] itemDrops2D
-    - Description: Makes item entities render 2D when it's an item (not blocks)
+    - Description: Makes item entities render 2D when it's an item (not blocks).
+    - Type: BOOLEAN
+- [X] oldDurabilityBarColors
+    - Description: Restores the old durability damage colors from <1.11.
     - Type: BOOLEAN
 - [X] cameraVersion
-    - Description: TODO
+    - Description: Change the camera position to be as it was in said version range.
     - Type: ENUM
         - 1.8 and below (v1_8)
         - 1.9 through to 1.13.2 (v1_9_v1_13_2)

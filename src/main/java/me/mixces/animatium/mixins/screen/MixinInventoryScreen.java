@@ -11,11 +11,11 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinInventoryScreen {
     @WrapWithCondition(method = "drawEntity(Lnet/minecraft/client/gui/DrawContext;IIIIIFFFLnet/minecraft/entity/LivingEntity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;enableScissor(IIII)V"))
     private static boolean animatium$disableEntityScissor(DrawContext instance, int x1, int y1, int x2, int y2) {
-        return !AnimatiumConfig.disableInventoryEntityScissor;
+        return !AnimatiumConfig.getInstance().disableInventoryEntityScissor;
     }
 
     @WrapWithCondition(method = "drawEntity(Lnet/minecraft/client/gui/DrawContext;IIIIIFFFLnet/minecraft/entity/LivingEntity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;disableScissor()V"))
     private static boolean animatium$disableEntityScissor(DrawContext instance) {
-        return !AnimatiumConfig.disableInventoryEntityScissor;
+        return !AnimatiumConfig.getInstance().disableInventoryEntityScissor;
     }
 }

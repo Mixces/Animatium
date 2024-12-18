@@ -11,6 +11,6 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinThrownEntity {
     @ModifyExpressionValue(method = "shouldRender", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/entity/projectile/thrown/ThrownEntity;age:I"))
     private int animatium$disableProjectileAgeCheck(int original) {
-        return original + (AnimatiumConfig.disableProjectileAgeCheck ? 2 : 0);
+        return original + (AnimatiumConfig.getInstance().disableProjectileAgeCheck ? 2 : 0);
     }
 }

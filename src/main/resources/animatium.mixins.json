@@ -43,5 +43,8 @@
 	],
 	"injectors": {
 		"defaultRequire": 1
-	}
+	},
+	"mixins": [
+		"MixinItem"
+	]
 }

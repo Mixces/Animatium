@@ -54,7 +54,7 @@ public abstract class MixinBipedEntityModel<T extends BipedEntityRenderState> ex
 
     @WrapOperation(method = "setAngles(Lnet/minecraft/client/render/entity/state/BipedEntityRenderState;)V", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/render/entity/state/BipedEntityRenderState;isInSneakingPose:Z"))
     private boolean animatium$oldSneakingFeetPosition(BipedEntityRenderState instance, Operation<Boolean> original) {
-        if (AnimatiumConfig.oldSneakingFeetPosition && instance.isInSneakingPose) {
+        if (AnimatiumConfig.getInstance().oldSneakingFeetPosition && instance.isInSneakingPose) {
             // Values sourced from older versions
             body.pitch = 0.5F;
             rightArm.pitch += 0.4F;
@@ -72,7 +72,7 @@ public abstract class MixinBipedEntityModel<T extends BipedEntityRenderState> ex
 
     @WrapOperation(method = "animateArms", at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/entity/model/BipedEntityModel;leftArm:Lnet/minecraft/client/model/ModelPart;", opcode = Opcodes.GETFIELD, ordinal = 3))
     public ModelPart animatium$fixMirrorArmSwing$field(BipedEntityModel<?> instance, Operation<ModelPart> original, @Local ModelPart modelPart) {
-        if (AnimatiumConfig.fixMirrorArmSwing) {
+        if (AnimatiumConfig.getInstance().fixMirrorArmSwing) {
             return modelPart;
         } else {
             return original.call(instance);
@@ -81,7 +81,7 @@ public abstract class MixinBipedEntityModel<T extends BipedEntityRenderState> ex
 
     @ModifyExpressionValue(method = "animateArms", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;sin(F)F", ordinal = 5))
     public float animatium$fixMirrorArmSwing$sin(float original, @Local Arm arm) {
-        if (AnimatiumConfig.fixMirrorArmSwing) {
+        if (AnimatiumConfig.getInstance().fixMirrorArmSwing) {
             return (arm == Arm.LEFT ? -1 : 1) * original;
         } else {
             return original;
@@ -90,7 +90,7 @@ public abstract class MixinBipedEntityModel<T extends BipedEntityRenderState> ex
 
     @WrapOperation(method = "positionBlockingArm", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;clamp(FFF)F"))
     private float animatium$lockBlockingArmRotation(float value, float min, float max, Operation<Float> original) {
-        if (AnimatiumConfig.lockBlockingArmRotation) {
+        if (AnimatiumConfig.getInstance().lockBlockingArmRotation) {
             return 0.0F;
         } else {
             return original.call(value, min, max);
@@ -99,7 +99,7 @@ public abstract class MixinBipedEntityModel<T extends BipedEntityRenderState> ex
 
     @Inject(method = "setAngles(Lnet/minecraft/client/render/entity/state/BipedEntityRenderState;)V", at = @At(value = "CONSTANT", args = "floatValue=0.0", ordinal = 1))
     private void animatium$fixBowArmMovement(T bipedEntityRenderState, CallbackInfo ci) {
-        if (AnimatiumConfig.fixBowArmMovement) {
+        if (AnimatiumConfig.getInstance().fixBowArmMovement) {
             BipedEntityModel.ArmPose leftArmPose = bipedEntityRenderState.leftArmPose;
             BipedEntityModel.ArmPose rightArmPose = bipedEntityRenderState.rightArmPose;
             final boolean isRightArmPose = rightArmPose == BipedEntityModel.ArmPose.BOW_AND_ARROW;

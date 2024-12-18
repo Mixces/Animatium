@@ -30,14 +30,14 @@ public abstract class MixinMinecraftClient {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void animatium$applySwingWhilstMining(CallbackInfo ci) {
-        if (AnimatiumConfig.applyItemSwingUsage) {
+        if (AnimatiumConfig.getInstance().applyItemSwingUsage) {
             ClientPlayerEntity player = this.player;
             if (player == null || player.getStackInHand(player.getActiveHand()) == null || !player.isUsingItem() || !this.options.attackKey.isPressed()) {
                 return;
             }
 
             // TODO: Possible setting to allow swinging without having to look at a block?
-            if (AnimatiumConfig.alwaysAllowUsageSwinging || (this.crosshairTarget != null && this.crosshairTarget.getType() == HitResult.Type.BLOCK)) {
+            if (AnimatiumConfig.getInstance().alwaysAllowUsageSwinging || (this.crosshairTarget != null && this.crosshairTarget.getType() == HitResult.Type.BLOCK)) {
                 PlayerUtils.fakeHandSwing(player, player.getActiveHand());
             }
         }

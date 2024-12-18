@@ -25,7 +25,7 @@ public abstract class MixinEntityRenderer {
 
     @WrapOperation(method = "renderLabelIfPresent", at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/entity/state/EntityRenderState;sneaking:Z"))
     private boolean animatium$sneakAnimationWhileFlying(EntityRenderState instance, Operation<Boolean> original) {
-        if (AnimatiumConfig.sneakAnimationWhileFlying && instance instanceof LivingEntityRenderState livingEntityRenderState) {
+        if (AnimatiumConfig.getInstance().sneakAnimationWhileFlying && instance instanceof LivingEntityRenderState livingEntityRenderState) {
             return livingEntityRenderState.sneaking || livingEntityRenderState.isInPose(EntityPose.CROUCHING);
         } else {
             return original.call(instance);
@@ -34,7 +34,7 @@ public abstract class MixinEntityRenderer {
 
     @WrapOperation(method = "renderLabelIfPresent", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/GameOptions;getTextBackgroundOpacity(F)F"))
     private float animatium$hideNameTagBackground(GameOptions instance, float fallback, Operation<Float> original) {
-        if (AnimatiumConfig.hideNameTagBackground) {
+        if (AnimatiumConfig.getInstance().hideNameTagBackground) {
             return 0F;
         } else {
             return original.call(instance, fallback);
@@ -43,7 +43,7 @@ public abstract class MixinEntityRenderer {
 
     @ModifyArg(method = "renderLabelIfPresent", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;draw(Lnet/minecraft/text/Text;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;II)I"), index = 4)
     private boolean animatium$applyTextShadowToNametag(boolean shadow) {
-        if (AnimatiumConfig.applyTextShadowToNametag) {
+        if (AnimatiumConfig.getInstance().applyTextShadowToNametag) {
             return true;
         } else {
             return shadow;

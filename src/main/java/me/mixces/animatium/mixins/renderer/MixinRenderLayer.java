@@ -44,14 +44,14 @@ public abstract class MixinRenderLayer {
     // TODO/NOTE: works fine until setting is changed
 //    @Inject(method = "getArmorEntityGlint", at = @At("RETURN"), cancellable = true)
 //    private static void animatium$forceItemGlintOnEntityArmor(CallbackInfoReturnable<RenderLayer> cir) {
-//        if (AnimatiumConfig.forceItemGlintOnEntity) {
+//        if (AnimatiumConfig.getInstance().forceItemGlintOnEntity) {
 //            cir.setReturnValue(animatium$customArmorEntityGlint);
 //        }
 //    }
 
 //    @Inject(method = "getEntityGlint", at = @At("RETURN"), cancellable = true)
 //    private static void animatium$forceItemGlintOnEntity(CallbackInfoReturnable<RenderLayer> cir) {
-//        if (AnimatiumConfig.forceItemGlintOnEntity) {
+//        if (AnimatiumConfig.getInstance().forceItemGlintOnEntity) {
 //            cir.setReturnValue(animatium$customEntityGlint);
 //        }
 //    }

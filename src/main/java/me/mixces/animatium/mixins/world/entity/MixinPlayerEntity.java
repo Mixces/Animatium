@@ -27,7 +27,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
     @ModifyConstant(method = "attack", constant = @Constant(floatValue = 0.0F, ordinal = 6))
     private float animatium$alwaysShowSharpParticles(float original) {
-        if (AnimatiumConfig.alwaysShowSharpParticles) {
+        if (AnimatiumConfig.getInstance().alwaysShowSharpParticles) {
             return -1;
         } else {
             return original;
@@ -36,14 +36,14 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
     @Inject(method = "getMaxRelativeHeadRotation", at = @At(value = "RETURN"), cancellable = true)
     private void animatium$uncapBlockingHeadRotation(CallbackInfoReturnable<Float> cir) {
-        if (AnimatiumConfig.uncapBlockingHeadRotation) {
+        if (AnimatiumConfig.getInstance().uncapBlockingHeadRotation) {
             cir.setReturnValue(50F);
         }
     }
 
     @Inject(method = "tickMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;setMovementSpeed(F)V", shift = At.Shift.AFTER))
     private void animatium$updateBobbingTiltValues(CallbackInfo ci) {
-        if (AnimatiumConfig.fixVerticalBobbingTilt) {
+        if (AnimatiumConfig.getInstance().fixVerticalBobbingTilt) {
             ViewBobbingStorage bobbingAccessor = (ViewBobbingStorage) this;
             float g = this.isOnGround() || this.getHealth() <= 0.0F ? 0.0F : (float) (Math.atan(-this.getVelocity().y * (double) 0.2F) * 15.0F);
             bobbingAccessor.animatium$setBobbingTilt(MathHelper.lerp(0.8F, bobbingAccessor.animatium$getBobbingTilt(), g));
@@ -52,14 +52,14 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;updatePose()V"))
     private void animatium$updateDimensions(CallbackInfo ci) {
-        if (AnimatiumConfig.oldSneakEyeHeight) {
+        if (AnimatiumConfig.getInstance().oldSneakEyeHeight) {
             calculateDimensions();
         }
     }
 
     @Inject(method = "getBaseDimensions", at = @At("RETURN"), cancellable = true)
     private void animatium$oldSneakEyeHeight(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
-        if (AnimatiumConfig.oldSneakEyeHeight && pose.equals(EntityPose.CROUCHING)) {
+        if (AnimatiumConfig.getInstance().oldSneakEyeHeight && pose.equals(EntityPose.CROUCHING)) {
             cir.setReturnValue(PlayerUtils.getLegacySneakingDimensions((PlayerEntity) (Object) this, pose));
         }
     }

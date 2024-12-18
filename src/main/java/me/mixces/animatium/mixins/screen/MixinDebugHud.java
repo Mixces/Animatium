@@ -12,12 +12,12 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public abstract class MixinDebugHud {
     @WrapWithCondition(method = "drawText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fill(IIIII)V"))
     private boolean removeDebugBackground(DrawContext instance, int x1, int y1, int x2, int y2, int color) {
-        return !AnimatiumConfig.removeDebugHudBackground;
+        return !AnimatiumConfig.getInstance().removeDebugHudBackground;
     }
 
     @ModifyArg(method = "drawText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawText(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;IIIZ)I"), index = 5)
     private boolean addDebugShadow(boolean shadow) {
-        if (AnimatiumConfig.debugHudTextShadow) {
+        if (AnimatiumConfig.getInstance().debugHudTextShadow) {
             return true;
         } else {
             return shadow;

@@ -9,11 +9,11 @@ import net.minecraft.client.network.ServerInfo;
 public class Animatium implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        AnimatiumConfig.init("animatium", AnimatiumConfig.class);
+        AnimatiumConfig.load();
     }
 
     public static boolean isLegacySupportedVersion() {
-        if (AnimatiumConfig.oldSneakEyeHeight) {
+        if (AnimatiumConfig.getInstance().oldSneakEyeHeight) {
             MinecraftClient client = MinecraftClient.getInstance();
             ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
             if (networkHandler == null) {
