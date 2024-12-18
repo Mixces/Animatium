@@ -1,3 +1,4 @@
 accessWidener v2 named
 accessible class net/minecraft/client/gui/hud/InGameHud$HeartType
 accessible class net/minecraft/client/font/TextRenderer$Drawer
+accessible field net/minecraft/client/render/RenderLayer ITEM_ENTITY_TRANSLUCENT_CULL Ljava/util/function/Function;

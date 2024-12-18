@@ -187,7 +187,7 @@ them [here](https://github.com/Legacy-Visuals-Project/Animatium/actions).
     - Description: Makes item entities face the camera / use camera yaw like <=1.7 when fast graphics
     - Type: BOOLEAN
 - [X] itemDrops2D
-    - Description: Makes item entities render 2D when its a item (not blocks)
+    - Description: Makes item entities render 2D when it's an item (not blocks)
     - Type: BOOLEAN
 - [X] cameraVersion
     - Description: TODO

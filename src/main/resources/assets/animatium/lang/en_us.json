@@ -114,6 +114,8 @@
 	"animatium.midnightconfig.disableCameraTransparentPassthrough.tooltip": "TODO",
 	"animatium.midnightconfig.itemDropsFaceCamera": "Make item entities use camera yaw / face camera",
 	"animatium.midnightconfig.itemDropsFaceCamera.tooltip": "TODO",
+	"animatium.midnightconfig.itemDrops2D": "Make item entities 2D when dropped",
+	"animatium.midnightconfig.itemDrops2D.tooltip": "TODO",
 	"animatium.midnightconfig.cameraVersion": "Change camera position to be as it was in",
 	"animatium.midnightconfig.cameraVersion.tooltip": "TODO",
 

@@ -166,7 +166,7 @@ public class AnimatiumConfig extends MidnightConfig {
     public static boolean itemDropsFaceCamera = true; // Makes item entities face the camera / use camera yaw like <=1.7 when fast graphics
 
     @Entry(category = "other")
-    public static boolean itemDrops2D = true; // Makes item entities render 2D when its a item (not blocks)
+    public static boolean itemDrops2D = true; // Makes item entities render 2D when it's an item (not blocks)
 
     @Entry(category = "other")
     public static CameraVersion cameraVersion = CameraVersion.v1_8; // Change the camera position to be as it was in said version range
