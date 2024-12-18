@@ -6,21 +6,24 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import me.mixces.animatium.config.AnimatiumConfig;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.option.Perspective;
-import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.util.Window;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(InGameHud.class)
 public abstract class MixinInGameHud {
-    @Inject(method = "renderChat", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/ChatHud;render(Lnet/minecraft/client/gui/DrawContext;IIIZ)V", shift = At.Shift.BEFORE))
-    private void animatium$oldChatPosition(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci, @Local Window window) {
+    @WrapOperation(method = "renderChat", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/ChatHud;render(Lnet/minecraft/client/gui/DrawContext;IIIZ)V"))
+    private void animatium$oldChatPosition(ChatHud instance, DrawContext context, int currentTick, int mouseX, int mouseY, boolean focused, Operation<Void> original, @Local Window window) {
         if (AnimatiumConfig.getInstance().oldChatPosition) {
             context.getMatrices().translate(0F, 12F, 0F);
+        }
+
+        original.call(instance, context, currentTick, mouseX, mouseY, focused);
+        if (AnimatiumConfig.getInstance().oldChatPosition) {
+            context.getMatrices().translate(0F, -12F, 0F);
         }
     }
 

@@ -23,4 +23,8 @@ public abstract class ItemUtils {
     public static Optional<ModelTransformationMode> getTransformMode() {
         return Optional.ofNullable(TRANSFORMATION_MODE.get());
     }
+
+    public static int getLegacyDurabilityColorValue(ItemStack stack) {
+        return (int) Math.round(255.0 - (double) stack.getDamage() * 255.0 / (double) stack.getMaxDamage());
+    }
 }

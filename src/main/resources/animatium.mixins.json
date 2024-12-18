@@ -16,6 +16,7 @@
 		"model.item.MixinItemModelManager",
 		"model.item.MixinItemRenderLayerState",
 		"model.item.MixinUsingItemProperty",
+		"renderer.MixinDrawContext",
 		"renderer.MixinGameRenderer",
 		"renderer.MixinRenderLayer",
 		"renderer.MixinWorldRenderer",
