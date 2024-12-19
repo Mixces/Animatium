@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import me.mixces.animatium.config.AnimatiumConfig;
+import me.mixces.animatium.util.MathUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -54,13 +55,21 @@ public abstract class MixinHeldItemRenderer {
         if (AnimatiumConfig.getInstance().tiltItemPositions && !(stack.getItem() instanceof BlockItem)) {
             final Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
             final int direction = arm == Arm.RIGHT ? 1 : -1;
-            final float scale = 0.7585F / 0.86F;
             if (stack.getItem() instanceof FishingRodItem) {
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 180.0F));
             }
-            matrices.scale(scale, scale, scale);
-            matrices.translate(direction * -0.084F, 0.059F, 0.08F);
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 5.0F));
+            matrices.scale(0.6F, 0.6F, 0.6F);
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(275.0F));
+            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(25.0F));
+            matrices.translate(
+                    -0.2F * Math.sin(MathUtils.toRadians(25)) + 0.4375F,
+                    -0.2F * Math.cos(MathUtils.toRadians(25)) + 0.4375F,
+                    0.03125F
+            );
+            matrices.scale(1 / 0.68F, 1 / 0.68F, 1 / 0.68F);
+            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-25.0F));
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90.0F));
+            matrices.translate(-1.13 * 0.0625F, -3.2 * 0.0625F, -1.13 * 0.0625F);
         }
     }
 
