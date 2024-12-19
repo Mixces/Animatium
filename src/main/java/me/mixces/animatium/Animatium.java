@@ -13,29 +13,25 @@ public class Animatium implements ClientModInitializer {
     }
 
     public static boolean isLegacySupportedVersion() {
-        if (AnimatiumConfig.getInstance().oldSneakEyeHeight) {
-            MinecraftClient client = MinecraftClient.getInstance();
-            ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
-            if (networkHandler == null) {
-                return false;
-            }
-
-            String brand = networkHandler.getBrand();
-            if (brand == null) {
-                return false;
-            }
-
-            if (brand.toLowerCase().contains("hypixel") || brand.toLowerCase().contains("hygot") || brand.contains("1.8")) {
-                return true;
-            } else {
-                ServerInfo serverInfo = networkHandler.getServerInfo();
-                return serverInfo != null &&
-                        (serverInfo.address.contains("loyisa") ||
-                                serverInfo.address.contains("bedwarspractice") ||
-                                serverInfo.address.contains("bridger.land"));
-            }
+        MinecraftClient client = MinecraftClient.getInstance();
+        ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
+        if (networkHandler == null) {
+            return false;
         }
 
-        return false;
+        String brand = networkHandler.getBrand();
+        if (brand == null) {
+            return false;
+        }
+
+        if (brand.toLowerCase().contains("hypixel") || brand.toLowerCase().contains("hygot") || brand.contains("1.8")) {
+            return true;
+        } else {
+            ServerInfo serverInfo = networkHandler.getServerInfo();
+            return serverInfo != null &&
+                    (serverInfo.address.contains("loyisa") ||
+                            serverInfo.address.contains("bedwarspractice") ||
+                            serverInfo.address.contains("bridger.land"));
+        }
     }
 }
