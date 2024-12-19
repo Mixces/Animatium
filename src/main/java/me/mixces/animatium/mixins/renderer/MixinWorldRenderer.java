@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = WorldRenderer.class, priority = Integer.MAX_VALUE)
+@Mixin(WorldRenderer.class)
 public abstract class MixinWorldRenderer {
     // TODO: Iris functionality/support?
     // TODO: Make blue void work in FabricSkyBoxes/Nuit
