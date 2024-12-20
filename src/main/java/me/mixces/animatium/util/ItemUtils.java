@@ -27,19 +27,37 @@ public abstract class ItemUtils {
         if (!stack.isEmpty()) {
             Item item = stack.getItem();
             return item instanceof FishingRodItem || item instanceof OnAStickItem<?>;
+        } else {
+            return false;
         }
-        return false;
     }
 
-    public static boolean isHandheld(ItemStack stack) {
-        Item item = stack.getItem();
-        //TODO: is this the best way? probably not
-        return item instanceof MiningToolItem || item instanceof SwordItem || item instanceof MaceItem || item instanceof TridentItem || isFishingRodItem(stack);
+    public static boolean isBowLikeItem(ItemStack stack) {
+        if (!stack.isEmpty()) {
+            Item item = stack.getItem();
+            return item instanceof BowItem || item instanceof CrossbowItem;
+        } else {
+            return false;
+        }
     }
 
-    public static boolean getItemBlacklist(ItemStack stack) {
-        Item item = stack.getItem();
-        return item instanceof ShieldItem || item instanceof CrossbowItem;
+    public static boolean isHandheldItem(ItemStack stack) {
+        if (!stack.isEmpty()) {
+            Item item = stack.getItem();
+            // TODO: is this the best way? probably not
+            return item instanceof MiningToolItem || item instanceof SwordItem || item instanceof MaceItem || item instanceof TridentItem || isFishingRodItem(stack);
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isItemBlacklisted(ItemStack stack) {
+        if (!stack.isEmpty()) {
+            Item item = stack.getItem();
+            return item instanceof ShieldItem || item instanceof CrossbowItem;
+        } else {
+            return false;
+        }
     }
 
     public static int getLegacyDurabilityColorValue(ItemStack stack) {

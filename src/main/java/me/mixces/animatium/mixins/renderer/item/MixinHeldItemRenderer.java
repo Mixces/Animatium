@@ -12,7 +12,10 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.*;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.RotationAxis;
@@ -60,10 +63,11 @@ public abstract class MixinHeldItemRenderer {
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(60.0F));
             matrices.scale(1 / 0.4F, 1 / 0.4F, 1 / 0.4F);
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-45.0F));
-            //TODO: um. this can be better
+            // TODO: um. this can be better
             return Items.SHIELD;
+        } else {
+            return original.call(instance);
         }
-        return original.call(instance);
     }
 
     @Inject(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", ordinal = 1))
