@@ -89,6 +89,7 @@ public class AnimatiumConfig {
     @SerialEntry public boolean itemDropsFaceCamera = true;
     @SerialEntry public boolean itemDrops2D = true;
     @SerialEntry public boolean oldDurabilityBarColors = true;
+    @SerialEntry public boolean oldItemRarities = true;
     @SerialEntry public boolean removeClientsideBlockingDelay = true;
     @SerialEntry public CameraVersion cameraVersion = CameraVersion.v1_8;
 
@@ -474,6 +475,12 @@ public class AnimatiumConfig {
                         .name(Text.translatable("animatium.oldDurabilityBarColors"))
                         .description(OptionDescription.of(Text.translatable("animatium.oldDurabilityBarColors.description")))
                         .binding(defaults.oldDurabilityBarColors, () -> config.oldDurabilityBarColors, newVal -> config.oldDurabilityBarColors = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build());
+                category.option(Option.<Boolean>createBuilder()
+                        .name(Text.translatable("animatium.oldItemRarities"))
+                        .description(OptionDescription.of(Text.translatable("animatium.oldItemRarities.description")))
+                        .binding(defaults.oldItemRarities, () -> config.oldItemRarities, newVal -> config.oldItemRarities = newVal)
                         .controller(TickBoxControllerBuilder::create)
                         .build());
                 category.option(Option.<Boolean>createBuilder()

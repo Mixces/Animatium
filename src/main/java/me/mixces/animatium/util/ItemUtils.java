@@ -5,8 +5,10 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
+import net.minecraft.util.Rarity;
 import net.minecraft.util.math.RotationAxis;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -97,5 +99,24 @@ public abstract class ItemUtils {
 
     public static int getLegacyDurabilityColorValue(ItemStack stack) {
         return (int) Math.round(255.0 - (double) stack.getDamage() * 255.0 / (double) stack.getMaxDamage());
+    }
+
+    public static Rarity getOldItemRarity(ItemStack stack) {
+        Rarity original = stack.getRarity();
+        if (!stack.isEmpty()) {
+            Item item = stack.getItem();
+            // TODO?: Trims? eh, if someone requests it ig
+            if (List.of(Items.GOLDEN_APPLE, Items.END_CRYSTAL).contains(item)) {
+                return Rarity.RARE;
+            } else if (List.of(Items.NETHER_STAR, Items.ELYTRA, Items.DRAGON_HEAD).contains(item)) {
+                return Rarity.UNCOMMON;
+            } else if (item == Items.ENCHANTED_GOLDEN_APPLE) {
+                return Rarity.EPIC;
+            } else if (item == Items.TRIDENT) {
+                return Rarity.COMMON;
+            }
+        }
+
+        return original;
     }
 }

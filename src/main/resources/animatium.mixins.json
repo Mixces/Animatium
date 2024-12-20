@@ -3,8 +3,8 @@
 	"package": "me.mixces.animatium.mixins",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"MixinCamera",
-		"MixinClientPlayerInteractionManager",
+		"screen.MixinCamera",
+		"network.MixinClientPlayerInteractionManager",
 		"MixinMinecraftClient",
 		"accessor.CameraAccessor",
 		"accessor.ClientWorldPropertiesAccessor",
@@ -45,12 +45,11 @@
 		"screen.widget.toast.MixinTutorialToast",
 		"world.entity.MixinLivingEntity",
 		"world.entity.MixinPlayerEntity",
-		"world.entity.MixinThrownEntity"
+		"world.entity.MixinThrownEntity",
+		"world.MixinItem",
+		"world.MixinItemStack"
 	],
 	"injectors": {
 		"defaultRequire": 1
-	},
-	"mixins": [
-		"MixinItem"
-	]
+	}
 }

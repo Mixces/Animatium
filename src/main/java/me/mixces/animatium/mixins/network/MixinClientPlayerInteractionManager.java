@@ -1,4 +1,4 @@
-package me.mixces.animatium.mixins;
+package me.mixces.animatium.mixins.network;
 
 import me.mixces.animatium.config.AnimatiumConfig;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
