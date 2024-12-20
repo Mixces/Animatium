@@ -57,7 +57,7 @@ public abstract class MixinHeldItemRenderer {
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 45.0F));
             matrices.scale(0.4F, 0.4F, 0.4F);
 
-            matrices.translate( direction * -0.5F, 0.2F, 0.0F);
+            matrices.translate(direction * -0.5F, 0.2F, 0.0F);
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 30.0F));
             matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-80.0F));
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 60.0F));

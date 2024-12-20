@@ -20,7 +20,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.util.Arm;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.RotationAxis;
 import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
@@ -71,7 +70,7 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
                 LivingEntity livingEntity = (LivingEntity) optionalLivingEntity.get();
                 ItemStack stack = livingEntity.getStackInArm(arm);
                 Item item = stack.getItem();
-                if (!stack.isEmpty() && !ItemUtils.isItemBlacklisted(stack) && !(stack.getItem() instanceof ShieldItem)) {
+                if (!stack.isEmpty() && !ItemUtils.isItemBlacklisted(stack)) {
                     float scale;
                     if (item instanceof BlockItem) {
                         scale = 0.375F;
@@ -94,12 +93,14 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
                             matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * 180.0F));
                             matrices.translate(0.0F, -0.125F, 0.0F);
                         }
+
                         if (livingEntity instanceof PlayerEntity && livingEntity.getItemUseTime() > 0 && livingEntity.isBlocking()) {
                             matrices.translate(direction * 0.05F, 0.0F, -0.1F);
                             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -50.0F));
                             matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-10.0F));
                             matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * -60.0F));
                         }
+
                         matrices.translate(direction * -0.0625F, 0.1875F, 0.0F);
                         matrices.scale(scale, scale, scale);
                         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
@@ -122,7 +123,6 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
 
                     matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 180.0F));
                     matrices.translate(direction * -0.5F, 0.5F, 0.03125F);
-
                     if (item instanceof BlockItem) {
                         matrices.scale(1 / 0.375F, 1 / 0.375F, 1 / 0.375F);
                         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -45.0F));
@@ -142,6 +142,7 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
                         if (isRod) {
                             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -180.0F));
                         }
+
                         matrices.translate(0.0F, -4.0F * 0.0625F, -0.5F * 0.0625F);
                         if (isRod) {
                             matrices.translate(0.0F, 0.0F, -2.0F * 0.0625F);
