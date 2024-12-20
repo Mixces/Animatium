@@ -126,7 +126,7 @@
 	"animatium.itemDrops2D.description": "Makes item entities render 2D when it's an item (not blocks).",
 	"animatium.oldDurabilityBarColors": "Restore old durability bar colors",
 	"animatium.oldDurabilityBarColors.description": "Restores the old durability damage colors from <1.11.",
-	"animatium.oldItemRarities": "Restore old item rarities.",
+	"animatium.oldItemRarities": "Restore old item rarities",
 	"animatium.oldItemRarities.description": "Restores the old rarities for items visually from <1.21.2. (also old trident rarity from <1.21)",
 	"animatium.removeClientsideBlockingDelay": "Remove client-side blocking delay",
 	"animatium.removeClientsideBlockingDelay.description": "Removes the pesky blocking delay that modern clients have. Shouldn't flag on servers.",

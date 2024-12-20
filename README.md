@@ -200,6 +200,9 @@ them [here](https://github.com/Legacy-Visuals-Project/Animatium/actions).
 - [X] oldDurabilityBarColors
     - Description: Restores the old durability damage colors from <1.11.
     - Type: BOOLEAN
+- [X] oldItemRarities
+    - Description: Restores the old rarities for items visually from <1.21.2. (also old trident rarity from <1.21)
+    - Type: BOOLEAN
 - [X] removeClientsideBlockingDelay
     - Description: Removes the pesky blocking delay that modern clients have. Shouldn't flag on servers.
     - Type: BOOLEAN
