@@ -133,7 +133,7 @@ public abstract class MixinBipedEntityModel<T extends BipedEntityRenderState> ex
     private void animatium$oldSwordBlockArm(BipedEntityModel<?> instance, ModelPart arm, boolean rightArm, Operation<Void> original, @Local(argsOnly = true) T state) {
         original.call(instance, arm, rightArm);
         if (AnimatiumConfig.getInstance().legacySwordBlockingPosition) {
-            Optional<Entity> optionalLivingEntity = EntityUtils.getEntityByState(state);
+            Optional<Entity> optionalLivingEntity = EntityUtils.Companion.getEntityByState(state);
             if (optionalLivingEntity.isPresent() && state instanceof BipedEntityRenderState) {
                 LivingEntity livingEntity = (LivingEntity) optionalLivingEntity.get();
                 ItemStack stack = rightArm ? livingEntity.getStackInArm(Arm.RIGHT) : livingEntity.getStackInArm(Arm.LEFT);

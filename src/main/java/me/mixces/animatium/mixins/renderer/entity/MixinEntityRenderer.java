@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinEntityRenderer {
     @Inject(method = "updateRenderState", at = @At("TAIL"))
     private <T extends Entity, S extends EntityRenderState> void animatium$saveEntityByState(T entity, S state, float tickDelta, CallbackInfo ci) {
-        EntityUtils.setEntityByState(state, entity);
+        EntityUtils.Companion.setEntityByState(state, entity);
     }
 
     @WrapOperation(method = "renderLabelIfPresent", at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/entity/state/EntityRenderState;sneaking:Z"))

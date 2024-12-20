@@ -26,7 +26,7 @@ public abstract class MixinFlyingItemEntityRenderer<T extends Entity & FlyingIte
     private void animatium$oldProjectilePosition(FlyingItemEntityRenderState flyingItemEntityRenderState, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
         if (AnimatiumConfig.getInstance().oldProjectilePosition) {
             assert MinecraftClient.getInstance().player != null;
-            int direction = PlayerUtils.getHandMultiplier(MinecraftClient.getInstance().player);
+            int direction = PlayerUtils.Companion.getHandMultiplier(MinecraftClient.getInstance().player);
             matrices.translate(direction * 0.25F, 0.0F, 0.25F);
         }
     }

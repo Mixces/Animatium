@@ -54,7 +54,7 @@ public abstract class MixinHeldItemRenderer {
         if (AnimatiumConfig.getInstance().tiltItemPositions && !(instance.getItem() instanceof ShieldItem)) {
             Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
             int direction = arm == Arm.RIGHT ? 1 : -1;
-            ItemUtils.applyLegacyFirstpersonTransforms(matrices, direction, () -> {
+            ItemUtils.Companion.applyLegacyFirstpersonTransforms(matrices, direction, () -> {
                 matrices.translate(direction * -0.5F, 0.2F, 0.0F);
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 30.0F));
                 matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-80.0F));
@@ -71,8 +71,8 @@ public abstract class MixinHeldItemRenderer {
         if (AnimatiumConfig.getInstance().tiltItemPositions && !(stack.getItem() instanceof BlockItem) && !(stack.getItem() instanceof ShieldItem)) {
             Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
             int direction = arm == Arm.RIGHT ? 1 : -1;
-            float angle = MathUtils.toRadians(25);
-            if (ItemUtils.isFishingRodItem(stack)) {
+            float angle = MathUtils.Companion.toRadians(25);
+            if (ItemUtils.Companion.isFishingRodItem(stack)) {
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 180.0F));
             }
 

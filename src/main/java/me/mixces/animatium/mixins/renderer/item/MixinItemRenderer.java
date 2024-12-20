@@ -23,7 +23,7 @@ public abstract class MixinItemRenderer {
     @WrapOperation(method = "renderBakedItemModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/BakedModel;getQuads(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/Direction;Lnet/minecraft/util/math/random/Random;)Ljava/util/List;", ordinal = 1))
     private static List<BakedQuad> animatium$itemDrops2D(BakedModel instance, BlockState state, Direction direction, Random random, Operation<List<BakedQuad>> original) {
         List<BakedQuad> quads = original.call(instance, state, direction, random);
-        Optional<ModelTransformationMode> optionalModelTransformationMode = ItemUtils.getTransformMode();
+        Optional<ModelTransformationMode> optionalModelTransformationMode = ItemUtils.Companion.getTransformMode();
         if (AnimatiumConfig.getInstance().itemDrops2D && !instance.hasDepth() && optionalModelTransformationMode.isPresent() && optionalModelTransformationMode.get() == ModelTransformationMode.GROUND) {
             return quads.stream().filter(baked -> baked.getFace() == Direction.SOUTH).collect(Collectors.toList());
         } else {
