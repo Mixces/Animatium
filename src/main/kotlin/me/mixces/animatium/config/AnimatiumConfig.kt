@@ -162,6 +162,17 @@ class AnimatiumConfig {
                     )
                     category.option(
                         Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.oldDebugHudTextColor"))
+                            .description(OptionDescription.of(Text.translatable("animatium.oldDebugHudTextColor.description")))
+                            .binding(
+                                defaults.oldDebugHudTextColor,
+                                { config.oldDebugHudTextColor },
+                                { newVal -> config.oldDebugHudTextColor = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
                             .name(Text.translatable("animatium.fixMirrorArmSwing"))
                             .description(OptionDescription.of(Text.translatable("animatium.fixMirrorArmSwing.description")))
                             .binding(
@@ -764,6 +775,7 @@ class AnimatiumConfig {
     @SerialEntry var showNametagInThirdperson = true
     @SerialEntry var hideNameTagBackground = true
     @SerialEntry var applyTextShadowToNametag = true
+    @SerialEntry var oldDebugHudTextColor = true
     @SerialEntry var fixMirrorArmSwing = true
     @SerialEntry var persistentBlockOutline = true
     @SerialEntry var alwaysAllowUsageSwinging = true

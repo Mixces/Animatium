@@ -51,6 +51,9 @@ them [here](https://github.com/Legacy-Visuals-Project/Animatium/actions).
 - [X] applyTextShadowToNametag
     - Description: Make the nametag use text shadow.
     - Type: BOOLEAN
+- [X] oldDebugHudTextColor
+    - Description: Makes the debug hud text color white again.
+    - Type: BOOLEAN
 - [X] fixMirrorArmSwing
     - Description: Fix the left-arm swing mirroring.
     - Type: BOOLEAN

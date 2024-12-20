@@ -26,6 +26,8 @@
 	"animatium.hideNameTagBackground.description": "Remove the nametag background.",
 	"animatium.applyTextShadowToNametag": "Apply text shadow to nametag",
 	"animatium.applyTextShadowToNametag.description": "Make the nametag use text shadow.",
+	"animatium.oldDebugHudTextColor": "Old debug hud text color",
+	"animatium.oldDebugHudTextColor.description": "Makes the debug hud text color white again.",
 	"animatium.fixMirrorArmSwing": "Fix arm swing mirroring",
 	"animatium.fixMirrorArmSwing.description": "Fix the left-arm swing mirroring.",
 	"animatium.persistentBlockOutline": "Always show block outline (Persistent)",
