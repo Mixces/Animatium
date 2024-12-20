@@ -14,7 +14,7 @@ public abstract class MixinItemStack {
     @WrapOperation(method = "getFormattedName", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getRarity()Lnet/minecraft/util/Rarity;"))
     private Rarity animatium$oldItemRarities$getFormattedName(ItemStack instance, Operation<Rarity> original) {
         if (AnimatiumConfig.getInstance().oldItemRarities) {
-            return ItemUtils.Companion.getOldItemRarity((ItemStack) (Object) this);
+            return ItemUtils.getOldItemRarity((ItemStack) (Object) this);
         } else {
             return original.call(instance);
         }
@@ -23,7 +23,7 @@ public abstract class MixinItemStack {
     @WrapOperation(method = "toHoverableText", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getRarity()Lnet/minecraft/util/Rarity;"))
     private Rarity animatium$oldItemRarities$toHoverableText(ItemStack instance, Operation<Rarity> original) {
         if (AnimatiumConfig.getInstance().oldItemRarities) {
-            return ItemUtils.Companion.getOldItemRarity((ItemStack) (Object) this);
+            return ItemUtils.getOldItemRarity((ItemStack) (Object) this);
         } else {
             return original.call(instance);
         }

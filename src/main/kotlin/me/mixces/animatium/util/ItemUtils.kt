@@ -25,6 +25,7 @@ abstract class ItemUtils {
         val STACK: ThreadLocal<ItemStack> = ThreadLocal.withInitial({ null })
         val TRANSFORMATION_MODE: ThreadLocal<ModelTransformationMode> = ThreadLocal.withInitial({ null })
 
+        @JvmStatic
         fun set(stack: ItemStack, transformationMode: ModelTransformationMode) {
             STACK.remove()
             TRANSFORMATION_MODE.remove()
@@ -32,14 +33,17 @@ abstract class ItemUtils {
             TRANSFORMATION_MODE.set(transformationMode)
         }
 
+        @JvmStatic
         fun getStack(): Optional<ItemStack> {
             return Optional.ofNullable(STACK.get())
         }
 
+        @JvmStatic
         fun getTransformMode(): Optional<ModelTransformationMode> {
             return Optional.ofNullable(TRANSFORMATION_MODE.get())
         }
 
+        @JvmStatic
         fun isFishingRodItem(stack: ItemStack): Boolean {
             return if (!stack.isEmpty) {
                 stack.item is FishingRodItem || stack.item is OnAStickItem<*>
@@ -48,6 +52,7 @@ abstract class ItemUtils {
             }
         }
 
+        @JvmStatic
         fun isRangedWeaponItem(stack: ItemStack): Boolean {
             return if (!stack.isEmpty) {
                 stack.item is RangedWeaponItem
@@ -56,6 +61,7 @@ abstract class ItemUtils {
             }
         }
 
+        @JvmStatic
         fun isHandheldItem(stack: ItemStack): Boolean {
             return if (!stack.isEmpty) {
                 // TODO: is this the best way? probably not
@@ -68,6 +74,7 @@ abstract class ItemUtils {
             }
         }
 
+        @JvmStatic
         fun isItemBlacklisted(stack: ItemStack): Boolean {
             return if (!stack.isEmpty) {
                 stack.item is ShieldItem || stack.item is CrossbowItem
@@ -76,6 +83,7 @@ abstract class ItemUtils {
             }
         }
 
+        @JvmStatic
         fun isBlock3d(stack: ItemStack, itemRenderState: ItemRenderState): Boolean {
             return if (!stack.isEmpty) {
                 stack.item is BlockItem && itemRenderState.hasDepth()
@@ -84,6 +92,7 @@ abstract class ItemUtils {
             }
         }
 
+        @JvmStatic
         fun applyLegacyFirstpersonTransforms(matrices: MatrixStack, direction: Int, runnable: Runnable) {
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 45.0F))
             matrices.scale(0.4F, 0.4F, 0.4F)
@@ -92,16 +101,19 @@ abstract class ItemUtils {
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -45.0F))
         }
 
+        @JvmStatic
         fun applyLegacyThirdpersonTransforms(matrices: MatrixStack, direction: Int, runnable: Runnable) {
             // TODO
             runnable.run()
             // TODO
         }
 
+        @JvmStatic
         fun getLegacyDurabilityColorValue(stack: ItemStack): Int {
             return (255.0 - stack.damage.toDouble() * 255.0 / stack.maxDamage.toDouble()).roundToInt()
         }
 
+        @JvmStatic
         fun getOldItemRarity(stack: ItemStack): Rarity {
             var original = stack.rarity
             if (!stack.isEmpty) {

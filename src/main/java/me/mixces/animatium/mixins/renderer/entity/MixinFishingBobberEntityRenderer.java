@@ -34,7 +34,7 @@ public abstract class MixinFishingBobberEntityRenderer extends EntityRenderer<Fi
         if (AnimatiumConfig.getInstance().fishingRodLineInterpolation) {
             CameraAccessor cameraAccessor = (CameraAccessor) dispatcher.camera;
             float eyeHeight = MathHelper.lerp(v, cameraAccessor.getLastCameraY(), cameraAccessor.getCameraY());
-            return PlayerUtils.Companion.lerpPlayerWithEyeHeight(instance, v, eyeHeight);
+            return PlayerUtils.lerpPlayerWithEyeHeight(instance, v, eyeHeight);
         } else {
             return original.call(instance, v);
         }
@@ -63,7 +63,7 @@ public abstract class MixinFishingBobberEntityRenderer extends EntityRenderer<Fi
     @ModifyArg(method = "updateRenderState(Lnet/minecraft/entity/projectile/FishingBobberEntity;Lnet/minecraft/client/render/entity/state/FishingBobberEntityState;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/FishingBobberEntityRenderer;getHandPos(Lnet/minecraft/entity/player/PlayerEntity;FF)Lnet/minecraft/util/math/Vec3d;"), index = 1)
     private float animatium$fixCastLineSwing(float f) {
         if (AnimatiumConfig.getInstance().fixCastLineSwing) {
-            int multiplier = PlayerUtils.Companion.getHandMultiplier(Objects.requireNonNull(MinecraftClient.getInstance().player));
+            int multiplier = PlayerUtils.getHandMultiplier(Objects.requireNonNull(MinecraftClient.getInstance().player));
             return f * multiplier;
         } else {
             return f;

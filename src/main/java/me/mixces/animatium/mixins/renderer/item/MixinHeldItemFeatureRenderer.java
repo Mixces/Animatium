@@ -42,7 +42,7 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
     @Inject(method = "renderItem", at = @At("HEAD"))
     private void animatium$setRef(S entityState, ItemRenderState itemState, Arm arm, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci, @Share("stack") LocalRef<ItemStack> stackRef) {
         if (AnimatiumConfig.getInstance().tiltItemPositionsInThirdperson && !itemState.isEmpty()) {
-            Optional<Entity> optionalLivingEntity = EntityUtils.Companion.getEntityByState(entityState);
+            Optional<Entity> optionalLivingEntity = EntityUtils.getEntityByState(entityState);
             if (optionalLivingEntity.isPresent() && entityState instanceof ArmedEntityRenderState) {
                 LivingEntity livingEntity = (LivingEntity) optionalLivingEntity.get();
                 stackRef.set(livingEntity.getStackInArm(arm));
@@ -53,28 +53,28 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
 
     @ModifyArgs(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;translate(FFF)V"))
     private void animatium$oldTransformTranslation(Args args, @Share("stack") LocalRef<ItemStack> stackRef) {
-        if (AnimatiumConfig.getInstance().tiltItemPositionsInThirdperson && !ItemUtils.Companion.isItemBlacklisted(stackRef.get())) {
+        if (AnimatiumConfig.getInstance().tiltItemPositionsInThirdperson && !ItemUtils.isItemBlacklisted(stackRef.get())) {
             args.setAll((float) args.get(0) * -1.0F, 0.4375F, (float) args.get(2) / 10 * -1.0F);
         }
     }
 
     @WrapWithCondition(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;multiply(Lorg/joml/Quaternionf;)V"))
     private boolean animatium$removeTransformMultiply(MatrixStack instance, Quaternionf quaternion, @Share("stack") LocalRef<ItemStack> stackRef) {
-        return !AnimatiumConfig.getInstance().tiltItemPositionsInThirdperson || ItemUtils.Companion.isItemBlacklisted(stackRef.get());
+        return !AnimatiumConfig.getInstance().tiltItemPositionsInThirdperson || ItemUtils.isItemBlacklisted(stackRef.get());
     }
 
     @Inject(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/ItemRenderState;render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;II)V"))
     private void animatium$tiltItemPositionsThird(S entityState, ItemRenderState itemRenderState, Arm arm, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
         if (AnimatiumConfig.getInstance().tiltItemPositionsInThirdperson) {
-            Optional<Entity> optionalLivingEntity = EntityUtils.Companion.getEntityByState(entityState);
+            Optional<Entity> optionalLivingEntity = EntityUtils.getEntityByState(entityState);
             if (optionalLivingEntity.isPresent() && entityState instanceof ArmedEntityRenderState) {
                 int direction = arm == Arm.RIGHT ? 1 : -1;
                 LivingEntity livingEntity = (LivingEntity) optionalLivingEntity.get();
                 ItemStack stack = livingEntity.getStackInArm(arm);
                 Item item = stack.getItem();
-                if (!stack.isEmpty() && !ItemUtils.Companion.isItemBlacklisted(stack)) {
+                if (!stack.isEmpty() && !ItemUtils.isItemBlacklisted(stack)) {
                     float scale;
-                    if (ItemUtils.Companion.isBlock3d(stack, itemRenderState)) {
+                    if (ItemUtils.isBlock3d(stack, itemRenderState)) {
                         scale = 0.375F;
                         matrices.translate(0.0F, 0.1875F, -0.3125F);
                         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(20.0F));
@@ -89,9 +89,9 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
                         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
                         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(100.0F));
                         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -145.0F));
-                    } else if (ItemUtils.Companion.isHandheldItem(stack)) {
+                    } else if (ItemUtils.isHandheldItem(stack)) {
                         scale = 0.625F;
-                        if (ItemUtils.Companion.isFishingRodItem(stack)) {
+                        if (ItemUtils.isFishingRodItem(stack)) {
                             matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * 180.0F));
                             matrices.translate(0.0F, -0.125F, 0.0F);
                         }
@@ -117,7 +117,7 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
                         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * 20.0F));
                     }
 
-                    if (!ItemUtils.Companion.isBlock3d(stack, itemRenderState)) {
+                    if (!ItemUtils.isBlock3d(stack, itemRenderState)) {
                         matrices.translate(0.0F, -0.3F, 0.0F);
                         matrices.scale(1.5F, 1.5F, 1.5F);
                         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 50.0F));
@@ -128,7 +128,7 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
                         matrices.translate(direction * -0.5F, 0.5F, 0.03125F);
                     }
 
-                    if (ItemUtils.Companion.isBlock3d(stack, itemRenderState)) {
+                    if (ItemUtils.isBlock3d(stack, itemRenderState)) {
                         matrices.scale(1 / 0.375F, 1 / 0.375F, 1 / 0.375F);
                         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -45.0F));
                         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-75.0F));
@@ -139,8 +139,8 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
                         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -260.0F));
                         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(80.0F));
                         matrices.translate(direction * 0.0625F, 2.0F * 0.0625F, -2.5F * 0.0625F);
-                    } else if (ItemUtils.Companion.isHandheldItem(stack)) {
-                        boolean isRod = ItemUtils.Companion.isFishingRodItem(stack);
+                    } else if (ItemUtils.isHandheldItem(stack)) {
+                        boolean isRod = ItemUtils.isFishingRodItem(stack);
                         matrices.scale(1 / 0.85F, 1 / 0.85F, 1 / 0.85F);
                         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * -55.0F));
                         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 90.0F));

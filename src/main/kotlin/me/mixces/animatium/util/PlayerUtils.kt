@@ -17,6 +17,7 @@ import java.util.Objects
 
 abstract class PlayerUtils {
     companion object {
+        @JvmStatic
         fun getHandMultiplier(player: PlayerEntity): Int {
             val hand = MoreObjects.firstNonNull(player.preferredHand, Hand.MAIN_HAND)
             val arm = if (hand == Hand.MAIN_HAND) player.getMainArm() else player.getMainArm().getOpposite()
@@ -25,6 +26,7 @@ abstract class PlayerUtils {
             return if (arm == Arm.RIGHT) i else -i
         }
 
+        @JvmStatic
         fun getLegacySneakingDimensions(player: PlayerEntity, defaultPose: EntityPose): EntityDimensions {
             // Changes the sneak height to the one from <=1.13.2 on Hypixel & Loyisa & Bedwars Practice & Bridger Land
             val dimensions = Objects.requireNonNull(PlayerEntityAccessor.getPoseDimensions()).getOrDefault(
@@ -38,10 +40,12 @@ abstract class PlayerUtils {
             }
         }
 
+        @JvmStatic
         fun lerpPlayerWithEyeHeight(entity: PlayerEntity, tickDelta: Float, eyeHeight: Double): Vec3d {
             return entity.getLerpedPos(tickDelta).add(0.0, eyeHeight, 0.0)
         }
 
+        @JvmStatic
         fun fakeHandSwing(player: PlayerEntity, hand: Hand) {
             // NOTE: Clientside fake swinging, doesn't send a packet
             if (!player.handSwinging || player.handSwingTicks >= getHandSwingDuration(player) / 2 || player.handSwingTicks < 0) {
@@ -52,14 +56,15 @@ abstract class PlayerUtils {
         }
 
         // Fixes crash & doesn't require accesswidener
+        @JvmStatic
         fun getHandSwingDuration(entity: LivingEntity): Int {
-            if (StatusEffectUtil.hasHaste(entity)) {
-                return 6 - (1 + StatusEffectUtil.getHasteAmplifier(entity))
+            return if (StatusEffectUtil.hasHaste(entity)) {
+                6 - (1 + StatusEffectUtil.getHasteAmplifier(entity))
             } else {
                 if (entity.hasStatusEffect(StatusEffects.MINING_FATIGUE)) {
-                    return 6 + (1 + Objects.requireNonNull(entity.getStatusEffect(StatusEffects.MINING_FATIGUE))!!.amplifier) * 2
+                    6 + (1 + Objects.requireNonNull(entity.getStatusEffect(StatusEffects.MINING_FATIGUE))!!.amplifier) * 2
                 } else {
-                    return 6;
+                    6
                 }
             }
         }

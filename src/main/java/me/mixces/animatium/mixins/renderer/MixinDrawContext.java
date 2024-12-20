@@ -22,7 +22,7 @@ public abstract class MixinDrawContext {
         if (AnimatiumConfig.getInstance().oldDurabilityBarColors) {
             int i = x + 2;
             int j = y + 13;
-            int color = ColorHelper.getArgb((255 - ItemUtils.Companion.getLegacyDurabilityColorValue(stack)) / 4, 64, 0);
+            int color = ColorHelper.getArgb((255 - ItemUtils.getLegacyDurabilityColorValue(stack)) / 4, 64, 0);
             this.fill(RenderLayer.getGui(), i, j, i + 12, j + 1, 200, ColorHelper.fullAlpha(color));
         }
     }
