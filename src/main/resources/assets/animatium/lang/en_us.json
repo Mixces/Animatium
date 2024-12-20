@@ -134,7 +134,7 @@
 	"animatium.cameraVersion.description": "Change the camera position to be as it was in said version range.",
 
 	"animatium.enum.CameraVersion.LATEST": "Latest",
-	"animatium.enum.CameraVersion.v1_14_v1_14_3": "1.14-1.14.3",
-	"animatium.enum.CameraVersion.v1_9_v1_13_2": "1.9-1.13.2",
-	"animatium.enum.CameraVersion.v1_8": "1.8 and below"
+	"animatium.enum.CameraVersion.V1_14_V1_14_3": "1.14-1.14.3",
+	"animatium.enum.CameraVersion.V1_9_V1_13_2": "1.9-1.13.2",
+	"animatium.enum.CameraVersion.V1_8": "1.8 and below"
 }

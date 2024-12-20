@@ -62,14 +62,14 @@ public abstract class MixinCamera {
         if (AnimatiumConfig.getInstance().cameraVersion != CameraVersion.LATEST && !thirdPerson && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
             // TODO: Fix bed/sleeping position
             final int ordinal = AnimatiumConfig.getInstance().cameraVersion.ordinal();
-            if (ordinal <= CameraVersion.v1_14_v1_14_3.ordinal()) {
+            if (ordinal <= CameraVersion.V1_14_V1_14_3.ordinal()) {
                 // <= 1.14.3
                 this.moveBy(-0.05000000074505806F, 0.0F, 0.0F);
                 // <= 1.13.2
-                if (ordinal <= CameraVersion.v1_9_v1_13_2.ordinal()) {
+                if (ordinal <= CameraVersion.V1_9_V1_13_2.ordinal()) {
                     this.moveBy(0.1F, 0.0F, 0.0F);
                     // <= 1.8
-                    if (ordinal == CameraVersion.v1_8.ordinal()) {
+                    if (ordinal == CameraVersion.V1_8.ordinal()) {
                         this.moveBy(-0.15F, 0, 0); // unfixing parallax
                     }
                 }

@@ -91,7 +91,7 @@ public class AnimatiumConfig {
     @SerialEntry public boolean oldDurabilityBarColors = true;
     @SerialEntry public boolean oldItemRarities = true;
     @SerialEntry public boolean removeClientsideBlockingDelay = true;
-    @SerialEntry public CameraVersion cameraVersion = CameraVersion.v1_8;
+    @SerialEntry public CameraVersion cameraVersion = CameraVersion.V1_8;
 
     public static Screen getConfigScreen(@Nullable Screen parent) {
         return YetAnotherConfigLib.create(CONFIG, ((defaults, config, builder) -> {

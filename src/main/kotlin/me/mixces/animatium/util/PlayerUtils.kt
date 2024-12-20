@@ -20,7 +20,7 @@ abstract class PlayerUtils {
         @JvmStatic
         fun getHandMultiplier(player: PlayerEntity): Int {
             val hand = MoreObjects.firstNonNull(player.preferredHand, Hand.MAIN_HAND)
-            val arm = if (hand == Hand.MAIN_HAND) player.getMainArm() else player.getMainArm().getOpposite()
+            val arm = if (hand == Hand.MAIN_HAND) player.mainArm else player.mainArm.opposite
             val client = MinecraftClient.getInstance()
             val i = if (client.options.perspective.isFirstPerson) 1 else -1
             return if (arm == Arm.RIGHT) i else -i
