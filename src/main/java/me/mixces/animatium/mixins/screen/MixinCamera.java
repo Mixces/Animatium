@@ -59,21 +59,21 @@ public abstract class MixinCamera {
 
     @Inject(method = "update", at = @At(value = "TAIL"))
     private void animatium$oldCameraVersion(BlockView area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
-//        if (AnimatiumConfig.getInstance().getCameraVersion() != CameraVersion.LATEST && !thirdPerson && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
-//            // TODO: Fix bed/sleeping position
-//            final int ordinal = AnimatiumConfig.getInstance().getCameraVersion().ordinal();
-//            if (ordinal <= CameraVersion.V1_14_V1_14_3.ordinal()) {
-//                // <= 1.14.3
-//                this.moveBy(-0.05000000074505806F, 0.0F, 0.0F);
-//                // <= 1.13.2
-//                if (ordinal <= CameraVersion.V1_9_V1_13_2.ordinal()) {
-//                    this.moveBy(0.1F, 0.0F, 0.0F);
-//                    // <= 1.8
-//                    if (ordinal == CameraVersion.V1_8.ordinal()) {
-//                        this.moveBy(-0.15F, 0, 0); // unfixing parallax
-//                    }
-//                }
-//            }
-//        }
+        if (AnimatiumConfig.getInstance().getCameraVersion() != CameraVersion.LATEST && !thirdPerson && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
+            // TODO: Fix bed/sleeping position
+            final int ordinal = AnimatiumConfig.getInstance().getCameraVersion().ordinal();
+            if (ordinal <= CameraVersion.V1_14_V1_14_3.ordinal()) {
+                // <= 1.14.3
+                this.moveBy(-0.05000000074505806F, 0.0F, 0.0F);
+                // <= 1.13.2
+                if (ordinal <= CameraVersion.V1_9_V1_13_2.ordinal()) {
+                    this.moveBy(0.1F, 0.0F, 0.0F);
+                    // <= 1.8
+                    if (ordinal == CameraVersion.V1_8.ordinal()) {
+                        this.moveBy(-0.15F, 0, 0); // unfixing parallax
+                    }
+                }
+            }
+        }
     }
 }
