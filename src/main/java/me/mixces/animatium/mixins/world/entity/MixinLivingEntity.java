@@ -1,5 +1,6 @@
 package me.mixces.animatium.mixins.world.entity;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import me.mixces.animatium.config.AnimatiumConfig;
@@ -67,6 +68,15 @@ public abstract class MixinLivingEntity extends Entity implements ViewBobbingSto
     private void animatium$updatePreviousBobbingTiltValue(CallbackInfo ci) {
         if (AnimatiumConfig.getInstance().fixVerticalBobbingTilt) {
             this.animatium$setPreviousBobbingTilt(this.animatium$getBobbingTilt());
+        }
+    }
+
+    @ModifyExpressionValue(method = "getBlockingItem", at = @At(value = "CONSTANT", args = "intValue=5"))
+    private int animatium$removeClientsideBlockingDelay(int original) {
+        if (AnimatiumConfig.getInstance().removeClientsideBlockingDelay) {
+            return 0;
+        } else {
+            return original;
         }
     }
 

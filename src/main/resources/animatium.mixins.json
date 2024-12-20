@@ -16,6 +16,7 @@
 		"model.item.MixinItemModelManager",
 		"model.item.MixinItemRenderLayerState",
 		"model.item.MixinUsingItemProperty",
+		"network.MixinClientPlayNetworkHandler",
 		"renderer.MixinDrawContext",
 		"renderer.MixinGameRenderer",
 		"renderer.MixinRenderLayer",
@@ -39,6 +40,9 @@
 		"screen.widget.MixinPressableWidget",
 		"screen.widget.MixinScrollableWidget",
 		"screen.widget.MixinSliderWidget",
+		"screen.widget.toast.MixinRecipeToast",
+		"screen.widget.toast.MixinToastManagerEntry",
+		"screen.widget.toast.MixinTutorialToast",
 		"world.entity.MixinLivingEntity",
 		"world.entity.MixinPlayerEntity",
 		"world.entity.MixinThrownEntity"

@@ -69,6 +69,12 @@ them [here](https://github.com/Legacy-Visuals-Project/Animatium/actions).
 - [ ] forceItemGlintOnEntity
     - Description: Makes the entity glint use the same texture as the item glint like it was in <=1.19.
     - Type: BOOLEAN
+- [X] disableRecipeAndTutorialToasts
+  - Description: Disable recipe and tutorial toasts.
+  - Type: BOOLEAN
+- [X] disablePoseUpdates
+  - Description: Stops the server from updating your pose/animations. (Fixes MC-159163)
+  - Type: BOOLEAN
 
 ## 🏃 Movement
 
@@ -147,7 +153,7 @@ them [here](https://github.com/Legacy-Visuals-Project/Animatium/actions).
     - Description: Returns the old list widget selected border color from <=1.15?
     - Type: BOOLEAN
 - [X] oldBlueVoidSky
-    - Description: Brings back the forgotten blue void part of the sky. Fixes MC-257056.
+    - Description: Brings back the forgotten blue void part of the sky. (Fixes MC-257056)
     - Type: BOOLEAN
 - [X] oldSkyHorizonHeight
     - Description: Changes the horizon height to how it was in <=1.16.5.
@@ -193,6 +199,9 @@ them [here](https://github.com/Legacy-Visuals-Project/Animatium/actions).
     - Type: BOOLEAN
 - [X] oldDurabilityBarColors
     - Description: Restores the old durability damage colors from <1.11.
+    - Type: BOOLEAN
+- [X] removeClientsideBlockingDelay
+    - Description: Removes the pesky blocking delay that modern clients have. Shouldn't flag on servers.
     - Type: BOOLEAN
 - [X] cameraVersion
     - Description: Change the camera position to be as it was in said version range.

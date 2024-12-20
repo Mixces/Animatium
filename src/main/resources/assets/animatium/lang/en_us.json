@@ -36,6 +36,10 @@
 	"animatium.alwaysShowSharpParticles.description": "Always show the sharpness particles when damaging/hitting an entity.",
 	"animatium.forceItemGlintOnEntity": "Force item glint on armor glint",
 	"animatium.forceItemGlintOnEntity.description": "Makes the entity glint use the same texture as the item glint like it was in <=1.19.",
+	"animatium.disableRecipeAndTutorialToasts": "Disable recipe and tutorial toasts.",
+	"animatium.disableRecipeAndTutorialToasts.description": "Disables the annoying tutorial and recipe unload toasts & sound.",
+	"animatium.disablePoseUpdates": "Disable server pose updates",
+	"animatium.disablePoseUpdates.description": "Stops the server from updating your pose/animations. (Fixes MC-159163)",
 
 	"animatium.category.movement": "Movement",
 	"animatium.rotateBackwardsWalking": "Rotate body whilst walking backwards",
@@ -91,7 +95,7 @@
 	"animatium.oldListWidgetSelectedBorderColor": "Old list widget selected border color",
 	"animatium.oldListWidgetSelectedBorderColor.description": "Returns the old list widget selected border color from <=1.15?",
 	"animatium.oldBlueVoidSky": "Bring back the old blue void skybox",
-	"animatium.oldBlueVoidSky.description": "Brings back the forgotten blue void part of the sky. Fixes MC-257056.",
+	"animatium.oldBlueVoidSky.description": "Brings back the forgotten blue void part of the sky. (Fixes MC-257056)",
 	"animatium.oldSkyHorizonHeight": "Revert the 1.17 sky horizon height",
 	"animatium.oldSkyHorizonHeight.description": "Changes the horizon height to how it was in <=1.16.5.",
 	"animatium.oldCloudHeight": "Bring back the old cloud height",
@@ -122,6 +126,8 @@
 	"animatium.itemDrops2D.description": "Makes item entities render 2D when it's an item (not blocks).",
 	"animatium.oldDurabilityBarColors": "Restore old durability bar colors",
 	"animatium.oldDurabilityBarColors.description": "Restores the old durability damage colors from <1.11.",
+	"animatium.removeClientsideBlockingDelay": "Remove client-side blocking delay",
+	"animatium.removeClientsideBlockingDelay.description": "Removes the pesky blocking delay that modern clients have. Shouldn't flag on servers.",
 	"animatium.cameraVersion": "Change camera position to be as it was in",
 	"animatium.cameraVersion.description": "Change the camera position to be as it was in said version range.",
 

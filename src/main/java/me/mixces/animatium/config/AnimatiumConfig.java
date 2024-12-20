@@ -41,6 +41,8 @@ public class AnimatiumConfig {
     @SerialEntry public boolean alwaysAllowUsageSwinging = true;
     @SerialEntry public boolean alwaysShowSharpParticles = true;
     @SerialEntry public boolean forceItemGlintOnEntity = false;
+    @SerialEntry public boolean disableRecipeAndTutorialToasts = false;
+    @SerialEntry public boolean disablePoseUpdates = false;
 
     // Movement
     @SerialEntry public boolean rotateBackwardsWalking = true;
@@ -87,6 +89,7 @@ public class AnimatiumConfig {
     @SerialEntry public boolean itemDropsFaceCamera = true;
     @SerialEntry public boolean itemDrops2D = true;
     @SerialEntry public boolean oldDurabilityBarColors = true;
+    @SerialEntry public boolean removeClientsideBlockingDelay = true;
     @SerialEntry public CameraVersion cameraVersion = CameraVersion.v1_8;
 
     public static Screen getConfigScreen(@Nullable Screen parent) {
@@ -198,6 +201,18 @@ public class AnimatiumConfig {
                         .name(Text.translatable("animatium.forceItemGlintOnEntity"))
                         .description(OptionDescription.of(Text.translatable("animatium.forceItemGlintOnEntity.description")))
                         .binding(defaults.forceItemGlintOnEntity, () -> config.forceItemGlintOnEntity, newVal -> config.forceItemGlintOnEntity = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build());
+                category.option(Option.<Boolean>createBuilder()
+                        .name(Text.translatable("animatium.disableRecipeAndTutorialToasts"))
+                        .description(OptionDescription.of(Text.translatable("animatium.disableRecipeAndTutorialToasts.description")))
+                        .binding(defaults.disableRecipeAndTutorialToasts, () -> config.disableRecipeAndTutorialToasts, newVal -> config.disableRecipeAndTutorialToasts = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build());
+                category.option(Option.<Boolean>createBuilder()
+                        .name(Text.translatable("animatium.disablePoseUpdates"))
+                        .description(OptionDescription.of(Text.translatable("animatium.disablePoseUpdates.description")))
+                        .binding(defaults.disablePoseUpdates, () -> config.disablePoseUpdates, newVal -> config.disablePoseUpdates = newVal)
                         .controller(TickBoxControllerBuilder::create)
                         .build());
                 builder.category(category.build());
@@ -459,6 +474,12 @@ public class AnimatiumConfig {
                         .name(Text.translatable("animatium.oldDurabilityBarColors"))
                         .description(OptionDescription.of(Text.translatable("animatium.oldDurabilityBarColors.description")))
                         .binding(defaults.oldDurabilityBarColors, () -> config.oldDurabilityBarColors, newVal -> config.oldDurabilityBarColors = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build());
+                category.option(Option.<Boolean>createBuilder()
+                        .name(Text.translatable("animatium.removeClientsideBlockingDelay"))
+                        .description(OptionDescription.of(Text.translatable("animatium.removeClientsideBlockingDelay.description")))
+                        .binding(defaults.removeClientsideBlockingDelay, () -> config.removeClientsideBlockingDelay, newVal -> config.removeClientsideBlockingDelay = newVal)
                         .controller(TickBoxControllerBuilder::create)
                         .build());
                 category.option(Option.<CameraVersion>createBuilder()
