@@ -24,7 +24,7 @@ public abstract class MixinScrollableWidget {
 
     @Inject(method = "setScrollY", at = @At("HEAD"), cancellable = true)
     private void animatium$allowNegativeScrolling(double scrollY, CallbackInfo ci) {
-        if (AnimatiumConfig.getInstance().centerScrollableListWidgets && (ScrollableWidget) (Object) this instanceof EntryListWidget<?> entryListWidget) {
+        if (AnimatiumConfig.getInstance().getCenterScrollableListWidgets() && (ScrollableWidget) (Object) this instanceof EntryListWidget<?> entryListWidget) {
             ci.cancel();
             int maxScrollY = getMaxScrollY();
             if (maxScrollY < 0)
@@ -37,7 +37,7 @@ public abstract class MixinScrollableWidget {
 
     @Inject(method = "getMaxScrollY", at = @At("HEAD"), cancellable = true)
     public void animatium$modifyMaxScroll(CallbackInfoReturnable<Integer> cir) {
-        if (AnimatiumConfig.getInstance().centerScrollableListWidgets && (ScrollableWidget) (Object) this instanceof EntryListWidget<?> entryListWidget) {
+        if (AnimatiumConfig.getInstance().getCenterScrollableListWidgets() && (ScrollableWidget) (Object) this instanceof EntryListWidget<?> entryListWidget) {
             cir.setReturnValue(this.getContentsHeightWithPadding() - entryListWidget.getHeight());
         }
     }

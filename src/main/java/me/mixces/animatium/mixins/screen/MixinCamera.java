@@ -32,7 +32,7 @@ public abstract class MixinCamera {
 
     @Inject(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/Camera;setRotation(FF)V", shift = At.Shift.BEFORE))
     private void animatium$removeSmoothSneaking(CallbackInfo ci) {
-        if (AnimatiumConfig.getInstance().removeSmoothSneaking) {
+        if (AnimatiumConfig.getInstance().getRemoveSmoothSneaking()) {
             this.lastCameraY = cameraY;
             this.cameraY = this.focusedEntity.getStandingEyeHeight();
         }
@@ -40,7 +40,7 @@ public abstract class MixinCamera {
 
     @WrapOperation(method = "updateEyeHeight", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/render/Camera;cameraY:F"))
     private void animatium$oldSneakAnimationInterpolation(Camera instance, float value, Operation<Void> original) {
-        if (AnimatiumConfig.getInstance().oldSneakAnimationInterpolation && !AnimatiumConfig.getInstance().removeSmoothSneaking && focusedEntity.getStandingEyeHeight() < cameraY) {
+        if (AnimatiumConfig.getInstance().getOldSneakAnimationInterpolation() && !AnimatiumConfig.getInstance().getRemoveSmoothSneaking() && focusedEntity.getStandingEyeHeight() < cameraY) {
             cameraY = focusedEntity.getStandingEyeHeight();
         } else {
             original.call(instance, value);
@@ -50,7 +50,7 @@ public abstract class MixinCamera {
     // TODO/NOTE: Could we also just do this in TransparentBlock?
     @WrapOperation(method = "clipToSpace", at = @At(value = "FIELD", target = "Lnet/minecraft/world/RaycastContext$ShapeType;VISUAL:Lnet/minecraft/world/RaycastContext$ShapeType;"))
     private RaycastContext.ShapeType animatium$disableCameraTransparentPassthrough(Operation<RaycastContext.ShapeType> original) {
-        if (AnimatiumConfig.getInstance().disableCameraTransparentPassthrough) {
+        if (AnimatiumConfig.getInstance().getDisableCameraTransparentPassthrough()) {
             return RaycastContext.ShapeType.OUTLINE;
         } else {
             return original.call();
@@ -59,21 +59,21 @@ public abstract class MixinCamera {
 
     @Inject(method = "update", at = @At(value = "TAIL"))
     private void animatium$oldCameraVersion(BlockView area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
-        if (AnimatiumConfig.getInstance().cameraVersion != CameraVersion.LATEST && !thirdPerson && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
-            // TODO: Fix bed/sleeping position
-            final int ordinal = AnimatiumConfig.getInstance().cameraVersion.ordinal();
-            if (ordinal <= CameraVersion.V1_14_V1_14_3.ordinal()) {
-                // <= 1.14.3
-                this.moveBy(-0.05000000074505806F, 0.0F, 0.0F);
-                // <= 1.13.2
-                if (ordinal <= CameraVersion.V1_9_V1_13_2.ordinal()) {
-                    this.moveBy(0.1F, 0.0F, 0.0F);
-                    // <= 1.8
-                    if (ordinal == CameraVersion.V1_8.ordinal()) {
-                        this.moveBy(-0.15F, 0, 0); // unfixing parallax
-                    }
-                }
-            }
-        }
+//        if (AnimatiumConfig.getInstance().getCameraVersion() != CameraVersion.LATEST && !thirdPerson && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
+//            // TODO: Fix bed/sleeping position
+//            final int ordinal = AnimatiumConfig.getInstance().getCameraVersion().ordinal();
+//            if (ordinal <= CameraVersion.V1_14_V1_14_3.ordinal()) {
+//                // <= 1.14.3
+//                this.moveBy(-0.05000000074505806F, 0.0F, 0.0F);
+//                // <= 1.13.2
+//                if (ordinal <= CameraVersion.V1_9_V1_13_2.ordinal()) {
+//                    this.moveBy(0.1F, 0.0F, 0.0F);
+//                    // <= 1.8
+//                    if (ordinal == CameraVersion.V1_8.ordinal()) {
+//                        this.moveBy(-0.15F, 0, 0); // unfixing parallax
+//                    }
+//                }
+//            }
+//        }
     }
 }

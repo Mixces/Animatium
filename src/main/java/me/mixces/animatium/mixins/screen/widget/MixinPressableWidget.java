@@ -16,7 +16,7 @@ public abstract class MixinPressableWidget extends ClickableWidget {
 
     @ModifyConstant(method = "renderWidget", constant = @Constant(intValue = 0xFFFFFF))
     private int renderWidget$old$textColor(int constant) {
-        if (AnimatiumConfig.getInstance().oldButtonTextColors) {
+        if (AnimatiumConfig.getInstance().getOldButtonTextColors()) {
             return !active ? 0xE0E0E0 : (isSelected() ? 0xFFFFA0 : 0xE0E0E0);
         } else {
             return constant;

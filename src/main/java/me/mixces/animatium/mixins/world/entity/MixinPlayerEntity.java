@@ -26,26 +26,26 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
     @Inject(method = "attack", at = @At("HEAD"))
     private void animatium$alwaysShowSharpParticles(Entity target, CallbackInfo ci) {
-        if (AnimatiumConfig.getInstance().alwaysShowSharpParticles) {
+        if (AnimatiumConfig.getInstance().getAlwaysShowSharpParticles()) {
             this.addEnchantedHitParticles(target);
         }
     }
 
     @WrapWithCondition(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;addEnchantedHitParticles(Lnet/minecraft/entity/Entity;)V"))
     private boolean animatium$disableDefaultSharpParticles(PlayerEntity instance, Entity target) {
-        return !AnimatiumConfig.getInstance().alwaysShowSharpParticles;
+        return !AnimatiumConfig.getInstance().getAlwaysShowSharpParticles();
     }
 
     @Inject(method = "getMaxRelativeHeadRotation", at = @At(value = "RETURN"), cancellable = true)
     private void animatium$uncapBlockingHeadRotation(CallbackInfoReturnable<Float> cir) {
-        if (AnimatiumConfig.getInstance().uncapBlockingHeadRotation) {
+        if (AnimatiumConfig.getInstance().getUncapBlockingHeadRotation()) {
             cir.setReturnValue(50F);
         }
     }
 
     @Inject(method = "tickMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;setMovementSpeed(F)V", shift = At.Shift.AFTER))
     private void animatium$updateBobbingTiltValues(CallbackInfo ci) {
-        if (AnimatiumConfig.getInstance().fixVerticalBobbingTilt) {
+        if (AnimatiumConfig.getInstance().getFixVerticalBobbingTilt()) {
             ViewBobbingStorage bobbingAccessor = (ViewBobbingStorage) this;
             float g = this.isOnGround() || this.getHealth() <= 0.0F ? 0.0F : (float) (Math.atan(-this.getVelocity().y * (double) 0.2F) * 15.0F);
             bobbingAccessor.animatium$setBobbingTilt(MathHelper.lerp(0.8F, bobbingAccessor.animatium$getBobbingTilt(), g));
@@ -54,14 +54,14 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;updatePose()V"))
     private void animatium$updateDimensions(CallbackInfo ci) {
-        if (AnimatiumConfig.getInstance().oldSneakEyeHeight) {
+        if (AnimatiumConfig.getInstance().getOldSneakEyeHeight()) {
             calculateDimensions();
         }
     }
 
     @Inject(method = "getBaseDimensions", at = @At("RETURN"), cancellable = true)
     private void animatium$oldSneakEyeHeight(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
-        if (AnimatiumConfig.getInstance().oldSneakEyeHeight && pose.equals(EntityPose.CROUCHING)) {
+        if (AnimatiumConfig.getInstance().getOldSneakEyeHeight() && pose.equals(EntityPose.CROUCHING)) {
             cir.setReturnValue(PlayerUtils.getLegacySneakingDimensions((PlayerEntity) (Object) this, pose));
         }
     }

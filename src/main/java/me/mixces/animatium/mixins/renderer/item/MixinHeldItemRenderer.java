@@ -37,13 +37,13 @@ public abstract class MixinHeldItemRenderer {
     private void animatium$postBowTransform(MatrixStack instance, float x, float y, float z, Operation<Void> original, @Local(argsOnly = true) AbstractClientPlayerEntity player, @Local(argsOnly = true) Hand hand) {
         Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
         int direction = arm == Arm.RIGHT ? 1 : -1;
-        if (AnimatiumConfig.getInstance().tiltItemPositions) {
+        if (AnimatiumConfig.getInstance().getTiltItemPositions()) {
             instance.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * -335));
             instance.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -50.0F));
         }
 
         original.call(instance, x, y, z);
-        if (AnimatiumConfig.getInstance().tiltItemPositions) {
+        if (AnimatiumConfig.getInstance().getTiltItemPositions()) {
             instance.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 50.0F));
             instance.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * 335));
         }
@@ -51,7 +51,7 @@ public abstract class MixinHeldItemRenderer {
 
     @WrapOperation(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;"))
     private Item animatium$oldFirstPersonSwordBlock(ItemStack instance, Operation<Item> original, @Local(argsOnly = true) AbstractClientPlayerEntity player, @Local(argsOnly = true) Hand hand, @Local(argsOnly = true) MatrixStack matrices) {
-        if (AnimatiumConfig.getInstance().tiltItemPositions && !(instance.getItem() instanceof ShieldItem)) {
+        if (AnimatiumConfig.getInstance().getTiltItemPositions() && !(instance.getItem() instanceof ShieldItem)) {
             Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
             int direction = arm == Arm.RIGHT ? 1 : -1;
             ItemUtils.applyLegacyFirstpersonTransforms(matrices, direction, () -> {
@@ -68,7 +68,7 @@ public abstract class MixinHeldItemRenderer {
 
     @Inject(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", ordinal = 1))
     private void animatium$tiltItemPositions(AbstractClientPlayerEntity player, float tickDelta, float pitch, Hand hand, float swingProgress, ItemStack stack, float equipProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
-        if (AnimatiumConfig.getInstance().tiltItemPositions && !(stack.getItem() instanceof BlockItem) && !(stack.getItem() instanceof ShieldItem)) {
+        if (AnimatiumConfig.getInstance().getTiltItemPositions() && !(stack.getItem() instanceof BlockItem) && !(stack.getItem() instanceof ShieldItem)) {
             Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
             int direction = arm == Arm.RIGHT ? 1 : -1;
             float angle = MathUtils.toRadians(25);
@@ -91,7 +91,7 @@ public abstract class MixinHeldItemRenderer {
     @Inject(method = "resetEquipProgress", at = @At("HEAD"), cancellable = true)
     private void animatium$removeEquipAnimationOnItemUse(Hand hand, CallbackInfo ci) {
         ClientPlayerEntity player = this.client.player;
-        if (AnimatiumConfig.getInstance().removeEquipAnimationOnItemUse && player != null && player.isUsingItem()) {
+        if (AnimatiumConfig.getInstance().getRemoveEquipAnimationOnItemUse() && player != null && player.isUsingItem()) {
             ci.cancel();
         }
     }
@@ -103,7 +103,7 @@ public abstract class MixinHeldItemRenderer {
                     to = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/HeldItemRenderer;applyEquipOffset(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/util/Arm;F)V", ordinal = 6)
             ))
     private void animatium$applyItemSwingUsage(AbstractClientPlayerEntity player, float tickDelta, float pitch, Hand hand, float swingProgress, ItemStack item, float equipProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci, @Local Arm arm) {
-        if (AnimatiumConfig.getInstance().applyItemSwingUsage) {
+        if (AnimatiumConfig.getInstance().getApplyItemSwingUsage()) {
             applySwingOffset(matrices, arm, swingProgress);
         }
     }

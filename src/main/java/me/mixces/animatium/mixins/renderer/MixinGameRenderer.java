@@ -26,7 +26,7 @@ public abstract class MixinGameRenderer {
 
     @Inject(method = "bobView", at = @At("TAIL"))
     private void animatium$fixVerticalBobbingTilt(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
-        if (AnimatiumConfig.getInstance().fixVerticalBobbingTilt && this.client.getCameraEntity() instanceof PlayerEntity playerEntity) {
+        if (AnimatiumConfig.getInstance().getFixVerticalBobbingTilt() && this.client.getCameraEntity() instanceof PlayerEntity playerEntity) {
             ViewBobbingStorage bobbingAccessor = (ViewBobbingStorage) playerEntity;
             float j = MathHelper.lerp(tickDelta, bobbingAccessor.animatium$getPreviousBobbingTilt(), bobbingAccessor.animatium$getBobbingTilt());
             matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(j));
@@ -35,12 +35,12 @@ public abstract class MixinGameRenderer {
 
     @WrapWithCondition(method = "renderWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;bobView(Lnet/minecraft/client/util/math/MatrixStack;F)V"))
     private boolean animatium$minimalViewBobbing(GameRenderer instance, MatrixStack matrices, float tickDelta) {
-        return !AnimatiumConfig.getInstance().minimalViewBobbing;
+        return !AnimatiumConfig.getInstance().getMinimalViewBobbing();
     }
 
     @WrapOperation(method = "renderWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;shouldRenderBlockOutline()Z"))
     private boolean animatium$e(GameRenderer instance, Operation<Boolean> original) {
-        if (AnimatiumConfig.getInstance().persistentBlockOutline) {
+        if (AnimatiumConfig.getInstance().getPersistentBlockOutline()) {
             return true;
         } else {
             return original.call(instance);

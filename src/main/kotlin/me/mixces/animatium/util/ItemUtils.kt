@@ -1,7 +1,10 @@
 package me.mixces.animatium.util
 
+import me.mixces.animatium.config.AnimatiumConfig
+import net.minecraft.client.render.entity.state.EntityRenderState
 import net.minecraft.client.render.item.ItemRenderState
 import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.entity.LivingEntity
 import net.minecraft.item.BlockItem
 import net.minecraft.item.CrossbowItem
 import net.minecraft.item.FishingRodItem
@@ -106,6 +109,26 @@ abstract class ItemUtils {
             // TODO
             runnable.run()
             // TODO
+        }
+
+        @JvmStatic
+        // TODO: jesus this name
+        fun shouldTiltItemPositionsInThirdperson(entityState: EntityRenderState): Boolean {
+            return if (AnimatiumConfig.getInstance().tiltItemPositionsInThirdperson) {
+                true
+            } else {
+                val optionalEntity = EntityUtils.getEntityByState(entityState)
+                if (optionalEntity.isEmpty) {
+                    false
+                } else {
+                    val entity = optionalEntity.get()
+                    if (entity is LivingEntity) {
+                        return AnimatiumConfig.getInstance().legacyThirdpersonSwordBlockingPosition && entity.isBlocking
+                    } else {
+                        false
+                    }
+                }
+            }
         }
 
         @JvmStatic

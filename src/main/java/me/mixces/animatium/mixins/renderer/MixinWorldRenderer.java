@@ -47,7 +47,7 @@ public abstract class MixinWorldRenderer {
 
     @Inject(method = "method_62215", at = @At(value = "TAIL"))
     private void animatium$oldBlueVoidSky(Fog fog, DimensionEffects.SkyType skyType, float tickDelta, DimensionEffects dimensionEffects, CallbackInfo ci, @Local MatrixStack matrices) {
-        if (AnimatiumConfig.getInstance().oldBlueVoidSky && skyType != DimensionEffects.SkyType.END) {
+        if (AnimatiumConfig.getInstance().getOldBlueVoidSky() && skyType != DimensionEffects.SkyType.END) {
             assert this.client.player != null;
             assert this.world != null;
             // can't get it via local, so have to re-get it this way
@@ -58,7 +58,7 @@ public abstract class MixinWorldRenderer {
 
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/DimensionEffects;getCloudsHeight()F"))
     private float animatium$oldCloudHeight(DimensionEffects instance, Operation<Float> original) {
-        if (AnimatiumConfig.getInstance().oldCloudHeight) {
+        if (AnimatiumConfig.getInstance().getOldCloudHeight()) {
             return instance.getSkyType() == DimensionEffects.SkyType.END ? 8.0F : 128.0F;
         } else {
             return original.call(instance);
@@ -95,7 +95,7 @@ public abstract class MixinWorldRenderer {
     @Unique
     public double animatium$getHorizonHeight(ClientWorld world) {
         if (((ClientWorldPropertiesAccessor) world.getLevelProperties()).isFlatWorld()) {
-            return AnimatiumConfig.getInstance().oldSkyHorizonHeight ? 0.0D : world.getBottomY();
+            return AnimatiumConfig.getInstance().getOldSkyHorizonHeight() ? 0.0D : world.getBottomY();
         } else {
             return 63.0D;
         }

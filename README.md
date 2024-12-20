@@ -128,6 +128,12 @@ them [here](https://github.com/Legacy-Visuals-Project/Animatium/actions).
 - [X] tiltItemPositions
     - Description: Tilts the held item position to make held items look like they did in <=1.7.x.
     - Type: BOOLEAN
+- [X] tiltItemPositions
+    - Description: Tilts the third-person held item position to make held items look like they did in <=1.7.x.
+    - Type: BOOLEAN
+- [X] legacyThirdpersonSwordBlockingPosition
+    - Description: Brings back the old third-person sword blocking look from <=1.7.
+    - Type: BOOLEAN
 - [X] lockBlockingArmRotation
     - Description: Locks the third-person blocking arm rotation.
     - Type: BOOLEAN

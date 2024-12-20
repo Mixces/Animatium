@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinRecipeToast {
     @Inject(method = "show", at = @At("HEAD"), cancellable = true)
     private static void animatium$disableRecipeAndTutorialToasts(ToastManager toastManager, RecipeDisplay display, CallbackInfo ci) {
-        if (AnimatiumConfig.getInstance().disableRecipeAndTutorialToasts) {
+        if (AnimatiumConfig.getInstance().getDisableRecipeAndTutorialToasts()) {
             ci.cancel();
         }
     }

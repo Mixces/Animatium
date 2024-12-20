@@ -23,7 +23,7 @@ public abstract class MixinClientPlayNetworkHandler {
 
     @WrapOperation(method = "onEntityTrackerUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/s2c/play/EntityTrackerUpdateS2CPacket;trackedValues()Ljava/util/List;"))
     public List<DataTracker.SerializedEntry<?>> animatium$disablePoseUpdates(EntityTrackerUpdateS2CPacket instance, Operation<List<DataTracker.SerializedEntry<?>>> original) {
-        if (AnimatiumConfig.getInstance().disablePoseUpdates) {
+        if (AnimatiumConfig.getInstance().getDisablePoseUpdates()) {
             if (Objects.requireNonNull(MinecraftClient.getInstance().player).equals(world.getEntityById(instance.id()))) {
                 instance.trackedValues().removeIf(entry -> entry.handler().equals(TrackedDataHandlerRegistry.ENTITY_POSE));
             }

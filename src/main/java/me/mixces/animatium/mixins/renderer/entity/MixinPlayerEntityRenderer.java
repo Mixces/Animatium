@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinPlayerEntityRenderer {
     @WrapOperation(method = "getPositionOffset(Lnet/minecraft/client/render/entity/state/PlayerEntityRenderState;)Lnet/minecraft/util/math/Vec3d;", at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/entity/state/PlayerEntityRenderState;isInSneakingPose:Z"))
     private boolean animatium$fixSneakingFeetPosition(PlayerEntityRenderState instance, Operation<Boolean> original) {
-        if (AnimatiumConfig.getInstance().fixSneakingFeetPosition) {
+        if (AnimatiumConfig.getInstance().getFixSneakingFeetPosition()) {
             return false;
         } else {
             return original.call(instance);
@@ -23,7 +23,7 @@ public abstract class MixinPlayerEntityRenderer {
     // TODO/NOTE: Fix inaccuracies/brokenness
     @WrapOperation(method = "updateCape", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;lerpAngleDegrees(FFF)F"))
     private static float undoLerpAngles(float delta, float start, float end, Operation<Float> original) {
-        if (AnimatiumConfig.getInstance().oldCapeMovement) {
+        if (AnimatiumConfig.getInstance().getOldCapeMovement()) {
             return MathHelper.lerp(delta, start, end);
         } else {
             return original.call(delta, start, end);
@@ -32,7 +32,7 @@ public abstract class MixinPlayerEntityRenderer {
 
     @WrapOperation(method = "updateCape", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;clamp(FFF)F", ordinal = 1))
     private static float undoClampOne(float value, float min, float max, Operation<Float> original) {
-        if (AnimatiumConfig.getInstance().oldCapeMovement) {
+        if (AnimatiumConfig.getInstance().getOldCapeMovement()) {
             return value;
         } else {
             return original.call(value, min, max);
@@ -41,7 +41,7 @@ public abstract class MixinPlayerEntityRenderer {
 
     @WrapOperation(method = "updateCape", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;clamp(FFF)F", ordinal = 2))
     private static float undoClampTwo(float value, float min, float max, Operation<Float> original) {
-        if (AnimatiumConfig.getInstance().oldCapeMovement) {
+        if (AnimatiumConfig.getInstance().getOldCapeMovement()) {
             return value;
         } else {
             return original.call(value, min, max);

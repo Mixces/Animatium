@@ -24,7 +24,7 @@ public abstract class MixinItemRenderLayerState {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/json/Transformation;apply(ZLnet/minecraft/client/util/math/MatrixStack;)V"))
     private void animatium$tiltItemPositionsRod(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, CallbackInfo ci) {
-        if (AnimatiumConfig.getInstance().tiltItemPositions) {
+        if (AnimatiumConfig.getInstance().getTiltItemPositions()) {
             Optional<ItemStack> stackOptional = ItemUtils.getStack();
             if (stackOptional.isPresent() && ItemUtils.isFishingRodItem(stackOptional.get())) {
                 Optional<ModelTransformationMode> modeOptional = ItemUtils.getTransformMode();

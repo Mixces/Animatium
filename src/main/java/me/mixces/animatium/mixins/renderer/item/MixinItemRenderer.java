@@ -24,7 +24,7 @@ public abstract class MixinItemRenderer {
     private static List<BakedQuad> animatium$itemDrops2D(BakedModel instance, BlockState state, Direction direction, Random random, Operation<List<BakedQuad>> original) {
         List<BakedQuad> quads = original.call(instance, state, direction, random);
         Optional<ModelTransformationMode> optionalModelTransformationMode = ItemUtils.getTransformMode();
-        if (AnimatiumConfig.getInstance().itemDrops2D && !instance.hasDepth() && optionalModelTransformationMode.isPresent() && optionalModelTransformationMode.get() == ModelTransformationMode.GROUND) {
+        if (AnimatiumConfig.getInstance().getItemDrops2D() && !instance.hasDepth() && optionalModelTransformationMode.isPresent() && optionalModelTransformationMode.get() == ModelTransformationMode.GROUND) {
             return quads.stream().filter(baked -> baked.getFace() == Direction.SOUTH).collect(Collectors.toList());
         } else {
             return quads;

@@ -24,7 +24,7 @@ public abstract class MixinFlyingItemEntityRenderer<T extends Entity & FlyingIte
 
     @Inject(method = "render(Lnet/minecraft/client/render/entity/state/FlyingItemEntityRenderState;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/ItemRenderState;render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;II)V"))
     private void animatium$oldProjectilePosition(FlyingItemEntityRenderState flyingItemEntityRenderState, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
-        if (AnimatiumConfig.getInstance().oldProjectilePosition) {
+        if (AnimatiumConfig.getInstance().getOldProjectilePosition()) {
             assert MinecraftClient.getInstance().player != null;
             int direction = PlayerUtils.getHandMultiplier(MinecraftClient.getInstance().player);
             matrices.translate(direction * 0.25F, 0.0F, 0.25F);

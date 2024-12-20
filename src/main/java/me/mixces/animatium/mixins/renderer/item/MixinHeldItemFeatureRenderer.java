@@ -1,9 +1,9 @@
 package me.mixces.animatium.mixins.renderer.item;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import me.mixces.animatium.config.AnimatiumConfig;
 import me.mixces.animatium.util.EntityUtils;
 import me.mixces.animatium.util.ItemUtils;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -41,7 +41,7 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
 
     @Inject(method = "renderItem", at = @At("HEAD"))
     private void animatium$setRef(S entityState, ItemRenderState itemState, Arm arm, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci, @Share("stack") LocalRef<ItemStack> stackRef) {
-        if (AnimatiumConfig.getInstance().tiltItemPositionsInThirdperson && !itemState.isEmpty()) {
+        if (ItemUtils.shouldTiltItemPositionsInThirdperson(entityState) && !itemState.isEmpty()) {
             Optional<Entity> optionalLivingEntity = EntityUtils.getEntityByState(entityState);
             if (optionalLivingEntity.isPresent() && entityState instanceof ArmedEntityRenderState) {
                 LivingEntity livingEntity = (LivingEntity) optionalLivingEntity.get();
@@ -52,20 +52,20 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
     }
 
     @ModifyArgs(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;translate(FFF)V"))
-    private void animatium$oldTransformTranslation(Args args, @Share("stack") LocalRef<ItemStack> stackRef) {
-        if (AnimatiumConfig.getInstance().tiltItemPositionsInThirdperson && !ItemUtils.isItemBlacklisted(stackRef.get())) {
+    private void animatium$oldTransformTranslation(Args args, @Local(argsOnly = true) S entityState, @Share("stack") LocalRef<ItemStack> stackRef) {
+        if (ItemUtils.shouldTiltItemPositionsInThirdperson(entityState) && !ItemUtils.isItemBlacklisted(stackRef.get())) {
             args.setAll((float) args.get(0) * -1.0F, 0.4375F, (float) args.get(2) / 10 * -1.0F);
         }
     }
 
     @WrapWithCondition(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;multiply(Lorg/joml/Quaternionf;)V"))
-    private boolean animatium$removeTransformMultiply(MatrixStack instance, Quaternionf quaternion, @Share("stack") LocalRef<ItemStack> stackRef) {
-        return !AnimatiumConfig.getInstance().tiltItemPositionsInThirdperson || ItemUtils.isItemBlacklisted(stackRef.get());
+    private boolean animatium$removeTransformMultiply(MatrixStack instance, Quaternionf quaternion, @Local(argsOnly = true) S entityState, @Share("stack") LocalRef<ItemStack> stackRef) {
+        return !ItemUtils.shouldTiltItemPositionsInThirdperson(entityState) || ItemUtils.isItemBlacklisted(stackRef.get());
     }
 
     @Inject(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/ItemRenderState;render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;II)V"))
     private void animatium$tiltItemPositionsThird(S entityState, ItemRenderState itemRenderState, Arm arm, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
-        if (AnimatiumConfig.getInstance().tiltItemPositionsInThirdperson) {
+        if (ItemUtils.shouldTiltItemPositionsInThirdperson(entityState)) {
             Optional<Entity> optionalLivingEntity = EntityUtils.getEntityByState(entityState);
             if (optionalLivingEntity.isPresent() && entityState instanceof ArmedEntityRenderState) {
                 int direction = arm == Arm.RIGHT ? 1 : -1;
