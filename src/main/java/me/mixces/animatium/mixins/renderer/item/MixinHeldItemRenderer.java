@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import me.mixces.animatium.config.AnimatiumConfig;
+import me.mixces.animatium.util.ItemUtils;
 import me.mixces.animatium.util.MathUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -11,9 +12,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.FishingRodItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.RotationAxis;
@@ -50,22 +49,36 @@ public abstract class MixinHeldItemRenderer {
         }
     }
 
+    @WrapOperation(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;"))
+    private Item animatium$oldFirstPersonSwordBlock(ItemStack instance, Operation<Item> original, @Local(argsOnly = true) MatrixStack matrices) {
+        if (AnimatiumConfig.getInstance().tiltItemPositions) {
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(45.0F));
+            matrices.scale(0.4F, 0.4F, 0.4F);
+            matrices.translate(-0.5F, 0.2F, 0.0F);
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(30.0F));
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-80.0F));
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(60.0F));
+            matrices.scale(1 / 0.4F, 1 / 0.4F, 1 / 0.4F);
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-45.0F));
+            //TODO: um. this can be better
+            return Items.SHIELD;
+        }
+        return original.call(instance);
+    }
+
     @Inject(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", ordinal = 1))
     private void animatium$tiltItemPositions(AbstractClientPlayerEntity player, float tickDelta, float pitch, Hand hand, float swingProgress, ItemStack stack, float equipProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
         if (AnimatiumConfig.getInstance().tiltItemPositions && !(stack.getItem() instanceof BlockItem)) {
             final Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
             final int direction = arm == Arm.RIGHT ? 1 : -1;
-            if (stack.getItem() instanceof FishingRodItem) {
+            float angle = MathUtils.toRadians(25);
+            if (ItemUtils.isFishingRodItem(stack)) {
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 180.0F));
             }
             matrices.scale(0.6F, 0.6F, 0.6F);
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(275.0F));
             matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(25.0F));
-            matrices.translate(
-                    -0.2F * Math.sin(MathUtils.toRadians(25)) + 0.4375F,
-                    -0.2F * Math.cos(MathUtils.toRadians(25)) + 0.4375F,
-                    0.03125F
-            );
+            matrices.translate(-0.2F * Math.sin(angle) + 0.4375F, -0.2F * Math.cos(angle) + 0.4375F, 0.03125F);
             matrices.scale(1 / 0.68F, 1 / 0.68F, 1 / 0.68F);
             matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-25.0F));
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90.0F));

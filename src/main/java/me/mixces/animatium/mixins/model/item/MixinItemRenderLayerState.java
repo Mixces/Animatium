@@ -27,7 +27,7 @@ public abstract class MixinItemRenderLayerState {
     private void animatium$tiltItemPositionsRod(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, CallbackInfo ci) {
         if (AnimatiumConfig.getInstance().tiltItemPositions) {
             Optional<ItemStack> stackOptional = ItemUtils.getStack();
-            if (stackOptional.isPresent() && stackOptional.get().getItem() instanceof FishingRodItem) {
+            if (stackOptional.isPresent() && ItemUtils.isFishingRodItem(stackOptional.get())) {
                 Optional<ModelTransformationMode> modeOptional = ItemUtils.getTransformMode();
                 if (modeOptional.isEmpty()) {
                     return;

@@ -45,6 +45,7 @@ public class AnimatiumConfig {
     // Movement
     @SerialEntry public boolean rotateBackwardsWalking = true;
     @SerialEntry public boolean uncapBlockingHeadRotation = true;
+    @SerialEntry public boolean oldSwordBlockArm = true;
     @SerialEntry public boolean removeHeadRotationInterpolation = true;
     @SerialEntry public boolean fixVerticalBobbingTilt = true;
     @SerialEntry public boolean oldDeathLimbs = true;
@@ -61,6 +62,7 @@ public class AnimatiumConfig {
 
     // Other
     @SerialEntry public boolean tiltItemPositions = true;
+    @SerialEntry public boolean tiltItemPositionsThird = true;
     @SerialEntry public boolean lockBlockingArmRotation = true;
     @SerialEntry public boolean applyItemSwingUsage = true;
     @SerialEntry public boolean removeEquipAnimationOnItemUse = true;
@@ -218,6 +220,12 @@ public class AnimatiumConfig {
                         .controller(TickBoxControllerBuilder::create)
                         .build());
                 category.option(Option.<Boolean>createBuilder()
+                        .name(Text.translatable("animatium.oldSwordBlockArm"))
+                        .description(OptionDescription.of(Text.translatable("animatium.oldSwordBlockArm.description")))
+                        .binding(defaults.oldSwordBlockArm, () -> config.oldSwordBlockArm, newVal -> config.oldSwordBlockArm = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build());
+                category.option(Option.<Boolean>createBuilder()
                         .name(Text.translatable("animatium.removeHeadRotationInterpolation"))
                         .description(OptionDescription.of(Text.translatable("animatium.removeHeadRotationInterpolation.description")))
                         .binding(defaults.removeHeadRotationInterpolation, () -> config.removeHeadRotationInterpolation, newVal -> config.removeHeadRotationInterpolation = newVal)
@@ -301,6 +309,12 @@ public class AnimatiumConfig {
                         .name(Text.translatable("animatium.tiltItemPositions"))
                         .description(OptionDescription.of(Text.translatable("animatium.tiltItemPositions.description")))
                         .binding(defaults.tiltItemPositions, () -> config.tiltItemPositions, newVal -> config.tiltItemPositions = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build());
+                category.option(Option.<Boolean>createBuilder()
+                        .name(Text.translatable("animatium.tiltItemPositionsThird"))
+                        .description(OptionDescription.of(Text.translatable("animatium.tiltItemPositionsThird.description")))
+                        .binding(defaults.tiltItemPositionsThird, () -> config.tiltItemPositionsThird, newVal -> config.tiltItemPositionsThird = newVal)
                         .controller(TickBoxControllerBuilder::create)
                         .build());
                 category.option(Option.<Boolean>createBuilder()

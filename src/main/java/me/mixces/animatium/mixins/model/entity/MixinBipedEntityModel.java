@@ -122,4 +122,11 @@ public abstract class MixinBipedEntityModel<T extends BipedEntityRenderState> ex
             }
         }
     }
+
+    @Inject(method = "positionBlockingArm", at = @At("RETURN"))
+    private void animatium$oldSwordBlockArm(ModelPart arm, boolean rightArm, CallbackInfo ci) {
+        if (AnimatiumConfig.getInstance().oldSwordBlockArm) {
+            arm.yaw = 0;
+        }
+    }
 }

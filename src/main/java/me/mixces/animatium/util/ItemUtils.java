@@ -1,7 +1,6 @@
 package me.mixces.animatium.util;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ModelTransformationMode;
+import net.minecraft.item.*;
 
 import java.util.Optional;
 
@@ -22,6 +21,25 @@ public abstract class ItemUtils {
 
     public static Optional<ModelTransformationMode> getTransformMode() {
         return Optional.ofNullable(TRANSFORMATION_MODE.get());
+    }
+
+    public static boolean isFishingRodItem(ItemStack stack) {
+        if (!stack.isEmpty()) {
+            Item item = stack.getItem();
+            return item instanceof FishingRodItem || item instanceof OnAStickItem<?>;
+        }
+        return false;
+    }
+
+    public static boolean isHandheld(ItemStack stack) {
+        Item item = stack.getItem();
+        //TODO: is this the best way? probably not
+        return item instanceof MiningToolItem || item instanceof SwordItem || item instanceof MaceItem || item instanceof TridentItem || isFishingRodItem(stack);
+    }
+
+    public static boolean getItemBlacklist(ItemStack stack) {
+        Item item = stack.getItem();
+        return item instanceof ShieldItem || item instanceof CrossbowItem;
     }
 
     public static int getLegacyDurabilityColorValue(ItemStack stack) {
