@@ -115,21 +115,18 @@ abstract class ItemUtils {
 
         @JvmStatic
         fun getOldItemRarity(stack: ItemStack): Rarity {
-            var original = stack.rarity
-            if (!stack.isEmpty) {
+            return if (listOf(Items.GOLDEN_APPLE, Items.END_CRYSTAL).contains(stack.item)) {
+                Rarity.RARE
+            } else if (listOf(Items.NETHER_STAR, Items.ELYTRA, Items.DRAGON_HEAD).contains(stack.item)) {
+                Rarity.UNCOMMON
+            } else if (stack.item == Items.ENCHANTED_GOLDEN_APPLE) {
+                Rarity.EPIC
+            } else if (stack.item == Items.TRIDENT) {
+                Rarity.COMMON
+            } else {
                 // TODO?: Trims? eh, if someone requests it ig
-                if (listOf(Items.GOLDEN_APPLE, Items.END_CRYSTAL).contains(stack.item)) {
-                    return Rarity.RARE
-                } else if (listOf(Items.NETHER_STAR, Items.ELYTRA, Items.DRAGON_HEAD).contains(stack.item)) {
-                    return Rarity.UNCOMMON
-                } else if (stack.item == Items.ENCHANTED_GOLDEN_APPLE) {
-                    return Rarity.EPIC
-                } else if (stack.item == Items.TRIDENT) {
-                    return Rarity.COMMON
-                }
+                stack.rarity
             }
-
-            return original
         }
     }
 }
