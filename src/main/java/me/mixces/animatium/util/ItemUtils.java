@@ -1,7 +1,10 @@
 package me.mixces.animatium.util;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.*;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.math.RotationAxis;
 
 import java.util.Optional;
@@ -63,6 +66,16 @@ public abstract class ItemUtils {
         if (!stack.isEmpty()) {
             Item item = stack.getItem();
             return item instanceof ShieldItem || item instanceof CrossbowItem;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isBlock3d(ItemStack stack) {
+        if (!stack.isEmpty()) {
+            Item item = stack.getItem();
+            BakedModel model = MinecraftClient.getInstance().getBakedModelManager().getModel(Registries.ITEM.getId(item));
+            return item instanceof BlockItem && model.hasDepth();
         } else {
             return false;
         }

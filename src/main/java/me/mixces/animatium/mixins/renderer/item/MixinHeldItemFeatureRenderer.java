@@ -18,12 +18,13 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.BowItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import net.minecraft.util.math.RotationAxis;
 import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
@@ -73,7 +74,7 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
                 Item item = stack.getItem();
                 if (!stack.isEmpty() && !ItemUtils.isItemBlacklisted(stack)) {
                     float scale;
-                    if (animatium$is3dBlock(item, itemState)) {
+                    if (ItemUtils.isBlock3d(stack)) {
                         scale = 0.375F;
                         matrices.translate(0.0F, 0.1875F, -0.3125F);
                         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(20.0F));
@@ -116,7 +117,7 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
                         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * 20.0F));
                     }
 
-                    if (!animatium$is3dBlock(item, itemState)) {
+                    if (!ItemUtils.isBlock3d(stack)) {
                         matrices.translate(0.0F, -0.3F, 0.0F);
                         matrices.scale(1.5F, 1.5F, 1.5F);
                         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 50.0F));
@@ -127,7 +128,7 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
                         matrices.translate(direction * -0.5F, 0.5F, 0.03125F);
                     }
 
-                    if (animatium$is3dBlock(item, itemState)) {
+                    if (ItemUtils.isBlock3d(stack)) {
                         matrices.scale(1 / 0.375F, 1 / 0.375F, 1 / 0.375F);
                         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -45.0F));
                         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-75.0F));
@@ -158,10 +159,5 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
                 }
             }
         }
-    }
-
-    @Unique
-    private boolean animatium$is3dBlock(Item item, ItemRenderState state) {
-        return item instanceof BlockItem && state.hasDepth();
     }
 }
