@@ -18,11 +18,9 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BowItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.util.Arm;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.RotationAxis;
 import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
@@ -69,80 +67,81 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
         if (AnimatiumConfig.getInstance().tiltItemPositionsInThirdperson) {
             Optional<Entity> optionalLivingEntity = EntityUtils.getEntityByState(entityState);
             if (optionalLivingEntity.isPresent() && entityState instanceof ArmedEntityRenderState) {
+                int direction = arm == Arm.RIGHT ? 1 : -1;
                 LivingEntity livingEntity = (LivingEntity) optionalLivingEntity.get();
                 ItemStack stack = livingEntity.getStackInArm(arm);
                 Item item = stack.getItem();
-                if (!stack.isEmpty() && !ItemUtils.isItemBlacklisted(stack)) {
+                if (!stack.isEmpty() && !ItemUtils.isItemBlacklisted(stack) && !(stack.getItem() instanceof ShieldItem)) {
                     float scale;
                     if (item instanceof BlockItem) {
                         scale = 0.375F;
-                        matrices.translate(0.0F, 0.1875F, -0.3125F);
+                        matrices.translate(direction * 0.0F, 0.1875F, -0.3125F);
                         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(20.0F));
-                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(45.0F));
+                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 45.0F));
                         matrices.scale(-scale, -scale, scale);
                     } else if (item instanceof BowItem) {
                         scale = 0.625F;
-                        matrices.translate(0.0F, 0.125F, 0.3125F);
-                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-20.0F));
-                        matrices.scale(scale, -scale, scale);
-                        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-100.0F));
-                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(45.0F));
+                        matrices.translate(direction * 0.0F, 0.125F, 0.3125F);
+                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -20.0F));
+                        matrices.translate(direction * -0.0625F, 0.0F, 0.0F);
+                        matrices.scale(scale, scale, scale);
+                        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+                        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(100.0F));
+                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -145.0F));
                     } else if (ItemUtils.isHandheldItem(stack)) {
                         scale = 0.625F;
                         if (ItemUtils.isFishingRodItem(stack)) {
-                            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180.0F));
+                            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * 180.0F));
                             matrices.translate(0.0F, -0.125F, 0.0F);
                         }
-
                         if (livingEntity instanceof PlayerEntity && livingEntity.getItemUseTime() > 0 && livingEntity.isBlocking()) {
-                            matrices.translate(0.05F, 0.0F, -0.1F);
-                            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-50.0F));
+                            matrices.translate(direction * 0.05F, 0.0F, -0.1F);
+                            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -50.0F));
                             matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-10.0F));
-                            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-60.0F));
+                            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * -60.0F));
                         }
-
-                        matrices.translate(-0.0625F, 0.1875F, 0.0F);
+                        matrices.translate(direction * -0.0625F, 0.1875F, 0.0F);
                         matrices.scale(scale, scale, scale);
                         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
                         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(100));
-                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-145));
+                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -145));
                     } else {
                         scale = 0.375F;
-                        matrices.translate(0.25F, 0.1875F, -0.1875F);
+                        matrices.translate(direction * 0.25F, 0.1875F, -0.1875F);
                         matrices.scale(scale, scale, scale);
-                        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(60.0F));
+                        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * 60.0F));
                         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90.0F));
-                        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(20.0F));
+                        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * 20.0F));
                     }
 
                     matrices.translate(0.0F, -0.3F, 0.0F);
                     matrices.scale(1.5F, 1.5F, 1.5F);
-                    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(50.0F));
-                    matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(335.0F));
-                    matrices.translate(-0.9375F, -0.0625F, 0.0F);
+                    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 50.0F));
+                    matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * 335.0F));
+                    matrices.translate(direction * -0.9375F, -0.0625F, 0.0F);
 
-                    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F));
-                    matrices.translate(-0.5F, 0.5F, 0.03125F);
+                    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 180.0F));
+                    matrices.translate(direction * -0.5F, 0.5F, 0.03125F);
+
                     if (item instanceof BlockItem) {
                         matrices.scale(1 / 0.375F, 1 / 0.375F, 1 / 0.375F);
-                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-45.0F));
+                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -45.0F));
                         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-75.0F));
                         matrices.translate(0.0F, -2.5F * 0.0625F, 0.0F);
                     } else if (item instanceof BowItem) {
                         matrices.scale(1 / 0.9F, 1 / 0.9F, 1 / 0.9F);
-                        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(40.0F));
-                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-260.0F));
+                        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * 40.0F));
+                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -260.0F));
                         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(80.0F));
-                        matrices.translate(0.0625F, 2.0F * 0.0625F, -2.5F * 0.0625F);
+                        matrices.translate(direction * 0.0625F, 2.0F * 0.0625F, -2.5F * 0.0625F);
                     } else if (ItemUtils.isHandheldItem(stack)) {
                         boolean isRod = ItemUtils.isFishingRodItem(stack);
                         matrices.scale(1 / 0.85F, 1 / 0.85F, 1 / 0.85F);
-                        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-55.0F));
-                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90.0F));
+                        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * -55.0F));
+                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 90.0F));
                         if (isRod) {
-                            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-180.0F));
+                            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -180.0F));
                         }
-
                         matrices.translate(0.0F, -4.0F * 0.0625F, -0.5F * 0.0625F);
                         if (isRod) {
                             matrices.translate(0.0F, 0.0F, -2.0F * 0.0625F);

@@ -5,11 +5,17 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import me.mixces.animatium.config.AnimatiumConfig;
+import me.mixces.animatium.util.EntityUtils;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.render.entity.state.ArmedEntityRenderState;
 import net.minecraft.client.render.entity.state.BipedEntityRenderState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShieldItem;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 import org.objectweb.asm.Opcodes;
@@ -20,6 +26,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 @Mixin(BipedEntityModel.class)
@@ -123,10 +130,19 @@ public abstract class MixinBipedEntityModel<T extends BipedEntityRenderState> ex
         }
     }
 
-    @Inject(method = "positionBlockingArm", at = @At("RETURN"))
-    private void animatium$oldSwordBlockArm(ModelPart arm, boolean rightArm, CallbackInfo ci) {
+    @WrapOperation(method = {"positionLeftArm", "positionRightArm"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/model/BipedEntityModel;positionBlockingArm(Lnet/minecraft/client/model/ModelPart;Z)V"))
+    private void animatium$oldSwordBlockArm(BipedEntityModel<?> instance, ModelPart arm, boolean rightArm, Operation<Void> original, @Local(argsOnly = true) T state) {
+        original.call(instance, arm, rightArm);
         if (AnimatiumConfig.getInstance().legacySwordBlockingPosition) {
-            arm.yaw = 0;
+            Optional<Entity> optionalLivingEntity = EntityUtils.getEntityByState(state);
+            if (optionalLivingEntity.isPresent() && state instanceof BipedEntityRenderState) {
+                LivingEntity livingEntity = (LivingEntity) optionalLivingEntity.get();
+                ItemStack stack = rightArm ? livingEntity.getStackInArm(Arm.RIGHT) : livingEntity.getStackInArm(Arm.LEFT);
+                // TODO: this code is terrible
+                if (!(stack.getItem() instanceof ShieldItem)) {
+                    arm.yaw = 0;
+                }
+            }
         }
     }
 }

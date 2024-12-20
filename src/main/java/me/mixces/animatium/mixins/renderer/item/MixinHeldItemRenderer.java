@@ -12,10 +12,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.RotationAxis;
@@ -38,8 +35,8 @@ public abstract class MixinHeldItemRenderer {
 
     @WrapOperation(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", ordinal = 1))
     private void animatium$postBowTransform(MatrixStack instance, float x, float y, float z, Operation<Void> original, @Local(argsOnly = true) AbstractClientPlayerEntity player, @Local(argsOnly = true) Hand hand) {
-        final Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
-        final int direction = arm == Arm.RIGHT ? 1 : -1;
+        Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
+        int direction = arm == Arm.RIGHT ? 1 : -1;
         if (AnimatiumConfig.getInstance().tiltItemPositions) {
             instance.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * -335));
             instance.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -50.0F));
@@ -53,16 +50,20 @@ public abstract class MixinHeldItemRenderer {
     }
 
     @WrapOperation(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;"))
-    private Item animatium$oldFirstPersonSwordBlock(ItemStack instance, Operation<Item> original, @Local(argsOnly = true) MatrixStack matrices) {
-        if (AnimatiumConfig.getInstance().tiltItemPositions) {
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(45.0F));
+    private Item animatium$oldFirstPersonSwordBlock(ItemStack instance, Operation<Item> original, @Local(argsOnly = true) AbstractClientPlayerEntity player, @Local(argsOnly = true) Hand hand, @Local(argsOnly = true) MatrixStack matrices) {
+        if (AnimatiumConfig.getInstance().tiltItemPositions && !(instance.getItem() instanceof ShieldItem)) {
+            Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
+            int direction = arm == Arm.RIGHT ? 1 : -1;
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 45.0F));
             matrices.scale(0.4F, 0.4F, 0.4F);
-            matrices.translate(-0.5F, 0.2F, 0.0F);
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(30.0F));
+
+            matrices.translate( direction * -0.5F, 0.2F, 0.0F);
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 30.0F));
             matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-80.0F));
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(60.0F));
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 60.0F));
+
             matrices.scale(1 / 0.4F, 1 / 0.4F, 1 / 0.4F);
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-45.0F));
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -45.0F));
             // TODO: um. this can be better
             return Items.SHIELD;
         } else {
@@ -72,21 +73,22 @@ public abstract class MixinHeldItemRenderer {
 
     @Inject(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", ordinal = 1))
     private void animatium$tiltItemPositions(AbstractClientPlayerEntity player, float tickDelta, float pitch, Hand hand, float swingProgress, ItemStack stack, float equipProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
-        if (AnimatiumConfig.getInstance().tiltItemPositions && !(stack.getItem() instanceof BlockItem)) {
-            final Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
-            final int direction = arm == Arm.RIGHT ? 1 : -1;
+        if (AnimatiumConfig.getInstance().tiltItemPositions && !(stack.getItem() instanceof BlockItem) && !(stack.getItem() instanceof ShieldItem)) {
+            Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
+            int direction = arm == Arm.RIGHT ? 1 : -1;
             float angle = MathUtils.toRadians(25);
             if (ItemUtils.isFishingRodItem(stack)) {
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 180.0F));
             }
             matrices.scale(0.6F, 0.6F, 0.6F);
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(275.0F));
-            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(25.0F));
-            matrices.translate(-0.2F * Math.sin(angle) + 0.4375F, -0.2F * Math.cos(angle) + 0.4375F, 0.03125F);
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 275.0F));
+            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * 25.0F));
+            matrices.translate(direction * (-0.2F * Math.sin(angle) + 0.4375F), -0.2F * Math.cos(angle) + 0.4375F, 0.03125F);
+
             matrices.scale(1 / 0.68F, 1 / 0.68F, 1 / 0.68F);
-            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-25.0F));
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90.0F));
-            matrices.translate(-1.13 * 0.0625F, -3.2 * 0.0625F, -1.13 * 0.0625F);
+            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * -25.0F));
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 90.0F));
+            matrices.translate(direction * -1.13 * 0.0625F, -3.2 * 0.0625F, -1.13 * 0.0625F);
         }
     }
 

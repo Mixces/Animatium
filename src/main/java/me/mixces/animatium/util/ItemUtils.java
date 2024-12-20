@@ -45,7 +45,7 @@ public abstract class ItemUtils {
         if (!stack.isEmpty()) {
             Item item = stack.getItem();
             // TODO: is this the best way? probably not
-            return item instanceof MiningToolItem || item instanceof SwordItem || item instanceof MaceItem || item instanceof TridentItem || isFishingRodItem(stack);
+            return item instanceof MiningToolItem || item instanceof SwordItem || item instanceof MaceItem || item instanceof TridentItem || isFishingRodItem(stack) || item == Items.STICK;
         } else {
             return false;
         }
