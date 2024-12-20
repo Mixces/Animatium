@@ -209,7 +209,7 @@ them [here](https://github.com/Legacy-Visuals-Project/Animatium/actions).
 - [X] cameraVersion
     - Description: Change the camera position to be as it was in said version range.
     - Type: ENUM
-        - 1.8 and below (v1_8)
-        - 1.9 through to 1.13.2 (v1_9_v1_13_2)
-        - 1.14 through to 1.14.3 (v1_14_v1_14_3)
+        - 1.8 and below (V1_8)
+        - 1.9 through to 1.13.2 (V1_9_V1_13_2)
+        - 1.14 through to 1.14.3 (V1_14_V1_14_3)
         - LATEST
