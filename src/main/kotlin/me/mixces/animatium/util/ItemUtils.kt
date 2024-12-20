@@ -59,12 +59,10 @@ abstract class ItemUtils {
         fun isHandheldItem(stack: ItemStack): Boolean {
             return if (!stack.isEmpty) {
                 // TODO: is this the best way? probably not
-                (stack.item is MiningToolItem
-                        || stack.item is SwordItem
-                        || stack.item is MaceItem
-                        || stack.item is TridentItem
+                stack.item is MiningToolItem || stack.item is SwordItem
+                        || stack.item is MaceItem || stack.item is TridentItem
                         || isFishingRodItem(stack)
-                        || setOf(Items.STICK, Items.BREEZE_ROD, Items.BLAZE_ROD).contains(stack.item))
+                        || setOf(Items.STICK, Items.BREEZE_ROD, Items.BLAZE_ROD).contains(stack.item)
             } else {
                 false
             }
