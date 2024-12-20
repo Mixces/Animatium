@@ -15,8 +15,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Optional;
-
 @Mixin(ItemRenderState.LayerRenderState.class)
 public abstract class MixinItemRenderLayerState {
     @Shadow
@@ -25,24 +23,21 @@ public abstract class MixinItemRenderLayerState {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/json/Transformation;apply(ZLnet/minecraft/client/util/math/MatrixStack;)V"))
     private void animatium$tiltItemPositionsRod(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, CallbackInfo ci) {
         if (AnimatiumConfig.getInstance().getTiltItemPositions()) {
-            Optional<ItemStack> stackOptional = ItemUtils.getStack();
-            if (stackOptional.isPresent() && ItemUtils.isFishingRodItem(stackOptional.get())) {
-                Optional<ModelTransformationMode> modeOptional = ItemUtils.getTransformMode();
-                if (modeOptional.isEmpty()) {
-                    return;
-                }
-
-                ModelTransformationMode mode = modeOptional.get();
-                boolean isFirstPerson = mode == ModelTransformationMode.FIRST_PERSON_LEFT_HAND || mode == ModelTransformationMode.FIRST_PERSON_RIGHT_HAND;
-                if (isFirstPerson) {
-                    Transformation transform = getTransformation();
-                    float x = transform.translation.x();
-                    float y = transform.translation.y();
-                    float z = transform.translation.z();
-                    matrices.translate(0.070625, 0.1, 0.020625);
-                    matrices.translate(x, y, z);
-                    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
-                    matrices.translate(-x, -y, -z);
+            ItemStack stack = ItemUtils.getStack();
+            if (stack != null && ItemUtils.isFishingRodItem(stack)) {
+                ModelTransformationMode mode = ItemUtils.getTransformMode();
+                if (mode != null) {
+                    boolean isFirstPerson = mode == ModelTransformationMode.FIRST_PERSON_LEFT_HAND || mode == ModelTransformationMode.FIRST_PERSON_RIGHT_HAND;
+                    if (isFirstPerson) {
+                        Transformation transform = getTransformation();
+                        float x = transform.translation.x();
+                        float y = transform.translation.y();
+                        float z = transform.translation.z();
+                        matrices.translate(0.070625, 0.1, 0.020625);
+                        matrices.translate(x, y, z);
+                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+                        matrices.translate(-x, -y, -z);
+                    }
                 }
             }
         }

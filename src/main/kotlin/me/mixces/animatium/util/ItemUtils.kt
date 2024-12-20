@@ -20,13 +20,12 @@ import net.minecraft.item.SwordItem
 import net.minecraft.item.TridentItem
 import net.minecraft.util.Rarity
 import net.minecraft.util.math.RotationAxis
-import java.util.Optional
 import kotlin.math.roundToInt
 
 abstract class ItemUtils {
     companion object {
-        val STACK: ThreadLocal<ItemStack> = ThreadLocal.withInitial({ null })
-        val TRANSFORMATION_MODE: ThreadLocal<ModelTransformationMode> = ThreadLocal.withInitial({ null })
+        val STACK: ThreadLocal<ItemStack> = ThreadLocal.withInitial { null }
+        val TRANSFORMATION_MODE: ThreadLocal<ModelTransformationMode> = ThreadLocal.withInitial { null }
 
         @JvmStatic
         fun set(stack: ItemStack, transformationMode: ModelTransformationMode) {
@@ -37,13 +36,13 @@ abstract class ItemUtils {
         }
 
         @JvmStatic
-        fun getStack(): Optional<ItemStack> {
-            return Optional.ofNullable(STACK.get())
+        fun getStack(): ItemStack? {
+            return STACK.get()
         }
 
         @JvmStatic
-        fun getTransformMode(): Optional<ModelTransformationMode> {
-            return Optional.ofNullable(TRANSFORMATION_MODE.get())
+        fun getTransformMode(): ModelTransformationMode? {
+            return TRANSFORMATION_MODE.get()
         }
 
         @JvmStatic
