@@ -54,18 +54,13 @@ public abstract class MixinHeldItemRenderer {
         if (AnimatiumConfig.getInstance().tiltItemPositions && !(instance.getItem() instanceof ShieldItem)) {
             Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
             int direction = arm == Arm.RIGHT ? 1 : -1;
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 45.0F));
-            matrices.scale(0.4F, 0.4F, 0.4F);
-
-            matrices.translate(direction * -0.5F, 0.2F, 0.0F);
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 30.0F));
-            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-80.0F));
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 60.0F));
-
-            matrices.scale(1 / 0.4F, 1 / 0.4F, 1 / 0.4F);
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -45.0F));
-            // TODO: um. this can be better
-            return Items.SHIELD;
+            ItemUtils.applyLegacyFirstpersonTransforms(matrices, direction, () -> {
+                matrices.translate(direction * -0.5F, 0.2F, 0.0F);
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 30.0F));
+                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-80.0F));
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 60.0F));
+            });
+            return Items.SHIELD; // Cnacels the vanilla blocking code
         } else {
             return original.call(instance);
         }
@@ -80,6 +75,7 @@ public abstract class MixinHeldItemRenderer {
             if (ItemUtils.isFishingRodItem(stack)) {
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 180.0F));
             }
+
             matrices.scale(0.6F, 0.6F, 0.6F);
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 275.0F));
             matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * 25.0F));

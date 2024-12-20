@@ -1,6 +1,8 @@
 package me.mixces.animatium.util;
 
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.*;
+import net.minecraft.util.math.RotationAxis;
 
 import java.util.Optional;
 
@@ -58,6 +60,20 @@ public abstract class ItemUtils {
         } else {
             return false;
         }
+    }
+
+    public static void applyLegacyFirstpersonTransforms(MatrixStack matrices, int direction, Runnable runnable) {
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 45.0F));
+        matrices.scale(0.4F, 0.4F, 0.4F);
+        runnable.run();
+        matrices.scale(1 / 0.4F, 1 / 0.4F, 1 / 0.4F);
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -45.0F));
+    }
+
+    public static void applyLegacyThirdpersonTransforms(MatrixStack matrices, int direction, Runnable runnable) {
+        // TODO
+        runnable.run();
+        // TODO
     }
 
     public static int getLegacyDurabilityColorValue(ItemStack stack) {
