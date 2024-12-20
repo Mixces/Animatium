@@ -32,10 +32,10 @@ public abstract class ItemUtils {
         }
     }
 
-    public static boolean isBowLikeItem(ItemStack stack) {
+    public static boolean isRangedWeaponItem(ItemStack stack) {
         if (!stack.isEmpty()) {
             Item item = stack.getItem();
-            return item instanceof BowItem || item instanceof CrossbowItem;
+            return item instanceof RangedWeaponItem;
         } else {
             return false;
         }
