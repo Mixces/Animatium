@@ -5,6 +5,7 @@ import net.minecraft.item.*;
 import net.minecraft.util.math.RotationAxis;
 
 import java.util.Optional;
+import java.util.Set;
 
 public abstract class ItemUtils {
     private static final ThreadLocal<ItemStack> STACK = ThreadLocal.withInitial(() -> null);
@@ -47,7 +48,12 @@ public abstract class ItemUtils {
         if (!stack.isEmpty()) {
             Item item = stack.getItem();
             // TODO: is this the best way? probably not
-            return item instanceof MiningToolItem || item instanceof SwordItem || item instanceof MaceItem || item instanceof TridentItem || isFishingRodItem(stack) || item == Items.STICK;
+            return item instanceof MiningToolItem
+                    || item instanceof SwordItem
+                    || item instanceof MaceItem
+                    || item instanceof TridentItem
+                    || isFishingRodItem(stack)
+                    || Set.of(Items.STICK, Items.BREEZE_ROD, Items.BLAZE_ROD).contains(item);
         } else {
             return false;
         }
