@@ -123,7 +123,7 @@ abstract class ItemUtils {
                 } else {
                     val entity = optionalEntity.get()
                     if (entity is LivingEntity) {
-                        return AnimatiumConfig.getInstance().legacyThirdpersonSwordBlockingPosition && entity.isBlocking
+                        AnimatiumConfig.getInstance().legacyThirdpersonSwordBlockingPosition && entity.isBlocking
                     } else {
                         false
                     }
