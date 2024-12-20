@@ -39,7 +39,7 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
 
     @Inject(method = "renderItem", at = @At("HEAD"))
     private void animatium$setRef(S entityState, ItemRenderState itemState, Arm arm, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci, @Share("stack") LocalRef<ItemStack> stackRef) {
-        if (AnimatiumConfig.getInstance().tiltItemPositionsThird && !itemState.isEmpty()) {
+        if (AnimatiumConfig.getInstance().tiltItemPositionsInThirdperson && !itemState.isEmpty()) {
             Optional<Entity> optionalLivingEntity = EntityUtils.getEntityByState(entityState);
             if (optionalLivingEntity.isPresent() && entityState instanceof ArmedEntityRenderState) {
                 LivingEntity livingEntity = (LivingEntity) optionalLivingEntity.get();
@@ -51,19 +51,19 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
 
     @ModifyArgs(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;translate(FFF)V"))
     private void animatium$oldTransformTranslation(Args args, @Share("stack") LocalRef<ItemStack> stackRef) {
-        if (AnimatiumConfig.getInstance().tiltItemPositionsThird && !ItemUtils.getItemBlacklist(stackRef.get())) {
+        if (AnimatiumConfig.getInstance().tiltItemPositionsInThirdperson && !ItemUtils.getItemBlacklist(stackRef.get())) {
             args.setAll((float) args.get(0) * -1.0F, 0.4375F, (float) args.get(2) / 10 * -1.0F);
         }
     }
 
     @WrapWithCondition(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;multiply(Lorg/joml/Quaternionf;)V"))
     private boolean animatium$removeTransformMultiply(MatrixStack instance, Quaternionf quaternion, @Share("stack") LocalRef<ItemStack> stackRef) {
-        return !AnimatiumConfig.getInstance().tiltItemPositionsThird || ItemUtils.getItemBlacklist(stackRef.get());
+        return !AnimatiumConfig.getInstance().tiltItemPositionsInThirdperson || ItemUtils.getItemBlacklist(stackRef.get());
     }
 
     @Inject(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/ItemRenderState;render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;II)V"))
     private void animatium$tiltItemPositionsThird(S entityState, ItemRenderState itemState, Arm arm, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
-        if (AnimatiumConfig.getInstance().tiltItemPositionsThird) {
+        if (AnimatiumConfig.getInstance().tiltItemPositionsInThirdperson) {
             Optional<Entity> optionalLivingEntity = EntityUtils.getEntityByState(entityState);
             if (optionalLivingEntity.isPresent() && entityState instanceof ArmedEntityRenderState) {
                 LivingEntity livingEntity = (LivingEntity) optionalLivingEntity.get();

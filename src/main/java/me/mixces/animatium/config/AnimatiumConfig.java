@@ -62,7 +62,7 @@ public class AnimatiumConfig {
 
     // Other
     @SerialEntry public boolean tiltItemPositions = true;
-    @SerialEntry public boolean tiltItemPositionsThird = true;
+    @SerialEntry public boolean tiltItemPositionsInThirdperson = true;
     @SerialEntry public boolean lockBlockingArmRotation = true;
     @SerialEntry public boolean applyItemSwingUsage = true;
     @SerialEntry public boolean removeEquipAnimationOnItemUse = true;
@@ -312,9 +312,9 @@ public class AnimatiumConfig {
                         .controller(TickBoxControllerBuilder::create)
                         .build());
                 category.option(Option.<Boolean>createBuilder()
-                        .name(Text.translatable("animatium.tiltItemPositionsThird"))
-                        .description(OptionDescription.of(Text.translatable("animatium.tiltItemPositionsThird.description")))
-                        .binding(defaults.tiltItemPositionsThird, () -> config.tiltItemPositionsThird, newVal -> config.tiltItemPositionsThird = newVal)
+                        .name(Text.translatable("animatium.tiltItemPositionsInThirdperson"))
+                        .description(OptionDescription.of(Text.translatable("animatium.tiltItemPositionsInThirdperson.description")))
+                        .binding(defaults.tiltItemPositionsInThirdperson, () -> config.tiltItemPositionsInThirdperson, newVal -> config.tiltItemPositionsInThirdperson = newVal)
                         .controller(TickBoxControllerBuilder::create)
                         .build());
                 category.option(Option.<Boolean>createBuilder()
