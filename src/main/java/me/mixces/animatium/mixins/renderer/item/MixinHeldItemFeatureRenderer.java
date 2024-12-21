@@ -74,15 +74,14 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
                 ItemStack stack = livingEntity.getStackInArm(arm);
                 Item item = stack.getItem();
                 if (!stack.isEmpty() && !ItemUtils.isItemBlacklisted(stack)) {
-                    float scale;
                     if (ItemUtils.isBlock3d(stack, itemRenderState)) {
-                        scale = 0.375F;
+                        float scale = 0.375F;
                         matrices.translate(0.0F, 0.1875F, -0.3125F);
                         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(20.0F));
                         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 45.0F));
                         matrices.scale(-scale, -scale, scale);
                     } else if (item instanceof BowItem) {
-                        scale = 0.625F;
+                        float scale = 0.625F;
                         matrices.translate(direction * 0.0F, 0.125F, 0.3125F);
                         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -20.0F));
                         matrices.translate(direction * -0.0625F, 0.0F, 0.0F);
@@ -91,7 +90,7 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
                         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(100.0F));
                         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -145.0F));
                     } else if (ItemUtils.isHandheldItem(stack)) {
-                        scale = 0.625F;
+                        float scale = 0.625F;
                         if (ItemUtils.isFishingRodItem(stack)) {
                             matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * 180.0F));
                             matrices.translate(0.0F, -0.125F, 0.0F);
@@ -110,7 +109,7 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
                         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(100));
                         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -145));
                     } else {
-                        scale = 0.375F;
+                        float scale = 0.375F;
                         matrices.translate(direction * 0.25F, 0.1875F, -0.1875F);
                         matrices.scale(scale, scale, scale);
                         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * 60.0F));
