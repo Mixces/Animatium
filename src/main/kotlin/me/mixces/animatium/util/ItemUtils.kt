@@ -25,8 +25,8 @@ import kotlin.math.roundToInt
 
 abstract class ItemUtils {
     companion object {
-        val STACK: ThreadLocal<ItemStack?> = ThreadLocal.withInitial { null }
-        val TRANSFORMATION_MODE: ThreadLocal<ModelTransformationMode?> = ThreadLocal.withInitial { null }
+        private val STACK: ThreadLocal<ItemStack?> = ThreadLocal.withInitial { null }
+        private val TRANSFORMATION_MODE: ThreadLocal<ModelTransformationMode?> = ThreadLocal.withInitial { null }
 
         @JvmStatic
         fun set(stack: ItemStack, transformationMode: ModelTransformationMode) {
