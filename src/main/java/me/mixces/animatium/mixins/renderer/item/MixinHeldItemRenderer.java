@@ -6,6 +6,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import me.mixces.animatium.config.AnimatiumConfig;
 import me.mixces.animatium.util.ItemUtils;
 import me.mixces.animatium.util.MathUtils;
+import me.mixces.animatium.util.PlayerUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -52,8 +53,7 @@ public abstract class MixinHeldItemRenderer {
     @WrapOperation(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;"))
     private Item animatium$oldFirstPersonSwordBlock(ItemStack instance, Operation<Item> original, @Local(argsOnly = true) AbstractClientPlayerEntity player, @Local(argsOnly = true) Hand hand, @Local(argsOnly = true) MatrixStack matrices) {
         if (AnimatiumConfig.getInstance().getTiltItemPositions() && !(instance.getItem() instanceof ShieldItem)) {
-            Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
-            int direction = arm == Arm.RIGHT ? 1 : -1;
+            int direction = PlayerUtils.getHandMultiplier(player);
             ItemUtils.applyLegacyFirstpersonTransforms(matrices, direction, () -> {
                 matrices.translate(direction * -0.5F, 0.2F, 0.0F);
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 30.0F));
