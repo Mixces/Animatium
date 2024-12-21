@@ -6,6 +6,7 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import me.mixces.animatium.util.EntityUtils;
 import me.mixces.animatium.util.ItemUtils;
+import me.mixces.animatium.util.PlayerUtils;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
@@ -68,7 +69,7 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
         if (ItemUtils.shouldTiltItemPositionsInThirdperson(entityState)) {
             Optional<Entity> optionalLivingEntity = EntityUtils.getEntityByState(entityState);
             if (optionalLivingEntity.isPresent() && entityState instanceof ArmedEntityRenderState) {
-                int direction = arm == Arm.RIGHT ? 1 : -1;
+                int direction = PlayerUtils.getArmMultiplier(arm);
                 LivingEntity livingEntity = (LivingEntity) optionalLivingEntity.get();
                 ItemStack stack = livingEntity.getStackInArm(arm);
                 Item item = stack.getItem();

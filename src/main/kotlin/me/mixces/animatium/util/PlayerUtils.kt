@@ -27,6 +27,11 @@ abstract class PlayerUtils {
         }
 
         @JvmStatic
+        fun getArmMultiplier(arm: Arm): Int {
+            return if (arm == Arm.RIGHT) 1 else -1
+        }
+
+        @JvmStatic
         fun getLegacySneakingDimensions(player: PlayerEntity, defaultPose: EntityPose): EntityDimensions {
             // Changes the sneak height to the one from <=1.13.2 on Hypixel & Loyisa & Bedwars Practice & Bridger Land
             val dimensions = Objects.requireNonNull(PlayerEntityAccessor.getPoseDimensions()).getOrDefault(
