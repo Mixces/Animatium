@@ -336,9 +336,290 @@ class AnimatiumConfig {
                 }
 
                 run {
-                    // Fishing Rod Category
+                    // Sky Category
                     val category = ConfigCategory.createBuilder()
-                    category.name(Text.translatable("animatium.category.fishing_rod"))
+                    category.name(Text.translatable("animatium.category.sky"))
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.oldBlueVoidSky"))
+                            .description(OptionDescription.of(Text.translatable("animatium.oldBlueVoidSky.description")))
+                            .binding(
+                                defaults.oldBlueVoidSky,
+                                { config.oldBlueVoidSky },
+                                { newVal -> config.oldBlueVoidSky = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.oldSkyHorizonHeight"))
+                            .description(OptionDescription.of(Text.translatable("animatium.oldSkyHorizonHeight.description")))
+                            .binding(
+                                defaults.oldSkyHorizonHeight,
+                                { config.oldSkyHorizonHeight },
+                                { newVal -> config.oldSkyHorizonHeight = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.oldCloudHeight"))
+                            .description(OptionDescription.of(Text.translatable("animatium.oldCloudHeight.description")))
+                            .binding(
+                                defaults.oldCloudHeight,
+                                { config.oldCloudHeight },
+                                { newVal -> config.oldCloudHeight = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    builder.category(category.build())
+                }
+
+                run {
+                    // Screen Category
+                    val category = ConfigCategory.createBuilder()
+                    category.name(Text.translatable("animatium.category.screen"))
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.showCrosshairInThirdperson"))
+                            .description(OptionDescription.of(Text.translatable("animatium.showCrosshairInThirdperson.description")))
+                            .binding(
+                                defaults.showCrosshairInThirdperson,
+                                { config.showCrosshairInThirdperson },
+                                { newVal -> config.showCrosshairInThirdperson = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.removeHeartFlash"))
+                            .description(OptionDescription.of(Text.translatable("animatium.removeHeartFlash.description")))
+                            .binding(
+                                defaults.removeHeartFlash,
+                                { config.removeHeartFlash },
+                                { newVal -> config.removeHeartFlash = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.fixTextStrikethroughStyle"))
+                            .description(OptionDescription.of(Text.translatable("animatium.fixTextStrikethroughStyle.description")))
+                            .binding(
+                                defaults.fixTextStrikethroughStyle,
+                                { config.fixTextStrikethroughStyle },
+                                { newVal -> config.fixTextStrikethroughStyle = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.centerScrollableListWidgets"))
+                            .description(OptionDescription.of(Text.translatable("animatium.centerScrollableListWidgets.description")))
+                            .binding(
+                                defaults.centerScrollableListWidgets,
+                                { config.centerScrollableListWidgets },
+                                { newVal -> config.centerScrollableListWidgets = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.oldListWidgetSelectedBorderColor"))
+                            .description(OptionDescription.of(Text.translatable("animatium.oldListWidgetSelectedBorderColor.description")))
+                            .binding(
+                                defaults.oldListWidgetSelectedBorderColor,
+                                { config.oldListWidgetSelectedBorderColor },
+                                { newVal -> config.oldListWidgetSelectedBorderColor = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.oldButtonTextColors"))
+                            .description(OptionDescription.of(Text.translatable("animatium.oldButtonTextColors.description")))
+                            .binding(
+                                defaults.oldButtonTextColors,
+                                { config.oldButtonTextColors },
+                                { newVal -> config.oldButtonTextColors = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.removeDebugHudBackground"))
+                            .description(OptionDescription.of(Text.translatable("animatium.removeDebugHudBackground.description")))
+                            .binding(
+                                defaults.removeDebugHudBackground,
+                                { config.removeDebugHudBackground },
+                                { newVal -> config.removeDebugHudBackground = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.debugHudTextShadow"))
+                            .description(OptionDescription.of(Text.translatable("animatium.debugHudTextShadow.description")))
+                            .binding(
+                                defaults.debugHudTextShadow,
+                                { config.debugHudTextShadow },
+                                { newVal -> config.debugHudTextShadow = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.oldChatPosition"))
+                            .description(OptionDescription.of(Text.translatable("animatium.oldChatPosition.description")))
+                            .binding(
+                                defaults.oldChatPosition,
+                                { config.oldChatPosition },
+                                { newVal -> config.oldChatPosition = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.disableCameraTransparentPassthrough"))
+                            .description(OptionDescription.of(Text.translatable("animatium.disableCameraTransparentPassthrough.description")))
+                            .binding(
+                                defaults.disableCameraTransparentPassthrough,
+                                { config.disableCameraTransparentPassthrough },
+                                { newVal -> config.disableCameraTransparentPassthrough = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(Option.createBuilder<CameraVersion>()
+                        .name(Text.translatable("animatium.cameraVersion"))
+                        .description(OptionDescription.of(Text.translatable("animatium.cameraVersion.description")))
+                        .binding(
+                            defaults.cameraVersion,
+                            { config.cameraVersion },
+                            { newVal -> config.cameraVersion = newVal })
+                        .controller { opt ->
+                            EnumControllerBuilder.create(opt).enumClass(CameraVersion::class.java)
+                                .formatValue { it -> Text.translatable("animatium.enum.CameraVersion." + it.name) }
+                        }
+                        .build())
+                    builder.category(category.build())
+                }
+
+                run {
+                    // Items Category
+                    val category = ConfigCategory.createBuilder()
+                    category.name(Text.translatable("animatium.category.items"))
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.tiltItemPositions"))
+                            .description(OptionDescription.of(Text.translatable("animatium.tiltItemPositions.description")))
+                            .binding(
+                                defaults.tiltItemPositions,
+                                { config.tiltItemPositions },
+                                { newVal -> config.tiltItemPositions = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.tiltItemPositionsInThirdperson"))
+                            .description(OptionDescription.of(Text.translatable("animatium.tiltItemPositionsInThirdperson.description")))
+                            .binding(
+                                defaults.tiltItemPositionsInThirdperson,
+                                { config.tiltItemPositionsInThirdperson },
+                                { newVal -> config.tiltItemPositionsInThirdperson = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.applyItemSwingUsage"))
+                            .description(OptionDescription.of(Text.translatable("animatium.applyItemSwingUsage.description")))
+                            .binding(
+                                defaults.applyItemSwingUsage,
+                                { config.applyItemSwingUsage },
+                                { newVal -> config.applyItemSwingUsage = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.removeEquipAnimationOnItemUse"))
+                            .description(OptionDescription.of(Text.translatable("animatium.removeEquipAnimationOnItemUse.description")))
+                            .binding(
+                                defaults.removeEquipAnimationOnItemUse,
+                                { config.removeEquipAnimationOnItemUse },
+                                { newVal -> config.removeEquipAnimationOnItemUse = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.disableItemUsingTextureInGui"))
+                            .description(OptionDescription.of(Text.translatable("animatium.disableItemUsingTextureInGui.description")))
+                            .binding(
+                                defaults.disableItemUsingTextureInGui,
+                                { config.disableItemUsingTextureInGui },
+                                { newVal -> config.disableItemUsingTextureInGui = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.itemDropsFaceCamera"))
+                            .description(OptionDescription.of(Text.translatable("animatium.itemDropsFaceCamera.description")))
+                            .binding(
+                                defaults.itemDropsFaceCamera,
+                                { config.itemDropsFaceCamera },
+                                { newVal -> config.itemDropsFaceCamera = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.itemDrops2D"))
+                            .description(OptionDescription.of(Text.translatable("animatium.itemDrops2D.description")))
+                            .binding(
+                                defaults.itemDrops2D,
+                                { config.itemDrops2D },
+                                { newVal -> config.itemDrops2D = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.oldDurabilityBarColors"))
+                            .description(OptionDescription.of(Text.translatable("animatium.oldDurabilityBarColors.description")))
+                            .binding(
+                                defaults.oldDurabilityBarColors,
+                                { config.oldDurabilityBarColors },
+                                { newVal -> config.oldDurabilityBarColors = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.oldItemRarities"))
+                            .description(OptionDescription.of(Text.translatable("animatium.oldItemRarities.description")))
+                            .binding(
+                                defaults.oldItemRarities,
+                                { config.oldItemRarities },
+                                { newVal -> config.oldItemRarities = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+                    category.option(
+                        Option.createBuilder<Boolean>()
+                            .name(Text.translatable("animatium.removeClientsideBlockingDelay"))
+                            .description(OptionDescription.of(Text.translatable("animatium.removeClientsideBlockingDelay.description")))
+                            .binding(
+                                defaults.removeClientsideBlockingDelay,
+                                { config.removeClientsideBlockingDelay },
+                                { newVal -> config.removeClientsideBlockingDelay = newVal })
+                            .controller(TickBoxControllerBuilder::create)
+                            .build()
+                    )
+
+                    // Fishing Rod
                     category.option(
                         Option.createBuilder<Boolean>()
                             .name(Text.translatable("animatium.oldFishingRodTextureStackCheck"))
@@ -414,28 +695,6 @@ class AnimatiumConfig {
                     category.name(Text.translatable("animatium.category.other"))
                     category.option(
                         Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.tiltItemPositions"))
-                            .description(OptionDescription.of(Text.translatable("animatium.tiltItemPositions.description")))
-                            .binding(
-                                defaults.tiltItemPositions,
-                                { config.tiltItemPositions },
-                                { newVal -> config.tiltItemPositions = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.tiltItemPositionsInThirdperson"))
-                            .description(OptionDescription.of(Text.translatable("animatium.tiltItemPositionsInThirdperson.description")))
-                            .binding(
-                                defaults.tiltItemPositionsInThirdperson,
-                                { config.tiltItemPositionsInThirdperson },
-                                { newVal -> config.tiltItemPositionsInThirdperson = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
                             .name(Text.translatable("animatium.legacyThirdpersonSwordBlockingPosition"))
                             .description(OptionDescription.of(Text.translatable("animatium.legacyThirdpersonSwordBlockingPosition.description")))
                             .binding(
@@ -453,160 +712,6 @@ class AnimatiumConfig {
                                 defaults.lockBlockingArmRotation,
                                 { config.lockBlockingArmRotation },
                                 { newVal -> config.lockBlockingArmRotation = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.applyItemSwingUsage"))
-                            .description(OptionDescription.of(Text.translatable("animatium.applyItemSwingUsage.description")))
-                            .binding(
-                                defaults.applyItemSwingUsage,
-                                { config.applyItemSwingUsage },
-                                { newVal -> config.applyItemSwingUsage = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.removeEquipAnimationOnItemUse"))
-                            .description(OptionDescription.of(Text.translatable("animatium.removeEquipAnimationOnItemUse.description")))
-                            .binding(
-                                defaults.removeEquipAnimationOnItemUse,
-                                { config.removeEquipAnimationOnItemUse },
-                                { newVal -> config.removeEquipAnimationOnItemUse = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.showCrosshairInThirdperson"))
-                            .description(OptionDescription.of(Text.translatable("animatium.showCrosshairInThirdperson.description")))
-                            .binding(
-                                defaults.showCrosshairInThirdperson,
-                                { config.showCrosshairInThirdperson },
-                                { newVal -> config.showCrosshairInThirdperson = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.removeHeartFlash"))
-                            .description(OptionDescription.of(Text.translatable("animatium.removeHeartFlash.description")))
-                            .binding(
-                                defaults.removeHeartFlash,
-                                { config.removeHeartFlash },
-                                { newVal -> config.removeHeartFlash = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.fixTextStrikethroughStyle"))
-                            .description(OptionDescription.of(Text.translatable("animatium.fixTextStrikethroughStyle.description")))
-                            .binding(
-                                defaults.fixTextStrikethroughStyle,
-                                { config.fixTextStrikethroughStyle },
-                                { newVal -> config.fixTextStrikethroughStyle = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.centerScrollableListWidgets"))
-                            .description(OptionDescription.of(Text.translatable("animatium.centerScrollableListWidgets.description")))
-                            .binding(
-                                defaults.centerScrollableListWidgets,
-                                { config.centerScrollableListWidgets },
-                                { newVal -> config.centerScrollableListWidgets = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.oldListWidgetSelectedBorderColor"))
-                            .description(OptionDescription.of(Text.translatable("animatium.oldListWidgetSelectedBorderColor.description")))
-                            .binding(
-                                defaults.oldListWidgetSelectedBorderColor,
-                                { config.oldListWidgetSelectedBorderColor },
-                                { newVal -> config.oldListWidgetSelectedBorderColor = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.oldBlueVoidSky"))
-                            .description(OptionDescription.of(Text.translatable("animatium.oldBlueVoidSky.description")))
-                            .binding(
-                                defaults.oldBlueVoidSky,
-                                { config.oldBlueVoidSky },
-                                { newVal -> config.oldBlueVoidSky = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.oldSkyHorizonHeight"))
-                            .description(OptionDescription.of(Text.translatable("animatium.oldSkyHorizonHeight.description")))
-                            .binding(
-                                defaults.oldSkyHorizonHeight,
-                                { config.oldSkyHorizonHeight },
-                                { newVal -> config.oldSkyHorizonHeight = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.oldCloudHeight"))
-                            .description(OptionDescription.of(Text.translatable("animatium.oldCloudHeight.description")))
-                            .binding(
-                                defaults.oldCloudHeight,
-                                { config.oldCloudHeight },
-                                { newVal -> config.oldCloudHeight = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.oldButtonTextColors"))
-                            .description(OptionDescription.of(Text.translatable("animatium.oldButtonTextColors.description")))
-                            .binding(
-                                defaults.oldButtonTextColors,
-                                { config.oldButtonTextColors },
-                                { newVal -> config.oldButtonTextColors = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.removeDebugHudBackground"))
-                            .description(OptionDescription.of(Text.translatable("animatium.removeDebugHudBackground.description")))
-                            .binding(
-                                defaults.removeDebugHudBackground,
-                                { config.removeDebugHudBackground },
-                                { newVal -> config.removeDebugHudBackground = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.debugHudTextShadow"))
-                            .description(OptionDescription.of(Text.translatable("animatium.debugHudTextShadow.description")))
-                            .binding(
-                                defaults.debugHudTextShadow,
-                                { config.debugHudTextShadow },
-                                { newVal -> config.debugHudTextShadow = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.oldChatPosition"))
-                            .description(OptionDescription.of(Text.translatable("animatium.oldChatPosition.description")))
-                            .binding(
-                                defaults.oldChatPosition,
-                                { config.oldChatPosition },
-                                { newVal -> config.oldChatPosition = newVal })
                             .controller(TickBoxControllerBuilder::create)
                             .build()
                     )
@@ -645,17 +750,6 @@ class AnimatiumConfig {
                     )
                     category.option(
                         Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.disableItemUsingTextureInGui"))
-                            .description(OptionDescription.of(Text.translatable("animatium.disableItemUsingTextureInGui.description")))
-                            .binding(
-                                defaults.disableItemUsingTextureInGui,
-                                { config.disableItemUsingTextureInGui },
-                                { newVal -> config.disableItemUsingTextureInGui = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
                             .name(Text.translatable("animatium.disableInventoryEntityScissor"))
                             .description(OptionDescription.of(Text.translatable("animatium.disableInventoryEntityScissor.description")))
                             .binding(
@@ -665,84 +759,6 @@ class AnimatiumConfig {
                             .controller(TickBoxControllerBuilder::create)
                             .build()
                     )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.disableCameraTransparentPassthrough"))
-                            .description(OptionDescription.of(Text.translatable("animatium.disableCameraTransparentPassthrough.description")))
-                            .binding(
-                                defaults.disableCameraTransparentPassthrough,
-                                { config.disableCameraTransparentPassthrough },
-                                { newVal -> config.disableCameraTransparentPassthrough = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.itemDropsFaceCamera"))
-                            .description(OptionDescription.of(Text.translatable("animatium.itemDropsFaceCamera.description")))
-                            .binding(
-                                defaults.itemDropsFaceCamera,
-                                { config.itemDropsFaceCamera },
-                                { newVal -> config.itemDropsFaceCamera = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.itemDrops2D"))
-                            .description(OptionDescription.of(Text.translatable("animatium.itemDrops2D.description")))
-                            .binding(
-                                defaults.itemDrops2D,
-                                { config.itemDrops2D },
-                                { newVal -> config.itemDrops2D = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.oldDurabilityBarColors"))
-                            .description(OptionDescription.of(Text.translatable("animatium.oldDurabilityBarColors.description")))
-                            .binding(
-                                defaults.oldDurabilityBarColors,
-                                { config.oldDurabilityBarColors },
-                                { newVal -> config.oldDurabilityBarColors = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.oldItemRarities"))
-                            .description(OptionDescription.of(Text.translatable("animatium.oldItemRarities.description")))
-                            .binding(
-                                defaults.oldItemRarities,
-                                { config.oldItemRarities },
-                                { newVal -> config.oldItemRarities = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(
-                        Option.createBuilder<Boolean>()
-                            .name(Text.translatable("animatium.removeClientsideBlockingDelay"))
-                            .description(OptionDescription.of(Text.translatable("animatium.removeClientsideBlockingDelay.description")))
-                            .binding(
-                                defaults.removeClientsideBlockingDelay,
-                                { config.removeClientsideBlockingDelay },
-                                { newVal -> config.removeClientsideBlockingDelay = newVal })
-                            .controller(TickBoxControllerBuilder::create)
-                            .build()
-                    )
-                    category.option(Option.createBuilder<CameraVersion>()
-                        .name(Text.translatable("animatium.cameraVersion"))
-                        .description(OptionDescription.of(Text.translatable("animatium.cameraVersion.description")))
-                        .binding(
-                            defaults.cameraVersion,
-                            { config.cameraVersion },
-                            { newVal -> config.cameraVersion = newVal })
-                        .controller { opt ->
-                            EnumControllerBuilder.create(opt).enumClass(CameraVersion::class.java)
-                                .formatValue { it -> Text.translatable("animatium.enum.CameraVersion." + it.name) }
-                        }
-                        .build())
                     builder.category(category.build())
                 }
 
@@ -793,7 +809,35 @@ class AnimatiumConfig {
     @SerialEntry var fixBowArmMovement = true
     @SerialEntry var oldCapeMovement = false // TODO/NOTE: Currently not accurate/broken.
 
-    // Fishing Rod
+    // Sky
+    @SerialEntry var oldBlueVoidSky = true
+    @SerialEntry var oldSkyHorizonHeight = true
+    @SerialEntry var oldCloudHeight = true
+
+    // Screen
+    @SerialEntry var showCrosshairInThirdperson = true
+    @SerialEntry var removeHeartFlash = true
+    @SerialEntry var fixTextStrikethroughStyle = true
+    @SerialEntry var centerScrollableListWidgets = true
+    @SerialEntry var oldListWidgetSelectedBorderColor = true
+    @SerialEntry var oldButtonTextColors = true
+    @SerialEntry var removeDebugHudBackground = true
+    @SerialEntry var debugHudTextShadow = true
+    @SerialEntry var oldChatPosition = true
+    @SerialEntry var disableCameraTransparentPassthrough = true
+    @SerialEntry var cameraVersion = CameraVersion.V1_8
+
+    // Items
+    @SerialEntry var tiltItemPositions = true
+    @SerialEntry var tiltItemPositionsInThirdperson = true
+    @SerialEntry var applyItemSwingUsage = true
+    @SerialEntry var removeEquipAnimationOnItemUse = true
+    @SerialEntry var disableItemUsingTextureInGui = true
+    @SerialEntry var itemDropsFaceCamera = true
+    @SerialEntry var itemDrops2D = true
+    @SerialEntry var oldDurabilityBarColors = true
+    @SerialEntry var oldItemRarities = true
+    @SerialEntry var removeClientsideBlockingDelay = true
     @SerialEntry var oldFishingRodTextureStackCheck = true
     @SerialEntry var fishingRodLineInterpolation = true
     @SerialEntry var noMoveFishingRodLine = true
@@ -802,34 +846,10 @@ class AnimatiumConfig {
     @SerialEntry var fixCastLineSwing = true
 
     // Other
-    @SerialEntry var tiltItemPositions = true
-    @SerialEntry var tiltItemPositionsInThirdperson = true
     @SerialEntry var legacyThirdpersonSwordBlockingPosition = true
     @SerialEntry var lockBlockingArmRotation = true
-    @SerialEntry var applyItemSwingUsage = true
-    @SerialEntry var removeEquipAnimationOnItemUse = true
-    @SerialEntry var showCrosshairInThirdperson = true
-    @SerialEntry var removeHeartFlash = true
-    @SerialEntry var fixTextStrikethroughStyle = true
-    @SerialEntry var centerScrollableListWidgets = true
-    @SerialEntry var oldListWidgetSelectedBorderColor = true
-    @SerialEntry var oldBlueVoidSky = true
-    @SerialEntry var oldSkyHorizonHeight = true
-    @SerialEntry var oldCloudHeight = true
-    @SerialEntry var oldButtonTextColors = true
-    @SerialEntry var removeDebugHudBackground = true
-    @SerialEntry var debugHudTextShadow = true
-    @SerialEntry var oldChatPosition = true
     @SerialEntry var oldProjectilePosition = true
     @SerialEntry var disableProjectileAgeCheck = true
     @SerialEntry var oldBlockMiningProgress = true
-    @SerialEntry var disableItemUsingTextureInGui = true
     @SerialEntry var disableInventoryEntityScissor = true
-    @SerialEntry var disableCameraTransparentPassthrough = true
-    @SerialEntry var itemDropsFaceCamera = true
-    @SerialEntry var itemDrops2D = true
-    @SerialEntry var oldDurabilityBarColors = true
-    @SerialEntry var oldItemRarities = true
-    @SerialEntry var removeClientsideBlockingDelay = true
-    @SerialEntry var cameraVersion = CameraVersion.V1_8
 }
