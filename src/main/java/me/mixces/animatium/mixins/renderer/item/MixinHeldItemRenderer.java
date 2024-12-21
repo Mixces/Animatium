@@ -36,8 +36,7 @@ public abstract class MixinHeldItemRenderer {
 
     @WrapOperation(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", ordinal = 1))
     private void animatium$postBowTransform(MatrixStack instance, float x, float y, float z, Operation<Void> original, @Local(argsOnly = true) AbstractClientPlayerEntity player, @Local(argsOnly = true) Hand hand) {
-        Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
-        int direction = arm == Arm.RIGHT ? 1 : -1;
+        int direction = PlayerUtils.getHandMultiplier(player);
         if (AnimatiumConfig.getInstance().getTiltItemPositions()) {
             instance.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(direction * -335));
             instance.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -50.0F));
@@ -69,8 +68,7 @@ public abstract class MixinHeldItemRenderer {
     @Inject(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", ordinal = 1))
     private void animatium$tiltItemPositions(AbstractClientPlayerEntity player, float tickDelta, float pitch, Hand hand, float swingProgress, ItemStack stack, float equipProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
         if (AnimatiumConfig.getInstance().getTiltItemPositions() && !(stack.getItem() instanceof BlockItem) && !(stack.getItem() instanceof ShieldItem)) {
-            Arm arm = hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
-            int direction = arm == Arm.RIGHT ? 1 : -1;
+            int direction = PlayerUtils.getHandMultiplier(player);
             float angle = MathUtils.toRadians(25);
             if (ItemUtils.isFishingRodItem(stack)) {
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * 180.0F));
