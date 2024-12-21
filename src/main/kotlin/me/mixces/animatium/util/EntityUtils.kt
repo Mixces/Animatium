@@ -6,11 +6,11 @@ import java.util.Optional
 
 abstract class EntityUtils {
     companion object {
-        val STATE_TO_ENTITY = hashMapOf<EntityRenderState, Entity>()
+        private val STATE_TO_ENTITY = hashMapOf<EntityRenderState, Entity>()
 
         @JvmStatic
         fun setEntityByState(state: EntityRenderState, entity: Entity) {
-            STATE_TO_ENTITY.put(state, entity)
+            STATE_TO_ENTITY[state] = entity
         }
 
         @JvmStatic

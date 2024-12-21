@@ -9,11 +9,11 @@ class AnimatiumClient : ClientModInitializer {
         fun isLegacySupportedVersion(): Boolean {
             val client = MinecraftClient.getInstance()
             val networkHandler = client.networkHandler ?: return false
-            val brand = networkHandler.getBrand()?.lowercase() ?: return false
+            val brand = networkHandler.brand?.lowercase() ?: return false
             return if (brand.contains("hypixel") || brand.contains("hygot") || brand.contains("1.8")) {
                 true
             } else {
-                val serverInfo = networkHandler.getServerInfo()
+                val serverInfo = networkHandler.serverInfo
                 serverInfo != null &&
                         (serverInfo.address.contains("loyisa") ||
                                 serverInfo.address.contains("bedwarspractice") ||
