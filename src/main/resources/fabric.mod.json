@@ -23,7 +23,10 @@
 			}
 		],
 		"modmenu": [
-			"me.mixces.animatium.config.ModMenuIntegration"
+			{
+				"value": "me.mixces.animatium.config.ModMenuIntegration",
+				"adapter": "kotlin"
+			}
 		]
 	},
 	"custom": {
