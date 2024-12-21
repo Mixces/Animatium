@@ -4,6 +4,8 @@ import com.google.common.base.MoreObjects
 import me.mixces.animatium.AnimatiumClient
 import me.mixces.animatium.mixins.accessor.PlayerEntityAccessor
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.render.entity.model.BipedEntityModel
+import net.minecraft.client.render.entity.state.ArmedEntityRenderState
 import net.minecraft.entity.EntityDimensions
 import net.minecraft.entity.EntityPose
 import net.minecraft.entity.LivingEntity
@@ -48,6 +50,17 @@ abstract class PlayerUtils {
         @JvmStatic
         fun lerpPlayerWithEyeHeight(entity: PlayerEntity, tickDelta: Float, eyeHeight: Double): Vec3d {
             return entity.getLerpedPos(tickDelta).add(0.0, eyeHeight, 0.0)
+        }
+
+        @JvmStatic
+        fun isBlockingArm(arm: Arm, armedEntityState: ArmedEntityRenderState): Boolean {
+            return if (arm == Arm.LEFT && armedEntityState.leftArmPose == BipedEntityModel.ArmPose.BLOCK) {
+                true
+            } else if (arm == Arm.RIGHT && armedEntityState.rightArmPose == BipedEntityModel.ArmPose.BLOCK) {
+                true
+            } else {
+                false
+            }
         }
 
         @JvmStatic

@@ -68,7 +68,7 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
     private void animatium$tiltItemPositionsThird(S entityState, ItemRenderState itemRenderState, Arm arm, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
         if (ItemUtils.shouldTiltItemPositionsInThirdperson(entityState)) {
             Optional<Entity> optionalLivingEntity = EntityUtils.getEntityByState(entityState);
-            if (optionalLivingEntity.isPresent() && entityState instanceof ArmedEntityRenderState) {
+            if (optionalLivingEntity.isPresent() && entityState instanceof ArmedEntityRenderState armedEntityRenderState) {
                 int direction = PlayerUtils.getArmMultiplier(arm);
                 LivingEntity livingEntity = (LivingEntity) optionalLivingEntity.get();
                 ItemStack stack = livingEntity.getStackInArm(arm);
@@ -97,7 +97,7 @@ public abstract class MixinHeldItemFeatureRenderer<S extends ArmedEntityRenderSt
                             matrices.translate(0.0F, -0.125F, 0.0F);
                         }
 
-                        if (livingEntity instanceof PlayerEntity && livingEntity.getItemUseTime() > 0 && livingEntity.isBlocking()) {
+                        if (livingEntity instanceof PlayerEntity && livingEntity.getItemUseTime() > 0 && livingEntity.isBlocking() && PlayerUtils.isBlockingArm(arm, armedEntityRenderState)) {
                             matrices.translate(direction * 0.05F, 0.0F, -0.1F);
                             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction * -50.0F));
                             matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-10.0F));
