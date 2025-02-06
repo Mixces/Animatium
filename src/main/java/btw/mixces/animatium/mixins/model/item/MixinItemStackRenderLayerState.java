@@ -25,6 +25,7 @@ package btw.mixces.animatium.mixins.model.item;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
+import btw.mixces.animatium.util.FishingRodVersion;
 import btw.mixces.animatium.util.ItemUtils;
 import btw.mixces.animatium.util.MathUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -79,13 +80,16 @@ public abstract class MixinItemStackRenderLayerState {
                 float scaleX = transform.scale.x();
                 float scaleY = transform.scale.y();
                 float scaleZ = transform.scale.z();
-                if (AnimatiumConfig.instance().getOldRodPosition() && ItemUtils.isFishingRodItem(stack)) {
-                    if (isFirstPerson) {
+                if (AnimatiumConfig.instance().getFishingRodVersion() != FishingRodVersion.LATEST && ItemUtils.isFishingRodItem(stack) && isFirstPerson) {
+                    int ordinal = AnimatiumConfig.instance().getFishingRodVersion().ordinal();
+                    if (ordinal <= FishingRodVersion.V1_8.ordinal()) {
                         poseStack.translate(0.070625, 0.1, 0.020625);
-                        poseStack.translate(x, y, z);
-                        poseStack.mulPose(Axis.YP.rotationDegrees(180));
-                        poseStack.translate(-x, -y, -z);
                     }
+                    poseStack.translate(x, y, z);
+                    if (ordinal == FishingRodVersion.V1_7.ordinal()) {
+                        poseStack.mulPose(Axis.YP.rotationDegrees(180));
+                    }
+                    poseStack.translate(-x, -y, -z);
                 }
 
                 if (AnimatiumConfig.instance().getOldThinBlockPositions() && ItemUtils.isThinBlockItem(stack)) {

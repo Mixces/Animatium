@@ -29,6 +29,7 @@ import btw.mixces.animatium.config.category.OtherConfigCategory
 import btw.mixces.animatium.config.category.QOLConfigCategory
 import btw.mixces.animatium.config.category.ScreenConfigCategory
 import btw.mixces.animatium.util.CameraVersion
+import btw.mixces.animatium.util.FishingRodVersion
 import dev.isxander.yacl3.api.YetAnotherConfigLib
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler
 import dev.isxander.yacl3.config.v2.api.SerialEntry
@@ -169,7 +170,7 @@ class AnimatiumConfig {
     @SerialEntry var tiltItemPositionsInThirdperson = true
     @SerialEntry var oldThinBlockPositions = true
     @SerialEntry var oldSkullPosition = true
-    @SerialEntry var oldRodPosition = true
+    @SerialEntry var fishingRodVersion = FishingRodVersion.V1_7
     // (Items) Other
     @SerialEntry var applyItemSwingUsage = true
     @SerialEntry var disableSwingOnUse = true
@@ -198,6 +199,8 @@ class AnimatiumConfig {
     @SerialEntry var disableModernCombatSounds = true // TODO/NOTE: Fix, it's broken on servers
     @SerialEntry var disableModernCombatParticles = true // TODO/NOTE: Fix, it's broken on servers
     @SerialEntry var oldHeldItemArmLogic = true
+    @SerialEntry var oldFlameDimensions = true
+    @SerialEntry var oldFlameOffset = false
     // (Other) Sky
     @SerialEntry var oldBlueVoidSky = true
     @SerialEntry var oldSkyHorizonHeight = true

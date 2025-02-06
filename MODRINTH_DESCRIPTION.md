@@ -336,12 +336,15 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
     - Description: Translates the held item position of blocks like carpet/slabs/daylight sensors/pressure plates to
       look like how they did in <=1.7.x.
     - Type: BOOLEAN
-- oldRodPosition
-    - Description: Bring back 1.7 first-person rod position
-    - Type: BOOLEAN
 - oldSkullPosition
     - Description: Positions the skull block items' held/gui positions to be how it was in 1.8.x.
     - Type: BOOLEAN
+- fishingRodVersion
+    - Description: Positions the fishing rod's first-person position to be how it was in said version range.
+    - Type: ENUM
+        - 1.7 and below (V1_7)
+        - 1.8 (V1_8)
+        - LATEST
 
 ### Other
 
@@ -418,6 +421,12 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
     - Description: In 1.8, the player's arm (when viewed from the first person POV) will be positioned at an angle when
       holding an item. This is only truly visible when going from an empty slot to an item. This happens due it applying
       the held item arm rotation meant for the third person model.
+    - Type: BOOLEAN
+- oldFlameDimensions
+    - Description: Makes the third person flame rendering use a fixed width and height to match <=1.12.x.
+    - Type: BOOLEAN
+- oldFlameOffset
+    - Description: Brings back the third person flame offset from <=1.7.x.
     - Type: BOOLEAN
 
 ### Sky

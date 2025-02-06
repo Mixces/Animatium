@@ -26,6 +26,7 @@ package btw.mixces.animatium.mixins.renderer.entity;
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.mixins.accessor.CameraAccessor;
+import btw.mixces.animatium.util.FishingRodVersion;
 import btw.mixces.animatium.util.PlayerUtils;
 import btw.mixces.animatium.util.RenderUtils;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
@@ -46,10 +47,13 @@ import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.Objects;
 
@@ -59,12 +63,16 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
         super(context);
     }
 
-    @ModifyArg(method = "getPlayerHandPos", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera$NearPlane;getPointOnPlane(FF)Lnet/minecraft/world/phys/Vec3;"), index = 1)
-    private float animatium$moveCastLineY(float original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldRodPosition()) {
-            return original + 0.15F;
-        } else {
-            return original;
+    @ModifyArgs(method = "getPlayerHandPos", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera$NearPlane;getPointOnPlane(FF)Lnet/minecraft/world/phys/Vec3;"))
+    private void animatium$moveCastLineY(Args args) {
+        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getFishingRodVersion() != FishingRodVersion.LATEST) {
+            FishingRodVersion version = AnimatiumConfig.instance().getFishingRodVersion();
+            if (version == FishingRodVersion.V1_8) {
+                animatium$modifyPlanarScale(args, 0);
+            }
+            if (version.ordinal() <= FishingRodVersion.V1_8.ordinal()) {
+                animatium$modifyPlanarScale(args, 1);
+            }
         }
     }
 
@@ -137,5 +145,10 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
         } else {
             return original;
         }
+    }
+
+    @Unique
+    private void animatium$modifyPlanarScale(Args args, int ordinal) {
+        args.set(ordinal, ((float) args.get(ordinal)) + 0.15F);
     }
 }

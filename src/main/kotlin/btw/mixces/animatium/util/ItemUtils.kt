@@ -127,7 +127,8 @@ object ItemUtils {
             val item = Block.byItem(stack.item)
             item is BannerBlock ||
                     item is RodBlock ||
-                    isSkullBlock(stack)
+                    isSkullBlock(stack) ||
+                    item is BedBlock
         } else {
             false
         }
