@@ -153,7 +153,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - capeChestplateTranslation
     - Description: Stops equipping a chestplate causing the cape to be translated a few pixels away like in <=1.15.x
     - Type: BOOLEAN
-- oldCapePosition
+- oldCapeSneakPosition
     - Description: Positions the cape while sneaking similarly to <=1.7.x
     - Type: BOOLEAN
 

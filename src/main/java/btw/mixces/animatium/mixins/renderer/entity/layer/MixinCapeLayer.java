@@ -55,7 +55,7 @@ public abstract class MixinCapeLayer {
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/renderer/entity/state/PlayerRenderState;FF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource;getBuffer(Lnet/minecraft/client/renderer/RenderType;)Lcom/mojang/blaze3d/vertex/VertexConsumer;"))
     private void animatium$capeSneakingOffset(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, PlayerRenderState playerRenderState, float f, float g, CallbackInfo ci) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldCapePosition() && playerRenderState.isCrouching) {
+        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldCapeSneakPosition() && playerRenderState.isCrouching) {
             poseStack.translate(0.0F, playerRenderState.scale * 2.0F / 16.0F, 0.0F);
         }
     }

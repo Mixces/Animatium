@@ -120,7 +120,7 @@ class AnimatiumConfig {
     @SerialEntry var dontClampCapeLean = false
     @SerialEntry var capeSwingRotation = true
     @SerialEntry var capeChestplateTranslation = true
-    @SerialEntry var oldCapePosition = false
+    @SerialEntry var oldCapeSneakPosition = false
 
     // (Screen)
     @SerialEntry var showCrosshairInThirdperson = true
@@ -164,7 +164,7 @@ class AnimatiumConfig {
     @SerialEntry var itemDropsFaceCameraRotationFix = false
     @SerialEntry var itemDrops2D = true
     @SerialEntry var itemFramed2D = true
-    @SerialEntry var item2DColors = false
+    @SerialEntry var item2DColors = true
     // (Items) Transformations
     @SerialEntry var tiltItemPositions = true
     @SerialEntry var tiltItemPositionsInThirdperson = true
@@ -196,11 +196,11 @@ class AnimatiumConfig {
     @SerialEntry var oldArmorHurtRendering = false
     @SerialEntry var forceHighAttackSpeedVisual = false
     @SerialEntry var disableEntityGlowOutline = false
-    @SerialEntry var disableModernCombatSounds = true // TODO/NOTE: Fix, it's broken on servers
+    @SerialEntry var disableModernCombatSounds = true
     @SerialEntry var disableModernCombatParticles = true // TODO/NOTE: Fix, it's broken on servers
     @SerialEntry var oldHeldItemArmLogic = true
     @SerialEntry var oldFlameDimensions = true
-    @SerialEntry var oldFlameOffset = false
+    @SerialEntry var oldFlameOffset = true
     // (Other) Sky
     @SerialEntry var oldBlueVoidSky = true
     @SerialEntry var oldSkyHorizonHeight = true

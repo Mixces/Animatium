@@ -88,8 +88,8 @@
 	"animatium.capeSwingRotation.description": "Stops the cape from swinging in unison with the body while the player is swinging their arm like in <=1.20.x.",
 	"animatium.capeChestplateTranslation": "Don't move cape while chestplate is equipped",
 	"animatium.capeChestplateTranslation.description": "Stops equipping a chestplate causing the cape to be translated a few pixels away like in <=1.15.x",
-	"animatium.oldCapePosition": "Old cape sneaking position",
-	"animatium.oldCapePosition.description": "Positions the cape while sneaking similarly to <=1.7.x",
+	"animatium.oldCapeSneakPosition": "Old cape sneaking position",
+	"animatium.oldCapeSneakPosition.description": "Positions the cape while sneaking similarly to <=1.7.x",
 
 	"animatium.category.screen": "Screen",
 	"animatium.showCrosshairInThirdperson": "Show crosshair in third-person",
