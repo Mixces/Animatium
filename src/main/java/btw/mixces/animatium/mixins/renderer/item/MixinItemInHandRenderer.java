@@ -45,7 +45,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ShieldItem;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -92,10 +95,10 @@ public abstract class MixinItemInHandRenderer {
         }
     }
 
-    @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/ItemUseAnimation;"))
-    private ItemUseAnimation animatium$removeItemUsageVisualInGUI(ItemStack instance, Operation<ItemUseAnimation> original) {
+    @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;isUsingItem()Z", ordinal = 1))
+    private boolean animatium$removeItemUsageVisualInGUI(AbstractClientPlayer instance, Operation<Boolean> original) {
         if (AnimatiumConfig.instance().getRemoveItemUsageVisualInGUI() && this.minecraft.screen != null) {
-            return ItemUseAnimation.NONE;
+            return false;
         } else {
             return original.call(instance);
         }
@@ -140,7 +143,7 @@ public abstract class MixinItemInHandRenderer {
             if (AnimatiumConfig.instance().getFishingRodVersion() == FishingRodVersion.V1_7 && ItemUtils.isFishingRodItem(stack)) {
                 poseStack.mulPose(Axis.YP.rotationDegrees(direction * 180.0F));
             }
-            
+
             if (AnimatiumConfig.instance().getTiltItemPositions() && !ItemUtils.isBlock3d(stack, itemRenderer.scratchItemStackRenderState) && !ItemUtils.isItemBlacklisted(stack)) {
                 float angle = MathUtils.toRadians(25);
 
