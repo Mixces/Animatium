@@ -25,8 +25,15 @@ package btw.mixces.animatium.mixins.renderer.entity;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
+import btw.mixces.animatium.util.EntityUtils;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,8 +41,9 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(EntityRenderDispatcher.class)
 public abstract class MixinEntityRenderDispatcher {
     @ModifyExpressionValue(method = "renderFlame", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;boundingBoxWidth:F"))
-    private float animatium$oldFlameWidth(float original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldFlameDimensions()) {
+    private float animatium$oldFlameWidth(float original, @Local(argsOnly = true) EntityRenderState entityRenderState, @Share("entity") LocalRef<Entity> entity) {
+        entity.set(EntityUtils.getEntityByState(entityRenderState));
+        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldFlameDimensions() && entity.get() instanceof Player) {
             return 0.6F;
         } else {
             return original;
@@ -43,8 +51,8 @@ public abstract class MixinEntityRenderDispatcher {
     }
 
     @ModifyExpressionValue(method = "renderFlame", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;boundingBoxHeight:F"))
-    private float animatium$oldFlameHeight(float original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldFlameDimensions()) {
+    private float animatium$oldFlameHeight(float original, @Share("entity") LocalRef<Entity> entity) {
+        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldFlameDimensions() && entity.get() instanceof Player) {
             return 1.8F;
         } else {
             return original;
@@ -52,8 +60,8 @@ public abstract class MixinEntityRenderDispatcher {
     }
 
     @ModifyExpressionValue(method = "renderFlame", at = @At(value = "CONSTANT", args = "floatValue=0.0", ordinal = 1))
-    private float animatium$oldFlameOffset(float original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldFlameOffset()) {
+    private float animatium$oldFlameOffset(float original, @Share("entity") LocalRef<Entity> entity) {
+        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldFlameOffset() && entity.get() instanceof Player) {
             return -0.2F;
         } else {
             return original;
