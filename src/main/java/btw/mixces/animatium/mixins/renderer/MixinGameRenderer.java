@@ -74,11 +74,12 @@ public abstract class MixinGameRenderer {
         }
     }
 
-    @WrapOperation(method={"bobHurt"}, at={@At(value="FIELD", target="Lnet/minecraft/world/entity/LivingEntity;hurtTime:I")})
+    @WrapOperation(method = "bobHurt", at= @At(value = "FIELD", target = "Lnet/minecraft/world/entity/LivingEntity;hurtTime:I"))
     private int animatium$hurtTime(LivingEntity instance, Operation<Integer> original) {
         if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOffsetHurtTime()) {
             return Math.max(original.call(instance) - 1, 0);
         }
+
         return original.call(instance);
     }
 
