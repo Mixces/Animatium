@@ -274,6 +274,17 @@ object MovementConfigCategory {
                     .controller(TickBoxControllerBuilder::create)
                     .build()
             )
+            otherGroup.option(
+                Option.createBuilder<Boolean>()
+                    .name(Component.translatable("animatium.offsetHurtTime"))
+                    .description(OptionDescription.of(Component.translatable("animatium.offsetHurtTime.description")))
+                    .binding(
+                        defaults.offsetHurtTime,
+                        { config.offsetHurtTime },
+                        { newVal -> config.offsetHurtTime = newVal })
+                    .controller(TickBoxControllerBuilder::create)
+                    .build()
+            )
             category.group(otherGroup.build())
         }
 

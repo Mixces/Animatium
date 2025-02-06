@@ -114,6 +114,7 @@ class AnimatiumConfig {
     @SerialEntry var oldDeathLimbs = true
     @SerialEntry var oldBowArmMovement = true
     @SerialEntry var oldDamageTilt = true
+    @SerialEntry var offsetHurtTime = true
     // (Movement) Cape
     @SerialEntry var oldCapeMovement = true
     @SerialEntry var dontClampCapeLean = false

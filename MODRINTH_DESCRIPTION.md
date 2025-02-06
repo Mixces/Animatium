@@ -177,6 +177,9 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - oldDamageTilt
     - Description: Reverts the damage tilt to it's old logic which will tilt in one direction <1.19.4.
     - Type: BOOLEAN
+  - offsetHurtTime
+    - Description: Offsets the damage tilt time by -1 like in <=1.7.
+    - Type: BOOLEAN
   </details>
 
 <details>

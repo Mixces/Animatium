@@ -74,6 +74,14 @@ public abstract class MixinGameRenderer {
         }
     }
 
+    @WrapOperation(method={"bobHurt"}, at={@At(value="FIELD", target="Lnet/minecraft/world/entity/LivingEntity;hurtTime:I")})
+    private int animatium$hurtTime(LivingEntity instance, Operation<Integer> original) {
+        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOffsetHurtTime()) {
+            return Math.max(original.call(instance) - 1, 0);
+        }
+        return original.call(instance);
+    }
+
     @Inject(method = "bobView", at = @At("TAIL"))
     private void animatium$fixVerticalBobbingTilt(PoseStack poseStack, float tickDelta, CallbackInfo ci) {
         if (AnimatiumConfig.instance().getFixVerticalBobbingTilt() && this.minecraft.getCameraEntity() instanceof Player player) {
