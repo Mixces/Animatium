@@ -70,6 +70,7 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
             if (version == FishingRodVersion.V1_8) {
                 animatium$modifyPlanarScale(args, 0);
             }
+
             if (version.ordinal() <= FishingRodVersion.V1_8.ordinal()) {
                 animatium$modifyPlanarScale(args, 1);
             }

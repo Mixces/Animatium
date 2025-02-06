@@ -85,10 +85,12 @@ public abstract class MixinItemStackRenderLayerState {
                     if (ordinal <= FishingRodVersion.V1_8.ordinal()) {
                         poseStack.translate(0.070625, 0.1, 0.020625);
                     }
+
                     poseStack.translate(x, y, z);
                     if (ordinal == FishingRodVersion.V1_7.ordinal()) {
                         poseStack.mulPose(Axis.YP.rotationDegrees(180));
                     }
+
                     poseStack.translate(-x, -y, -z);
                 }
 

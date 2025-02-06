@@ -25,8 +25,10 @@ package btw.mixces.animatium.mixins.renderer.item;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.util.*;
+import btw.mixces.animatium.util.FishingRodVersion;
 import btw.mixces.animatium.util.ItemUtils;
+import btw.mixces.animatium.util.MathUtils;
+import btw.mixces.animatium.util.PlayerUtils;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -138,6 +140,7 @@ public abstract class MixinItemInHandRenderer {
             if (AnimatiumConfig.instance().getFishingRodVersion() == FishingRodVersion.V1_7 && ItemUtils.isFishingRodItem(stack)) {
                 poseStack.mulPose(Axis.YP.rotationDegrees(direction * 180.0F));
             }
+            
             if (AnimatiumConfig.instance().getTiltItemPositions() && !ItemUtils.isBlock3d(stack, itemRenderer.scratchItemStackRenderState) && !ItemUtils.isItemBlacklisted(stack)) {
                 float angle = MathUtils.toRadians(25);
 
