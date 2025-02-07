@@ -25,7 +25,6 @@ package btw.mixces.animatium.mixins.renderer.entity;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.mixins.accessor.CameraAccessor;
 import btw.mixces.animatium.util.EntityUtils;
 import btw.mixces.animatium.util.PlayerUtils;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
@@ -33,7 +32,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.objectweb.asm.Opcodes;
@@ -75,10 +73,12 @@ public abstract class MixinEntityRenderDispatcher {
             if (shouldSyncPlayerModelWithEyeHeight) {
                 original = Player.STANDING_DIMENSIONS.eyeHeight() - PlayerUtils.lerpCameraPosition(camera);
             }
+
             if (AnimatiumConfig.instance().getOldFlameOffset()) {
                 original += (shouldSyncPlayerModelWithEyeHeight && entity.isCrouching() ? 0.140625F : 0.296875F);
             }
         }
+
         return original;
     }
 }
