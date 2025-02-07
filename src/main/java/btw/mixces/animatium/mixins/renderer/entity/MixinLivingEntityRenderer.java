@@ -27,6 +27,7 @@ import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.mixins.accessor.CameraAccessor;
 import btw.mixces.animatium.util.EntityUtils;
+import btw.mixces.animatium.util.PlayerUtils;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -60,9 +61,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
             Minecraft client = Minecraft.getInstance();
             LocalPlayer player = client.player;
             if (livingEntityRenderState instanceof PlayerRenderState state && player != null && state.id == player.getId()) {
-                Camera camera = client.gameRenderer.getMainCamera();
-                CameraAccessor cameraAccessor = (CameraAccessor) camera;
-                float cameraLerpValue = Mth.lerp(camera.getPartialTickTime(), cameraAccessor.getEyeHeightOld(), cameraAccessor.getEyeHeight());
+                float cameraLerpValue = PlayerUtils.lerpCameraPosition(client.gameRenderer.getMainCamera());
                 poseStack.translate(0.0F, Player.STANDING_DIMENSIONS.eyeHeight() - cameraLerpValue, 0.0F);
             }
         }

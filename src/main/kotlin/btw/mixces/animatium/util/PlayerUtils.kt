@@ -23,7 +23,9 @@
 
 package btw.mixces.animatium.util
 
+import btw.mixces.animatium.mixins.accessor.CameraAccessor
 import com.google.common.base.MoreObjects
+import net.minecraft.client.Camera
 import net.minecraft.client.Minecraft
 import net.minecraft.client.model.HumanoidModel
 import net.minecraft.client.player.LocalPlayer
@@ -32,6 +34,7 @@ import net.minecraft.network.protocol.game.ClientboundAnimatePacket
 import net.minecraft.network.protocol.game.ServerboundSwingPacket
 import net.minecraft.server.level.ServerChunkCache
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.util.Mth
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.effect.MobEffectUtil
 import net.minecraft.world.effect.MobEffects
@@ -120,5 +123,11 @@ object PlayerUtils {
                 6
             }
         }
+    }
+
+    @JvmStatic
+    fun lerpCameraPosition(camera: Camera): Float {
+        val cameraAccessor: CameraAccessor = camera as CameraAccessor
+        return Mth.lerp(camera.partialTickTime, cameraAccessor.getEyeHeightOld(), cameraAccessor.getEyeHeight())
     }
 }
