@@ -24,6 +24,7 @@
 package btw.mixces.animatium.util
 
 import btw.mixces.animatium.mixins.accessor.CameraAccessor
+import btw.mixces.animatium.mixins.accessor.LivingEntityAccessor
 import com.google.common.base.MoreObjects
 import net.minecraft.client.Camera
 import net.minecraft.client.Minecraft
@@ -36,13 +37,9 @@ import net.minecraft.server.level.ServerChunkCache
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.Mth
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.effect.MobEffectUtil
-import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.HumanoidArm
-import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.phys.Vec3
-import java.util.*
 
 object PlayerUtils {
     @JvmStatic
@@ -83,7 +80,7 @@ object PlayerUtils {
     @JvmStatic
     fun fakeHandSwing(player: Player, hand: InteractionHand) {
         // NOTE: Clientside fake swinging, doesn't send a packet
-        if (!player.swinging || player.swingTime >= getHandSwingDuration(player) / 2 || player.swingTime < 0) {
+        if (!player.swinging || player.swingTime >= (player as LivingEntityAccessor).swingDuration / 2 || player.swingTime < 0) {
             player.swingTime = -1
             player.swinging = true
             player.swingingArm = hand
@@ -93,7 +90,7 @@ object PlayerUtils {
     // Sends necessary swing packets, without playing the player hand swing animation
     @JvmStatic
     fun sendSwingPacket(player: LocalPlayer, hand: InteractionHand) {
-        if (!player.swinging || player.swingTime >= getHandSwingDuration(player) / 2 || player.swingTime < 0) {
+        if (!player.swinging || player.swingTime >= (player as LivingEntityAccessor).swingDuration / 2 || player.swingTime < 0) {
             if (player.level() is ServerLevel) {
                 (player.level().chunkSource as ServerChunkCache).broadcast(
                     player,
@@ -109,20 +106,6 @@ object PlayerUtils {
         }
 
         player.connection?.send(ServerboundSwingPacket(hand))
-    }
-
-    // Fixes crash & doesn't require accesswidener
-    @JvmStatic
-    fun getHandSwingDuration(entity: LivingEntity): Int {
-        return if (MobEffectUtil.hasDigSpeed(entity)) {
-            6 - (1 + MobEffectUtil.getDigSpeedAmplification(entity))
-        } else {
-            if (entity.hasEffect(MobEffects.DIG_SLOWDOWN)) {
-                6 + (1 + Objects.requireNonNull(entity.getEffect(MobEffects.DIG_SLOWDOWN))!!.amplifier) * 2
-            } else {
-                6
-            }
-        }
     }
 
     @JvmStatic
