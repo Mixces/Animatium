@@ -25,6 +25,7 @@ package btw.mixces.animatium.mixins.renderer.item;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
+import btw.mixces.animatium.mixins.accessor.ItemRendererAccessor;
 import btw.mixces.animatium.util.FishingRodVersion;
 import btw.mixces.animatium.util.ItemUtils;
 import btw.mixces.animatium.util.MathUtils;
@@ -144,7 +145,7 @@ public abstract class MixinItemInHandRenderer {
                 poseStack.mulPose(Axis.YP.rotationDegrees(direction * 180.0F));
             }
 
-            if (AnimatiumConfig.instance().getTiltItemPositions() && !ItemUtils.isBlock3d(stack, itemRenderer.scratchItemStackRenderState) && !ItemUtils.isItemBlacklisted(stack)) {
+            if (AnimatiumConfig.instance().getTiltItemPositions() && !ItemUtils.isBlock3d(stack, ((ItemRendererAccessor) itemRenderer).getScratchItemStackRenderState()) && !ItemUtils.isItemBlacklisted(stack)) {
                 float angle = MathUtils.toRadians(25);
 
                 poseStack.scale(0.6F, 0.6F, 0.6F);

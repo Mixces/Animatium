@@ -9,6 +9,7 @@
 		"accessor.AbstractSelectionListAccessor",
 		"accessor.CameraAccessor",
 		"accessor.ClientLevelDataAccessor",
+		"accessor.ItemRendererAccessor",
 		"accessor.LivingEntityAccessor",
 		"accessor.PlayerAccessor",
 		"accessor.SkyRendererAccessor",
