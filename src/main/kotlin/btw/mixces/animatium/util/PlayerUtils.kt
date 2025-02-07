@@ -80,7 +80,7 @@ object PlayerUtils {
     @JvmStatic
     fun fakeHandSwing(player: Player, hand: InteractionHand) {
         // NOTE: Clientside fake swinging, doesn't send a packet
-        if (!player.swinging || player.swingTime >= (player as LivingEntityAccessor).swingDuration / 2 || player.swingTime < 0) {
+        if (isNotSwinging(player)) {
             player.swingTime = -1
             player.swinging = true
             player.swingingArm = hand
@@ -90,7 +90,7 @@ object PlayerUtils {
     // Sends necessary swing packets, without playing the player hand swing animation
     @JvmStatic
     fun sendSwingPacket(player: LocalPlayer, hand: InteractionHand) {
-        if (!player.swinging || player.swingTime >= (player as LivingEntityAccessor).swingDuration / 2 || player.swingTime < 0) {
+        if (isNotSwinging(player)) {
             if (player.level() is ServerLevel) {
                 (player.level().chunkSource as ServerChunkCache).broadcast(
                     player,
@@ -106,6 +106,11 @@ object PlayerUtils {
         }
 
         player.connection?.send(ServerboundSwingPacket(hand))
+    }
+
+    @JvmStatic
+    fun isNotSwinging(player: Player): Boolean {
+        return !player.swinging || player.swingTime >= (player as LivingEntityAccessor).swingDuration / 2 || player.swingTime < 0
     }
 
     @JvmStatic
