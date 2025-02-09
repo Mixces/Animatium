@@ -180,6 +180,17 @@ object ScreenConfigCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .build()
         )
+        category.option(
+            Option.createBuilder<Boolean>()
+                .name(Component.translatable("animatium.oldEffectsInventoryPosition"))
+                .description(OptionDescription.of(Component.translatable("animatium.oldEffectsInventoryPosition.description")))
+                .binding(
+                    defaults.oldEffectsInventoryPosition,
+                    { config.oldEffectsInventoryPosition },
+                    { newVal -> config.oldEffectsInventoryPosition = newVal })
+                .controller(TickBoxControllerBuilder::create)
+                .build()
+        )
         category.option(Option.createBuilder<CameraVersion>()
             .name(Component.translatable("animatium.cameraVersion"))
             .description(OptionDescription.of(Component.translatable("animatium.cameraVersion.description")))

@@ -226,6 +226,9 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
     - Type: BOOLEAN
     - Note: If you are using a resource pack with a custom slot hover texture, turn this setting OFF to not cause
       issues!
+- oldSlotHoverStyleRendering
+    - Description: Restores the old potion effects status position in the inventory to like it was in <=1.11/1.19.
+    - Type: BOOLEAN
 - cameraVersion
     - Description: Change the camera position to be as it was in said version range.
     - Type: ENUM

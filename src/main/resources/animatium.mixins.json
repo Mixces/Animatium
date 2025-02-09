@@ -6,6 +6,7 @@
 		"MixinMinecraft",
 		"MixinSoundManager",
 		"MixinSpriteContents",
+		"accessor.AbstractRecipeBookScreenAccessor",
 		"accessor.AbstractSelectionListAccessor",
 		"accessor.CameraAccessor",
 		"accessor.ClientLevelDataAccessor",
@@ -66,14 +67,15 @@
 		"screen.MixinDebugScreenOverlay",
 		"screen.MixinFontStringRenderOutput",
 		"screen.MixinInGameHud",
-		"screen.MixinInventoryScreen",
 		"screen.components.MixinAbstractButton",
 		"screen.components.MixinAbstractScrollArea",
 		"screen.components.MixinAbstractSliderButton",
 		"screen.components.MixinChatComponent",
 		"screen.components.toasts.MixinRecipeToast",
 		"screen.components.toasts.MixinToastManagerToastInstance",
-		"screen.components.toasts.MixinTutorialToast"
+		"screen.components.toasts.MixinTutorialToast",
+		"screen.inventory.MixinEffectsInInventory",
+		"screen.inventory.MixinInventoryScreen"
 	],
 	"injectors": {
 		"defaultRequire": 1
