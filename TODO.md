@@ -1,4 +1,3 @@
 - Particle blending!!!
 - Potion model offset?
-- Disable recipe book
 - Server enabled feature to hide fishing rod in first-person thats attatched to you
