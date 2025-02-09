@@ -24,6 +24,7 @@
 package btw.mixces.animatium.mixins.screen.inventory;
 
 import btw.mixces.animatium.AnimatiumClient;
+import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.mixins.accessor.AbstractRecipeBookScreenAccessor;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -45,7 +46,7 @@ public abstract class MixinEffectsInInventory {
     @WrapOperation(method = "renderEffects", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;imageWidth:I"))
     private int animatium$oldEffectsInventoryPosition(AbstractContainerScreen<?> instance, Operation<Integer> original) {
         final int imageWidth = original.call(instance);
-        if (AnimatiumClient.getEnabled() && !(this.screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && ((AbstractRecipeBookScreenAccessor) recipeBookScreen).getRecipeBookComponent().isVisible())) {
+        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldEffectsInventoryPosition() && !(this.screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && ((AbstractRecipeBookScreenAccessor) recipeBookScreen).getRecipeBookComponent().isVisible())) {
             return 0;
         } else {
             return imageWidth;
@@ -54,7 +55,7 @@ public abstract class MixinEffectsInInventory {
 
     @ModifyExpressionValue(method = "renderEffects", at = @At(value = "CONSTANT", args = "intValue=2"))
     private int animatium$oldEffectsInventoryPosition(int original) {
-        if (AnimatiumClient.getEnabled() && !(this.screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && ((AbstractRecipeBookScreenAccessor) recipeBookScreen).getRecipeBookComponent().isVisible())) {
+        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldEffectsInventoryPosition() && !(this.screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && ((AbstractRecipeBookScreenAccessor) recipeBookScreen).getRecipeBookComponent().isVisible())) {
             return -124;
         } else {
             return original;
