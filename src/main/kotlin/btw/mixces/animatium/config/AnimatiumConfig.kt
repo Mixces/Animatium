@@ -137,6 +137,7 @@ class AnimatiumConfig {
     @SerialEntry var oldTooltipStyleRendering = true
     @SerialEntry var oldSlotHoverStyleRendering = true
     @SerialEntry var oldEffectsInventoryPosition = true
+    @SerialEntry var hideRecipeBook = true
     @SerialEntry var cameraVersion = CameraVersion.V1_8
 
     // (Items)

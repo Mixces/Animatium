@@ -60,22 +60,24 @@
 		"renderer.item.MixinItemModelResolver",
 		"renderer.item.MixinItemPickupParticle",
 		"renderer.item.MixinItemRenderer",
-		"screen.MixinAbstractContainerScreen",
-		"screen.MixinAbstractSelectionList",
 		"screen.MixinCamera",
 		"screen.MixinChatScreen",
-		"screen.MixinDebugScreenOverlay",
 		"screen.MixinFontStringRenderOutput",
 		"screen.MixinInGameHud",
 		"screen.components.MixinAbstractButton",
 		"screen.components.MixinAbstractScrollArea",
+		"screen.components.MixinAbstractSelectionList",
 		"screen.components.MixinAbstractSliderButton",
 		"screen.components.MixinChatComponent",
+		"screen.components.MixinDebugScreenOverlay",
 		"screen.components.toasts.MixinRecipeToast",
 		"screen.components.toasts.MixinToastManagerToastInstance",
 		"screen.components.toasts.MixinTutorialToast",
+		"screen.inventory.MixinAbstractContainerScreen",
+		"screen.inventory.MixinAbstractRecipeBookScreen",
 		"screen.inventory.MixinEffectsInInventory",
-		"screen.inventory.MixinInventoryScreen"
+		"screen.inventory.MixinInventoryScreen",
+		"screen.recipebook.MixinRecipeBookComponent"
 	],
 	"injectors": {
 		"defaultRequire": 1

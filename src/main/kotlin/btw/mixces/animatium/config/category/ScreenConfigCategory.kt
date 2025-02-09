@@ -191,6 +191,17 @@ object ScreenConfigCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .build()
         )
+        category.option(
+            Option.createBuilder<Boolean>()
+                .name(Component.translatable("animatium.hideRecipeBook"))
+                .description(OptionDescription.of(Component.translatable("animatium.hideRecipeBook.description")))
+                .binding(
+                    defaults.hideRecipeBook,
+                    { config.hideRecipeBook },
+                    { newVal -> config.hideRecipeBook = newVal })
+                .controller(TickBoxControllerBuilder::create)
+                .build()
+        )
         category.option(Option.createBuilder<CameraVersion>()
             .name(Component.translatable("animatium.cameraVersion"))
             .description(OptionDescription.of(Component.translatable("animatium.cameraVersion.description")))
