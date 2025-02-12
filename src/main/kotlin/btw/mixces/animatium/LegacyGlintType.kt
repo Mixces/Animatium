@@ -34,20 +34,8 @@ import net.minecraft.client.renderer.entity.ItemRenderer
 import net.minecraft.util.TriState
 import org.joml.Matrix4f
 
-object LegacyGlintType {
-    // TODO: Entity Glint/Sold Glint
-
-    @JvmStatic
-    val glintTranslucentLayer = makeItemGlintLayer(
-        RenderStateShard.TexturingStateShard(
-            "legacy_glint_texturing",
-            { setupGlintTexturing(8.0F, -50.0F, false, 3000L) },
-            RenderSystem::resetTextureMatrix
-        ),
-        true
-    )
-
 //    TODO/NOTE: Not required? With makes it wrong.
+//    NOTE: This is layer 2
 //    @JvmStatic
 //    val glintTranslucentLayer2 = makeItemGlintLayer(
 //        RenderStateShard.TexturingStateShard(
@@ -57,15 +45,48 @@ object LegacyGlintType {
 //        ), true
 //    )
 
+object LegacyGlintType {
+    // TODO: Entity Glint
+
     @JvmStatic
-    val glintLayer = makeItemGlintLayer(
+    val itemGlintLayer = makeItemGlintLayer(
         RenderStateShard.TexturingStateShard(
             "legacy_glint_texturing",
-            { setupGlintTexturing(8.0F, -50.0F, false, 3000L) },
+            { setupItemGlintTexturing(8.0F, -50.0F, false, 3000L) },
             RenderSystem::resetTextureMatrix
         ),
         false
     )
+
+    @JvmStatic
+    val itemGlintTranslucentLayer = makeItemGlintLayer(
+        RenderStateShard.TexturingStateShard(
+            "legacy_glint_texturing",
+            { setupItemGlintTexturing(8.0F, -50.0F, false, 3000L) },
+            RenderSystem::resetTextureMatrix
+        ),
+        true
+    )
+
+//    @JvmStatic
+//    val entityGlintLayer = makeEntityGlintLayer(
+//        RenderStateShard.TexturingStateShard(
+//            "legacy_glint_texturing",
+//            {  },
+//            RenderSystem::resetTextureMatrix
+//        ),
+//        false
+//    )
+//
+//    @JvmStatic
+//    val entityArmorGlintLayer = makeEntityGlintLayer(
+//        RenderStateShard.TexturingStateShard(
+//            "legacy_glint_texturing",
+//            {  },
+//            RenderSystem::resetTextureMatrix
+//        ),
+//        true
+//    )
 
     private fun makeItemGlintLayer(
         texturingStateShard: RenderStateShard.TexturingStateShard,
@@ -95,12 +116,41 @@ object LegacyGlintType {
         )
     }
 
-    private fun setupGlintTexturing(scale: Float, angle: Float, negative: Boolean, clampedTime: Long) {
-        val matrix4f = Matrix4f()
+    private fun makeEntityGlintLayer(
+        texturingStateShard: RenderStateShard.TexturingStateShard,
+        armor: Boolean,
+    ): RenderType {
+        return RenderType.create(
+            "legacy_" + (if (armor) "armor_" else "") + "entity_glint",
+            DefaultVertexFormat.POSITION_TEX,
+            VertexFormat.Mode.QUADS,
+            1536,
+            RenderType.CompositeState.builder()
+                .setShaderState(if (armor) RenderType.RENDERTYPE_ARMOR_ENTITY_GLINT_SHADER else RenderType.RENDERTYPE_ENTITY_GLINT_SHADER)
+                .setTextureState(
+                    RenderStateShard.TextureStateShard(
+                        ItemRenderer.ENCHANTED_GLINT_ITEM, // <=1.19.3 uses item glint texture, we will to
+                        TriState.DEFAULT,
+                        false
+                    )
+                )
+                .setWriteMaskState(RenderType.COLOR_WRITE)
+                .setCullState(RenderType.NO_CULL)
+                .setDepthTestState(RenderType.EQUAL_DEPTH_TEST)
+                .setTransparencyState(RenderType.GLINT_TRANSPARENCY)
+                .setTexturingState(texturingStateShard)
+                .setLayeringState(if (armor) RenderType.VIEW_OFFSET_Z_LAYERING else RenderType.NO_LAYERING)
+                .createCompositeState(false)
+        )
+    }
+
+    private fun setupItemGlintTexturing(scale: Float, angle: Float, negative: Boolean, clampedTime: Long) {
         val g = (Util.getMillis() % clampedTime) / clampedTime.toFloat() / 8.0F
-        matrix4f.scale(scale)
-        matrix4f.translate(if (negative) -g else g, 0.0F, 0.0F)
-        matrix4f.rotateZ(MathUtils.toRadians(angle))
-        RenderSystem.setTextureMatrix(matrix4f)
+        RenderSystem.setTextureMatrix(
+            Matrix4f()
+                .scale(scale)
+                .translate(if (negative) -g else g, 0.0F, 0.0F)
+                .rotateZ(MathUtils.toRadians(angle))
+        )
     }
 }

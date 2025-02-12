@@ -48,20 +48,28 @@ import java.util.stream.Collectors;
 public abstract class MixinItemRenderer {
     // tint: -8372020
 
+//    @WrapOperation(method = "getArmorFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;armorEntityGlint()Lnet/minecraft/client/renderer/RenderType;"))
+//    private static RenderType animatium$legacyGlintRendering$armorEntityGlint(Operation<RenderType> original) {
+//        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
+//            return LegacyGlintType.getEntityArmorGlintLayer();
+//        } else {
+//            return original.call();
+//        }
+//    }
+
     @WrapOperation(method = "getCompassFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glint()Lnet/minecraft/client/renderer/RenderType;"))
     private static RenderType animatium$legacyGlintRendering$compassGlint(Operation<RenderType> original) {
         if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
-            return LegacyGlintType.getGlintLayer();
+            return LegacyGlintType.getItemGlintLayer();
         } else {
             return original.call();
         }
     }
 
-    // TODO: Entity Glint
     @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glintTranslucent()Lnet/minecraft/client/renderer/RenderType;"))
     private static RenderType animatium$legacyGlintRendering$glintTranslucent(Operation<RenderType> original) {
         if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
-            return LegacyGlintType.getGlintTranslucentLayer();
+            return LegacyGlintType.getItemGlintTranslucentLayer();
         } else {
             return original.call();
         }
@@ -70,11 +78,20 @@ public abstract class MixinItemRenderer {
     @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glint()Lnet/minecraft/client/renderer/RenderType;"))
     private static RenderType animatium$legacyGlintRendering$glint(Operation<RenderType> original) {
         if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
-            return LegacyGlintType.getGlintLayer();
+            return LegacyGlintType.getItemGlintLayer();
         } else {
             return original.call();
         }
     }
+
+//    @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;entityGlint()Lnet/minecraft/client/renderer/RenderType;"))
+//    private static RenderType animatium$legacyGlintRendering$entityGlint(Operation<RenderType> original) {
+//        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
+//            return LegacyGlintType.getEntityGlintLayer();
+//        } else {
+//            return original.call();
+//        }
+//    }
 
     @WrapOperation(method = "renderModelLists", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/BakedModel;getQuads(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/Direction;Lnet/minecraft/util/RandomSource;)Ljava/util/List;", ordinal = 1))
     private static List<BakedQuad> animatium$itemDrops2D(BakedModel instance, BlockState state, Direction direction, RandomSource random, Operation<List<BakedQuad>> original) {
