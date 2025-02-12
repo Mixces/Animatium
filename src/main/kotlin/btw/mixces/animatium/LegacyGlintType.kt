@@ -38,27 +38,39 @@ object LegacyGlintType {
     // TODO: Entity Glint/Sold Glint
 
     @JvmStatic
-    val glintTranslucentLayerA = makeItemGlintTranslucentLayer(
+    val glintTranslucentLayer = makeItemGlintLayer(
         RenderStateShard.TexturingStateShard(
             "legacy_glint_texturing",
             { setupGlintTexturing(8.0F, -50.0F, false, 3000L) },
             RenderSystem::resetTextureMatrix
-        )
+        ), true
     )
 
 //    TODO/NOTE: Not required? With makes it wrong.
 //    @JvmStatic
-//    val glintTranslucentLayerB = makeItemGlintTranslucentLayer(
+//    val glintTranslucentLayer2 = makeItemGlintLayer(
 //        RenderStateShard.TexturingStateShard(
 //            "legacy_glint_texturing",
 //            { setupGlintTexturing(8.0F, 10.0F, true, 4873L) },
 //            RenderSystem::resetTextureMatrix
-//        )
+//        ), true
 //    )
 
-    private fun makeItemGlintTranslucentLayer(texturingStateShard: RenderStateShard.TexturingStateShard): RenderType {
+    @JvmStatic
+    val glintLayer = makeItemGlintLayer(
+        RenderStateShard.TexturingStateShard(
+            "legacy_glint_texturing",
+            { setupGlintTexturing(8.0F, -50.0F, false, 3000L) },
+            RenderSystem::resetTextureMatrix
+        ), false
+    )
+
+    private fun makeItemGlintLayer(
+        texturingStateShard: RenderStateShard.TexturingStateShard,
+        translucent: Boolean,
+    ): RenderType {
         return RenderType.create(
-            "legacy_glint_translucent",
+            "legacy_glint" + (if (translucent) "_translucent" else ""),
             DefaultVertexFormat.POSITION_TEX,
             VertexFormat.Mode.QUADS,
             1536,
@@ -76,7 +88,7 @@ object LegacyGlintType {
                 .setDepthTestState(RenderType.EQUAL_DEPTH_TEST)
                 .setTransparencyState(RenderType.GLINT_TRANSPARENCY)
                 .setTexturingState(texturingStateShard)
-                .setOutputState(RenderType.ITEM_ENTITY_TARGET)
+                .setOutputState(if (translucent) RenderType.ITEM_ENTITY_TARGET else RenderType.MAIN_TARGET)
                 .createCompositeState(false)
         )
     }
