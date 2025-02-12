@@ -43,7 +43,8 @@ object LegacyGlintType {
             "legacy_glint_texturing",
             { setupGlintTexturing(8.0F, -50.0F, false, 3000L) },
             RenderSystem::resetTextureMatrix
-        ), true
+        ),
+        true
     )
 
 //    TODO/NOTE: Not required? With makes it wrong.
@@ -62,7 +63,8 @@ object LegacyGlintType {
             "legacy_glint_texturing",
             { setupGlintTexturing(8.0F, -50.0F, false, 3000L) },
             RenderSystem::resetTextureMatrix
-        ), false
+        ),
+        false
     )
 
     private fun makeItemGlintLayer(

@@ -24,6 +24,7 @@
 package btw.mixces.animatium.mixins.renderer;
 
 import btw.mixces.animatium.AnimatiumClient;
+import btw.mixces.animatium.LegacyGlintType;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.mixins.accessor.SkyRendererAccessor;
 import btw.mixces.animatium.util.MathUtils;
@@ -32,20 +33,25 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.resource.ResourceHandle;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Final;
@@ -72,6 +78,10 @@ public abstract class MixinLevelRenderer {
     @Shadow
     @Final
     private SkyRenderer skyRenderer;
+
+    @Shadow
+    @Final
+    private RenderBuffers renderBuffers;
 
     @Inject(method = "method_62215", at = @At("TAIL"))
     private void animatium$oldBlueVoidSky(FogParameters fog, DimensionSpecialEffects.SkyType skyType, float tickDelta, DimensionSpecialEffects dimensionSpecialEffects, CallbackInfo ci, @Local PoseStack poseStack) {
@@ -140,6 +150,14 @@ public abstract class MixinLevelRenderer {
             return MathUtils.expandVoxelShape(shape, 0.0020000000949949026F);
         } else {
             return shape;
+        }
+    }
+
+    @Inject(method = "method_62214", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;endBatch(Lnet/minecraft/client/renderer/RenderType;)V", ordinal = 16, shift = At.Shift.AFTER))
+    private void animatium$legacyGlintRendering$endBatch(FogParameters fogParameters, DeltaTracker deltaTracker, Camera camera, ProfilerFiller profilerFiller, Matrix4f matrix4f, Matrix4f matrix4f2, ResourceHandle resourceHandle, ResourceHandle resourceHandle2, ResourceHandle resourceHandle3, ResourceHandle resourceHandle4, boolean bl, Frustum frustum, ResourceHandle resourceHandle5, CallbackInfo ci) {
+        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
+            renderBuffers.bufferSource().endBatch(LegacyGlintType.getGlintLayer());
+            renderBuffers.bufferSource().endBatch(LegacyGlintType.getGlintTranslucentLayer());
         }
     }
 

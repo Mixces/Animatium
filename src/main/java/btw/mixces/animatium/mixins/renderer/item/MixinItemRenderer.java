@@ -48,7 +48,16 @@ import java.util.stream.Collectors;
 public abstract class MixinItemRenderer {
     // tint: -8372020
 
-    // TODO: Solid Glint/Entity Glint
+    @WrapOperation(method = "getCompassFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glint()Lnet/minecraft/client/renderer/RenderType;"))
+    private static RenderType animatium$legacyGlintRendering$compassGlint(Operation<RenderType> original) {
+        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
+            return LegacyGlintType.getGlintLayer();
+        } else {
+            return original.call();
+        }
+    }
+
+    // TODO: Entity Glint
     @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glintTranslucent()Lnet/minecraft/client/renderer/RenderType;"))
     private static RenderType animatium$legacyGlintRendering$glintTranslucent(Operation<RenderType> original) {
         if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
