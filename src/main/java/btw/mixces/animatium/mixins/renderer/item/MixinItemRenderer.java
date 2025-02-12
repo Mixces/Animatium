@@ -24,10 +24,12 @@
 package btw.mixces.animatium.mixins.renderer.item;
 
 import btw.mixces.animatium.AnimatiumClient;
+import btw.mixces.animatium.LegacyGlintType;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.ItemUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
@@ -44,6 +46,18 @@ import java.util.stream.Collectors;
 
 @Mixin(ItemRenderer.class)
 public abstract class MixinItemRenderer {
+    // tint: -8372020
+
+    // TODO: Solid Glint/Entity Glint
+    @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glintTranslucent()Lnet/minecraft/client/renderer/RenderType;"))
+    private static RenderType animatium$legacyGlintRendering$glintTranslucent(Operation<RenderType> original) {
+        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
+            return LegacyGlintType.getGlintTranslucentLayerA();
+        } else {
+            return original.call();
+        }
+    }
+
     @WrapOperation(method = "renderModelLists", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/BakedModel;getQuads(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/Direction;Lnet/minecraft/util/RandomSource;)Ljava/util/List;", ordinal = 1))
     private static List<BakedQuad> animatium$itemDrops2D(BakedModel instance, BlockState state, Direction direction, RandomSource random, Operation<List<BakedQuad>> original) {
         List<BakedQuad> quads = original.call(instance, state, direction, random);

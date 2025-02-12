@@ -416,6 +416,9 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - oldArmorHurtRendering
     - Description: Restores the old armor hurt tint rendering from ~1.8.
     - Type: BOOLEAN
+- oldGlintRendering
+    - Description: Restores the old item/armor glint rendering found in <=1.14.4.
+    - Type: BOOLEAN
 - forceHighAttackSpeedVisual
     - Description: Fakes the high attack speed visual, which stops the attack cooldown animation on items like the
       sword.
