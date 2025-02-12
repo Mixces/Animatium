@@ -40,6 +40,7 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType
 import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.api.ModContainer
+import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.CoreShaders
 import net.minecraft.client.renderer.ShaderDefines
 import net.minecraft.client.renderer.ShaderProgram
@@ -118,6 +119,12 @@ class AnimatiumClient : ClientModInitializer {
             modContainer,
             ResourcePackActivationType.NORMAL
         )
+
+        val minecraft = Minecraft.getInstance()
+        minecraft.execute {
+            val shaderManager = Minecraft.getInstance().shaderManager
+            shaderManager.getProgram(renderTypeLegacyGlintTranslucent)?.getUniform("GlintColor")?.set(0x8040CC)
+        }
 
         // Commands
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, registryAccess ->

@@ -135,7 +135,7 @@ object LegacyGlintType {
                     )
                 )
                 .setWriteMaskState(RenderType.COLOR_WRITE)
-                .setCullState(RenderType.NO_CULL)
+                .setCullState(RenderType.CULL)
                 .setDepthTestState(RenderType.EQUAL_DEPTH_TEST)
                 .setTransparencyState(RenderType.GLINT_TRANSPARENCY)
                 .setTexturingState(texturingStateShard)
