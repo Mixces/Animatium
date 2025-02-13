@@ -29,6 +29,10 @@ import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.ItemUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexMultiConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -46,8 +50,6 @@ import java.util.stream.Collectors;
 
 @Mixin(ItemRenderer.class)
 public abstract class MixinItemRenderer {
-    // tint: -8372020
-
 //    @WrapOperation(method = "getArmorFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;armorEntityGlint()Lnet/minecraft/client/renderer/RenderType;"))
 //    private static RenderType animatium$legacyGlintRendering$armorEntityGlint(Operation<RenderType> original) {
 //        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
@@ -58,7 +60,7 @@ public abstract class MixinItemRenderer {
 //    }
 
     @WrapOperation(method = "getCompassFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glint()Lnet/minecraft/client/renderer/RenderType;"))
-    private static RenderType animatium$legacyGlintRendering$compassGlint(Operation<RenderType> original) {
+    private static RenderType animatium$legacyGlintRendering$compassGlintLayer1(Operation<RenderType> original) {
         if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
             return LegacyGlintType.getItemGlintLayer();
         } else {
@@ -66,32 +68,34 @@ public abstract class MixinItemRenderer {
         }
     }
 
-//    @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexMultiConsumer;create(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lcom/mojang/blaze3d/vertex/VertexConsumer;)Lcom/mojang/blaze3d/vertex/VertexConsumer;", ordinal = 0))
-//    private static VertexConsumer animatium$legacyGlintRendering$2ndLayer(VertexConsumer leftConsumer, VertexConsumer rightConsumer, Operation<VertexConsumer> original, @Local(argsOnly = true) MultiBufferSource multiBufferSource) {
-//        VertexConsumer finalConsumer = original.call(leftConsumer, rightConsumer);
-////        ItemDisplayContext itemDisplayContext = ItemUtils.getDisplayContext();
-//        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
-//            return VertexMultiConsumer.create(finalConsumer, multiBufferSource.getBuffer(LegacyGlintType.getItemGlintTranslucent2ndLayer()));
-//        } else {
-//            return finalConsumer;
-//        }
-//    }
-
-    @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glintTranslucent()Lnet/minecraft/client/renderer/RenderType;"))
-    private static RenderType animatium$legacyGlintRendering$glintTranslucent(Operation<RenderType> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
-            return LegacyGlintType.getItemGlintTranslucentLayer();
+    @WrapOperation(method = "getCompassFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource;getBuffer(Lnet/minecraft/client/renderer/RenderType;)Lcom/mojang/blaze3d/vertex/VertexConsumer;", ordinal = 0))
+    private static VertexConsumer animatium$legacyGlintRendering$compassGlintLayer2(MultiBufferSource instance, RenderType renderType, Operation<VertexConsumer> original, @Local(argsOnly = true) MultiBufferSource multiBufferSource) {
+        final VertexConsumer finalConsumer = original.call(instance, renderType);
+        ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
+        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering() && displayContext == ItemDisplayContext.GUI) {
+            return VertexMultiConsumer.create(multiBufferSource.getBuffer(LegacyGlintType.getItemGlint2ndLayer()), finalConsumer);
         } else {
-            return original.call();
+            return finalConsumer;
         }
     }
 
     @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glint()Lnet/minecraft/client/renderer/RenderType;"))
-    private static RenderType animatium$legacyGlintRendering$glint(Operation<RenderType> original) {
+    private static RenderType animatium$legacyGlintRendering$glintLayer1(Operation<RenderType> original) {
         if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
             return LegacyGlintType.getItemGlintLayer();
         } else {
             return original.call();
+        }
+    }
+
+    @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexMultiConsumer;create(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lcom/mojang/blaze3d/vertex/VertexConsumer;)Lcom/mojang/blaze3d/vertex/VertexConsumer;", ordinal = 1))
+    private static VertexConsumer animatium$legacyGlintRendering$glintLayer2(VertexConsumer leftConsumer, VertexConsumer rightConsumer, Operation<VertexConsumer> original, @Local(argsOnly = true) MultiBufferSource multiBufferSource, @Local(argsOnly = true, ordinal = 0) boolean bl) {
+        final VertexConsumer finalConsumer = original.call(leftConsumer, rightConsumer);
+        ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
+        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering() && displayContext == ItemDisplayContext.GUI && bl) {
+            return VertexMultiConsumer.create(multiBufferSource.getBuffer(LegacyGlintType.getItemGlint2ndLayer()), finalConsumer);
+        } else {
+            return finalConsumer;
         }
     }
 
