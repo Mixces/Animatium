@@ -40,9 +40,8 @@ public abstract class MixinRenderBuffers {
     @Inject(method = "put", at = @At("HEAD"))
     private static void animatium$addLegacyGlintLayers(Object2ObjectLinkedOpenHashMap<RenderType, ByteBufferBuilder> object2ObjectLinkedOpenHashMap, RenderType renderType, CallbackInfo ci) {
         List.of(LegacyGlintType.getItemGlintLayer(), LegacyGlintType.getItemGlint2ndLayer(),
-                LegacyGlintType.getItemGlintTranslucentLayer(), LegacyGlintType.getItemGlintTranslucent2ndLayer()
-//                LegacyGlintType.getEntityGlintLayer(), LegacyGlintType.getEntityArmorGlintLayer()
-        ).forEach(renderLayer -> {
+                LegacyGlintType.getItemGlintTranslucentLayer(), LegacyGlintType.getItemGlintTranslucent2ndLayer(),
+                LegacyGlintType.getEntityGlintLayer(), LegacyGlintType.getEntityArmorGlintLayer()).forEach(renderLayer -> {
             if (!object2ObjectLinkedOpenHashMap.containsKey(renderLayer)) {
                 object2ObjectLinkedOpenHashMap.put(renderLayer, new ByteBufferBuilder(renderLayer.bufferSize()));
             }

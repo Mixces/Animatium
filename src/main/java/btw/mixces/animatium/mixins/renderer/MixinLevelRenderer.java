@@ -160,8 +160,8 @@ public abstract class MixinLevelRenderer {
             renderBuffers.bufferSource().endBatch(LegacyGlintType.getItemGlint2ndLayer());
             renderBuffers.bufferSource().endBatch(LegacyGlintType.getItemGlintTranslucentLayer());
             renderBuffers.bufferSource().endBatch(LegacyGlintType.getItemGlintTranslucent2ndLayer());
-//            renderBuffers.bufferSource().endBatch(LegacyGlintType.getEntityGlintLayer());
-//            renderBuffers.bufferSource().endBatch(LegacyGlintType.getEntityArmorGlintLayer());
+            renderBuffers.bufferSource().endBatch(LegacyGlintType.getEntityGlintLayer());
+            renderBuffers.bufferSource().endBatch(LegacyGlintType.getEntityArmorGlintLayer());
         }
     }
 

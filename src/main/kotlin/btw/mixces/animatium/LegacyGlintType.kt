@@ -34,20 +34,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer
 import net.minecraft.util.TriState
 import org.joml.Matrix4f
 
-//    TODO/NOTE: Not required? With makes it wrong.
-//    NOTE: This is layer 2
-//    @JvmStatic
-//    val glintTranslucentLayer2 = makeItemGlintLayer(
-//        RenderStateShard.TexturingStateShard(
-//            "legacy_glint_texturing",
-//            { setupItemGlintTexturing(10.0F, true, 4873L) },
-//            RenderSystem::resetTextureMatrix
-//        ), true
-//    )
-
 object LegacyGlintType {
-    // TODO: Entity Glint
-
     @JvmStatic
     val itemGlintLayer = makeItemGlintLayer(
         RenderStateShard.TexturingStateShard(
@@ -88,25 +75,25 @@ object LegacyGlintType {
         true
     )
 
-//    @JvmStatic
-//    val entityGlintLayer = makeEntityGlintLayer(
-//        RenderStateShard.TexturingStateShard(
-//            "legacy_glint_texturing",
-//            {  },
-//            RenderSystem::resetTextureMatrix
-//        ),
-//        false
-//    )
-//
-//    @JvmStatic
-//    val entityArmorGlintLayer = makeEntityGlintLayer(
-//        RenderStateShard.TexturingStateShard(
-//            "legacy_glint_texturing",
-//            {  },
-//            RenderSystem::resetTextureMatrix
-//        ),
-//        true
-//    )
+    @JvmStatic
+    val entityGlintLayer = makeEntityGlintLayer(
+        RenderStateShard.TexturingStateShard(
+            "legacy_glint_texturing",
+            { setupEntityGlintTexturing() },
+            RenderSystem::resetTextureMatrix
+        ),
+        false
+    )
+
+    @JvmStatic
+    val entityArmorGlintLayer = makeEntityGlintLayer(
+        RenderStateShard.TexturingStateShard(
+            "legacy_glint_texturing",
+            { setupEntityGlintTexturing() },
+            RenderSystem::resetTextureMatrix
+        ),
+        true
+    )
 
     private fun makeItemGlintLayer(
         texturingStateShard: RenderStateShard.TexturingStateShard,
@@ -118,7 +105,7 @@ object LegacyGlintType {
             VertexFormat.Mode.QUADS,
             1536,
             RenderType.CompositeState.builder()
-                .setShaderState(RenderStateShard.ShaderStateShard(AnimatiumClient.renderTypeLegacyGlintTranslucent))
+                .setShaderState(RenderStateShard.ShaderStateShard(AnimatiumClient.renderTypeLegacyGlint))
                 .setTextureState(
                     RenderStateShard.TextureStateShard(
                         ItemRenderer.ENCHANTED_GLINT_ITEM,
@@ -146,7 +133,7 @@ object LegacyGlintType {
             VertexFormat.Mode.QUADS,
             1536,
             RenderType.CompositeState.builder()
-                .setShaderState(if (armor) RenderType.RENDERTYPE_ARMOR_ENTITY_GLINT_SHADER else RenderType.RENDERTYPE_ENTITY_GLINT_SHADER)
+                .setShaderState(RenderStateShard.ShaderStateShard(AnimatiumClient.renderTypeLegacyGlint))
                 .setTextureState(
                     RenderStateShard.TextureStateShard(
                         ItemRenderer.ENCHANTED_GLINT_ITEM, // <=1.19.3 uses item glint texture, we will to
@@ -171,6 +158,21 @@ object LegacyGlintType {
                 .scale(8.0F)
                 .translate(if (negative) -g else g, 0.0F, 0.0F)
                 .rotateZ(MathUtils.toRadians(angle))
+        )
+    }
+
+    private fun setupEntityGlintTexturing() {
+        // TODO: Replace with proper <=1.14 translation/stuff
+        // TEMPORARY
+        // CODE FROM RenderStateShader#setupGlintTexturing(float)
+        val l = (Util.getMillis().toDouble() * 8.0).toLong()
+        val g = (l % 110000L).toFloat() / 110000.0F
+        val h = (l % 30000L).toFloat() / 30000.0F
+        RenderSystem.setTextureMatrix(
+            Matrix4f()
+                .translation(-g, h, 0.0F)
+                .rotateZ((Math.PI / 18).toFloat())
+                .scale(0.16F)
         )
     }
 }
