@@ -99,10 +99,21 @@ class AnimatiumClient : ClientModInitializer {
 
         // Shaders
         val renderTypeLegacyGlintTranslucent = ShaderProgram(
-            ResourceLocation.withDefaultNamespace("core/rendertype_legacy_glint_translucent"),
+            ResourceLocation.fromNamespaceAndPath("animatium", "core/rendertype_legacy_glint_translucent"),
             DefaultVertexFormat.POSITION_TEX,
             ShaderDefines.EMPTY
-        );
+        )
+
+        @JvmStatic
+        fun setGlintColor(red: Float, green: Float, blue: Float) {
+            val minecraft = Minecraft.getInstance()
+            minecraft.execute {
+                val shaderManager = Minecraft.getInstance().shaderManager ?: return@execute
+                val compiledShader = shaderManager.getProgram(renderTypeLegacyGlintTranslucent) ?: return@execute
+                val glintColorUniform = compiledShader.getUniform("GlintColor") ?: return@execute
+                glintColorUniform.set(red, green, blue)
+            }
+        }
 
         init {
             CoreShaders.getProgramsToPreload().add(renderTypeLegacyGlintTranslucent)
@@ -119,12 +130,6 @@ class AnimatiumClient : ClientModInitializer {
             modContainer,
             ResourcePackActivationType.NORMAL
         )
-
-        val minecraft = Minecraft.getInstance()
-        minecraft.execute {
-            val shaderManager = Minecraft.getInstance().shaderManager
-            shaderManager.getProgram(renderTypeLegacyGlintTranslucent)?.getUniform("GlintColor")?.set(0x8040CC)
-        }
 
         // Commands
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, registryAccess ->

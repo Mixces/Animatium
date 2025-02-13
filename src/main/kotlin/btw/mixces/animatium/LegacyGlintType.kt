@@ -40,7 +40,7 @@ import org.joml.Matrix4f
 //    val glintTranslucentLayer2 = makeItemGlintLayer(
 //        RenderStateShard.TexturingStateShard(
 //            "legacy_glint_texturing",
-//            { setupGlintTexturing(8.0F, 10.0F, true, 4873L) },
+//            { setupItemGlintTexturing(10.0F, true, 4873L) },
 //            RenderSystem::resetTextureMatrix
 //        ), true
 //    )
@@ -52,7 +52,17 @@ object LegacyGlintType {
     val itemGlintLayer = makeItemGlintLayer(
         RenderStateShard.TexturingStateShard(
             "legacy_glint_texturing",
-            { setupItemGlintTexturing(8.0F, -50.0F, false, 3000L) },
+            { setupItemGlintTexturing(-50.0F, false, 3000L) },
+            RenderSystem::resetTextureMatrix
+        ),
+        false
+    )
+
+    @JvmStatic
+    val itemGlint2ndLayer = makeItemGlintLayer(
+        RenderStateShard.TexturingStateShard(
+            "legacy_glint_texturing",
+            { setupItemGlintTexturing(10.0F, true, 4873L) },
             RenderSystem::resetTextureMatrix
         ),
         false
@@ -62,7 +72,17 @@ object LegacyGlintType {
     val itemGlintTranslucentLayer = makeItemGlintLayer(
         RenderStateShard.TexturingStateShard(
             "legacy_glint_texturing",
-            { setupItemGlintTexturing(8.0F, -50.0F, false, 3000L) },
+            { setupItemGlintTexturing(-50.0F, false, 3000L) },
+            RenderSystem::resetTextureMatrix
+        ),
+        true
+    )
+
+    @JvmStatic
+    val itemGlintTranslucent2ndLayer = makeItemGlintLayer(
+        RenderStateShard.TexturingStateShard(
+            "legacy_glint_texturing",
+            { setupItemGlintTexturing(10.0F, true, 4873L) },
             RenderSystem::resetTextureMatrix
         ),
         true
@@ -144,11 +164,11 @@ object LegacyGlintType {
         )
     }
 
-    private fun setupItemGlintTexturing(scale: Float, angle: Float, negative: Boolean, clampedTime: Long) {
+    private fun setupItemGlintTexturing(angle: Float, negative: Boolean, clampedTime: Long) {
         val g = (Util.getMillis() % clampedTime) / clampedTime.toFloat() / 8.0F
         RenderSystem.setTextureMatrix(
             Matrix4f()
-                .scale(scale)
+                .scale(8.0F)
                 .translate(if (negative) -g else g, 0.0F, 0.0F)
                 .rotateZ(MathUtils.toRadians(angle))
         )
