@@ -59,7 +59,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
             LocalPlayer player = client.player;
             if (livingEntityRenderState instanceof PlayerRenderState state && player != null && state.id == player.getId()) {
                 float cameraLerpValue = PlayerUtils.lerpCameraPosition(client.gameRenderer.getMainCamera());
-                poseStack.translate(0.0F, Player.STANDING_DIMENSIONS.eyeHeight() - cameraLerpValue, 0.0F);
+                poseStack.translate(0.0F, (Player.STANDING_DIMENSIONS.eyeHeight() * player.getScale()) - cameraLerpValue, 0.0F);
             }
         }
     }
