@@ -85,6 +85,7 @@ class AnimatiumConfig {
     @SerialEntry var disableRecipeAndTutorialToasts = false
     @SerialEntry var showArmWhileInvisible = false
     @SerialEntry var fakeMissPenaltySwing = false
+    @SerialEntry var dontMoveBlueVoid = false
     @SerialEntry var showUsageSwingingParticles = false
     @SerialEntry var disableEntityDeathTopple = false
     @SerialEntry var deepRedHurtTint = false
@@ -104,7 +105,7 @@ class AnimatiumConfig {
     @SerialEntry var fakeOldSneakEyeHeight = false
     @SerialEntry var fixSneakingFeetPosition = true
     @SerialEntry var oldSneakingFeetPosition = true
-    @SerialEntry var syncPlayerModelWithEyeHeight = true
+    @SerialEntry var syncPlayerModelWithEyeHeight = false
     @SerialEntry var sneakAnimationWhileFlying = true
     // (Movement) Other
     @SerialEntry var rotateBackwardsWalking = true
@@ -185,18 +186,18 @@ class AnimatiumConfig {
     @SerialEntry var oldItemPickupPosition = true
 
     // (Other)
-    @SerialEntry var legacyThirdpersonSwordBlockingPosition = true
+    @SerialEntry var oldThirdpersonSwordBlockingPosition = true
     @SerialEntry var lockBlockingArmRotation = true
     @SerialEntry var disableProjectileAgeCheck = true
     @SerialEntry var oldBlockMiningProgress = true
     @SerialEntry var disableInventoryEntityScissor = true
-    @SerialEntry var legacyBlockOutlineRendering = true
+    @SerialEntry var oldBlockOutlineRendering = true
     @SerialEntry var hideModelWhilstSleeping = true
     @SerialEntry var entityArmorHurtTint = true
     @SerialEntry var forceItemGlintOnEntity = true
     @SerialEntry var forceMaxGlintProperties = true
     @SerialEntry var oldArmorHurtRendering = false
-    @SerialEntry var oldGlintRendering = false
+//    @SerialEntry var oldGlintRendering = false
     @SerialEntry var forceHighAttackSpeedVisual = false
     @SerialEntry var disableEntityGlowOutline = false
     @SerialEntry var disableModernCombatSounds = true
@@ -207,6 +208,6 @@ class AnimatiumConfig {
     // (Other) Sky
     @SerialEntry var oldBlueVoidSky = true
     @SerialEntry var oldSkyHorizonHeight = true
-    @SerialEntry var oldVoidSkyFogHeight = true
+    @SerialEntry var oldVoidSkyFogHeight = true // TODO: To be removed in 1.21.5+
     @SerialEntry var oldCloudHeight = true
 }

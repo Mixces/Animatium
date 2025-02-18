@@ -161,6 +161,17 @@ object QOLConfigCategory {
         )
         category.option(
             Option.createBuilder<Boolean>()
+                .name(Component.translatable("animatium.dontMoveBlueVoid"))
+                .description(OptionDescription.of(Component.translatable("animatium.dontMoveBlueVoid.description")))
+                .binding(
+                    defaults.dontMoveBlueVoid,
+                    { config.dontMoveBlueVoid },
+                    { newVal -> config.dontMoveBlueVoid = newVal })
+                .controller(TickBoxControllerBuilder::create)
+                .build()
+        )
+        category.option(
+            Option.createBuilder<Boolean>()
                 .name(Component.translatable("animatium.showUsageSwingingParticles"))
                 .description(OptionDescription.of(Component.translatable("animatium.showUsageSwingingParticles.description")))
                 .binding(

@@ -66,6 +66,9 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
       attack cooldown before they can can swing again. Enable this feature to play a fake swing animation during that 10
       ms delay to match <=1.7.x.
     - Type: BOOLEAN
+- dontMoveBlueVoid
+    - Description: Stops the blue void sky from moving based on eye height. [Requires oldBlueVoidSky to be enabled]
+    - Type: BOOLEAN
 - showUsageSwingingParticles
     - Description: Shows fake block-breaking particles during usage swinging to match <=1.7.x.
     - Type: BOOLEAN
@@ -376,7 +379,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 
 ## 🛠️ Old Settings
 
-- legacyThirdpersonSwordBlockingPosition
+- oldThirdpersonSwordBlockingPosition
     - Description: Brings back the old third-person arm blocking rotations from <=1.7
     - Type: BOOLEAN
 - lockBlockingArmRotation
@@ -391,7 +394,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - disableInventoryEntityScissor
     - Description: Allows the inventory entity model to render fully.
     - Type: BOOLEAN
-- legacyBlockOutlineRendering
+- oldBlockOutlineRendering
     - Description: Restores the legacy block outline rendering from <=1.14.4.
     - Type: BOOLEAN
 - hideModelWhilstSleeping

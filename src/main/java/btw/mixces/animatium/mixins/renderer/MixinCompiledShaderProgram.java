@@ -36,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 @Mixin(CompiledShaderProgram.class)
 public abstract class MixinCompiledShaderProgram {
     @WrapOperation(method = "setDefaultUniforms", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;getShaderLineWidth()F"))
-    private float animatium$legacyBlockOutlineRendering$lineWidth(Operation<Float> original) {
+    private float animatium$oldBlockOutlineRendering$lineWidth(Operation<Float> original) {
         return RenderUtils.getLineWidth(original.call());
     }
 
