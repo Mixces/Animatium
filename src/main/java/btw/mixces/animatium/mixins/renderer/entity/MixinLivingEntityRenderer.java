@@ -25,21 +25,19 @@ package btw.mixces.animatium.mixins.renderer.entity;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.mixins.accessor.CameraAccessor;
 import btw.mixces.animatium.util.EntityUtils;
+import btw.mixces.animatium.util.PlayerUtils;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
@@ -60,10 +58,8 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
             Minecraft client = Minecraft.getInstance();
             LocalPlayer player = client.player;
             if (livingEntityRenderState instanceof PlayerRenderState state && player != null && state.id == player.getId()) {
-                Camera camera = client.gameRenderer.getMainCamera();
-                CameraAccessor cameraAccessor = (CameraAccessor) camera;
-                float cameraLerpValue = Mth.lerp(camera.getPartialTickTime(), cameraAccessor.getEyeHeightOld(), cameraAccessor.getEyeHeight());
-                poseStack.translate(0.0F, Player.STANDING_DIMENSIONS.eyeHeight() - cameraLerpValue, 0.0F);
+                float cameraLerpValue = PlayerUtils.lerpCameraPosition(client.gameRenderer.getMainCamera());
+                poseStack.translate(0.0F, (Player.STANDING_DIMENSIONS.eyeHeight() * player.getScale()) - cameraLerpValue, 0.0F);
             }
         }
     }

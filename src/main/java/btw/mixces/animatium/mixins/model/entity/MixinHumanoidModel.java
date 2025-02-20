@@ -157,7 +157,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
     @WrapOperation(method = {"poseLeftArm", "poseRightArm"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/HumanoidModel;poseBlockingArm(Lnet/minecraft/client/model/geom/ModelPart;Z)V"))
     private void animatium$oldSwordBlockArm(HumanoidModel<?> instance, ModelPart arm, boolean rightArm, Operation<Void> original, @Local(argsOnly = true) T state) {
         original.call(instance, arm, rightArm);
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getLegacyThirdpersonSwordBlockingPosition()) {
+        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldThirdpersonSwordBlockingPosition()) {
             Entity entity = EntityUtils.getEntityByState(state);
             if (entity instanceof LivingEntity livingEntity && state instanceof HumanoidRenderState) {
                 ItemStack stack = rightArm ? livingEntity.getItemHeldByArm(HumanoidArm.RIGHT) : livingEntity.getItemHeldByArm(HumanoidArm.LEFT);

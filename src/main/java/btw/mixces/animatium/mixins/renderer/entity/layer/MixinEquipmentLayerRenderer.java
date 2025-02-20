@@ -29,6 +29,8 @@ import btw.mixces.animatium.util.EntityUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.blaze3d.platform.GlConst;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -95,10 +97,10 @@ public abstract class MixinEquipmentLayerRenderer {
                 // Code sourced from 1.7/1.8
                 Minecraft.getInstance().gameRenderer.lightTexture().turnOffLightLayer();
                 RenderSystem.enableBlend();
-                RenderSystem.blendFunc(770, 771);
-                RenderSystem.depthFunc(514);
+                RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+                RenderSystem.depthFunc(GlConst.GL_EQUAL);
                 original.call(instance, poseStack, vertexConsumer, light, overlay, color);
-                RenderSystem.depthFunc(515);
+                RenderSystem.depthFunc(GlConst.GL_LEQUAL);
                 RenderSystem.disableBlend();
                 Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer();
             }

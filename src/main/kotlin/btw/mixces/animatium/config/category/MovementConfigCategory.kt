@@ -170,12 +170,12 @@ object MovementConfigCategory {
             )
             capeGroup.option(
                 Option.createBuilder<Boolean>()
-                    .name(Component.translatable("animatium.oldCapePosition"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldCapePosition.description")))
+                    .name(Component.translatable("animatium.oldCapeSneakPosition"))
+                    .description(OptionDescription.of(Component.translatable("animatium.oldCapeSneakPosition.description")))
                     .binding(
-                        defaults.oldCapePosition,
-                        { config.oldCapePosition },
-                        { newVal -> config.oldCapePosition = newVal })
+                        defaults.oldCapeSneakPosition,
+                        { config.oldCapeSneakPosition },
+                        { newVal -> config.oldCapeSneakPosition = newVal })
                     .controller(TickBoxControllerBuilder::create)
                     .build()
             )

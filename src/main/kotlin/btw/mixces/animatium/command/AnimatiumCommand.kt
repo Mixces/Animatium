@@ -74,12 +74,19 @@ class AnimatiumCommand : Command<FabricClientCommandSource> {
             run {
                 command.then(
                     LiteralArgumentBuilder.literal<FabricClientCommandSource>("on").executes { context ->
-                        context.source.sendFeedback(Component.literal("Mod enabled.").withColor(0x00FF00))
-                        AnimatiumClient.enabled = true
-                        AnimatiumClient.shouldReloadOverlayTexture = true
-                        Minecraft.getInstance().reloadResourcePacks()
-                        AnimatiumClient.saveEnabledState()
-                        return@executes Command.SINGLE_SUCCESS
+                        if (AnimatiumClient.enabled) {
+                            context.source.sendFeedback(
+                                Component.literal("Mod is already enabled!").withColor(0x00FF00)
+                            )
+                            return@executes Command.SINGLE_SUCCESS
+                        } else {
+                            context.source.sendFeedback(Component.literal("Mod enabled.").withColor(0x00FF00))
+                            AnimatiumClient.enabled = true
+                            AnimatiumClient.shouldReloadOverlayTexture = true
+                            Minecraft.getInstance().reloadResourcePacks()
+                            AnimatiumClient.saveEnabledState()
+                            return@executes Command.SINGLE_SUCCESS
+                        }
                     }
                 )
             }
@@ -87,12 +94,19 @@ class AnimatiumCommand : Command<FabricClientCommandSource> {
             run {
                 command.then(
                     LiteralArgumentBuilder.literal<FabricClientCommandSource>("off").executes { context ->
-                        context.source.sendFeedback(Component.literal("Mod disabled.").withColor(0xFF0000))
-                        AnimatiumClient.enabled = false
-                        AnimatiumClient.shouldReloadOverlayTexture = true
-                        Minecraft.getInstance().reloadResourcePacks()
-                        AnimatiumClient.saveEnabledState()
-                        return@executes Command.SINGLE_SUCCESS
+                        if (!AnimatiumClient.enabled) {
+                            context.source.sendFeedback(
+                                Component.literal("Mod is already disabled!").withColor(0x00FF00)
+                            )
+                            return@executes Command.SINGLE_SUCCESS
+                        } else {
+                            context.source.sendFeedback(Component.literal("Mod disabled.").withColor(0xFF0000))
+                            AnimatiumClient.enabled = false
+                            AnimatiumClient.shouldReloadOverlayTexture = true
+                            Minecraft.getInstance().reloadResourcePacks()
+                            AnimatiumClient.saveEnabledState()
+                            return@executes Command.SINGLE_SUCCESS
+                        }
                     }
                 )
             }

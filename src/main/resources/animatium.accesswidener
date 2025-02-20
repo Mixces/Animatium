@@ -2,4 +2,3 @@ accessWidener v2 named
 accessible class net/minecraft/client/gui/Gui$HeartType
 accessible class net/minecraft/client/gui/Font$StringRenderOutput
 accessible class net/minecraft/client/gui/components/toasts/ToastManager$ToastInstance
-accessible field net/minecraft/client/renderer/entity/ItemRenderer scratchItemStackRenderState Lnet/minecraft/client/renderer/item/ItemStackRenderState;

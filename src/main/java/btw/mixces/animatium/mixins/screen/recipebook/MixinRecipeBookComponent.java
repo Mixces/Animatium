@@ -21,25 +21,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package btw.mixces.animatium.mixins.screen;
+package btw.mixces.animatium.mixins.screen.recipebook;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(InventoryScreen.class)
-public abstract class MixinInventoryScreen {
-    @WrapWithCondition(method = "renderEntityInInventoryFollowsMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;enableScissor(IIII)V"))
-    private static boolean animatium$disableEntityScissor(GuiGraphics instance, int i, int j, int k, int l) {
-        return !AnimatiumClient.getEnabled() || !AnimatiumConfig.instance().getDisableInventoryEntityScissor();
-    }
-
-    @WrapWithCondition(method = "renderEntityInInventoryFollowsMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;disableScissor()V"))
-    private static boolean animatium$disableEntityScissor(GuiGraphics instance) {
-        return !AnimatiumClient.getEnabled() || !AnimatiumConfig.instance().getDisableInventoryEntityScissor();
+@Mixin(RecipeBookComponent.class)
+public abstract class MixinRecipeBookComponent {
+    @WrapOperation(method = "isVisible", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;visible:Z"))
+    private boolean animatium$hideRecipeBook(RecipeBookComponent<?> instance, Operation<Boolean> original) {
+        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getHideRecipeBook()) {
+            return false;
+        } else {
+            return original.call(instance);
+        }
     }
 }

@@ -24,11 +24,13 @@
 package btw.mixces.animatium.config.category
 
 import btw.mixces.animatium.config.AnimatiumConfig
+import btw.mixces.animatium.util.FishingRodVersion
 import dev.isxander.yacl3.api.ConfigCategory
 import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.api.OptionGroup
 import dev.isxander.yacl3.api.YetAnotherConfigLib
+import dev.isxander.yacl3.api.controller.EnumControllerBuilder
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder
 import net.minecraft.network.chat.Component
 
@@ -346,17 +348,6 @@ object ItemsConfigCategory {
             )
             transformationsGroup.option(
                 Option.createBuilder<Boolean>()
-                    .name(Component.translatable("animatium.oldRodPosition"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldRodPosition.description")))
-                    .binding(
-                        defaults.oldRodPosition,
-                        { config.oldRodPosition },
-                        { newVal -> config.oldRodPosition = newVal })
-                    .controller(TickBoxControllerBuilder::create)
-                    .build()
-            )
-            transformationsGroup.option(
-                Option.createBuilder<Boolean>()
                     .name(Component.translatable("animatium.oldSkullPosition"))
                     .description(OptionDescription.of(Component.translatable("animatium.oldSkullPosition.description")))
                     .binding(
@@ -366,6 +357,18 @@ object ItemsConfigCategory {
                     .controller(TickBoxControllerBuilder::create)
                     .build()
             )
+            transformationsGroup.option(Option.createBuilder<FishingRodVersion>()
+                .name(Component.translatable("animatium.fishingRodVersion"))
+                .description(OptionDescription.of(Component.translatable("animatium.fishingRodVersion.description")))
+                .binding(
+                    defaults.fishingRodVersion,
+                    { config.fishingRodVersion },
+                    { newVal -> config.fishingRodVersion = newVal })
+                .controller { opt ->
+                    EnumControllerBuilder.create(opt).enumClass(FishingRodVersion::class.java)
+                        .formatValue { Component.translatable("animatium.enum.FishingRodVersion." + it.name) }
+                }
+                .build())
             category.group(transformationsGroup.build())
         }
 

@@ -72,6 +72,9 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
       attack cooldown before they can can swing again. Enable this feature to play a fake swing animation during that 10
       ms delay to match <=1.7.x.
     - Type: BOOLEAN
+- dontMoveBlueVoid
+    - Description: Stops the blue void sky from moving based on eye height. [Requires oldBlueVoidSky to be enabled]
+    - Type: BOOLEAN
 - showUsageSwingingParticles
     - Description: Shows fake block-breaking particles during usage swinging to match <=1.7.x.
     - Type: BOOLEAN
@@ -153,7 +156,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - capeChestplateTranslation
     - Description: Stops equipping a chestplate causing the cape to be translated a few pixels away like in <=1.15.x
     - Type: BOOLEAN
-- oldCapePosition
+- oldCapeSneakPosition
     - Description: Positions the cape while sneaking similarly to <=1.7.x
     - Type: BOOLEAN
 
@@ -235,6 +238,12 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
     - Type: BOOLEAN
     - Note: If you are using a resource pack with a custom slot hover texture, turn this setting OFF to not cause
       issues!
+- oldEffectsInventoryPosition
+    - Description: Restores the old potion effects status position in the inventory to like it was in <=1.11/1.19.
+    - Type: BOOLEAN
+- hideRecipeBook
+    - Description: Hides the recipe book from the inventory, including the button.
+    - Type: BOOLEAN
 - cameraVersion
     - Description: Change the camera position to be as it was in said version range.
     - Type: ENUM
@@ -345,12 +354,15 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
     - Description: Translates the held item position of blocks like carpet/slabs/daylight sensors/pressure plates to
       look like how they did in <=1.7.x.
     - Type: BOOLEAN
-- oldRodPosition
-    - Description: Bring back 1.7 first-person rod position
-    - Type: BOOLEAN
 - oldSkullPosition
     - Description: Positions the skull block items' held/gui positions to be how it was in 1.8.x.
     - Type: BOOLEAN
+- fishingRodVersion
+    - Description: Positions the fishing rod's first-person position to be how it was in said version range.
+    - Type: ENUM
+        - 1.7 and below (V1_7)
+        - 1.8 (V1_8)
+        - LATEST
 
 ### Other
 
@@ -376,7 +388,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 
 ## 🛠️ Old Settings
 
-- legacyThirdpersonSwordBlockingPosition
+- oldThirdpersonSwordBlockingPosition
     - Description: Brings back the old third-person arm blocking rotations from <=1.7
     - Type: BOOLEAN
 - lockBlockingArmRotation
@@ -391,7 +403,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - disableInventoryEntityScissor
     - Description: Allows the inventory entity model to render fully.
     - Type: BOOLEAN
-- legacyBlockOutlineRendering
+- oldBlockOutlineRendering
     - Description: Restores the legacy block outline rendering from <=1.14.4.
     - Type: BOOLEAN
 - hideModelWhilstSleeping
@@ -410,6 +422,9 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - oldArmorHurtRendering
     - Description: Restores the old armor hurt tint rendering from ~1.8.
     - Type: BOOLEAN
+- oldGlintRendering
+    - Description: Restores the old item/armor glint rendering found in <=1.14.4.
+    - Type: BOOLEAN
 - forceHighAttackSpeedVisual
     - Description: Fakes the high attack speed visual, which stops the attack cooldown animation on items like the
       sword.
@@ -427,6 +442,12 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
     - Description: In 1.8, the player's arm (when viewed from the first person POV) will be positioned at an angle when
       holding an item. This is only truly visible when going from an empty slot to an item. This happens due it applying
       the held item arm rotation meant for the third person model.
+    - Type: BOOLEAN
+- oldFlameDimensions
+    - Description: Makes the third person flame rendering use a fixed width and height to match <=1.12.x.
+    - Type: BOOLEAN
+- oldFlameOffset
+    - Description: Brings back the third person flame offset from <=1.7.x.
     - Type: BOOLEAN
 
 ### Sky

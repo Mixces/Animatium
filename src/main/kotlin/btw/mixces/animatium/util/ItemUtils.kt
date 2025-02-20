@@ -127,7 +127,8 @@ object ItemUtils {
             val item = Block.byItem(stack.item)
             item is BannerBlock ||
                     item is RodBlock ||
-                    isSkullBlock(stack)
+                    isSkullBlock(stack) ||
+                    item is BedBlock
         } else {
             false
         }
@@ -183,7 +184,7 @@ object ItemUtils {
         } else {
             val entity = EntityUtils.getEntityByState(entityState) ?: return false
             if (entity is LivingEntity) {
-                AnimatiumConfig.instance().legacyThirdpersonSwordBlockingPosition && entity.isBlocking
+                AnimatiumConfig.instance().oldThirdpersonSwordBlockingPosition && entity.isBlocking
             } else {
                 false
             }

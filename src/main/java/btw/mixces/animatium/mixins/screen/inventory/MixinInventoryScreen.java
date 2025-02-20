@@ -21,32 +21,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package btw.mixces.animatium.mixins.renderer;
+package btw.mixces.animatium.mixins.screen.inventory;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.util.RenderUtils;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.renderer.CompiledShaderProgram;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(CompiledShaderProgram.class)
-public abstract class MixinCompiledShaderProgram {
-    @WrapOperation(method = "setDefaultUniforms", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;getShaderLineWidth()F"))
-    private float animatium$oldBlockOutlineRendering$lineWidth(Operation<Float> original) {
-        return RenderUtils.getLineWidth(original.call());
+@Mixin(InventoryScreen.class)
+public abstract class MixinInventoryScreen {
+    @WrapWithCondition(method = "renderEntityInInventoryFollowsMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;enableScissor(IIII)V"))
+    private static boolean animatium$disableEntityScissor(GuiGraphics instance, int i, int j, int k, int l) {
+        return !AnimatiumClient.getEnabled() || !AnimatiumConfig.instance().getDisableInventoryEntityScissor();
     }
 
-    @ModifyArg(method = "setDefaultUniforms", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/shaders/Uniform;set(F)V", ordinal = 0))
-    private float animatium$forceMaxGlintStrength(float original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getForceMaxGlintProperties()) {
-            // 100% glint strength
-            return 1.0F;
-        } else {
-            return original;
-        }
+    @WrapWithCondition(method = "renderEntityInInventoryFollowsMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;disableScissor()V"))
+    private static boolean animatium$disableEntityScissor(GuiGraphics instance) {
+        return !AnimatiumClient.getEnabled() || !AnimatiumConfig.instance().getDisableInventoryEntityScissor();
     }
 }
