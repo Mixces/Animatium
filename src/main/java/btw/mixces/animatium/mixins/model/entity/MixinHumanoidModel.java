@@ -154,13 +154,24 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
         }
     }
 
+    @WrapOperation(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;isUsingItem:Z"))
+    private boolean animatium$fixDoubleBlockVisual(HumanoidRenderState instance, Operation<Boolean> original) {
+        boolean isArmBlockingPos = instance.leftArmPose == HumanoidModel.ArmPose.BLOCK || instance.rightArmPose == HumanoidModel.ArmPose.BLOCK;
+        Entity entity = EntityUtils.getEntityByState(instance);
+        if (AnimatiumConfig.instance().getFixDoubleBlockingVisual() && isArmBlockingPos && entity instanceof LivingEntity livingEntity) {
+            return PlayerUtils.isBlocking(livingEntity, livingEntity.getUseItem());
+        } else {
+            return original.call(instance);
+        }
+    }
+
     @WrapOperation(method = {"poseLeftArm", "poseRightArm"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/HumanoidModel;poseBlockingArm(Lnet/minecraft/client/model/geom/ModelPart;Z)V"))
     private void animatium$oldSwordBlockArm(HumanoidModel<?> instance, ModelPart arm, boolean rightArm, Operation<Void> original, @Local(argsOnly = true) T state) {
         original.call(instance, arm, rightArm);
         if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldThirdpersonSwordBlockingPosition()) {
             Entity entity = EntityUtils.getEntityByState(state);
             if (entity instanceof LivingEntity livingEntity && state instanceof HumanoidRenderState) {
-                ItemStack stack = rightArm ? livingEntity.getItemHeldByArm(HumanoidArm.RIGHT) : livingEntity.getItemHeldByArm(HumanoidArm.LEFT);
+                ItemStack stack = livingEntity.getItemHeldByArm(rightArm ? HumanoidArm.RIGHT : HumanoidArm.LEFT);
                 if (!(stack.getItem() instanceof ShieldItem)) {
                     arm.xRot = arm.xRot * 0.5F - ((float) Math.PI / 10F) * 2F;
                     arm.yRot = 0;

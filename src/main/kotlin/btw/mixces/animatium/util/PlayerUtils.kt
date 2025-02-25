@@ -23,6 +23,7 @@
 
 package btw.mixces.animatium.util
 
+import btw.mixces.animatium.config.AnimatiumConfig
 import btw.mixces.animatium.mixins.accessor.CameraAccessor
 import btw.mixces.animatium.mixins.accessor.LivingEntityAccessor
 import com.google.common.base.MoreObjects
@@ -38,7 +39,10 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.Mth
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.HumanoidArm
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.ItemUseAnimation
 import net.minecraft.world.phys.Vec3
 
 object PlayerUtils {
@@ -64,6 +68,18 @@ object PlayerUtils {
     @JvmStatic
     fun getPosWithEyeHeight(entity: Player, tickDelta: Float, eyeHeight: Double): Vec3 {
         return entity.getPosition(tickDelta).add(0.0, eyeHeight, 0.0)
+    }
+
+    @JvmStatic
+    fun isBlocking(livingEntity: LivingEntity, stack: ItemStack): Boolean {
+        val minecraft = Minecraft.getInstance()
+        var isBlocking =
+            (livingEntity is Player && livingEntity.useItemRemainingTicks > 0 && stack.useAnimation == ItemUseAnimation.BLOCK)
+        if (AnimatiumConfig.instance().fixDoubleBlockingVisual && livingEntity.`is`(minecraft.player) && !minecraft.options.keyUse.isDown) {
+            isBlocking = false
+        }
+
+        return isBlocking
     }
 
     @JvmStatic

@@ -25,14 +25,16 @@ package btw.mixces.animatium.mixins.renderer;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.mixins.accessor.SkyRendererAccessor;
 import btw.mixces.animatium.util.MathUtils;
 import btw.mixces.animatium.util.RenderUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexBuffer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -65,9 +67,24 @@ public abstract class MixinLevelRenderer {
     @Nullable
     private ClientLevel level;
 
-    @Shadow
-    @Final
-    private SkyRenderer skyRenderer;
+    @Unique
+    private final VertexBuffer animatium$blueVoidSkyBuffer = VertexBuffer.uploadStatic(
+            VertexFormat.Mode.QUADS,
+            DefaultVertexFormat.POSITION,
+            (vertexConsumer) -> {
+                int width = 64;
+                float y = -16.0F;
+                for (int k = -384; k <= 384; k += width) {
+                    for (int l = -384; l <= 384; l += width) {
+                        vertexConsumer
+                                .addVertex((k + width), y, l)
+                                .addVertex(k, y, l)
+                                .addVertex(k, y, (l + width))
+                                .addVertex((k + width), y, (l + width));
+                    }
+                }
+            }
+    );
 
     @Inject(method = "method_62215", at = @At("TAIL"))
     private void animatium$oldBlueVoidSky(FogParameters fogParameters, DimensionSpecialEffects.SkyType skyType, float tickDelta, DimensionSpecialEffects dimensionSpecialEffects, CallbackInfo ci) {
@@ -114,7 +131,7 @@ public abstract class MixinLevelRenderer {
             modelViewStack.translate(0.0F, -((float) (depth - 16.0)), 0.0F);
         }
 
-        ((SkyRendererAccessor) this.skyRenderer).getBottomSkyBuffer().drawWithRenderType(RenderType.sky());
+        animatium$blueVoidSkyBuffer.drawWithRenderType(RenderType.sky());
         modelViewStack.popMatrix();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }

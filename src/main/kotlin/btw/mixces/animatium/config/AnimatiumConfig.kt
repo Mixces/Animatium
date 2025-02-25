@@ -158,6 +158,7 @@ class AnimatiumConfig {
     @SerialEntry var removeClientsideBlockingDelay = true // TODO: To be removed in 1.21.5+
     @SerialEntry var removeItemUsageVisualInGUI = true
     @SerialEntry var fixFireballClientsideVisual = true
+    @SerialEntry var fixDoubleBlockingVisual = false // TODO: Fix weirdness
     // (Items) Enchantment Glint
     @SerialEntry var oldGlintSpeed = true
     @SerialEntry var disableGlintOnItemDrops2D = false

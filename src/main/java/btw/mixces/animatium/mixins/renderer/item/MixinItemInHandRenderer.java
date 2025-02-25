@@ -100,6 +100,8 @@ public abstract class MixinItemInHandRenderer {
     private boolean animatium$removeItemUsageVisualInGUI(AbstractClientPlayer instance, Operation<Boolean> original) {
         if (AnimatiumConfig.instance().getRemoveItemUsageVisualInGUI() && this.minecraft.screen != null) {
             return false;
+        } else if (AnimatiumConfig.instance().getFixDoubleBlockingVisual() && !this.minecraft.options.keyUse.isDown()) {
+            return false;
         } else {
             return original.call(instance);
         }

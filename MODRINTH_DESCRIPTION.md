@@ -300,6 +300,9 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
     - Description: Makes fire charges not place fire clientside like in older mc versions. Doesn't cause issues on
       servers, and is clientside only.
     - Type: BOOLEAN
+- fixDoubleBlockingVisual
+    - Description:
+    - Type: BOOLEAN
 
 ### Enchantment Glint
 

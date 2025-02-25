@@ -50,7 +50,6 @@ import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.ItemUseAnimation;
 import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -123,7 +122,7 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
                             poseStack.translate(0.0F, -0.125F, 0.0F);
                         }
 
-                        if (livingEntity instanceof Player && livingEntity.getUseItemRemainingTicks() > 0 && item.getUseAnimation(stack) == ItemUseAnimation.BLOCK && PlayerUtils.isBlockingArm(humanoidArm, armedEntityRenderState)) {
+                        if (PlayerUtils.isBlocking(livingEntity, stack) && PlayerUtils.isBlockingArm(humanoidArm, armedEntityRenderState)) {
                             poseStack.translate(direction * 0.05F, 0.0F, -0.1F);
                             poseStack.mulPose(Axis.YP.rotationDegrees(direction * -50.0F));
                             poseStack.mulPose(Axis.XP.rotationDegrees(-10.0F));
