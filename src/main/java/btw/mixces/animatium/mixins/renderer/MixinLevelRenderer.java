@@ -71,20 +71,7 @@ public abstract class MixinLevelRenderer {
     private final VertexBuffer animatium$blueVoidSkyBuffer = VertexBuffer.uploadStatic(
             VertexFormat.Mode.QUADS,
             DefaultVertexFormat.POSITION,
-            (vertexConsumer) -> {
-                int width = 64;
-                float y = -16.0F;
-                for (int k = -384; k <= 384; k += width) {
-                    for (int l = -384; l <= 384; l += width) {
-                        vertexConsumer
-                                .addVertex((k + width), y, l)
-                                .addVertex(k, y, l)
-                                .addVertex(k, y, (l + width))
-                                .addVertex((k + width), y, (l + width));
-                    }
-                }
-            }
-    );
+            (vertexConsumer) -> RenderUtils.buildSkyHalf(vertexConsumer, -16.0F, true));
 
     @Inject(method = "method_62215", at = @At("TAIL"))
     private void animatium$oldBlueVoidSky(FogParameters fogParameters, DimensionSpecialEffects.SkyType skyType, float tickDelta, DimensionSpecialEffects dimensionSpecialEffects, CallbackInfo ci) {
