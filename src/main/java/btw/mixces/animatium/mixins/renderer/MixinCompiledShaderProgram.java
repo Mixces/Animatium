@@ -28,13 +28,40 @@ import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.RenderUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.shaders.Uniform;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.renderer.CompiledShaderProgram;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CompiledShaderProgram.class)
 public abstract class MixinCompiledShaderProgram {
+    @Shadow
+    public abstract @Nullable Uniform getUniform(String string);
+
+    @Unique
+    @Nullable
+    private static Uniform animatium$GLINT_COLOR;
+
+    @Inject(method = "setDefaultUniforms", at = @At("TAIL"))
+    private void animatium$setupAndApplyCustomUniforms(VertexFormat.Mode mode, Matrix4f matrix4f, Matrix4f matrix4f2, Window window, CallbackInfo ci) {
+        if (animatium$GLINT_COLOR == null) {
+            animatium$GLINT_COLOR = this.getUniform("GlintColor");
+        }
+
+        if (animatium$GLINT_COLOR != null) {
+            animatium$GLINT_COLOR.set(RenderUtils.getGlintColor());
+        }
+    }
+
     @WrapOperation(method = "setDefaultUniforms", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;getShaderLineWidth()F"))
     private float animatium$oldBlockOutlineRendering$lineWidth(Operation<Float> original) {
         return RenderUtils.getLineWidth(original.call());

@@ -198,7 +198,7 @@ class AnimatiumConfig {
     @SerialEntry var forceItemGlintOnEntity = true
     @SerialEntry var forceMaxGlintProperties = true
     @SerialEntry var oldArmorHurtRendering = false
-//    @SerialEntry var oldGlintRendering = false
+    @SerialEntry var oldGlintRendering = false
     @SerialEntry var forceHighAttackSpeedVisual = false
     @SerialEntry var disableEntityGlowOutline = false
     @SerialEntry var disableModernCombatSounds = true

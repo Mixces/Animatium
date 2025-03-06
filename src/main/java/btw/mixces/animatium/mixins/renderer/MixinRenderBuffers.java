@@ -23,19 +23,28 @@
 
 package btw.mixces.animatium.mixins.renderer;
 
+import btw.mixces.animatium.LegacyGlintType;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.client.renderer.RenderBuffers;
+import net.minecraft.client.renderer.RenderType;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.List;
 
 @Mixin(RenderBuffers.class)
 public abstract class MixinRenderBuffers {
-//    @Inject(method = "put", at = @At("HEAD"))
-//    private static void animatium$addLegacyGlintLayers(Object2ObjectLinkedOpenHashMap<RenderType, ByteBufferBuilder> object2ObjectLinkedOpenHashMap, RenderType renderType, CallbackInfo ci) {
-//        List.of(LegacyGlintType.getItemGlintLayer(), LegacyGlintType.getItemGlint2ndLayer(),
-//                LegacyGlintType.getItemGlintTranslucentLayer(), LegacyGlintType.getItemGlintTranslucent2ndLayer(),
-//                LegacyGlintType.getEntityGlintLayer(), LegacyGlintType.getEntityArmorGlintLayer()).forEach(renderLayer -> {
-//            if (!object2ObjectLinkedOpenHashMap.containsKey(renderLayer)) {
-//                object2ObjectLinkedOpenHashMap.put(renderLayer, new ByteBufferBuilder(renderLayer.bufferSize()));
-//            }
-//        });
-//    }
+    @Inject(method = "put", at = @At("HEAD"))
+    private static void animatium$addLegacyGlintLayers(Object2ObjectLinkedOpenHashMap<RenderType, ByteBufferBuilder> object2ObjectLinkedOpenHashMap, RenderType renderType, CallbackInfo ci) {
+        List.of(LegacyGlintType.getItemGlintLayer(), LegacyGlintType.getItemGlint2ndLayer(),
+                LegacyGlintType.getItemGlintTranslucentLayer(), LegacyGlintType.getItemGlintTranslucent2ndLayer(),
+                LegacyGlintType.getEntityGlintLayer(), LegacyGlintType.getEntityArmorGlintLayer()).forEach(renderLayer -> {
+            if (!object2ObjectLinkedOpenHashMap.containsKey(renderLayer)) {
+                object2ObjectLinkedOpenHashMap.put(renderLayer, new ByteBufferBuilder(renderLayer.bufferSize()));
+            }
+        });
+    }
 }

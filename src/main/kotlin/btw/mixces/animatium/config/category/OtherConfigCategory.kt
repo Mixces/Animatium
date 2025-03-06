@@ -209,17 +209,17 @@ object OtherConfigCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .build()
         )
-//        category.option(
-//            Option.createBuilder<Boolean>()
-//                .name(Component.translatable("animatium.oldGlintRendering"))
-//                .description(OptionDescription.of(Component.translatable("animatium.oldGlintRendering.description")))
-//                .binding(
-//                    defaults.oldGlintRendering,
-//                    { config.oldGlintRendering },
-//                    { newVal -> config.oldGlintRendering = newVal })
-//                .controller(TickBoxControllerBuilder::create)
-//                .build()
-//        )
+        category.option(
+            Option.createBuilder<Boolean>()
+                .name(Component.translatable("animatium.oldGlintRendering"))
+                .description(OptionDescription.of(Component.translatable("animatium.oldGlintRendering.description")))
+                .binding(
+                    defaults.oldGlintRendering,
+                    { config.oldGlintRendering },
+                    { newVal -> config.oldGlintRendering = newVal })
+                .controller(TickBoxControllerBuilder::create)
+                .build()
+        )
         category.option(
             Option.createBuilder<Boolean>()
                 .name(Component.translatable("animatium.forceHighAttackSpeedVisual"))

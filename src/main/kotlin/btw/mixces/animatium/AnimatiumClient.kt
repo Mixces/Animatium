@@ -28,6 +28,7 @@ import btw.mixces.animatium.config.AnimatiumConfig
 import btw.mixces.animatium.packet.AnimatiumInfoPayloadPacket
 import btw.mixces.animatium.packet.SetFeaturesPayloadPacket
 import btw.mixces.animatium.util.Feature
+import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents
@@ -39,6 +40,9 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType
 import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.api.ModContainer
+import net.minecraft.client.renderer.CoreShaders
+import net.minecraft.client.renderer.ShaderDefines
+import net.minecraft.client.renderer.ShaderProgram
 import net.minecraft.resources.ResourceLocation
 import java.io.File
 import java.util.Optional
@@ -93,26 +97,15 @@ class AnimatiumClient : ClientModInitializer {
         }
 
         // Shaders
-//        val renderTypeLegacyGlint = ShaderProgram(
-//            ResourceLocation.fromNamespaceAndPath("animatium", "core/rendertype_legacy_glint"),
-//            DefaultVertexFormat.POSITION_TEX,
-//            ShaderDefines.EMPTY
-//        )
+        val renderTypeLegacyGlint = ShaderProgram(
+            ResourceLocation.fromNamespaceAndPath("animatium", "core/rendertype_legacy_glint"),
+            DefaultVertexFormat.POSITION_TEX,
+            ShaderDefines.EMPTY
+        )
 
-//        @JvmStatic
-//        fun setGlintColor(red: Float, green: Float, blue: Float) {
-//            val minecraft = Minecraft.getInstance()
-//            minecraft.execute {
-//                val shaderManager = Minecraft.getInstance().shaderManager ?: return@execute
-//                val compiledShader = shaderManager.getProgram(renderTypeLegacyGlint) ?: return@execute
-//                val glintColorUniform = compiledShader.getUniform("GlintColor") ?: return@execute
-//                glintColorUniform.set(red, green, blue)
-//            }
-//        }
-
-//        init {
-//            CoreShaders.getProgramsToPreload().add(renderTypeLegacyGlint)
-//        }
+        init {
+            CoreShaders.getProgramsToPreload().add(renderTypeLegacyGlint)
+        }
     }
 
     override fun onInitializeClient() {

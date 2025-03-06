@@ -24,6 +24,7 @@
 package btw.mixces.animatium.mixins.renderer;
 
 import btw.mixces.animatium.AnimatiumClient;
+import btw.mixces.animatium.LegacyGlintType;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.MathUtils;
 import btw.mixces.animatium.util.RenderUtils;
@@ -147,17 +148,18 @@ public abstract class MixinLevelRenderer {
         }
     }
 
-//    @Inject(method = "method_62214", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;endBatch(Lnet/minecraft/client/renderer/RenderType;)V", ordinal = 16, shift = At.Shift.AFTER))
-//    private void animatium$legacyGlintRendering$endBatch(FogParameters fogParameters, DeltaTracker deltaTracker, Camera camera, ProfilerFiller profilerFiller, Matrix4f matrix4f, Matrix4f matrix4f2, ResourceHandle resourceHandle, ResourceHandle resourceHandle2, ResourceHandle resourceHandle3, ResourceHandle resourceHandle4, boolean bl, Frustum frustum, ResourceHandle resourceHandle5, CallbackInfo ci) {
-//        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
-//            renderBuffers.bufferSource().endBatch(LegacyGlintType.getItemGlintLayer());
-//            renderBuffers.bufferSource().endBatch(LegacyGlintType.getItemGlint2ndLayer());
-//            renderBuffers.bufferSource().endBatch(LegacyGlintType.getItemGlintTranslucentLayer());
-//            renderBuffers.bufferSource().endBatch(LegacyGlintType.getItemGlintTranslucent2ndLayer());
-//            renderBuffers.bufferSource().endBatch(LegacyGlintType.getEntityGlintLayer());
-//            renderBuffers.bufferSource().endBatch(LegacyGlintType.getEntityArmorGlintLayer());
-//        }
-//    }
+    @WrapOperation(method = "method_62214", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;endBatch(Lnet/minecraft/client/renderer/RenderType;)V", ordinal = 16))
+    private void animatium$legacyGlintRendering$endBatch(MultiBufferSource.BufferSource instance, RenderType renderType, Operation<Void> original) {
+        original.call(instance, renderType);
+        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
+            instance.endBatch(LegacyGlintType.getItemGlintLayer());
+            instance.endBatch(LegacyGlintType.getItemGlint2ndLayer());
+            instance.endBatch(LegacyGlintType.getItemGlintTranslucentLayer());
+            instance.endBatch(LegacyGlintType.getItemGlintTranslucent2ndLayer());
+            instance.endBatch(LegacyGlintType.getEntityGlintLayer());
+            instance.endBatch(LegacyGlintType.getEntityArmorGlintLayer());
+        }
+    }
 
     // TODO/NOTE: The reason we redirect width/height instead of changing the outcome of shouldShowEntityOutlines
     // TODO/NOTE: is that it caused issues with Iris/shaders. As simple as that. Until that is fixed/we find another way

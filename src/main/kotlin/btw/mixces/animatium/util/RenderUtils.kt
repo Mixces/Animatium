@@ -29,9 +29,11 @@ import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.VertexConsumer
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.multiplayer.ClientLevel
+import org.joml.Vector3f
 
 object RenderUtils {
     private var lineWidth: Float = -1.0F
+    private var glintColor: Vector3f = Vector3f(0.5019607843137255F, 0.25098039215686274F, 0.8F)
 
     @JvmStatic
     fun getLineWidth(): Float {
@@ -46,6 +48,21 @@ object RenderUtils {
     @JvmStatic
     fun setLineWidth(width: Float) {
         lineWidth = width
+    }
+
+    @JvmStatic
+    fun getGlintColor(): Vector3f {
+        return glintColor
+    }
+
+    @JvmStatic
+    fun setGlintColor(vector3f: Vector3f) {
+        glintColor = vector3f
+    }
+
+    @JvmStatic
+    fun setGlintColor(red: Float, green: Float, blue: Float) {
+        glintColor = Vector3f(red, green, blue)
     }
 
     @JvmStatic
