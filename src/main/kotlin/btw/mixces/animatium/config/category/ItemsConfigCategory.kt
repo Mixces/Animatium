@@ -204,17 +204,6 @@ object ItemsConfigCategory {
                     .controller(TickBoxControllerBuilder::create)
                     .build()
             )
-            itemFixesGroup.option(
-                Option.createBuilder<Boolean>()
-                    .name(Component.translatable("animatium.fixDoubleBlockingVisual"))
-                    .description(OptionDescription.of(Component.translatable("animatium.fixDoubleBlockingVisual.description")))
-                    .binding(
-                        defaults.fixDoubleBlockingVisual,
-                        { config.fixDoubleBlockingVisual },
-                        { newVal -> config.fixDoubleBlockingVisual = newVal })
-                    .controller(TickBoxControllerBuilder::create)
-                    .build()
-            )
             category.group(itemFixesGroup.build())
         }
 

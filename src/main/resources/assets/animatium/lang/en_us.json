@@ -162,8 +162,6 @@
 	"animatium.removeItemUsageVisualInGUI.description": "Removes item usage animation whilst inside a GUI, for example removes continuous visual blocking, etc.",
 	"animatium.fixFireballClientsideVisual": "Fix fireball clientside fire",
 	"animatium.fixFireballClientsideVisual.description": "Makes fire charges not place fire clientside like in older mc versions. Doesn't cause issues on servers, and is clientside only.",
-	"animatium.fixDoubleBlockingVisual": "Fix double blocking visual bug",
-	"animatium.fixDoubleBlockingVisual.description": "",
 	"animatium.category.items.group.glint": "Enchantment Glint",
 	"animatium.oldGlintSpeed": "Old enchantment glint speed",
 	"animatium.oldGlintSpeed.description": "Restores the old enchantment glint speed like in <=1.8.x.",

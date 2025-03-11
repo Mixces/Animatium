@@ -115,7 +115,7 @@ class AnimatiumConfig {
     @SerialEntry var oldViewBobbing = true
     @SerialEntry var oldDeathLimbs = true
     @SerialEntry var oldBowArmMovement = true
-    @SerialEntry var oldDamageTilt = true
+    @SerialEntry var oldDamageTilt = false
     // (Movement) Cape
     @SerialEntry var oldCapeMovement = true
     @SerialEntry var dontClampCapeLean = false
@@ -124,21 +124,21 @@ class AnimatiumConfig {
     @SerialEntry var oldCapeSneakPosition = false
 
     // (Screen)
-    @SerialEntry var showCrosshairInThirdperson = true
+    @SerialEntry var showCrosshairInThirdperson = false
     @SerialEntry var fixHighAttackSpeedIndicator = true
     @SerialEntry var removeHeartFlash = true
     @SerialEntry var fixTextStrikethroughStyle = true
     @SerialEntry var centerScrollableListWidgets = true
     @SerialEntry var oldListWidgetSelectedBorderColor = true
     @SerialEntry var oldButtonTextColors = true
-    @SerialEntry var removeDebugHudBackground = true
-    @SerialEntry var debugHudTextShadow = true
-    @SerialEntry var oldChatVisual = true
-    @SerialEntry var disableCameraTransparentPassthrough = true
+    @SerialEntry var removeDebugHudBackground = false
+    @SerialEntry var debugHudTextShadow = false
+    @SerialEntry var oldChatVisual = false
+    @SerialEntry var disableCameraTransparentPassthrough = false
     @SerialEntry var oldTooltipStyleRendering = true
     @SerialEntry var oldSlotHoverStyleRendering = true
     @SerialEntry var oldEffectsInventoryPosition = true
-    @SerialEntry var hideRecipeBook = true
+    @SerialEntry var hideRecipeBook = false
     @SerialEntry var cameraVersion = CameraVersion.V1_8
 
     // (Items)
@@ -158,7 +158,6 @@ class AnimatiumConfig {
     @SerialEntry var removeClientsideBlockingDelay = true // TODO: To be removed in 1.21.5+
     @SerialEntry var removeItemUsageVisualInGUI = true
     @SerialEntry var fixFireballClientsideVisual = true
-    @SerialEntry var fixDoubleBlockingVisual = false // TODO: Fix weirdness
     // (Items) Enchantment Glint
     @SerialEntry var oldGlintSpeed = true
     @SerialEntry var disableGlintOnItemDrops2D = false
@@ -180,7 +179,7 @@ class AnimatiumConfig {
     @SerialEntry var disableSwingOnUse = true
     @SerialEntry var disableSwingOnDrop = true
     @SerialEntry var disableSwingOnEntityInteract = true
-    @SerialEntry var disableItemUsingTextureInGui = true
+    @SerialEntry var disableItemUsingTextureInGui = false
     @SerialEntry var oldDurabilityBarColors = true
     @SerialEntry var oldItemRarities = true
     @SerialEntry var showHeldItemInBoat = true
@@ -194,15 +193,15 @@ class AnimatiumConfig {
     @SerialEntry var disableInventoryEntityScissor = true
     @SerialEntry var oldBlockOutlineRendering = true
     @SerialEntry var hideModelWhilstSleeping = true
-    @SerialEntry var entityArmorHurtTint = true
+    @SerialEntry var entityArmorHurtTint = false
     @SerialEntry var forceItemGlintOnEntity = true
     @SerialEntry var forceMaxGlintProperties = true
     @SerialEntry var oldArmorHurtRendering = false
     @SerialEntry var oldGlintRendering = false
     @SerialEntry var forceHighAttackSpeedVisual = false
     @SerialEntry var disableEntityGlowOutline = false
-    @SerialEntry var disableModernCombatSounds = true
-    @SerialEntry var disableModernCombatParticles = true // TODO/NOTE: Fix, it's broken on servers
+    @SerialEntry var disableModernCombatSounds = false
+    @SerialEntry var disableModernCombatParticles = false // TODO/NOTE: Fix, it's broken on servers
     @SerialEntry var oldHeldItemArmLogic = true
     @SerialEntry var oldFlameDimensions = true
     @SerialEntry var oldFlameOffset = true

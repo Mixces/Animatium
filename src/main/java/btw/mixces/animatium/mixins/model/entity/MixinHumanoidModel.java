@@ -154,17 +154,6 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
         }
     }
 
-    @WrapOperation(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;isUsingItem:Z"))
-    private boolean animatium$fixDoubleBlockVisual(HumanoidRenderState instance, Operation<Boolean> original) {
-        boolean isArmBlockingPos = instance.leftArmPose == HumanoidModel.ArmPose.BLOCK || instance.rightArmPose == HumanoidModel.ArmPose.BLOCK;
-        Entity entity = EntityUtils.getEntityByState(instance);
-        if (AnimatiumConfig.instance().getFixDoubleBlockingVisual() && isArmBlockingPos && entity instanceof LivingEntity livingEntity) {
-            return PlayerUtils.isBlocking(livingEntity, livingEntity.getUseItem());
-        } else {
-            return original.call(instance);
-        }
-    }
-
     @WrapOperation(method = {"poseLeftArm", "poseRightArm"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/HumanoidModel;poseBlockingArm(Lnet/minecraft/client/model/geom/ModelPart;Z)V"))
     private void animatium$oldSwordBlockArm(HumanoidModel<?> instance, ModelPart arm, boolean rightArm, Operation<Void> original, @Local(argsOnly = true) T state) {
         original.call(instance, arm, rightArm);

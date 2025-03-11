@@ -23,7 +23,6 @@
 
 package btw.mixces.animatium.util
 
-import btw.mixces.animatium.config.AnimatiumConfig
 import btw.mixces.animatium.mixins.accessor.CameraAccessor
 import btw.mixces.animatium.mixins.accessor.LivingEntityAccessor
 import com.google.common.base.MoreObjects
@@ -72,14 +71,7 @@ object PlayerUtils {
 
     @JvmStatic
     fun isBlocking(livingEntity: LivingEntity, stack: ItemStack): Boolean {
-        val minecraft = Minecraft.getInstance()
-        var isBlocking =
-            (livingEntity is Player && livingEntity.useItemRemainingTicks > 0 && stack.useAnimation == ItemUseAnimation.BLOCK)
-        if (AnimatiumConfig.instance().fixDoubleBlockingVisual && livingEntity.`is`(minecraft.player) && !minecraft.options.keyUse.isDown) {
-            isBlocking = false
-        }
-
-        return isBlocking
+        return (livingEntity is Player && livingEntity.useItemRemainingTicks > 0 && stack.useAnimation == ItemUseAnimation.BLOCK)
     }
 
     @JvmStatic
