@@ -128,7 +128,7 @@ class AnimatiumConfig {
     @SerialEntry var fixHighAttackSpeedIndicator = true
     @SerialEntry var removeHeartFlash = true
     @SerialEntry var fixTextStrikethroughStyle = true
-    @SerialEntry var centerScrollableListWidgets = true
+    @SerialEntry var centerScrollableListWidgets = false
     @SerialEntry var oldListWidgetSelectedBorderColor = true
     @SerialEntry var oldButtonTextColors = true
     @SerialEntry var removeDebugHudBackground = false
@@ -193,7 +193,7 @@ class AnimatiumConfig {
     @SerialEntry var disableInventoryEntityScissor = true
     @SerialEntry var oldBlockOutlineRendering = true
     @SerialEntry var hideModelWhilstSleeping = true
-    @SerialEntry var entityArmorHurtTint = false
+    @SerialEntry var entityArmorHurtTint = true
     @SerialEntry var forceItemGlintOnEntity = true
     @SerialEntry var forceMaxGlintProperties = true
     @SerialEntry var oldArmorHurtRendering = false
