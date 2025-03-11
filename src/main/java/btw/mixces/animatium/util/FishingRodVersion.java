@@ -21,13 +21,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package btw.mixces.animatium.util
+package btw.mixces.animatium.util;
 
-import kotlin.random.Random
-
-object ColorUtils {
-    @JvmStatic
-    fun randomColor(): Int {
-        return Random.nextInt(0xFFFFFF)
-    }
+public enum FishingRodVersion {
+    V1_7,
+    V1_8,
+    LATEST
 }

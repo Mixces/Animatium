@@ -21,10 +21,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package btw.mixces.animatium.util
+package btw.mixces.animatium.util;
 
-enum class FishingRodVersion {
-    V1_7,
-    V1_8,
-    LATEST
+public interface ViewBobbingStorage {
+    // Bobbing Tilt
+    void animatium$setBobbingTilt(float bobbingTilt);
+
+    float animatium$getBobbingTilt();
+
+    float animatium$getPreviousBobbingTilt();
+
+    // Horizontal Speed
+    float animatium$getHorizontalSpeed();
+
+    float animatium$getPreviousHorizontalSpeed();
 }

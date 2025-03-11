@@ -51,7 +51,7 @@ public abstract class MixinSoundManager {
 
     @WrapWithCondition(method = "play", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/sounds/SoundEngine;play(Lnet/minecraft/client/resources/sounds/SoundInstance;)V"))
     private boolean animatium$disableModernCombatSounds(SoundEngine instance, SoundInstance soundInstance) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getDisableModernCombatSounds()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getDisableModernCombatSounds()) {
             return !animatium$ignoreSounds.contains(soundInstance.getLocation());
         } else {
             return true;

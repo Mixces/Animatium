@@ -37,7 +37,7 @@ public class MixinEyeOfEnder {
     @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/projectile/EyeOfEnder;tickCount:I"))
     private int animatium$disableProjectileAgeCheck(EyeOfEnder instance, Operation<Integer> original) {
         int originalTick = original.call(instance);
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getDisableProjectileAgeCheck()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getDisableProjectileAgeCheck()) {
             return originalTick + 2;
         } else {
             return originalTick;

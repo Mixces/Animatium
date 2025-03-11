@@ -44,19 +44,19 @@ public abstract class MixinChatScreen {
 
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;render(Lnet/minecraft/client/gui/GuiGraphics;IIIZ)V"))
     private void animatium$oldChatPosition(ChatComponent instance, GuiGraphics context, int currentTick, int mouseX, int mouseY, boolean focused, Operation<Void> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldChatVisual()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldChatVisual()) {
             context.pose().translate(0F, animatium$chatOffset, 0F);
         }
 
         original.call(instance, context, currentTick, mouseX, mouseY, focused);
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldChatVisual()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldChatVisual()) {
             context.pose().translate(0F, -animatium$chatOffset, 0F);
         }
     }
 
     @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/ChatScreen;getComponentStyleAt(DD)Lnet/minecraft/network/chat/Style;"), index = 1)
     private double animatium$oldChatPosition$fixY(double d) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldChatVisual()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldChatVisual()) {
             return d - animatium$chatOffset;
         } else {
             return d;
@@ -65,7 +65,7 @@ public abstract class MixinChatScreen {
 
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;getMessageTagAt(DD)Lnet/minecraft/client/GuiMessageTag;"))
     private GuiMessageTag animatium$oldChatVisual$removeChatIndicatorTooltip(ChatComponent instance, double mouseX, double mouseY, Operation<GuiMessageTag> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldChatVisual()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldChatVisual()) {
             return null;
         } else {
             return original.call(instance, mouseX, mouseY);
@@ -74,16 +74,16 @@ public abstract class MixinChatScreen {
 
     @ModifyArg(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;handleChatQueueClicked(DD)Z"), index = 1)
     private double animatium$oldChatPosition$clicked$0(double d) {
-        return d - ((AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldChatVisual()) ? animatium$chatOffset : 0);
+        return d - ((AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldChatVisual()) ? animatium$chatOffset : 0);
     }
 
     @ModifyArg(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/ChatScreen;getComponentStyleAt(DD)Lnet/minecraft/network/chat/Style;"), index = 1)
     private double animatium$oldChatPosition$clicked$1(double d) {
-        return d - ((AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldChatVisual()) ? animatium$chatOffset : 0);
+        return d - ((AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldChatVisual()) ? animatium$chatOffset : 0);
     }
 
     @ModifyArg(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;mouseClicked(DDI)Z"), index = 1)
     private double animatium$oldChatPosition$clicked$2(double d) {
-        return d - ((AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldChatVisual()) ? animatium$chatOffset : 0);
+        return d - ((AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldChatVisual()) ? animatium$chatOffset : 0);
     }
 }

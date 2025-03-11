@@ -83,14 +83,14 @@ public abstract class MixinMinecraft {
 
     @Inject(method = "startAttack", at = @At(value = "RETURN", ordinal = 0))
     private void animatium$missPenaltySwing(CallbackInfoReturnable<Boolean> cir) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getFakeMissPenaltySwing() && player != null) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getFakeMissPenaltySwing() && player != null) {
             PlayerUtils.fakeHandSwing(player, InteractionHand.MAIN_HAND);
         }
     }
 
     @ModifyVariable(method = "startUseItem", at = @At(value = "STORE", ordinal = 0))
     private ItemStack animatium$fixCopyStackUseItem(ItemStack original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getFixEquipAnimation()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getFixEquipAnimation()) {
             // Update the stack to match mutations to the stack in other classes
             return original.copy();
         } else {
@@ -100,7 +100,7 @@ public abstract class MixinMinecraft {
 
     @WrapOperation(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V", ordinal = 2))
     private void animatium$disableSwingOnUse(LocalPlayer instance, InteractionHand hand, Operation<Void> original, @Local InteractionHand interactionHand, @Local ItemStack itemStack) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getDisableSwingOnUse() && ItemUtils.isSwingItemBlacklisted(itemStack)) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getDisableSwingOnUse() && ItemUtils.isSwingItemBlacklisted(itemStack)) {
             PlayerUtils.sendSwingPacket(instance, hand);
         } else {
             original.call(instance, hand);
@@ -109,7 +109,7 @@ public abstract class MixinMinecraft {
 
     @WrapOperation(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V"))
     private void animatium$disableSwingOnDrop(LocalPlayer instance, InteractionHand hand, Operation<Void> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getDisableSwingOnDrop()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getDisableSwingOnDrop()) {
             PlayerUtils.sendSwingPacket(instance, hand);
         } else {
             original.call(instance, hand);
@@ -118,7 +118,7 @@ public abstract class MixinMinecraft {
 
     @WrapOperation(method = "startAttack", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 0))
     private int animatium$disableSwingMissPenalty(Minecraft instance, Operation<Integer> original) {
-        if (AnimatiumClient.getEnabledFeatures().contains(Feature.MISS_PENALTY) && (this.hitResult != null && this.hitResult.getType() != HitResult.Type.BLOCK)) {
+        if (AnimatiumClient.ENABLED_FEATURES.contains(Feature.MISS_PENALTY) && (this.hitResult != null && this.hitResult.getType() != HitResult.Type.BLOCK)) {
             return 0;
         } else {
             return original.call(instance);
@@ -127,7 +127,7 @@ public abstract class MixinMinecraft {
 
     @WrapOperation(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;isDestroying()Z"))
     private boolean animatium$leftClickItemUsage(MultiPlayerGameMode instance, Operation<Boolean> original) {
-        if (AnimatiumClient.getEnabledFeatures().contains(Feature.LEFT_CLICK_ITEM_USAGE)) {
+        if (AnimatiumClient.ENABLED_FEATURES.contains(Feature.LEFT_CLICK_ITEM_USAGE)) {
             return false;
         } else {
             return original.call(instance);
@@ -136,7 +136,7 @@ public abstract class MixinMinecraft {
 
     @WrapOperation(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V", ordinal = 0))
     private void animatium$disableSwingOnEntityInteract(LocalPlayer instance, InteractionHand hand, Operation<Void> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getDisableSwingOnEntityInteract()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getDisableSwingOnEntityInteract()) {
             PlayerUtils.sendSwingPacket(instance, hand);
         } else {
             original.call(instance, hand);
@@ -145,7 +145,7 @@ public abstract class MixinMinecraft {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void animatium$applySwingWhilstMining(CallbackInfo ci) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getApplyItemSwingUsage()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getApplyItemSwingUsage()) {
             LocalPlayer player = this.player;
             if (player == null || player.getItemInHand(player.getUsedItemHand()).isEmpty() || !player.isUsingItem() || !this.options.keyAttack.isDown()) {
                 return;
@@ -170,7 +170,7 @@ public abstract class MixinMinecraft {
     @WrapWithCondition(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;itemUsed(Lnet/minecraft/world/InteractionHand;)V"))
     private boolean animatium$removeEquipAnimationOnItemUse(ItemInHandRenderer instance, InteractionHand interactionHand) {
         // TODO: This fixes projectile equip, but it isn't going to be 100% accurate in some other areas. This needs to be worked on :)
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getRemoveEquipAnimationOnItemUse()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getRemoveEquipAnimationOnItemUse()) {
             // The equip animation plays when right-clicking blocks in creative mode in <1.8.x
             boolean isAimedAtBlock = this.hitResult != null && this.hitResult.getType() == HitResult.Type.BLOCK;
             // This might need to be revamped a bit. We are already checking for creative mode in the actual method,

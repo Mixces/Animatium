@@ -21,24 +21,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package btw.mixces.animatium.util
+package btw.mixces.animatium.util;
 
-interface ViewBobbingStorage {
-    // Bobbing Tilt
-    fun `animatium$setBobbingTilt`(bobbingTilt: Float)
-
-    fun `animatium$setPreviousBobbingTilt`(previousBobbingTilt: Float)
-
-    fun `animatium$getBobbingTilt`(): Float
-
-    fun `animatium$getPreviousBobbingTilt`(): Float
-
-    // Horizontal Speed
-    fun `animatium$setHorizontalSpeed`(horizontalSpeed: Float)
-
-    fun `animatium$setPreviousHorizontalSpeed`(previousHorizontalSpeed: Float)
-
-    fun `animatium$getHorizontalSpeed`(): Float
-
-    fun `animatium$getPreviousHorizontalSpeed`(): Float
+public enum CameraVersion {
+    V1_8,
+    V1_9_V1_13_2,
+    V1_14_V1_14_3,
+    LATEST
 }

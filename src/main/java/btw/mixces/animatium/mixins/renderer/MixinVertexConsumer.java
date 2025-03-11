@@ -41,7 +41,7 @@ public interface MixinVertexConsumer {
     @ModifyArgs(method = "putBulkData(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;[FFFFF[IIZ)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack$Pose;transformNormal(FFFLorg/joml/Vector3f;)Lorg/joml/Vector3f;"), require = 0)
     default void animatium$item2DColors(Args args) {
         ItemStackRenderState state = ItemUtils.getRenderState();
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getItem2DColors() && state != null && !state.isGui3d()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getItem2DColors() && state != null && !state.isGui3d()) {
             ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
             if (displayContext == ItemDisplayContext.GROUND) {
                 args.set(1, (float) args.get(2));

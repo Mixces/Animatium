@@ -201,7 +201,7 @@ object QOLConfigCategory {
                     { config.deepRedHurtTint },
                     { newVal ->
                         config.deepRedHurtTint = newVal
-                        AnimatiumClient.reloadOverlayTexture()
+                        AnimatiumClient.SHOULD_RELOAD_OVERLAY_TEXTURE = true
                     })
                 .controller(TickBoxControllerBuilder::create)
                 .build()

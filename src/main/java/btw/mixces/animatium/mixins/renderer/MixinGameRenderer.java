@@ -59,15 +59,15 @@ public abstract class MixinGameRenderer {
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void animatium$reloadOverlayTexture(CallbackInfo ci) {
-        if (AnimatiumClient.getShouldReloadOverlayTexture()) {
+        if (AnimatiumClient.SHOULD_RELOAD_OVERLAY_TEXTURE) {
             this.overlayTexture = new OverlayTexture();
-            AnimatiumClient.setShouldReloadOverlayTexture(false);
+            AnimatiumClient.SHOULD_RELOAD_OVERLAY_TEXTURE = false;
         }
     }
 
     @WrapOperation(method = "bobHurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getHurtDir()F"))
     private float animatium$revertYaw(LivingEntity instance, Operation<Float> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldDamageTilt()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldDamageTilt()) {
             return 0.0F;
         } else {
             return original.call(instance);
@@ -85,7 +85,7 @@ public abstract class MixinGameRenderer {
 
     @WrapOperation(method = "bobView", at = @At(value = "FIELD", target = "Lnet/minecraft/client/player/AbstractClientPlayer;walkDist:F"))
     private float animatium$changeDistance(AbstractClientPlayer instance, Operation<Float> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldViewBobbing()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldViewBobbing()) {
             return ((ViewBobbingStorage) instance).animatium$getHorizontalSpeed();
         } else {
             return original.call(instance);
@@ -94,7 +94,7 @@ public abstract class MixinGameRenderer {
 
     @WrapOperation(method = "bobView", at = @At(value = "FIELD", target = "Lnet/minecraft/client/player/AbstractClientPlayer;walkDistO:F"))
     private float animatium$changePreviousDistance(AbstractClientPlayer instance, Operation<Float> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldViewBobbing()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldViewBobbing()) {
             return ((ViewBobbingStorage) instance).animatium$getPreviousHorizontalSpeed();
         } else {
             return original.call(instance);
@@ -103,12 +103,12 @@ public abstract class MixinGameRenderer {
 
     @WrapWithCondition(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GameRenderer;bobView(Lcom/mojang/blaze3d/vertex/PoseStack;F)V"))
     private boolean animatium$minimalViewBobbing(GameRenderer instance, PoseStack poseStack, float tickDelta) {
-        return !AnimatiumClient.getEnabled() || !AnimatiumConfig.instance().getMinimalViewBobbing();
+        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().getMinimalViewBobbing();
     }
 
     @WrapOperation(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GameRenderer;shouldRenderBlockOutline()Z"))
     private boolean animatium$persistentBlockOutline(GameRenderer instance, Operation<Boolean> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getPersistentBlockOutline()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getPersistentBlockOutline()) {
             return true;
         } else {
             return original.call(instance);

@@ -52,8 +52,8 @@ import java.util.stream.Collectors;
 public abstract class MixinItemRenderer {
     @WrapOperation(method = "getArmorFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;armorEntityGlint()Lnet/minecraft/client/renderer/RenderType;"))
     private static RenderType animatium$legacyGlintRendering$armorEntityGlint(Operation<RenderType> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
-            return LegacyGlintType.getEntityArmorGlintLayer();
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
+            return LegacyGlintType.ENTITY_ARMOR_GLINT_LAYER;
         } else {
             return original.call();
         }
@@ -61,8 +61,8 @@ public abstract class MixinItemRenderer {
 
     @WrapOperation(method = "getCompassFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glint()Lnet/minecraft/client/renderer/RenderType;"))
     private static RenderType animatium$legacyGlintRendering$compassGlintLayer1(Operation<RenderType> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
-            return LegacyGlintType.getItemGlintLayer();
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
+            return LegacyGlintType.ITEM_GLINT_LAYER;
         } else {
             return original.call();
         }
@@ -72,8 +72,8 @@ public abstract class MixinItemRenderer {
     private static VertexConsumer animatium$legacyGlintRendering$compassGlintLayer2(MultiBufferSource instance, RenderType renderType, Operation<VertexConsumer> original, @Local(argsOnly = true) MultiBufferSource multiBufferSource) {
         final VertexConsumer finalConsumer = original.call(instance, renderType);
         ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering() && displayContext != ItemDisplayContext.GUI) {
-            return VertexMultiConsumer.create(multiBufferSource.getBuffer(LegacyGlintType.getItemGlint2ndLayer()), finalConsumer);
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldGlintRendering() && displayContext != ItemDisplayContext.GUI) {
+            return VertexMultiConsumer.create(multiBufferSource.getBuffer(LegacyGlintType.ITEM_GLINT_2ND_LAYER), finalConsumer);
         } else {
             return finalConsumer;
         }
@@ -81,8 +81,8 @@ public abstract class MixinItemRenderer {
 
     @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glint()Lnet/minecraft/client/renderer/RenderType;"))
     private static RenderType animatium$legacyGlintRendering$glintLayer1(Operation<RenderType> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
-            return LegacyGlintType.getItemGlintLayer();
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
+            return LegacyGlintType.ITEM_GLINT_LAYER;
         } else {
             return original.call();
         }
@@ -92,8 +92,8 @@ public abstract class MixinItemRenderer {
     private static VertexConsumer animatium$legacyGlintRendering$glintLayer2(VertexConsumer leftConsumer, VertexConsumer rightConsumer, Operation<VertexConsumer> original, @Local(argsOnly = true) MultiBufferSource multiBufferSource, @Local(argsOnly = true, ordinal = 0) boolean bl) {
         final VertexConsumer finalConsumer = original.call(leftConsumer, rightConsumer);
         ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering() && displayContext != ItemDisplayContext.GUI && bl) {
-            return VertexMultiConsumer.create(multiBufferSource.getBuffer(LegacyGlintType.getItemGlint2ndLayer()), finalConsumer);
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldGlintRendering() && displayContext != ItemDisplayContext.GUI && bl) {
+            return VertexMultiConsumer.create(multiBufferSource.getBuffer(LegacyGlintType.ITEM_GLINT_2ND_LAYER), finalConsumer);
         } else {
             return finalConsumer;
         }
@@ -101,8 +101,8 @@ public abstract class MixinItemRenderer {
 
     @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;entityGlint()Lnet/minecraft/client/renderer/RenderType;"))
     private static RenderType animatium$legacyGlintRendering$entityGlint(Operation<RenderType> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
-            return LegacyGlintType.getEntityGlintLayer();
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
+            return LegacyGlintType.ENTITY_GLINT_LAYER;
         } else {
             return original.call();
         }
@@ -111,7 +111,7 @@ public abstract class MixinItemRenderer {
     @WrapOperation(method = "renderModelLists", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/BakedModel;getQuads(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/Direction;Lnet/minecraft/util/RandomSource;)Ljava/util/List;", ordinal = 1))
     private static List<BakedQuad> animatium$itemDrops2D(BakedModel instance, BlockState state, Direction direction, RandomSource random, Operation<List<BakedQuad>> original) {
         List<BakedQuad> quads = original.call(instance, state, direction, random);
-        if (AnimatiumClient.getEnabled() && animatium$isTransformationModeValid() && !instance.isGui3d()) {
+        if (AnimatiumClient.isEnabled() && animatium$isTransformationModeValid() && !instance.isGui3d()) {
             return quads.stream().filter(baked -> baked.getDirection() == Direction.SOUTH).collect(Collectors.toList());
         } else {
             return quads;

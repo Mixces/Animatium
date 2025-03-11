@@ -46,7 +46,7 @@ public abstract class MixinParticle {
 
     @Inject(method = "move", at = @At("HEAD"), cancellable = true)
     private void animatium$disableParticlePhysics(double x, double y, double z, CallbackInfo ci) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getDisableParticlePhysics()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getDisableParticlePhysics()) {
             ci.cancel();
             setBoundingBox(this.getBoundingBox().move(x, y, z));
             this.setLocationFromBoundingbox();

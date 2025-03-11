@@ -39,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinIsUsingItem {
     @ModifyReturnValue(method = "get", at = @At(value = "RETURN"))
     private boolean animatium$getValue(boolean original, @Local(argsOnly = true) LivingEntity livingEntity, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) ItemDisplayContext displayContext) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getDisableItemUsingTextureInGui() && ItemUtils.isRangedWeaponItem(stack) && displayContext == ItemDisplayContext.GUI) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getDisableItemUsingTextureInGui() && ItemUtils.isRangedWeaponItem(stack) && displayContext == ItemDisplayContext.GUI) {
             return false;
         } else {
             return original;

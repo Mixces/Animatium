@@ -41,7 +41,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinChatComponent {
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/GuiMessage$Line;tag()Lnet/minecraft/client/GuiMessageTag;"))
     private GuiMessageTag animatium$oldChatVisual$removeChatIndicatorBar(GuiMessage.Line instance, Operation<GuiMessageTag> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldChatVisual()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldChatVisual()) {
             return null;
         } else {
             return original.call(instance);
@@ -50,12 +50,12 @@ public abstract class MixinChatComponent {
 
     @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIIII)V"))
     private boolean animatium$oldChatVisual$removeScrollbar(GuiGraphics instance, int i, int j, int k, int l, int m, int n) {
-        return !AnimatiumClient.getEnabled() || !AnimatiumConfig.instance().getOldChatVisual();
+        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().getOldChatVisual();
     }
 
     @Inject(method = "clearMessages", at = @At("HEAD"), cancellable = true)
     private void animatium$dontClearChat(boolean bl, CallbackInfo ci) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getDontClearChat()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getDontClearChat()) {
             ci.cancel();
         }
     }

@@ -37,7 +37,7 @@ public class MixinWindCharge {
     @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/projectile/windcharge/WindCharge;tickCount:I"))
     private int animatium$disableProjectileAgeCheck(WindCharge instance, Operation<Integer> original) {
         int originalTick = original.call(instance);
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getDisableProjectileAgeCheck()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getDisableProjectileAgeCheck()) {
             return originalTick + 2;
         } else {
             return originalTick;

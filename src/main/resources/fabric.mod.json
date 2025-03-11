@@ -16,10 +16,7 @@
 	"environment": "client",
 	"entrypoints": {
 		"client": [
-			{
-				"value": "btw.mixces.animatium.AnimatiumClient",
-				"adapter": "kotlin"
-			}
+			"btw.mixces.animatium.AnimatiumClient"
 		],
 		"modmenu": [
 			{

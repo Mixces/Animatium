@@ -21,11 +21,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package btw.mixces.animatium.util
+package btw.mixces.animatium.util;
 
-enum class CameraVersion {
-    V1_8,
-    V1_9_V1_13_2,
-    V1_14_V1_14_3,
-    LATEST
+import java.util.Random;
+
+public class ColourUtils {
+    public static int randomColor() {
+        return new Random().nextInt(0xFFFFFF);
+    }
 }

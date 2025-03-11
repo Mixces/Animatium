@@ -44,19 +44,19 @@ import java.util.function.Function;
 public abstract class MixinInGameHud {
     @WrapOperation(method = "renderChat", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;render(Lnet/minecraft/client/gui/GuiGraphics;IIIZ)V"))
     private void animatium$oldChatPosition(ChatComponent instance, GuiGraphics context, int currentTick, int mouseX, int mouseY, boolean focused, Operation<Void> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldChatVisual()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldChatVisual()) {
             context.pose().translate(0F, 12F, 0F);
         }
 
         original.call(instance, context, currentTick, mouseX, mouseY, focused);
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldChatVisual()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldChatVisual()) {
             context.pose().translate(0F, -12F, 0F);
         }
     }
 
     @WrapOperation(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/CameraType;isFirstPerson()Z"))
     private boolean animatium$showCrosshairInThirdperson(CameraType instance, Operation<Boolean> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getShowCrosshairInThirdperson()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getShowCrosshairInThirdperson()) {
             return true;
         } else {
             return original.call(instance);
@@ -74,6 +74,6 @@ public abstract class MixinInGameHud {
 
     @WrapWithCondition(method = "renderHearts", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderHeart(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Gui$HeartType;IIZZZ)V"))
     private boolean animatium$removeHeartFlash(Gui instance, GuiGraphics guiGraphics, Gui.HeartType type, int x, int y, boolean hardcore, boolean blinking, boolean half) {
-        return !AnimatiumClient.getEnabled() || !AnimatiumConfig.instance().getRemoveHeartFlash() || !blinking || type == Gui.HeartType.CONTAINER;
+        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().getRemoveHeartFlash() || !blinking || type == Gui.HeartType.CONTAINER;
     }
 }

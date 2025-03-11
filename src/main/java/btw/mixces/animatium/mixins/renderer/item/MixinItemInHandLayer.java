@@ -66,7 +66,7 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
 
     @Inject(method = "renderArmWithItem", at = @At("HEAD"))
     private void animatium$setRef(S armedEntityRenderState, ItemStackRenderState itemStackRenderState, HumanoidArm humanoidArm, PoseStack poseStack, MultiBufferSource multiBufferSource, int light, CallbackInfo ci, @Share("stack") LocalRef<ItemStack> stackRef) {
-        if (AnimatiumClient.getEnabled() && ItemUtils.shouldTiltItemPositionsInThirdperson(armedEntityRenderState) && !itemStackRenderState.isEmpty()) {
+        if (AnimatiumClient.isEnabled() && ItemUtils.shouldTiltItemPositionsInThirdperson(armedEntityRenderState) && !itemStackRenderState.isEmpty()) {
             Entity entity = EntityUtils.getEntityByState(armedEntityRenderState);
             if (entity instanceof LivingEntity livingEntity && armedEntityRenderState instanceof ArmedEntityRenderState) {
                 stackRef.set(livingEntity.getItemHeldByArm(humanoidArm));
@@ -76,26 +76,26 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
 
     @ModifyArgs(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V"))
     private void animatium$oldTransformTranslation(Args args, @Local(argsOnly = true) S entityState, @Share("stack") LocalRef<ItemStack> stackRef) {
-        if (AnimatiumClient.getEnabled() && ItemUtils.shouldTiltItemPositionsInThirdperson(entityState) && !ItemUtils.isItemBlacklisted(stackRef.get())) {
+        if (AnimatiumClient.isEnabled() && ItemUtils.shouldTiltItemPositionsInThirdperson(entityState) && !ItemUtils.isItemBlacklisted(stackRef.get())) {
             args.setAll((float) args.get(0) * -1.0F, 0.4375F, (float) args.get(2) / 10 * -1.0F);
         }
     }
 
     @WrapWithCondition(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lorg/joml/Quaternionf;)V"))
     private boolean animatium$removeTransformMultiply(PoseStack instance, Quaternionf quaternionf, @Local(argsOnly = true) S entityState, @Share("stack") LocalRef<ItemStack> stackRef) {
-        return !AnimatiumClient.getEnabled() || !ItemUtils.shouldTiltItemPositionsInThirdperson(entityState) || ItemUtils.isItemBlacklisted(stackRef.get());
+        return !AnimatiumClient.isEnabled() || !ItemUtils.shouldTiltItemPositionsInThirdperson(entityState) || ItemUtils.isItemBlacklisted(stackRef.get());
     }
 
     @Inject(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/item/ItemStackRenderState;render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V"))
     private void animatium$tiltItemPositionsThird(S entityRenderState, ItemStackRenderState itemStackRenderState, HumanoidArm humanoidArm, PoseStack poseStack, MultiBufferSource multiBufferSource, int light, CallbackInfo ci) {
-        if (AnimatiumClient.getEnabled() && ItemUtils.shouldTiltItemPositionsInThirdperson(entityRenderState)) {
+        if (AnimatiumClient.isEnabled() && ItemUtils.shouldTiltItemPositionsInThirdperson(entityRenderState)) {
             Entity entity = EntityUtils.getEntityByState(entityRenderState);
             if (entity instanceof LivingEntity livingEntity && entityRenderState instanceof ArmedEntityRenderState armedEntityRenderState) {
                 int direction = PlayerUtils.getArmMultiplier(humanoidArm);
                 ItemStack stack = livingEntity.getItemHeldByArm(humanoidArm);
                 Item item = stack.getItem();
                 if (!stack.isEmpty() && !ItemUtils.isItemBlacklisted(stack)) {
-                    boolean isStickRod = AnimatiumClient.getEnabled() &&
+                    boolean isStickRod = AnimatiumClient.isEnabled() &&
                             AnimatiumConfig.instance().getUseStickModelWhenCastInThirdperson() &&
                             item == Items.FISHING_ROD &&
                             (livingEntity instanceof Player player && player.fishing != null);

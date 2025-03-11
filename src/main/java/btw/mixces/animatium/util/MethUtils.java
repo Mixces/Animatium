@@ -21,38 +21,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package btw.mixces.animatium.util
+package btw.mixces.animatium.util;
 
-import net.minecraft.world.phys.shapes.BooleanOp
-import net.minecraft.world.phys.shapes.Shapes
-import net.minecraft.world.phys.shapes.VoxelShape
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
-object MathUtils {
-    @JvmStatic
-    fun toRadians(angle: Float): Float {
-        return angle * Math.PI.toFloat() / 180F
+import java.util.ArrayList;
+import java.util.List;
+
+public class MethUtils {
+    public static float toRadians(float angle) {
+        return angle * (float) Math.PI / 180F;
     }
 
-    @JvmStatic
-    fun expandVoxelShape(shape: VoxelShape, value: Float): VoxelShape {
+    public static VoxelShape expandVoxelShape(VoxelShape shape, float value) {
         // Code from VoxelShape#simplify
         // TODO: simplify this code? or find alternative?
-        val voxelShapes = arrayListOf<VoxelShape>()
-        voxelShapes.add(Shapes.empty())
-        shape.forAllBoxes { minX, minY, minZ, maxX, maxY, maxZ ->
-            voxelShapes[0] = Shapes.joinUnoptimized(
-                voxelShapes[0],
+        List<VoxelShape> voxelShapes = new ArrayList<>();
+        voxelShapes.add(Shapes.empty());
+        shape.forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> voxelShapes.set(0, Shapes.joinUnoptimized(
+                voxelShapes.getFirst(),
                 Shapes.box(
-                    minX - value,
-                    minY - value,
-                    minZ - value,
-                    maxX + value,
-                    maxY + value,
-                    maxZ + value
+                        minX - value,
+                        minY - value,
+                        minZ - value,
+                        maxX + value,
+                        maxY + value,
+                        maxZ + value
                 ),
                 BooleanOp.OR
-            )
-        }
-        return voxelShapes[0]
+        )));
+        return voxelShapes.getFirst();
     }
 }
