@@ -51,44 +51,46 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - nameTagTextShadow
     - Description: Make the nametag use text shadow.
     - Type: BOOLEAN
-- oldDebugHudTextColor
-    - Description: Makes the debug hud text color white again.
+- debugHudTextColor
+    - Description: Makes the debug hud text color white again from <=1.7.
     - Type: BOOLEAN
 - persistentBlockOutline
     - Description: Always show block outline, no matter the gamemode or state.
     - Type: BOOLEAN
-
-- alwaysShowSharpParticles
+- offhandUsageSwinging
+    - Description: Swings the offhand whilst using item and holding right click.
+    - Type: BOOLEAN
+- alwaysSharpParticles
     - Description: Always show the sharpness particles when damaging/hitting an entity.
     - Type: BOOLEAN
-- disableRecipeAndTutorialToasts
+- recipeAndTutorialToasts
     - Description: Disable recipe and tutorial toasts.
     - Type: BOOLEAN
-- showArmWhileInvisible
+- visibleArmWhileInvisible
     - Description: Shows the arm as partially visible whilst invisible, like spectator mode or invisibly effect.
     - Type: BOOLEAN
 - fakeMissPenaltySwing
     - Description: In vanilla Minecraft, if the player has missed their hit, there will be a 10 ms delay on top of the
-      attack cooldown before they can can swing again. Enable this feature to play a fake swing animation during that 10
+      attack cooldown before they can swing again. Enable this feature to play a fake swing animation during that 10
       ms delay to match <=1.7.x.
     - Type: BOOLEAN
 - dontMoveBlueVoid
     - Description: Stops the blue void sky from moving based on eye height. [Requires oldBlueVoidSky to be enabled]
     - Type: BOOLEAN
-- showUsageSwingingParticles
+- usageSwingingParticles
     - Description: Shows fake block-breaking particles during usage swinging to match <=1.7.x.
     - Type: BOOLEAN
-- disableEntityDeathTopple
-    - Description: Prevents the dying entity from rotating 90 degrees.
+- entityDeathTopple
+    - Description: Toggle the dying entity from rotating 90 degrees.
     - Type: BOOLEAN
 - deepRedHurtTint
     - Description: Modifies the entity damage tint alpha to be less like in Oranges Old Animations mod.
     - Type: BOOLEAN
-- disableParticlePhysics
-    - Description: Allows particles to bypass collision logic.
+- particlePhysics
+    - Description: Toggle particles ability to bypass collision logic.
     - Type: BOOLEAN
-- hideFirstpersonParticles
-    - Description: Hides potion particle effects coming from you whilst in first-person.
+- firstPersonParticles
+    - Description: Toggle potion particle effects coming from you whilst in first-person.
     - Type: BOOLEAN
 - dontClearChat
     - Description: Stops minecraft from clearing chat.

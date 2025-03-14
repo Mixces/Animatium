@@ -89,7 +89,7 @@ public abstract class MixinItemInHandRenderer {
     // TODO: Make arm partially translucent/transparent like the third-person player model (like on a team)
     @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;isInvisible()Z"))
     private boolean animatium$showArmWhileInvisible(AbstractClientPlayer instance, Operation<Boolean> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getShowArmWhileInvisible()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getVisibleArmWhileInvisible()) {
             return false;
         } else {
             return original.call(instance);

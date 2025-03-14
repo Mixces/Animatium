@@ -84,12 +84,12 @@ object QOLConfigCategory {
         )
         category.option(
             Option.createBuilder<Boolean>()
-                .name(Component.translatable("animatium.oldDebugHudTextColor"))
-                .description(OptionDescription.of(Component.translatable("animatium.oldDebugHudTextColor.description")))
+                .name(Component.translatable("animatium.debugHudTextColor"))
+                .description(OptionDescription.of(Component.translatable("animatium.debugHudTextColor.description")))
                 .binding(
-                    defaults.oldDebugHudTextColor,
-                    { config.oldDebugHudTextColor },
-                    { newVal -> config.oldDebugHudTextColor = newVal })
+                    defaults.debugHudTextColor,
+                    { config.debugHudTextColor },
+                    { newVal -> config.debugHudTextColor = newVal })
                 .controller(TickBoxControllerBuilder::create)
                 .build()
         )
@@ -106,45 +106,45 @@ object QOLConfigCategory {
         )
         category.option(
             Option.createBuilder<Boolean>()
-                .name(Component.translatable("animatium.allowOffhandUsageSwinging"))
-                .description(OptionDescription.of(Component.translatable("animatium.allowOffhandUsageSwinging.description")))
+                .name(Component.translatable("animatium.offhandUsageSwinging"))
+                .description(OptionDescription.of(Component.translatable("animatium.offhandUsageSwinging.description")))
                 .binding(
-                    defaults.allowOffhandUsageSwinging,
-                    { config.allowOffhandUsageSwinging },
-                    { newVal -> config.allowOffhandUsageSwinging = newVal })
+                    defaults.offhandUsageSwinging,
+                    { config.offhandUsageSwinging },
+                    { newVal -> config.offhandUsageSwinging = newVal })
                 .controller(TickBoxControllerBuilder::create)
                 .build()
         )
         category.option(
             Option.createBuilder<Boolean>()
-                .name(Component.translatable("animatium.alwaysShowSharpParticles"))
-                .description(OptionDescription.of(Component.translatable("animatium.alwaysShowSharpParticles.description")))
+                .name(Component.translatable("animatium.alwaysSharpParticles"))
+                .description(OptionDescription.of(Component.translatable("animatium.alwaysSharpParticles.description")))
                 .binding(
-                    defaults.alwaysShowSharpParticles,
-                    { config.alwaysShowSharpParticles },
-                    { newVal -> config.alwaysShowSharpParticles = newVal })
+                    defaults.alwaysSharpParticles,
+                    { config.alwaysSharpParticles },
+                    { newVal -> config.alwaysSharpParticles = newVal })
                 .controller(TickBoxControllerBuilder::create)
                 .build()
         )
         category.option(
             Option.createBuilder<Boolean>()
-                .name(Component.translatable("animatium.disableRecipeAndTutorialToasts"))
-                .description(OptionDescription.of(Component.translatable("animatium.disableRecipeAndTutorialToasts.description")))
+                .name(Component.translatable("animatium.recipeAndTutorialToasts"))
+                .description(OptionDescription.of(Component.translatable("animatium.recipeAndTutorialToasts.description")))
                 .binding(
-                    defaults.disableRecipeAndTutorialToasts,
-                    { config.disableRecipeAndTutorialToasts },
-                    { newVal -> config.disableRecipeAndTutorialToasts = newVal })
+                    defaults.recipeAndTutorialToasts,
+                    { config.recipeAndTutorialToasts },
+                    { newVal -> config.recipeAndTutorialToasts = newVal })
                 .controller(TickBoxControllerBuilder::create)
                 .build()
         )
         category.option(
             Option.createBuilder<Boolean>()
-                .name(Component.translatable("animatium.showArmWhileInvisible"))
-                .description(OptionDescription.of(Component.translatable("animatium.showArmWhileInvisible.description")))
+                .name(Component.translatable("animatium.visibleArmWhileInvisible"))
+                .description(OptionDescription.of(Component.translatable("animatium.visibleArmWhileInvisible.description")))
                 .binding(
-                    defaults.showArmWhileInvisible,
-                    { config.showArmWhileInvisible },
-                    { newVal -> config.showArmWhileInvisible = newVal })
+                    defaults.visibleArmWhileInvisible,
+                    { config.visibleArmWhileInvisible },
+                    { newVal -> config.visibleArmWhileInvisible = newVal })
                 .controller(TickBoxControllerBuilder::create)
                 .build()
         )
@@ -172,23 +172,23 @@ object QOLConfigCategory {
         )
         category.option(
             Option.createBuilder<Boolean>()
-                .name(Component.translatable("animatium.showUsageSwingingParticles"))
-                .description(OptionDescription.of(Component.translatable("animatium.showUsageSwingingParticles.description")))
+                .name(Component.translatable("animatium.usageSwingingParticles"))
+                .description(OptionDescription.of(Component.translatable("animatium.usageSwingingParticles.description")))
                 .binding(
-                    defaults.showUsageSwingingParticles,
-                    { config.showUsageSwingingParticles },
-                    { newVal -> config.showUsageSwingingParticles = newVal })
+                    defaults.usageSwingingParticles,
+                    { config.usageSwingingParticles },
+                    { newVal -> config.usageSwingingParticles = newVal })
                 .controller(TickBoxControllerBuilder::create)
                 .build()
         )
         category.option(
             Option.createBuilder<Boolean>()
-                .name(Component.translatable("animatium.disableEntityDeathTopple"))
-                .description(OptionDescription.of(Component.translatable("animatium.disableEntityDeathTopple.description")))
+                .name(Component.translatable("animatium.entityDeathTopple"))
+                .description(OptionDescription.of(Component.translatable("animatium.entityDeathTopple.description")))
                 .binding(
-                    defaults.disableEntityDeathTopple,
-                    { config.disableEntityDeathTopple },
-                    { newVal -> config.disableEntityDeathTopple = newVal })
+                    defaults.entityDeathTopple,
+                    { config.entityDeathTopple },
+                    { newVal -> config.entityDeathTopple = newVal })
                 .controller(TickBoxControllerBuilder::create)
                 .build()
         )
@@ -208,23 +208,23 @@ object QOLConfigCategory {
         )
         category.option(
             Option.createBuilder<Boolean>()
-                .name(Component.translatable("animatium.disableParticlePhysics"))
-                .description(OptionDescription.of(Component.translatable("animatium.disableParticlePhysics.description")))
+                .name(Component.translatable("animatium.particlePhysics"))
+                .description(OptionDescription.of(Component.translatable("animatium.particlePhysics.description")))
                 .binding(
-                    defaults.disableParticlePhysics,
-                    { config.disableParticlePhysics },
-                    { newVal -> config.disableParticlePhysics = newVal })
+                    defaults.particlePhysics,
+                    { config.particlePhysics },
+                    { newVal -> config.particlePhysics = newVal })
                 .controller(TickBoxControllerBuilder::create)
                 .build()
         )
         category.option(
             Option.createBuilder<Boolean>()
-                .name(Component.translatable("animatium.hideFirstpersonParticles"))
-                .description(OptionDescription.of(Component.translatable("animatium.hideFirstpersonParticles.description")))
+                .name(Component.translatable("animatium.firstPersonParticles"))
+                .description(OptionDescription.of(Component.translatable("animatium.firstPersonParticles.description")))
                 .binding(
-                    defaults.hideFirstpersonParticles,
-                    { config.hideFirstpersonParticles },
-                    { newVal -> config.hideFirstpersonParticles = newVal })
+                    defaults.firstPersonParticles,
+                    { config.firstPersonParticles },
+                    { newVal -> config.firstPersonParticles = newVal })
                 .controller(TickBoxControllerBuilder::create)
                 .build()
         )

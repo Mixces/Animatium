@@ -152,12 +152,12 @@ public abstract class MixinMinecraft {
             }
 
             InteractionHand activeHand = player.getUsedItemHand();
-            InteractionHand hand = AnimatiumConfig.instance().getAllowOffhandUsageSwinging() ? activeHand : InteractionHand.MAIN_HAND;
+            InteractionHand hand = AnimatiumConfig.instance().getOffhandUsageSwinging() ? activeHand : InteractionHand.MAIN_HAND;
             if (this.hitResult != null && this.hitResult.getType() == HitResult.Type.BLOCK && activeHand.equals(hand)) {
                 BlockHitResult blockHitResult = (BlockHitResult) this.hitResult;
 
                 BlockPos blockPos = blockHitResult.getBlockPos();
-                if (AnimatiumConfig.instance().getShowUsageSwingingParticles() && this.level != null && !this.level.getBlockState(blockPos).isAir()) {
+                if (AnimatiumConfig.instance().getUsageSwingingParticles() && this.level != null && !this.level.getBlockState(blockPos).isAir()) {
                     Direction direction = blockHitResult.getDirection();
                     this.particleEngine.crack(blockPos, direction);
                 }

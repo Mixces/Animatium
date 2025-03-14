@@ -97,7 +97,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
     @WrapOperation(method = "setupRotations", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;deathTime:F"))
     private float animatium$disableDeathTopple(LivingEntityRenderState instance, Operation<Float> original, @Local(argsOnly = true) S state) {
         Entity entity = EntityUtils.getEntityByState(state);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getDisableEntityDeathTopple() && entity instanceof Player) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().getEntityDeathTopple() && entity instanceof Player) {
             return 0;
         } else {
             return original.call(instance);

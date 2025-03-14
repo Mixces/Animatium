@@ -102,7 +102,7 @@ public abstract class MixinLivingEntity extends Entity implements ViewBobbingSto
     @WrapOperation(method = "tickEffects", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"))
     private boolean animatium$hideFirstpersonParticles(List<ParticleOptions> particleOptions, Operation<Boolean> original) {
         Minecraft client = Minecraft.getInstance();
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getHideFirstpersonParticles() && (Object) this == client.player && client.options.getCameraType().isFirstPerson()) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().getFirstPersonParticles() && (Object) this == client.player && client.options.getCameraType().isFirstPerson()) {
             return true;
         } else {
             return original.call(particleOptions);
