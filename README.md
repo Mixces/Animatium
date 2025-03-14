@@ -42,13 +42,13 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - minimalViewBobbing
     - Description: Removes the view bobbing from tilting the world.
     - Type: BOOLEAN
-- showNametagInThirdperson
+- nameTagInThirdperson
     - Description: Show the player nametag whilst in third-person.
     - Type: BOOLEAN
-- hideNameTagBackground
-    - Description: Remove the nametag background.
+- nameTagBackground
+    - Description: Toggle the nametag background.
     - Type: BOOLEAN
-- applyTextShadowToNametag
+- nameTagTextShadow
     - Description: Make the nametag use text shadow.
     - Type: BOOLEAN
 - oldDebugHudTextColor

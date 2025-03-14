@@ -51,34 +51,34 @@ object QOLConfigCategory {
         )
         category.option(
             Option.createBuilder<Boolean>()
-                .name(Component.translatable("animatium.showNametagInThirdperson"))
-                .description(OptionDescription.of(Component.translatable("animatium.showNametagInThirdperson.description")))
+                .name(Component.translatable("animatium.nameTagInThirdperson"))
+                .description(OptionDescription.of(Component.translatable("animatium.nameTagInThirdperson.description")))
                 .binding(
-                    defaults.showNametagInThirdperson,
-                    { config.showNametagInThirdperson },
-                    { newVal -> config.showNametagInThirdperson = newVal })
+                    defaults.nameTagInThirdperson,
+                    { config.nameTagInThirdperson },
+                    { newVal -> config.nameTagInThirdperson = newVal })
                 .controller(TickBoxControllerBuilder::create)
                 .build()
         )
         category.option(
             Option.createBuilder<Boolean>()
-                .name(Component.translatable("animatium.hideNameTagBackground"))
-                .description(OptionDescription.of(Component.translatable("animatium.hideNameTagBackground.description")))
+                .name(Component.translatable("animatium.nameTagBackground"))
+                .description(OptionDescription.of(Component.translatable("animatium.nameTagBackground.description")))
                 .binding(
-                    defaults.hideNameTagBackground,
-                    { config.hideNameTagBackground },
-                    { newVal -> config.hideNameTagBackground = newVal })
+                    defaults.nameTagBackground,
+                    { config.nameTagBackground },
+                    { newVal -> config.nameTagBackground = newVal })
                 .controller(TickBoxControllerBuilder::create)
                 .build()
         )
         category.option(
             Option.createBuilder<Boolean>()
-                .name(Component.translatable("animatium.applyTextShadowToNametag"))
-                .description(OptionDescription.of(Component.translatable("animatium.applyTextShadowToNametag.description")))
+                .name(Component.translatable("animatium.nameTagTextShadow"))
+                .description(OptionDescription.of(Component.translatable("animatium.nameTagTextShadow.description")))
                 .binding(
-                    defaults.applyTextShadowToNametag,
-                    { config.applyTextShadowToNametag },
-                    { newVal -> config.applyTextShadowToNametag = newVal })
+                    defaults.nameTagTextShadow,
+                    { config.nameTagTextShadow },
+                    { newVal -> config.nameTagTextShadow = newVal })
                 .controller(TickBoxControllerBuilder::create)
                 .build()
         )

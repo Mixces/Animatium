@@ -75,9 +75,9 @@ class AnimatiumConfig {
 
     // (QOL)
     @SerialEntry var minimalViewBobbing = false
-    @SerialEntry var showNametagInThirdperson = false
-    @SerialEntry var hideNameTagBackground = false
-    @SerialEntry var applyTextShadowToNametag = false
+    @SerialEntry var nameTagInThirdperson = false
+    @SerialEntry var nameTagBackground = true
+    @SerialEntry var nameTagTextShadow = false
     @SerialEntry var oldDebugHudTextColor = false
     @SerialEntry var persistentBlockOutline = false
     @SerialEntry var allowOffhandUsageSwinging = false

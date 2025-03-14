@@ -1,3 +1,3 @@
 - Particle blending!!!
 - Potion model offset?
-- Server enabled feature to hide fishing rod in first-person thats attatched to you
+- Server enabled feature to hide fishing rod in first-person that's attached to you
