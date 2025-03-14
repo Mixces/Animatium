@@ -32,7 +32,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,18 +41,6 @@ import java.util.function.Function;
 
 @Mixin(Gui.class)
 public abstract class MixinInGameHud {
-    @WrapOperation(method = "renderChat", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/ChatComponent;render(Lnet/minecraft/client/gui/GuiGraphics;IIIZ)V"))
-    private void animatium$oldChatPosition(ChatComponent instance, GuiGraphics context, int currentTick, int mouseX, int mouseY, boolean focused, Operation<Void> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldChatVisual()) {
-            context.pose().translate(0F, 12F, 0F);
-        }
-
-        original.call(instance, context, currentTick, mouseX, mouseY, focused);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldChatVisual()) {
-            context.pose().translate(0F, -12F, 0F);
-        }
-    }
-
     @WrapOperation(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/CameraType;isFirstPerson()Z"))
     private boolean animatium$showCrosshairInThirdperson(CameraType instance, Operation<Boolean> original) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getShowCrosshairInThirdperson()) {

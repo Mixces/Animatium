@@ -112,8 +112,6 @@
 	"animatium.removeDebugHudBackground.description": "Remove the F3 Debug Hud background,",
 	"animatium.debugHudTextShadow": "Add text-shadow to F3 debug hud text",
 	"animatium.debugHudTextShadow.description": "Add text-shadow to F3 Debug Hud.",
-	"animatium.oldChatVisual": "Old chat visual",
-	"animatium.oldChatVisual.description": "Restores the old chatbox position/visual from <=1.8.",
 	"animatium.disableCameraTransparentPassthrough": "Disable third-person camera block passthrough",
 	"animatium.disableCameraTransparentPassthrough.description": "Stops camera passthrough in thirdperson in glass/etc like in <=1.15.",
 	"animatium.oldTooltipStyleRendering": "Restore old tooltip style",

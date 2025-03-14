@@ -133,7 +133,6 @@ class AnimatiumConfig {
     @SerialEntry var oldButtonTextColors = true
     @SerialEntry var removeDebugHudBackground = false
     @SerialEntry var debugHudTextShadow = false
-    @SerialEntry var oldChatVisual = false
     @SerialEntry var disableCameraTransparentPassthrough = false
     @SerialEntry var oldTooltipStyleRendering = true
     @SerialEntry var oldSlotHoverStyleRendering = true

@@ -138,17 +138,6 @@ object ScreenConfigCategory {
         )
         category.option(
             Option.createBuilder<Boolean>()
-                .name(Component.translatable("animatium.oldChatVisual"))
-                .description(OptionDescription.of(Component.translatable("animatium.oldChatVisual.description")))
-                .binding(
-                    defaults.oldChatVisual,
-                    { config.oldChatVisual },
-                    { newVal -> config.oldChatVisual = newVal })
-                .controller(TickBoxControllerBuilder::create)
-                .build()
-        )
-        category.option(
-            Option.createBuilder<Boolean>()
                 .name(Component.translatable("animatium.disableCameraTransparentPassthrough"))
                 .description(OptionDescription.of(Component.translatable("animatium.disableCameraTransparentPassthrough.description")))
                 .binding(

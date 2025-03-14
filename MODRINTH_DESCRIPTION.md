@@ -214,9 +214,6 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - debugHudTextShadow
     - Description: Add text-shadow to F3 Debug Hud.
     - Type: BOOLEAN
-- oldChatVisual
-    - Description: Restores the old chatbox position/visual from <=1.8.
-    - Type: BOOLEAN
 - disableCameraTransparentPassthrough
     - Description: Stops camera passthrough in thirdperson in glass/etc like in <=1.15.
     - Type: BOOLEAN
