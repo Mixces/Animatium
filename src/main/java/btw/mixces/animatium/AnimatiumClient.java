@@ -44,13 +44,13 @@ import net.minecraft.client.renderer.CoreShaders;
 import net.minecraft.client.renderer.ShaderDefines;
 import net.minecraft.client.renderer.ShaderProgram;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class AnimatiumClient implements ClientModInitializer {
     // Settings
@@ -63,7 +63,7 @@ public class AnimatiumClient implements ClientModInitializer {
     private static final ModContainer MOD_CONTAINER = FabricLoader.getInstance().getModContainer("animatium").orElseThrow(() -> new RuntimeException("Mod not found"));
     private static final String[] VERSION_PARTS = MOD_CONTAINER.getMetadata().getVersion().getFriendlyString().split("-");
     public static Double VERSION = Double.parseDouble(VERSION_PARTS[0]);
-    public static Optional<String> DEVELOPMENT_VERSION = Optional.ofNullable(VERSION_PARTS[1]);
+    public static @Nullable String DEVELOPMENT_VERSION = VERSION_PARTS[1];
 
     public static AnimatiumInfoPayloadPacket getInfoPayload() {
         return new AnimatiumInfoPayloadPacket(VERSION, DEVELOPMENT_VERSION);
@@ -136,11 +136,11 @@ public class AnimatiumClient implements ClientModInitializer {
         ClientConfigurationConnectionEvents.DISCONNECT.register((packet, client) -> ENABLED_FEATURES.clear());
         ClientPlayConnectionEvents.DISCONNECT.register((packet, client) -> ENABLED_FEATURES.clear());
 
-        PayloadTypeRegistry.playC2S().register(AnimatiumInfoPayloadPacket.Companion.getPAYLOAD_ID(), AnimatiumInfoPayloadPacket.Companion.getCODEC());
-        PayloadTypeRegistry.playS2C().register(SetFeaturesPayloadPacket.Companion.getPAYLOAD_ID(), SetFeaturesPayloadPacket.Companion.getCODEC());
-        ClientPlayNetworking.registerGlobalReceiver(SetFeaturesPayloadPacket.Companion.getPAYLOAD_ID(), (payload, context) -> context.client().schedule(() -> {
+        PayloadTypeRegistry.playC2S().register(AnimatiumInfoPayloadPacket.PAYLOAD_ID, AnimatiumInfoPayloadPacket.CODEC);
+        PayloadTypeRegistry.playS2C().register(SetFeaturesPayloadPacket.PAYLOAD_ID, SetFeaturesPayloadPacket.CODEC);
+        ClientPlayNetworking.registerGlobalReceiver(SetFeaturesPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> {
             ENABLED_FEATURES.clear();
-            ENABLED_FEATURES.addAll(payload.getFeatures());
+            ENABLED_FEATURES.addAll(payload.features());
         }));
     }
 }

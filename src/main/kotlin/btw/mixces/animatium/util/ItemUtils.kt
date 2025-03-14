@@ -85,8 +85,8 @@ object ItemUtils {
     @JvmStatic
     fun isHandheldItem(stack: ItemStack): Boolean {
         return if (!stack.isEmpty) {
-            ItemClassUtil.isDiggerItem(stack) ||
-                    ItemClassUtil.isSwordItem(stack) ||
+            ItemClassUtils.isDiggerItem(stack) ||
+                    ItemClassUtils.isSwordItem(stack) ||
                     isFishingRodItem(stack) ||
                     setOf(
                         Items.MACE,
@@ -138,7 +138,7 @@ object ItemUtils {
     fun isItemBlacklisted(stack: ItemStack): Boolean {
         return if (!stack.isEmpty) {
             val item = stack.item
-            ItemClassUtil.isShieldItem(item) ||
+            ItemClassUtils.isShieldItem(item) ||
                     isBlockItemBlacklisted(stack) ||
                     item is CrossbowItem
         } else {

@@ -30,7 +30,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MethUtils {
+public final class MethUtils {
     public static float toRadians(float angle) {
         return angle * (float) Math.PI / 180F;
     }

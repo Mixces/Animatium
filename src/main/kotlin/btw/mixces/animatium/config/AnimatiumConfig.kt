@@ -155,7 +155,6 @@ class AnimatiumConfig {
     // (Items) Fixes
     @SerialEntry var fixEquipAnimation = true
     @SerialEntry var removeEquipAnimationOnItemUse = true
-    @SerialEntry var removeClientsideBlockingDelay = true // TODO: To be removed in 1.21.5+
     @SerialEntry var removeItemUsageVisualInGUI = true
     @SerialEntry var fixFireballClientsideVisual = true
     // (Items) Enchantment Glint

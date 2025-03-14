@@ -62,7 +62,7 @@ public abstract class MixinCompiledShaderProgram {
         }
     }
 
-    @WrapOperation(method = "setDefaultUniforms", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;getShaderLineWidth()F"))
+    @WrapOperation(method = "setDefaultUniforms", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;getShaderLineWidth()F"), remap = false)
     private float animatium$oldBlockOutlineRendering$lineWidth(Operation<Float> original) {
         return RenderUtils.getLineWidth(original.call());
     }

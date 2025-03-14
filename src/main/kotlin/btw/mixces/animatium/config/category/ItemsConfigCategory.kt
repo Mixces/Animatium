@@ -173,17 +173,6 @@ object ItemsConfigCategory {
             )
             itemFixesGroup.option(
                 Option.createBuilder<Boolean>()
-                    .name(Component.translatable("animatium.removeClientsideBlockingDelay"))
-                    .description(OptionDescription.of(Component.translatable("animatium.removeClientsideBlockingDelay.description")))
-                    .binding(
-                        defaults.removeClientsideBlockingDelay,
-                        { config.removeClientsideBlockingDelay },
-                        { newVal -> config.removeClientsideBlockingDelay = newVal })
-                    .controller(TickBoxControllerBuilder::create)
-                    .build()
-            )
-            itemFixesGroup.option(
-                Option.createBuilder<Boolean>()
                     .name(Component.translatable("animatium.removeItemUsageVisualInGUI"))
                     .description(OptionDescription.of(Component.translatable("animatium.removeItemUsageVisualInGUI.description")))
                     .binding(

@@ -26,18 +26,14 @@ package btw.mixces.animatium.mixins.level.entity;
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.ViewBobbingStorage;
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -100,16 +96,6 @@ public abstract class MixinLivingEntity extends Entity implements ViewBobbingSto
     private void animatium$updatePreviousBobbingTiltValue(CallbackInfo ci) {
         if (AnimatiumConfig.instance().getFixVerticalBobbingTilt()) {
             this.animatium$previousBobbingTilt = this.animatium$bobbingTilt;
-        }
-    }
-
-    @ModifyExpressionValue(method = "getItemBlockingWith", at = @At(value = "CONSTANT", args = "intValue=5"))
-    private int animatium$removeClientsideBlockingDelay(int original, @Local Item item) {
-        // TODO/NOTE: REMOVE THIS WHEN 1.21.5 IS OUT
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getRemoveClientsideBlockingDelay() && item != Items.SHIELD /* Keeps vanilla functionality */) {
-            return 0;
-        } else {
-            return original;
         }
     }
 

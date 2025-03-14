@@ -156,8 +156,6 @@
 	"animatium.fixEquipAnimationItemCheck.description": "Revert changes to the equip animation / item update logic to match <=1.8.x.",
 	"animatium.removeEquipAnimationOnItemUse": "Remove the equip animation when using a item",
 	"animatium.removeEquipAnimationOnItemUse.description": "Fixes the blocking animation which plays the equip animation on use, and others.",
-	"animatium.removeClientsideBlockingDelay": "Remove client-side blocking delay",
-	"animatium.removeClientsideBlockingDelay.description": "Removes the pesky blocking delay that modern clients have. Shouldn't flag on servers.",
 	"animatium.removeItemUsageVisualInGUI": "Remove item usage visual whilst in GUI",
 	"animatium.removeItemUsageVisualInGUI.description": "Removes item usage animation whilst inside a GUI, for example removes continuous visual blocking, etc.",
 	"animatium.fixFireballClientsideVisual": "Fix fireball clientside fire",

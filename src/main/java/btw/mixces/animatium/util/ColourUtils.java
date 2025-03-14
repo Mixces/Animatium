@@ -25,7 +25,7 @@ package btw.mixces.animatium.util;
 
 import java.util.Random;
 
-public class ColourUtils {
+public final class ColourUtils {
     public static int randomColor() {
         return new Random().nextInt(0xFFFFFF);
     }

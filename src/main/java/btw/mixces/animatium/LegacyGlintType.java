@@ -34,7 +34,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.util.TriState;
 import org.joml.Matrix4f;
 
-public class LegacyGlintType {
+public final class LegacyGlintType {
     public static final RenderType ITEM_GLINT_LAYER = makeItemGlintLayer(new RenderStateShard.TexturingStateShard(
             "legacy_glint_texturing",
             () -> setupItemGlintTexturing(-50.0F, false, 3000L),

@@ -289,9 +289,6 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - removeEquipAnimationOnItemUse
     - Description: Fixes the blocking animation which plays the equip animation on use, and others.
     - Type: BOOLEAN
-- removeClientsideBlockingDelay
-    - Description: Removes the pesky blocking delay that modern clients have. Shouldn't flag on servers.
-    - Type: BOOLEAN
 - removeItemUsageVisualInGUI
     - Description: Removes item usage animation whilst inside a GUI, for example removes continuous visual blocking,
       etc.
