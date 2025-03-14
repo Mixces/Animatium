@@ -100,9 +100,9 @@ class AnimatiumConfig {
 
     // (Movement)
     // (Movement) Sneaking
-    @SerialEntry var removeSmoothSneaking = false
-    @SerialEntry var oldSneakAnimationInterpolation = false
-    @SerialEntry var fakeOldSneakEyeHeight = false
+    @SerialEntry var smoothSneaking = true
+    @SerialEntry var sneakAnimationInterpolation = false
+    @SerialEntry var fakeOldSneakEyeHeight = false // TODO/NOTE: continue from here including this
     @SerialEntry var fixSneakingFeetPosition = true
     @SerialEntry var oldSneakingFeetPosition = true
     @SerialEntry var syncPlayerModelWithEyeHeight = false

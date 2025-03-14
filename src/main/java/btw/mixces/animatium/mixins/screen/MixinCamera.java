@@ -60,7 +60,7 @@ public abstract class MixinCamera {
 
     @Inject(method = "setup", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setRotation(FF)V", shift = At.Shift.BEFORE))
     private void animatium$removeSmoothSneaking(CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getRemoveSmoothSneaking()) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().getSmoothSneaking()) {
             this.eyeHeightOld = eyeHeight;
             this.eyeHeight = this.animatium$getStandingEyeHeight();
         }
@@ -77,7 +77,7 @@ public abstract class MixinCamera {
 
     @WrapOperation(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/Camera;eyeHeight:F"))
     private void animatium$oldSneakAnimationInterpolation(Camera instance, float value, Operation<Void> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldSneakAnimationInterpolation() && !AnimatiumConfig.instance().getRemoveSmoothSneaking() && this.entity.getEyeHeight() < eyeHeight) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getSneakAnimationInterpolation() && AnimatiumConfig.instance().getSmoothSneaking() && this.entity.getEyeHeight() < eyeHeight) {
             this.eyeHeight = this.animatium$getStandingEyeHeight();
         } else {
             original.call(instance, value);

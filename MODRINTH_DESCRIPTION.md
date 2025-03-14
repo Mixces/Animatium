@@ -39,8 +39,8 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - showNametagInThirdperson
     - Description: Show the player nametag whilst in third-person.
     - Type: BOOLEAN
-- hideNameTagBackground
-    - Description: Remove the nametag background.
+- nameTagBackground
+    - Description: Toggle the nametag background.
     - Type: BOOLEAN
 - applyTextShadowToNametag
     - Description: Make the nametag use text shadow.
@@ -115,11 +115,11 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 
 ### Sneaking
 
-- removeSmoothSneaking
-    - Description: Removes the smooth sneaking camera animation, making it like it was in 1.8-1.12.2.
+- smoothSneaking
+    - Description: Toggle the smooth sneaking camera animation, making it like it was in 1.8-1.12.2.
     - Type: BOOLEAN
-- oldSneakAnimationInterpolation
-    - Description: Brings back the <=1.7.x sneaking camera animation interpolation.
+- sneakAnimationInterpolation
+    - Description: Brings back the sneaking camera animation interpolation from <=1.7.x.
     - Type: BOOLEAN
 - fakeOldSneakEyeHeight
     - Description: Changes the sneak eye height to be as it was in <=1.13.2 visually.

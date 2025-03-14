@@ -43,23 +43,23 @@ object MovementConfigCategory {
             sneakingGroup.name(Component.translatable("animatium.category.movement.group.sneaking"))
             sneakingGroup.option(
                 Option.createBuilder<Boolean>()
-                    .name(Component.translatable("animatium.removeSmoothSneaking"))
-                    .description(OptionDescription.of(Component.translatable("animatium.removeSmoothSneaking.description")))
+                    .name(Component.translatable("animatium.smoothSneaking"))
+                    .description(OptionDescription.of(Component.translatable("animatium.smoothSneaking.description")))
                     .binding(
-                        defaults.removeSmoothSneaking,
-                        { config.removeSmoothSneaking },
-                        { newVal -> config.removeSmoothSneaking = newVal })
+                        defaults.smoothSneaking,
+                        { config.smoothSneaking },
+                        { newVal -> config.smoothSneaking = newVal })
                     .controller(TickBoxControllerBuilder::create)
                     .build()
             )
             sneakingGroup.option(
                 Option.createBuilder<Boolean>()
-                    .name(Component.translatable("animatium.oldSneakAnimationInterpolation"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldSneakAnimationInterpolation.description")))
+                    .name(Component.translatable("animatium.sneakAnimationInterpolation"))
+                    .description(OptionDescription.of(Component.translatable("animatium.sneakAnimationInterpolation.description")))
                     .binding(
-                        defaults.oldSneakAnimationInterpolation,
-                        { config.oldSneakAnimationInterpolation },
-                        { newVal -> config.oldSneakAnimationInterpolation = newVal })
+                        defaults.sneakAnimationInterpolation,
+                        { config.sneakAnimationInterpolation },
+                        { newVal -> config.sneakAnimationInterpolation = newVal })
                     .controller(TickBoxControllerBuilder::create)
                     .build()
             )
