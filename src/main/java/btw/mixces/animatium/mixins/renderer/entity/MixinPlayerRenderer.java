@@ -69,7 +69,7 @@ public abstract class MixinPlayerRenderer extends LivingEntityRenderer<AbstractC
 
     @WrapOperation(method = "extractCapeState", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;rotLerp(FFF)F"))
     private static float animatium$changeLerpMethod(float delta, float start, float end, Operation<Float> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldCapeMovement()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldCapeMovement) {
             return Mth.lerp(delta, start, end);
         } else {
             return original.call(delta, start, end);
@@ -78,7 +78,7 @@ public abstract class MixinPlayerRenderer extends LivingEntityRenderer<AbstractC
 
     @ModifyArg(method = "extractCapeState", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F", ordinal = 1), index = 2)
     private static float animatium$uncapRotation(float original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getDontClampCapeLean()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().dontClampCapeLean) {
             return Float.MAX_VALUE;
         } else {
             return original;
@@ -87,17 +87,17 @@ public abstract class MixinPlayerRenderer extends LivingEntityRenderer<AbstractC
 
     @WrapWithCondition(method = "extractCapeState", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;capeLean:F", ordinal = 1))
     private static boolean animatium$dontAssignLeanField(PlayerRenderState instance, float value) {
-        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().getOldCapeMovement();
+        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().oldCapeMovement;
     }
 
     @WrapWithCondition(method = "extractCapeState", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;capeLean2:F", ordinal = 1))
     private static boolean animatium$dontAssignLean2Field(PlayerRenderState instance, float value) {
-        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().getOldCapeMovement();
+        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().oldCapeMovement;
     }
 
     @WrapOperation(method = "getRenderOffset(Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;)Lnet/minecraft/world/phys/Vec3;", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;isCrouching:Z"))
     private boolean animatium$fixSneakingFeetPosition(PlayerRenderState instance, Operation<Boolean> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getFixSneakingFeetPosition()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixSneakingFeetPosition) {
             return false;
         } else {
             return original.call(instance);
@@ -106,7 +106,7 @@ public abstract class MixinPlayerRenderer extends LivingEntityRenderer<AbstractC
 
     @Inject(method = "renderHand", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/model/geom/ModelPart;visible:Z", ordinal = 2))
     private void animatium$oldHeldItemArmLogic(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, ResourceLocation resourceLocation, ModelPart modelPart, boolean bl, CallbackInfo ci, @Local PlayerModel playerModel) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldHeldItemArmLogic()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldHeldItemArmLogic) {
             AbstractClientPlayer player = Minecraft.getInstance().player;
             HumanoidArm arm = modelPart == model.rightArm ? HumanoidArm.RIGHT : HumanoidArm.LEFT;
             if (player != null && getArmPose(player, arm) == HumanoidModel.ArmPose.ITEM) {

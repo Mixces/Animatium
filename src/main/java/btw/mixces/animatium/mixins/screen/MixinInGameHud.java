@@ -43,7 +43,7 @@ import java.util.function.Function;
 public abstract class MixinInGameHud {
     @WrapOperation(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/CameraType;isFirstPerson()Z"))
     private boolean animatium$showCrosshairInThirdperson(CameraType instance, Operation<Boolean> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getShowCrosshairInThirdperson()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().showCrosshairInThirdperson) {
             return true;
         } else {
             return original.call(instance);
@@ -52,7 +52,7 @@ public abstract class MixinInGameHud {
 
     @WrapWithCondition(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Ljava/util/function/Function;Lnet/minecraft/resources/ResourceLocation;IIII)V", ordinal = 2))
     private boolean animatium$fixHighAttackSpeedIndicator(GuiGraphics instance, Function<ResourceLocation, RenderType> function, ResourceLocation resourceLocation, int i, int j, int k, int l, @Local float f) {
-        if (AnimatiumConfig.instance().getFixHighAttackSpeedIndicator()) {
+        if (AnimatiumConfig.instance().fixHighAttackSpeedIndicator) {
             return (int) (f * 17.0F) != 0;
         } else {
             return true;
@@ -61,6 +61,6 @@ public abstract class MixinInGameHud {
 
     @WrapWithCondition(method = "renderHearts", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderHeart(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Gui$HeartType;IIZZZ)V"))
     private boolean animatium$removeHeartFlash(Gui instance, GuiGraphics guiGraphics, Gui.HeartType type, int x, int y, boolean hardcore, boolean blinking, boolean half) {
-        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().getRemoveHeartFlash() || !blinking || type == Gui.HeartType.CONTAINER;
+        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().removeHeartFlash || !blinking || type == Gui.HeartType.CONTAINER;
     }
 }

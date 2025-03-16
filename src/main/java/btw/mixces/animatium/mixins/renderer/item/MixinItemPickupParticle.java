@@ -40,7 +40,7 @@ public class MixinItemPickupParticle {
 
     @ModifyExpressionValue(method = "updatePosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getEyeY()D"))
     private double animatium$oldItemPickupPosition(double original) {
-        if (AnimatiumConfig.instance().getOldItemPickupPosition()) {
+        if (AnimatiumConfig.instance().oldItemPickupPosition) {
             return this.target.position().y;
         } else {
             return original;

@@ -21,14 +21,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package btw.mixces.animatium.config
+package btw.mixces.animatium.config;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory
-import com.terraformersmc.modmenu.api.ModMenuApi
-import net.minecraft.client.gui.screens.Screen
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ModMenuApi;
 
-class ModMenuIntegration : ModMenuApi {
-    override fun getModConfigScreenFactory(): ConfigScreenFactory<*> {
-        return ConfigScreenFactory { parent: Screen? -> AnimatiumConfig.getConfigScreen(parent) }
+public class ModMenuIntegration implements ModMenuApi {
+    @Override
+    public ConfigScreenFactory<?> getModConfigScreenFactory() {
+        return AnimatiumConfig::getConfigScreen;
     }
 }

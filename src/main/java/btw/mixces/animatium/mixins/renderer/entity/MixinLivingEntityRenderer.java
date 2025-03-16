@@ -54,7 +54,7 @@ import java.util.Objects;
 public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderState> {
     @Inject(method = "render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal = 1))
     private void animatium$syncPlayerModelWithEyeHeight(S livingEntityRenderState, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getSyncPlayerModelWithEyeHeight()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().syncPlayerModelWithEyeHeight) {
             Minecraft client = Minecraft.getInstance();
             LocalPlayer player = client.player;
             if (livingEntityRenderState instanceof PlayerRenderState state && player != null && state.id == player.getId()) {
@@ -66,7 +66,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
 
     @ModifyExpressionValue(method = "extractRenderState(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isAlive()Z"))
     private boolean animatium$oldDeathLimbs(boolean original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldDeathLimbs()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldDeathLimbs) {
             return true;
         } else {
             return original;
@@ -75,7 +75,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
 
     @WrapOperation(method = "shouldShowName(Lnet/minecraft/world/entity/LivingEntity;D)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;getCameraEntity()Lnet/minecraft/world/entity/Entity;"))
     private Entity animatium$showNametagInThirdperson(Minecraft instance, Operation<Entity> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getNameTagInThirdperson()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().nameTagInThirdperson) {
             return null;
         } else {
             return original.call(instance);
@@ -85,7 +85,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
     @Inject(method = "render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At("HEAD"), cancellable = true)
     private void animatium$hideModelWhilstSleeping(S livingEntityRenderState, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
         Entity entity = EntityUtils.getEntityByState(livingEntityRenderState);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getHideModelWhilstSleeping() &&
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().hideModelWhilstSleeping &&
                 entity instanceof LivingEntity livingEntity &&
                 livingEntity == Objects.requireNonNull(Minecraft.getInstance().player) &&
                 livingEntityRenderState.hasPose(Pose.SLEEPING) &&
@@ -97,7 +97,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
     @WrapOperation(method = "setupRotations", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;deathTime:F"))
     private float animatium$disableDeathTopple(LivingEntityRenderState instance, Operation<Float> original, @Local(argsOnly = true) S state) {
         Entity entity = EntityUtils.getEntityByState(state);
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().getEntityDeathTopple() && entity instanceof Player) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().entityDeathTopple && entity instanceof Player) {
             return 0;
         } else {
             return original.call(instance);

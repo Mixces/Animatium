@@ -55,7 +55,7 @@ public abstract class MixinEquipmentLayerRenderer {
 
     @WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/resources/ResourceLocation;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;armorCutoutNoCull(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;"))
     private RenderType animatium$renderLayerArmorTint(ResourceLocation resourceLocation, Operation<RenderType> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getEntityArmorHurtTint()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().entityArmorHurtTint) {
             return RenderType.entityCutoutNoCullZOffset(resourceLocation);
         } else {
             return original.call(resourceLocation);
@@ -64,7 +64,7 @@ public abstract class MixinEquipmentLayerRenderer {
 
     @WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/resources/ResourceLocation;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;wrap(Lcom/mojang/blaze3d/vertex/VertexConsumer;)Lcom/mojang/blaze3d/vertex/VertexConsumer;"))
     private VertexConsumer animatium$renderLayerArmorTrimTint(TextureAtlasSprite instance, VertexConsumer consumer, Operation<VertexConsumer> original, @Local(argsOnly = true) MultiBufferSource multiBufferSource) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getEntityArmorHurtTint()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().entityArmorHurtTint) {
             return instance.wrap(multiBufferSource.getBuffer(RenderType.entityCutoutNoCullZOffset(instance.atlasLocation())));
         } else {
             return original.call(instance, consumer);
@@ -84,7 +84,7 @@ public abstract class MixinEquipmentLayerRenderer {
     @WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/resources/ResourceLocation;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/Model;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V"))
     private void animatium$oldArmorHurtRendering(Model instance, PoseStack poseStack, VertexConsumer vertexConsumer, int light, int overlay, int color, Operation<Void> original) {
         original.call(instance, poseStack, vertexConsumer, light, overlay, color);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getEntityArmorHurtTint() && AnimatiumConfig.instance().getOldArmorHurtRendering()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().entityArmorHurtTint && AnimatiumConfig.instance().oldArmorHurtRendering) {
             HumanoidRenderState humanRenderState = EntityUtils.getHumanRenderState();
             Level level = Minecraft.getInstance().level;
             if (humanRenderState == null || level == null) {
@@ -110,7 +110,7 @@ public abstract class MixinEquipmentLayerRenderer {
     @Unique
     private int animatium$getPackUv(int original) {
         HumanoidRenderState humanRenderState = EntityUtils.getHumanRenderState();
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getEntityArmorHurtTint() && humanRenderState != null) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().entityArmorHurtTint && humanRenderState != null) {
             return OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(humanRenderState.hasRedOverlay));
         } else {
             return original;

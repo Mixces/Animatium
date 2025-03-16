@@ -37,7 +37,7 @@ public abstract class MixinThrowableProjectile {
     @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/projectile/ThrowableProjectile;tickCount:I"))
     private int animatium$disableProjectileAgeCheck(ThrowableProjectile instance, Operation<Integer> original) {
         int originalTick = original.call(instance);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getDisableProjectileAgeCheck()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().disableProjectileAgeCheck) {
             return originalTick + 2;
         } else {
             return originalTick;

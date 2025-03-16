@@ -40,9 +40,6 @@ dependencies {
     // Fabric API - Needs to be specified, otherwise an older version might be defaulted and cause issues.
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 
-    // Kotlin
-    include("net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}")
-
     // YACL - TO BE REPLACED WITH LIGHTCONFIG
     modImplementation("dev.isxander:yet-another-config-lib:${project.yacl_version}")
 

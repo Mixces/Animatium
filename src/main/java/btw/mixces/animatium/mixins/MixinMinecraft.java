@@ -83,14 +83,14 @@ public abstract class MixinMinecraft {
 
     @Inject(method = "startAttack", at = @At(value = "RETURN", ordinal = 0))
     private void animatium$missPenaltySwing(CallbackInfoReturnable<Boolean> cir) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getFakeMissPenaltySwing() && player != null) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fakeMissPenaltySwing && player != null) {
             PlayerUtils.fakeHandSwing(player, InteractionHand.MAIN_HAND);
         }
     }
 
     @ModifyVariable(method = "startUseItem", at = @At(value = "STORE", ordinal = 0))
     private ItemStack animatium$fixCopyStackUseItem(ItemStack original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getFixEquipAnimation()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixEquipAnimation) {
             // Update the stack to match mutations to the stack in other classes
             return original.copy();
         } else {
@@ -100,7 +100,7 @@ public abstract class MixinMinecraft {
 
     @WrapOperation(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V", ordinal = 2))
     private void animatium$disableSwingOnUse(LocalPlayer instance, InteractionHand hand, Operation<Void> original, @Local InteractionHand interactionHand, @Local ItemStack itemStack) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getDisableSwingOnUse() && ItemUtils.isSwingItemBlacklisted(itemStack)) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().disableSwingOnUse && ItemUtils.isSwingItemBlacklisted(itemStack)) {
             PlayerUtils.sendSwingPacket(instance, hand);
         } else {
             original.call(instance, hand);
@@ -109,7 +109,7 @@ public abstract class MixinMinecraft {
 
     @WrapOperation(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V"))
     private void animatium$disableSwingOnDrop(LocalPlayer instance, InteractionHand hand, Operation<Void> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getDisableSwingOnDrop()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().disableSwingOnDrop) {
             PlayerUtils.sendSwingPacket(instance, hand);
         } else {
             original.call(instance, hand);
@@ -136,7 +136,7 @@ public abstract class MixinMinecraft {
 
     @WrapOperation(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V", ordinal = 0))
     private void animatium$disableSwingOnEntityInteract(LocalPlayer instance, InteractionHand hand, Operation<Void> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getDisableSwingOnEntityInteract()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().disableSwingOnEntityInteract) {
             PlayerUtils.sendSwingPacket(instance, hand);
         } else {
             original.call(instance, hand);
@@ -145,19 +145,19 @@ public abstract class MixinMinecraft {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void animatium$applySwingWhilstMining(CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getApplyItemSwingUsage()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().applyItemSwingUsage) {
             LocalPlayer player = this.player;
             if (player == null || player.getItemInHand(player.getUsedItemHand()).isEmpty() || !player.isUsingItem() || !this.options.keyAttack.isDown()) {
                 return;
             }
 
             InteractionHand activeHand = player.getUsedItemHand();
-            InteractionHand hand = AnimatiumConfig.instance().getOffhandUsageSwinging() ? activeHand : InteractionHand.MAIN_HAND;
+            InteractionHand hand = AnimatiumConfig.instance().offhandUsageSwinging ? activeHand : InteractionHand.MAIN_HAND;
             if (this.hitResult != null && this.hitResult.getType() == HitResult.Type.BLOCK && activeHand.equals(hand)) {
                 BlockHitResult blockHitResult = (BlockHitResult) this.hitResult;
 
                 BlockPos blockPos = blockHitResult.getBlockPos();
-                if (AnimatiumConfig.instance().getUsageSwingingParticles() && this.level != null && !this.level.getBlockState(blockPos).isAir()) {
+                if (AnimatiumConfig.instance().usageSwingingParticles && this.level != null && !this.level.getBlockState(blockPos).isAir()) {
                     Direction direction = blockHitResult.getDirection();
                     this.particleEngine.crack(blockPos, direction);
                 }
@@ -170,7 +170,7 @@ public abstract class MixinMinecraft {
     @WrapWithCondition(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;itemUsed(Lnet/minecraft/world/InteractionHand;)V"))
     private boolean animatium$removeEquipAnimationOnItemUse(ItemInHandRenderer instance, InteractionHand interactionHand) {
         // TODO: This fixes projectile equip, but it isn't going to be 100% accurate in some other areas. This needs to be worked on :)
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getRemoveEquipAnimationOnItemUse()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().removeEquipAnimationOnItemUse) {
             // The equip animation plays when right-clicking blocks in creative mode in <1.8.x
             boolean isAimedAtBlock = this.hitResult != null && this.hitResult.getType() == HitResult.Type.BLOCK;
             // This might need to be revamped a bit. We are already checking for creative mode in the actual method,

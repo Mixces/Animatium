@@ -7,6 +7,11 @@
 	"authors": [
 		"Mixces & lowercasebtw"
 	],
+	"contributors": [
+		"Tellinq",
+		"MicrocontrollersDev",
+		"Wyvest"
+	],
 	"contact": {
 		"sources": "https://github.com/Legacy-Visuals-Project/Animatium/",
 		"issues": "https://github.com/Legacy-Visuals-Project/Animatium/issues"
@@ -19,10 +24,7 @@
 			"btw.mixces.animatium.AnimatiumClient"
 		],
 		"modmenu": [
-			{
-				"value": "btw.mixces.animatium.config.ModMenuIntegration",
-				"adapter": "kotlin"
-			}
+			"btw.mixces.animatium.config.ModMenuIntegration"
 		]
 	},
 	"custom": {

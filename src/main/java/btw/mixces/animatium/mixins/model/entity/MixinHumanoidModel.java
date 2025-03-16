@@ -84,7 +84,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
 
     @WrapOperation(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;isCrouching:Z"))
     private boolean animatium$oldSneakingFeetPosition(HumanoidRenderState instance, Operation<Boolean> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldSneakingFeetPosition() && instance.isCrouching) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldSneakingFeetPosition && instance.isCrouching) {
             // Values sourced from older versions
             // TODO/NOTE: Better way to do this possibly?
             body.xRot = 0.5F;
@@ -103,7 +103,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
 
     @WrapOperation(method = "setupAttackAnimation", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/model/geom/ModelPart;xRot:F", ordinal = 0))
     public void animatium$fixMirrorArmSwing$field(ModelPart instance, float value, Operation<Void> original, @Local HumanoidArm arm) {
-        if (AnimatiumConfig.instance().getFixMirrorArmSwing() && arm == HumanoidArm.LEFT) {
+        if (AnimatiumConfig.instance().fixMirrorArmSwing && arm == HumanoidArm.LEFT) {
             this.rightArm.xRot -= this.body.yRot;
         } else {
             original.call(instance, value);
@@ -112,7 +112,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
 
     @ModifyExpressionValue(method = "setupAttackAnimation", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;sin(F)F", ordinal = 5))
     public float animatium$fixMirrorArmSwing$sin(float original, @Local HumanoidArm arm) {
-        if (AnimatiumConfig.instance().getFixMirrorArmSwing()) {
+        if (AnimatiumConfig.instance().fixMirrorArmSwing) {
             return PlayerUtils.getArmMultiplier(arm) * original; // NOTE: i changed this loloolool
         } else {
             return original;
@@ -121,7 +121,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
 
     @WrapOperation(method = "poseBlockingArm", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F"))
     private float animatium$lockBlockingArmRotation(float value, float min, float max, Operation<Float> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getLockBlockingArmRotation()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().lockBlockingArmRotation) {
             return 0.0F;
         } else {
             return original.call(value, min, max);
@@ -130,7 +130,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
 
     @Inject(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At(value = "CONSTANT", args = "floatValue=0.0", ordinal = 1))
     private void animatium$oldBowArmMovement(T humanoidRenderState, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldBowArmMovement()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldBowArmMovement) {
             HumanoidModel.ArmPose leftArmPose = humanoidRenderState.leftArmPose;
             HumanoidModel.ArmPose rightArmPose = humanoidRenderState.rightArmPose;
             final boolean isRightArmPose = rightArmPose == HumanoidModel.ArmPose.BOW_AND_ARROW;
@@ -157,7 +157,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
     @WrapOperation(method = {"poseLeftArm", "poseRightArm"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/HumanoidModel;poseBlockingArm(Lnet/minecraft/client/model/geom/ModelPart;Z)V"))
     private void animatium$oldSwordBlockArm(HumanoidModel<?> instance, ModelPart arm, boolean rightArm, Operation<Void> original, @Local(argsOnly = true) T state) {
         original.call(instance, arm, rightArm);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getOldThirdpersonSwordBlockingPosition()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldThirdpersonSwordBlockingPosition) {
             Entity entity = EntityUtils.getEntityByState(state);
             if (entity instanceof LivingEntity livingEntity && state instanceof HumanoidRenderState) {
                 ItemStack stack = livingEntity.getItemHeldByArm(rightArm ? HumanoidArm.RIGHT : HumanoidArm.LEFT);
@@ -171,6 +171,6 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
 
     @ModifyExpressionValue(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;isUsingItem:Z", ordinal = 0))
     private boolean animatium$fixOffHandUsingPose(boolean original) {
-        return (!AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().getFixOffHandUsingPose()) && original;
+        return (!AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().fixOffHandUsingPose) && original;
     }
 }

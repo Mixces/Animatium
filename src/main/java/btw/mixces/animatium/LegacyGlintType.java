@@ -23,7 +23,7 @@
 
 package btw.mixces.animatium;
 
-import btw.mixces.animatium.util.MethUtils;
+import btw.mixces.animatium.util.MathUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -79,13 +79,7 @@ public final class LegacyGlintType {
                 1536,
                 RenderType.CompositeState.builder()
                         .setShaderState(new RenderStateShard.ShaderStateShard(AnimatiumClient.renderTypeLegacyGlint))
-                        .setTextureState(
-                                new RenderStateShard.TextureStateShard(
-                                        ItemRenderer.ENCHANTED_GLINT_ITEM,
-                                        TriState.DEFAULT,
-                                        false
-                                )
-                        )
+                        .setTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANTED_GLINT_ITEM, TriState.DEFAULT, false))
                         .setWriteMaskState(RenderType.COLOR_WRITE)
                         .setCullState(RenderType.CULL)
                         .setDepthTestState(RenderType.EQUAL_DEPTH_TEST)
@@ -104,13 +98,7 @@ public final class LegacyGlintType {
                 1536,
                 RenderType.CompositeState.builder()
                         .setShaderState(new RenderStateShard.ShaderStateShard(AnimatiumClient.renderTypeLegacyGlint))
-                        .setTextureState(
-                                new RenderStateShard.TextureStateShard(
-                                        ItemRenderer.ENCHANTED_GLINT_ITEM, // <=1.19.3 uses item glint texture, we will to
-                                        TriState.DEFAULT,
-                                        false
-                                )
-                        )
+                        .setTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANTED_GLINT_ITEM, TriState.DEFAULT, false)) // <=1.19.3 uses item glint texture, we will to
                         .setWriteMaskState(RenderType.COLOR_WRITE)
                         .setCullState(RenderType.CULL)
                         .setDepthTestState(RenderType.EQUAL_DEPTH_TEST)
@@ -123,11 +111,7 @@ public final class LegacyGlintType {
 
     private static void setupItemGlintTexturing(float angle, boolean negative, long clampedTime) {
         float g = (Util.getMillis() % clampedTime) / (float) clampedTime / 8.0F;
-        RenderSystem.setTextureMatrix(
-                new Matrix4f()
-                        .scale(8.0F)
-                        .translate(negative ? -g : g, 0.0F, 0.0F)
-                        .rotateZ(MethUtils.toRadians(angle)));
+        RenderSystem.setTextureMatrix(new Matrix4f().scale(8.0F).translate(negative ? -g : g, 0.0F, 0.0F).rotateZ(MathUtils.toRadians(angle)));
     }
 
     private static void setupEntityGlintTexturing() {
@@ -137,10 +121,6 @@ public final class LegacyGlintType {
         long l = (long) ((double) Util.getMillis() * 8.0);
         float g = (float) (l % 110000L) / 110000.0F;
         float h = (float) (l % 30000L) / 30000.0F;
-        RenderSystem.setTextureMatrix(
-                new Matrix4f()
-                        .translation(-g, h, 0.0F)
-                        .rotateZ((float) (Math.PI / 18))
-                        .scale(0.16F));
+        RenderSystem.setTextureMatrix(new Matrix4f().translation(-g, h, 0.0F).rotateZ((float) (Math.PI / 18)).scale(0.16F));
     }
 }

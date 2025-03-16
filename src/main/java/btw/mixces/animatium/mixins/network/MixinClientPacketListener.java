@@ -37,6 +37,6 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinClientPacketListener {
     @WrapWithCondition(method = "handleContainerClose", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;clientSideCloseContainer()V"))
     private boolean animatium$dontCloseChat$containerClose(LocalPlayer instance) {
-        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().getDontCloseChat() || !(Minecraft.getInstance().screen instanceof ChatScreen);
+        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().dontCloseChat || !(Minecraft.getInstance().screen instanceof ChatScreen);
     }
 }

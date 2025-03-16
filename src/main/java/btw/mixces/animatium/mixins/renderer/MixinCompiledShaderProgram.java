@@ -69,7 +69,7 @@ public abstract class MixinCompiledShaderProgram {
 
     @ModifyArg(method = "setDefaultUniforms", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/shaders/Uniform;set(F)V", ordinal = 0))
     private float animatium$forceMaxGlintStrength(float original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getForceMaxGlintProperties()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().forceMaxGlintProperties) {
             // 100% glint strength
             return 1.0F;
         } else {

@@ -25,7 +25,7 @@ package btw.mixces.animatium.mixins.renderer.entity;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.util.MethUtils;
+import btw.mixces.animatium.util.MathUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -45,10 +45,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinItemEntityRenderer {
     @WrapOperation(method = "render(Lnet/minecraft/client/renderer/entity/state/ItemEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;getSpin(FF)F"))
     private float animatium$itemDropsFaceCamera(float age, float uniqueOffset, Operation<Float> original, @Local(argsOnly = true) ItemEntityRenderState itemEntityRenderState, @Local(argsOnly = true) PoseStack poseStack) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getItemDropsFaceCamera()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemDropsFaceCamera) {
             if (!itemEntityRenderState.item.isGui3d()) {
                 Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
-                return MethUtils.toRadians(180F - camera.getYRot());
+                return MathUtils.toRadians(180F - camera.getYRot());
             }
         }
 
@@ -57,7 +57,7 @@ public abstract class MixinItemEntityRenderer {
 
     @Inject(method = "render(Lnet/minecraft/client/renderer/entity/state/ItemEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lorg/joml/Quaternionf;)V", shift = At.Shift.AFTER))
     private void animatium$fixItemDrops2dRotation(ItemEntityRenderState itemEntityRenderState, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().getItemDropsFaceCamera() && AnimatiumConfig.instance().getItemDropsFaceCameraRotationFix()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemDropsFaceCamera && AnimatiumConfig.instance().itemDropsFaceCameraRotationFix) {
             if (!itemEntityRenderState.item.isGui3d()) {
                 Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
                 poseStack.mulPose(Axis.XP.rotationDegrees(-camera.getXRot()));
