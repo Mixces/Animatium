@@ -47,5 +47,12 @@
 		"minecraft": ">=1.21.4 <1.21.5",
 		"yet_another_config_lib_v3": ">=3.6.2",
 		"fabric-api": "*"
+	},
+	"recommends": {
+		"animatium_extras": "*",
+		"legacy_potion_colors": "*",
+		"nuit": "*",
+		"polytone": "*",
+		"viafabricplus": "*"
 	}
 }
