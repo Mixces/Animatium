@@ -145,7 +145,7 @@ public abstract class MixinMinecraft {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void animatium$applySwingWhilstMining(CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().applyItemSwingUsage) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemUsageSwinging) {
             LocalPlayer player = this.player;
             if (player == null || player.getItemInHand(player.getUsedItemHand()).isEmpty() || !player.isUsingItem() || !this.options.keyAttack.isDown()) {
                 return;

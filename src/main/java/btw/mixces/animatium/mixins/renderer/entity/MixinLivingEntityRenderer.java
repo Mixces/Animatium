@@ -83,9 +83,9 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
     }
 
     @Inject(method = "render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At("HEAD"), cancellable = true)
-    private void animatium$hideModelWhilstSleeping(S livingEntityRenderState, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
+    private void animatium$modelWhilstSleeping(S livingEntityRenderState, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
         Entity entity = EntityUtils.getEntityByState(livingEntityRenderState);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().hideModelWhilstSleeping &&
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().modelWhilstSleeping &&
                 entity instanceof LivingEntity livingEntity &&
                 livingEntity == Objects.requireNonNull(Minecraft.getInstance().player) &&
                 livingEntityRenderState.hasPose(Pose.SLEEPING) &&

@@ -38,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(SkyRenderer.class)
 public abstract class MixinSkyRenderer {
     @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexBuffer;drawWithRenderType(Lnet/minecraft/client/renderer/RenderType;)V"))
-    private void animatium$oldVoidSkyFogHeight(VertexBuffer instance, RenderType renderType, Operation<Void> original, @Local(argsOnly = true) PoseStack poseStack) {
+    private void animatium$voidSkyFogHeight(VertexBuffer instance, RenderType renderType, Operation<Void> original, @Local(argsOnly = true) PoseStack poseStack) {
         RenderSystem.getModelViewStack().pushMatrix();
         RenderSystem.getModelViewStack().mul(poseStack.last().pose());
         original.call(instance, renderType);

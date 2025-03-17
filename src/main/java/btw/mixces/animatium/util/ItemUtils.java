@@ -165,13 +165,13 @@ public final class ItemUtils {
         poseStack.mulPose(Axis.YP.rotationDegrees(direction * -45.0F));
     }
 
-    public static boolean shouldTiltItemPositionsInThirdperson(EntityRenderState entityState) {
-        if (AnimatiumConfig.instance().tiltItemPositionsInThirdperson) {
+    public static boolean shoulditemPositionsInThirdPerson(EntityRenderState entityState) {
+        if (AnimatiumConfig.instance().itemPositionsInThirdPerson) {
             return true;
         } else {
             final Entity entity = EntityUtils.getEntityByState(entityState);
             if (entity instanceof LivingEntity livingEntity) {
-                return AnimatiumConfig.instance().oldThirdpersonSwordBlockingPosition && livingEntity.isBlocking();
+                return AnimatiumConfig.instance().thirdPersonSwordBlockingPosition && livingEntity.isBlocking();
             } else {
                 return false;
             }

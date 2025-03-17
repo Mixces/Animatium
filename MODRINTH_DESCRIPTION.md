@@ -69,7 +69,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
       ms delay to match <=1.7.x.
     - Type: BOOLEAN
 - dontMoveBlueVoid
-    - Description: Stops the blue void sky from moving based on eye height. [Requires oldBlueVoidSky to be enabled]
+    - Description: Stops the blue void sky from moving based on eye height. [Requires blueVoidSky to be enabled]
     - Type: BOOLEAN
 - usageSwingingParticles
     - Description: Shows fake block-breaking particles during usage swinging to match <=1.7.x.
@@ -299,7 +299,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 
 ### Enchantment Glint
 
-- oldGlintSpeed
+- glintSpeed
     - Description: Restores the old enchantment glint speed like in <=1.8.x.
     - Type: BOOLEAN
 - disableGlintOnItemDrops2D
@@ -325,23 +325,23 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - itemFramed2D
     - Description: Makes framed items render 2D (not blocks).
     - Type: BOOLEAN
-- item2DColors
+- itemColors2D
     - Description: Restores the old color of 2D items by swapping the Y and Z components of the vertex normal.
     - Type: BOOLEAN
 
 ### Item Transformations
 
-- tiltItemPositions
+- itemPositions
     - Description: Tilts the held item position to make held items look like they did in <=1.7.x.
     - Type: BOOLEAN
-- tiltItemPositionsInThirdperson
+- itemPositionsInThirdPerson
     - Description: Tilts the third-person held item position to make held items look like they did in <=1.7.x.
     - Type: BOOLEAN
-- oldThinBlockPositions
+- thinBlockPositions
     - Description: Translates the held item position of blocks like carpet/slabs/daylight sensors/pressure plates to
       look like how they did in <=1.7.x.
     - Type: BOOLEAN
-- oldSkullPosition
+- skullPosition
     - Description: Positions the skull block items' held/gui positions to be how it was in 1.8.x.
     - Type: BOOLEAN
 - fishingRodVersion
@@ -353,19 +353,19 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 
 ### Other
 
-- applyItemSwingUsage
+- itemUsageSwinging
     - Description: Block hitting (apply swing offset in item usage code).
     - Type: BOOLEAN
 - disableItemUsingTextureInGui
     - Description: Disables the item usage texture in the GUI like in <=1.8.x (mainly rod/bow/crossbow).
     - Type: BOOLEAN
-- oldDurabilityBarColors
+- durabilityBarColors
     - Description: Restores the old durability damage colors from <1.11.
     - Type: BOOLEAN
-- oldItemRarities
+- itemRarities
     - Description: Restores the old rarities for items visually from <1.21.2. (also old trident rarity from <1.21)
     - Type: BOOLEAN
-- showHeldItemInBoat
+- heldItemVisibilityInBoat
     - Description: Shows your held item while you're in a moving boat like <=1.8.x.
     - Type: BOOLEAN
   </details>
@@ -375,80 +375,80 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 
 ## 🛠️ Old Settings
 
-- oldThirdpersonSwordBlockingPosition
+- thirdPersonSwordBlockingPosition
     - Description: Brings back the old third-person arm blocking rotations from <=1.7
     - Type: BOOLEAN
 - lockBlockingArmRotation
     - Description: Locks the third-person blocking arm rotation.
     - Type: BOOLEAN
-- disableProjectileAgeCheck
+- projectileAgeCheck
     - Description: Render projectile at all ages <=1.15?
     - Type: BOOLEAN
-- oldBlockMiningProgress
+- blockMiningProgress
     - Description: Bring back the old block mining progress <=1.18?
     - Type: BOOLEAN
-- disableInventoryEntityScissor
+- inventoryEntityScissor
     - Description: Allows the inventory entity model to render fully.
     - Type: BOOLEAN
-- oldBlockOutlineRendering
+- blockOutlineRendering
     - Description: Restores the legacy block outline rendering from <=1.14.4.
     - Type: BOOLEAN
-- hideModelWhilstSleeping
+- modelWhilstSleeping
     - Description: Hides the player model whilst sleeping like in <=1.12? Only affects you.
     - Type: BOOLEAN
 - entityArmorHurtTint
     - Description: Tints the armor when an entity is damaged like in <=1.7.x.
     - Type: BOOLEAN
-- forceItemGlintOnEntity
+- itemGlintOnEntity
     - Description: Forces the glint on armor to use the item glint texture. This therefore unifies the glint texture
       like in older mc versions.
     - Type: BOOLEAN
-- forceMaxGlintProperties
+- maxGlintProperties
     - Description: Forces the glint to use the maximum speed and strength by default like in older mc versions.
     - Type: BOOLEAN
-- oldArmorHurtRendering
+- armorHurtRendering
     - Description: Restores the old armor hurt tint rendering from ~1.8.
     - Type: BOOLEAN
-- oldGlintRendering
+- glintRendering
     - Description: Restores the old item/armor glint rendering found in <=1.14.4.
     - Type: BOOLEAN
-- forceHighAttackSpeedVisual
+- highAttackSpeedVisual
     - Description: Fakes the high attack speed visual, which stops the attack cooldown animation on items like the
       sword.
     - Type: BOOLEAN
 - disableEntityGlowOutline
     - Description: Disables the 1.9+ glow effect from rendering.
     - Type: BOOLEAN
-- disableModernCombatSounds
+- modernCombatSounds
     - Description: Disables the 1.9+ combat sounds that were added.
     - Type: BOOLEAN
-- disableModernCombatParticles
+- modernCombatParticles
     - Description: Disables the 1.9+ combat particles that were added.
     - Type: BOOLEAN
-- oldHeldItemArmLogic
+- heldItemArmLogic
     - Description: In 1.8, the player's arm (when viewed from the first person POV) will be positioned at an angle when
       holding an item. This is only truly visible when going from an empty slot to an item. This happens due it applying
       the held item arm rotation meant for the third person model.
     - Type: BOOLEAN
-- oldFlameDimensions
+- flameDimensions
     - Description: Makes the third person flame rendering use a fixed width and height to match <=1.12.x.
     - Type: BOOLEAN
-- oldFlameOffset
+- flameOffset
     - Description: Brings back the third person flame offset from <=1.7.x.
     - Type: BOOLEAN
 
 ### Sky
 
-- oldBlueVoidSky
+- blueVoidSky
     - Description: Brings back the forgotten blue void part of the sky. (Fixes MC-257056)
     - Type: BOOLEAN
-- oldSkyHorizonHeight
+- skyHorizonHeight
     - Description: Changes the horizon height to how it was in <=1.16.5.
     - Type: BOOLEAN
-- oldVoidSkyFogHeight
+- voidSkyFogHeight
     - Description: Restores the old void sky fog height to what it was in <=1.21.1. (Fixes MC-279472)
     - Type: BOOLEAN
-- oldCloudHeight
+- cloudHeight
     - Description: Changes the cloud height back to 128 like in <=1.16.5.
     - Type: BOOLEAN
   </details>

@@ -48,8 +48,8 @@ public abstract class MixinMultiPlayerGameMode {
     private GameType localPlayerMode;
 
     @Inject(method = "getDestroyStage", at = @At(value = "RETURN"), cancellable = true)
-    private void animatium$oldBlockMiningProgress(CallbackInfoReturnable<Integer> cir) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldBlockMiningProgress && destroyProgress > 0.0F) {
+    private void animatium$blockMiningProgress(CallbackInfoReturnable<Integer> cir) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().blockMiningProgress && destroyProgress > 0.0F) {
             cir.setReturnValue((int) (this.destroyProgress * 10.0F));
         }
     }

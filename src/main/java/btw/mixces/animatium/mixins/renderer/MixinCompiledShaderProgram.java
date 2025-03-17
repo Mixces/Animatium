@@ -63,13 +63,13 @@ public abstract class MixinCompiledShaderProgram {
     }
 
     @WrapOperation(method = "setDefaultUniforms", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;getShaderLineWidth()F"), remap = false)
-    private float animatium$oldBlockOutlineRendering$lineWidth(Operation<Float> original) {
+    private float animatium$blockOutlineRendering$lineWidth(Operation<Float> original) {
         return RenderUtils.getLineWidth(original.call());
     }
 
     @ModifyArg(method = "setDefaultUniforms", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/shaders/Uniform;set(F)V", ordinal = 0))
     private float animatium$forceMaxGlintStrength(float original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().forceMaxGlintProperties) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().maxGlintProperties) {
             // 100% glint strength
             return 1.0F;
         } else {

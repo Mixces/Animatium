@@ -93,110 +93,110 @@ public final class AnimatiumConfig {
     // (Movement) Sneaking
     @SerialEntry public boolean smoothSneaking = true;
     @SerialEntry public boolean sneakAnimationInterpolation = false;
-    @SerialEntry public boolean fakeOldSneakEyeHeight = false; // TODO/NOTE: continue from here including this
+    @SerialEntry public boolean fakeOldSneakEyeHeight = false;
     @SerialEntry public boolean fixSneakingFeetPosition = true;
-    @SerialEntry public boolean oldSneakingFeetPosition = true;
+    @SerialEntry public boolean oldSneakingFeetPosition = true; //todo
     @SerialEntry public boolean syncPlayerModelWithEyeHeight = false;
     @SerialEntry public boolean sneakAnimationWhileFlying = true;
     // (Movement) Other
     @SerialEntry public boolean rotateBackwardsWalking = true;
     @SerialEntry public boolean uncapBlockingHeadRotation = true;
-    @SerialEntry public boolean removeHeadRotationInterpolation = true;
+    @SerialEntry public boolean removeHeadRotationInterpolation = true; //todo
     @SerialEntry public boolean fixVerticalBobbingTilt = true;
-    @SerialEntry public boolean oldViewBobbing = true;
-    @SerialEntry public boolean oldDeathLimbs = true;
-    @SerialEntry public boolean oldBowArmMovement = true;
-    @SerialEntry public boolean oldDamageTilt = false;
+    @SerialEntry public boolean oldViewBobbing = true; //todo
+    @SerialEntry public boolean oldDeathLimbs = true; //todo
+    @SerialEntry public boolean oldBowArmMovement = true; //todo
+    @SerialEntry public boolean oldDamageTilt = false; //todo
     // (Movement) Cape
-    @SerialEntry public boolean oldCapeMovement = true;
-    @SerialEntry public boolean dontClampCapeLean = false;
+    @SerialEntry public boolean oldCapeMovement = true; //todo
+    @SerialEntry public boolean dontClampCapeLean = false; //todo
     @SerialEntry public boolean capeSwingRotation = true;
     @SerialEntry public boolean capeChestplateTranslation = true;
-    @SerialEntry public boolean oldCapeSneakPosition = false;
+    @SerialEntry public boolean oldCapeSneakPosition = false; //todo
 
     // (Screen)
-    @SerialEntry public boolean showCrosshairInThirdperson = false;
-    @SerialEntry public boolean fixHighAttackSpeedIndicator = true;
-    @SerialEntry public boolean removeHeartFlash = true;
-    @SerialEntry public boolean fixTextStrikethroughStyle = true;
-    @SerialEntry public boolean centerScrollableListWidgets = false;
-    @SerialEntry public boolean oldListWidgetSelectedBorderColor = true;
-    @SerialEntry public boolean oldButtonTextColors = true;
-    @SerialEntry public boolean removeDebugHudBackground = false;
-    @SerialEntry public boolean debugHudTextShadow = false;
-    @SerialEntry public boolean disableCameraTransparentPassthrough = false;
-    @SerialEntry public boolean oldTooltipStyleRendering = true;
-    @SerialEntry public boolean oldSlotHoverStyleRendering = true;
-    @SerialEntry public boolean oldEffectsInventoryPosition = true;
-    @SerialEntry public boolean hideRecipeBook = false;
+    @SerialEntry public boolean showCrosshairInThirdperson = false; //todo
+    @SerialEntry public boolean fixHighAttackSpeedIndicator = true; //todo
+    @SerialEntry public boolean removeHeartFlash = true; //todo
+    @SerialEntry public boolean fixTextStrikethroughStyle = true; //todo
+    @SerialEntry public boolean centerScrollableListWidgets = false; //todo
+    @SerialEntry public boolean oldListWidgetSelectedBorderColor = true; //todo
+    @SerialEntry public boolean oldButtonTextColors = true; //todo
+    @SerialEntry public boolean removeDebugHudBackground = false; //todo
+    @SerialEntry public boolean debugHudTextShadow = false; //todo
+    @SerialEntry public boolean disableCameraTransparentPassthrough = false; //todo
+    @SerialEntry public boolean oldTooltipStyleRendering = true; //todo
+    @SerialEntry public boolean oldSlotHoverStyleRendering = true; //todo
+    @SerialEntry public boolean oldEffectsInventoryPosition = true; //todo
+    @SerialEntry public boolean hideRecipeBook = false; //todo
     @SerialEntry public CameraVersion cameraVersion = CameraVersion.V1_8;
 
     // (Items)
     // (Items) Fishing Rod
-    @SerialEntry public boolean oldFishingRodTextureStackCheck = true;
-    @SerialEntry public boolean fishingRodLineInterpolation = true;
-    @SerialEntry public boolean noMoveFishingRodLine = false;
-    @SerialEntry public boolean oldFishingRodLinePositionThirdPerson = true;
-    @SerialEntry public boolean oldFishingRodLineThickness = true;
-    @SerialEntry public boolean thinFishingRodLineThickness = false;
-    @SerialEntry public boolean useStickModelWhenCastInThirdperson = true;
+    @SerialEntry public boolean oldFishingRodTextureStackCheck = true; //todo
+    @SerialEntry public boolean fishingRodLineInterpolation = true; //todo
+    @SerialEntry public boolean noMoveFishingRodLine = false; //todo
+    @SerialEntry public boolean oldFishingRodLinePositionThirdPerson = true; //todo
+    @SerialEntry public boolean oldFishingRodLineThickness = true; //todo
+    @SerialEntry public boolean thinFishingRodLineThickness = false; //todo
+    @SerialEntry public boolean useStickModelWhenCastInThirdperson = true; //todo
     @SerialEntry public boolean fixCastLineCheck = true;
     @SerialEntry public boolean fixCastLineSwing = true;
     // (Items) Fixes
     @SerialEntry public boolean fixEquipAnimation = true;
-    @SerialEntry public boolean removeEquipAnimationOnItemUse = true;
-    @SerialEntry public boolean removeItemUsageVisualInGUI = true;
+    @SerialEntry public boolean removeEquipAnimationOnItemUse = true; //todo
+    @SerialEntry public boolean removeItemUsageVisualInGUI = true; //todo
     @SerialEntry public boolean fixFireballClientsideVisual = true;
     // (Items) Enchantment Glint
-    @SerialEntry public boolean oldGlintSpeed = true;
-    @SerialEntry public boolean disableGlintOnItemDrops2D = false;
-    @SerialEntry public boolean disableGlintOnItemFramed2D = false;
+    @SerialEntry public boolean glintSpeed = true;
+    @SerialEntry public boolean disableGlintOnItemDrops2D = false; //todo
+    @SerialEntry public boolean disableGlintOnItemFramed2D = false; //todo
     // (Items) 2D Drops
     @SerialEntry public boolean itemDropsFaceCamera = true;
     @SerialEntry public boolean itemDropsFaceCameraRotationFix = false;
     @SerialEntry public boolean itemDrops2D = true;
     @SerialEntry public boolean itemFramed2D = true;
-    @SerialEntry public boolean item2DColors = true;
+    @SerialEntry public boolean itemColors2D = true;
     // (Items) Transformations
-    @SerialEntry public boolean tiltItemPositions = true;
-    @SerialEntry public boolean tiltItemPositionsInThirdperson = true;
-    @SerialEntry public boolean oldThinBlockPositions = true;
-    @SerialEntry public boolean oldSkullPosition = true;
+    @SerialEntry public boolean itemPositions = true;
+    @SerialEntry public boolean itemPositionsInThirdPerson = true;
+    @SerialEntry public boolean thinBlockPositions = true;
+    @SerialEntry public boolean skullPosition = true;
     @SerialEntry public FishingRodVersion fishingRodVersion = FishingRodVersion.V1_7;
     // (Items) Other
-    @SerialEntry public boolean applyItemSwingUsage = true;
-    @SerialEntry public boolean disableSwingOnUse = true;
-    @SerialEntry public boolean disableSwingOnDrop = true;
-    @SerialEntry public boolean disableSwingOnEntityInteract = true;
-    @SerialEntry public boolean disableItemUsingTextureInGui = false;
-    @SerialEntry public boolean oldDurabilityBarColors = true;
-    @SerialEntry public boolean oldItemRarities = true;
-    @SerialEntry public boolean showHeldItemInBoat = true;
-    @SerialEntry public boolean oldItemPickupPosition = true;
+    @SerialEntry public boolean itemUsageSwinging = true;
+    @SerialEntry public boolean disableSwingOnUse = true; //todo
+    @SerialEntry public boolean disableSwingOnDrop = true; //todo
+    @SerialEntry public boolean disableSwingOnEntityInteract = true; //todo
+    @SerialEntry public boolean disableItemUsingTextureInGui = false; //todo
+    @SerialEntry public boolean durabilityBarColors = true;
+    @SerialEntry public boolean itemRarities = true;
+    @SerialEntry public boolean heldItemVisibilityInBoat = true;
+    @SerialEntry public boolean itemPickupPosition = true;
 
     // (Other)
-    @SerialEntry public boolean oldThirdpersonSwordBlockingPosition = true;
+    @SerialEntry public boolean thirdPersonSwordBlockingPosition = true;
     @SerialEntry public boolean lockBlockingArmRotation = true;
-    @SerialEntry public boolean disableProjectileAgeCheck = true;
-    @SerialEntry public boolean oldBlockMiningProgress = true;
-    @SerialEntry public boolean disableInventoryEntityScissor = true;
-    @SerialEntry public boolean oldBlockOutlineRendering = true;
-    @SerialEntry public boolean hideModelWhilstSleeping = true;
+    @SerialEntry public boolean projectileAgeCheck = false;
+    @SerialEntry public boolean blockMiningProgress = true;
+    @SerialEntry public boolean inventoryEntityScissor = false;
+    @SerialEntry public boolean blockOutlineRendering = true;
+    @SerialEntry public boolean modelWhilstSleeping = false;
     @SerialEntry public boolean entityArmorHurtTint = true;
-    @SerialEntry public boolean forceItemGlintOnEntity = true;
-    @SerialEntry public boolean forceMaxGlintProperties = true;
-    @SerialEntry public boolean oldArmorHurtRendering = false;
-    @SerialEntry public boolean oldGlintRendering = false;
-    @SerialEntry public boolean forceHighAttackSpeedVisual = false;
-    @SerialEntry public boolean disableEntityGlowOutline = false;
-    @SerialEntry public boolean disableModernCombatSounds = false;
-    @SerialEntry public boolean disableModernCombatParticles = false; // TODO/NOTE: Fix, it's broken on servers
-    @SerialEntry public boolean oldHeldItemArmLogic = true;
-    @SerialEntry public boolean oldFlameDimensions = true;
-    @SerialEntry public boolean oldFlameOffset = true;
+    @SerialEntry public boolean itemGlintOnEntity = true;
+    @SerialEntry public boolean maxGlintProperties = true;
+    @SerialEntry public boolean armorHurtRendering = false;
+    @SerialEntry public boolean glintRendering = false;
+    @SerialEntry public boolean highAttackSpeedVisual = false;
+    @SerialEntry public boolean entityGlowOutline = true;
+    @SerialEntry public boolean modernCombatSounds = true;
+    @SerialEntry public boolean modernCombatParticles = true; // TODO/NOTE: Fix, it's broken on servers
+    @SerialEntry public boolean heldItemArmLogic = true;
+    @SerialEntry public boolean flameDimensions = true;
+    @SerialEntry public boolean flameOffset = true;
     // (Other) Sky
-    @SerialEntry public boolean oldBlueVoidSky = true;
-    @SerialEntry public boolean oldSkyHorizonHeight = true;
-    @SerialEntry public boolean oldVoidSkyFogHeight = true; // TODO: To be removed in 1.21.5+
-    @SerialEntry public boolean oldCloudHeight = true;
+    @SerialEntry public boolean blueVoidSky = true;
+    @SerialEntry public boolean skyHorizonHeight = true;
+    @SerialEntry public boolean voidSkyFogHeight = true; // TODO: To be removed in 1.21.5+
+    @SerialEntry public boolean cloudHeight = true;
 }

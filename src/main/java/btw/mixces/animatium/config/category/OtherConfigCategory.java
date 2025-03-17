@@ -41,51 +41,51 @@ public final class OtherConfigCategory {
             OptionGroup.Builder skyGroup = OptionGroup.createBuilder();
             skyGroup.name(Component.translatable("animatium.category.other.group.sky"));
             skyGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.oldBlueVoidSky"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldBlueVoidSky.description")))
+                    .name(Component.translatable("animatium.blueVoidSky"))
+                    .description(OptionDescription.of(Component.translatable("animatium.blueVoidSky.description")))
                     .binding(
-                            defaults.oldBlueVoidSky,
-                            () -> config.oldBlueVoidSky,
-                            (newVal) -> config.oldBlueVoidSky = newVal)
+                            defaults.blueVoidSky,
+                            () -> config.blueVoidSky,
+                            (newVal) -> config.blueVoidSky = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             skyGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.oldSkyHorizonHeight"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldSkyHorizonHeight.description")))
+                    .name(Component.translatable("animatium.skyHorizonHeight"))
+                    .description(OptionDescription.of(Component.translatable("animatium.skyHorizonHeight.description")))
                     .binding(
-                            defaults.oldSkyHorizonHeight,
-                            () -> config.oldSkyHorizonHeight,
-                            (newVal) -> config.oldSkyHorizonHeight = newVal)
+                            defaults.skyHorizonHeight,
+                            () -> config.skyHorizonHeight,
+                            (newVal) -> config.skyHorizonHeight = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             skyGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.oldVoidSkyFogHeight"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldVoidSkyFogHeight.description")))
+                    .name(Component.translatable("animatium.voidSkyFogHeight"))
+                    .description(OptionDescription.of(Component.translatable("animatium.voidSkyFogHeight.description")))
                     .binding(
-                            defaults.oldVoidSkyFogHeight,
-                            () -> config.oldVoidSkyFogHeight,
-                            (newVal) -> config.oldVoidSkyFogHeight = newVal)
+                            defaults.voidSkyFogHeight,
+                            () -> config.voidSkyFogHeight,
+                            (newVal) -> config.voidSkyFogHeight = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             skyGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.oldCloudHeight"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldCloudHeight.description")))
+                    .name(Component.translatable("animatium.cloudHeight"))
+                    .description(OptionDescription.of(Component.translatable("animatium.cloudHeight.description")))
                     .binding(
-                            defaults.oldCloudHeight,
-                            () -> config.oldCloudHeight,
-                            (newVal) -> config.oldCloudHeight = newVal)
+                            defaults.cloudHeight,
+                            () -> config.cloudHeight,
+                            (newVal) -> config.cloudHeight = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             category.group(skyGroup.build());
         }
 
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.oldThirdpersonSwordBlockingPosition"))
-                .description(OptionDescription.of(Component.translatable("animatium.oldThirdpersonSwordBlockingPosition.description")))
+                .name(Component.translatable("animatium.thirdPersonSwordBlockingPosition"))
+                .description(OptionDescription.of(Component.translatable("animatium.thirdPersonSwordBlockingPosition.description")))
                 .binding(
-                        defaults.oldThirdpersonSwordBlockingPosition,
-                        () -> config.oldThirdpersonSwordBlockingPosition,
-                        (newVal) -> config.oldThirdpersonSwordBlockingPosition = newVal)
+                        defaults.thirdPersonSwordBlockingPosition,
+                        () -> config.thirdPersonSwordBlockingPosition,
+                        (newVal) -> config.thirdPersonSwordBlockingPosition = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
@@ -98,48 +98,48 @@ public final class OtherConfigCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.disableProjectileAgeCheck"))
-                .description(OptionDescription.of(Component.translatable("animatium.disableProjectileAgeCheck.description")))
+                .name(Component.translatable("animatium.projectileAgeCheck"))
+                .description(OptionDescription.of(Component.translatable("animatium.projectileAgeCheck.description")))
                 .binding(
-                        defaults.disableProjectileAgeCheck,
-                        () -> config.disableProjectileAgeCheck,
-                        (newVal) -> config.disableProjectileAgeCheck = newVal)
+                        defaults.projectileAgeCheck,
+                        () -> config.projectileAgeCheck,
+                        (newVal) -> config.projectileAgeCheck = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.oldBlockMiningProgress"))
-                .description(OptionDescription.of(Component.translatable("animatium.oldBlockMiningProgress.description")))
+                .name(Component.translatable("animatium.blockMiningProgress"))
+                .description(OptionDescription.of(Component.translatable("animatium.blockMiningProgress.description")))
                 .binding(
-                        defaults.oldBlockMiningProgress,
-                        () -> config.oldBlockMiningProgress,
-                        (newVal) -> config.oldBlockMiningProgress = newVal)
+                        defaults.blockMiningProgress,
+                        () -> config.blockMiningProgress,
+                        (newVal) -> config.blockMiningProgress = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.disableInventoryEntityScissor"))
-                .description(OptionDescription.of(Component.translatable("animatium.disableInventoryEntityScissor.description")))
+                .name(Component.translatable("animatium.inventoryEntityScissor"))
+                .description(OptionDescription.of(Component.translatable("animatium.inventoryEntityScissor.description")))
                 .binding(
-                        defaults.disableInventoryEntityScissor,
-                        () -> config.disableInventoryEntityScissor,
-                        (newVal) -> config.disableInventoryEntityScissor = newVal)
+                        defaults.inventoryEntityScissor,
+                        () -> config.inventoryEntityScissor,
+                        (newVal) -> config.inventoryEntityScissor = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.oldBlockOutlineRendering"))
-                .description(OptionDescription.of(Component.translatable("animatium.oldBlockOutlineRendering.description")))
+                .name(Component.translatable("animatium.blockOutlineRendering"))
+                .description(OptionDescription.of(Component.translatable("animatium.blockOutlineRendering.description")))
                 .binding(
-                        defaults.oldBlockOutlineRendering,
-                        () -> config.oldBlockOutlineRendering,
-                        (newVal) -> config.oldBlockOutlineRendering = newVal)
+                        defaults.blockOutlineRendering,
+                        () -> config.blockOutlineRendering,
+                        (newVal) -> config.blockOutlineRendering = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.hideModelWhilstSleeping"))
-                .description(OptionDescription.of(Component.translatable("animatium.hideModelWhilstSleeping.description")))
+                .name(Component.translatable("animatium.modelWhilstSleeping"))
+                .description(OptionDescription.of(Component.translatable("animatium.modelWhilstSleeping.description")))
                 .binding(
-                        defaults.hideModelWhilstSleeping,
-                        () -> config.hideModelWhilstSleeping,
-                        (newVal) -> config.hideModelWhilstSleeping = newVal)
+                        defaults.modelWhilstSleeping,
+                        () -> config.modelWhilstSleeping,
+                        (newVal) -> config.modelWhilstSleeping = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
@@ -152,102 +152,102 @@ public final class OtherConfigCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.forceItemGlintOnEntity"))
-                .description(OptionDescription.of(Component.translatable("animatium.forceItemGlintOnEntity.description")))
+                .name(Component.translatable("animatium.itemGlintOnEntity"))
+                .description(OptionDescription.of(Component.translatable("animatium.itemGlintOnEntity.description")))
                 .binding(
-                        defaults.forceItemGlintOnEntity,
-                        () -> config.forceItemGlintOnEntity,
-                        (newVal) -> config.forceItemGlintOnEntity = newVal)
+                        defaults.itemGlintOnEntity,
+                        () -> config.itemGlintOnEntity,
+                        (newVal) -> config.itemGlintOnEntity = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.forceMaxGlintProperties"))
-                .description(OptionDescription.of(Component.translatable("animatium.forceMaxGlintProperties.description")))
+                .name(Component.translatable("animatium.maxGlintProperties"))
+                .description(OptionDescription.of(Component.translatable("animatium.maxGlintProperties.description")))
                 .binding(
-                        defaults.forceMaxGlintProperties,
-                        () -> config.forceMaxGlintProperties,
-                        (newVal) -> config.forceMaxGlintProperties = newVal)
+                        defaults.maxGlintProperties,
+                        () -> config.maxGlintProperties,
+                        (newVal) -> config.maxGlintProperties = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.oldArmorHurtRendering"))
-                .description(OptionDescription.of(Component.translatable("animatium.oldArmorHurtRendering.description")))
+                .name(Component.translatable("animatium.armorHurtRendering"))
+                .description(OptionDescription.of(Component.translatable("animatium.armorHurtRendering.description")))
                 .binding(
-                        defaults.oldArmorHurtRendering,
-                        () -> config.oldArmorHurtRendering,
-                        (newVal) -> config.oldArmorHurtRendering = newVal)
+                        defaults.armorHurtRendering,
+                        () -> config.armorHurtRendering,
+                        (newVal) -> config.armorHurtRendering = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.oldGlintRendering"))
-                .description(OptionDescription.of(Component.translatable("animatium.oldGlintRendering.description")))
+                .name(Component.translatable("animatium.glintRendering"))
+                .description(OptionDescription.of(Component.translatable("animatium.glintRendering.description")))
                 .binding(
-                        defaults.oldGlintRendering,
-                        () -> config.oldGlintRendering,
-                        (newVal) -> config.oldGlintRendering = newVal)
+                        defaults.glintRendering,
+                        () -> config.glintRendering,
+                        (newVal) -> config.glintRendering = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.forceHighAttackSpeedVisual"))
-                .description(OptionDescription.of(Component.translatable("animatium.forceHighAttackSpeedVisual.description")))
+                .name(Component.translatable("animatium.highAttackSpeedVisual"))
+                .description(OptionDescription.of(Component.translatable("animatium.highAttackSpeedVisual.description")))
                 .binding(
-                        defaults.forceHighAttackSpeedVisual,
-                        () -> config.forceHighAttackSpeedVisual,
-                        (newVal) -> config.forceHighAttackSpeedVisual = newVal)
+                        defaults.highAttackSpeedVisual,
+                        () -> config.highAttackSpeedVisual,
+                        (newVal) -> config.highAttackSpeedVisual = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.disableEntityGlowOutline"))
-                .description(OptionDescription.of(Component.translatable("animatium.disableEntityGlowOutline.description")))
+                .name(Component.translatable("animatium.entityGlowOutline"))
+                .description(OptionDescription.of(Component.translatable("animatium.entityGlowOutline.description")))
                 .binding(
-                        defaults.disableEntityGlowOutline,
-                        () -> config.disableEntityGlowOutline,
-                        (newVal) -> config.disableEntityGlowOutline = newVal)
+                        defaults.entityGlowOutline,
+                        () -> config.entityGlowOutline,
+                        (newVal) -> config.entityGlowOutline = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.disableModernCombatSounds"))
-                .description(OptionDescription.of(Component.translatable("animatium.disableModernCombatSounds.description")))
+                .name(Component.translatable("animatium.modernCombatSounds"))
+                .description(OptionDescription.of(Component.translatable("animatium.modernCombatSounds.description")))
                 .binding(
-                        defaults.disableModernCombatSounds,
-                        () -> config.disableModernCombatSounds,
-                        (newVal) -> config.disableModernCombatSounds = newVal)
+                        defaults.modernCombatSounds,
+                        () -> config.modernCombatSounds,
+                        (newVal) -> config.modernCombatSounds = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.disableModernCombatParticles"))
-                .description(OptionDescription.of(Component.translatable("animatium.disableModernCombatParticles.description")))
+                .name(Component.translatable("animatium.modernCombatParticles"))
+                .description(OptionDescription.of(Component.translatable("animatium.modernCombatParticles.description")))
                 .binding(
-                        defaults.disableModernCombatParticles,
-                        () -> config.disableModernCombatParticles,
-                        (newVal) -> config.disableModernCombatParticles = newVal)
+                        defaults.modernCombatParticles,
+                        () -> config.modernCombatParticles,
+                        (newVal) -> config.modernCombatParticles = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.oldHeldItemArmLogic"))
-                .description(OptionDescription.of(Component.translatable("animatium.oldHeldItemArmLogic.description")))
+                .name(Component.translatable("animatium.heldItemArmLogic"))
+                .description(OptionDescription.of(Component.translatable("animatium.heldItemArmLogic.description")))
                 .binding(
-                        defaults.oldHeldItemArmLogic,
-                        () -> config.oldHeldItemArmLogic,
-                        (newVal) -> config.oldHeldItemArmLogic = newVal)
+                        defaults.heldItemArmLogic,
+                        () -> config.heldItemArmLogic,
+                        (newVal) -> config.heldItemArmLogic = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.oldFlameDimensions"))
-                .description(OptionDescription.of(Component.translatable("animatium.oldFlameDimensions.description")))
+                .name(Component.translatable("animatium.flameDimensions"))
+                .description(OptionDescription.of(Component.translatable("animatium.flameDimensions.description")))
                 .binding(
-                        defaults.oldFlameDimensions,
-                        () -> config.oldFlameDimensions,
-                        (newVal) -> config.oldFlameDimensions = newVal)
+                        defaults.flameDimensions,
+                        () -> config.flameDimensions,
+                        (newVal) -> config.flameDimensions = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.oldFlameOffset"))
-                .description(OptionDescription.of(Component.translatable("animatium.oldFlameOffset.description")))
+                .name(Component.translatable("animatium.flameOffset"))
+                .description(OptionDescription.of(Component.translatable("animatium.flameOffset.description")))
                 .binding(
-                        defaults.oldFlameOffset,
-                        () -> config.oldFlameOffset,
-                        (newVal) -> config.oldFlameOffset = newVal)
+                        defaults.flameOffset,
+                        () -> config.flameOffset,
+                        (newVal) -> config.flameOffset = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
 

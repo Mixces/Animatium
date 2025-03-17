@@ -62,7 +62,7 @@ public abstract class MixinItemStackRenderLayerState {
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack;)V"))
-    private void animatium$tiltItemPositionsRod(PoseStack poseStack, MultiBufferSource multiBufferSource, int light, int overlay, CallbackInfo ci) {
+    private void animatium$itemPositionsRod(PoseStack poseStack, MultiBufferSource multiBufferSource, int light, int overlay, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled()) {
             ItemStack stack = ItemUtils.getStack();
             ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
@@ -94,7 +94,7 @@ public abstract class MixinItemStackRenderLayerState {
                     poseStack.translate(-x, -y, -z);
                 }
 
-                if (AnimatiumConfig.instance().oldThinBlockPositions && ItemUtils.isThinBlockItem(stack)) {
+                if (AnimatiumConfig.instance().thinBlockPositions && ItemUtils.isThinBlockItem(stack)) {
                     if (isFirstPerson) {
                         poseStack.translate(0, -4.2 * 0.0625, 0);
                     } else if (isThirdPerson) {
@@ -102,7 +102,7 @@ public abstract class MixinItemStackRenderLayerState {
                     }
                 }
 
-                if (AnimatiumConfig.instance().oldSkullPosition && ItemUtils.isSkullBlock(stack)) {
+                if (AnimatiumConfig.instance().skullPosition && ItemUtils.isSkullBlock(stack)) {
                     if (isGui) {
                         poseStack.translate(x, y, z);
                         poseStack.mulPose(Axis.XP.rotationDegrees(MathUtils.toRadians(rotZ)));

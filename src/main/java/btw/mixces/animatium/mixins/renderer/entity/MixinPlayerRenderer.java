@@ -105,8 +105,8 @@ public abstract class MixinPlayerRenderer extends LivingEntityRenderer<AbstractC
     }
 
     @Inject(method = "renderHand", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/model/geom/ModelPart;visible:Z", ordinal = 2))
-    private void animatium$oldHeldItemArmLogic(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, ResourceLocation resourceLocation, ModelPart modelPart, boolean bl, CallbackInfo ci, @Local PlayerModel playerModel) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldHeldItemArmLogic) {
+    private void animatium$heldItemArmLogic(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, ResourceLocation resourceLocation, ModelPart modelPart, boolean bl, CallbackInfo ci, @Local PlayerModel playerModel) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().heldItemArmLogic) {
             AbstractClientPlayer player = Minecraft.getInstance().player;
             HumanoidArm arm = modelPart == model.rightArm ? HumanoidArm.RIGHT : HumanoidArm.LEFT;
             if (player != null && getArmPose(player, arm) == HumanoidModel.ArmPose.ITEM) {

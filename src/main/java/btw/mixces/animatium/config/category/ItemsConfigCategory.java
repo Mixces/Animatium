@@ -175,12 +175,12 @@ public final class ItemsConfigCategory {
             OptionGroup.Builder glintGroup = OptionGroup.createBuilder();
             glintGroup.name(Component.translatable("animatium.category.items.group.glint"));
             glintGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.oldGlintSpeed"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldGlintSpeed.description")))
+                    .name(Component.translatable("animatium.glintSpeed"))
+                    .description(OptionDescription.of(Component.translatable("animatium.glintSpeed.description")))
                     .binding(
-                            defaults.oldGlintSpeed,
-                            () -> config.oldGlintSpeed,
-                            (newVal) -> config.oldGlintSpeed = newVal)
+                            defaults.glintSpeed,
+                            () -> config.glintSpeed,
+                            (newVal) -> config.glintSpeed = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             glintGroup.option(Option.<Boolean>createBuilder()
@@ -245,12 +245,12 @@ public final class ItemsConfigCategory {
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             drops2dGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.item2DColors"))
-                    .description(OptionDescription.of(Component.translatable("animatium.item2DColors.description")))
+                    .name(Component.translatable("animatium.itemColors2D"))
+                    .description(OptionDescription.of(Component.translatable("animatium.itemColors2D.description")))
                     .binding(
-                            defaults.item2DColors,
-                            () -> config.item2DColors,
-                            (newVal) -> config.item2DColors = newVal)
+                            defaults.itemColors2D,
+                            () -> config.itemColors2D,
+                            (newVal) -> config.itemColors2D = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             category.group(drops2dGroup.build());
@@ -261,39 +261,39 @@ public final class ItemsConfigCategory {
             OptionGroup.Builder transformationsGroup = OptionGroup.createBuilder();
             transformationsGroup.name(Component.translatable("animatium.category.items.group.transformations"));
             transformationsGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.tiltItemPositions"))
-                    .description(OptionDescription.of(Component.translatable("animatium.tiltItemPositions.description")))
+                    .name(Component.translatable("animatium.itemPositions"))
+                    .description(OptionDescription.of(Component.translatable("animatium.itemPositions.description")))
                     .binding(
-                            defaults.tiltItemPositions,
-                            () -> config.tiltItemPositions,
-                            (newVal) -> config.tiltItemPositions = newVal)
+                            defaults.itemPositions,
+                            () -> config.itemPositions,
+                            (newVal) -> config.itemPositions = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             transformationsGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.tiltItemPositionsInThirdperson"))
-                    .description(OptionDescription.of(Component.translatable("animatium.tiltItemPositionsInThirdperson.description")))
+                    .name(Component.translatable("animatium.itemPositionsInThirdPerson"))
+                    .description(OptionDescription.of(Component.translatable("animatium.itemPositionsInThirdPerson.description")))
                     .binding(
-                            defaults.tiltItemPositionsInThirdperson,
-                            () -> config.tiltItemPositionsInThirdperson,
-                            (newVal) -> config.tiltItemPositionsInThirdperson = newVal)
+                            defaults.itemPositionsInThirdPerson,
+                            () -> config.itemPositionsInThirdPerson,
+                            (newVal) -> config.itemPositionsInThirdPerson = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             transformationsGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.oldThinBlockPositions"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldThinBlockPositions.description")))
+                    .name(Component.translatable("animatium.thinBlockPositions"))
+                    .description(OptionDescription.of(Component.translatable("animatium.thinBlockPositions.description")))
                     .binding(
-                            defaults.oldThinBlockPositions,
-                            () -> config.oldThinBlockPositions,
-                            (newVal) -> config.oldThinBlockPositions = newVal)
+                            defaults.thinBlockPositions,
+                            () -> config.thinBlockPositions,
+                            (newVal) -> config.thinBlockPositions = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             transformationsGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.oldSkullPosition"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldSkullPosition.description")))
+                    .name(Component.translatable("animatium.skullPosition"))
+                    .description(OptionDescription.of(Component.translatable("animatium.skullPosition.description")))
                     .binding(
-                            defaults.oldSkullPosition,
-                            () -> config.oldSkullPosition,
-                            (newVal) -> config.oldSkullPosition = newVal)
+                            defaults.skullPosition,
+                            () -> config.skullPosition,
+                            (newVal) -> config.skullPosition = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             transformationsGroup.option(Option.<FishingRodVersion>createBuilder()
@@ -316,12 +316,12 @@ public final class ItemsConfigCategory {
             OptionGroup.Builder otherGroup = OptionGroup.createBuilder();
             otherGroup.name(Component.translatable("animatium.category.items.group.other"));
             otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.applyItemSwingUsage"))
-                    .description(OptionDescription.of(Component.translatable("animatium.applyItemSwingUsage.description")))
+                    .name(Component.translatable("animatium.itemUsageSwinging"))
+                    .description(OptionDescription.of(Component.translatable("animatium.itemUsageSwinging.description")))
                     .binding(
-                            defaults.applyItemSwingUsage,
-                            () -> config.applyItemSwingUsage,
-                            (newVal) -> config.applyItemSwingUsage = newVal)
+                            defaults.itemUsageSwinging,
+                            () -> config.itemUsageSwinging,
+                            (newVal) -> config.itemUsageSwinging = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             otherGroup.option(Option.<Boolean>createBuilder()
@@ -361,39 +361,39 @@ public final class ItemsConfigCategory {
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.oldDurabilityBarColors"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldDurabilityBarColors.description")))
+                    .name(Component.translatable("animatium.durabilityBarColors"))
+                    .description(OptionDescription.of(Component.translatable("animatium.durabilityBarColors.description")))
                     .binding(
-                            defaults.oldDurabilityBarColors,
-                            () -> config.oldDurabilityBarColors,
-                            (newVal) -> config.oldDurabilityBarColors = newVal)
+                            defaults.durabilityBarColors,
+                            () -> config.durabilityBarColors,
+                            (newVal) -> config.durabilityBarColors = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.oldItemRarities"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldItemRarities.description")))
+                    .name(Component.translatable("animatium.itemRarities"))
+                    .description(OptionDescription.of(Component.translatable("animatium.itemRarities.description")))
                     .binding(
-                            defaults.oldItemRarities,
-                            () -> config.oldItemRarities,
-                            (newVal) -> config.oldItemRarities = newVal)
+                            defaults.itemRarities,
+                            () -> config.itemRarities,
+                            (newVal) -> config.itemRarities = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.showHeldItemInBoat"))
-                    .description(OptionDescription.of(Component.translatable("animatium.showHeldItemInBoat.description")))
+                    .name(Component.translatable("animatium.heldItemVisibilityInBoat"))
+                    .description(OptionDescription.of(Component.translatable("animatium.heldItemVisibilityInBoat.description")))
                     .binding(
-                            defaults.showHeldItemInBoat,
-                            () -> config.showHeldItemInBoat,
-                            (newVal) -> config.showHeldItemInBoat = newVal)
+                            defaults.heldItemVisibilityInBoat,
+                            () -> config.heldItemVisibilityInBoat,
+                            (newVal) -> config.heldItemVisibilityInBoat = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.oldItemPickupPosition"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldItemPickupPosition.description")))
+                    .name(Component.translatable("animatium.itemPickupPosition"))
+                    .description(OptionDescription.of(Component.translatable("animatium.itemPickupPosition.description")))
                     .binding(
-                            defaults.oldItemPickupPosition,
-                            () -> config.oldItemPickupPosition,
-                            (newVal) -> config.oldItemPickupPosition = newVal)
+                            defaults.itemPickupPosition,
+                            () -> config.itemPickupPosition,
+                            (newVal) -> config.itemPickupPosition = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             category.group(otherGroup.build());

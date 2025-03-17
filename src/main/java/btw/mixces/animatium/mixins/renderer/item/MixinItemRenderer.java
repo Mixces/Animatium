@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
 public abstract class MixinItemRenderer {
     @WrapOperation(method = "getArmorFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;armorEntityGlint()Lnet/minecraft/client/renderer/RenderType;"))
     private static RenderType animatium$legacyGlintRendering$armorEntityGlint(Operation<RenderType> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldGlintRendering) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering) {
             return LegacyGlintType.ENTITY_ARMOR_GLINT_LAYER;
         } else {
             return original.call();
@@ -61,7 +61,7 @@ public abstract class MixinItemRenderer {
 
     @WrapOperation(method = "getCompassFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glint()Lnet/minecraft/client/renderer/RenderType;"))
     private static RenderType animatium$legacyGlintRendering$compassGlintLayer1(Operation<RenderType> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldGlintRendering) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering) {
             return LegacyGlintType.ITEM_GLINT_LAYER;
         } else {
             return original.call();
@@ -72,7 +72,7 @@ public abstract class MixinItemRenderer {
     private static VertexConsumer animatium$legacyGlintRendering$compassGlintLayer2(MultiBufferSource instance, RenderType renderType, Operation<VertexConsumer> original, @Local(argsOnly = true) MultiBufferSource multiBufferSource) {
         final VertexConsumer finalConsumer = original.call(instance, renderType);
         ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldGlintRendering && displayContext != ItemDisplayContext.GUI) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering && displayContext != ItemDisplayContext.GUI) {
             return VertexMultiConsumer.create(multiBufferSource.getBuffer(LegacyGlintType.ITEM_GLINT_2ND_LAYER), finalConsumer);
         } else {
             return finalConsumer;
@@ -81,7 +81,7 @@ public abstract class MixinItemRenderer {
 
     @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glint()Lnet/minecraft/client/renderer/RenderType;"))
     private static RenderType animatium$legacyGlintRendering$glintLayer1(Operation<RenderType> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldGlintRendering) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering) {
             return LegacyGlintType.ITEM_GLINT_LAYER;
         } else {
             return original.call();
@@ -92,7 +92,7 @@ public abstract class MixinItemRenderer {
     private static VertexConsumer animatium$legacyGlintRendering$glintLayer2(VertexConsumer leftConsumer, VertexConsumer rightConsumer, Operation<VertexConsumer> original, @Local(argsOnly = true) MultiBufferSource multiBufferSource, @Local(argsOnly = true, ordinal = 0) boolean bl) {
         final VertexConsumer finalConsumer = original.call(leftConsumer, rightConsumer);
         ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldGlintRendering && displayContext != ItemDisplayContext.GUI && bl) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering && displayContext != ItemDisplayContext.GUI && bl) {
             return VertexMultiConsumer.create(multiBufferSource.getBuffer(LegacyGlintType.ITEM_GLINT_2ND_LAYER), finalConsumer);
         } else {
             return finalConsumer;
@@ -101,7 +101,7 @@ public abstract class MixinItemRenderer {
 
     @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;entityGlint()Lnet/minecraft/client/renderer/RenderType;"))
     private static RenderType animatium$legacyGlintRendering$entityGlint(Operation<RenderType> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldGlintRendering) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering) {
             return LegacyGlintType.ENTITY_GLINT_LAYER;
         } else {
             return original.call();

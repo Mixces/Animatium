@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class MixinRenderStateShard {
     @ModifyExpressionValue(method = "setupGlintTexturing", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/OptionInstance;get()Ljava/lang/Object;"))
     private static Object animatium$forceMaxGlintSpeed(Object original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().forceMaxGlintProperties) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().maxGlintProperties) {
             // 100% glint speed
             return 1.0D;
         } else {
@@ -44,8 +44,8 @@ public class MixinRenderStateShard {
     }
 
     @ModifyExpressionValue(method = "setupGlintTexturing", at = @At(value = "CONSTANT", args = "doubleValue=8.0"))
-    private static double animatium$oldGlintSpeed(double original, @Local(argsOnly = true) float f) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldGlintSpeed && f == 8.0F) {
+    private static double animatium$glintSpeed(double original, @Local(argsOnly = true) float f) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintSpeed && f == 8.0F) {
             // Value taken from 1.8
             return 1.0D;
         } else {
@@ -54,8 +54,8 @@ public class MixinRenderStateShard {
     }
 
     @ModifyExpressionValue(method = "setupGlintTexturing", at = @At(value = "CONSTANT", args = "floatValue=110000.0"))
-    private static float animatium$oldGlintSpeed$horizontal(float original, @Local(argsOnly = true) float f) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldGlintSpeed && f == 8.0F) {
+    private static float animatium$glintSpeed$horizontal(float original, @Local(argsOnly = true) float f) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintSpeed && f == 8.0F) {
             // Value taken from 1.7/1.8
             return 4873.0F;
         } else {
@@ -64,8 +64,8 @@ public class MixinRenderStateShard {
     }
 
     @ModifyExpressionValue(method = "setupGlintTexturing", at = @At(value = "CONSTANT", args = "floatValue=30000.0"))
-    private static float animatium$oldGlintSpeed$diagonal(float original, @Local(argsOnly = true) float f) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldGlintSpeed && f == 8.0F) {
+    private static float animatium$glintSpeed$diagonal(float original, @Local(argsOnly = true) float f) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintSpeed && f == 8.0F) {
             // Value taken from 1.7/1.8
             return 3000.0F;
         } else {

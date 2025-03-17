@@ -108,13 +108,13 @@ public abstract class MixinItemInHandRenderer {
     @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V", ordinal = 1))
     private void animatium$postBowTransform(PoseStack poseStack, float x, float y, float z, Operation<Void> original, @Local(argsOnly = true) AbstractClientPlayer player, @Local(argsOnly = true) InteractionHand hand) {
         int direction = PlayerUtils.getHandMultiplier(player, hand);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().tiltItemPositions) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemPositions) {
             poseStack.mulPose(Axis.ZP.rotationDegrees(direction * -335));
             poseStack.mulPose(Axis.YP.rotationDegrees(direction * -50.0F));
         }
 
         original.call(poseStack, x, y, z);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().tiltItemPositions) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemPositions) {
             poseStack.mulPose(Axis.YP.rotationDegrees(direction * 50.0F));
             poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 335));
         }
@@ -122,7 +122,7 @@ public abstract class MixinItemInHandRenderer {
 
     @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getItem()Lnet/minecraft/world/item/Item;"))
     private Item animatium$oldFirstPersonSwordBlock(ItemStack instance, Operation<Item> original, @Local(argsOnly = true) AbstractClientPlayer player, @Local(argsOnly = true) InteractionHand hand, @Local(argsOnly = true) PoseStack poseStack) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().tiltItemPositions && !(instance.getItem() instanceof ShieldItem)) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemPositions && !(instance.getItem() instanceof ShieldItem)) {
             int direction = PlayerUtils.getHandMultiplier(player, hand);
             // We do this to fix a rounding error in Mojangs code.
             ItemUtils.applyLegacyFirstpersonTransforms(poseStack, direction, () -> {
@@ -138,14 +138,14 @@ public abstract class MixinItemInHandRenderer {
     }
 
     @Inject(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", ordinal = 1))
-    private void animatium$tiltItemPositions(AbstractClientPlayer player, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack stack, float equipProgress, PoseStack poseStack, MultiBufferSource multiBufferSource, int light, CallbackInfo ci) {
+    private void animatium$itemPositions(AbstractClientPlayer player, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack stack, float equipProgress, PoseStack poseStack, MultiBufferSource multiBufferSource, int light, CallbackInfo ci) {
         int direction = PlayerUtils.getHandMultiplier(player, hand);
         if (AnimatiumClient.isEnabled()) {
             if (AnimatiumConfig.instance().fishingRodVersion == FishingRodVersion.V1_7 && ItemUtils.isFishingRodItem(stack)) {
                 poseStack.mulPose(Axis.YP.rotationDegrees(direction * 180.0F));
             }
 
-            if (AnimatiumConfig.instance().tiltItemPositions && !ItemUtils.isBlock3d(stack, ((ItemRendererAccessor) itemRenderer).getScratchItemStackRenderState()) && !ItemUtils.isItemBlacklisted(stack)) {
+            if (AnimatiumConfig.instance().itemPositions && !ItemUtils.isBlock3d(stack, ((ItemRendererAccessor) itemRenderer).getScratchItemStackRenderState()) && !ItemUtils.isItemBlacklisted(stack)) {
                 float angle = MathUtils.toRadians(25);
 
                 poseStack.scale(0.6F, 0.6F, 0.6F);
@@ -159,7 +159,7 @@ public abstract class MixinItemInHandRenderer {
                 poseStack.translate(direction * -1.13 * 0.0625F, -3.2 * 0.0625F, -1.13 * 0.0625F);
             }
 
-            if (AnimatiumConfig.instance().oldSkullPosition && ItemUtils.isSkullBlock(stack)) {
+            if (AnimatiumConfig.instance().skullPosition && ItemUtils.isSkullBlock(stack)) {
                 poseStack.mulPose(Axis.YP.rotationDegrees(45.0F));
                 poseStack.scale(0.4F, 0.4F, 0.4F);
 
@@ -177,15 +177,15 @@ public abstract class MixinItemInHandRenderer {
                     from = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/ItemUseAnimation;"),
                     to = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;applyItemArmTransform(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/HumanoidArm;F)V", ordinal = 6)
             ))
-    private void animatium$applyItemSwingUsage(AbstractClientPlayer abstractClientPlayer, float tickDelta, float pitch, InteractionHand interactionHand, float swingProgress, ItemStack itemStack, float equipProgress, PoseStack poseStack, MultiBufferSource multiBufferSource, int light, CallbackInfo ci, @Local HumanoidArm arm) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().applyItemSwingUsage) {
+    private void animatium$itemUsageSwinging(AbstractClientPlayer abstractClientPlayer, float tickDelta, float pitch, InteractionHand interactionHand, float swingProgress, ItemStack itemStack, float equipProgress, PoseStack poseStack, MultiBufferSource multiBufferSource, int light, CallbackInfo ci, @Local HumanoidArm arm) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemUsageSwinging) {
             applyItemArmAttackTransform(poseStack, arm, swingProgress);
         }
     }
 
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getAttackStrengthScale(F)F"))
-    private float animatium$forceHighAttackSpeedVisual(LocalPlayer instance, float defaultAttackScale, Operation<Float> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().forceHighAttackSpeedVisual) {
+    private float animatium$highAttackSpeedVisual(LocalPlayer instance, float defaultAttackScale, Operation<Float> original) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().highAttackSpeedVisual) {
             return defaultAttackScale;
         } else {
             return original.call(instance, defaultAttackScale);
@@ -193,8 +193,8 @@ public abstract class MixinItemInHandRenderer {
     }
 
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isHandsBusy()Z"))
-    private boolean animatium$showHeldItemInBoat(LocalPlayer instance, Operation<Boolean> original) {
-        return (!AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().showHeldItemInBoat) && original.call(instance);
+    private boolean animatium$heldItemVisibilityInBoat(LocalPlayer instance, Operation<Boolean> original) {
+        return (!AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().heldItemVisibilityInBoat) && original.call(instance);
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getOffhandItem()Lnet/minecraft/world/item/ItemStack;"))
