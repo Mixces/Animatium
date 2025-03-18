@@ -39,11 +39,8 @@ import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -138,25 +135,8 @@ public abstract class MixinMinecraft {
     @Inject(method = "tick", at = @At("TAIL"))
     private void animatium$applySwingWhilstMining(CallbackInfo ci) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemUsageSwinging) {
-            LocalPlayer player = this.player;
-            if (player == null || player.getItemInHand(player.getUsedItemHand()).isEmpty() || !player.isUsingItem() || !this.options.keyAttack.isDown()) {
-                return;
-            }
-
-            // TODO: AnimatiumConfig.instance().offhandUsageSwinging
-            InteractionHand activeHand = player.getUsedItemHand();
-            InteractionHand hand = InteractionHand.MAIN_HAND;
-            if (this.hitResult != null && this.hitResult.getType() == HitResult.Type.BLOCK && activeHand.equals(hand)) {
-                BlockHitResult blockHitResult = (BlockHitResult) this.hitResult;
-
-                BlockPos blockPos = blockHitResult.getBlockPos();
-                // TODO: AnimatiumConfig.instance().usageSwingingParticles &&
-                if (this.level != null && !this.level.getBlockState(blockPos).isAir()) {
-                    Direction direction = blockHitResult.getDirection();
-                    this.particleEngine.crack(blockPos, direction);
-                }
-
-                PlayerUtils.fakeHandSwing(player, hand);
+            if (this.player != null && !(this.player.getItemInHand(this.player.getUsedItemHand()).isEmpty() || !this.player.isUsingItem() || !this.options.keyAttack.isDown())) {
+                PlayerUtils.applySwingWhilstMining(this.level, this.player, this.hitResult, this.particleEngine);
             }
         }
     }

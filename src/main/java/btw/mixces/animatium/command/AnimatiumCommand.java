@@ -64,7 +64,6 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
                 } else {
                     context.getSource().sendFeedback(Component.literal("Mod enabled.").withColor(0x00FF00));
                     AnimatiumClient.ENABLED = true;
-                    AnimatiumClient.SHOULD_RELOAD_OVERLAY_TEXTURE = true;
                     Minecraft.getInstance().reloadResourcePacks();
                     if (!AnimatiumClient.saveEnabledState()) {
                         System.err.println("Failed to save enabled state...");
@@ -82,7 +81,6 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
                 } else {
                     context.getSource().sendFeedback(Component.literal("Mod disabled.").withColor(0xFF0000));
                     AnimatiumClient.ENABLED = false;
-                    AnimatiumClient.SHOULD_RELOAD_OVERLAY_TEXTURE = true;
                     Minecraft.getInstance().reloadResourcePacks();
                     AnimatiumClient.saveEnabledState();
                 }

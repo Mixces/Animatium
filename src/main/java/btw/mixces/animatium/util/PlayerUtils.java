@@ -29,8 +29,11 @@ import com.google.common.base.MoreObjects;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
 import net.minecraft.network.protocol.game.ServerboundSwingPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -41,6 +44,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 public final class PlayerUtils {
@@ -108,5 +114,22 @@ public final class PlayerUtils {
     public static float lerpCameraPosition(Camera camera) {
         CameraAccessor cameraAccessor = (CameraAccessor) camera;
         return Mth.lerp(camera.getPartialTickTime(), cameraAccessor.getEyeHeightOld(), cameraAccessor.getEyeHeight());
+    }
+
+    public static void applySwingWhilstMining(Level level, Player player, HitResult hitResult, ParticleEngine particleEngine) {
+        // TODO: AnimatiumConfig.instance().offhandUsageSwinging
+        InteractionHand activeHand = player.getUsedItemHand();
+        InteractionHand hand = InteractionHand.MAIN_HAND;
+        if (hitResult != null && hitResult.getType() == HitResult.Type.BLOCK && activeHand.equals(hand)) {
+            BlockHitResult blockHitResult = (BlockHitResult) hitResult;
+
+            BlockPos blockPos = blockHitResult.getBlockPos();
+            if (level != null && !level.getBlockState(blockPos).isAir()) {
+                Direction direction = blockHitResult.getDirection();
+                particleEngine.crack(blockPos, direction);
+            }
+
+            PlayerUtils.fakeHandSwing(player, hand);
+        }
     }
 }
