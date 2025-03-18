@@ -28,8 +28,6 @@ import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.ViewBobbingStorage;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -41,8 +39,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.List;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity implements ViewBobbingStorage {
@@ -96,16 +92,6 @@ public abstract class MixinLivingEntity extends Entity implements ViewBobbingSto
     private void animatium$updatePreviousBobbingTiltValue(CallbackInfo ci) {
         if (AnimatiumConfig.instance().fixVerticalBobbingTilt) {
             this.animatium$previousBobbingTilt = this.animatium$bobbingTilt;
-        }
-    }
-
-    @WrapOperation(method = "tickEffects", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"))
-    private boolean animatium$hideFirstpersonParticles(List<ParticleOptions> particleOptions, Operation<Boolean> original) {
-        Minecraft client = Minecraft.getInstance();
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().firstPersonParticles && (Object) this == client.player && client.options.getCameraType().isFirstPerson()) {
-            return true;
-        } else {
-            return original.call(particleOptions);
         }
     }
 

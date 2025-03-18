@@ -45,10 +45,10 @@ public final class AnimatiumConfig {
     public static Screen getConfigScreen(@Nullable Screen parent) {
         return YetAnotherConfigLib.create(CONFIG, (defaults, config, builder) -> {
             builder.title(Component.translatable("animatium.title"));
-            builder.category(QOLConfigCategory.setup(defaults, config));
             builder.category(MovementConfigCategory.setup(defaults, config));
             builder.category(ScreenConfigCategory.setup(defaults, config));
             builder.category(ItemsConfigCategory.setup(defaults, config));
+            builder.category(FixesConfigCategory.setup(defaults, config));
             builder.category(OtherConfigCategory.setup(defaults, config));
             return builder;
         }).generateScreen(parent);
@@ -61,33 +61,6 @@ public final class AnimatiumConfig {
     public static AnimatiumConfig instance() {
         return CONFIG.instance();
     }
-
-    // TODO/NOTE: Category for just fixes?
-
-    // (QOL)
-    @SerialEntry public boolean minimalViewBobbing = false;
-    @SerialEntry public boolean nameTagInThirdperson = false;
-    @SerialEntry public boolean nameTagBackground = true;
-    @SerialEntry public boolean nameTagTextShadow = false;
-    @SerialEntry public boolean debugHudTextColor = false;
-    @SerialEntry public boolean persistentBlockOutline = false;
-    @SerialEntry public boolean offhandUsageSwinging = false;
-    @SerialEntry public boolean alwaysSharpParticles = false;
-    @SerialEntry public boolean recipeAndTutorialToasts = false;
-    @SerialEntry public boolean visibleArmWhileInvisible = false;
-    @SerialEntry public boolean fakeMissPenaltySwing = false;
-    @SerialEntry public boolean dontMoveBlueVoid = false;
-    @SerialEntry public boolean usageSwingingParticles = false;
-    @SerialEntry public boolean entityDeathTopple = true;
-    @SerialEntry public boolean deepRedHurtTint = false;
-    @SerialEntry public boolean particlePhysics = true;
-    @SerialEntry public boolean firstPersonParticles = true;
-    @SerialEntry public boolean dontClearChat = false;
-    @SerialEntry public boolean dontCloseChat = false;
-    // (QOL) Fixes
-    @SerialEntry public boolean fixMirrorArmSwing = true;
-    @SerialEntry public boolean upMinPixelTransparencyLimit = true;
-    @SerialEntry public boolean fixOffHandUsingPose = true;
 
     // (Movement)
     // (Movement) Sneaking
@@ -173,6 +146,11 @@ public final class AnimatiumConfig {
     @SerialEntry public boolean itemRarities = true;
     @SerialEntry public boolean heldItemVisibilityInBoat = true;
     @SerialEntry public boolean itemPickupPosition = true;
+
+    // (Fixes)
+    @SerialEntry public boolean fixMirrorArmSwing = true;
+    @SerialEntry public boolean upMinPixelTransparencyLimit = true;
+    @SerialEntry public boolean fixOffHandUsingPose = true;
 
     // (Other)
     @SerialEntry public boolean thirdPersonSwordBlockingPosition = true;

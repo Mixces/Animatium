@@ -52,15 +52,6 @@ public abstract class MixinPlayer extends LivingEntity {
         super(entityType, level);
     }
 
-    @ModifyExpressionValue(method = "attack", at = @At(value = "CONSTANT", args = "floatValue=0.0", ordinal = 6))
-    private float animatium$alwaysShowSharpParticles(float original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().alwaysSharpParticles) {
-            return -1.0F;
-        } else {
-            return original;
-        }
-    }
-
     @Inject(method = "getMaxHeadRotationRelativeToBody", at = @At(value = "RETURN"), cancellable = true)
     private void animatium$uncapBlockingHeadRotation(CallbackInfoReturnable<Float> cir) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().uncapBlockingHeadRotation) {

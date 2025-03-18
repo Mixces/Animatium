@@ -35,86 +35,6 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 # Available Config Categories
 
 <details>
-  <summary>Quality of Life</summary>
-
-## 🪶 Quality of Life
-
-- minimalViewBobbing
-    - Description: Removes the view bobbing from tilting the world.
-    - Type: BOOLEAN
-- nameTagInThirdperson
-    - Description: Show the player nametag whilst in third-person.
-    - Type: BOOLEAN
-- nameTagBackground
-    - Description: Toggle the nametag background.
-    - Type: BOOLEAN
-- nameTagTextShadow
-    - Description: Make the nametag use text shadow.
-    - Type: BOOLEAN
-- debugHudTextColor
-    - Description: Makes the debug hud text color white again from <=1.7.
-    - Type: BOOLEAN
-- persistentBlockOutline
-    - Description: Always show block outline, no matter the gamemode or state.
-    - Type: BOOLEAN
-- offhandUsageSwinging
-    - Description: Swings the offhand whilst using item and holding right click.
-    - Type: BOOLEAN
-- alwaysSharpParticles
-    - Description: Always show the sharpness particles when damaging/hitting an entity.
-    - Type: BOOLEAN
-- recipeAndTutorialToasts
-    - Description: Disable recipe and tutorial toasts.
-    - Type: BOOLEAN
-- visibleArmWhileInvisible
-    - Description: Shows the arm as partially visible whilst invisible, like spectator mode or invisibly effect.
-    - Type: BOOLEAN
-- fakeMissPenaltySwing
-    - Description: In vanilla Minecraft, if the player has missed their hit, there will be a 10 ms delay on top of the
-      attack cooldown before they can swing again. Enable this feature to play a fake swing animation during that 10
-      ms delay to match <=1.7.x.
-    - Type: BOOLEAN
-- dontMoveBlueVoid
-    - Description: Stops the blue void sky from moving based on eye height. [Requires blueVoidSky to be enabled]
-    - Type: BOOLEAN
-- usageSwingingParticles
-    - Description: Shows fake block-breaking particles during usage swinging to match <=1.7.x.
-    - Type: BOOLEAN
-- entityDeathTopple
-    - Description: Toggle the dying entity from rotating 90 degrees.
-    - Type: BOOLEAN
-- deepRedHurtTint
-    - Description: Modifies the entity damage tint alpha to be less like in Oranges Old Animations mod.
-    - Type: BOOLEAN
-- particlePhysics
-    - Description: Toggle particles ability to bypass collision logic.
-    - Type: BOOLEAN
-- firstPersonParticles
-    - Description: Toggle potion particle effects coming from you whilst in first-person.
-    - Type: BOOLEAN
-- dontClearChat
-    - Description: Stops minecraft from clearing chat.
-    - Type: BOOLEAN
-- dontCloseChat
-    - Description: Stops minecraft from closing the chat screen on teleport/some situations.
-    - Type: BOOLEAN
-
-### Fixes
-
-- fixMirrorArmSwing
-    - Description: Fix the left-arm swing mirroring.
-    - Type: BOOLEAN
-- upMinPixelTransparencyLimit
-    - Description: Makes the minimum 0-transparency value less than or equal to 0.1. This fixes textures with invisible
-      pixels that cause issues.
-    - Type: BOOLEAN
-- fixOffHandUsingPose
-    - Description: Stops the offhand from using the NONE pose with a held item while using an item in the mainhand like
-      in <=1.17.
-    - Type: BOOLEAN
-  </details>
-
-<details>
   <summary>Movement</summary>
 
 ## 🏃 Movement
@@ -375,6 +295,25 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
     - Description: Shows your held item while you're in a moving boat like <=1.8.x.
     - Type: BOOLEAN
   </details>
+
+<details>
+  <summary>Fixes</summary>
+
+## 🪶 Fixes
+
+- fixMirrorArmSwing
+    - Description: Fix the left-arm swing mirroring.
+    - Type: BOOLEAN
+- upMinPixelTransparencyLimit
+    - Description: Makes the minimum 0-transparency value less than or equal to 0.1. This fixes textures with invisible
+      pixels that cause issues.
+    - Type: BOOLEAN
+- fixOffHandUsingPose
+    - Description: Stops the offhand from using the NONE pose with a held item while using an item in the mainhand like
+      in <=1.17.
+    - Type: BOOLEAN
+
+</details>
 
 <details>
   <summary>Old Settings</summary>

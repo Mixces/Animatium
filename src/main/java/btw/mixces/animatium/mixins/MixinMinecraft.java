@@ -53,7 +53,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft {
@@ -80,13 +79,6 @@ public abstract class MixinMinecraft {
     @Shadow
     @Nullable
     public MultiPlayerGameMode gameMode;
-
-    @Inject(method = "startAttack", at = @At(value = "RETURN", ordinal = 0))
-    private void animatium$missPenaltySwing(CallbackInfoReturnable<Boolean> cir) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fakeMissPenaltySwing && player != null) {
-            PlayerUtils.fakeHandSwing(player, InteractionHand.MAIN_HAND);
-        }
-    }
 
     @ModifyVariable(method = "startUseItem", at = @At(value = "STORE", ordinal = 0))
     private ItemStack animatium$fixCopyStackUseItem(ItemStack original) {
@@ -151,13 +143,15 @@ public abstract class MixinMinecraft {
                 return;
             }
 
+            // TODO: AnimatiumConfig.instance().offhandUsageSwinging
             InteractionHand activeHand = player.getUsedItemHand();
-            InteractionHand hand = AnimatiumConfig.instance().offhandUsageSwinging ? activeHand : InteractionHand.MAIN_HAND;
+            InteractionHand hand = InteractionHand.MAIN_HAND;
             if (this.hitResult != null && this.hitResult.getType() == HitResult.Type.BLOCK && activeHand.equals(hand)) {
                 BlockHitResult blockHitResult = (BlockHitResult) this.hitResult;
 
                 BlockPos blockPos = blockHitResult.getBlockPos();
-                if (AnimatiumConfig.instance().usageSwingingParticles && this.level != null && !this.level.getBlockState(blockPos).isAir()) {
+                // TODO: AnimatiumConfig.instance().usageSwingingParticles &&
+                if (this.level != null && !this.level.getBlockState(blockPos).isAir()) {
                     Direction direction = blockHitResult.getDirection();
                     this.particleEngine.crack(blockPos, direction);
                 }

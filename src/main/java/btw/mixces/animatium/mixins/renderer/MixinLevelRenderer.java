@@ -113,11 +113,12 @@ public abstract class MixinLevelRenderer {
 
         Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
         modelViewStack.pushMatrix();
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().dontMoveBlueVoid) {
-            modelViewStack.translate(0.0F, 12.0F, 0.0F);
-        } else {
-            modelViewStack.translate(0.0F, -((float) (depth - 16.0)), 0.0F);
-        }
+        // TODO: AnimatiumConfig.instance().dontMoveBlueVoid
+//        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().dontMoveBlueVoid) {
+//            modelViewStack.translate(0.0F, 12.0F, 0.0F);
+//        } else {
+        modelViewStack.translate(0.0F, -((float) (depth - 16.0)), 0.0F);
+//        }
 
         animatium$blueVoidSkyBuffer.drawWithRenderType(RenderType.sky());
         modelViewStack.popMatrix();
