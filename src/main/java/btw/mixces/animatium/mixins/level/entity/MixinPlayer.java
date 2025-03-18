@@ -27,7 +27,6 @@ import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.PlayerUtils;
 import btw.mixces.animatium.util.ViewBobbingStorage;
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -69,8 +68,8 @@ public abstract class MixinPlayer extends LivingEntity {
     }
 
     @WrapOperation(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;swing(Lnet/minecraft/world/InteractionHand;)V"))
-    private void animatium$disableSwingOnDropInventory(Player player, InteractionHand hand, Operation<Void> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().disableSwingOnDrop) {
+    private void animatium$swingOnDropInventory(Player player, InteractionHand hand, Operation<Void> original) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().swingOnDrop) {
             PlayerUtils.sendSwingPacket((LocalPlayer) player, hand);
         } else {
             original.call(player, hand);

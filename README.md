@@ -173,7 +173,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 
 ### Fishing Rod
 
-- oldFishingRodTextureStackCheck
+- fishingRodTextureStackCheck
     - Description: Brings back old fishing rod stack texture check from <=1.8.
     - Type: BOOLEAN
 - fishingRodLineInterpolation
@@ -183,25 +183,25 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
     - Description: Does not move the fishing rod cast line while sneaking when viewed in the third person mode from <
       =1.7.
     - Type: BOOLEAN
-- oldFishingRodLinePositionThirdPerson
+- fishingRodLinePositionThirdPerson
     - Description: Adjusts the position of the fishing rod cast line horizontally like in <=1.7.
     - Type: BOOLEAN
-- oldFishingRodLineThickness
+- fishingRodLineThickness
     - Description: Restores the old fishing rod line thickness from <1.13?
     - Type: BOOLEAN
 - thinFishingRodLineThickness
     - Description: Makes the fishing rod line super thin. Overrides the above setting.
     - Type: BOOLEAN
-- useStickModelWhenCastInThirdperson
+- stickModelWhenCastInThirdperson
     - Description: Makes the fishing rod model in third-person a stick when cast like in <=1.7.x.
     - Type: BOOLEAN
 
 ### Fixes
 
-- removeEquipAnimationOnItemUse
+- equipAnimationOnItemUse
     - Description: Fixes the blocking animation which plays the equip animation on use, and others.
     - Type: BOOLEAN
-- removeItemUsageVisualInGUI
+- itemUsageVisualInGUI
     - Description: Removes item usage animation whilst inside a GUI, for example removes continuous visual blocking,
       etc.
     - Type: BOOLEAN
@@ -211,11 +211,11 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - glintSpeed
     - Description: Restores the old enchantment glint speed like in <=1.8.x.
     - Type: BOOLEAN
-- disableGlintOnItemDrops2D
+- glintOnItemDrops2D
     - Description: Disables the enchantment glint on dropped items. Intended to be used along side the 2D dropped items
       feature to match <1.7.x.
     - Type: BOOLEAN
-- disableGlintOnItemFramed2D
+- glintOnItemFramed2D
     - Description: Disables the enchantment glint on framed items. Intended to be used along side the 2D framed items
       feature to match <1.7.x.
     - Type: BOOLEAN
@@ -265,7 +265,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - itemUsageSwinging
     - Description: Block hitting (apply swing offset in item usage code).
     - Type: BOOLEAN
-- disableItemUsingTextureInGui
+- itemUsingTextureInGui
     - Description: Disables the item usage texture in the GUI like in <=1.8.x (mainly rod/bow/crossbow).
     - Type: BOOLEAN
 - durabilityBarColors

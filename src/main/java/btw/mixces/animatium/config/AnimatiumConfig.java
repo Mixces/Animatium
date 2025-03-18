@@ -105,20 +105,20 @@ public final class AnimatiumConfig {
 
     // (Items)
     // (Items) Fishing Rod
-    @SerialEntry public boolean oldFishingRodTextureStackCheck = true; //todo
-    @SerialEntry public boolean fishingRodLineInterpolation = true; //todo
-    @SerialEntry public boolean noMoveFishingRodLine = false; //todo
-    @SerialEntry public boolean oldFishingRodLinePositionThirdPerson = true; //todo
-    @SerialEntry public boolean oldFishingRodLineThickness = true; //todo
-    @SerialEntry public boolean thinFishingRodLineThickness = false; //todo
-    @SerialEntry public boolean useStickModelWhenCastInThirdperson = true; //todo
+    @SerialEntry public boolean fishingRodTextureStackCheck = true;
+    @SerialEntry public boolean fishingRodLineInterpolation = true;
+    @SerialEntry public boolean noMoveFishingRodLine = false;
+    @SerialEntry public boolean fishingRodLinePositionThirdPerson = true;
+    @SerialEntry public boolean fishingRodLineThickness = true;
+    @SerialEntry public boolean thinFishingRodLineThickness = false;
+    @SerialEntry public boolean stickModelWhenCastInThirdperson = true;
     // (Items) Fixes
-    @SerialEntry public boolean removeEquipAnimationOnItemUse = true; //todo
-    @SerialEntry public boolean removeItemUsageVisualInGUI = true; //todo
+    @SerialEntry public boolean equipAnimationOnItemUse = false;
+    @SerialEntry public boolean itemUsageVisualInGUI = false;
     // (Items) Enchantment Glint
     @SerialEntry public boolean glintSpeed = true;
-    @SerialEntry public boolean disableGlintOnItemDrops2D = false; //todo
-    @SerialEntry public boolean disableGlintOnItemFramed2D = false; //todo
+    @SerialEntry public boolean glintOnItemDrops2D = true;
+    @SerialEntry public boolean glintOnItemFramed2D = true;
     // (Items) 2D Drops
     @SerialEntry public boolean itemDropsFaceCamera = true;
     @SerialEntry public boolean itemDropsFaceCameraRotationFix = false;
@@ -133,10 +133,10 @@ public final class AnimatiumConfig {
     @SerialEntry public FishingRodVersion fishingRodVersion = FishingRodVersion.V1_7;
     // (Items) Other
     @SerialEntry public boolean itemUsageSwinging = true;
-    @SerialEntry public boolean disableSwingOnUse = true; //todo
-    @SerialEntry public boolean disableSwingOnDrop = true; //todo
-    @SerialEntry public boolean disableSwingOnEntityInteract = true; //todo
-    @SerialEntry public boolean disableItemUsingTextureInGui = false; //todo
+    @SerialEntry public boolean swingOnUse = false;
+    @SerialEntry public boolean swingOnDrop = false;
+    @SerialEntry public boolean swingOnEntityInteract = false;
+    @SerialEntry public boolean itemUsingTextureInGui = true;
     @SerialEntry public boolean durabilityBarColors = true;
     @SerialEntry public boolean itemRarities = true;
     @SerialEntry public boolean heldItemVisibilityInBoat = true;

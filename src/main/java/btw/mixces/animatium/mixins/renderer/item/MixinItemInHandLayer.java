@@ -96,7 +96,7 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
                 Item item = stack.getItem();
                 if (!stack.isEmpty() && !ItemUtils.isItemBlacklisted(stack)) {
                     boolean isStickRod = AnimatiumClient.isEnabled() &&
-                            AnimatiumConfig.instance().useStickModelWhenCastInThirdperson &&
+                            AnimatiumConfig.instance().stickModelWhenCastInThirdperson &&
                             item == Items.FISHING_ROD &&
                             (livingEntity instanceof Player player && player.fishing != null);
                     if (ItemUtils.isBlock3d(stack, itemStackRenderState)) {

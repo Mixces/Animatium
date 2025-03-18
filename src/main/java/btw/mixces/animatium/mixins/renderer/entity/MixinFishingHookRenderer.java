@@ -78,13 +78,13 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
     }
 
     @Inject(method = "render(Lnet/minecraft/client/renderer/entity/state/FishingHookRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;last()Lcom/mojang/blaze3d/vertex/PoseStack$Pose;", ordinal = 1, shift = At.Shift.AFTER))
-    private void animatium$oldFishingRodLineThickness(FishingHookRenderState fishingHookRenderState, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
+    private void animatium$fishingRodLineThickness(FishingHookRenderState fishingHookRenderState, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled()) {
             // TODO/NOTE: Seems to be ok to set it like this and not have to set -1.0F after?
             // TODO/NOTE: Might be able to do that for MixinLevelRenderer
             if (AnimatiumConfig.instance().thinFishingRodLineThickness) {
                 RenderUtils.setLineWidth(1.0F);
-            } else if (AnimatiumConfig.instance().oldFishingRodLineThickness) {
+            } else if (AnimatiumConfig.instance().fishingRodLineThickness) {
                 RenderUtils.setLineWidth(2.0F);
             }
         }
@@ -121,8 +121,8 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
     }
 
     @ModifyExpressionValue(method = "getPlayerHandPos", at = @At(value = "CONSTANT", args = "doubleValue=0.8"))
-    private double animatium$oldFishingRodLinePositionThirdPerson(double original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldFishingRodLinePositionThirdPerson) {
+    private double animatium$fishingRodLinePositionThirdPerson(double original) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fishingRodLinePositionThirdPerson) {
             return original + 0.05;
         } else {
             return original;

@@ -50,8 +50,8 @@ public abstract class MixinItemStackRenderLayerState {
 
     @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderItem(Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II[ILnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/client/renderer/RenderType;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"), index = 8)
     private ItemStackRenderState.FoilType animatium$disableGlintOn2dItems(ItemStackRenderState.FoilType glint) {
-        boolean glintDropped = AnimatiumConfig.instance().disableGlintOnItemDrops2D;
-        boolean glintFramed = AnimatiumConfig.instance().disableGlintOnItemFramed2D;
+        boolean glintDropped = !AnimatiumConfig.instance().glintOnItemDrops2D;
+        boolean glintFramed = !AnimatiumConfig.instance().glintOnItemFramed2D;
         if (AnimatiumClient.isEnabled() && ItemUtils.getDisplayContext() != null &&
                 (glintDropped && ItemUtils.getDisplayContext() == ItemDisplayContext.GROUND) ||
                 (glintFramed && ItemUtils.getDisplayContext() == ItemDisplayContext.FIXED)) {

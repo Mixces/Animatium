@@ -87,8 +87,8 @@ public abstract class MixinItemInHandRenderer {
     private ItemStack animatium$mainHandItem = ItemStack.EMPTY;
 
     @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;isUsingItem()Z", ordinal = 1))
-    private boolean animatium$removeItemUsageVisualInGUI(AbstractClientPlayer instance, Operation<Boolean> original) {
-        if (AnimatiumConfig.instance().removeItemUsageVisualInGUI && this.minecraft.screen != null) {
+    private boolean animatium$itemUsageVisualInGUI(AbstractClientPlayer instance, Operation<Boolean> original) {
+        if (!AnimatiumConfig.instance().itemUsageVisualInGUI && this.minecraft.screen != null) {
             return false;
         } else {
             return original.call(instance);
