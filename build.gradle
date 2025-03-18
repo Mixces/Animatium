@@ -1,9 +1,6 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     id 'fabric-loom' version '1.10-SNAPSHOT'
     id 'maven-publish'
-    id "org.jetbrains.kotlin.jvm" version "2.1.0"
     id "com.diffplug.spotless" version "7.0.2"
 }
 
@@ -60,12 +57,6 @@ tasks.withType(JavaCompile).configureEach {
     it.options.release = 21
 }
 
-tasks.withType(KotlinCompile).configureEach {
-    kotlinOptions {
-        jvmTarget = 21
-    }
-}
-
 java {
     withSourcesJar()
     sourceCompatibility = JavaVersion.VERSION_21
@@ -96,10 +87,6 @@ publishing {
 spotless {
     def licenseHeader = rootProject.file("HEADER")
     java {
-        licenseHeaderFile(licenseHeader)
-    }
-
-    kotlin {
         licenseHeaderFile(licenseHeader)
     }
 }
