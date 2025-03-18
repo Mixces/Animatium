@@ -67,7 +67,6 @@ public final class AnimatiumConfig {
     @SerialEntry public boolean smoothSneaking = true;
     @SerialEntry public boolean sneakAnimationInterpolation = false;
     @SerialEntry public boolean fakeOldSneakEyeHeight = false;
-    @SerialEntry public boolean fixSneakingFeetPosition = true;
     @SerialEntry public boolean oldSneakingFeetPosition = true; //todo
     @SerialEntry public boolean syncPlayerModelWithEyeHeight = false;
     @SerialEntry public boolean sneakAnimationWhileFlying = true;
@@ -113,13 +112,9 @@ public final class AnimatiumConfig {
     @SerialEntry public boolean oldFishingRodLineThickness = true; //todo
     @SerialEntry public boolean thinFishingRodLineThickness = false; //todo
     @SerialEntry public boolean useStickModelWhenCastInThirdperson = true; //todo
-    @SerialEntry public boolean fixCastLineCheck = true;
-    @SerialEntry public boolean fixCastLineSwing = true;
     // (Items) Fixes
-    @SerialEntry public boolean fixEquipAnimation = true;
     @SerialEntry public boolean removeEquipAnimationOnItemUse = true; //todo
     @SerialEntry public boolean removeItemUsageVisualInGUI = true; //todo
-    @SerialEntry public boolean fixFireballClientsideVisual = true;
     // (Items) Enchantment Glint
     @SerialEntry public boolean glintSpeed = true;
     @SerialEntry public boolean disableGlintOnItemDrops2D = false; //todo
@@ -148,9 +143,14 @@ public final class AnimatiumConfig {
     @SerialEntry public boolean itemPickupPosition = true;
 
     // (Fixes)
+    @SerialEntry public boolean fixSneakingFeetPosition = true;
     @SerialEntry public boolean fixMirrorArmSwing = true;
-    @SerialEntry public boolean upMinPixelTransparencyLimit = true;
     @SerialEntry public boolean fixOffHandUsingPose = true;
+    @SerialEntry public boolean fixCastLineCheck = true;
+    @SerialEntry public boolean fixCastLineSwing = true;
+    @SerialEntry public boolean fixEquipAnimation = true;
+    @SerialEntry public boolean fixFireballClientsideVisual = true;
+    @SerialEntry public boolean upMinPixelTransparencyLimit = true;
 
     // (Other)
     @SerialEntry public boolean thirdPersonSwordBlockingPosition = true;

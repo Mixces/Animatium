@@ -50,9 +50,6 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - fakeOldSneakEyeHeight
     - Description: Changes the sneak eye height to be as it was in <=1.13.2 visually.
     - Type: BOOLEAN
-- fixSneakingFeetPosition
-    - Description: Fixes the sneaking model offset to be like <=1.11.x.
-    - Type: BOOLEAN
 - oldSneakingFeetPosition
     - Description: Fixes the sneaking model offset to be like <1.14?
     - Type: BOOLEAN
@@ -198,29 +195,15 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - useStickModelWhenCastInThirdperson
     - Description: Makes the fishing rod model in third-person a stick when cast like in <=1.7.x.
     - Type: BOOLEAN
-- fixCastLineCheck
-    - Description: Fixes the arm logic for casting the fishing rod.
-    - Type: BOOLEAN
-- fixCastLineSwing
-    - Description: Fixes the swing logic for casting the fishing rod.
-    - Type: BOOLEAN
 
 ### Fixes
 
-- fixEquipAnimation
-    - Description: Instead of comparing item stacks directly to determine the equip animation, compare the durability
-      and stack count of the items like in <=1.8.x.
-    - Type: BOOLEAN
 - removeEquipAnimationOnItemUse
     - Description: Fixes the blocking animation which plays the equip animation on use, and others.
     - Type: BOOLEAN
 - removeItemUsageVisualInGUI
     - Description: Removes item usage animation whilst inside a GUI, for example removes continuous visual blocking,
       etc.
-    - Type: BOOLEAN
-- fixFireballClientsideVisual
-    - Description: Makes fire charges not place fire clientside like in older mc versions. Doesn't cause issues on
-      servers, and is clientside only.
     - Type: BOOLEAN
 
 ### Enchantment Glint
@@ -301,16 +284,33 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 
 ## 🪶 Fixes
 
+- fixSneakingFeetPosition
+    - Description: Fixes the sneaking model offset to be like <=1.11.x.
+    - Type: BOOLEAN
 - fixMirrorArmSwing
     - Description: Fix the left-arm swing mirroring.
-    - Type: BOOLEAN
-- upMinPixelTransparencyLimit
-    - Description: Makes the minimum 0-transparency value less than or equal to 0.1. This fixes textures with invisible
-      pixels that cause issues.
     - Type: BOOLEAN
 - fixOffHandUsingPose
     - Description: Stops the offhand from using the NONE pose with a held item while using an item in the mainhand like
       in <=1.17.
+    - Type: BOOLEAN
+- fixCastLineCheck
+    - Description: Fixes the arm logic for casting the fishing rod.
+    - Type: BOOLEAN
+- fixCastLineSwing
+    - Description: Fixes the swing logic for casting the fishing rod.
+    - Type: BOOLEAN
+- fixEquipAnimation
+    - Description: Instead of comparing item stacks directly to determine the equip animation, compare the durability
+      and stack count of the items like in <=1.8.x.
+    - Type: BOOLEAN
+- fixFireballClientsideVisual
+    - Description: Makes fire charges not place fire clientside like in older mc versions. Doesn't cause issues on
+      servers, and is clientside only.
+    - Type: BOOLEAN
+- upMinPixelTransparencyLimit
+    - Description: Makes the minimum 0-transparency value less than or equal to 0.1. This fixes textures with invisible
+      pixels that cause issues.
     - Type: BOOLEAN
 
 </details>

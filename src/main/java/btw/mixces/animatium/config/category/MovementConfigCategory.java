@@ -68,15 +68,6 @@ public final class MovementConfigCategory {
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             sneakingGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.fixSneakingFeetPosition"))
-                    .description(OptionDescription.of(Component.translatable("animatium.fixSneakingFeetPosition.description")))
-                    .binding(
-                            defaults.fixSneakingFeetPosition,
-                            () -> config.fixSneakingFeetPosition,
-                            (newVal) -> config.fixSneakingFeetPosition = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            sneakingGroup.option(Option.<Boolean>createBuilder()
                     .name(Component.translatable("animatium.oldSneakingFeetPosition"))
                     .description(OptionDescription.of(Component.translatable("animatium.oldSneakingFeetPosition.description")))
                     .binding(

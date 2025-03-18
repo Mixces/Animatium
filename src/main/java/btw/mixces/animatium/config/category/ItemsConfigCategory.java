@@ -106,24 +106,6 @@ public final class ItemsConfigCategory {
                             (newVal) -> config.useStickModelWhenCastInThirdperson = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
-            fishingRodGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.fixCastLineCheck"))
-                    .description(OptionDescription.of(Component.translatable("animatium.fixCastLineCheck.description")))
-                    .binding(
-                            defaults.fixCastLineCheck,
-                            () -> config.fixCastLineCheck,
-                            (newVal) -> config.fixCastLineCheck = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            fishingRodGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.fixCastLineSwing"))
-                    .description(OptionDescription.of(Component.translatable("animatium.fixCastLineSwing.description")))
-                    .binding(
-                            defaults.fixCastLineSwing,
-                            () -> config.fixCastLineSwing,
-                            (newVal) -> config.fixCastLineSwing = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
             category.group(fishingRodGroup.build());
         }
 
@@ -131,15 +113,6 @@ public final class ItemsConfigCategory {
         {
             OptionGroup.Builder itemFixesGroup = OptionGroup.createBuilder();
             itemFixesGroup.name(Component.translatable("animatium.category.items.group.item_fixes"));
-            itemFixesGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.fixEquipAnimationItemCheck"))
-                    .description(OptionDescription.of(Component.translatable("animatium.fixEquipAnimationItemCheck.description")))
-                    .binding(
-                            defaults.fixEquipAnimation,
-                            () -> config.fixEquipAnimation,
-                            (newVal) -> config.fixEquipAnimation = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
             itemFixesGroup.option(Option.<Boolean>createBuilder()
                     .name(Component.translatable("animatium.removeEquipAnimationOnItemUse"))
                     .description(OptionDescription.of(Component.translatable("animatium.removeEquipAnimationOnItemUse.description")))
@@ -156,15 +129,6 @@ public final class ItemsConfigCategory {
                             defaults.removeItemUsageVisualInGUI,
                             () -> config.removeItemUsageVisualInGUI,
                             (newVal) -> config.removeItemUsageVisualInGUI = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            itemFixesGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.fixFireballClientsideVisual"))
-                    .description(OptionDescription.of(Component.translatable("animatium.fixFireballClientsideVisual.description")))
-                    .binding(
-                            defaults.fixFireballClientsideVisual,
-                            () -> config.fixFireballClientsideVisual,
-                            (newVal) -> config.fixFireballClientsideVisual = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             category.group(itemFixesGroup.build());

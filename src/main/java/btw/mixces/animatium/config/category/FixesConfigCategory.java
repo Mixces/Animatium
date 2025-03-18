@@ -36,12 +36,66 @@ public class FixesConfigCategory {
         ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.fixes"));
         category.option(Option.<Boolean>createBuilder()
+                .name(Component.translatable("animatium.fixSneakingFeetPosition"))
+                .description(OptionDescription.of(Component.translatable("animatium.fixSneakingFeetPosition.description")))
+                .binding(
+                        defaults.fixSneakingFeetPosition,
+                        () -> config.fixSneakingFeetPosition,
+                        (newVal) -> config.fixSneakingFeetPosition = newVal)
+                .controller(TickBoxControllerBuilder::create)
+                .build());
+        category.option(Option.<Boolean>createBuilder()
                 .name(Component.translatable("animatium.fixMirrorArmSwing"))
                 .description(OptionDescription.of(Component.translatable("animatium.fixMirrorArmSwing.description")))
                 .binding(
                         defaults.fixMirrorArmSwing,
                         () -> config.fixMirrorArmSwing,
                         (newVal) -> config.fixMirrorArmSwing = newVal)
+                .controller(TickBoxControllerBuilder::create)
+                .build());
+        category.option(Option.<Boolean>createBuilder()
+                .name(Component.translatable("animatium.fixOffHandUsingPose"))
+                .description(OptionDescription.of(Component.translatable("animatium.fixOffHandUsingPose.description")))
+                .binding(
+                        defaults.fixOffHandUsingPose,
+                        () -> config.fixOffHandUsingPose,
+                        (newVal) -> config.fixOffHandUsingPose = newVal)
+                .controller(TickBoxControllerBuilder::create)
+                .build());
+        category.option(Option.<Boolean>createBuilder()
+                .name(Component.translatable("animatium.fixCastLineCheck"))
+                .description(OptionDescription.of(Component.translatable("animatium.fixCastLineCheck.description")))
+                .binding(
+                        defaults.fixCastLineCheck,
+                        () -> config.fixCastLineCheck,
+                        (newVal) -> config.fixCastLineCheck = newVal)
+                .controller(TickBoxControllerBuilder::create)
+                .build());
+        category.option(Option.<Boolean>createBuilder()
+                .name(Component.translatable("animatium.fixCastLineSwing"))
+                .description(OptionDescription.of(Component.translatable("animatium.fixCastLineSwing.description")))
+                .binding(
+                        defaults.fixCastLineSwing,
+                        () -> config.fixCastLineSwing,
+                        (newVal) -> config.fixCastLineSwing = newVal)
+                .controller(TickBoxControllerBuilder::create)
+                .build());
+        category.option(Option.<Boolean>createBuilder()
+                .name(Component.translatable("animatium.fixEquipAnimationItemCheck"))
+                .description(OptionDescription.of(Component.translatable("animatium.fixEquipAnimationItemCheck.description")))
+                .binding(
+                        defaults.fixEquipAnimation,
+                        () -> config.fixEquipAnimation,
+                        (newVal) -> config.fixEquipAnimation = newVal)
+                .controller(TickBoxControllerBuilder::create)
+                .build());
+        category.option(Option.<Boolean>createBuilder()
+                .name(Component.translatable("animatium.fixFireballClientsideVisual"))
+                .description(OptionDescription.of(Component.translatable("animatium.fixFireballClientsideVisual.description")))
+                .binding(
+                        defaults.fixFireballClientsideVisual,
+                        () -> config.fixFireballClientsideVisual,
+                        (newVal) -> config.fixFireballClientsideVisual = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
@@ -54,15 +108,6 @@ public class FixesConfigCategory {
                             config.upMinPixelTransparencyLimit = newVal;
                             Minecraft.getInstance().reloadResourcePacks();
                         })
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.fixOffHandUsingPose"))
-                .description(OptionDescription.of(Component.translatable("animatium.fixOffHandUsingPose.description")))
-                .binding(
-                        defaults.fixOffHandUsingPose,
-                        () -> config.fixOffHandUsingPose,
-                        (newVal) -> config.fixOffHandUsingPose = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         return category.build();
