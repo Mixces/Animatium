@@ -26,9 +26,13 @@ package btw.mixces.animatium.util;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.mixins.accessor.ClientLevelDataAccessor;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.util.ARGB;
+import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
 
 public final class RenderUtils {
@@ -106,5 +110,21 @@ public final class RenderUtils {
                 vertexConsumer.addVertex(g, y, (float) (l + width));
             }
         }
+    }
+
+    public static void renderBlueVoidSky(ClientLevel level, VertexBuffer blueVoidSkyBuffer, int skyColor, double depth) {
+        Vector3f skyColorVec = ARGB.vector3fFromRGB24(skyColor);
+        if (level.effects().hasGround()) {
+            RenderSystem.setShaderColor(skyColorVec.x * 0.2F + 0.04F, skyColorVec.y * 0.2F + 0.04F, skyColorVec.z * 0.6F + 0.1F, 1.0F);
+        } else {
+            RenderSystem.setShaderColor(skyColorVec.x, skyColorVec.y, skyColorVec.z, 1.0F);
+        }
+
+        Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
+        modelViewStack.pushMatrix();
+        modelViewStack.translate(0.0F, -((float) (depth - 16.0)), 0.0F);
+        blueVoidSkyBuffer.drawWithRenderType(RenderType.sky());
+        modelViewStack.popMatrix();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 }

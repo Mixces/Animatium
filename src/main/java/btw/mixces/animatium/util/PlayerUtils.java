@@ -117,7 +117,6 @@ public final class PlayerUtils {
     }
 
     public static void applySwingWhilstMining(Level level, Player player, HitResult hitResult, ParticleEngine particleEngine) {
-        // TODO: AnimatiumConfig.instance().offhandUsageSwinging
         InteractionHand activeHand = player.getUsedItemHand();
         InteractionHand hand = InteractionHand.MAIN_HAND;
         if (hitResult != null && hitResult.getType() == HitResult.Type.BLOCK && activeHand.equals(hand)) {
