@@ -45,8 +45,8 @@ public abstract class MixinAbstractSelectionList {
     }
 
     @WrapOperation(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/AbstractSelectionList;isFocused()Z"))
-    private boolean animatium$oldListWidgetSelectedBorderColor(AbstractSelectionList<?> instance, Operation<Boolean> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldListWidgetSelectedBorderColor) {
+    private boolean animatium$listWidgetSelectedBorderColor(AbstractSelectionList<?> instance, Operation<Boolean> original) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().listWidgetSelectedBorderColor) {
             return false;
         } else {
             return original.call(instance);

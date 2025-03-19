@@ -34,7 +34,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class MixinElytraModel {
     @ModifyExpressionValue(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At(value = "CONSTANT", args = "floatValue=3.0"))
     private float animatium$fixSneakTranslationWhileFlying(float original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldSneakingFeetPosition) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().sneakingFeetPosition) {
             return 0.0F;
         } else {
             return original;

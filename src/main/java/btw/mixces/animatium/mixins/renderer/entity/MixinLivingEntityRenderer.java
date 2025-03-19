@@ -61,8 +61,8 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
     }
 
     @ModifyExpressionValue(method = "extractRenderState(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isAlive()Z"))
-    private boolean animatium$oldDeathLimbs(boolean original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldDeathLimbs) {
+    private boolean animatium$deathLimbs(boolean original) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().deathLimbs) {
             return true;
         } else {
             return original;

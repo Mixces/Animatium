@@ -68,12 +68,12 @@ public final class MovementConfigCategory {
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             sneakingGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.oldSneakingFeetPosition"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldSneakingFeetPosition.description")))
+                    .name(Component.translatable("animatium.sneakingFeetPosition"))
+                    .description(OptionDescription.of(Component.translatable("animatium.sneakingFeetPosition.description")))
                     .binding(
-                            defaults.oldSneakingFeetPosition,
-                            () -> config.oldSneakingFeetPosition,
-                            (newVal) -> config.oldSneakingFeetPosition = newVal)
+                            defaults.sneakingFeetPosition,
+                            () -> config.sneakingFeetPosition,
+                            (newVal) -> config.sneakingFeetPosition = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             sneakingGroup.option(Option.<Boolean>createBuilder()
@@ -101,21 +101,21 @@ public final class MovementConfigCategory {
             OptionGroup.Builder capeGroup = OptionGroup.createBuilder();
             capeGroup.name(Component.translatable("animatium.category.movement.group.cape"));
             capeGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.oldCapeMovement"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldCapeMovement.description")))
+                    .name(Component.translatable("animatium.capeMovement"))
+                    .description(OptionDescription.of(Component.translatable("animatium.capeMovement.description")))
                     .binding(
-                            defaults.oldCapeMovement,
-                            () -> config.oldCapeMovement,
-                            (newVal) -> config.oldCapeMovement = newVal)
+                            defaults.capeMovement,
+                            () -> config.capeMovement,
+                            (newVal) -> config.capeMovement = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             capeGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.dontClampCapeLean"))
-                    .description(OptionDescription.of(Component.translatable("animatium.dontClampCapeLean.description")))
+                    .name(Component.translatable("animatium.clampCapeLean"))
+                    .description(OptionDescription.of(Component.translatable("animatium.clampCapeLean.description")))
                     .binding(
-                            defaults.dontClampCapeLean,
-                            () -> config.dontClampCapeLean,
-                            (newVal) -> config.dontClampCapeLean = newVal)
+                            defaults.clampCapeLean,
+                            () -> config.clampCapeLean,
+                            (newVal) -> config.clampCapeLean = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             capeGroup.option(Option.<Boolean>createBuilder()
@@ -137,12 +137,12 @@ public final class MovementConfigCategory {
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             capeGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.oldCapeSneakPosition"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldCapeSneakPosition.description")))
+                    .name(Component.translatable("animatium.capeSneakPosition"))
+                    .description(OptionDescription.of(Component.translatable("animatium.capeSneakPosition.description")))
                     .binding(
-                            defaults.oldCapeSneakPosition,
-                            () -> config.oldCapeSneakPosition,
-                            (newVal) -> config.oldCapeSneakPosition = newVal)
+                            defaults.capeSneakPosition,
+                            () -> config.capeSneakPosition,
+                            (newVal) -> config.capeSneakPosition = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             category.group(capeGroup.build());
@@ -171,57 +171,48 @@ public final class MovementConfigCategory {
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.removeHeadRotationInterpolation"))
-                    .description(OptionDescription.of(Component.translatable("animatium.removeHeadRotationInterpolation.description")))
+                    .name(Component.translatable("animatium.headRotationInterpolation"))
+                    .description(OptionDescription.of(Component.translatable("animatium.headRotationInterpolation.description")))
                     .binding(
-                            defaults.removeHeadRotationInterpolation,
-                            () -> config.removeHeadRotationInterpolation,
-                            (newVal) -> config.removeHeadRotationInterpolation = newVal)
+                            defaults.headRotationInterpolation,
+                            () -> config.headRotationInterpolation,
+                            (newVal) -> config.headRotationInterpolation = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.fixVerticalBobbingTilt"))
-                    .description(OptionDescription.of(Component.translatable("animatium.fixVerticalBobbingTilt.description")))
+                    .name(Component.translatable("animatium.viewBobbing"))
+                    .description(OptionDescription.of(Component.translatable("animatium.viewBobbing.description")))
                     .binding(
-                            defaults.fixVerticalBobbingTilt,
-                            () -> config.fixVerticalBobbingTilt,
-                            (newVal) -> config.fixVerticalBobbingTilt = newVal)
+                            defaults.viewBobbing,
+                            () -> config.viewBobbing,
+                            (newVal) -> config.viewBobbing = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.oldViewBobbing"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldViewBobbing.description")))
+                    .name(Component.translatable("animatium.deathLimbs"))
+                    .description(OptionDescription.of(Component.translatable("animatium.deathLimbs.description")))
                     .binding(
-                            defaults.oldViewBobbing,
-                            () -> config.oldViewBobbing,
-                            (newVal) -> config.oldViewBobbing = newVal)
+                            defaults.deathLimbs,
+                            () -> config.deathLimbs,
+                            (newVal) -> config.deathLimbs = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.oldDeathLimbs"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldDeathLimbs.description")))
+                    .name(Component.translatable("animatium.bowArmMovement"))
+                    .description(OptionDescription.of(Component.translatable("animatium.bowArmMovement.description")))
                     .binding(
-                            defaults.oldDeathLimbs,
-                            () -> config.oldDeathLimbs,
-                            (newVal) -> config.oldDeathLimbs = newVal)
+                            defaults.bowArmMovement,
+                            () -> config.bowArmMovement,
+                            (newVal) -> config.bowArmMovement = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.oldBowArmMovement"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldBowArmMovement.description")))
+                    .name(Component.translatable("animatium.damageTilt"))
+                    .description(OptionDescription.of(Component.translatable("animatium.damageTilt.description")))
                     .binding(
-                            defaults.oldBowArmMovement,
-                            () -> config.oldBowArmMovement,
-                            (newVal) -> config.oldBowArmMovement = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.oldDamageTilt"))
-                    .description(OptionDescription.of(Component.translatable("animatium.oldDamageTilt.description")))
-                    .binding(
-                            defaults.oldDamageTilt,
-                            () -> config.oldDamageTilt,
-                            (newVal) -> config.oldDamageTilt = newVal)
+                            defaults.damageTilt,
+                            () -> config.damageTilt,
+                            (newVal) -> config.damageTilt = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             category.group(otherGroup.build());

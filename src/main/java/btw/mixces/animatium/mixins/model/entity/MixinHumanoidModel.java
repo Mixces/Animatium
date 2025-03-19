@@ -83,8 +83,8 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
     }
 
     @WrapOperation(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;isCrouching:Z"))
-    private boolean animatium$oldSneakingFeetPosition(HumanoidRenderState instance, Operation<Boolean> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldSneakingFeetPosition && instance.isCrouching) {
+    private boolean animatium$sneakingFeetPosition(HumanoidRenderState instance, Operation<Boolean> original) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().sneakingFeetPosition && instance.isCrouching) {
             // Values sourced from older versions
             // TODO/NOTE: Better way to do this possibly?
             body.xRot = 0.5F;
@@ -129,8 +129,8 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
     }
 
     @Inject(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At(value = "CONSTANT", args = "floatValue=0.0", ordinal = 1))
-    private void animatium$oldBowArmMovement(T humanoidRenderState, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldBowArmMovement) {
+    private void animatium$bowArmMovement(T humanoidRenderState, CallbackInfo ci) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().bowArmMovement) {
             HumanoidModel.ArmPose leftArmPose = humanoidRenderState.leftArmPose;
             HumanoidModel.ArmPose rightArmPose = humanoidRenderState.rightArmPose;
             final boolean isRightArmPose = rightArmPose == HumanoidModel.ArmPose.BOW_AND_ARROW;

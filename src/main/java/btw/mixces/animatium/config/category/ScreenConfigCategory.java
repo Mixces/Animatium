@@ -37,39 +37,21 @@ public final class ScreenConfigCategory {
         ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.screen"));
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.showCrosshairInThirdperson"))
-                .description(OptionDescription.of(Component.translatable("animatium.showCrosshairInThirdperson.description")))
+                .name(Component.translatable("animatium.crosshairInThirdPerson"))
+                .description(OptionDescription.of(Component.translatable("animatium.crosshairInThirdPerson.description")))
                 .binding(
-                        defaults.showCrosshairInThirdperson,
-                        () -> config.showCrosshairInThirdperson,
-                        (newVal) -> config.showCrosshairInThirdperson = newVal)
+                        defaults.crosshairInThirdPerson,
+                        () -> config.crosshairInThirdPerson,
+                        (newVal) -> config.crosshairInThirdPerson = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.fixHighAttackSpeedIndicator"))
-                .description(OptionDescription.of(Component.translatable("animatium.fixHighAttackSpeedIndicator.description")))
+                .name(Component.translatable("animatium.heartFlash"))
+                .description(OptionDescription.of(Component.translatable("animatium.heartFlash.description")))
                 .binding(
-                        defaults.fixHighAttackSpeedIndicator,
-                        () -> config.fixHighAttackSpeedIndicator,
-                        (newVal) -> config.fixHighAttackSpeedIndicator = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.removeHeartFlash"))
-                .description(OptionDescription.of(Component.translatable("animatium.removeHeartFlash.description")))
-                .binding(
-                        defaults.removeHeartFlash,
-                        () -> config.removeHeartFlash,
-                        (newVal) -> config.removeHeartFlash = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.fixTextStrikethroughStyle"))
-                .description(OptionDescription.of(Component.translatable("animatium.fixTextStrikethroughStyle.description")))
-                .binding(
-                        defaults.fixTextStrikethroughStyle,
-                        () -> config.fixTextStrikethroughStyle,
-                        (newVal) -> config.fixTextStrikethroughStyle = newVal)
+                        defaults.heartFlash,
+                        () -> config.heartFlash,
+                        (newVal) -> config.heartFlash = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
@@ -82,30 +64,30 @@ public final class ScreenConfigCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.oldListWidgetSelectedBorderColor"))
-                .description(OptionDescription.of(Component.translatable("animatium.oldListWidgetSelectedBorderColor.description")))
+                .name(Component.translatable("animatium.listWidgetSelectedBorderColor"))
+                .description(OptionDescription.of(Component.translatable("animatium.listWidgetSelectedBorderColor.description")))
                 .binding(
-                        defaults.oldListWidgetSelectedBorderColor,
-                        () -> config.oldListWidgetSelectedBorderColor,
-                        (newVal) -> config.oldListWidgetSelectedBorderColor = newVal)
+                        defaults.listWidgetSelectedBorderColor,
+                        () -> config.listWidgetSelectedBorderColor,
+                        (newVal) -> config.listWidgetSelectedBorderColor = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.oldButtonTextColors"))
-                .description(OptionDescription.of(Component.translatable("animatium.oldButtonTextColors.description")))
+                .name(Component.translatable("animatium.buttonTextColors"))
+                .description(OptionDescription.of(Component.translatable("animatium.buttonTextColors.description")))
                 .binding(
-                        defaults.oldButtonTextColors,
-                        () -> config.oldButtonTextColors,
-                        (newVal) -> config.oldButtonTextColors = newVal)
+                        defaults.buttonTextColors,
+                        () -> config.buttonTextColors,
+                        (newVal) -> config.buttonTextColors = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.removeDebugHudBackground"))
-                .description(OptionDescription.of(Component.translatable("animatium.removeDebugHudBackground.description")))
+                .name(Component.translatable("animatium.debugHudBackground"))
+                .description(OptionDescription.of(Component.translatable("animatium.debugHudBackground.description")))
                 .binding(
-                        defaults.removeDebugHudBackground,
-                        () -> config.removeDebugHudBackground,
-                        (newVal) -> config.removeDebugHudBackground = newVal)
+                        defaults.debugHudBackground,
+                        () -> config.debugHudBackground,
+                        (newVal) -> config.debugHudBackground = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
@@ -118,48 +100,48 @@ public final class ScreenConfigCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.disableCameraTransparentPassthrough"))
-                .description(OptionDescription.of(Component.translatable("animatium.disableCameraTransparentPassthrough.description")))
+                .name(Component.translatable("animatium.cameraTransparentPassthrough"))
+                .description(OptionDescription.of(Component.translatable("animatium.cameraTransparentPassthrough.description")))
                 .binding(
-                        defaults.disableCameraTransparentPassthrough,
-                        () -> config.disableCameraTransparentPassthrough,
-                        (newVal) -> config.disableCameraTransparentPassthrough = newVal)
+                        defaults.cameraTransparentPassthrough,
+                        () -> config.cameraTransparentPassthrough,
+                        (newVal) -> config.cameraTransparentPassthrough = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.oldTooltipStyleRendering"))
-                .description(OptionDescription.of(Component.translatable("animatium.oldTooltipStyleRendering.description")))
+                .name(Component.translatable("animatium.tooltipStyleRendering"))
+                .description(OptionDescription.of(Component.translatable("animatium.tooltipStyleRendering.description")))
                 .binding(
-                        defaults.oldTooltipStyleRendering,
-                        () -> config.oldTooltipStyleRendering,
-                        (newVal) -> config.oldTooltipStyleRendering = newVal)
+                        defaults.tooltipStyleRendering,
+                        () -> config.tooltipStyleRendering,
+                        (newVal) -> config.tooltipStyleRendering = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.oldSlotHoverStyleRendering"))
-                .description(OptionDescription.of(Component.translatable("animatium.oldSlotHoverStyleRendering.description")))
+                .name(Component.translatable("animatium.slotHoverStyleRendering"))
+                .description(OptionDescription.of(Component.translatable("animatium.slotHoverStyleRendering.description")))
                 .binding(
-                        defaults.oldSlotHoverStyleRendering,
-                        () -> config.oldSlotHoverStyleRendering,
-                        (newVal) -> config.oldSlotHoverStyleRendering = newVal)
+                        defaults.slotHoverStyleRendering,
+                        () -> config.slotHoverStyleRendering,
+                        (newVal) -> config.slotHoverStyleRendering = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.oldEffectsInventoryPosition"))
-                .description(OptionDescription.of(Component.translatable("animatium.oldEffectsInventoryPosition.description")))
+                .name(Component.translatable("animatium.effectsInventoryPosition"))
+                .description(OptionDescription.of(Component.translatable("animatium.effectsInventoryPosition.description")))
                 .binding(
-                        defaults.oldEffectsInventoryPosition,
-                        () -> config.oldEffectsInventoryPosition,
-                        (newVal) -> config.oldEffectsInventoryPosition = newVal)
+                        defaults.effectsInventoryPosition,
+                        () -> config.effectsInventoryPosition,
+                        (newVal) -> config.effectsInventoryPosition = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.hideRecipeBook"))
-                .description(OptionDescription.of(Component.translatable("animatium.hideRecipeBook.description")))
+                .name(Component.translatable("animatium.recipeBook"))
+                .description(OptionDescription.of(Component.translatable("animatium.recipeBook.description")))
                 .binding(
-                        defaults.hideRecipeBook,
-                        () -> config.hideRecipeBook,
-                        (newVal) -> config.hideRecipeBook = newVal)
+                        defaults.recipeBook,
+                        () -> config.recipeBook,
+                        (newVal) -> config.recipeBook = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<CameraVersion>createBuilder()

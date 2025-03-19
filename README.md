@@ -50,7 +50,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - fakeOldSneakEyeHeight
     - Description: Changes the sneak eye height to be as it was in <=1.13.2 visually.
     - Type: BOOLEAN
-- oldSneakingFeetPosition
+- sneakingFeetPosition
     - Description: Fixes the sneaking model offset to be like <1.14?
     - Type: BOOLEAN
 - syncPlayerModelWithEyeHeight
@@ -62,10 +62,10 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 
 ### Cape
 
-- oldCapeMovement
+- capeMovement
     - Description: Changes the cape model movement to be how it used to be in <=1.12.x.
     - Type: BOOLEAN
-- dontClampCapeLean
+- clampCapeLean
     - Description: Removes the cape lean restriction. Disable this to match OptiFine cape physics.
     - Type: BOOLEAN
 - capeSwingRotation
@@ -75,7 +75,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - capeChestplateTranslation
     - Description: Stops equipping a chestplate causing the cape to be translated a few pixels away like in <=1.15.x
     - Type: BOOLEAN
-- oldCapeSneakPosition
+- capeSneakPosition
     - Description: Positions the cape while sneaking similarly to <=1.7.x
     - Type: BOOLEAN
 
@@ -87,22 +87,22 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - uncapBlockingHeadRotation
     - Description: Reverts the change in 1.20.2, making head rotation when blocking as it used to be.
     - Type: BOOLEAN
-- removeHeadRotationInterpolation
-    - Description: Removes the head rotation interpolation like in <=1.7.x.
+- headRotationInterpolation
+    - Description: Enable/disable the head rotation interpolation like in <=1.7.x.
     - Type: BOOLEAN
 - fixVerticalBobbingTilt
     - Description: Brings back the camera tilting when falling/flying up like it was in <=1.13.x. (Fixes MC-225335)
     - Type: BOOLEAN
-- oldViewBobbing
+- viewBobbing
     - Description: Undoes the 1.21.2+ view bobbing change where when sneaking, your hand still moves normally.
     - Type: BOOLEAN
-- oldDeathLimbs
+- deathLimbs
     - Description: Makes entities continue their animation even upon death.
     - Type: BOOLEAN
-- oldBowArmMovement
+- bowArmMovement
     - Description: Restores old player body movement in third-person when using the bow like in <=1.7?
     - Type: BOOLEAN
-- oldDamageTilt
+- damageTilt
     - Description: Reverts the damage tilt to it's old logic which will tilt in one direction <1.19.4.
     - Type: BOOLEAN
   </details>
@@ -112,13 +112,13 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 
 ## 📷 Screen
 
-- showCrosshairInThirdperson
+- crosshairInThirdPerson
     - Description: Show crosshair whilst in thirdperson like in <=1.8.x.
     - Type: BOOLEAN
 - fixHighAttackSpeedIndicator
     - Description: Hides the attack indicator when you have such a high attack speed. (Fixes MC-268420)
     - Type: BOOLEAN
-- removeHeartFlash
+- heartFlash
     - Description: Remove heart blinking like in <=1.7.x.
     - Type: BOOLEAN
 - fixTextStrikethroughStyle
@@ -127,34 +127,34 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - centerScrollableListWidgets
     - Description: Center scrollable list widgets like <=1.7.x.
     - Type: BOOLEAN
-- oldListWidgetSelectedBorderColor
+- listWidgetSelectedBorderColor
     - Description: Returns the old list widget selected border color from <=1.15?
     - Type: BOOLEAN
-- oldButtonTextColors
+- buttonTextColors
     - Description: Bring back the old yellow hover/grayish text colors like in <=1.14.4.
     - Type: BOOLEAN
-- removeDebugHudBackground
-    - Description: Remove the F3 Debug Hud background.
+- debugHudBackground
+    - Description: Enable/disable the F3 Debug Hud background.
     - Type: BOOLEAN
 - debugHudTextShadow
     - Description: Add text-shadow to F3 Debug Hud.
     - Type: BOOLEAN
-- disableCameraTransparentPassthrough
-    - Description: Stops camera passthrough in thirdperson in glass/etc like in <=1.15.
+- cameraTransparentPassthrough
+    - Description: Enable/disable camera passthrough in thirdperson in glass/etc like in <=1.15.
     - Type: BOOLEAN
-- oldTooltipStyleRendering
+- tooltipStyleRendering
     - Description: Restores the corners of the tooltip texture that were removed in 1.21.2.
     - Type: BOOLEAN
     - Note: If you are using a resource pack with a custom tooltip texture, turn this setting OFF to not cause issues!
-- oldSlotHoverStyleRendering
+- slotHoverStyleRendering
     - Description: Restores the old inventory slot hover visual to how it was prior to 1.21.2.
     - Type: BOOLEAN
     - Note: If you are using a resource pack with a custom slot hover texture, turn this setting OFF to not cause
       issues!
-- oldEffectsInventoryPosition
+- effectsInventoryPosition
     - Description: Restores the old potion effects status position in the inventory to like it was in <=1.11/1.19.
     - Type: BOOLEAN
-- hideRecipeBook
+- recipeBook
     - Description: Hides the recipe book from the inventory, including the button.
     - Type: BOOLEAN
 - cameraVersion

@@ -65,7 +65,7 @@ public abstract class MixinLivingEntity extends Entity implements ViewBobbingSto
     }
 
     @WrapOperation(method = "tickHeadTurn", at = @At(value = "INVOKE", target = "Ljava/lang/Math;abs(F)F"))
-    private float animatium$removeHeadRotationInterpolation(float g, Operation<Float> original) {
+    private float animatium$headRotationInterpolation(float g, Operation<Float> original) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().rotateBackwardsWalking) {
             g = Mth.clamp(g, -75.0F, 75.0F);
             this.yBodyRot = this.getYRot() - g;
@@ -80,8 +80,8 @@ public abstract class MixinLivingEntity extends Entity implements ViewBobbingSto
     }
 
     @WrapOperation(method = "lerpHeadRotationStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;rotLerp(DDD)D"))
-    public double animatium$removeHeadRotationInterpolation(double delta, double start, double end, Operation<Double> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().removeHeadRotationInterpolation) {
+    public double animatium$headRotationInterpolation(double delta, double start, double end, Operation<Double> original) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().headRotationInterpolation) {
             return end;
         } else {
             return original.call(delta, start, end);

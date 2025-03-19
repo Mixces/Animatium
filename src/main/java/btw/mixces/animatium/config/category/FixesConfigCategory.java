@@ -99,6 +99,33 @@ public class FixesConfigCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
+                .name(Component.translatable("animatium.fixTextStrikethroughStyle"))
+                .description(OptionDescription.of(Component.translatable("animatium.fixTextStrikethroughStyle.description")))
+                .binding(
+                        defaults.fixTextStrikethroughStyle,
+                        () -> config.fixTextStrikethroughStyle,
+                        (newVal) -> config.fixTextStrikethroughStyle = newVal)
+                .controller(TickBoxControllerBuilder::create)
+                .build());
+        category.option(Option.<Boolean>createBuilder()
+                .name(Component.translatable("animatium.fixHighAttackSpeedIndicator"))
+                .description(OptionDescription.of(Component.translatable("animatium.fixHighAttackSpeedIndicator.description")))
+                .binding(
+                        defaults.fixHighAttackSpeedIndicator,
+                        () -> config.fixHighAttackSpeedIndicator,
+                        (newVal) -> config.fixHighAttackSpeedIndicator = newVal)
+                .controller(TickBoxControllerBuilder::create)
+                .build());
+        category.option(Option.<Boolean>createBuilder()
+                .name(Component.translatable("animatium.fixVerticalBobbingTilt"))
+                .description(OptionDescription.of(Component.translatable("animatium.fixVerticalBobbingTilt.description")))
+                .binding(
+                        defaults.fixVerticalBobbingTilt,
+                        () -> config.fixVerticalBobbingTilt,
+                        (newVal) -> config.fixVerticalBobbingTilt = newVal)
+                .controller(TickBoxControllerBuilder::create)
+                .build());
+        category.option(Option.<Boolean>createBuilder()
                 .name(Component.translatable("animatium.upMinPixelTransparencyLimit"))
                 .description(OptionDescription.of(Component.translatable("animatium.upMinPixelTransparencyLimit.description")))
                 .binding(

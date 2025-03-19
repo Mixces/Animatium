@@ -51,7 +51,7 @@ public abstract class MixinGameRenderer {
 
     @WrapOperation(method = "bobHurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getHurtDir()F"))
     private float animatium$revertYaw(LivingEntity instance, Operation<Float> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldDamageTilt) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().damageTilt) {
             return 0.0F;
         } else {
             return original.call(instance);
@@ -69,7 +69,7 @@ public abstract class MixinGameRenderer {
 
     @WrapOperation(method = "bobView", at = @At(value = "FIELD", target = "Lnet/minecraft/client/player/AbstractClientPlayer;walkDist:F"))
     private float animatium$changeDistance(AbstractClientPlayer instance, Operation<Float> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldViewBobbing) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().viewBobbing) {
             return ((ViewBobbingStorage) instance).animatium$getHorizontalSpeed();
         } else {
             return original.call(instance);
@@ -78,7 +78,7 @@ public abstract class MixinGameRenderer {
 
     @WrapOperation(method = "bobView", at = @At(value = "FIELD", target = "Lnet/minecraft/client/player/AbstractClientPlayer;walkDistO:F"))
     private float animatium$changePreviousDistance(AbstractClientPlayer instance, Operation<Float> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().oldViewBobbing) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().viewBobbing) {
             return ((ViewBobbingStorage) instance).animatium$getPreviousHorizontalSpeed();
         } else {
             return original.call(instance);

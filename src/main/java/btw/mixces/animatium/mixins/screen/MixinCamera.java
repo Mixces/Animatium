@@ -85,8 +85,8 @@ public abstract class MixinCamera {
     }
 
     @WrapOperation(method = "getMaxZoom", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/ClipContext$Block;VISUAL:Lnet/minecraft/world/level/ClipContext$Block;"))
-    private ClipContext.Block animatium$disableCameraTransparentPassthrough(Operation<ClipContext.Block> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().disableCameraTransparentPassthrough) {
+    private ClipContext.Block animatium$cameraTransparentPassthrough(Operation<ClipContext.Block> original) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().cameraTransparentPassthrough) {
             return ClipContext.Block.OUTLINE;
         } else {
             return original.call();
