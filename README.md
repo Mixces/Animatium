@@ -199,10 +199,10 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 ### Fixes
 
 - equipAnimationOnItemUse
-    - Description: Fixes the blocking animation which plays the equip animation on use, and others.
+    - Description: Enable/disable the equip animation when blocking/etc.
     - Type: BOOLEAN
 - itemUsageVisualInGUI
-    - Description: Removes item usage animation whilst inside a GUI, for example removes continuous visual blocking,
+    - Description: Enable/disable item usage animation whilst inside a GUI, for example the continuous visual blocking,
       etc.
     - Type: BOOLEAN
 
@@ -339,7 +339,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
     - Description: Restores the legacy block outline rendering from <=1.14.4.
     - Type: BOOLEAN
 - modelWhilstSleeping
-    - Description: Hides the player model whilst sleeping like in <=1.12? Only affects you.
+    - Description: Enable/disable the player model rendering whilst sleeping like in <=1.12? Only affects you.
     - Type: BOOLEAN
 - entityArmorHurtTint
     - Description: Tints the armor when an entity is damaged like in <=1.7.x.
