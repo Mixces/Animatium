@@ -42,7 +42,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 ### Sneaking
 
 - smoothSneaking
-    - Description: Toggle the smooth sneaking camera animation, making it like it was in 1.8-1.12.2.
+    - Description: Enable/disable the smooth sneaking camera animation, making it like it was in 1.8-1.12.2.
     - Type: BOOLEAN
 - sneakAnimationInterpolation
     - Description: Brings back the sneaking camera animation interpolation from <=1.7.x.
@@ -69,8 +69,8 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
     - Description: Removes the cape lean restriction. Disable this to match OptiFine cape physics.
     - Type: BOOLEAN
 - capeSwingRotation
-    - Description: Stops the cape from swinging in unison with the body while the player is swinging their arm like in <
-      =1.20.x.
+    - Description: Enable/disable the cape from swinging in unison with the body while the player is swinging their arm.
+      Turn this off to be like it was in <=1.20.x.
     - Type: BOOLEAN
 - capeChestplateTranslation
     - Description: Stops equipping a chestplate causing the cape to be translated a few pixels away like in <=1.15.x
@@ -103,7 +103,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
     - Description: Restores old player body movement in third-person when using the bow like in <=1.7?
     - Type: BOOLEAN
 - damageTilt
-    - Description: Reverts the damage tilt to it's old logic which will tilt in one direction <1.19.4.
+    - Description: Reverts the damage tilt to it's old logic which will tilt in one direction like in <=1.19.4.
     - Type: BOOLEAN
   </details>
 
@@ -174,7 +174,8 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 ### Fishing Rod
 
 - fishingRodTextureStackCheck
-    - Description: Brings back old fishing rod stack texture check from <=1.8.
+    - Description: Enable/disable the legacy texture check for fishing rod. Turning this on will bring back the old
+      fishing rod stack texture check from <=1.8.
     - Type: BOOLEAN
 - fishingRodLineInterpolation
     - Description: Correctly interpolates the fishing rod cast line with the eye height from <1.14?
@@ -265,8 +266,20 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - itemUsageSwinging
     - Description: Block hitting (apply swing offset in item usage code).
     - Type: BOOLEAN
+- swingOnUse
+    - Description: Enable/disable the swing animation while using items (except the fishing rod) <=1.15.
+    - Type: BOOLEAN
+- swingOnDrop
+    - Description: Enable/disable the swing animation while dropping items from either your hotbar or your inventory <
+      =1.15.
+    - Type: BOOLEAN
+- swingOnEntityInteract
+    - Description: Enable/disable the swing animation when interacting with interactable entities such as villagers <
+      =1.15.
+    - Type: BOOLEAN
 - itemUsingTextureInGui
-    - Description: Disables the item usage texture in the GUI like in <=1.8.x (mainly rod/bow/crossbow).
+    - Description: Enable/disable the item usage texture in the GUI, disabling restores it to be like in <=1.8.x (mainly
+      rod/bow/crossbow).
     - Type: BOOLEAN
 - durabilityBarColors
     - Description: Restores the old durability damage colors from <1.11.
@@ -275,7 +288,8 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
     - Description: Restores the old rarities for items visually from <1.21.2. (also old trident rarity from <1.21)
     - Type: BOOLEAN
 - heldItemVisibilityInBoat
-    - Description: Shows your held item while you're in a moving boat like <=1.8.x.
+    - Description: Enable/disable held item visibility while you're in a moving boat. Turn this on to be like it was
+      in <=1.8.x.
     - Type: BOOLEAN
   </details>
 
@@ -285,7 +299,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 ## 🪶 Fixes
 
 - fixSneakingFeetPosition
-    - Description: Fixes the sneaking model offset to be like <=1.11.x.
+    - Description: Fixes the sneaking model offset to be like in <=1.11.
     - Type: BOOLEAN
 - fixMirrorArmSwing
     - Description: Fix the left-arm swing mirroring.
@@ -324,7 +338,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
     - Description: Brings back the old third-person arm blocking rotations from <=1.7
     - Type: BOOLEAN
 - lockBlockingArmRotation
-    - Description: Locks the third-person blocking arm rotation.
+    - Description: Enable/disable the third-person blocking arm rotation being locked in place.
     - Type: BOOLEAN
 - projectileAgeCheck
     - Description: Render projectile at all ages <=1.15?
@@ -361,14 +375,14 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
     - Description: Fakes the high attack speed visual, which stops the attack cooldown animation on items like the
       sword.
     - Type: BOOLEAN
-- disableEntityGlowOutline
-    - Description: Disables the 1.9+ glow effect from rendering.
+- entityGlowOutline
+    - Description: Enable/disable the 1.9+ glow effect from rendering.
     - Type: BOOLEAN
 - modernCombatSounds
-    - Description: Disables the 1.9+ combat sounds that were added.
+    - Description: Enable/disable the 1.9+ combat sounds that were added.
     - Type: BOOLEAN
 - modernCombatParticles
-    - Description: Disables the 1.9+ combat particles that were added.
+    - Description: Enable/disable the 1.9+ combat particles that were added.
     - Type: BOOLEAN
 - heldItemArmLogic
     - Description: In 1.8, the player's arm (when viewed from the first person POV) will be positioned at an angle when
