@@ -30,6 +30,8 @@
 	"animatium.bowArmMovement.description": "Restores old player body movement in third-person when using the bow like in <=1.7?",
 	"animatium.damageTilt": "[1.19] Bring back old damage tilt logic",
 	"animatium.damageTilt.description": "Reverts the damage tilt to it's old logic which will tilt in one direction like in <=1.19.4.",
+  	"animatium.offsetHurtTime": "[1.7] Offset damage tilt time",
+	"animatium.offsetHurtTime.description": "Offsets the damage tilt time by -1 like in <=1.7.",
 	"animatium.category.movement.group.cape": "Cape",
 	"animatium.capeMovement": "[1.12] Cape model movement",
 	"animatium.capeMovement.description": "Changes the cape model movement to be how it used to be in <=1.12.x.",
