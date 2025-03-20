@@ -24,29 +24,28 @@
 package btw.mixces.animatium.mixins.renderer;
 
 import btw.mixces.animatium.AnimatiumClient;
+import btw.mixces.animatium.LegacyGlintType;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.mixins.accessor.SkyRendererAccessor;
 import btw.mixces.animatium.util.MathUtils;
 import btw.mixces.animatium.util.RenderUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexBuffer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.ARGB;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4fStack;
-import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -65,21 +64,23 @@ public abstract class MixinLevelRenderer {
     @Nullable
     private ClientLevel level;
 
-    @Shadow
-    @Final
-    private SkyRenderer skyRenderer;
+    @Unique
+    private final VertexBuffer animatium$blueVoidSkyBuffer = VertexBuffer.uploadStatic(
+            VertexFormat.Mode.QUADS,
+            DefaultVertexFormat.POSITION,
+            (vertexConsumer) -> RenderUtils.buildSkyHalf(vertexConsumer, -16.0F, true));
 
     @Inject(method = "method_62215", at = @At("TAIL"))
-    private void animatium$oldBlueVoidSky(FogParameters fogParameters, DimensionSpecialEffects.SkyType skyType, float tickDelta, DimensionSpecialEffects dimensionSpecialEffects, CallbackInfo ci) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldBlueVoidSky() && skyType != DimensionSpecialEffects.SkyType.END && this.level != null && this.minecraft.player != null) {
+    private void animatium$blueVoidSky(FogParameters fogParameters, DimensionSpecialEffects.SkyType skyType, float tickDelta, DimensionSpecialEffects dimensionSpecialEffects, CallbackInfo ci) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().blueVoidSky && skyType != DimensionSpecialEffects.SkyType.END && this.level != null && this.minecraft.player != null) {
             int skyColor = this.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), tickDelta);
-            this.animatium$renderSkyBlueVoid(skyColor, this.minecraft.player.getEyePosition(tickDelta).y - RenderUtils.getLevelHorizonHeight(this.level));
+            RenderUtils.renderBlueVoidSky(this.level, animatium$blueVoidSkyBuffer, skyColor, this.minecraft.player.getEyePosition(tickDelta).y - RenderUtils.getLevelHorizonHeight(this.level));
         }
     }
 
     @WrapOperation(method = "shouldRenderDarkDisc", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel$ClientLevelData;getHorizonHeight(Lnet/minecraft/world/level/LevelHeightAccessor;)D"))
-    private double animatium$oldSkyHorizonHeight(ClientLevel.ClientLevelData instance, LevelHeightAccessor levelHeightAccessor, Operation<Double> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldSkyHorizonHeight() && this.level != null) {
+    private double animatium$skyHorizonHeight(ClientLevel.ClientLevelData instance, LevelHeightAccessor levelHeightAccessor, Operation<Double> original) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().skyHorizonHeight && this.level != null) {
             return RenderUtils.getLevelHorizonHeight(this.level);
         } else {
             return original.call(instance, levelHeightAccessor);
@@ -87,8 +88,8 @@ public abstract class MixinLevelRenderer {
     }
 
     @WrapOperation(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/DimensionSpecialEffects;getCloudHeight()F"))
-    private float animatium$oldCloudHeight(DimensionSpecialEffects instance, Operation<Float> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldCloudHeight()) {
+    private float animatium$cloudHeight(DimensionSpecialEffects instance, Operation<Float> original) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().cloudHeight) {
             // TODO/FIX: Clouds showing in the nether/end supposedly?
             return instance.skyType() == DimensionSpecialEffects.SkyType.END ? 8.0F : 128.0F;
         } else {
@@ -96,71 +97,49 @@ public abstract class MixinLevelRenderer {
         }
     }
 
-    @Unique
-    private void animatium$renderSkyBlueVoid(int skyColor, double depth) {
-        assert this.level != null;
-        Vector3f skyColorVec = ARGB.vector3fFromRGB24(skyColor);
-        if (this.level.effects().hasGround()) {
-            RenderSystem.setShaderColor(skyColorVec.x * 0.2F + 0.04F, skyColorVec.y * 0.2F + 0.04F, skyColorVec.z * 0.6F + 0.1F, 1.0F);
-        } else {
-            RenderSystem.setShaderColor(skyColorVec.x, skyColorVec.y, skyColorVec.z, 1.0F);
-        }
-
-        Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
-        modelViewStack.pushMatrix();
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getDontMoveBlueVoid()) {
-            modelViewStack.translate(0.0F, 12.0F, 0.0F);
-        } else {
-            modelViewStack.translate(0.0F, -((float) (depth - 16.0)), 0.0F);
-        }
-
-        ((SkyRendererAccessor) this.skyRenderer).getBottomSkyBuffer().drawWithRenderType(RenderType.sky());
-        modelViewStack.popMatrix();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-    }
-
     @Inject(method = "renderBlockOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderHitOutline(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/entity/Entity;DDDLnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)V", shift = At.Shift.BEFORE))
     private void animatium$setBlockOutlineWidth$on(Camera camera, MultiBufferSource.BufferSource bufferSource, PoseStack poseStack, boolean bl, CallbackInfo ci) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldBlockOutlineRendering()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().blockOutlineRendering) {
             RenderUtils.setLineWidth(2.0F);
         }
     }
 
     @Inject(method = "renderBlockOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderHitOutline(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/entity/Entity;DDDLnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)V", shift = At.Shift.BEFORE))
     private void animatium$setBlockOutlineWidth$off(Camera camera, MultiBufferSource.BufferSource bufferSource, PoseStack poseStack, boolean bl, CallbackInfo ci) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldBlockOutlineRendering()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().blockOutlineRendering) {
             RenderUtils.setLineWidth(-1.0F);
         }
     }
 
     @WrapOperation(method = "renderHitOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;"))
-    private VoxelShape animatium$oldBlockOutlineRendering(BlockState instance, BlockGetter blockView, BlockPos blockPos, CollisionContext collisionContext, Operation<VoxelShape> original) {
+    private VoxelShape animatium$blockOutlineRendering(BlockState instance, BlockGetter blockView, BlockPos blockPos, CollisionContext collisionContext, Operation<VoxelShape> original) {
         VoxelShape shape = original.call(instance, blockView, blockPos, collisionContext);
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldBlockOutlineRendering()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().blockOutlineRendering) {
             return MathUtils.expandVoxelShape(shape, 0.0020000000949949026F);
         } else {
             return shape;
         }
     }
 
-//    @Inject(method = "method_62214", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;endBatch(Lnet/minecraft/client/renderer/RenderType;)V", ordinal = 16, shift = At.Shift.AFTER))
-//    private void animatium$legacyGlintRendering$endBatch(FogParameters fogParameters, DeltaTracker deltaTracker, Camera camera, ProfilerFiller profilerFiller, Matrix4f matrix4f, Matrix4f matrix4f2, ResourceHandle resourceHandle, ResourceHandle resourceHandle2, ResourceHandle resourceHandle3, ResourceHandle resourceHandle4, boolean bl, Frustum frustum, ResourceHandle resourceHandle5, CallbackInfo ci) {
-//        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
-//            renderBuffers.bufferSource().endBatch(LegacyGlintType.getItemGlintLayer());
-//            renderBuffers.bufferSource().endBatch(LegacyGlintType.getItemGlint2ndLayer());
-//            renderBuffers.bufferSource().endBatch(LegacyGlintType.getItemGlintTranslucentLayer());
-//            renderBuffers.bufferSource().endBatch(LegacyGlintType.getItemGlintTranslucent2ndLayer());
-//            renderBuffers.bufferSource().endBatch(LegacyGlintType.getEntityGlintLayer());
-//            renderBuffers.bufferSource().endBatch(LegacyGlintType.getEntityArmorGlintLayer());
-//        }
-//    }
+    @WrapOperation(method = "method_62214", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;endBatch(Lnet/minecraft/client/renderer/RenderType;)V", ordinal = 16))
+    private void animatium$legacyGlintRendering$endBatch(MultiBufferSource.BufferSource instance, RenderType renderType, Operation<Void> original) {
+        original.call(instance, renderType);
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering) {
+            instance.endBatch(LegacyGlintType.ITEM_GLINT_LAYER);
+            instance.endBatch(LegacyGlintType.ITEM_GLINT_2ND_LAYER);
+            instance.endBatch(LegacyGlintType.ITEM_GLINT_TRANSLUCENT_LAYER);
+            instance.endBatch(LegacyGlintType.ITEM_GLINT_TRANSLUCENT_2ND_LAYER);
+            instance.endBatch(LegacyGlintType.ENTITY_GLINT_LAYER);
+            instance.endBatch(LegacyGlintType.ENTITY_ARMOR_GLINT_LAYER);
+        }
+    }
 
     // TODO/NOTE: The reason we redirect width/height instead of changing the outcome of shouldShowEntityOutlines
     // TODO/NOTE: is that it caused issues with Iris/shaders. As simple as that. Until that is fixed/we find another way
     // TODO/NOTE: it will stay like this. Sorry!
     @WrapOperation(method = "doEntityOutline", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Window;getWidth()I"))
-    private int animatium$disableEntityGlowOutline$width(Window instance, Operation<Integer> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getDisableEntityGlowOutline()) {
+    private int animatium$entityGlowOutline$width(Window instance, Operation<Integer> original) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().entityGlowOutline) {
             return 0;
         } else {
             return original.call(instance);
@@ -168,8 +147,8 @@ public abstract class MixinLevelRenderer {
     }
 
     @WrapOperation(method = "doEntityOutline", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Window;getHeight()I"))
-    private int animatium$disableEntityGlowOutline$height(Window instance, Operation<Integer> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getDisableEntityGlowOutline()) {
+    private int animatium$entityGlowOutline$height(Window instance, Operation<Integer> original) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().entityGlowOutline) {
             return 0;
         } else {
             return original.call(instance);

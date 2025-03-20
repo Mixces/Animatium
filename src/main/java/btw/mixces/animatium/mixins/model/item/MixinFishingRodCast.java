@@ -36,10 +36,10 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinFishingRodCast {
     @ModifyReturnValue(method = "get", at = @At(value = "RETURN", ordinal = 0))
     private boolean animatium$getValue(boolean original, @Local(argsOnly = true) ItemDisplayContext displayContext) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getDisableItemUsingTextureInGui() && displayContext == ItemDisplayContext.GUI) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().itemUsingTextureInGui && displayContext == ItemDisplayContext.GUI) {
             return false;
         } else {
-            return (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldFishingRodTextureStackCheck()) || original;
+            return (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fishingRodTextureStackCheck) || original;
         }
     }
 }

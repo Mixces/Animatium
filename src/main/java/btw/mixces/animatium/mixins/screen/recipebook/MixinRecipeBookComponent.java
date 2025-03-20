@@ -34,8 +34,8 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(RecipeBookComponent.class)
 public abstract class MixinRecipeBookComponent {
     @WrapOperation(method = "isVisible", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;visible:Z"))
-    private boolean animatium$hideRecipeBook(RecipeBookComponent<?> instance, Operation<Boolean> original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getHideRecipeBook()) {
+    private boolean animatium$recipeBook(RecipeBookComponent<?> instance, Operation<Boolean> original) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().recipeBook) {
             return false;
         } else {
             return original.call(instance);

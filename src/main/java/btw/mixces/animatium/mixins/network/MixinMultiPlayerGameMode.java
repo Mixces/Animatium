@@ -48,15 +48,15 @@ public abstract class MixinMultiPlayerGameMode {
     private GameType localPlayerMode;
 
     @Inject(method = "getDestroyStage", at = @At(value = "RETURN"), cancellable = true)
-    private void animatium$oldBlockMiningProgress(CallbackInfoReturnable<Integer> cir) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldBlockMiningProgress() && destroyProgress > 0.0F) {
+    private void animatium$blockMiningProgress(CallbackInfoReturnable<Integer> cir) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().blockMiningProgress && destroyProgress > 0.0F) {
             cir.setReturnValue((int) (this.destroyProgress * 10.0F));
         }
     }
 
     @WrapOperation(method = "performUseItemOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;useOn(Lnet/minecraft/world/item/context/UseOnContext;)Lnet/minecraft/world/InteractionResult;"))
     private InteractionResult animatium$fixFireballClientsideVisual(ItemStack stack, UseOnContext useOnContext, Operation<InteractionResult> original) {
-        if (AnimatiumConfig.instance().getFixFireballClientsideVisual() && !stack.isEmpty() && stack.is(Items.FIRE_CHARGE) && useOnContext.getLevel().isClientSide() && !this.localPlayerMode.isCreative()) {
+        if (AnimatiumConfig.instance().fixFireballClientsideVisual && !stack.isEmpty() && stack.is(Items.FIRE_CHARGE) && useOnContext.getLevel().isClientSide() && !this.localPlayerMode.isCreative()) {
             return InteractionResult.SUCCESS;
         } else {
             return original.call(stack, useOnContext);

@@ -24,10 +24,16 @@
 package btw.mixces.animatium.mixins.renderer.item;
 
 import btw.mixces.animatium.AnimatiumClient;
+import btw.mixces.animatium.LegacyGlintType;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.ItemUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexMultiConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
@@ -44,68 +50,68 @@ import java.util.stream.Collectors;
 
 @Mixin(ItemRenderer.class)
 public abstract class MixinItemRenderer {
-//    @WrapOperation(method = "getArmorFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;armorEntityGlint()Lnet/minecraft/client/renderer/RenderType;"))
-//    private static RenderType animatium$legacyGlintRendering$armorEntityGlint(Operation<RenderType> original) {
-//        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
-//            return LegacyGlintType.getEntityArmorGlintLayer();
-//        } else {
-//            return original.call();
-//        }
-//    }
-//
-//    @WrapOperation(method = "getCompassFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glint()Lnet/minecraft/client/renderer/RenderType;"))
-//    private static RenderType animatium$legacyGlintRendering$compassGlintLayer1(Operation<RenderType> original) {
-//        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
-//            return LegacyGlintType.getItemGlintLayer();
-//        } else {
-//            return original.call();
-//        }
-//    }
-//
-//    @WrapOperation(method = "getCompassFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource;getBuffer(Lnet/minecraft/client/renderer/RenderType;)Lcom/mojang/blaze3d/vertex/VertexConsumer;", ordinal = 0))
-//    private static VertexConsumer animatium$legacyGlintRendering$compassGlintLayer2(MultiBufferSource instance, RenderType renderType, Operation<VertexConsumer> original, @Local(argsOnly = true) MultiBufferSource multiBufferSource) {
-//        final VertexConsumer finalConsumer = original.call(instance, renderType);
-//        ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
-//        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering() && displayContext == ItemDisplayContext.GUI) {
-//            return VertexMultiConsumer.create(multiBufferSource.getBuffer(LegacyGlintType.getItemGlint2ndLayer()), finalConsumer);
-//        } else {
-//            return finalConsumer;
-//        }
-//    }
-//
-//    @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glint()Lnet/minecraft/client/renderer/RenderType;"))
-//    private static RenderType animatium$legacyGlintRendering$glintLayer1(Operation<RenderType> original) {
-//        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
-//            return LegacyGlintType.getItemGlintLayer();
-//        } else {
-//            return original.call();
-//        }
-//    }
-//
-//    @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexMultiConsumer;create(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lcom/mojang/blaze3d/vertex/VertexConsumer;)Lcom/mojang/blaze3d/vertex/VertexConsumer;", ordinal = 1))
-//    private static VertexConsumer animatium$legacyGlintRendering$glintLayer2(VertexConsumer leftConsumer, VertexConsumer rightConsumer, Operation<VertexConsumer> original, @Local(argsOnly = true) MultiBufferSource multiBufferSource, @Local(argsOnly = true, ordinal = 0) boolean bl) {
-//        final VertexConsumer finalConsumer = original.call(leftConsumer, rightConsumer);
-//        ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
-//        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering() && displayContext == ItemDisplayContext.GUI && bl) {
-//            return VertexMultiConsumer.create(multiBufferSource.getBuffer(LegacyGlintType.getItemGlint2ndLayer()), finalConsumer);
-//        } else {
-//            return finalConsumer;
-//        }
-//    }
-//
-//    @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;entityGlint()Lnet/minecraft/client/renderer/RenderType;"))
-//    private static RenderType animatium$legacyGlintRendering$entityGlint(Operation<RenderType> original) {
-//        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldGlintRendering()) {
-//            return LegacyGlintType.getEntityGlintLayer();
-//        } else {
-//            return original.call();
-//        }
-//    }
+    @WrapOperation(method = "getArmorFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;armorEntityGlint()Lnet/minecraft/client/renderer/RenderType;"))
+    private static RenderType animatium$legacyGlintRendering$armorEntityGlint(Operation<RenderType> original) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering) {
+            return LegacyGlintType.ENTITY_ARMOR_GLINT_LAYER;
+        } else {
+            return original.call();
+        }
+    }
+
+    @WrapOperation(method = "getCompassFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glint()Lnet/minecraft/client/renderer/RenderType;"))
+    private static RenderType animatium$legacyGlintRendering$compassGlintLayer1(Operation<RenderType> original) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering) {
+            return LegacyGlintType.ITEM_GLINT_LAYER;
+        } else {
+            return original.call();
+        }
+    }
+
+    @WrapOperation(method = "getCompassFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource;getBuffer(Lnet/minecraft/client/renderer/RenderType;)Lcom/mojang/blaze3d/vertex/VertexConsumer;", ordinal = 0))
+    private static VertexConsumer animatium$legacyGlintRendering$compassGlintLayer2(MultiBufferSource instance, RenderType renderType, Operation<VertexConsumer> original, @Local(argsOnly = true) MultiBufferSource multiBufferSource) {
+        final VertexConsumer finalConsumer = original.call(instance, renderType);
+        ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering && displayContext != ItemDisplayContext.GUI) {
+            return VertexMultiConsumer.create(multiBufferSource.getBuffer(LegacyGlintType.ITEM_GLINT_2ND_LAYER), finalConsumer);
+        } else {
+            return finalConsumer;
+        }
+    }
+
+    @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;glint()Lnet/minecraft/client/renderer/RenderType;"))
+    private static RenderType animatium$legacyGlintRendering$glintLayer1(Operation<RenderType> original) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering) {
+            return LegacyGlintType.ITEM_GLINT_LAYER;
+        } else {
+            return original.call();
+        }
+    }
+
+    @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexMultiConsumer;create(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lcom/mojang/blaze3d/vertex/VertexConsumer;)Lcom/mojang/blaze3d/vertex/VertexConsumer;", ordinal = 1))
+    private static VertexConsumer animatium$legacyGlintRendering$glintLayer2(VertexConsumer leftConsumer, VertexConsumer rightConsumer, Operation<VertexConsumer> original, @Local(argsOnly = true) MultiBufferSource multiBufferSource, @Local(argsOnly = true, ordinal = 0) boolean bl) {
+        final VertexConsumer finalConsumer = original.call(leftConsumer, rightConsumer);
+        ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering && displayContext != ItemDisplayContext.GUI && bl) {
+            return VertexMultiConsumer.create(multiBufferSource.getBuffer(LegacyGlintType.ITEM_GLINT_2ND_LAYER), finalConsumer);
+        } else {
+            return finalConsumer;
+        }
+    }
+
+    @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;entityGlint()Lnet/minecraft/client/renderer/RenderType;"))
+    private static RenderType animatium$legacyGlintRendering$entityGlint(Operation<RenderType> original) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering) {
+            return LegacyGlintType.ENTITY_GLINT_LAYER;
+        } else {
+            return original.call();
+        }
+    }
 
     @WrapOperation(method = "renderModelLists", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/BakedModel;getQuads(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/Direction;Lnet/minecraft/util/RandomSource;)Ljava/util/List;", ordinal = 1))
     private static List<BakedQuad> animatium$itemDrops2D(BakedModel instance, BlockState state, Direction direction, RandomSource random, Operation<List<BakedQuad>> original) {
         List<BakedQuad> quads = original.call(instance, state, direction, random);
-        if (AnimatiumClient.getEnabled() && animatium$isTransformationModeValid() && !instance.isGui3d()) {
+        if (AnimatiumClient.isEnabled() && animatium$isTransformationModeValid() && !instance.isGui3d()) {
             return quads.stream().filter(baked -> baked.getDirection() == Direction.SOUTH).collect(Collectors.toList());
         } else {
             return quads;
@@ -115,8 +121,8 @@ public abstract class MixinItemRenderer {
     @Unique
     private static boolean animatium$isTransformationModeValid() {
         ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
-        boolean itemDrops2D = AnimatiumConfig.instance().getItemDrops2D();
-        boolean itemFramed2D = AnimatiumConfig.instance().getItemFramed2D();
+        boolean itemDrops2D = AnimatiumConfig.instance().itemDrops2D;
+        boolean itemFramed2D = AnimatiumConfig.instance().itemFramed2D;
         return (itemDrops2D && displayContext == ItemDisplayContext.GROUND) || (itemFramed2D && displayContext == ItemDisplayContext.FIXED);
     }
 }

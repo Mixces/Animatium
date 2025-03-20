@@ -5,7 +5,13 @@
 	"name": "Animatium",
 	"description": "Visual Tweaks/QOL Settings For Modern Minecraft Versions, Aimed At 1.7/1.8 players.",
 	"authors": [
-		"Mixces & lowercasebtw"
+		"Mixces",
+		"lowercasebtw"
+	],
+	"contributors": [
+		"Tellinq",
+		"MicrocontrollersDev",
+		"Wyvest"
 	],
 	"contact": {
 		"sources": "https://github.com/Legacy-Visuals-Project/Animatium/",
@@ -16,16 +22,10 @@
 	"environment": "client",
 	"entrypoints": {
 		"client": [
-			{
-				"value": "btw.mixces.animatium.AnimatiumClient",
-				"adapter": "kotlin"
-			}
+			"btw.mixces.animatium.AnimatiumClient"
 		],
 		"modmenu": [
-			{
-				"value": "btw.mixces.animatium.config.ModMenuIntegration",
-				"adapter": "kotlin"
-			}
+			"btw.mixces.animatium.config.ModMenuIntegration"
 		]
 	},
 	"custom": {
@@ -47,5 +47,12 @@
 		"minecraft": ">=1.21.4 <1.21.5",
 		"yet_another_config_lib_v3": ">=3.6.2",
 		"fabric-api": "*"
+	},
+	"recommends": {
+		"animatium_extras": "*",
+		"legacy_potion_colors": "*",
+		"nuit": "*",
+		"polytone": "*",
+		"viafabricplus": "*"
 	}
 }

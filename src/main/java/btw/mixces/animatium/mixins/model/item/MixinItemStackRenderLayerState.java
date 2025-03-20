@@ -50,9 +50,9 @@ public abstract class MixinItemStackRenderLayerState {
 
     @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderItem(Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II[ILnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/client/renderer/RenderType;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"), index = 8)
     private ItemStackRenderState.FoilType animatium$disableGlintOn2dItems(ItemStackRenderState.FoilType glint) {
-        boolean glintDropped = AnimatiumConfig.instance().getDisableGlintOnItemDrops2D();
-        boolean glintFramed = AnimatiumConfig.instance().getDisableGlintOnItemFramed2D();
-        if (AnimatiumClient.getEnabled() && ItemUtils.getDisplayContext() != null &&
+        boolean glintDropped = !AnimatiumConfig.instance().glintOnItemDrops2D;
+        boolean glintFramed = !AnimatiumConfig.instance().glintOnItemFramed2D;
+        if (AnimatiumClient.isEnabled() && ItemUtils.getDisplayContext() != null &&
                 (glintDropped && ItemUtils.getDisplayContext() == ItemDisplayContext.GROUND) ||
                 (glintFramed && ItemUtils.getDisplayContext() == ItemDisplayContext.FIXED)) {
             return ItemStackRenderState.FoilType.NONE;
@@ -62,8 +62,8 @@ public abstract class MixinItemStackRenderLayerState {
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack;)V"))
-    private void animatium$tiltItemPositionsRod(PoseStack poseStack, MultiBufferSource multiBufferSource, int light, int overlay, CallbackInfo ci) {
-        if (AnimatiumClient.getEnabled()) {
+    private void animatium$itemPositionsRod(PoseStack poseStack, MultiBufferSource multiBufferSource, int light, int overlay, CallbackInfo ci) {
+        if (AnimatiumClient.isEnabled()) {
             ItemStack stack = ItemUtils.getStack();
             ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
             if (stack != null && displayContext != null) {
@@ -80,8 +80,8 @@ public abstract class MixinItemStackRenderLayerState {
                 float scaleX = transform.scale.x();
                 float scaleY = transform.scale.y();
                 float scaleZ = transform.scale.z();
-                if (AnimatiumConfig.instance().getFishingRodVersion() != FishingRodVersion.LATEST && ItemUtils.isFishingRodItem(stack) && isFirstPerson) {
-                    int ordinal = AnimatiumConfig.instance().getFishingRodVersion().ordinal();
+                if (AnimatiumConfig.instance().fishingRodVersion != FishingRodVersion.LATEST && ItemUtils.isFishingRodItem(stack) && isFirstPerson) {
+                    int ordinal = AnimatiumConfig.instance().fishingRodVersion.ordinal();
                     if (ordinal <= FishingRodVersion.V1_8.ordinal()) {
                         poseStack.translate(0.070625, 0.1, 0.020625);
                     }
@@ -94,7 +94,7 @@ public abstract class MixinItemStackRenderLayerState {
                     poseStack.translate(-x, -y, -z);
                 }
 
-                if (AnimatiumConfig.instance().getOldThinBlockPositions() && ItemUtils.isThinBlockItem(stack)) {
+                if (AnimatiumConfig.instance().thinBlockPositions && ItemUtils.isThinBlockItem(stack)) {
                     if (isFirstPerson) {
                         poseStack.translate(0, -4.2 * 0.0625, 0);
                     } else if (isThirdPerson) {
@@ -102,7 +102,7 @@ public abstract class MixinItemStackRenderLayerState {
                     }
                 }
 
-                if (AnimatiumConfig.instance().getOldSkullPosition() && ItemUtils.isSkullBlock(stack)) {
+                if (AnimatiumConfig.instance().skullPosition && ItemUtils.isSkullBlock(stack)) {
                     if (isGui) {
                         poseStack.translate(x, y, z);
                         poseStack.mulPose(Axis.XP.rotationDegrees(MathUtils.toRadians(rotZ)));

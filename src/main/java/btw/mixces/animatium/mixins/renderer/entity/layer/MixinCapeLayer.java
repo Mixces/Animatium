@@ -46,7 +46,7 @@ public abstract class MixinCapeLayer {
 
     @ModifyExpressionValue(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/renderer/entity/state/PlayerRenderState;FF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/layers/CapeLayer;hasLayer(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;)Z", ordinal = 1))
     private boolean animatium$removeChestplateCheck(boolean original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getCapeChestplateTranslation()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().capeChestplateTranslation) {
             return false;
         } else {
             return original;
@@ -55,14 +55,14 @@ public abstract class MixinCapeLayer {
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/renderer/entity/state/PlayerRenderState;FF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource;getBuffer(Lnet/minecraft/client/renderer/RenderType;)Lcom/mojang/blaze3d/vertex/VertexConsumer;"))
     private void animatium$capeSneakingOffset(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, PlayerRenderState playerRenderState, float f, float g, CallbackInfo ci) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldCapeSneakPosition() && playerRenderState.isCrouching) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().capeSneakPosition && playerRenderState.isCrouching) {
             poseStack.translate(0.0F, playerRenderState.scale * 2.0F / 16.0F, 0.0F);
         }
     }
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/renderer/entity/state/PlayerRenderState;FF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/HumanoidModel;setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", shift = At.Shift.AFTER))
     private void animatium$capeSwingRotation(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, PlayerRenderState playerRenderState, float f, float g, CallbackInfo ci) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getCapeSwingRotation()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().capeSwingRotation) {
             model.body.yRot = 0;
         }
     }

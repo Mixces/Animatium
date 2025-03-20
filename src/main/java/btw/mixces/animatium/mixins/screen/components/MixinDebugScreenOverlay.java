@@ -36,24 +36,15 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public abstract class MixinDebugScreenOverlay {
     @WrapWithCondition(method = "renderLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V"))
     private boolean animatium$removeDebugBackground(GuiGraphics instance, int x1, int y1, int x2, int y2, int color) {
-        return !AnimatiumClient.getEnabled() || !AnimatiumConfig.instance().getRemoveDebugHudBackground();
+        return !AnimatiumClient.isEnabled() || AnimatiumConfig.instance().debugHudBackground;
     }
 
     @ModifyArg(method = "renderLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)I"), index = 5)
     private boolean animatium$addDebugShadow(boolean shadow) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getDebugHudTextShadow()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().debugHudTextShadow) {
             return true;
         } else {
             return shadow;
-        }
-    }
-
-    @ModifyArg(method = "renderLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)I"), index = 4)
-    private int animatium$oldDebugHudTextColor(int color) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldDebugHudTextColor()) {
-            return -1;
-        } else {
-            return color;
         }
     }
 }

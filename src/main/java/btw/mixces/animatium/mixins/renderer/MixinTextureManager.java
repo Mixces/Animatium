@@ -37,7 +37,7 @@ public class MixinTextureManager {
     // TODO/NOTE: Do we need this when we have MixinTextureStateShard
     @ModifyVariable(method = "getTexture", at = @At("HEAD"), argsOnly = true)
     private ResourceLocation animatium$useItemGlint(ResourceLocation original) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getForceItemGlintOnEntity() && original == ItemRenderer.ENCHANTED_GLINT_ENTITY) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemGlintOnEntity && original == ItemRenderer.ENCHANTED_GLINT_ENTITY) {
             return ItemRenderer.ENCHANTED_GLINT_ITEM;
         } else {
             return original;

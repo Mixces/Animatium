@@ -23,11 +23,13 @@
 
 package btw.mixces.animatium.mixins.renderer;
 
-import btw.mixces.animatium.config.AnimatiumConfig;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SkyRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,25 +37,11 @@ import org.spongepowered.asm.mixin.injection.At;
 // TODO/NOTE: Just bug fixes here.
 @Mixin(SkyRenderer.class)
 public abstract class MixinSkyRenderer {
-    @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;pushPose()V"))
-    private void animatium$pushMatrix(PoseStack instance, Operation<Void> original) {
-        if (AnimatiumConfig.instance().getOldVoidSkyFogHeight()) {
-            RenderSystem.getModelViewStack().pushMatrix();
-            RenderSystem.getModelViewStack().mul(instance.last().pose());
-        }
-    }
-
-    @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V"))
-    private void animatium$translate(PoseStack instance, float x, float y, float z, Operation<Void> original) {
-        if (AnimatiumConfig.instance().getOldVoidSkyFogHeight()) {
-            RenderSystem.getModelViewStack().translate(x, y, z);
-        }
-    }
-
-    @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V"))
-    private void animatium$popMatrix(PoseStack instance, Operation<Void> original) {
-        if (AnimatiumConfig.instance().getOldVoidSkyFogHeight()) {
-            RenderSystem.getModelViewStack().popMatrix();
-        }
+    @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexBuffer;drawWithRenderType(Lnet/minecraft/client/renderer/RenderType;)V"))
+    private void animatium$voidSkyFogHeight(VertexBuffer instance, RenderType renderType, Operation<Void> original, @Local(argsOnly = true) PoseStack poseStack) {
+        RenderSystem.getModelViewStack().pushMatrix();
+        RenderSystem.getModelViewStack().mul(poseStack.last().pose());
+        original.call(instance, renderType);
+        RenderSystem.getModelViewStack().popMatrix();
     }
 }

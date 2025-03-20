@@ -46,26 +46,16 @@ public abstract class MixinEntity implements ViewBobbingStorage {
 
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;handlePortal()V", shift = At.Shift.AFTER))
     private void animatium$storePreviousHorizontalSpeed(CallbackInfo ci) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldViewBobbing()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().viewBobbing) {
             this.animatium$previousHorizontalSpeed = this.animatium$horizontalSpeed;
         }
     }
 
     @Inject(method = "applyMovementEmissionAndPlaySound", at = @At("HEAD"))
     private void animatium$storeHorizontalSpeed(Entity.MovementEmission movementEmission, Vec3 vec3d, BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
-        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getOldViewBobbing()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().viewBobbing) {
             this.animatium$horizontalSpeed = this.animatium$horizontalSpeed + (float) vec3d.horizontalDistance() * 0.6F;
         }
-    }
-
-    @Override
-    public void animatium$setHorizontalSpeed(float horizontalSpeed) {
-        this.animatium$horizontalSpeed = horizontalSpeed;
-    }
-
-    @Override
-    public void animatium$setPreviousHorizontalSpeed(float previousHorizontalSpeed) {
-        this.animatium$previousHorizontalSpeed = previousHorizontalSpeed;
     }
 
     @Override
