@@ -215,6 +215,15 @@ public final class MovementConfigCategory {
                             (newVal) -> config.damageTilt = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
+            otherGroup.option(Option.<Boolean>createBuilder()
+                    .name(Component.translatable("animatium.offsetHurtTime"))
+                    .description(OptionDescription.of(Component.translatable("animatium.offsetHurtTime.description")))
+                    .binding(
+                            defaults.offsetHurtTime,
+                            () -> config.offsetHurtTime,
+                            (newVal) -> config.offsetHurtTime = newVal)
+                    .controller(TickBoxControllerBuilder::create)
+                    .build());
             category.group(otherGroup.build());
         }
 

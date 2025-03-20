@@ -78,6 +78,7 @@ public final class AnimatiumConfig {
     @SerialEntry public boolean deathLimbs = true;
     @SerialEntry public boolean bowArmMovement = true;
     @SerialEntry public boolean damageTilt = false;
+    @SerialEntry public boolean offsetHurtTime = false;
     // (Movement) Cape
     @SerialEntry public boolean capeMovement = true;
     @SerialEntry public boolean clampCapeLean = false;
