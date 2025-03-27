@@ -24,7 +24,6 @@
 package btw.mixces.animatium.mixins.renderer;
 
 import btw.mixces.animatium.AnimatiumClient;
-import btw.mixces.animatium.LegacyGlintType;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.MathUtils;
 import btw.mixces.animatium.util.RenderUtils;
@@ -33,7 +32,11 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.buffers.BufferType;
 import com.mojang.blaze3d.buffers.BufferUsage;
 import com.mojang.blaze3d.buffers.GpuBuffer;
+import com.mojang.blaze3d.opengl.GlDevice;
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.GpuTexture;
+import com.mojang.blaze3d.textures.TextureFormat;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -143,26 +146,20 @@ public abstract class MixinLevelRenderer {
 //        }
 //    }
 
-    // TODO/NOTE: The reason we redirect width/height instead of changing the outcome of shouldShowEntityOutlines
-    // TODO/NOTE: is that it caused issues with Iris/shaders. As simple as that. Until that is fixed/we find another way
-    // TODO/NOTE: it will stay like this. Sorry!
+    @Unique
+    private GpuTexture animatium$blankTexture = null;
 
-    // TODO: Fix
-//    @WrapOperation(method = "doEntityOutline", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Window;getWidth()I"))
-//    private int animatium$disableEntityGlowOutline$width(Window instance, Operation<Integer> original) {
-//        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getDisableEntityGlowOutline()) {
-//            return 0;
-//        } else {
-//            return original.call(instance);
-//        }
-//    }
+    @WrapOperation(method = "doEntityOutline", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;blitAndBlendToTexture(Lcom/mojang/blaze3d/textures/GpuTexture;)V"))
+    private void animatium$entityGlowOutline(RenderTarget instance, GpuTexture gpuTexture, Operation<Void> original) {
+        GpuTexture texture = gpuTexture;
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().entityGlowOutline && RenderSystem.getDevice() instanceof GlDevice glDevice) {
+            if (animatium$blankTexture == null) {
+                animatium$blankTexture = glDevice.createTexture("Blank", TextureFormat.RGBA8, 1, 1, 1);
+            }
 
-//    @WrapOperation(method = "doEntityOutline", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Window;getHeight()I"))
-//    private int animatium$entityGlowOutline$height(Window instance, Operation<Integer> original) {
-//        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().entityGlowOutline) {
-//            return 0;
-//        } else {
-//            return original.call(instance);
-//        }
-//    }
+            texture = animatium$blankTexture;
+        }
+
+        original.call(instance, texture);
+    }
 }
