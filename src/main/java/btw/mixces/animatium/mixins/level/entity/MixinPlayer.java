@@ -25,16 +25,11 @@ package btw.mixces.animatium.mixins.level.entity;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.util.PlayerUtils;
 import btw.mixces.animatium.util.ViewBobbingStorage;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -64,15 +59,6 @@ public abstract class MixinPlayer extends LivingEntity {
             ViewBobbingStorage bobbingAccessor = (ViewBobbingStorage) this;
             float g = this.onGround() || this.getHealth() <= 0.0F ? 0.0F : (float) (Math.atan(-this.getDeltaMovement().y * (double) 0.2F) * 15.0F);
             bobbingAccessor.animatium$setBobbingTilt(Mth.lerp(0.8F, bobbingAccessor.animatium$getBobbingTilt(), g));
-        }
-    }
-
-    @WrapOperation(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;swing(Lnet/minecraft/world/InteractionHand;)V"))
-    private void animatium$swingOnDropInventory(Player player, InteractionHand hand, Operation<Void> original) {
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().swingOnDrop) {
-            PlayerUtils.sendSwingPacket((LocalPlayer) player, hand);
-        } else {
-            original.call(player, hand);
         }
     }
 

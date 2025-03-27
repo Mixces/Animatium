@@ -30,15 +30,17 @@ import btw.mixces.animatium.util.MathUtils;
 import btw.mixces.animatium.util.RenderUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexBuffer;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.buffers.BufferType;
+import com.mojang.blaze3d.buffers.BufferUsage;
+import com.mojang.blaze3d.buffers.GpuBuffer;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelHeightAccessor;
@@ -65,16 +67,23 @@ public abstract class MixinLevelRenderer {
     private ClientLevel level;
 
     @Unique
-    private final VertexBuffer animatium$blueVoidSkyBuffer = VertexBuffer.uploadStatic(
-            VertexFormat.Mode.QUADS,
-            DefaultVertexFormat.POSITION,
-            (vertexConsumer) -> RenderUtils.buildSkyHalf(vertexConsumer, -16.0F, true));
+    private GpuBuffer animatium$blueVoidBuffer = null;
+
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void init(Minecraft minecraft, EntityRenderDispatcher entityRenderDispatcher, BlockEntityRenderDispatcher blockEntityRenderDispatcher, RenderBuffers renderBuffers, CallbackInfo ci) {
+        VertexFormat.Mode mode = VertexFormat.Mode.QUADS;
+        BufferBuilder builder = Tesselator.getInstance().begin(mode, DefaultVertexFormat.POSITION);
+        RenderUtils.buildSkyHalf(builder, -16.0F, true);
+        try (MeshData meshData = builder.buildOrThrow()) {
+            this.animatium$blueVoidBuffer = RenderSystem.getDevice().createBuffer(() -> "Blue void sky vertex buffer", BufferType.VERTICES, BufferUsage.STATIC_WRITE, meshData.vertexBuffer());
+        }
+    }
 
     @Inject(method = "method_62215", at = @At("TAIL"))
     private void animatium$blueVoidSky(FogParameters fogParameters, DimensionSpecialEffects.SkyType skyType, float tickDelta, DimensionSpecialEffects dimensionSpecialEffects, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().blueVoidSky && skyType != DimensionSpecialEffects.SkyType.END && this.level != null && this.minecraft.player != null) {
             int skyColor = this.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), tickDelta);
-            RenderUtils.renderBlueVoidSky(this.level, animatium$blueVoidSkyBuffer, skyColor, this.minecraft.player.getEyePosition(tickDelta).y - RenderUtils.getLevelHorizonHeight(this.level));
+            RenderUtils.renderBlueVoidSky(this.minecraft, this.level, this.animatium$blueVoidBuffer, skyColor, this.minecraft.player.getEyePosition(tickDelta).y - RenderUtils.getLevelHorizonHeight(this.level));
         }
     }
 
@@ -121,37 +130,39 @@ public abstract class MixinLevelRenderer {
         }
     }
 
-    @WrapOperation(method = "method_62214", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;endBatch(Lnet/minecraft/client/renderer/RenderType;)V", ordinal = 16))
-    private void animatium$legacyGlintRendering$endBatch(MultiBufferSource.BufferSource instance, RenderType renderType, Operation<Void> original) {
-        original.call(instance, renderType);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering) {
-            instance.endBatch(LegacyGlintType.ITEM_GLINT_LAYER);
-            instance.endBatch(LegacyGlintType.ITEM_GLINT_2ND_LAYER);
-            instance.endBatch(LegacyGlintType.ITEM_GLINT_TRANSLUCENT_LAYER);
-            instance.endBatch(LegacyGlintType.ITEM_GLINT_TRANSLUCENT_2ND_LAYER);
-            instance.endBatch(LegacyGlintType.ENTITY_GLINT_LAYER);
-            instance.endBatch(LegacyGlintType.ENTITY_ARMOR_GLINT_LAYER);
-        }
-    }
+//    @WrapOperation(method = "method_62214", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;endBatch(Lnet/minecraft/client/renderer/RenderType;)V", ordinal = 16))
+//    private void animatium$legacyGlintRendering$endBatch(MultiBufferSource.BufferSource instance, RenderType renderType, Operation<Void> original) {
+//        original.call(instance, renderType);
+//        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering) {
+//            instance.endBatch(LegacyGlintType.ITEM_GLINT_LAYER);
+//            instance.endBatch(LegacyGlintType.ITEM_GLINT_2ND_LAYER);
+//            instance.endBatch(LegacyGlintType.ITEM_GLINT_TRANSLUCENT_LAYER);
+//            instance.endBatch(LegacyGlintType.ITEM_GLINT_TRANSLUCENT_2ND_LAYER);
+//            instance.endBatch(LegacyGlintType.ENTITY_GLINT_LAYER);
+//            instance.endBatch(LegacyGlintType.ENTITY_ARMOR_GLINT_LAYER);
+//        }
+//    }
 
     // TODO/NOTE: The reason we redirect width/height instead of changing the outcome of shouldShowEntityOutlines
     // TODO/NOTE: is that it caused issues with Iris/shaders. As simple as that. Until that is fixed/we find another way
     // TODO/NOTE: it will stay like this. Sorry!
-    @WrapOperation(method = "doEntityOutline", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Window;getWidth()I"))
-    private int animatium$entityGlowOutline$width(Window instance, Operation<Integer> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().entityGlowOutline) {
-            return 0;
-        } else {
-            return original.call(instance);
-        }
-    }
 
-    @WrapOperation(method = "doEntityOutline", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Window;getHeight()I"))
-    private int animatium$entityGlowOutline$height(Window instance, Operation<Integer> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().entityGlowOutline) {
-            return 0;
-        } else {
-            return original.call(instance);
-        }
-    }
+    // TODO: Fix
+//    @WrapOperation(method = "doEntityOutline", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Window;getWidth()I"))
+//    private int animatium$disableEntityGlowOutline$width(Window instance, Operation<Integer> original) {
+//        if (AnimatiumClient.getEnabled() && AnimatiumConfig.instance().getDisableEntityGlowOutline()) {
+//            return 0;
+//        } else {
+//            return original.call(instance);
+//        }
+//    }
+
+//    @WrapOperation(method = "doEntityOutline", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Window;getHeight()I"))
+//    private int animatium$entityGlowOutline$height(Window instance, Operation<Integer> original) {
+//        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().entityGlowOutline) {
+//            return 0;
+//        } else {
+//            return original.call(instance);
+//        }
+//    }
 }

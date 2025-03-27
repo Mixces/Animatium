@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(RenderStateShard.class)
-public class MixinRenderStateShard {
+public abstract class MixinRenderStateShard {
     @ModifyExpressionValue(method = "setupGlintTexturing", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/OptionInstance;get()Ljava/lang/Object;"))
     private static Object animatium$forceMaxGlintSpeed(Object original) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().maxGlintProperties) {

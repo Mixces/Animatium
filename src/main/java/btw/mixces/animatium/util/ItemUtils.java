@@ -151,7 +151,7 @@ public final class ItemUtils {
 
     public static boolean isBlock3d(ItemStack stack, ItemStackRenderState itemStackRenderState) {
         if (!stack.isEmpty()) {
-            return stack.getItem() instanceof BlockItem && itemStackRenderState.isGui3d();
+            return stack.getItem() instanceof BlockItem && itemStackRenderState.usesBlockLight();
         } else {
             return false;
         }

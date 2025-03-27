@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package btw.mixces.animatium.mixins.screen.recipebook;
+package btw.mixces.animatium.mixins.screen.recipe_book;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;

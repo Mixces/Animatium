@@ -127,7 +127,7 @@ public abstract class MixinItemInHandRenderer {
         }
     }
 
-    @Inject(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", ordinal = 1))
+    @Inject(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", ordinal = 1))
     private void animatium$itemPositions(AbstractClientPlayer player, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack stack, float equipProgress, PoseStack poseStack, MultiBufferSource multiBufferSource, int light, CallbackInfo ci) {
         int direction = PlayerUtils.getHandMultiplier(player, hand);
         if (AnimatiumClient.isEnabled()) {
@@ -192,7 +192,7 @@ public abstract class MixinItemInHandRenderer {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixEquipAnimation) {
             // Initialize our copied stack
             copyStack.set(itemStack.copy());
-            boolean slotsMatch = this.animatium$currentSlot == localPlayer.getInventory().selected;
+            boolean slotsMatch = this.animatium$currentSlot == localPlayer.getInventory().getSelectedSlot();
             // Equip logic fix
             boolean shouldSwap1_8 = ItemUtils.shouldInstantlyReplaceVisibleItem1_8(this.animatium$mainHandItem, copyStack.get());
             // Original equip logic
@@ -208,7 +208,7 @@ public abstract class MixinItemInHandRenderer {
         boolean value = original.call(instance, itemStack, itemStack2);
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixEquipAnimation) {
             // Apply our equip logic fix to offhand items
-            boolean slotsMatch = this.animatium$currentSlot == localPlayer.getInventory().selected;
+            boolean slotsMatch = this.animatium$currentSlot == localPlayer.getInventory().getSelectedSlot();
             return (slotsMatch && ItemUtils.shouldInstantlyReplaceVisibleItem1_8(itemStack, itemStack2)) || value;
         } else {
             return value;
@@ -253,7 +253,7 @@ public abstract class MixinItemInHandRenderer {
             // Update our copied stack
             this.animatium$mainHandItem = copyStack.get();
             // Cache the previous slot item to use in our comparison above
-            this.animatium$currentSlot = localPlayer.getInventory().selected;
+            this.animatium$currentSlot = localPlayer.getInventory().getSelectedSlot();
         }
     }
 
@@ -267,7 +267,7 @@ public abstract class MixinItemInHandRenderer {
         }
     }
 
-    @ModifyArg(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"), index = 1)
+    @ModifyArg(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"), index = 1)
     private ItemStack animatium$useActualStackForRender(ItemStack original) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixEquipAnimation) {
             // Use the original stack for rendering to avoid rendering issues

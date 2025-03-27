@@ -25,10 +25,16 @@ package btw.mixces.animatium;
 
 import btw.mixces.animatium.command.AnimatiumCommand;
 import btw.mixces.animatium.config.AnimatiumConfig;
+import btw.mixces.animatium.mixins.accessor.RenderPipelinesAccessor;
 import btw.mixces.animatium.packet.AnimatiumInfoPayloadPacket;
 import btw.mixces.animatium.packet.SetFeaturesPayloadPacket;
 import btw.mixces.animatium.util.Feature;
+import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.DepthTestFunction;
+import com.mojang.blaze3d.shaders.UniformType;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
@@ -40,9 +46,6 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.client.renderer.CoreShaders;
-import net.minecraft.client.renderer.ShaderDefines;
-import net.minecraft.client.renderer.ShaderProgram;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,16 +71,34 @@ public class AnimatiumClient implements ClientModInitializer {
         return new AnimatiumInfoPayloadPacket(VERSION, DEVELOPMENT_VERSION);
     }
 
-    // Shaders
-    public static ShaderProgram renderTypeLegacyGlint = new ShaderProgram(
-            ResourceLocation.fromNamespaceAndPath("animatium", "core/rendertype_legacy_glint"),
-            DefaultVertexFormat.POSITION_TEX,
-            ShaderDefines.EMPTY
-    );
-
-    static {
-        CoreShaders.getProgramsToPreload().add(renderTypeLegacyGlint);
+    public static ResourceLocation getPath(String path) {
+        return ResourceLocation.fromNamespaceAndPath("animatium", path);
     }
+
+    // Shaders
+    public static final RenderPipeline LEGACY_SKY_PIPELINE = RenderPipelinesAccessor.registerPipeline(
+            RenderPipeline.builder(RenderPipelinesAccessor.getMatricesColorFogSnippet())
+                    .withLocation("pipeline/legacy_sky")
+                    .withVertexShader("core/position")
+                    .withFragmentShader("core/position")
+                    .withDepthWrite(false)
+                    .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
+                    .build());
+
+    public static final RenderPipeline LEGACY_GLINT_PIPELINE = RenderPipelinesAccessor.registerPipeline(
+            RenderPipeline.builder(RenderPipelinesAccessor.getMatricesColorSnippet(), RenderPipelinesAccessor.getFogNoColorSnippet())
+                    .withLocation(getPath("pipeline/legacy_glint"))
+                    .withVertexShader(getPath("core/legacy_glint"))
+                    .withFragmentShader(getPath("core/legacy_glint"))
+                    .withColorWrite(true, false)
+                    .withCull(true)
+                    .withBlend(BlendFunction.GLINT)
+                    .withDepthTestFunction(DepthTestFunction.EQUAL_DEPTH_TEST)
+                    .withSampler("Sampler0")
+                    .withUniform("GlintColor", UniformType.VEC3)
+                    .withUniform("TextureMat", UniformType.MATRIX4X4)
+                    .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
+                    .build());
 
     // Config State
     private static final File STATE_FILE = new File(FabricLoader.getInstance().getGameDir().toFile(), "animatium_state.txt");

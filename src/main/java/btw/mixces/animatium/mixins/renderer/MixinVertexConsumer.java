@@ -29,24 +29,24 @@ import btw.mixces.animatium.util.ItemUtils;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.world.item.ItemDisplayContext;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 // Priority set to 1500 to fix Vulkan Mod Incompatibility
 @Mixin(value = VertexConsumer.class, priority = 1500)
 public interface MixinVertexConsumer {
     // TODO: this is only half of the battle + framed item 2d colors are disabled
-    @ModifyArgs(method = "putBulkData(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;[FFFFF[IIZ)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack$Pose;transformNormal(FFFLorg/joml/Vector3f;)Lorg/joml/Vector3f;"), require = 0)
-    default void animatium$itemColors2D(Args args) {
+    @ModifyArg(method = "putBulkData(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;[FFFFF[IIZ)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack$Pose;transformNormal(Lorg/joml/Vector3fc;Lorg/joml/Vector3f;)Lorg/joml/Vector3f;"), index = 0, require = 0)
+    default Vector3fc animatium$itemColors2D(Vector3fc vector3fc) {
         ItemStackRenderState state = ItemUtils.getRenderState();
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemColors2D && state != null && !state.isGui3d()) {
-            ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
-            if (displayContext == ItemDisplayContext.GROUND) {
-                args.set(1, (float) args.get(2));
-                args.set(2, (float) args.get(1));
-            }
+        ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemColors2D && state != null && !state.usesBlockLight() && displayContext == ItemDisplayContext.GROUND) {
+            return new Vector3f(vector3fc.x(), vector3fc.z(), vector3fc.y());
+        } else {
+            return vector3fc;
         }
     }
 }

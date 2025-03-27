@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ItemPickupParticle.class)
-public class MixinItemPickupParticle {
+public abstract class MixinItemPickupParticle {
     @Shadow
     @Final
     private Entity target;

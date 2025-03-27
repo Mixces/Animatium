@@ -59,15 +59,6 @@ public final class OtherConfigCategory {
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             skyGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.voidSkyFogHeight"))
-                    .description(OptionDescription.of(Component.translatable("animatium.voidSkyFogHeight.description")))
-                    .binding(
-                            defaults.voidSkyFogHeight,
-                            () -> config.voidSkyFogHeight,
-                            (newVal) -> config.voidSkyFogHeight = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            skyGroup.option(Option.<Boolean>createBuilder()
                     .name(Component.translatable("animatium.cloudHeight"))
                     .description(OptionDescription.of(Component.translatable("animatium.cloudHeight.description")))
                     .binding(
@@ -178,15 +169,15 @@ public final class OtherConfigCategory {
                         (newVal) -> config.armorHurtRendering = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.glintRendering"))
-                .description(OptionDescription.of(Component.translatable("animatium.glintRendering.description")))
-                .binding(
-                        defaults.glintRendering,
-                        () -> config.glintRendering,
-                        (newVal) -> config.glintRendering = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
+//        category.option(Option.<Boolean>createBuilder()
+//                .name(Component.translatable("animatium.glintRendering"))
+//                .description(OptionDescription.of(Component.translatable("animatium.glintRendering.description")))
+//                .binding(
+//                        defaults.glintRendering,
+//                        () -> config.glintRendering,
+//                        (newVal) -> config.glintRendering = newVal)
+//                .controller(TickBoxControllerBuilder::create)
+//                .build());
         category.option(Option.<Boolean>createBuilder()
                 .name(Component.translatable("animatium.highAttackSpeedVisual"))
                 .description(OptionDescription.of(Component.translatable("animatium.highAttackSpeedVisual.description")))

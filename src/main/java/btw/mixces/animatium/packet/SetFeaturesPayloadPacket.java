@@ -23,11 +23,11 @@
 
 package btw.mixces.animatium.packet;
 
+import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.util.Feature;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import java.util.List;
 
 public record SetFeaturesPayloadPacket(List<Feature> features) implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, SetFeaturesPayloadPacket> CODEC = CustomPacketPayload.codec(null, SetFeaturesPayloadPacket::read);
-    public static final Type<SetFeaturesPayloadPacket> PAYLOAD_ID = new Type<>(ResourceLocation.parse("animatium:set_features"));
+    public static final Type<SetFeaturesPayloadPacket> PAYLOAD_ID = new Type<>(AnimatiumClient.getPath("set_features"));
 
     private static SetFeaturesPayloadPacket read(FriendlyByteBuf buffer) {
         List<Feature> features = new ArrayList<>();

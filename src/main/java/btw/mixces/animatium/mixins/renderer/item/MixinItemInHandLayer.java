@@ -50,7 +50,7 @@ import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.joml.Quaternionf;
+import org.joml.Quaternionfc;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -81,8 +81,8 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
         }
     }
 
-    @WrapWithCondition(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lorg/joml/Quaternionf;)V"))
-    private boolean animatium$removeTransformMultiply(PoseStack instance, Quaternionf quaternionf, @Local(argsOnly = true) S entityState, @Share("stack") LocalRef<ItemStack> stackRef) {
+    @WrapWithCondition(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lorg/joml/Quaternionfc;)V"))
+    private boolean animatium$removeTransformMultiply(PoseStack instance, Quaternionfc quaternionfc, @Local(argsOnly = true) S entityState, @Share("stack") LocalRef<ItemStack> stackRef) {
         return !AnimatiumClient.isEnabled() || !ItemUtils.shoulditemPositionsInThirdPerson(entityState) || ItemUtils.isItemBlacklisted(stackRef.get());
     }
 

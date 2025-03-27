@@ -29,9 +29,11 @@ import btw.mixces.animatium.util.EntityUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.blaze3d.platform.GlConst;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.opengl.GlConst;
+import com.mojang.blaze3d.opengl.GlStateManager;
+import com.mojang.blaze3d.platform.DepthTestFunction;
+import com.mojang.blaze3d.platform.DestFactor;
+import com.mojang.blaze3d.platform.SourceFactor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -96,12 +98,12 @@ public abstract class MixinEquipmentLayerRenderer {
             if (isHurt) {
                 // Code sourced from 1.7/1.8
                 Minecraft.getInstance().gameRenderer.lightTexture().turnOffLightLayer();
-                RenderSystem.enableBlend();
-                RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-                RenderSystem.depthFunc(GlConst.GL_EQUAL);
+                GlStateManager._enableBlend();
+                GlStateManager._blendFuncSeparate(GlConst.toGl(SourceFactor.SRC_ALPHA), GlConst.toGl(DestFactor.ONE_MINUS_SRC_ALPHA), GlConst.toGl(SourceFactor.SRC_ALPHA), GlConst.toGl(DestFactor.ONE_MINUS_SRC_ALPHA));
+                GlStateManager._depthFunc(GlConst.toGl(DepthTestFunction.EQUAL_DEPTH_TEST));
                 original.call(instance, poseStack, vertexConsumer, light, overlay, color);
-                RenderSystem.depthFunc(GlConst.GL_LEQUAL);
-                RenderSystem.disableBlend();
+                GlStateManager._depthFunc(GlConst.toGl(DepthTestFunction.LEQUAL_DEPTH_TEST));
+                GlStateManager._disableBlend();
                 Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer();
             }
         }

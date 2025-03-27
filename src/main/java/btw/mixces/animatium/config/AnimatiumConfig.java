@@ -165,7 +165,7 @@ public final class AnimatiumConfig {
     @SerialEntry public boolean itemGlintOnEntity = true;
     @SerialEntry public boolean maxGlintProperties = true;
     @SerialEntry public boolean armorHurtRendering = false;
-    @SerialEntry public boolean glintRendering = false;
+//    @SerialEntry public boolean glintRendering = false;
     @SerialEntry public boolean highAttackSpeedVisual = false;
     @SerialEntry public boolean entityGlowOutline = true;
     @SerialEntry public boolean modernCombatSounds = true;
@@ -176,6 +176,5 @@ public final class AnimatiumConfig {
     // (Other) Sky
     @SerialEntry public boolean blueVoidSky = true;
     @SerialEntry public boolean skyHorizonHeight = true;
-    @SerialEntry public boolean voidSkyFogHeight = true; // TODO: To be removed in 1.21.5+
     @SerialEntry public boolean cloudHeight = true;
 }

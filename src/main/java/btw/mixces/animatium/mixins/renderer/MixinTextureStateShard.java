@@ -35,11 +35,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.Optional;
 
 @Mixin(RenderStateShard.TextureStateShard.class)
-public class MixinTextureStateShard {
+public abstract class MixinTextureStateShard {
     // TODO/NOTE: Do we need this when we have MixinTextureManager
     @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Ljava/util/Optional;of(Ljava/lang/Object;)Ljava/util/Optional;"))
     private Optional<Object> animatium$useItemGlint(Object value, Operation<Optional<Object>> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemGlintOnEntity && value == ItemRenderer.ENCHANTED_GLINT_ENTITY) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemGlintOnEntity && value == ItemRenderer.ENCHANTED_GLINT_ARMOR) {
             return Optional.of(ItemRenderer.ENCHANTED_GLINT_ITEM);
         } else {
             return original.call(value);

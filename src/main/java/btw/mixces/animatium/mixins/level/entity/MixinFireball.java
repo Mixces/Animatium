@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Fireball.class)
-public class MixinFireball {
+public abstract class MixinFireball {
     @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/projectile/Fireball;tickCount:I"))
     private int animatium$projectileAgeCheck(Fireball instance, Operation<Integer> original) {
         int originalTick = original.call(instance);
