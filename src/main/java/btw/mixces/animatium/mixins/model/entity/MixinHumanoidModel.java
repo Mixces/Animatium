@@ -113,7 +113,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
     @ModifyExpressionValue(method = "setupAttackAnimation", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;sin(F)F", ordinal = 5))
     public float animatium$fixMirrorArmSwing$sin(float original, @Local HumanoidArm arm) {
         if (AnimatiumConfig.instance().fixMirrorArmSwing) {
-            return PlayerUtils.getArmMultiplier(arm) * original; // NOTE: i changed this loloolool
+            return PlayerUtils.getArmMultiplier(arm) * original;
         } else {
             return original;
         }

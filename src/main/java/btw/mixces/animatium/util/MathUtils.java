@@ -23,12 +23,12 @@
 
 package btw.mixces.animatium.util;
 
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public final class MathUtils {
     public static float toRadians(float angle) {
@@ -36,22 +36,12 @@ public final class MathUtils {
     }
 
     public static VoxelShape expandVoxelShape(VoxelShape shape, float value) {
-        // Code from VoxelShape#simplify
-        // TODO: simplify this code? or find alternative?
-        List<VoxelShape> voxelShapes = new ArrayList<>();
-        voxelShapes.add(Shapes.empty());
-        shape.forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> voxelShapes.set(0, Shapes.joinUnoptimized(
-                voxelShapes.getFirst(),
-                Shapes.box(
-                        minX - value,
-                        minY - value,
-                        minZ - value,
-                        maxX + value,
-                        maxY + value,
-                        maxZ + value
-                ),
-                BooleanOp.OR
-        )));
-        return voxelShapes.getFirst();
+        AtomicReference<VoxelShape> voxelShape = new AtomicReference<>(Shapes.empty());
+        shape.forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) ->
+                voxelShape.set(Shapes.join(
+                        voxelShape.get(),
+                        Shapes.create(new AABB(minX, minY, minZ, maxX, maxY, maxZ).inflate(value)),
+                        BooleanOp.OR)));
+        return voxelShape.get();
     }
 }

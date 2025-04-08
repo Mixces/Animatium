@@ -53,8 +53,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(EquipmentLayerRenderer.class)
 public abstract class MixinEquipmentLayerRenderer {
-    // TODO: Fix lunar client
-
     @WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/resources/ResourceLocation;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;armorCutoutNoCull(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;"))
     private RenderType animatium$renderLayerArmorTint(ResourceLocation resourceLocation, Operation<RenderType> original) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().entityArmorHurtTint) {

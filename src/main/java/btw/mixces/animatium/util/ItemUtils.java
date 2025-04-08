@@ -198,7 +198,6 @@ public final class ItemUtils {
         } else if (item == Items.TRIDENT) {
             return Rarity.COMMON;
         } else {
-            // TODO?: Trims? eh, if someone requests it ig
             return stack.getRarity();
         }
     }
