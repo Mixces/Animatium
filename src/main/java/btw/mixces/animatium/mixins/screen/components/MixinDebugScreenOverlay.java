@@ -39,7 +39,7 @@ public abstract class MixinDebugScreenOverlay {
         return !AnimatiumClient.isEnabled() || AnimatiumConfig.instance().debugHudBackground;
     }
 
-    @ModifyArg(method = "renderLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)I"), index = 5)
+    @ModifyArg(method = "renderLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)V"), index = 5)
     private boolean animatium$addDebugShadow(boolean shadow) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().debugHudTextShadow) {
             return true;

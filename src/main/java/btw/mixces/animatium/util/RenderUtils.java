@@ -81,20 +81,20 @@ public final class RenderUtils {
         }
     }
 
-    public static void fillVerticalLine(GuiGraphics context, int startX, int startY, int endX, int endY, int color) {
-        context.fill(startX, startY, startX + 1, startY + endX, endY, color);
+    public static void fillVerticalLine(GuiGraphics context, int x, int y, int length, int color) {
+        context.fill(x, y, x + 1, y + length, color);
     }
 
-    public static void fillVerticalGradientLine(GuiGraphics context, int i, int j, int k, int l, int startColor, int endColor) {
-        context.fillGradient(i, j, i + 1, j + k, l, startColor, endColor);
+    public static void fillVerticalGradientLine(GuiGraphics context, int x, int y, int length, int startColor, int endColor) {
+        context.fillGradient(x, y, x + 1, y + length, startColor, endColor);
     }
 
-    public static void fillHorizontalLine(GuiGraphics context, int startX, int startY, int endX, int endY, int color) {
-        context.fill(startX, startY, startX + endX, startY + 1, endY, color);
+    public static void fillHorizontalLine(GuiGraphics context, int x, int y, int length, int color) {
+        context.fill(x, y, x + length, y + 1, color);
     }
 
-    public static void fillRectangle(GuiGraphics context, int startX, int startY, int endX, int endY, int padding, int color) {
-        context.fill(startX, startY, startX + endX, startY + endY, padding, color);
+    public static void fillRectangle(GuiGraphics context, int x, int y, int width, int height, int color) {
+        context.fill(x, y, x + width, y + height, color);
     }
 
     public static void buildSkyHalf(VertexConsumer vertexConsumer, float y, boolean bottom) {
@@ -120,7 +120,7 @@ public final class RenderUtils {
 
     public static void renderBlueVoidSky(Minecraft minecraft, ClientLevel level, GpuBuffer blueVoidSkyBuffer, int skyColor, double depth) {
         Vector3f skyColorVec = ARGB.vector3fFromRGB24(skyColor);
-        if (level.effects().hasGround()) {
+        if (!level.effects().forceBrightLightmap()) {
             RenderSystem.setShaderColor(skyColorVec.x * 0.2F + 0.04F, skyColorVec.y * 0.2F + 0.04F, skyColorVec.z * 0.6F + 0.1F, 1.0F);
         } else {
             RenderSystem.setShaderColor(skyColorVec.x, skyColorVec.y, skyColorVec.z, 1.0F);

@@ -31,7 +31,6 @@ import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.util.TriState;
 import org.joml.Matrix4f;
 
 public final class LegacyGlintType {
@@ -73,7 +72,7 @@ public final class LegacyGlintType {
 
     private static RenderType makeItemGlintLayer(RenderStateShard.TexturingStateShard texturingStateShard, boolean translucent) {
         RenderTypeCompositeStateBuilderAccessor compositeStateBuilder = (RenderTypeCompositeStateBuilderAccessor) RenderType.CompositeState.builder();
-        compositeStateBuilder.withTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANTED_GLINT_ITEM, TriState.DEFAULT, false));
+        compositeStateBuilder.withTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANTED_GLINT_ITEM, false));
         compositeStateBuilder.withTexturingState(texturingStateShard);
         compositeStateBuilder.withOutputState(translucent ? RenderType.ITEM_ENTITY_TARGET : RenderType.MAIN_TARGET);
         return RenderTypeAccessor.createRenderType(
@@ -86,7 +85,7 @@ public final class LegacyGlintType {
 
     private static RenderType makeEntityGlintLayer(RenderStateShard.TexturingStateShard texturingStateShard, boolean armor) {
         RenderTypeCompositeStateBuilderAccessor compositeStateBuilder = (RenderTypeCompositeStateBuilderAccessor) RenderType.CompositeState.builder();
-        compositeStateBuilder.withTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANTED_GLINT_ITEM, TriState.DEFAULT, false));  // <=1.19.3 uses item glint texture, we will to
+        compositeStateBuilder.withTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANTED_GLINT_ITEM, false));  // <=1.19.3 uses item glint texture, we will to
         compositeStateBuilder.withTexturingState(texturingStateShard);
         compositeStateBuilder.withLayeringState(armor ? RenderType.VIEW_OFFSET_Z_LAYERING : RenderType.NO_LAYERING);
         return RenderTypeAccessor.createRenderType(

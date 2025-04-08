@@ -48,6 +48,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -58,6 +59,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Optional;
 
 @Mixin(LevelRenderer.class)
 public abstract class MixinLevelRenderer {
@@ -99,11 +102,12 @@ public abstract class MixinLevelRenderer {
         }
     }
 
-    @WrapOperation(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/DimensionSpecialEffects;getCloudHeight()F"))
-    private float animatium$cloudHeight(DimensionSpecialEffects instance, Operation<Float> original) {
+    @WrapOperation(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/dimension/DimensionType;cloudHeight()Ljava/util/Optional;"))
+    private Optional<Integer> animatium$cloudHeight(DimensionType instance, Operation<Optional<Integer>> original) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().cloudHeight) {
             // TODO/FIX: Clouds showing in the nether/end supposedly?
-            return instance.skyType() == DimensionSpecialEffects.SkyType.END ? 8.0F : 128.0F;
+            assert this.level != null;
+            return Optional.of(this.level.effects().skyType() == DimensionSpecialEffects.SkyType.END ? 8 : 128);
         } else {
             return original.call(instance);
         }

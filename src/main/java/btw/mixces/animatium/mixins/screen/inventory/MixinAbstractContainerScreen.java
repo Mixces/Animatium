@@ -30,7 +30,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -52,7 +51,7 @@ public abstract class MixinAbstractContainerScreen {
     private void animatium$slotHoverStyleRendering(AbstractContainerScreen<?> instance, GuiGraphics context, Operation<Void> original) {
         Slot slot = this.hoveredSlot;
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().slotHoverStyleRendering && slot != null && slot.isHighlightable()) {
-            context.fillGradient(RenderType.guiOverlay(), slot.x, slot.y, slot.x + 16, slot.y + 16, -2130706433, -2130706433, 0);
+            context.fillGradient(slot.x, slot.y, slot.x + 16, slot.y + 16, -2130706433, -2130706433);
         } else {
             original.call(instance, context);
         }
