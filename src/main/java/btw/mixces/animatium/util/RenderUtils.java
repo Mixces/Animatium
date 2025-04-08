@@ -120,11 +120,7 @@ public final class RenderUtils {
 
     public static void renderBlueVoidSky(Minecraft minecraft, ClientLevel level, GpuBuffer blueVoidSkyBuffer, int skyColor, double depth) {
         Vector3f skyColorVec = ARGB.vector3fFromRGB24(skyColor);
-        if (!level.effects().forceBrightLightmap()) {
-            RenderSystem.setShaderColor(skyColorVec.x * 0.2F + 0.04F, skyColorVec.y * 0.2F + 0.04F, skyColorVec.z * 0.6F + 0.1F, 1.0F);
-        } else {
-            RenderSystem.setShaderColor(skyColorVec.x, skyColorVec.y, skyColorVec.z, 1.0F);
-        }
+        RenderSystem.setShaderColor(skyColorVec.x * 0.2F + 0.04F, skyColorVec.y * 0.2F + 0.04F, skyColorVec.z * 0.6F + 0.1F, 1.0F);
 
         Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
         modelViewStack.pushMatrix();
