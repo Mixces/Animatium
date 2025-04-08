@@ -25,7 +25,6 @@ package btw.mixces.animatium;
 
 import btw.mixces.animatium.command.AnimatiumCommand;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.mixins.accessor.RenderPipelinesAccessor;
 import btw.mixces.animatium.packet.AnimatiumInfoPayloadPacket;
 import btw.mixces.animatium.packet.SetFeaturesPayloadPacket;
 import btw.mixces.animatium.util.Feature;
@@ -46,6 +45,7 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -76,17 +76,17 @@ public class AnimatiumClient implements ClientModInitializer {
     }
 
     // Shaders
-    public static final RenderPipeline LEGACY_SKY_PIPELINE = RenderPipelinesAccessor.registerPipeline(
-            RenderPipeline.builder(RenderPipelinesAccessor.getMatricesColorFogSnippet())
-                    .withLocation("pipeline/legacy_sky")
+    public static final RenderPipeline LEGACY_SKY_PIPELINE = RenderPipelines.register(
+            RenderPipeline.builder(RenderPipelines.MATRICES_COLOR_FOG_SNIPPET)
+                    .withLocation(getPath("pipeline/legacy_sky"))
                     .withVertexShader("core/position")
                     .withFragmentShader("core/position")
                     .withDepthWrite(false)
                     .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
                     .build());
 
-    public static final RenderPipeline LEGACY_GLINT_PIPELINE = RenderPipelinesAccessor.registerPipeline(
-            RenderPipeline.builder(RenderPipelinesAccessor.getMatricesColorSnippet(), RenderPipelinesAccessor.getFogNoColorSnippet())
+    public static final RenderPipeline LEGACY_GLINT_PIPELINE = RenderPipelines.register(
+            RenderPipeline.builder(RenderPipelines.MATRICES_COLOR_FOG_SNIPPET)
                     .withLocation(getPath("pipeline/legacy_glint"))
                     .withVertexShader(getPath("core/legacy_glint"))
                     .withFragmentShader(getPath("core/legacy_glint"))

@@ -13,7 +13,6 @@
     "accessor.ItemRendererAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.PlayerAccessor",
-    "accessor.RenderPipelinesAccessor",
     "accessor.RenderTypeAccessor",
     "accessor.RenderTypeCompositeStateBuilderAccessor",
     "accessor.SkyRendererAccessor",
