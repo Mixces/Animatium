@@ -79,10 +79,10 @@ public abstract class MixinDrawContext {
     }
 
     @Unique
-    private static void animatium$drawFrameGradient(GuiGraphics context, int i, int j, int k, int l, int startColor, int endColor) {
-        RenderUtils.fillVerticalGradientLine(context, i, j, l - 2, startColor, endColor);
-        RenderUtils.fillVerticalGradientLine(context, i + k - 1, j, l - 2, startColor, endColor);
-        RenderUtils.fillHorizontalLine(context, i, j - 1, k, startColor);
-        RenderUtils.fillHorizontalLine(context, i, j - 1 + l - 1, k, endColor);
+    private static void animatium$drawFrameGradient(GuiGraphics context, int x, int y, int width, int height, int startColor, int endColor) {
+        RenderUtils.fillVerticalGradientLine(context, x, y, height - 2, startColor, endColor);
+        RenderUtils.fillVerticalGradientLine(context, x + width - 1, y, height - 2, startColor, endColor);
+        RenderUtils.fillHorizontalLine(context, x, y - 1, width, startColor);
+        RenderUtils.fillHorizontalLine(context, x, y - 1 + height - 1, width, endColor);
     }
 }
