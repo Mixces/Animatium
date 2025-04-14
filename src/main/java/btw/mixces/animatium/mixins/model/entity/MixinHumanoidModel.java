@@ -86,7 +86,6 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
     private boolean animatium$sneakingFeetPosition(HumanoidRenderState instance, Operation<Boolean> original) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().sneakingFeetPosition && instance.isCrouching) {
             // Values sourced from older versions
-            // TODO/NOTE: Better way to do this possibly?
             body.xRot = 0.5F;
             rightArm.xRot += 0.4F;
             leftArm.xRot += 0.4F;

@@ -27,6 +27,8 @@ import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.ViewBobbingStorage;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -38,7 +40,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Player.class)
 public abstract class MixinPlayer extends LivingEntity {
@@ -46,11 +47,9 @@ public abstract class MixinPlayer extends LivingEntity {
         super(entityType, level);
     }
 
-    @Inject(method = "getMaxHeadRotationRelativeToBody", at = @At(value = "RETURN"), cancellable = true)
-    private void animatium$uncapBlockingHeadRotation(CallbackInfoReturnable<Float> cir) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().uncapBlockingHeadRotation) {
-            cir.setReturnValue(50F);
-        }
+    @WrapOperation(method = "getMaxHeadRotationRelativeToBody", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isBlocking()Z"))
+    private boolean animatium$uncapBlockingHeadRotation(Player instance, Operation<Boolean> original) {
+        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().uncapBlockingHeadRotation;
     }
 
     @Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;setSpeed(F)V", shift = At.Shift.AFTER))
