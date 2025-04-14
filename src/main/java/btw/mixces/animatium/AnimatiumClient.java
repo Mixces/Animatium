@@ -27,6 +27,7 @@ import btw.mixces.animatium.command.AnimatiumCommand;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.mixins.accessor.RenderPipelinesAccessor;
 import btw.mixces.animatium.packet.AnimatiumInfoPayloadPacket;
+import btw.mixces.animatium.packet.RequestInfoPayloadPacket;
 import btw.mixces.animatium.packet.SetFeaturesPayloadPacket;
 import btw.mixces.animatium.util.Feature;
 import com.mojang.blaze3d.pipeline.BlendFunction;
@@ -166,5 +167,8 @@ public class AnimatiumClient implements ClientModInitializer {
             ENABLED_FEATURES.clear();
             ENABLED_FEATURES.addAll(payload.features());
         }));
+
+        PayloadTypeRegistry.playS2C().register(RequestInfoPayloadPacket.PAYLOAD_ID, RequestInfoPayloadPacket.CODEC);
+        ClientPlayNetworking.registerGlobalReceiver(RequestInfoPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> ClientPlayNetworking.send(AnimatiumClient.getInfoPayload())));
     }
 }
