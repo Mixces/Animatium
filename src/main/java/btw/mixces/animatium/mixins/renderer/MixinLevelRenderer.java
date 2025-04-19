@@ -29,9 +29,8 @@ import btw.mixces.animatium.util.MathUtils;
 import btw.mixces.animatium.util.RenderUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.mojang.blaze3d.buffers.BufferType;
-import com.mojang.blaze3d.buffers.BufferUsage;
 import com.mojang.blaze3d.buffers.GpuBuffer;
+import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.opengl.GlDevice;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -41,7 +40,10 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.DimensionSpecialEffects;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
@@ -81,15 +83,15 @@ public abstract class MixinLevelRenderer {
         BufferBuilder builder = Tesselator.getInstance().begin(mode, DefaultVertexFormat.POSITION);
         RenderUtils.buildSkyHalf(builder, -16.0F, true);
         try (MeshData meshData = builder.buildOrThrow()) {
-            this.animatium$blueVoidBuffer = RenderSystem.getDevice().createBuffer(() -> "Blue void sky vertex buffer", BufferType.VERTICES, BufferUsage.STATIC_WRITE, meshData.vertexBuffer());
+            this.animatium$blueVoidBuffer = RenderSystem.getDevice().createBuffer(() -> "Blue void sky vertex buffer", 32, meshData.vertexBuffer());
         }
     }
 
     @Inject(method = "method_62215", at = @At("TAIL"))
-    private void animatium$blueVoidSky(FogParameters fogParameters, DimensionSpecialEffects.SkyType skyType, float tickDelta, DimensionSpecialEffects dimensionSpecialEffects, CallbackInfo ci) {
+    private void animatium$blueVoidSky(GpuBufferSlice fogParameters, DimensionSpecialEffects.SkyType skyType, float tickDelta, DimensionSpecialEffects dimensionSpecialEffects, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().blueVoidSky && skyType != DimensionSpecialEffects.SkyType.END && this.level != null && this.minecraft.player != null) {
             int skyColor = this.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), tickDelta);
-            RenderUtils.renderBlueVoidSky(this.minecraft, this.level, this.animatium$blueVoidBuffer, skyColor, this.minecraft.player.getEyePosition(tickDelta).y - RenderUtils.getLevelHorizonHeight(this.level));
+            RenderUtils.renderBlueVoidSky(this.minecraft, this.animatium$blueVoidBuffer, skyColor, this.minecraft.player.getEyePosition(tickDelta).y - RenderUtils.getLevelHorizonHeight(this.level));
         }
     }
 

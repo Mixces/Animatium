@@ -27,6 +27,7 @@ import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.mixins.accessor.ClientLevelDataAccessor;
 import com.mojang.blaze3d.buffers.GpuBuffer;
+import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -43,7 +44,6 @@ import java.util.OptionalInt;
 
 public final class RenderUtils {
     private static float LINE_WIDTH = -1.0F;
-    private static Vector3f GLINT_COLOR = new Vector3f(0.5019607843137255F, 0.25098039215686274F, 0.8F);
 
     public static float getLineWidth(Float def) {
         if (LINE_WIDTH == -1.0F) {
@@ -55,18 +55,6 @@ public final class RenderUtils {
 
     public static void setLineWidth(float width) {
         LINE_WIDTH = width;
-    }
-
-    public static Vector3f getGlintColor() {
-        return GLINT_COLOR;
-    }
-
-    public static void setGlintColor(Vector3f vector3f) {
-        GLINT_COLOR = vector3f;
-    }
-
-    public static void setGlintColor(float red, float green, float blue) {
-        GLINT_COLOR = new Vector3f(red, green, blue);
     }
 
     public static double getLevelHorizonHeight(ClientLevel level) {
@@ -118,13 +106,15 @@ public final class RenderUtils {
         }
     }
 
-    public static void renderBlueVoidSky(Minecraft minecraft, ClientLevel level, GpuBuffer blueVoidSkyBuffer, int skyColor, double depth) {
-        Vector3f skyColorVec = ARGB.vector3fFromRGB24(skyColor);
-        RenderSystem.setShaderColor(skyColorVec.x * 0.2F + 0.04F, skyColorVec.y * 0.2F + 0.04F, skyColorVec.z * 0.6F + 0.1F, 1.0F);
-
+    public static void renderBlueVoidSky(Minecraft minecraft, GpuBuffer blueVoidSkyBuffer, int skyColor, double depth) {
         Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
         modelViewStack.pushMatrix();
         modelViewStack.translate(0.0F, -((float) (depth - 16.0)), 0.0F);
+
+        Vector3f skyColorVec = ARGB.vector3fFromRGB24(skyColor);
+        GpuBufferSlice transforms = DynamicTransformsBuilder.of()
+                .withShaderColor(new Vector3f(skyColorVec.x * 0.2F + 0.04F, skyColorVec.y * 0.2F + 0.04F, skyColorVec.z * 0.6F + 0.1F))
+                .build();
 
         try (RenderPass renderPass = RenderSystem.getDevice()
                 .createCommandEncoder()
@@ -133,10 +123,11 @@ public final class RenderUtils {
             renderPass.setPipeline(AnimatiumClient.LEGACY_SKY_PIPELINE);
             renderPass.setVertexBuffer(0, blueVoidSkyBuffer);
             renderPass.setIndexBuffer(autoStorageIndexBuffer.getBuffer(6), autoStorageIndexBuffer.type());
+            RenderSystem.bindDefaultUniforms(renderPass);
+            renderPass.setUniform("DynamicTransforms", transforms);
             renderPass.drawIndexed(0, 1014);
         }
 
         modelViewStack.popMatrix();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 }

@@ -21,17 +21,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package btw.mixces.animatium.mixins.accessor;
+package btw.mixces.animatium.mixins.renderer;
 
-import com.mojang.blaze3d.buffers.GpuBuffer;
-import net.minecraft.client.renderer.SkyRenderer;
-import org.spongepowered.asm.mixin.Final;
+import btw.mixces.animatium.util.RenderUtils;
+import net.minecraft.client.renderer.RenderType;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(SkyRenderer.class)
-public interface SkyRendererAccessor {
-    @Final
-    @Accessor("bottomSkyBuffer")
-    GpuBuffer getBottomSkyBuffer();
+@Mixin(RenderType.CompositeRenderType.class)
+public abstract class MixinCompositeRenderType {
+    @ModifyArg(method = "draw", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/DynamicUniforms;writeTransform(Lorg/joml/Matrix4fc;Lorg/joml/Vector4fc;Lorg/joml/Vector3fc;Lorg/joml/Matrix4fc;F)Lcom/mojang/blaze3d/buffers/GpuBufferSlice;"), index = 4)
+    private float animatium$blockOutlineRendering$lineWidth(float original) {
+        return RenderUtils.getLineWidth(original);
+    }
 }

@@ -1,3 +1,4 @@
 accessWidener v2 named
 accessible class net/minecraft/client/gui/Gui$HeartType
 accessible class net/minecraft/client/gui/Font$StringRenderOutput
+accessible field net/minecraft/client/renderer/RenderPipelines MATRICES_FOG_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
