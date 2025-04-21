@@ -436,6 +436,12 @@ Allows the server to enable/disable server-only features that enhance gameplay.
 |------------------------|:--------------|:---------------|:---------------------------------------------------------------------------------------------|
 | animatium:set_features | Features List | List\<String\> | List of features the client should use currently, maps to Feature above or skips if unknown. |
 
+#### Request Info (Clientbound)
+
+| Identifier             | Field Name | Field Type | Description                                                                         |
+|------------------------|:-----------|:-----------|:------------------------------------------------------------------------------------|
+| animatium:request_info |            |            | Sends the animatium:info payload back containing information about the mod version. |
+
 #### Info (Serverbound)
 
 Sent to the server when receiving the "minecraft:register" payload, and it contains "Animatium".

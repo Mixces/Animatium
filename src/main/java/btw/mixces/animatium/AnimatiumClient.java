@@ -26,6 +26,7 @@ package btw.mixces.animatium;
 import btw.mixces.animatium.command.AnimatiumCommand;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.packet.AnimatiumInfoPayloadPacket;
+import btw.mixces.animatium.packet.RequestInfoPayloadPacket;
 import btw.mixces.animatium.packet.SetFeaturesPayloadPacket;
 import btw.mixces.animatium.util.Feature;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -66,6 +67,10 @@ public class AnimatiumClient implements ClientModInitializer {
 
     public static AnimatiumInfoPayloadPacket getInfoPayload() {
         return new AnimatiumInfoPayloadPacket(VERSION, DEVELOPMENT_VERSION);
+    }
+
+    public static ResourceLocation getPath(String path) {
+        return ResourceLocation.fromNamespaceAndPath("animatium", path);
     }
 
     // Shaders
@@ -141,5 +146,8 @@ public class AnimatiumClient implements ClientModInitializer {
             ENABLED_FEATURES.clear();
             ENABLED_FEATURES.addAll(payload.features());
         }));
+
+        PayloadTypeRegistry.playS2C().register(RequestInfoPayloadPacket.PAYLOAD_ID, RequestInfoPayloadPacket.CODEC);
+        ClientPlayNetworking.registerGlobalReceiver(RequestInfoPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> ClientPlayNetworking.send(AnimatiumClient.getInfoPayload())));
     }
 }
