@@ -407,6 +407,9 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - skyHorizonHeight
     - Description: Changes the horizon height to how it was in <=1.16.5.
     - Type: BOOLEAN
+- voidSkyFogHeight
+    - Description: Restores the old void sky fog height to what it was in <=1.21.1. (Fixes MC-279472)
+    - Type: BOOLEAN
 - cloudHeight
     - Description: Changes the cloud height back to 128 like in <=1.16.5.
     - Type: BOOLEAN
@@ -432,6 +435,12 @@ Allows the server to enable/disable server-only features that enhance gameplay.
 | Identifier             | Field Name    | Field Type     | Description                                                                                  |
 |------------------------|:--------------|:---------------|:---------------------------------------------------------------------------------------------|
 | animatium:set_features | Features List | List\<String\> | List of features the client should use currently, maps to Feature above or skips if unknown. |
+
+#### Request Info (Clientbound)
+
+| Identifier             | Field Name | Field Type | Description                                                                         |
+|------------------------|:-----------|:-----------|:------------------------------------------------------------------------------------|
+| animatium:request_info |            |            | Sends the animatium:info payload back containing information about the mod version. |
 
 #### Info (Serverbound)
 
