@@ -26,6 +26,7 @@ package btw.mixces.animatium;
 import btw.mixces.animatium.command.AnimatiumCommand;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.packet.AnimatiumInfoPayloadPacket;
+import btw.mixces.animatium.packet.RequestInfoPayloadPacket;
 import btw.mixces.animatium.packet.SetFeaturesPayloadPacket;
 import btw.mixces.animatium.util.Feature;
 import com.mojang.blaze3d.pipeline.BlendFunction;
@@ -34,11 +35,11 @@ import com.mojang.blaze3d.platform.DepthTestFunction;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
@@ -78,11 +79,10 @@ public class AnimatiumClient implements ClientModInitializer {
     public static final RenderPipeline LEGACY_SKY_PIPELINE = RenderPipelines.register(
             RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
                     .withLocation(getPath("pipeline/legacy_sky"))
-                    .withVertexShader("core/position")
-                    .withFragmentShader("core/position")
+                    .withVertexShader("core/sky")
+                    .withFragmentShader("core/sky")
                     .withDepthWrite(false)
                     .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
-                    .withShaderDefine("FOG_IS_SKY")
                     .build());
 
     public static final RenderPipeline LEGACY_GLINT_PIPELINE = RenderPipelines.register(
@@ -147,11 +147,7 @@ public class AnimatiumClient implements ClientModInitializer {
         ResourceManagerHelper.registerBuiltinResourcePack(ResourceLocation.parse("animatium:classic_textures"), MOD_CONTAINER, ResourcePackActivationType.DEFAULT_ENABLED);
 
         // Commands
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            if (environment.includeIntegrated) {
-                dispatcher.register(AnimatiumCommand.create());
-            }
-        });
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) -> dispatcher.register(AnimatiumCommand.create()));
 
         // Packets
         ClientLoginConnectionEvents.DISCONNECT.register((packet, client) -> ENABLED_FEATURES.clear());
@@ -164,5 +160,8 @@ public class AnimatiumClient implements ClientModInitializer {
             ENABLED_FEATURES.clear();
             ENABLED_FEATURES.addAll(payload.features());
         }));
+
+        PayloadTypeRegistry.playS2C().register(RequestInfoPayloadPacket.PAYLOAD_ID, RequestInfoPayloadPacket.CODEC);
+        ClientPlayNetworking.registerGlobalReceiver(RequestInfoPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> ClientPlayNetworking.send(AnimatiumClient.getInfoPayload())));
     }
 }

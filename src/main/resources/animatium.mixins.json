@@ -32,7 +32,6 @@
 		"model.item.MixinItemModelResolver",
 		"model.item.MixinItemStackRenderLayerState",
 		"network.MixinMultiPlayerGameMode",
-		"network.MixinRegistrationPayload",
 		"renderer.MixinCompositeRenderType",
 		"renderer.MixinDrawContext",
 		"renderer.MixinGameRenderer",

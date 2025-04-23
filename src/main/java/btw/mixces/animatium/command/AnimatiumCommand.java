@@ -30,21 +30,21 @@ import btw.mixces.animatium.util.Feature;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.Minecraft;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 
-public class AnimatiumCommand implements Command<CommandSourceStack> {
-    public static LiteralArgumentBuilder<CommandSourceStack> create() {
-        LiteralArgumentBuilder<CommandSourceStack> command = Commands.literal("animatium").executes(new AnimatiumCommand());
+public class AnimatiumCommand implements Command<FabricClientCommandSource> {
+    public static LiteralArgumentBuilder<FabricClientCommandSource> create() {
+        LiteralArgumentBuilder<FabricClientCommandSource> command = ClientCommandManager.literal("animatium").executes(new AnimatiumCommand());
 
-        command.then(LiteralArgumentBuilder.<CommandSourceStack>literal("debug").executes((context) -> {
-            context.getSource().sendSystemMessage(Component.literal("Disabled miss swing penalty? " + AnimatiumClient.ENABLED_FEATURES.contains(Feature.MISS_PENALTY)).withColor(ColourUtils.randomColor()));
-            context.getSource().sendSystemMessage(Component.literal("Enabled left-click item usage on ground? " + AnimatiumClient.ENABLED_FEATURES.contains(Feature.LEFT_CLICK_ITEM_USAGE)).withColor(ColourUtils.randomColor()));
+        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("debug").executes((context) -> {
+            context.getSource().sendFeedback(Component.literal("Disabled miss swing penalty? " + AnimatiumClient.ENABLED_FEATURES.contains(Feature.MISS_PENALTY)).withColor(ColourUtils.randomColor()));
+            context.getSource().sendFeedback(Component.literal("Enabled left-click item usage on ground? " + AnimatiumClient.ENABLED_FEATURES.contains(Feature.LEFT_CLICK_ITEM_USAGE)).withColor(ColourUtils.randomColor()));
             return Command.SINGLE_SUCCESS;
         }).requires((ctx) -> {
             Player player = Minecraft.getInstance().player;
@@ -54,11 +54,11 @@ public class AnimatiumCommand implements Command<CommandSourceStack> {
             ).contains(player.getStringUUID());
         }));
 
-        command.then(LiteralArgumentBuilder.<CommandSourceStack>literal("on").executes((context) -> {
+        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("on").executes((context) -> {
             if (AnimatiumClient.isEnabled()) {
-                context.getSource().sendSystemMessage(Component.literal("Mod is already enabled!").withColor(0x00FF00));
+                context.getSource().sendFeedback(Component.literal("Mod is already enabled!").withColor(0x00FF00));
             } else {
-                context.getSource().sendSystemMessage(Component.literal("Mod enabled.").withColor(0x00FF00));
+                context.getSource().sendFeedback(Component.literal("Mod enabled.").withColor(0x00FF00));
                 AnimatiumClient.ENABLED = true;
                 Minecraft.getInstance().reloadResourcePacks();
                 if (!AnimatiumClient.saveEnabledState()) {
@@ -69,11 +69,11 @@ public class AnimatiumCommand implements Command<CommandSourceStack> {
             return Command.SINGLE_SUCCESS;
         }));
 
-        command.then(LiteralArgumentBuilder.<CommandSourceStack>literal("off").executes((context) -> {
+        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("off").executes((context) -> {
             if (!AnimatiumClient.isEnabled()) {
-                context.getSource().sendSystemMessage(Component.literal("Mod is already disabled!").withColor(0x00FF00));
+                context.getSource().sendFeedback(Component.literal("Mod is already disabled!").withColor(0x00FF00));
             } else {
-                context.getSource().sendSystemMessage(Component.literal("Mod disabled.").withColor(0xFF0000));
+                context.getSource().sendFeedback(Component.literal("Mod disabled.").withColor(0xFF0000));
                 AnimatiumClient.ENABLED = false;
                 Minecraft.getInstance().reloadResourcePacks();
                 AnimatiumClient.saveEnabledState();
@@ -82,23 +82,19 @@ public class AnimatiumCommand implements Command<CommandSourceStack> {
             return Command.SINGLE_SUCCESS;
         }));
 
-        command.then(LiteralArgumentBuilder.<CommandSourceStack>literal("configure").executes((context) -> {
-            context.getSource().sendSystemMessage(Component.literal("Opening config menu...").withColor(0x00FF00));
+        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("configure").executes((context) -> {
+            context.getSource().sendFeedback(Component.literal("Opening config menu...").withColor(0x00FF00));
             Minecraft minecraft = Minecraft.getInstance();
-//            minecraft.schedule(() -> minecraft.setScreen(AnimatiumConfig.getConfigScreen(null)));
+            minecraft.schedule(() -> minecraft.setScreen(AnimatiumConfig.getConfigScreen(null)));
             return Command.SINGLE_SUCCESS;
         }));
-
-//        ,
-//        "yet_another_config_lib_v3": ">=3.6.6",
-//                "fabric-api": "*"
 
         return command;
     }
 
     @Override
-    public int run(CommandContext<CommandSourceStack> context) {
-        context.getSource().sendSystemMessage(Component.literal("Hello there!").withColor(ColourUtils.randomColor()));
+    public int run(CommandContext<FabricClientCommandSource> context) {
+        context.getSource().sendFeedback(Component.literal("Hello there!").withColor(ColourUtils.randomColor()));
         return Command.SINGLE_SUCCESS;
     }
 }

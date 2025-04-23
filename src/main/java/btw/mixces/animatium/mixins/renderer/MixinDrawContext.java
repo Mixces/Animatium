@@ -49,7 +49,7 @@ public abstract class MixinDrawContext {
     @Shadow
     public abstract void fill(RenderPipeline renderPipeline, int i, int j, int k, int l, int m);
 
-    @WrapOperation(method = "renderTooltipInternal", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/tooltip/TooltipRenderUtil;renderTooltipBackground(Lnet/minecraft/client/gui/GuiGraphics;IIIILnet/minecraft/resources/ResourceLocation;)V"))
+    @WrapOperation(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/tooltip/TooltipRenderUtil;renderTooltipBackground(Lnet/minecraft/client/gui/GuiGraphics;IIIILnet/minecraft/resources/ResourceLocation;)V"))
     private void animatium$tooltipStyleRendering(GuiGraphics context, int i, int j, int k, int l, ResourceLocation resourceLocation, Operation<Void> original) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().tooltipStyleRendering) {
             int n = i - 3;

@@ -44,7 +44,7 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.16.7",
-		"minecraft": "1.21.6-alpha.25.16.a"
+		"minecraft": "1.21.6-alpha.25.17.a"
 	},
 	"recommends": {
 		"animatium_extras": "*",

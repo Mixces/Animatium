@@ -160,7 +160,7 @@ public abstract class MixinLevelRenderer {
         GpuTexture texture = gpuTexture;
         if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().entityGlowOutline && RenderSystem.getDevice() instanceof GlDevice glDevice) {
             if (animatium$blankTexture == null) {
-                animatium$blankTexture = glDevice.createTexture("Blank", TextureFormat.RGBA8, 1, 1, 1);
+                animatium$blankTexture = glDevice.createTexture(() -> "Blank", 15, TextureFormat.RGBA8, 1, 1, 1);
             }
 
             texture = animatium$blankTexture;

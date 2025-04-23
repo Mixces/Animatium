@@ -118,14 +118,14 @@ public final class RenderUtils {
 
         try (RenderPass renderPass = RenderSystem.getDevice()
                 .createCommandEncoder()
-                .createRenderPass(minecraft.getMainRenderTarget().getColorTexture(), OptionalInt.empty(), minecraft.getMainRenderTarget().getDepthTexture(), OptionalDouble.empty())) {
+                .createRenderPass(() -> "Blue void disc", minecraft.getMainRenderTarget().getColorTexture(), OptionalInt.empty(), minecraft.getMainRenderTarget().getDepthTexture(), OptionalDouble.empty())) {
             RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
             renderPass.setPipeline(AnimatiumClient.LEGACY_SKY_PIPELINE);
             renderPass.setVertexBuffer(0, blueVoidSkyBuffer);
             renderPass.setIndexBuffer(autoStorageIndexBuffer.getBuffer(6), autoStorageIndexBuffer.type());
             RenderSystem.bindDefaultUniforms(renderPass);
             renderPass.setUniform("DynamicTransforms", transforms);
-            renderPass.drawIndexed(0, 1014);
+            renderPass.drawIndexed(0, 0, 1014, 1);
         }
 
         modelViewStack.popMatrix();
