@@ -45,7 +45,6 @@ import net.minecraft.client.renderer.CoreShaders;
 import net.minecraft.client.renderer.ShaderDefines;
 import net.minecraft.client.renderer.ShaderProgram;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -133,7 +132,7 @@ public class AnimatiumClient implements ClientModInitializer {
         ResourceManagerHelper.registerBuiltinResourcePack(ResourceLocation.parse("animatium:classic_textures"), MOD_CONTAINER, ResourcePackActivationType.DEFAULT_ENABLED);
 
         // Commands
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> AnimatiumCommand.register(dispatcher));
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) -> AnimatiumCommand.create());
 
         // Packets
         ClientLoginConnectionEvents.DISCONNECT.register((packet, client) -> ENABLED_FEATURES.clear());
