@@ -71,25 +71,25 @@ public class AnimatiumClient implements ClientModInitializer {
         return new AnimatiumInfoPayloadPacket(VERSION, DEVELOPMENT_VERSION);
     }
 
-    public static ResourceLocation getPath(String path) {
+    public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath("animatium", path);
     }
 
     // Shaders
     public static final RenderPipeline LEGACY_SKY_PIPELINE = RenderPipelines.register(
             RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
-                    .withLocation(getPath("pipeline/legacy_sky"))
-                    .withVertexShader("core/sky")
-                    .withFragmentShader("core/sky")
+                    .withLocation(id("pipeline/legacy_sky"))
+                    .withVertexShader(id("core/legacy_sky"))
+                    .withFragmentShader(id("core/legacy_sky"))
                     .withDepthWrite(false)
                     .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
                     .build());
 
     public static final RenderPipeline LEGACY_GLINT_PIPELINE = RenderPipelines.register(
             RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
-                    .withLocation(getPath("pipeline/legacy_glint"))
-                    .withVertexShader(getPath("core/legacy_glint"))
-                    .withFragmentShader(getPath("core/legacy_glint"))
+                    .withLocation(id("pipeline/legacy_glint"))
+                    .withVertexShader(id("core/legacy_glint"))
+                    .withFragmentShader(id("core/legacy_glint"))
                     .withColorWrite(true, false)
                     .withCull(true)
                     .withBlend(BlendFunction.GLINT)

@@ -35,6 +35,7 @@ import com.mojang.blaze3d.opengl.GlDevice;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuTexture;
+import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.textures.TextureFormat;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Camera;
@@ -83,7 +84,7 @@ public abstract class MixinLevelRenderer {
         BufferBuilder builder = Tesselator.getInstance().begin(mode, DefaultVertexFormat.POSITION);
         RenderUtils.buildSkyHalf(builder, -16.0F, true);
         try (MeshData meshData = builder.buildOrThrow()) {
-            this.animatium$blueVoidBuffer = RenderSystem.getDevice().createBuffer(() -> "Blue void sky vertex buffer", 32, meshData.vertexBuffer());
+            this.animatium$blueVoidBuffer = RenderSystem.getDevice().createBuffer(() -> "Blue void sky vertex buffer", GpuBuffer.USAGE_COPY_DST, meshData.vertexBuffer());
         }
     }
 
@@ -155,17 +156,24 @@ public abstract class MixinLevelRenderer {
     @Unique
     private GpuTexture animatium$blankTexture = null;
 
-    @WrapOperation(method = "doEntityOutline", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;blitAndBlendToTexture(Lcom/mojang/blaze3d/textures/GpuTexture;)V"))
-    private void animatium$entityGlowOutline(RenderTarget instance, GpuTexture gpuTexture, Operation<Void> original) {
-        GpuTexture texture = gpuTexture;
+    @Unique
+    private GpuTextureView animatium$blankTextureView = null;
+
+    @WrapOperation(method = "doEntityOutline", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;blitAndBlendToTexture(Lcom/mojang/blaze3d/textures/GpuTextureView;)V"))
+    private void animatium$entityGlowOutline(RenderTarget instance, GpuTextureView gpuTextureView, Operation<Void> original) {
+        GpuTextureView textureView = gpuTextureView;
         if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().entityGlowOutline && RenderSystem.getDevice() instanceof GlDevice glDevice) {
-            if (animatium$blankTexture == null) {
-                animatium$blankTexture = glDevice.createTexture(() -> "Blank", 15, TextureFormat.RGBA8, 1, 1, 1);
+            if (this.animatium$blankTexture == null) {
+                this.animatium$blankTexture = glDevice.createTexture(() -> "Blank", 15, TextureFormat.RGBA8, 1, 1, 1, 1);
             }
 
-            texture = animatium$blankTexture;
+            if (this.animatium$blankTextureView == null) {
+                this.animatium$blankTextureView = glDevice.createTextureView(this.animatium$blankTexture);
+            }
+
+            textureView = this.animatium$blankTextureView;
         }
 
-        original.call(instance, texture);
+        original.call(instance, textureView);
     }
 }
