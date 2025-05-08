@@ -78,7 +78,7 @@ public final class LegacyGlintType {
                 VertexFormat.Mode.QUADS,
                 1536,
                 RenderType.CompositeState.builder()
-                        .setShaderState(new RenderStateShard.ShaderStateShard(AnimatiumClient.renderTypeLegacyGlint))
+                        .setShaderState(new RenderStateShard.ShaderStateShard(AnimatiumClient.legacyGlintProgram))
                         .setTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANTED_GLINT_ITEM, TriState.DEFAULT, false))
                         .setWriteMaskState(RenderType.COLOR_WRITE)
                         .setCullState(RenderType.CULL)
@@ -97,7 +97,7 @@ public final class LegacyGlintType {
                 VertexFormat.Mode.QUADS,
                 1536,
                 RenderType.CompositeState.builder()
-                        .setShaderState(new RenderStateShard.ShaderStateShard(AnimatiumClient.renderTypeLegacyGlint))
+                        .setShaderState(new RenderStateShard.ShaderStateShard(AnimatiumClient.legacyGlintProgram))
                         .setTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANTED_GLINT_ITEM, TriState.DEFAULT, false)) // <=1.19.3 uses item glint texture, we will to
                         .setWriteMaskState(RenderType.COLOR_WRITE)
                         .setCullState(RenderType.CULL)

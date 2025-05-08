@@ -30,6 +30,7 @@ import btw.mixces.animatium.packet.RequestInfoPayloadPacket;
 import btw.mixces.animatium.packet.SetFeaturesPayloadPacket;
 import btw.mixces.animatium.util.Feature;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
@@ -41,9 +42,8 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.client.renderer.CoreShaders;
-import net.minecraft.client.renderer.ShaderDefines;
-import net.minecraft.client.renderer.ShaderProgram;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.*;
 import net.minecraft.resources.ResourceLocation;
 
 import java.io.File;
@@ -52,14 +52,15 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnimatiumClient implements ClientModInitializer {
+public final class AnimatiumClient implements ClientModInitializer {
     // Settings
+    public static final String MOD_ID = "animatium";
     public static boolean ENABLED = true;
     public static List<Feature> ENABLED_FEATURES = new ArrayList<>();
 
     // Info
     // TODO/NOTE: Find a better way/cleanup
-    private static final ModContainer MOD_CONTAINER = FabricLoader.getInstance().getModContainer("animatium").orElseThrow(() -> new RuntimeException("Mod not found"));
+    private static final ModContainer MOD_CONTAINER = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow(() -> new RuntimeException("Mod not found"));
     private static final String[] VERSION_PARTS = MOD_CONTAINER.getMetadata().getVersion().getFriendlyString().split("-");
     public static Double VERSION = Double.parseDouble(VERSION_PARTS[0]);
 //    public static @Nullable String DEVELOPMENT_VERSION = VERSION_PARTS[1];
@@ -68,19 +69,56 @@ public class AnimatiumClient implements ClientModInitializer {
         return new AnimatiumInfoPayloadPacket(VERSION, null);
     }
 
-    public static ResourceLocation getPath(String path) {
-        return ResourceLocation.fromNamespaceAndPath("animatium", path);
+    public static ResourceLocation id(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
 
     // Shaders
-    public static ShaderProgram renderTypeLegacyGlint = new ShaderProgram(
-            ResourceLocation.fromNamespaceAndPath("animatium", "core/rendertype_legacy_glint"),
+    public static ShaderProgram legacyGlintProgram = new ShaderProgram(
+            id("core/rendertype_legacy_glint"),
             DefaultVertexFormat.POSITION_TEX,
             ShaderDefines.EMPTY
     );
 
+    public static ShaderProgram legacySkyProgram = new ShaderProgram(
+            id("core/rendertype_legacy_sky"),
+            DefaultVertexFormat.POSITION_TEX,
+            ShaderDefines.EMPTY
+    );
+
+    public static ShaderProgram legacySkyPlanarFogProgram = new ShaderProgram(
+            id("core/rendertype_legacy_sky"),
+            DefaultVertexFormat.POSITION_TEX,
+            ShaderDefines.builder()
+                    .define("PLANAR_FOG")
+                    .build()
+    );
+
+    private static RenderType makeBasicSky(boolean planar) {
+        return RenderType.create(
+                "legacy_sky" + (planar ? "_planar_fog" : ""),
+                DefaultVertexFormat.POSITION,
+                VertexFormat.Mode.QUADS,
+                1014,
+                false,
+                false,
+                RenderType.CompositeState.builder()
+                        .setShaderState(new RenderStateShard.ShaderStateShard(planar ? legacySkyPlanarFogProgram : legacySkyProgram))
+                        .setWriteMaskState(new RenderStateShard.WriteMaskStateShard(true, false))
+                        .createCompositeState(false)
+        );
+    }
+
+    private static RenderType LEGACY_SKY_RENDERTYPE = null;
+    private static RenderType LEGACY_SKY_PLANAR_FOG_RENDERTYPE = null;
+
+    public static RenderType getLegacySkyRenderType(boolean planar) {
+        return planar ? LEGACY_SKY_PLANAR_FOG_RENDERTYPE : LEGACY_SKY_RENDERTYPE;
+    }
+
     static {
-        CoreShaders.getProgramsToPreload().add(renderTypeLegacyGlint);
+        CoreShaders.getProgramsToPreload().add(legacyGlintProgram);
+        CoreShaders.getProgramsToPreload().add(legacySkyProgram);
     }
 
     // Config State
@@ -127,6 +165,11 @@ public class AnimatiumClient implements ClientModInitializer {
             ENABLED = true;
             System.err.println("Failed to load enabled state, defaulting to true...");
         }
+
+        Minecraft.getInstance().schedule(() -> {
+            LEGACY_SKY_RENDERTYPE = makeBasicSky(false);
+            LEGACY_SKY_PLANAR_FOG_RENDERTYPE = makeBasicSky(true);
+        });
 
         // Packs
         ResourceManagerHelper.registerBuiltinResourcePack(ResourceLocation.parse("animatium:classic_textures"), MOD_CONTAINER, ResourcePackActivationType.DEFAULT_ENABLED);

@@ -407,6 +407,9 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
 - skyHorizonHeight
     - Description: Changes the horizon height to how it was in <=1.16.5.
     - Type: BOOLEAN
+- planarSkyFog
+    - Description: Changes the sky fog to use the planar type. This fog is also known as OptiFine Fast Fog.
+    - Type: BOOLEAN
 - voidSkyFogHeight
     - Description: Restores the old void sky fog height to what it was in <=1.21.1. (Fixes MC-279472)
     - Type: BOOLEAN

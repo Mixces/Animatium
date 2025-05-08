@@ -23,6 +23,7 @@
 
 package btw.mixces.animatium.util;
 
+import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.mixins.accessor.ClientLevelDataAccessor;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -30,7 +31,6 @@ import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.ARGB;
 import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
@@ -123,7 +123,7 @@ public final class RenderUtils {
         Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
         modelViewStack.pushMatrix();
         modelViewStack.translate(0.0F, -((float) (depth - 16.0)), 0.0F);
-        blueVoidSkyBuffer.drawWithRenderType(RenderType.sky());
+        blueVoidSkyBuffer.drawWithRenderType(AnimatiumClient.getLegacySkyRenderType(AnimatiumConfig.instance().planarSkyFog));
         modelViewStack.popMatrix();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }

@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record RequestInfoPayloadPacket() implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, RequestInfoPayloadPacket> CODEC = CustomPacketPayload.codec(null, RequestInfoPayloadPacket::read);
-    public static final Type<RequestInfoPayloadPacket> PAYLOAD_ID = new Type<>(AnimatiumClient.getPath("request_info"));
+    public static final Type<RequestInfoPayloadPacket> PAYLOAD_ID = new Type<>(AnimatiumClient.id("request_info"));
 
     private static RequestInfoPayloadPacket read(FriendlyByteBuf buffer) {
         return new RequestInfoPayloadPacket();
