@@ -5,6 +5,7 @@
 
 in float cylindricalVertexDistance;
 in float sphericalVertexDistance;
+
 out vec4 fragColor;
 
 void main() {
