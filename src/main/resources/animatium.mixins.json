@@ -39,6 +39,7 @@
 		"renderer.MixinLevelRenderer",
 		"renderer.MixinRenderBuffers",
 		"renderer.MixinRenderStateShard",
+		"renderer.MixinSkyRenderer",
 		"renderer.MixinTextureManager",
 		"renderer.MixinTextureStateShard",
 		"renderer.MixinVertexConsumer",

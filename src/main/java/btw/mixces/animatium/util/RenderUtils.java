@@ -26,11 +26,12 @@ package btw.mixces.animatium.util;
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.mixins.accessor.ClientLevelDataAccessor;
+import com.mojang.blaze3d.buffers.BufferType;
+import com.mojang.blaze3d.buffers.BufferUsage;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -40,6 +41,7 @@ import org.joml.Vector3f;
 
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
+import java.util.function.Consumer;
 
 public final class RenderUtils {
     private static float LINE_WIDTH = -1.0F;
@@ -97,6 +99,7 @@ public final class RenderUtils {
         context.fill(startX, startY, startX + endX, startY + endY, padding, color);
     }
 
+    // Sky Stuff
     public static void buildSkyHalf(VertexConsumer vertexConsumer, float y, boolean bottom) {
         final int width = 64;
         for (int k = -384; k <= 384; k += width) {
@@ -118,7 +121,28 @@ public final class RenderUtils {
         }
     }
 
-    public static void renderBlueVoidSky(Minecraft minecraft, ClientLevel level, GpuBuffer blueVoidSkyBuffer, int skyColor, double depth) {
+    private static GpuBuffer animatium$blueVoidBuffer = null;
+
+    public static GpuBuffer getBlueVoidBuffer() {
+        return animatium$blueVoidBuffer;
+    }
+
+    public static void initializeBlueVoidSky() {
+        animatium$blueVoidBuffer = initializeSky((builder) -> buildSkyHalf(builder, -16.0F, true));
+    }
+
+    public static GpuBuffer initializeSky(Consumer<BufferBuilder> bufferBuilderConsumer) {
+        VertexFormat.Mode mode = VertexFormat.Mode.QUADS;
+        BufferBuilder builder = Tesselator.getInstance().begin(mode, DefaultVertexFormat.POSITION);
+        bufferBuilderConsumer.accept(builder);
+        try (MeshData meshData = builder.buildOrThrow()) {
+            return RenderSystem.getDevice().createBuffer(() -> "Static sky vertex buffer", BufferType.VERTICES, BufferUsage.STATIC_WRITE, meshData.vertexBuffer());
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    public static void renderBlueVoidSky(Minecraft minecraft, ClientLevel level, int skyColor, double depth) {
         Vector3f skyColorVec = ARGB.vector3fFromRGB24(skyColor);
         if (level.effects().hasGround()) {
             RenderSystem.setShaderColor(skyColorVec.x * 0.2F + 0.04F, skyColorVec.y * 0.2F + 0.04F, skyColorVec.z * 0.6F + 0.1F, 1.0F);
@@ -135,7 +159,7 @@ public final class RenderUtils {
                 .createRenderPass(minecraft.getMainRenderTarget().getColorTexture(), OptionalInt.empty(), minecraft.getMainRenderTarget().getDepthTexture(), OptionalDouble.empty())) {
             RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
             renderPass.setPipeline(AnimatiumConfig.instance().planarSkyFog ? AnimatiumClient.LEGACY_SKY_PLANAR_FOG_PIPELINE : AnimatiumClient.LEGACY_SKY_PIPELINE);
-            renderPass.setVertexBuffer(0, blueVoidSkyBuffer);
+            renderPass.setVertexBuffer(0, animatium$blueVoidBuffer);
             renderPass.setIndexBuffer(autoStorageIndexBuffer.getBuffer(6), autoStorageIndexBuffer.type());
             renderPass.drawIndexed(0, 1014);
         }
