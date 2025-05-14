@@ -105,7 +105,7 @@ public final class RenderUtils {
         for (int k = -384; k <= 384; k += width) {
             for (int l = -384; l <= 384; l += width) {
                 float g = (float) k;
-                float h = (float) (k + 64);
+                float h = (float) (k + width);
                 if (bottom) {
                     // Swap them
                     float b = g;
