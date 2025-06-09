@@ -24,6 +24,7 @@
 package btw.mixces.animatium.mixins.renderer;
 
 import btw.mixces.animatium.AnimatiumClient;
+import btw.mixces.animatium.LegacyGlintType;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.MathUtils;
 import btw.mixces.animatium.util.RenderUtils;
@@ -41,10 +42,7 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.DimensionSpecialEffects;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderBuffers;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
@@ -140,18 +138,18 @@ public abstract class MixinLevelRenderer {
         }
     }
 
-//    @WrapOperation(method = "method_62214", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;endBatch(Lnet/minecraft/client/renderer/RenderType;)V", ordinal = 16))
-//    private void animatium$legacyGlintRendering$endBatch(MultiBufferSource.BufferSource instance, RenderType renderType, Operation<Void> original) {
-//        original.call(instance, renderType);
-//        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering) {
-//            instance.endBatch(LegacyGlintType.ITEM_GLINT_LAYER);
-//            instance.endBatch(LegacyGlintType.ITEM_GLINT_2ND_LAYER);
-//            instance.endBatch(LegacyGlintType.ITEM_GLINT_TRANSLUCENT_LAYER);
-//            instance.endBatch(LegacyGlintType.ITEM_GLINT_TRANSLUCENT_2ND_LAYER);
-//            instance.endBatch(LegacyGlintType.ENTITY_GLINT_LAYER);
-//            instance.endBatch(LegacyGlintType.ENTITY_ARMOR_GLINT_LAYER);
-//        }
-//    }
+    @WrapOperation(method = "method_62214", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;endBatch(Lnet/minecraft/client/renderer/RenderType;)V", ordinal = 16))
+    private void animatium$legacyGlintRendering$endBatch(MultiBufferSource.BufferSource instance, RenderType renderType, Operation<Void> original) {
+        original.call(instance, renderType);
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering) {
+            instance.endBatch(LegacyGlintType.ITEM_GLINT_LAYER);
+            instance.endBatch(LegacyGlintType.ITEM_GLINT_2ND_LAYER);
+            instance.endBatch(LegacyGlintType.ITEM_GLINT_TRANSLUCENT_LAYER);
+            instance.endBatch(LegacyGlintType.ITEM_GLINT_TRANSLUCENT_2ND_LAYER);
+            instance.endBatch(LegacyGlintType.ENTITY_GLINT_LAYER);
+            instance.endBatch(LegacyGlintType.ENTITY_ARMOR_GLINT_LAYER);
+        }
+    }
 
     @Unique
     private GpuTexture animatium$blankTexture = null;

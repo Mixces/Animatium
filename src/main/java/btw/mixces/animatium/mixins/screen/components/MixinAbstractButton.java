@@ -38,10 +38,10 @@ public abstract class MixinAbstractButton extends AbstractWidget {
         super(x, y, width, height, message);
     }
 
-    @ModifyConstant(method = "renderWidget", constant = @Constant(intValue = 0xFFFFFF))
+    @ModifyConstant(method = "renderWidget", constant = @Constant(intValue = 0xFFFFFFFF))
     private int animatium$renderWidget$old$textColor(int constant) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().buttonTextColors) {
-            return !active ? 0xE0E0E0 : (isHoveredOrFocused() ? 0xFFFFA0 : 0xE0E0E0);
+            return !active ? 0xFFE0E0E0 : (isHoveredOrFocused() ? 0xFFFFFFA0 : 0xFFE0E0E0);
         } else {
             return constant;
         }

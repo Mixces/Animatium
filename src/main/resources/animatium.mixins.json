@@ -58,7 +58,7 @@
 		"renderer.item.MixinItemPickupParticle",
 		"renderer.item.MixinItemRenderer",
 		"screen.MixinCamera",
-		"screen.MixinFontStringRenderOutput",
+		"screen.MixinFontPreparedTextBuilder",
 		"screen.MixinInGameHud",
 		"screen.components.MixinAbstractButton",
 		"screen.components.MixinAbstractScrollArea",

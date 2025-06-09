@@ -30,8 +30,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(Font.StringRenderOutput.class)
-public abstract class MixinFontStringRenderOutput {
+@Mixin(Font.PreparedTextBuilder.class)
+public abstract class MixinFontPreparedTextBuilder {
     @Unique
     private static final float animatium$strikethroughOffset = 0.5F;
 
