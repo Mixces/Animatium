@@ -11,6 +11,11 @@ out float sphericalVertexDistance;
 
 void main() {
     gl_Position = ProjMat * ModelViewMat * vec4(Position, 1.0);
+#ifdef PLANAR_FOG
+    cylindricalVertexDistance = gl_Position.z;
+    sphericalVertexDistance = gl_Position.z;
+#else
     cylindricalVertexDistance = fog_cylindrical_distance(Position);
     sphericalVertexDistance = fog_spherical_distance(Position);
+#endif
 }

@@ -21,14 +21,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package btw.mixces.animatium.config;
+package btw.mixces.animatium.mixins.accessor;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import net.minecraft.client.renderer.RenderPipelines;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
-public class ModMenuIntegration implements ModMenuApi {
-    @Override
-    public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return AnimatiumConfig::getConfigScreen;
+@Mixin(RenderPipelines.class)
+public interface RenderPipelinesAccessor {
+    @Invoker("register")
+    static RenderPipeline registerPipeline(RenderPipeline renderPipeline) {
+        return null;
     }
 }

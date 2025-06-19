@@ -38,7 +38,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.textures.TextureFormat;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -78,19 +78,14 @@ public abstract class MixinLevelRenderer {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(Minecraft minecraft, EntityRenderDispatcher entityRenderDispatcher, BlockEntityRenderDispatcher blockEntityRenderDispatcher, RenderBuffers renderBuffers, CallbackInfo ci) {
-        VertexFormat.Mode mode = VertexFormat.Mode.QUADS;
-        BufferBuilder builder = Tesselator.getInstance().begin(mode, DefaultVertexFormat.POSITION);
-        RenderUtils.buildSkyHalf(builder, -16.0F, true);
-        try (MeshData meshData = builder.buildOrThrow()) {
-            this.animatium$blueVoidBuffer = RenderSystem.getDevice().createBuffer(() -> "Blue void sky vertex buffer", GpuBuffer.USAGE_COPY_DST, meshData.vertexBuffer());
-        }
+        RenderUtils.initializeBlueVoidSky();
     }
 
     @Inject(method = "method_62215", at = @At("TAIL"))
     private void animatium$blueVoidSky(GpuBufferSlice fogParameters, DimensionSpecialEffects.SkyType skyType, float tickDelta, DimensionSpecialEffects dimensionSpecialEffects, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().blueVoidSky && skyType != DimensionSpecialEffects.SkyType.END && this.level != null && this.minecraft.player != null) {
             int skyColor = this.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), tickDelta);
-            RenderUtils.renderBlueVoidSky(this.minecraft, this.animatium$blueVoidBuffer, skyColor, this.minecraft.player.getEyePosition(tickDelta).y - RenderUtils.getLevelHorizonHeight(this.level));
+            RenderUtils.renderBlueVoidSky(this.minecraft, this.level, skyColor, this.minecraft.player.getEyePosition(tickDelta).y - RenderUtils.getLevelHorizonHeight(this.level));
         }
     }
 

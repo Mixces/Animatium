@@ -33,7 +33,6 @@ import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
 import net.minecraft.network.protocol.game.ServerboundSwingPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -117,15 +116,13 @@ public final class PlayerUtils {
     }
 
     public static void applySwingWhilstMining(Level level, Player player, HitResult hitResult, ParticleEngine particleEngine) {
-        InteractionHand activeHand = player.getUsedItemHand();
-        InteractionHand hand = InteractionHand.MAIN_HAND;
+        final InteractionHand activeHand = player.getUsedItemHand();
+        final InteractionHand hand = InteractionHand.MAIN_HAND;
         if (hitResult != null && hitResult.getType() == HitResult.Type.BLOCK && activeHand.equals(hand)) {
-            BlockHitResult blockHitResult = (BlockHitResult) hitResult;
-
-            BlockPos blockPos = blockHitResult.getBlockPos();
+            final BlockHitResult blockHitResult = (BlockHitResult) hitResult;
+            final BlockPos blockPos = blockHitResult.getBlockPos();
             if (level != null && !level.getBlockState(blockPos).isAir()) {
-                Direction direction = blockHitResult.getDirection();
-                particleEngine.crack(blockPos, direction);
+                particleEngine.crack(blockPos, blockHitResult.getDirection());
             }
 
             PlayerUtils.fakeHandSwing(player, hand);

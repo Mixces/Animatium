@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.10-SNAPSHOT'
+    id 'fabric-loom' version "${loom_version}"
     id 'maven-publish'
     id "com.diffplug.spotless" version "7.0.2"
 }
@@ -43,9 +43,9 @@ dependencies {
     }
 
     // Mod Menu
-//    modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") {
-//        exclude group: 'net.fabricmc.fabric-api'
-//    }
+    modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") {
+        exclude group: 'net.fabricmc.fabric-api'
+    }
 }
 
 processResources {

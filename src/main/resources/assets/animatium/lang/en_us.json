@@ -217,6 +217,8 @@
 	"animatium.blueVoidSky.description": "Brings back the forgotten blue void part of the sky. (Fixes MC-257056)",
 	"animatium.skyHorizonHeight": "[1.16] Sky horizon height",
 	"animatium.skyHorizonHeight.description": "Changes the horizon height to how it was in <=1.16.5.",
+	"animatium.planarSkyFog": "[*] Planar sky fog",
+	"animatium.planarSkyFog.description": "Changes the sky fog to use the planar type. This fog is also known as OptiFine Fast Fog.",
 	"animatium.cloudHeight": "[1.16] Old cloud height",
 	"animatium.cloudHeight.description": "Change the cloud height back to 128 like it was in <=1.16.5."
 }
