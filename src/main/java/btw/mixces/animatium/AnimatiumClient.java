@@ -63,7 +63,7 @@ public final class AnimatiumClient implements ClientModInitializer {
     private static final ModContainer MOD_CONTAINER = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow(() -> new RuntimeException("Mod not found"));
     private static final String[] VERSION_PARTS = MOD_CONTAINER.getMetadata().getVersion().getFriendlyString().split("-");
     public static Double VERSION = Double.parseDouble(VERSION_PARTS[0]);
-//    public static @Nullable String DEVELOPMENT_VERSION = VERSION_PARTS[1];
+    // public static @Nullable String DEVELOPMENT_VERSION = VERSION_PARTS[1];
 
     public static AnimatiumInfoPayloadPacket getInfoPayload() {
         return new AnimatiumInfoPayloadPacket(VERSION, null);
