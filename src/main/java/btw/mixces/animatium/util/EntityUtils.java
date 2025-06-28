@@ -28,11 +28,11 @@ import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
+import java.util.WeakHashMap;
 
 public final class EntityUtils {
     private static final ThreadLocal<@Nullable HumanoidRenderState> HUMAN_RENDER_STATE = ThreadLocal.withInitial(() -> null);
-    private static final HashMap<EntityRenderState, Entity> STATE_TO_ENTITY = new HashMap<>();
+    private static final WeakHashMap<EntityRenderState, Entity> STATE_TO_ENTITY = new WeakHashMap<>();
 
     public static void setEntityByState(EntityRenderState state, Entity entity) {
         STATE_TO_ENTITY.put(state, entity);
