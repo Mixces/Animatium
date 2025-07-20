@@ -99,6 +99,7 @@ public final class AnimatiumConfig {
     @SerialEntry public boolean slotHoverStyleRendering = true;
     @SerialEntry public boolean effectsInventoryPosition = true;
     @SerialEntry public boolean recipeBook = false;
+    @SerialEntry public boolean panoramaRendering = true;
     @SerialEntry public CameraVersion cameraVersion = CameraVersion.V1_8;
 
     // (Items)

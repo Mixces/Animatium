@@ -28,8 +28,11 @@ import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.mixins.accessor.ClientLevelDataAccessor;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -83,6 +86,50 @@ public final class RenderUtils {
 
     public static void fillRectangle(GuiGraphics context, int x, int y, int width, int height, int color) {
         context.fill(x, y, x + width, y + height, color);
+    }
+
+    public static void drawBuffer(BufferBuilder builder, RenderTarget renderTarget, RenderPipeline renderPipeline) {
+        GpuBuffer vertexBuffer;
+        GpuBuffer indexBuffer;
+        VertexFormat.IndexType indexType;
+        int indexCount;
+        try (MeshData meshData = builder.buildOrThrow()) {
+            indexCount = meshData.drawState().indexCount();
+            vertexBuffer = renderPipeline.getVertexFormat().uploadImmediateVertexBuffer(meshData.vertexBuffer());
+            if (meshData.indexBuffer() == null) {
+                RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(meshData.drawState().mode());
+                indexBuffer = autoStorageIndexBuffer.getBuffer(meshData.drawState().indexCount());
+                indexType = autoStorageIndexBuffer.type();
+            } else {
+                indexBuffer = renderPipeline.getVertexFormat().uploadImmediateIndexBuffer(meshData.indexBuffer());
+                indexType = meshData.drawState().indexType();
+            }
+        } catch (Exception e) {
+            vertexBuffer = null;
+            indexBuffer = null;
+            indexType = null;
+            indexCount = 0;
+        }
+
+        if (vertexBuffer == null) {
+            throw new RuntimeException("Vertex buffer was null when trying to render buffer.");
+        }
+
+        try (RenderPass renderPass = RenderSystem.getDevice()
+                .createCommandEncoder()
+                .createRenderPass(() -> "Immediate Rendering", renderTarget.getColorTextureView(), OptionalInt.empty(), renderTarget.useDepth ? renderTarget.getDepthTextureView() : null, OptionalDouble.empty())) {
+            renderPass.setPipeline(renderPipeline);
+            renderPass.setVertexBuffer(0, vertexBuffer);
+            renderPass.setIndexBuffer(indexBuffer, indexType);
+            for (int i = 0; i < 12; i++) {
+                GpuTextureView gpuTexture = RenderSystem.getShaderTexture(i);
+                if (gpuTexture != null) {
+                    renderPass.bindSampler("Sampler" + i, gpuTexture);
+                }
+            }
+
+            renderPass.drawIndexed(0, 0, indexCount, 1);
+        }
     }
 
     // Sky Stuff

@@ -62,6 +62,7 @@
 		"screen.MixinCamera",
 		"screen.MixinFontPreparedTextBuilder",
 		"screen.MixinInGameHud",
+		"screen.MixinPanoramaRenderer",
 		"screen.components.MixinAbstractButton",
 		"screen.components.MixinAbstractScrollArea",
 		"screen.components.MixinAbstractSelectionList",

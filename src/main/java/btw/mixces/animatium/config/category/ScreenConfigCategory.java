@@ -144,6 +144,15 @@ public final class ScreenConfigCategory {
                         (newVal) -> config.recipeBook = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
+        category.option(Option.<Boolean>createBuilder()
+                .name(Component.translatable("animatium.panoramaRendering"))
+                .description(OptionDescription.of(Component.translatable("animatium.panoramaRendering.description")))
+                .binding(
+                        defaults.panoramaRendering,
+                        () -> config.panoramaRendering,
+                        (newVal) -> config.panoramaRendering = newVal)
+                .controller(TickBoxControllerBuilder::create)
+                .build());
         category.option(Option.<CameraVersion>createBuilder()
                 .name(Component.translatable("animatium.cameraVersion"))
                 .description(OptionDescription.of(Component.translatable("animatium.cameraVersion.description")))
