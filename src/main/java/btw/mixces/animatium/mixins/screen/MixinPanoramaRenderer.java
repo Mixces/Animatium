@@ -72,7 +72,7 @@ public abstract class MixinPanoramaRenderer {
     private GlTextureView animatium$backgroundTextureView;
 
     @Inject(method = "render", at = @At("HEAD"))
-    private void setupPanorama(GuiGraphics guiGraphics, int i, int j, boolean bl, CallbackInfo ci) {
+    private void animatium$panoramaStart(GuiGraphics guiGraphics, int i, int j, boolean bl, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().panoramaRendering) {
             if (animatium$backgroundTexture == null) {
                 GpuDevice device = RenderSystem.getDevice();
@@ -85,11 +85,11 @@ public abstract class MixinPanoramaRenderer {
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CubeMap;render(Lnet/minecraft/client/Minecraft;FF)V", ordinal = 0, shift = At.Shift.AFTER))
-    private void finishPanorama(GuiGraphics guiGraphics, int width, int height, boolean bl, CallbackInfo ci) {
+    private void animatium$panoramaFinish(GuiGraphics guiGraphics, int width, int height, boolean bl, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().panoramaRendering) {
             RenderTarget renderTarget = minecraft.getMainRenderTarget();
             for (int i = 0; i < 6; ++i) {
-                this.writeAndBlitBlurTexture(guiGraphics, renderTarget, animatium$backgroundTextureView, width, height);
+                this.animatium$writeAndBlitBlurTexture(guiGraphics, renderTarget, animatium$backgroundTextureView, width, height);
             }
 
             GlStateManager._viewport(0, 0, renderTarget.width, renderTarget.height);
@@ -98,7 +98,7 @@ public abstract class MixinPanoramaRenderer {
     }
 
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/ResourceLocation;IIFFIIIIII)V"))
-    private void oldGradientPanoramaOverlay(GuiGraphics instance, RenderPipeline renderPipeline, ResourceLocation resourceLocation, int i, int j, float f, float g, int width, int height, int m, int n, int o, int p, Operation<Void> original) {
+    private void animatium$panoramaGradient(GuiGraphics instance, RenderPipeline renderPipeline, ResourceLocation resourceLocation, int i, int j, float f, float g, int width, int height, int m, int n, int o, int p, Operation<Void> original) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().panoramaRendering) {
             instance.fillGradient(0, 0, width, height, -2130706433, 16777215);
             instance.fillGradient(0, 0, width, height, 0, Integer.MIN_VALUE);
@@ -108,7 +108,7 @@ public abstract class MixinPanoramaRenderer {
     }
 
     @Unique
-    private void writeAndBlitBlurTexture(GuiGraphics drawContext, RenderTarget renderTarget, GlTextureView texture, int width, int height) {
+    private void animatium$writeAndBlitBlurTexture(GuiGraphics drawContext, RenderTarget renderTarget, GlTextureView texture, int width, int height) {
         texture.texture().setTextureFilter(FilterMode.LINEAR, false);
         // Ensures enough width/height for it to not crash when window is resized
         if (renderTarget.width >= 256 && renderTarget.height >= 256) {
