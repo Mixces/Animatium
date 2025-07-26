@@ -28,16 +28,22 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 
 public enum Feature {
-    MISS_PENALTY("miss_penalty"),
-    LEFT_CLICK_ITEM_USAGE("left_click_item_usage");
+    MISS_PENALTY("miss_penalty", "animatium.miss_penalty.description"),
+    LEFT_CLICK_ITEM_USAGE("left_click_item_usage", "animatium.left_click_item_usage.description");
 
     private final String id;
+    private final String translate;
 
     public static @Nullable Feature byId(String id) {
         return Arrays.stream(Feature.values()).filter(feature -> feature.id.equals(id)).findFirst().orElse(null);
     }
 
-    Feature(String id) {
+    Feature(String id, String translate) {
         this.id = id;
+        this.translate = translate;
+    }
+
+    public String getTranslateKey() {
+        return translate;
     }
 }

@@ -32,26 +32,26 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
-
-import java.util.List;
 
 public class AnimatiumCommand implements Command<FabricClientCommandSource> {
     public static LiteralArgumentBuilder<FabricClientCommandSource> create() {
         LiteralArgumentBuilder<FabricClientCommandSource> command = ClientCommandManager.literal("animatium").executes(new AnimatiumCommand());
 
         command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("debug").executes((context) -> {
-            context.getSource().sendFeedback(Component.literal("Disabled miss swing penalty? " + AnimatiumClient.ENABLED_FEATURES.contains(Feature.MISS_PENALTY)).withColor(ColourUtils.randomColor()));
-            context.getSource().sendFeedback(Component.literal("Enabled left-click item usage on ground? " + AnimatiumClient.ENABLED_FEATURES.contains(Feature.LEFT_CLICK_ITEM_USAGE)).withColor(ColourUtils.randomColor()));
+            context.getSource().sendFeedback(Component.literal("Note: Info displayed here is for developers containing config settings/features enabled by the server!").withStyle(ChatFormatting.YELLOW));
+            context.getSource().sendFeedback(Component.literal("Enabled Features:").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
+            for (Feature feature : AnimatiumClient.ENABLED_FEATURES) {
+                context.getSource().sendFeedback(Component.literal(" - " + Component.translatable(feature.getTranslateKey()).getString()).withColor(ColourUtils.randomColor()));
+            }
+
+            if (AnimatiumClient.ENABLED_FEATURES.isEmpty()) {
+                context.getSource().sendFeedback(Component.literal(" - No features...").withStyle(ChatFormatting.GREEN));
+            }
+
             return Command.SINGLE_SUCCESS;
-        }).requires((ctx) -> {
-            Player player = Minecraft.getInstance().player;
-            return player != null && List.of(
-                    "41ee11aa-bde8-40e2-8283-f51c23a9c817", "b0f27308-0a70-43bf-b025-45c12979b7ad",
-                    "0e3ee1e0-f4d2-4550-8fe9-4f7a0d2cd08a", "718c0beb-a8c2-4887-a85c-87d118c3d31a"
-            ).contains(player.getStringUUID());
         }));
 
         command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("on").executes((context) -> {
