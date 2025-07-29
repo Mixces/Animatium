@@ -26,6 +26,7 @@ package btw.mixces.animatium.mixins.model.item;
 import btw.mixces.animatium.util.ItemUtils;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -38,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ItemModelResolver.class)
 public abstract class MixinItemModelResolver {
     @Inject(method = "appendItemLayers", at = @At("HEAD"))
-    private void animatium$setItemUtils(ItemStackRenderState stackRenderState, ItemStack stack, ItemDisplayContext displayContext, Level level, LivingEntity livingEntity, int i, CallbackInfo ci) {
+    private void animatium$setItemUtils(ItemStackRenderState stackRenderState, ItemStack stack, ItemDisplayContext displayContext, Level level, ItemOwner owner, int i, CallbackInfo ci) {
         ItemUtils.set(stackRenderState, stack, displayContext);
     }
 }

@@ -128,10 +128,10 @@ public abstract class MixinPanoramaRenderer {
         for (int i = 0; i < 3; ++i) {
             float growth = (float) (i - 1) / 256.0F;
             int color = ARGB.colorFromFloat(1.0F / (float) (i + 1), 1.0F, 1.0F, 1.0F);
-            bufferBuilder.addVertexWith2DPose(matrix, width, height, 0.0F).setUv(0.0F + growth, 1.0F).setColor(color);
-            bufferBuilder.addVertexWith2DPose(matrix, width, 0.0F, 0.0F).setUv(1.0F + growth, 1.0F).setColor(color);
-            bufferBuilder.addVertexWith2DPose(matrix, 0.0F, 0.0F, 0.0F).setUv(1.0F + growth, 0.0F).setColor(color);
-            bufferBuilder.addVertexWith2DPose(matrix, 0.0F, height, 0.0F).setUv(0.0F + growth, 0.0F).setColor(color);
+            bufferBuilder.addVertexWith2DPose(matrix, width, height).setUv(0.0F + growth, 1.0F).setColor(color);
+            bufferBuilder.addVertexWith2DPose(matrix, width, 0.0F).setUv(1.0F + growth, 1.0F).setColor(color);
+            bufferBuilder.addVertexWith2DPose(matrix, 0.0F, 0.0F).setUv(1.0F + growth, 0.0F).setColor(color);
+            bufferBuilder.addVertexWith2DPose(matrix, 0.0F, height).setUv(0.0F + growth, 0.0F).setColor(color);
         }
 
         RenderSystem.setShaderTexture(0, texture);

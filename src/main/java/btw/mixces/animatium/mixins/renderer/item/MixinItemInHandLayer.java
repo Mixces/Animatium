@@ -36,7 +36,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
@@ -64,8 +64,8 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
         super(context);
     }
 
-    @Inject(method = "renderArmWithItem", at = @At("HEAD"))
-    private void animatium$setRef(S armedEntityRenderState, ItemStackRenderState itemStackRenderState, HumanoidArm humanoidArm, PoseStack poseStack, MultiBufferSource multiBufferSource, int light, CallbackInfo ci, @Share("stack") LocalRef<ItemStack> stackRef) {
+    @Inject(method = "submitArmWithItem", at = @At("HEAD"))
+    private void animatium$setRef(S armedEntityRenderState, ItemStackRenderState itemStackRenderState, HumanoidArm humanoidArm, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, CallbackInfo ci, @Share("stack") LocalRef<ItemStack> stackRef) {
         if (AnimatiumClient.isEnabled() && ItemUtils.shoulditemPositionsInThirdPerson(armedEntityRenderState) && !itemStackRenderState.isEmpty()) {
             Entity entity = EntityUtils.getEntityByState(armedEntityRenderState);
             if (entity instanceof LivingEntity livingEntity && armedEntityRenderState instanceof ArmedEntityRenderState) {
@@ -74,20 +74,20 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
         }
     }
 
-    @ModifyArgs(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V"))
+    @ModifyArgs(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V"))
     private void animatium$oldTransformTranslation(Args args, @Local(argsOnly = true) S entityState, @Share("stack") LocalRef<ItemStack> stackRef) {
         if (AnimatiumClient.isEnabled() && ItemUtils.shoulditemPositionsInThirdPerson(entityState) && !ItemUtils.isItemBlacklisted(stackRef.get())) {
             args.setAll((float) args.get(0) * -1.0F, 0.4375F, (float) args.get(2) / 10 * -1.0F);
         }
     }
 
-    @WrapWithCondition(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lorg/joml/Quaternionfc;)V"))
+    @WrapWithCondition(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lorg/joml/Quaternionfc;)V"))
     private boolean animatium$removeTransformMultiply(PoseStack instance, Quaternionfc quaternionfc, @Local(argsOnly = true) S entityState, @Share("stack") LocalRef<ItemStack> stackRef) {
         return !AnimatiumClient.isEnabled() || !ItemUtils.shoulditemPositionsInThirdPerson(entityState) || ItemUtils.isItemBlacklisted(stackRef.get());
     }
 
-    @Inject(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/item/ItemStackRenderState;render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V"))
-    private void animatium$itemPositionsThird(S entityRenderState, ItemStackRenderState itemStackRenderState, HumanoidArm humanoidArm, PoseStack poseStack, MultiBufferSource multiBufferSource, int light, CallbackInfo ci) {
+    @Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/item/ItemStackRenderState;II)V"))
+    private void animatium$itemPositionsThird(S entityRenderState, ItemStackRenderState itemStackRenderState, HumanoidArm humanoidArm, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled() && ItemUtils.shoulditemPositionsInThirdPerson(entityRenderState)) {
             Entity entity = EntityUtils.getEntityByState(entityRenderState);
             if (entity instanceof LivingEntity livingEntity && entityRenderState instanceof ArmedEntityRenderState armedEntityRenderState) {

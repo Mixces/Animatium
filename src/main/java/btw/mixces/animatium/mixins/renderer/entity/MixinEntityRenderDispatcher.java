@@ -45,7 +45,7 @@ public abstract class MixinEntityRenderDispatcher {
     @Shadow
     public Camera camera;
 
-    @ModifyExpressionValue(method = "renderFlame", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;boundingBoxWidth:F"))
+//    @ModifyExpressionValue(method = "renderFlame", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;boundingBoxWidth:F"))
     private float animatium$flameWidth(float original, @Local(argsOnly = true) EntityRenderState entityRenderState) {
         Entity entity = EntityUtils.getEntityByState(entityRenderState);
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().flameDimensions && entity instanceof Player) {
@@ -55,7 +55,7 @@ public abstract class MixinEntityRenderDispatcher {
         }
     }
 
-    @ModifyExpressionValue(method = "renderFlame", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;boundingBoxHeight:F"))
+//    @ModifyExpressionValue(method = "renderFlame", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;boundingBoxHeight:F"))
     private float animatium$flameHeight(float original, @Local(argsOnly = true) EntityRenderState entityRenderState) {
         Entity entity = EntityUtils.getEntityByState(entityRenderState);
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().flameDimensions && entity instanceof Player) {
@@ -65,7 +65,7 @@ public abstract class MixinEntityRenderDispatcher {
         }
     }
 
-    @ModifyArg(method = "renderFlame", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal = 0), index = 1)
+//    @ModifyArg(method = "renderFlame", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal = 0), index = 1)
     private float animatium$flameOffset(float original, @Local(argsOnly = true) EntityRenderState entityRenderState) {
         Entity entity = EntityUtils.getEntityByState(entityRenderState);
         if (AnimatiumClient.isEnabled() && entity instanceof Player player) {
