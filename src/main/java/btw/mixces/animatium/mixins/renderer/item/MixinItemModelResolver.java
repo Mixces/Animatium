@@ -31,6 +31,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -42,7 +43,8 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ItemModelResolver.class)
 public abstract class MixinItemModelResolver {
     @WrapOperation(method = "appendItemLayers", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;get(Lnet/minecraft/core/component/DataComponentType;)Ljava/lang/Object;"))
-    private Object animatium$stickModelWhenCastInThirdperson(ItemStack instance, DataComponentType<ResourceLocation> dataComponentType, Operation<ResourceLocation> original, @Local(argsOnly = true) ItemDisplayContext displayContext, @Local(argsOnly = true) LivingEntity livingEntity, @Local(argsOnly = true) ItemStack itemStack) {
+    private Object animatium$stickModelWhenCastInThirdperson(ItemStack instance, DataComponentType<ResourceLocation> dataComponentType, Operation<ResourceLocation> original, @Local(argsOnly = true) ItemDisplayContext displayContext, @Local(argsOnly = true) ItemOwner itemOwner, @Local(argsOnly = true) ItemStack itemStack) {
+        LivingEntity livingEntity = itemOwner.asLivingEntity();
         if (AnimatiumClient.isEnabled() &&
                 AnimatiumConfig.instance().stickModelWhenCastInThirdperson &&
                 itemStack.getItem() == Items.FISHING_ROD &&
