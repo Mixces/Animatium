@@ -29,7 +29,6 @@ import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.Nullable;
 
 @interface SerialEntry {
-
 }
 
 public final class AnimatiumConfig {
@@ -59,7 +58,17 @@ public final class AnimatiumConfig {
     }
 
     public static AnimatiumConfig instance() {
-        return new AnimatiumConfig(); // TODO: CONFIG.instance();
+        AnimatiumConfig config = new AnimatiumConfig(); // TODO: CONFIG.instance();
+        config.armorHurtRendering = true;
+        config.entityArmorHurtTint = true;
+        config.fakeOldSneakEyeHeight = true;
+        config.syncPlayerModelWithEyeHeight = true;
+        config.debugHudTextShadow = true;
+        config.crosshairInThirdPerson = true;
+        config.itemDropsFaceCameraRotationFix = true;
+        config.planarSkyFog = false;
+        config.blueVoidSky = false;
+        return config;
     }
 
     // (Movement)
