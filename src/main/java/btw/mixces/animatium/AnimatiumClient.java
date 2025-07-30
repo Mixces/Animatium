@@ -25,7 +25,6 @@ package btw.mixces.animatium;
 
 import btw.mixces.animatium.command.AnimatiumCommand;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.mixins.accessor.RenderPipelinesAccessor;
 import btw.mixces.animatium.packet.AnimatiumInfoPayloadPacket;
 import btw.mixces.animatium.packet.RequestInfoPayloadPacket;
 import btw.mixces.animatium.packet.SetFeaturesPayloadPacket;
@@ -73,38 +72,39 @@ public final class AnimatiumClient implements ClientModInitializer {
     }
 
     // Shaders
-    private static final RenderPipeline.Snippet LEGACY_SKY_PIPELINE_SNIPPET =
-            RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
-                    .withLocation(id("pipeline/legacy_sky"))
-                    .withVertexShader(id("core/legacy_sky"))
-                    .withFragmentShader(id("core/legacy_sky"))
-                    .withDepthWrite(false)
-                    .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
-                    .buildSnippet();
+    // TODO
+//    private static final RenderPipeline.Snippet LEGACY_SKY_PIPELINE_SNIPPET =
+//            RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
+//                    .withLocation(id("pipeline/legacy_sky"))
+//                    .withVertexShader(id("core/legacy_sky"))
+//                    .withFragmentShader(id("core/legacy_sky"))
+//                    .withDepthWrite(false)
+//                    .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
+//                    .buildSnippet();
+//
+//    public static final RenderPipeline LEGACY_SKY_PIPELINE =
+//            RenderPipelinesAccessor.registerPipeline(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
+//                    .withLocation(id("pipeline/legacy_sky"))
+//                    .build());
+//
+//    public static final RenderPipeline LEGACY_SKY_PLANAR_FOG_PIPELINE =
+//            RenderPipelinesAccessor.registerPipeline(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
+//                    .withLocation(id("pipeline/legacy_sky_planar_fog"))
+//                    .withShaderDefine("PLANAR_FOG")
+//                    .build());
 
-    public static final RenderPipeline LEGACY_SKY_PIPELINE =
-            RenderPipelinesAccessor.registerPipeline(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
-                    .withLocation(id("pipeline/legacy_sky"))
-                    .build());
-
-    public static final RenderPipeline LEGACY_SKY_PLANAR_FOG_PIPELINE =
-            RenderPipelinesAccessor.registerPipeline(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
-                    .withLocation(id("pipeline/legacy_sky_planar_fog"))
-                    .withShaderDefine("PLANAR_FOG")
-                    .build());
-
-    public static final RenderPipeline LEGACY_GLINT_PIPELINE = RenderPipelines.register(
-            RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
-                    .withLocation(id("pipeline/legacy_glint"))
-                    .withVertexShader(id("core/legacy_glint"))
-                    .withFragmentShader(id("core/legacy_glint"))
-                    .withColorWrite(true, false)
-                    .withCull(true)
-                    .withBlend(BlendFunction.GLINT)
-                    .withDepthTestFunction(DepthTestFunction.EQUAL_DEPTH_TEST)
-                    .withSampler("Sampler0")
-                    .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
-                    .build());
+//    public static final RenderPipeline LEGACY_GLINT_PIPELINE = RenderPipelines.register(
+//            RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
+//                    .withLocation(id("pipeline/legacy_glint"))
+//                    .withVertexShader(id("core/legacy_glint"))
+//                    .withFragmentShader(id("core/legacy_glint"))
+//                    .withColorWrite(true, false)
+//                    .withCull(true)
+//                    .withBlend(BlendFunction.GLINT)
+//                    .withDepthTestFunction(DepthTestFunction.EQUAL_DEPTH_TEST)
+//                    .withSampler("Sampler0")
+//                    .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
+//                    .build());
 
     // Config State
     private static final File STATE_FILE = new File(FabricLoader.getInstance().getGameDir().toFile(), "animatium_state.txt");

@@ -78,13 +78,14 @@ public abstract class MixinLevelRenderer {
         RenderUtils.initializeBlueVoidSky();
     }
 
-    @Inject(method = "method_62215", at = @At("TAIL"))
-    private void animatium$blueVoidSky(GpuBufferSlice fogParameters, DimensionSpecialEffects.SkyType skyType, float tickDelta, DimensionSpecialEffects dimensionSpecialEffects, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().blueVoidSky && skyType != DimensionSpecialEffects.SkyType.END && this.level != null && this.minecraft.player != null) {
-            int skyColor = this.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), tickDelta);
-            RenderUtils.renderBlueVoidSky(this.minecraft, this.level, skyColor, this.minecraft.player.getEyePosition(tickDelta).y - RenderUtils.getLevelHorizonHeight(this.level));
-        }
-    }
+    // TODO
+    // @Inject(method = "method_62215", at = @At("TAIL"))
+    // private void animatium$blueVoidSky(GpuBufferSlice fogParameters, DimensionSpecialEffects.SkyType skyType, float tickDelta, DimensionSpecialEffects dimensionSpecialEffects, CallbackInfo ci) {
+    //     if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().blueVoidSky && skyType != DimensionSpecialEffects.SkyType.END && this.level != null && this.minecraft.player != null) {
+    //         int skyColor = this.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), tickDelta);
+    //         RenderUtils.renderBlueVoidSky(this.minecraft, this.level, skyColor, this.minecraft.player.getEyePosition(tickDelta).y - RenderUtils.getLevelHorizonHeight(this.level));
+    //     }
+    // }
 
     @WrapOperation(method = "shouldRenderDarkDisc", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel$ClientLevelData;getHorizonHeight(Lnet/minecraft/world/level/LevelHeightAccessor;)D"))
     private double animatium$skyHorizonHeight(ClientLevel.ClientLevelData instance, LevelHeightAccessor levelHeightAccessor, Operation<Double> original) {
@@ -130,18 +131,19 @@ public abstract class MixinLevelRenderer {
         }
     }
 
-    @WrapOperation(method = "method_62214", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;endBatch(Lnet/minecraft/client/renderer/RenderType;)V", ordinal = 16))
-    private void animatium$legacyGlintRendering$endBatch(MultiBufferSource.BufferSource instance, RenderType renderType, Operation<Void> original) {
-        original.call(instance, renderType);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering) {
-            instance.endBatch(LegacyGlintType.ITEM_GLINT_LAYER);
-            instance.endBatch(LegacyGlintType.ITEM_GLINT_2ND_LAYER);
-            instance.endBatch(LegacyGlintType.ITEM_GLINT_TRANSLUCENT_LAYER);
-            instance.endBatch(LegacyGlintType.ITEM_GLINT_TRANSLUCENT_2ND_LAYER);
-            instance.endBatch(LegacyGlintType.ENTITY_GLINT_LAYER);
-            instance.endBatch(LegacyGlintType.ENTITY_ARMOR_GLINT_LAYER);
-        }
-    }
+    // TODO
+    // @WrapOperation(method = "method_62214", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;endBatch(Lnet/minecraft/client/renderer/RenderType;)V", ordinal = 16))
+    // private void animatium$legacyGlintRendering$endBatch(MultiBufferSource.BufferSource instance, RenderType renderType, Operation<Void> original) {
+    //     original.call(instance, renderType);
+    //     if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering) {
+    //         instance.endBatch(LegacyGlintType.ITEM_GLINT_LAYER);
+    //         instance.endBatch(LegacyGlintType.ITEM_GLINT_2ND_LAYER);
+    //         instance.endBatch(LegacyGlintType.ITEM_GLINT_TRANSLUCENT_LAYER);
+    //         instance.endBatch(LegacyGlintType.ITEM_GLINT_TRANSLUCENT_2ND_LAYER);
+    //         instance.endBatch(LegacyGlintType.ENTITY_GLINT_LAYER);
+    //         instance.endBatch(LegacyGlintType.ENTITY_ARMOR_GLINT_LAYER);
+    //     }
+    // }
 
     @Unique
     private GpuTexture animatium$blankTexture = null;
