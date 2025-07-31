@@ -46,6 +46,7 @@
 		"renderer.entity.MixinEntityRenderDispatcher",
 		"renderer.entity.MixinEntityRenderer",
 		"renderer.entity.MixinFishingHookRenderer",
+		"renderer.entity.MixinFlameFeatureRenderer",
 		"renderer.entity.MixinHumanoidMobRenderer",
 		"renderer.entity.MixinItemEntityRenderer",
 		"renderer.entity.MixinLivingEntityRenderer",
