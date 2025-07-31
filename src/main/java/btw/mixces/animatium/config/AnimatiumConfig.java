@@ -66,8 +66,6 @@ public final class AnimatiumConfig {
         config.debugHudTextShadow = true;
         config.crosshairInThirdPerson = true;
         config.itemDropsFaceCameraRotationFix = true;
-        config.planarSkyFog = false;
-        config.blueVoidSky = false;
         return config;
     }
 
