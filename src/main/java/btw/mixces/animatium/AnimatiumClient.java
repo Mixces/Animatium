@@ -25,6 +25,7 @@ package btw.mixces.animatium;
 
 import btw.mixces.animatium.command.AnimatiumCommand;
 import btw.mixces.animatium.config.AnimatiumConfig;
+import btw.mixces.animatium.mixins.accessor.RenderPipelinesAccessor;
 import btw.mixces.animatium.packet.AnimatiumInfoPayloadPacket;
 import btw.mixces.animatium.packet.RequestInfoPayloadPacket;
 import btw.mixces.animatium.packet.SetFeaturesPayloadPacket;
@@ -38,6 +39,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.networking.v1.*;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -72,39 +75,38 @@ public final class AnimatiumClient implements ClientModInitializer {
     }
 
     // Shaders
-    // TODO
-//    private static final RenderPipeline.Snippet LEGACY_SKY_PIPELINE_SNIPPET =
-//            RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
-//                    .withLocation(id("pipeline/legacy_sky"))
-//                    .withVertexShader(id("core/legacy_sky"))
-//                    .withFragmentShader(id("core/legacy_sky"))
-//                    .withDepthWrite(false)
-//                    .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
-//                    .buildSnippet();
-//
-//    public static final RenderPipeline LEGACY_SKY_PIPELINE =
-//            RenderPipelinesAccessor.registerPipeline(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
-//                    .withLocation(id("pipeline/legacy_sky"))
-//                    .build());
-//
-//    public static final RenderPipeline LEGACY_SKY_PLANAR_FOG_PIPELINE =
-//            RenderPipelinesAccessor.registerPipeline(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
-//                    .withLocation(id("pipeline/legacy_sky_planar_fog"))
-//                    .withShaderDefine("PLANAR_FOG")
-//                    .build());
+    private static final RenderPipeline.Snippet LEGACY_SKY_PIPELINE_SNIPPET =
+            RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
+                    .withLocation(id("pipeline/legacy_sky"))
+                    .withVertexShader(id("core/legacy_sky"))
+                    .withFragmentShader(id("core/legacy_sky"))
+                    .withDepthWrite(false)
+                    .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
+                    .buildSnippet();
 
-//    public static final RenderPipeline LEGACY_GLINT_PIPELINE = RenderPipelines.register(
-//            RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
-//                    .withLocation(id("pipeline/legacy_glint"))
-//                    .withVertexShader(id("core/legacy_glint"))
-//                    .withFragmentShader(id("core/legacy_glint"))
-//                    .withColorWrite(true, false)
-//                    .withCull(true)
-//                    .withBlend(BlendFunction.GLINT)
-//                    .withDepthTestFunction(DepthTestFunction.EQUAL_DEPTH_TEST)
-//                    .withSampler("Sampler0")
-//                    .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
-//                    .build());
+    public static final RenderPipeline LEGACY_SKY_PIPELINE =
+            RenderPipelinesAccessor.registerPipeline(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
+                    .withLocation(id("pipeline/legacy_sky"))
+                    .build());
+
+    public static final RenderPipeline LEGACY_SKY_PLANAR_FOG_PIPELINE =
+            RenderPipelinesAccessor.registerPipeline(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
+                    .withLocation(id("pipeline/legacy_sky_planar_fog"))
+                    .withShaderDefine("PLANAR_FOG")
+                    .build());
+
+    public static final RenderPipeline LEGACY_GLINT_PIPELINE = RenderPipelines.register(
+            RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
+                    .withLocation(id("pipeline/legacy_glint"))
+                    .withVertexShader(id("core/legacy_glint"))
+                    .withFragmentShader(id("core/legacy_glint"))
+                    .withColorWrite(true, false)
+                    .withCull(true)
+                    .withBlend(BlendFunction.GLINT)
+                    .withDepthTestFunction(DepthTestFunction.EQUAL_DEPTH_TEST)
+                    .withSampler("Sampler0")
+                    .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
+                    .build());
 
     // Config State
     private static final File STATE_FILE = new File(FabricLoader.getInstance().getGameDir().toFile(), "animatium_state.txt");
@@ -152,7 +154,7 @@ public final class AnimatiumClient implements ClientModInitializer {
         }
 
         // Packs
-        // TODO: ResourceManagerHelper.registerBuiltinResourcePack(id("classic_textures"), MOD_CONTAINER, ResourcePackActivationType.DEFAULT_ENABLED);
+        ResourceManagerHelper.registerBuiltinResourcePack(id("classic_textures"), MOD_CONTAINER, ResourcePackActivationType.DEFAULT_ENABLED);
 
         // Commands
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) -> dispatcher.register(AnimatiumCommand.create()));

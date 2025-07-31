@@ -35,7 +35,7 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
 
     // Fabric API - Needs to be specified, otherwise an older version might be defaulted and cause issues.
-    // TODO: modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
     modImplementation(fabricApi.module("fabric-networking-api-v1", project.fabric_version))
     modImplementation(fabricApi.module("fabric-command-api-v2", project.fabric_version))
 

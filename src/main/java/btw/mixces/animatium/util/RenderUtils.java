@@ -37,7 +37,6 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.ARGB;
 import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
@@ -190,8 +189,7 @@ public final class RenderUtils {
                 .createCommandEncoder()
                 .createRenderPass(() -> "Blue void disc", minecraft.getMainRenderTarget().getColorTextureView(), OptionalInt.empty(), minecraft.getMainRenderTarget().getDepthTextureView(), OptionalDouble.empty())) {
             RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
-            // TODO: renderPass.setPipeline(AnimatiumConfig.instance().planarSkyFog ? AnimatiumClient.LEGACY_SKY_PLANAR_FOG_PIPELINE : AnimatiumClient.LEGACY_SKY_PIPELINE);
-            renderPass.setPipeline(RenderPipelines.SKY);
+            renderPass.setPipeline(AnimatiumConfig.instance().planarSkyFog ? AnimatiumClient.LEGACY_SKY_PLANAR_FOG_PIPELINE : AnimatiumClient.LEGACY_SKY_PIPELINE);
             renderPass.setVertexBuffer(0, animatium$blueVoidBuffer);
             renderPass.setIndexBuffer(autoStorageIndexBuffer.getBuffer(6), autoStorageIndexBuffer.type());
             RenderSystem.bindDefaultUniforms(renderPass);
