@@ -43,7 +43,6 @@
 		"renderer.MixinTextureManager",
 		"renderer.MixinTextureStateShard",
 		"renderer.MixinVertexConsumer",
-		"renderer.entity.MixinEntityRenderDispatcher",
 		"renderer.entity.MixinEntityRenderer",
 		"renderer.entity.MixinFishingHookRenderer",
 		"renderer.entity.MixinFlameFeatureRenderer",
