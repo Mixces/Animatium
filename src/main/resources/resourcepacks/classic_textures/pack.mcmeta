@@ -2,10 +2,9 @@
 	"pack": {
 		"pack_format": 46,
 		"description": "Restores some classic textures from the 1.8 era.",
-		"supported_formats": {
-			"min_inclusive": 46,
-			"max_inclusive": 46
-		}
+		"supported_formats": [46, 2048],
+		"min_format": 46,
+		"max_format": 2048
 	},
 	"meta": {
 		"game_version": "1.21.4"
