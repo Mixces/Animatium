@@ -6,7 +6,7 @@ plugins {
     id "com.diffplug.spotless" version "7.0.2"
 }
 
-version = "${project.mod_version}-${getCheckedOutGitCommitHash()}"
+version = "${project.mod_version}-${getCheckedOutGitCommitHash()}+mc${project.minecraft_version}"
 group = project.maven_group
 
 base {
