@@ -23,50 +23,43 @@
 
 package btw.mixces.animatium.config;
 
+import btw.mixces.animatium.config.category.*;
 import btw.mixces.animatium.util.CameraVersion;
 import btw.mixces.animatium.util.FishingRodVersion;
+import dev.isxander.yacl3.api.YetAnotherConfigLib;
+import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
+import dev.isxander.yacl3.config.v2.api.SerialEntry;
+import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
+import dev.isxander.yacl3.platform.YACLPlatform;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
-@interface SerialEntry {
-}
-
 public final class AnimatiumConfig {
-    // TODO:
-//    private static final ConfigClassHandler<AnimatiumConfig> CONFIG = ConfigClassHandler.createBuilder(AnimatiumConfig.class)
-//            .serializer((config) -> GsonConfigSerializerBuilder.create(config)
-//                    .setPath(YACLPlatform.getConfigDir().resolve("animatium.json"))
-//                    .build()
-//            ).build();
+    private static final ConfigClassHandler<AnimatiumConfig> CONFIG = ConfigClassHandler.createBuilder(AnimatiumConfig.class)
+            .serializer((config) -> GsonConfigSerializerBuilder.create(config)
+                    .setPath(YACLPlatform.getConfigDir().resolve("animatium.json"))
+                    .build()
+            ).build();
 
     public static Screen getConfigScreen(@Nullable Screen parent) {
-        // TODO:
-//        return YetAnotherConfigLib.create(CONFIG, (defaults, config, builder) -> {
-//            builder.title(Component.translatable("animatium.title"));
-//            builder.category(MovementConfigCategory.setup(defaults, config));
-//            builder.category(ScreenConfigCategory.setup(defaults, config));
-//            builder.category(ItemsConfigCategory.setup(defaults, config));
-//            builder.category(FixesConfigCategory.setup(defaults, config));
-//            builder.category(OtherConfigCategory.setup(defaults, config));
-//            return builder;
-//        }).generateScreen(parent);
-        return parent;
+        return YetAnotherConfigLib.create(CONFIG, (defaults, config, builder) -> {
+            builder.title(Component.translatable("animatium.title"));
+            builder.category(MovementConfigCategory.setup(defaults, config));
+            builder.category(ScreenConfigCategory.setup(defaults, config));
+            builder.category(ItemsConfigCategory.setup(defaults, config));
+            builder.category(FixesConfigCategory.setup(defaults, config));
+            builder.category(OtherConfigCategory.setup(defaults, config));
+            return builder;
+        }).generateScreen(parent);
     }
 
     public static void load() {
-        // TODO: CONFIG.load();
+        CONFIG.load();
     }
 
     public static AnimatiumConfig instance() {
-        AnimatiumConfig config = new AnimatiumConfig(); // TODO: CONFIG.instance();
-        config.armorHurtRendering = true;
-        config.entityArmorHurtTint = true;
-        config.fakeOldSneakEyeHeight = true;
-        config.syncPlayerModelWithEyeHeight = true;
-        config.debugHudTextShadow = true;
-        config.crosshairInThirdPerson = true;
-        config.itemDropsFaceCameraRotationFix = true;
-        return config;
+        return CONFIG.instance();
     }
 
     // (Movement)
