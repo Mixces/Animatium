@@ -26,33 +26,17 @@ package btw.mixces.animatium.command;
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.ColourUtils;
-import btw.mixces.animatium.util.Feature;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
 public class AnimatiumCommand implements Command<FabricClientCommandSource> {
     public static LiteralArgumentBuilder<FabricClientCommandSource> create() {
         LiteralArgumentBuilder<FabricClientCommandSource> command = ClientCommandManager.literal("animatium").executes(new AnimatiumCommand());
-
-        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("debug").executes((context) -> {
-            context.getSource().sendFeedback(Component.literal("Note: Info displayed here is for developers containing config settings/features enabled by the server!").withStyle(ChatFormatting.YELLOW));
-            context.getSource().sendFeedback(Component.literal("Enabled Features:").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
-            for (Feature feature : AnimatiumClient.ENABLED_FEATURES) {
-                context.getSource().sendFeedback(Component.literal(" - " + Component.translatable(feature.getTranslateKey()).getString()).withColor(ColourUtils.randomColor()));
-            }
-
-            if (AnimatiumClient.ENABLED_FEATURES.isEmpty()) {
-                context.getSource().sendFeedback(Component.literal(" - No features...").withStyle(ChatFormatting.GREEN));
-            }
-
-            return Command.SINGLE_SUCCESS;
-        }));
 
         command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("on").executes((context) -> {
             if (AnimatiumClient.isEnabled()) {

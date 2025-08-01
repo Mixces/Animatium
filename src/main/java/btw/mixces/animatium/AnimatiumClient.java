@@ -43,8 +43,16 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+import net.minecraft.client.gui.components.debug.DebugEntryCategory;
+import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
+import net.minecraft.client.gui.components.debug.DebugScreenEntries;
+import net.minecraft.client.gui.components.debug.DebugScreenEntry;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.LevelChunk;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -143,6 +151,8 @@ public final class AnimatiumClient implements ClientModInitializer {
         return ENABLED;
     }
 
+    private static final DebugEntryCategory ANIMATIUM_DEBUG_CATEGORY = new DebugEntryCategory(Component.translatable("animatium.category.debug"), 9999.0F);
+
     @Override
     public void onInitializeClient() {
         AnimatiumConfig.load();
@@ -182,5 +192,29 @@ public final class AnimatiumClient implements ClientModInitializer {
         PayloadTypeRegistry.playC2S().register(AnimatiumInfoPayloadPacket.PAYLOAD_ID, AnimatiumInfoPayloadPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(RequestInfoPayloadPacket.PAYLOAD_ID, RequestInfoPayloadPacket.CODEC);
         ClientPlayNetworking.registerGlobalReceiver(RequestInfoPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> ClientPlayNetworking.send(AnimatiumClient.getInfoPayload())));
+
+        // Debug
+        DebugScreenEntries.register(id("debug"), new DebugScreenEntry() {
+            @Override
+            public void display(DebugScreenDisplayer debugScreenDisplayer, @Nullable Level level, @Nullable LevelChunk levelChunk, @Nullable LevelChunk levelChunk2) {
+                if (!AnimatiumClient.ENABLED_FEATURES.isEmpty()) {
+                    debugScreenDisplayer.addPriorityLine("Animatium Enabled Server Features:");
+                    for (Feature feature : AnimatiumClient.ENABLED_FEATURES) {
+                        debugScreenDisplayer.addPriorityLine("");
+                        debugScreenDisplayer.addPriorityLine(" - " + Component.translatable(feature.getTranslateKey()).getString());
+                    }
+                }
+            }
+
+            @Override
+            public boolean isAllowed(boolean bl) {
+                return true;
+            }
+
+            @Override
+            public @NotNull DebugEntryCategory category() {
+                return ANIMATIUM_DEBUG_CATEGORY;
+            }
+        });
     }
 }
