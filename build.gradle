@@ -1,3 +1,5 @@
+import com.diffplug.spotless.LineEnding
+
 plugins {
     id 'fabric-loom' version "${loom_version}"
     id 'maven-publish'
@@ -97,4 +99,5 @@ spotless {
     java {
         licenseHeaderFile(licenseHeader)
     }
+    spotless.setLineEndings(LineEnding.UNIX)
 }
