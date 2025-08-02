@@ -152,6 +152,7 @@ public final class AnimatiumClient implements ClientModInitializer {
     }
 
     private static final DebugEntryCategory ANIMATIUM_DEBUG_CATEGORY = new DebugEntryCategory(Component.translatable("animatium.category.debug"), 9999.0F);
+    private static final ResourceLocation ANIMATIUM_GROUP = id("debug");
 
     @Override
     public void onInitializeClient() {
@@ -194,15 +195,17 @@ public final class AnimatiumClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(RequestInfoPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> ClientPlayNetworking.send(AnimatiumClient.getInfoPayload())));
 
         // Debug
-        DebugScreenEntries.register(id("debug"), new DebugScreenEntry() {
+        DebugScreenEntries.register(ANIMATIUM_GROUP, new DebugScreenEntry() {
             @Override
             public void display(DebugScreenDisplayer debugScreenDisplayer, @Nullable Level level, @Nullable LevelChunk levelChunk, @Nullable LevelChunk levelChunk2) {
                 if (!AnimatiumClient.ENABLED_FEATURES.isEmpty()) {
-                    debugScreenDisplayer.addPriorityLine("Animatium Enabled Server Features:");
+                    List<String> list = new ArrayList<>();
+                    list.add("Animatium Enabled Server Features:");
                     for (Feature feature : AnimatiumClient.ENABLED_FEATURES) {
-                        debugScreenDisplayer.addPriorityLine("");
-                        debugScreenDisplayer.addPriorityLine(" - " + Component.translatable(feature.getTranslateKey()).getString());
+                        list.add(" - " + Component.translatable(feature.getTranslateKey()).getString());
                     }
+
+                    debugScreenDisplayer.addToGroup(ANIMATIUM_GROUP, list);
                 }
             }
 
