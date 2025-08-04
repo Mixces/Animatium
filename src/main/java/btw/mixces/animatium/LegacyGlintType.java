@@ -28,7 +28,6 @@ import btw.mixces.animatium.mixins.accessor.RenderTypeCompositeStateBuilderAcces
 import btw.mixces.animatium.util.MathUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.Util;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -79,7 +78,7 @@ public final class LegacyGlintType {
         return RenderTypeAccessor.createRenderType(
                 "legacy_glint" + (translucent ? "_translucent" : ""),
                 1536,
-                RenderPipelines.GLINT /* TODO: AnimatiumClient.LEGACY_GLINT_PIPELINE */,
+                AnimatiumClient.LEGACY_GLINT_PIPELINE,
                 compositeStateBuilder.buildCompositeState(false)
         );
     }
@@ -92,7 +91,7 @@ public final class LegacyGlintType {
         return RenderTypeAccessor.createRenderType(
                 "legacy_" + (armor ? "armor_" : "") + "entity_glint",
                 1536,
-                RenderPipelines.GLINT /* TODO: AnimatiumClient.LEGACY_GLINT_PIPELINE */,
+                AnimatiumClient.LEGACY_GLINT_PIPELINE,
                 compositeStateBuilder.buildCompositeState(false)
         );
     }

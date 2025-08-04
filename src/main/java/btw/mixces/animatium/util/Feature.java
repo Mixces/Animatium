@@ -34,8 +34,10 @@ public enum Feature {
     private final String id;
     private final String translate;
 
+    public static final Feature[] VALUES = values();
+
     public static @Nullable Feature byId(String id) {
-        return Arrays.stream(Feature.values()).filter(feature -> feature.id.equals(id)).findFirst().orElse(null);
+        return Arrays.stream(VALUES).filter(feature -> feature.id.equals(id)).findFirst().orElse(null);
     }
 
     Feature(String id, String translate) {
