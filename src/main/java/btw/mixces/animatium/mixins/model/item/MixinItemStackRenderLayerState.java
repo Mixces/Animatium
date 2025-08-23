@@ -30,7 +30,7 @@ import btw.mixces.animatium.util.ItemUtils;
 import btw.mixces.animatium.util.MathUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -48,7 +48,7 @@ public abstract class MixinItemStackRenderLayerState {
     @Shadow
     ItemTransform transform;
 
-    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderItem(Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II[ILjava/util/List;Lnet/minecraft/client/renderer/RenderType;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"), index = 8)
+    @ModifyArg(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemDisplayContext;III[ILjava/util/List;Lnet/minecraft/client/renderer/RenderType;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"), index = 8)
     private ItemStackRenderState.FoilType animatium$disableGlintOn2dItems(ItemStackRenderState.FoilType glint) {
         boolean glintDropped = !AnimatiumConfig.instance().glintOnItemDrops2D;
         boolean glintFramed = !AnimatiumConfig.instance().glintOnItemFramed2D;
@@ -61,8 +61,8 @@ public abstract class MixinItemStackRenderLayerState {
         }
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack$Pose;)V"))
-    private void animatium$itemPositionsRod(PoseStack poseStack, MultiBufferSource multiBufferSource, int light, int overlay, CallbackInfo ci) {
+    @Inject(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack$Pose;)V"))
+    private void animatium$itemPositionsRod(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int light, int overlay, int k, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled()) {
             ItemStack stack = ItemUtils.getStack();
             ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
@@ -102,16 +102,14 @@ public abstract class MixinItemStackRenderLayerState {
                     }
                 }
 
-                if (AnimatiumConfig.instance().skullPosition && ItemUtils.isSkullBlock(stack)) {
-                    if (isGui) {
-                        poseStack.translate(x, y, z);
-                        poseStack.mulPose(Axis.XP.rotationDegrees(MathUtils.toRadians(rotZ)));
-                        poseStack.mulPose(Axis.YP.rotationDegrees(MathUtils.toRadians(rotY)));
-                        poseStack.mulPose(Axis.ZP.rotationDegrees(MathUtils.toRadians(rotX)));
-                        poseStack.scale(0.9f, 0.9f, 0.9f);
-                        poseStack.scale(scaleX, scaleY, scaleZ);
-                        animatium$doInverseTransformations(poseStack);
-                    }
+                if (AnimatiumConfig.instance().skullPosition && ItemUtils.isSkullBlock(stack) && isGui) {
+                    poseStack.translate(x, y, z);
+                    poseStack.mulPose(Axis.XP.rotationDegrees(MathUtils.toRadians(rotZ)));
+                    poseStack.mulPose(Axis.YP.rotationDegrees(MathUtils.toRadians(rotY)));
+                    poseStack.mulPose(Axis.ZP.rotationDegrees(MathUtils.toRadians(rotX)));
+                    poseStack.scale(0.9f, 0.9f, 0.9f);
+                    poseStack.scale(scaleX, scaleY, scaleZ);
+                    animatium$doInverseTransformations(poseStack);
                 }
             }
         }

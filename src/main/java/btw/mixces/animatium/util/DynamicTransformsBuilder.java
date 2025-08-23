@@ -75,7 +75,7 @@ public class DynamicTransformsBuilder {
         return RenderSystem.getDynamicUniforms().writeTransform(
                 this.modelViewMatrix.orElse(RenderSystem.getModelViewMatrix()),
                 this.colorModulator.orElse(new Vector4f(1.0F, 1.0F, 1.0F, 1.0F)),
-                this.modelOffset.orElse(RenderSystem.getModelOffset()),
+                this.modelOffset.orElse(new Vector3f()),
                 this.textureMatrix.orElse(RenderSystem.getTextureMatrix()),
                 this.lineWidth.orElse(RenderUtils.getLineWidth(RenderSystem.getShaderLineWidth()))
         );

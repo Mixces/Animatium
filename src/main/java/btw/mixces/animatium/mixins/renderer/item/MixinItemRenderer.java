@@ -81,7 +81,7 @@ public abstract class MixinItemRenderer {
     @WrapOperation(method = "getFoilBuffer", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexMultiConsumer;create(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lcom/mojang/blaze3d/vertex/VertexConsumer;)Lcom/mojang/blaze3d/vertex/VertexConsumer;", ordinal = 1))
     private static VertexConsumer animatium$legacyGlintRendering$glintLayer2(VertexConsumer leftConsumer, VertexConsumer rightConsumer, Operation<VertexConsumer> original, @Local(argsOnly = true) MultiBufferSource multiBufferSource, @Local(argsOnly = true, ordinal = 0) boolean bl) {
         final VertexConsumer finalConsumer = original.call(leftConsumer, rightConsumer);
-        ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
+        final ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering && displayContext != ItemDisplayContext.GUI && bl) {
             return VertexMultiConsumer.create(multiBufferSource.getBuffer(LegacyGlintType.ITEM_GLINT_2ND_LAYER), finalConsumer);
         } else {
@@ -100,7 +100,7 @@ public abstract class MixinItemRenderer {
 
     @ModifyArg(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderQuadList(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Ljava/util/List;[III)V"), index = 2)
     private static List<BakedQuad> animatium$itemDrops2D(List<BakedQuad> quads) {
-        ItemStackRenderState itemStackRenderState = ItemUtils.getRenderState();
+        final ItemStackRenderState itemStackRenderState = ItemUtils.getRenderState();
         if (AnimatiumClient.isEnabled() && animatium$isTransformationModeValid() && itemStackRenderState != null && !itemStackRenderState.usesBlockLight()) {
             return quads.stream().filter(baked -> baked.direction() == Direction.SOUTH).collect(Collectors.toList());
         } else {
@@ -110,7 +110,7 @@ public abstract class MixinItemRenderer {
 
     @Unique
     private static boolean animatium$isTransformationModeValid() {
-        ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
+        final ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
         boolean itemDrops2D = AnimatiumConfig.instance().itemDrops2D;
         boolean itemFramed2D = AnimatiumConfig.instance().itemFramed2D;
         return (itemDrops2D && displayContext == ItemDisplayContext.GROUND) || (itemFramed2D && displayContext == ItemDisplayContext.FIXED);

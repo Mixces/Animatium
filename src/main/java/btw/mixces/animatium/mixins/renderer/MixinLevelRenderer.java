@@ -136,8 +136,6 @@ public abstract class MixinLevelRenderer {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().glintRendering) {
             instance.endBatch(LegacyGlintType.ITEM_GLINT_LAYER);
             instance.endBatch(LegacyGlintType.ITEM_GLINT_2ND_LAYER);
-            instance.endBatch(LegacyGlintType.ITEM_GLINT_TRANSLUCENT_LAYER);
-            instance.endBatch(LegacyGlintType.ITEM_GLINT_TRANSLUCENT_2ND_LAYER);
             instance.endBatch(LegacyGlintType.ENTITY_GLINT_LAYER);
             instance.endBatch(LegacyGlintType.ENTITY_ARMOR_GLINT_LAYER);
         }

@@ -86,7 +86,7 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
         return !AnimatiumClient.isEnabled() || !ItemUtils.shoulditemPositionsInThirdPerson(entityState) || ItemUtils.isItemBlacklisted(stackRef.get());
     }
 
-    @Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/item/ItemStackRenderState;II)V"))
+    @Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/item/ItemStackRenderState;submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V"))
     private void animatium$itemPositionsThird(S entityRenderState, ItemStackRenderState itemStackRenderState, HumanoidArm humanoidArm, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled() && ItemUtils.shoulditemPositionsInThirdPerson(entityRenderState)) {
             Entity entity = EntityUtils.getEntityByState(entityRenderState);

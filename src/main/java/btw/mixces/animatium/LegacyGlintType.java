@@ -46,18 +46,6 @@ public final class LegacyGlintType {
             RenderSystem::resetTextureMatrix
     ), false);
 
-    public static final RenderType ITEM_GLINT_TRANSLUCENT_LAYER = makeItemGlintLayer(new RenderStateShard.TexturingStateShard(
-            "legacy_glint_texturing",
-            () -> setupItemGlintTexturing(-50.0F, false, 3000L),
-            RenderSystem::resetTextureMatrix
-    ), true);
-
-    public static final RenderType ITEM_GLINT_TRANSLUCENT_2ND_LAYER = makeItemGlintLayer(new RenderStateShard.TexturingStateShard(
-            "legacy_glint_texturing",
-            () -> setupItemGlintTexturing(10.0F, true, 4873L),
-            RenderSystem::resetTextureMatrix
-    ), true);
-
     public static final RenderType ENTITY_GLINT_LAYER = makeEntityGlintLayer(new RenderStateShard.TexturingStateShard(
             "legacy_glint_texturing",
             LegacyGlintType::setupEntityGlintTexturing,
@@ -102,12 +90,11 @@ public final class LegacyGlintType {
     }
 
     private static void setupEntityGlintTexturing() {
-        // TODO: Replace with proper <=1.14 translation/stuff
-        // TEMPORARY
-        // CODE FROM RenderStateShader#setupGlintTexturing(float)
         long l = (long) ((double) Util.getMillis() * 8.0);
-        float g = (float) (l % 110000L) / 110000.0F;
-        float h = (float) (l % 30000L) / 30000.0F;
-        RenderSystem.setTextureMatrix(new Matrix4f().translation(-g, h, 0.0F).rotateZ((float) (Math.PI / 18)).scale(0.16F));
+        RenderSystem.setTextureMatrix(new Matrix4f()
+                .scale(0.33333334F)
+                .rotateZ(30.0F - (1 * 60.0F))
+                .translation(0.0F, l * (0.001F + 1 * 0.003F) * 20.0F, 0.0F)
+        );
     }
 }
