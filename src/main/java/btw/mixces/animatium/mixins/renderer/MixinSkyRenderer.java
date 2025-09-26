@@ -28,12 +28,15 @@ import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.RenderUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.SkyRenderer;
+import net.minecraft.world.level.LevelHeightAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -111,6 +114,15 @@ public abstract class MixinSkyRenderer {
             instance.drawIndexed(i, 0, 1014, 1);
         } else {
             original.call(instance, i, j);
+        }
+    }
+
+    @WrapOperation(method = "shouldRenderDarkDisc", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel$ClientLevelData;getHorizonHeight(Lnet/minecraft/world/level/LevelHeightAccessor;)D"))
+    private double animatium$skyHorizonHeight(ClientLevel.ClientLevelData instance, LevelHeightAccessor levelHeightAccessor, Operation<Double> original, @Local(argsOnly = true) ClientLevel level) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().skyHorizonHeight && level != null) {
+            return RenderUtils.getLevelHorizonHeight(level);
+        } else {
+            return original.call(instance, levelHeightAccessor);
         }
     }
 }

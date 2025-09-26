@@ -84,16 +84,6 @@ public abstract class MixinLevelRenderer {
         }
     }
 
-    // TODO: Move to SkyRenderer
-//    @WrapOperation(method = "shouldRenderDarkDisc", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel$ClientLevelData;getHorizonHeight(Lnet/minecraft/world/level/LevelHeightAccessor;)D"))
-//    private double animatium$skyHorizonHeight(ClientLevel.ClientLevelData instance, LevelHeightAccessor levelHeightAccessor, Operation<Double> original) {
-//        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().skyHorizonHeight && this.level != null) {
-//            return RenderUtils.getLevelHorizonHeight(this.level);
-//        } else {
-//            return original.call(instance, levelHeightAccessor);
-//        }
-//    }
-
     @WrapOperation(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/dimension/DimensionType;cloudHeight()Ljava/util/Optional;"))
     private Optional<Integer> animatium$cloudHeight(DimensionType instance, Operation<Optional<Integer>> original) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().cloudHeight) {
