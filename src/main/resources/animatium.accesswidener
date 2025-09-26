@@ -4,6 +4,7 @@ accessible class net/minecraft/client/gui/Font$PreparedTextBuilder
 accessible method net/minecraft/client/gui/components/debug/DebugScreenEntries register (Ljava/lang/String;Lnet/minecraft/client/gui/components/debug/DebugScreenEntry;)Lnet/minecraft/resources/ResourceLocation;
 accessible method net/minecraft/client/gui/components/debug/DebugScreenEntries register (Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/gui/components/debug/DebugScreenEntry;)Lnet/minecraft/resources/ResourceLocation;
 
+accessible field net/minecraft/world/entity/Avatar STANDING_DIMENSIONS Lnet/minecraft/world/entity/EntityDimensions;
 accessible class net/minecraft/client/renderer/RenderType$CompositeState
 accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
 accessible class net/minecraft/client/renderer/RenderStateShard$TextureStateShard

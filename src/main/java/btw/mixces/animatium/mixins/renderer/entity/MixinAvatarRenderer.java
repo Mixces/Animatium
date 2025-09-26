@@ -38,10 +38,11 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.player.AvatarRenderer;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.HumanoidArm;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Opcodes;
@@ -52,20 +53,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(PlayerRenderer.class)
-public abstract class MixinPlayerRenderer extends LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel> {
-    public MixinPlayerRenderer(EntityRendererProvider.Context context, PlayerModel entityModel, float f) {
+@Mixin(AvatarRenderer.class)
+public abstract class MixinAvatarRenderer extends LivingEntityRenderer<AbstractClientPlayer, AvatarRenderState, PlayerModel> {
+    public MixinAvatarRenderer(EntityRendererProvider.Context context, PlayerModel entityModel, float f) {
         super(context, entityModel, f);
     }
 
     @Shadow
-    private static HumanoidModel.ArmPose getArmPose(AbstractClientPlayer abstractClientPlayer, HumanoidArm humanoidArm) {
-        return null;
-    }
+    @NotNull
+    public abstract AvatarRenderState createRenderState();
 
     @Shadow
-    @NotNull
-    public abstract PlayerRenderState createRenderState();
+    private static HumanoidModel.ArmPose getArmPose(Avatar avatar, HumanoidArm humanoidArm) {
+        return null;
+    }
 
     @WrapOperation(method = "extractCapeState", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;rotLerp(FFF)F"))
     private static float animatium$changeLerpMethod(float delta, float start, float end, Operation<Float> original) {
@@ -85,18 +86,18 @@ public abstract class MixinPlayerRenderer extends LivingEntityRenderer<AbstractC
         }
     }
 
-    @WrapWithCondition(method = "extractCapeState", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;capeLean:F", ordinal = 1))
-    private static boolean animatium$dontAssignLeanField(PlayerRenderState instance, float value) {
+    @WrapWithCondition(method = "extractCapeState", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;capeLean:F", ordinal = 1))
+    private static boolean animatium$dontAssignLeanField(AvatarRenderState instance, float value) {
         return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().capeMovement;
     }
 
-    @WrapWithCondition(method = "extractCapeState", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;capeLean2:F", ordinal = 1))
-    private static boolean animatium$dontAssignLean2Field(PlayerRenderState instance, float value) {
+    @WrapWithCondition(method = "extractCapeState", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;capeLean2:F", ordinal = 1))
+    private static boolean animatium$dontAssignLean2Field(AvatarRenderState instance, float value) {
         return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().capeMovement;
     }
 
-    @WrapOperation(method = "getRenderOffset(Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;)Lnet/minecraft/world/phys/Vec3;", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;isCrouching:Z"))
-    private boolean animatium$fixSneakingFeetPosition(PlayerRenderState instance, Operation<Boolean> original) {
+    @WrapOperation(method = "getRenderOffset(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;)Lnet/minecraft/world/phys/Vec3;", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;isCrouching:Z"))
+    private boolean animatium$fixSneakingFeetPosition(AvatarRenderState instance, Operation<Boolean> original) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixSneakingFeetPosition) {
             return false;
         } else {

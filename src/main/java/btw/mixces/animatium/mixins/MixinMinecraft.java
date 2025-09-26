@@ -36,7 +36,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.world.InteractionHand;
@@ -64,10 +63,6 @@ public abstract class MixinMinecraft {
     @Shadow
     @Nullable
     public HitResult hitResult;
-
-    @Shadow
-    @Final
-    public ParticleEngine particleEngine;
 
     @Shadow
     @Nullable
@@ -136,7 +131,7 @@ public abstract class MixinMinecraft {
     private void animatium$applySwingWhilstMining(CallbackInfo ci) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemUsageSwinging) {
             if (this.player != null && !(this.player.getItemInHand(this.player.getUsedItemHand()).isEmpty() || !this.player.isUsingItem() || !this.options.keyAttack.isDown())) {
-                PlayerUtils.applySwingWhilstMining(this.level, this.player, this.hitResult, this.particleEngine);
+                PlayerUtils.applySwingWhilstMining(this.level, this.player, this.hitResult);
             }
         }
     }

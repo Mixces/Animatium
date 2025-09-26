@@ -34,7 +34,9 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
@@ -48,14 +50,14 @@ import java.util.Objects;
 
 @Mixin(LivingEntityRenderer.class)
 public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderState> {
-    @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal = 1))
-    private void animatium$syncPlayerModelWithEyeHeight(S livingEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CallbackInfo ci) {
+    @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal = 1))
+    private void animatium$syncPlayerModelWithEyeHeight(S livingEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().syncPlayerModelWithEyeHeight) {
             Minecraft client = Minecraft.getInstance();
             LocalPlayer player = client.player;
-            if (livingEntityRenderState instanceof PlayerRenderState state && player != null && state.id == player.getId()) {
+            if (livingEntityRenderState instanceof AvatarRenderState state && player != null && state.id == player.getId()) {
                 float cameraLerpValue = PlayerUtils.lerpCameraPosition(client.gameRenderer.getMainCamera());
-                poseStack.translate(0.0F, (Player.STANDING_DIMENSIONS.eyeHeight() * player.getScale()) - cameraLerpValue, 0.0F);
+                poseStack.translate(0.0F, (Avatar.STANDING_DIMENSIONS.eyeHeight() * player.getScale()) - cameraLerpValue, 0.0F);
             }
         }
     }
@@ -69,8 +71,8 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
         }
     }
 
-    @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;)V", at = @At("HEAD"), cancellable = true)
-    private void animatium$modelWhilstSleeping(S livingEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CallbackInfo ci) {
+    @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At("HEAD"), cancellable = true)
+    private void animatium$modelWhilstSleeping(S livingEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
         Entity entity = EntityUtils.getEntityByState(livingEntityRenderState);
         if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().modelWhilstSleeping &&
                 entity instanceof LivingEntity livingEntity &&

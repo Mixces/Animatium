@@ -29,7 +29,7 @@ import com.google.common.base.MoreObjects;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
 import net.minecraft.core.BlockPos;
@@ -43,7 +43,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -100,7 +99,7 @@ public final class PlayerUtils {
                 swingHand = ClientboundAnimatePacket.SWING_OFF_HAND;
             }
 
-            serverLevel.getChunkSource().broadcast(player, new ClientboundAnimatePacket(player, swingHand));
+            serverLevel.getChunkSource().sendToTrackingPlayers(player, new ClientboundAnimatePacket(player, swingHand));
         }
 
         player.connection.send(new ServerboundSwingPacket(hand));
@@ -115,14 +114,14 @@ public final class PlayerUtils {
         return Mth.lerp(camera.getPartialTickTime(), cameraAccessor.getEyeHeightOld(), cameraAccessor.getEyeHeight());
     }
 
-    public static void applySwingWhilstMining(Level level, Player player, HitResult hitResult, ParticleEngine particleEngine) {
+    public static void applySwingWhilstMining(ClientLevel level, Player player, HitResult hitResult) {
         final InteractionHand activeHand = player.getUsedItemHand();
         final InteractionHand hand = InteractionHand.MAIN_HAND;
         if (hitResult != null && hitResult.getType() == HitResult.Type.BLOCK && activeHand.equals(hand)) {
             final BlockHitResult blockHitResult = (BlockHitResult) hitResult;
             final BlockPos blockPos = blockHitResult.getBlockPos();
             if (level != null && !level.getBlockState(blockPos).isAir()) {
-                particleEngine.crack(blockPos, blockHitResult.getDirection());
+                level.addBreakingBlockEffect(blockPos, blockHitResult.getDirection());
             }
 
             PlayerUtils.fakeHandSwing(player, hand);

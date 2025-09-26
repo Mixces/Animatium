@@ -35,6 +35,7 @@ public abstract class MixinFontPreparedTextBuilder {
     @Unique
     private static final float animatium$strikethroughOffset = 0.5F;
 
+    // TODO
 //    @ModifyArg(method = "accept(ILnet/minecraft/network/chat/Style;Lnet/minecraft/client/gui/font/glyphs/BakeableGlyph;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/font/glyphs/BakedGlyph$Effect;<init>(FFFFFIIF)V", ordinal = 0), index = 1)
 //    private float animatium$fixTextStrikethroughStyle$minY(float minY) {
 //        if (AnimatiumConfig.instance().fixTextStrikethroughStyle) {

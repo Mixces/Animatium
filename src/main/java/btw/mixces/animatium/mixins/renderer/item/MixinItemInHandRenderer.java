@@ -25,7 +25,6 @@ package btw.mixces.animatium.mixins.renderer.item;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.mixins.accessor.ItemRendererAccessor;
 import btw.mixces.animatium.util.FishingRodVersion;
 import btw.mixces.animatium.util.ItemUtils;
 import btw.mixces.animatium.util.MathUtils;
@@ -44,12 +43,11 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.item.*;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -80,6 +78,9 @@ public abstract class MixinItemInHandRenderer {
     @Final
     private ItemRenderer itemRenderer;
 
+    @Shadow
+    @Final
+    private ItemModelResolver itemModelResolver;
     @Unique
     private int animatium$currentSlot = -1;
 
@@ -135,7 +136,10 @@ public abstract class MixinItemInHandRenderer {
                 poseStack.mulPose(Axis.YP.rotationDegrees(direction * 180.0F));
             }
 
-            if (AnimatiumConfig.instance().itemPositions && !ItemUtils.isBlock3d(stack, ((ItemRendererAccessor) itemRenderer).getScratchItemStackRenderState()) && !ItemUtils.isItemBlacklisted(stack)) {
+            ItemStackRenderState scratchItemStackRenderState = new ItemStackRenderState();
+            // TODO/NOTE: Might be wrong
+            itemModelResolver.updateForTopItem(scratchItemStackRenderState, stack, hand == InteractionHand.MAIN_HAND ? ItemDisplayContext.FIRST_PERSON_RIGHT_HAND : ItemDisplayContext.FIRST_PERSON_LEFT_HAND, player.level(), player, light);
+            if (AnimatiumConfig.instance().itemPositions && !ItemUtils.isBlock3d(stack, scratchItemStackRenderState) && !ItemUtils.isItemBlacklisted(stack)) {
                 float angle = MathUtils.toRadians(25);
 
                 poseStack.scale(0.6F, 0.6F, 0.6F);
