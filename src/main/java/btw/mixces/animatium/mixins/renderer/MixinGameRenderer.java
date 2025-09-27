@@ -31,7 +31,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.entity.ClientAvatarState;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -78,21 +78,14 @@ public abstract class MixinGameRenderer {
         }
     }
 
-    @WrapOperation(method = "bobView", at = @At(value = "FIELD", target = "Lnet/minecraft/client/player/AbstractClientPlayer;walkDist:F"))
-    private float animatium$viewBobbing$changeDistance(AbstractClientPlayer instance, Operation<Float> original) {
+    @WrapOperation(method = "bobView", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/ClientAvatarState;getBackwardsInterpolatedWalkDistance(F)F"))
+    private float animatium$viewBobbing$changeDistance(ClientAvatarState instance, float tickDelta, Operation<Float> original) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().viewBobbing) {
-            return ((ViewBobbingStorage) instance).animatium$getHorizontalSpeed();
+            float walkDist = ((ViewBobbingStorage) instance).animatium$getHorizontalSpeed();
+            float walkDistO = ((ViewBobbingStorage) instance).animatium$getPreviousHorizontalSpeed();
+            return -(walkDist + (walkDist - walkDistO) * tickDelta);
         } else {
-            return original.call(instance);
-        }
-    }
-
-    @WrapOperation(method = "bobView", at = @At(value = "FIELD", target = "Lnet/minecraft/client/player/AbstractClientPlayer;walkDistO:F"))
-    private float animatium$viewBobbing$changePreviousDistance(AbstractClientPlayer instance, Operation<Float> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().viewBobbing) {
-            return ((ViewBobbingStorage) instance).animatium$getPreviousHorizontalSpeed();
-        } else {
-            return original.call(instance);
+            return original.call(instance, tickDelta);
         }
     }
 

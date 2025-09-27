@@ -91,10 +91,6 @@ public final class LegacyGlintType {
 
     private static void setupEntityGlintTexturing() {
         long l = (long) ((double) Util.getMillis() * 8.0);
-        RenderSystem.setTextureMatrix(new Matrix4f()
-                .scale(0.33333334F)
-                .rotateZ(30.0F - (1 * 60.0F))
-                .translation(0.0F, l * (0.001F + 1 * 0.003F) * 20.0F, 0.0F)
-        );
+        RenderSystem.setTextureMatrix(new Matrix4f().scale(0.33333334F).rotateZ(30.0F - (1 * 60.0F)).translation(0.0F, l * (0.001F + 1 * 0.003F) * 20.0F, 0.0F));
     }
 }
