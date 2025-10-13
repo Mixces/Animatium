@@ -23,6 +23,7 @@
 
 package btw.mixces.animatium.config.category;
 
+import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
@@ -98,15 +99,17 @@ public class FixesConfigCategory {
                         (newVal) -> config.fixFireballClientsideVisual = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.fixTextStrikethroughStyle"))
-                .description(OptionDescription.of(Component.translatable("animatium.fixTextStrikethroughStyle.description")))
-                .binding(
-                        defaults.fixTextStrikethroughStyle,
-                        () -> config.fixTextStrikethroughStyle,
-                        (newVal) -> config.fixTextStrikethroughStyle = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
+        if (!AnimatiumClient.isVFPInstalled()) {
+            category.option(Option.<Boolean>createBuilder()
+                    .name(Component.translatable("animatium.fixTextStrikethroughStyle"))
+                    .description(OptionDescription.of(Component.translatable("animatium.fixTextStrikethroughStyle.description")))
+                    .binding(
+                            defaults.fixTextStrikethroughStyle,
+                            () -> config.fixTextStrikethroughStyle,
+                            (newVal) -> config.fixTextStrikethroughStyle = newVal)
+                    .controller(TickBoxControllerBuilder::create)
+                    .build());
+        }
         category.option(Option.<Boolean>createBuilder()
                 .name(Component.translatable("animatium.fixHighAttackSpeedIndicator"))
                 .description(OptionDescription.of(Component.translatable("animatium.fixHighAttackSpeedIndicator.description")))

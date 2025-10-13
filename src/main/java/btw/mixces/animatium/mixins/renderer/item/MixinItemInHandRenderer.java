@@ -42,7 +42,6 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.world.InteractionHand;
@@ -76,11 +75,8 @@ public abstract class MixinItemInHandRenderer {
 
     @Shadow
     @Final
-    private ItemRenderer itemRenderer;
-
-    @Shadow
-    @Final
     private ItemModelResolver itemModelResolver;
+
     @Unique
     private int animatium$currentSlot = -1;
 
@@ -98,7 +94,7 @@ public abstract class MixinItemInHandRenderer {
 
     @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V", ordinal = 1))
     private void animatium$postBowTransform(PoseStack poseStack, float x, float y, float z, Operation<Void> original, @Local(argsOnly = true) AbstractClientPlayer player, @Local(argsOnly = true) InteractionHand hand) {
-        int direction = PlayerUtils.getHandMultiplier(player, hand);
+        final int direction = PlayerUtils.getHandMultiplier(player, hand);
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemPositions) {
             poseStack.mulPose(Axis.ZP.rotationDegrees(direction * -335));
             poseStack.mulPose(Axis.YP.rotationDegrees(direction * -50.0F));
@@ -114,7 +110,7 @@ public abstract class MixinItemInHandRenderer {
     @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getItem()Lnet/minecraft/world/item/Item;"))
     private Item animatium$oldFirstPersonSwordBlock(ItemStack instance, Operation<Item> original, @Local(argsOnly = true) AbstractClientPlayer player, @Local(argsOnly = true) InteractionHand hand, @Local(argsOnly = true) PoseStack poseStack) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemPositions && !(instance.getItem() instanceof ShieldItem)) {
-            int direction = PlayerUtils.getHandMultiplier(player, hand);
+            final int direction = PlayerUtils.getHandMultiplier(player, hand);
             // We do this to fix a rounding error in Mojangs code.
             ItemUtils.applyLegacyFirstpersonTransforms(poseStack, direction, () -> {
                 poseStack.translate(direction * -0.5F, 0.2F, 0.0F);
@@ -130,7 +126,7 @@ public abstract class MixinItemInHandRenderer {
 
     @Inject(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V"))
     private void animatium$itemPositions(AbstractClientPlayer player, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack stack, float equipProgress, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int light, CallbackInfo ci) {
-        int direction = PlayerUtils.getHandMultiplier(player, hand);
+        final int direction = PlayerUtils.getHandMultiplier(player, hand);
         if (AnimatiumClient.isEnabled()) {
             if (AnimatiumConfig.instance().fishingRodVersion == FishingRodVersion.V1_7 && ItemUtils.isFishingRodItem(stack)) {
                 poseStack.mulPose(Axis.YP.rotationDegrees(direction * 180.0F));
@@ -140,7 +136,7 @@ public abstract class MixinItemInHandRenderer {
             // TODO/NOTE: Might be wrong
             itemModelResolver.updateForTopItem(scratchItemStackRenderState, stack, hand == InteractionHand.MAIN_HAND ? ItemDisplayContext.FIRST_PERSON_RIGHT_HAND : ItemDisplayContext.FIRST_PERSON_LEFT_HAND, player.level(), player, light);
             if (AnimatiumConfig.instance().itemPositions && !ItemUtils.isBlock3d(stack, scratchItemStackRenderState) && !ItemUtils.isItemBlacklisted(stack)) {
-                float angle = MathUtils.toRadians(25);
+                final float angle = MathUtils.toRadians(25);
 
                 poseStack.scale(0.6F, 0.6F, 0.6F);
                 poseStack.mulPose(Axis.YP.rotationDegrees(direction * 275.0F));

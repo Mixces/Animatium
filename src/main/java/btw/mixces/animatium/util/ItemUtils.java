@@ -165,7 +165,7 @@ public final class ItemUtils {
         poseStack.mulPose(Axis.YP.rotationDegrees(direction * -45.0F));
     }
 
-    public static boolean shoulditemPositionsInThirdPerson(EntityRenderState entityState) {
+    public static boolean shouldApplyItemPositionsInThirdperson(EntityRenderState entityState) {
         if (AnimatiumConfig.instance().itemPositionsInThirdPerson) {
             return true;
         } else {

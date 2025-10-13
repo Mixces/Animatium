@@ -23,6 +23,7 @@
 
 package btw.mixces.animatium.mixins.screen;
 
+import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import net.minecraft.client.gui.Font;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,22 +36,26 @@ public abstract class MixinFontPreparedTextBuilder {
     @Unique
     private static final float animatium$strikethroughOffset = 0.5F;
 
-    // TODO
-//    @ModifyArg(method = "accept(ILnet/minecraft/network/chat/Style;Lnet/minecraft/client/gui/font/glyphs/BakeableGlyph;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/font/glyphs/BakedGlyph$Effect;<init>(FFFFFIIF)V", ordinal = 0), index = 1)
-//    private float animatium$fixTextStrikethroughStyle$minY(float minY) {
-//        if (AnimatiumConfig.instance().fixTextStrikethroughStyle) {
-//            return minY - animatium$strikethroughOffset;
-//        } else {
-//            return minY;
-//        }
-//    }
-//
-//    @ModifyArg(method = "accept(ILnet/minecraft/network/chat/Style;Lnet/minecraft/client/gui/font/glyphs/BakeableGlyph;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/font/glyphs/BakedGlyph$Effect;<init>(FFFFFIIF)V", ordinal = 0), index = 3)
-//    private float animatium$fixTextStrikethroughStyle$maxY(float maxY) {
-//        if (AnimatiumConfig.instance().fixTextStrikethroughStyle) {
-//            return maxY - animatium$strikethroughOffset;
-//        } else {
-//            return maxY;
-//        }
-//    }
+    @ModifyArg(method = "accept(ILnet/minecraft/network/chat/Style;Lnet/minecraft/client/gui/font/glyphs/BakedGlyph;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/font/glyphs/EffectGlyph;createEffect(FFFFFIIF)Lnet/minecraft/client/gui/font/TextRenderable;", ordinal = 0), index = 1)
+    private float animatium$fixTextStrikethroughStyle$minY(float minY) {
+        if (AnimatiumConfig.instance().fixTextStrikethroughStyle && this.animatium$shouldApply()) {
+            return minY - animatium$strikethroughOffset;
+        } else {
+            return minY;
+        }
+    }
+
+    @ModifyArg(method = "accept(ILnet/minecraft/network/chat/Style;Lnet/minecraft/client/gui/font/glyphs/BakedGlyph;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/font/glyphs/EffectGlyph;createEffect(FFFFFIIF)Lnet/minecraft/client/gui/font/TextRenderable;", ordinal = 0), index = 3)
+    private float animatium$fixTextStrikethroughStyle$maxY(float maxY) {
+        if (AnimatiumConfig.instance().fixTextStrikethroughStyle && this.animatium$shouldApply()) {
+            return maxY - animatium$strikethroughOffset;
+        } else {
+            return maxY;
+        }
+    }
+
+    @Unique
+    private boolean animatium$shouldApply() {
+        return !AnimatiumClient.isVFPInstalled();
+    }
 }

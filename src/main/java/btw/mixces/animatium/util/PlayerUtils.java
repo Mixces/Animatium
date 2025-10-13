@@ -51,13 +51,11 @@ public final class PlayerUtils {
     public static int getHandMultiplier(Player player) {
         InteractionHand hand = MoreObjects.firstNonNull(player.swingingArm, InteractionHand.MAIN_HAND);
         final int direction = getHandMultiplier(player, hand);
-        Minecraft client = Minecraft.getInstance();
-        return (client.options.getCameraType().isFirstPerson() ? 1 : -1) * direction;
+        return (Minecraft.getInstance().options.getCameraType().isFirstPerson() ? 1 : -1) * direction;
     }
 
     public static int getHandMultiplier(Player player, InteractionHand hand) {
-        HumanoidArm arm = hand == InteractionHand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
-        return getArmMultiplier(arm);
+        return getArmMultiplier(hand == InteractionHand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite());
     }
 
     public static int getArmMultiplier(HumanoidArm arm) {
@@ -73,17 +71,12 @@ public final class PlayerUtils {
     }
 
     public static boolean isBlockingArm(HumanoidArm arm, ArmedEntityRenderState armedEntityState) {
-        if (arm == HumanoidArm.LEFT && armedEntityState.leftArmPose == HumanoidModel.ArmPose.BLOCK) {
-            return true;
-        } else if (arm == HumanoidArm.RIGHT && armedEntityState.rightArmPose == HumanoidModel.ArmPose.BLOCK) {
-            return true;
-        } else {
-            return false;
-        }
+        return (arm == HumanoidArm.LEFT && armedEntityState.leftArmPose == HumanoidModel.ArmPose.BLOCK) ||
+                (arm == HumanoidArm.RIGHT && armedEntityState.rightArmPose == HumanoidModel.ArmPose.BLOCK);
     }
 
     public static void fakeHandSwing(Player player, InteractionHand hand) {
-        // Clientside NOTE fake swinging, doesn't send a packet
+        // Clientside NOTE: fake swinging, doesn't send a packet
         if (isNotSwinging(player)) {
             player.swingTime = -1;
             player.swinging = true;
@@ -110,7 +103,7 @@ public final class PlayerUtils {
     }
 
     public static float lerpCameraPosition(Camera camera) {
-        CameraAccessor cameraAccessor = (CameraAccessor) camera;
+        final CameraAccessor cameraAccessor = (CameraAccessor) camera;
         return Mth.lerp(camera.getPartialTickTime(), cameraAccessor.getEyeHeightOld(), cameraAccessor.getEyeHeight());
     }
 

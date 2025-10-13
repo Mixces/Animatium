@@ -80,9 +80,9 @@ public abstract class MixinGameRenderer {
 
     @WrapOperation(method = "bobView", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/ClientAvatarState;getBackwardsInterpolatedWalkDistance(F)F"))
     private float animatium$viewBobbing$changeDistance(ClientAvatarState instance, float tickDelta, Operation<Float> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().viewBobbing) {
-            float walkDist = ((ViewBobbingStorage) instance).animatium$getHorizontalSpeed();
-            float walkDistO = ((ViewBobbingStorage) instance).animatium$getPreviousHorizontalSpeed();
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().viewBobbing && this.minecraft.getCameraEntity() instanceof Player player) {
+            float walkDist = ((ViewBobbingStorage) player).animatium$getHorizontalSpeed();
+            float walkDistO = ((ViewBobbingStorage) player).animatium$getPreviousHorizontalSpeed();
             return -(walkDist + (walkDist - walkDistO) * tickDelta);
         } else {
             return original.call(instance, tickDelta);

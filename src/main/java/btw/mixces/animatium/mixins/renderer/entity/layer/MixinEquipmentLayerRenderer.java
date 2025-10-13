@@ -101,6 +101,7 @@ public abstract class MixinEquipmentLayerRenderer {
                 return;
             }
 
+            // TODO: Check if this code even does anything at all
             // TODO: Too strong? & glint needs to be tinted hurt color
             boolean isHurt = humanRenderState.hasRedOverlay;
             if (isHurt) {

@@ -62,7 +62,7 @@ public final class RenderUtils {
 
     public static double getLevelHorizonHeight(ClientLevel level) {
         if (AnimatiumConfig.instance().skyHorizonHeight) {
-            if (((ClientLevelDataAccessor) level.getLevelData()).isFlatWorld()) {
+            if (((ClientLevelDataAccessor) level.getLevelData()).animatium$isFlatWorld()) {
                 return 0.0D;
             } else {
                 return 63.0D;
@@ -175,7 +175,7 @@ public final class RenderUtils {
         }
     }
 
-    public static void renderBlueVoidSky(Minecraft minecraft, ClientLevel level, int skyColor, double depth) {
+    public static void renderBlueVoidSky(Minecraft minecraft, int skyColor, double depth) {
         Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
         modelViewStack.pushMatrix();
         modelViewStack.translate(0.0F, -((float) (depth - 16.0)), 0.0F);
