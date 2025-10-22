@@ -42,4 +42,8 @@ public interface UtilityRenderState {
     boolean animatium$isYou();
 
     void animatium$setIsYou();
+
+    boolean animatium$isSleeping();
+
+    void animatium$setSleeping();
 }

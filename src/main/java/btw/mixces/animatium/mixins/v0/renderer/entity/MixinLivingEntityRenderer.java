@@ -26,6 +26,7 @@ package btw.mixces.animatium.mixins.v0.renderer.entity;
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.PlayerUtils;
+import btw.mixces.animatium.util.states.UtilityRenderState;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -36,6 +37,7 @@ import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.entity.Avatar;
+import net.minecraft.world.entity.Pose;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -66,13 +68,13 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
 
     @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At("HEAD"), cancellable = true)
     private void animatium$modelWhilstSleeping(S livingEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
-        // TODO: RenderStateIssue
-//        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().modelWhilstSleeping &&
-//                entity instanceof LivingEntity livingEntity &&
-//                livingEntity == Minecraft.getInstance().player &&
-//                livingEntityRenderState.hasPose(Pose.SLEEPING) &&
-//                livingEntity.isSleeping()) {
-//            ci.cancel();
-//        }
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().modelWhilstSleeping &&
+                livingEntityRenderState instanceof AvatarRenderState avatarRenderState &&
+                avatarRenderState.hasPose(Pose.SLEEPING)) {
+            UtilityRenderState utilityRenderState = (UtilityRenderState) avatarRenderState;
+            if (utilityRenderState.animatium$isYou() && utilityRenderState.animatium$isSleeping()) {
+                ci.cancel();
+            }
+        }
     }
 }

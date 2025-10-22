@@ -55,6 +55,9 @@ public abstract class MixinArmedEntityRenderState implements UtilityRenderState 
     @Unique
     private boolean animatium$isYou = false;
 
+    @Unique
+    private boolean animatium$isSleeping = false;
+
     @Inject(method = "extractArmedEntityRenderState", at = @At("TAIL"))
     private static void animatium$storeStacks(LivingEntity livingEntity, ArmedEntityRenderState armedEntityRenderState, ItemModelResolver itemModelResolver, CallbackInfo ci) {
         UtilityRenderState utilityRenderState = (UtilityRenderState) armedEntityRenderState;
@@ -69,6 +72,10 @@ public abstract class MixinArmedEntityRenderState implements UtilityRenderState 
             if (player == Minecraft.getInstance().player) {
                 utilityRenderState.animatium$setIsYou();
             }
+        }
+
+        if (livingEntity.isSleeping()) {
+            utilityRenderState.animatium$setSleeping();
         }
     }
 
@@ -122,5 +129,15 @@ public abstract class MixinArmedEntityRenderState implements UtilityRenderState 
     @Override
     public void animatium$setIsYou() {
         animatium$isYou = true;
+    }
+
+    @Override
+    public boolean animatium$isSleeping() {
+        return animatium$isSleeping;
+    }
+
+    @Override
+    public void animatium$setSleeping() {
+        animatium$isSleeping = true;
     }
 }
