@@ -76,7 +76,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
         Entity entity = EntityUtils.getEntityByState(livingEntityRenderState);
         if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().modelWhilstSleeping &&
                 entity instanceof LivingEntity livingEntity &&
-                livingEntity == Objects.requireNonNull(Minecraft.getInstance().player) &&
+                livingEntity == Minecraft.getInstance().player &&
                 livingEntityRenderState.hasPose(Pose.SLEEPING) &&
                 livingEntity.isSleeping()) {
             ci.cancel();
