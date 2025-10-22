@@ -24,7 +24,7 @@
 package btw.mixces.animatium.packet;
 
 import btw.mixces.animatium.AnimatiumClient;
-import btw.mixces.animatium.util.Feature;
+import btw.mixces.animatium.util.enums.Feature;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;

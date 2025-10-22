@@ -31,6 +31,9 @@ import net.minecraft.world.item.ShieldItem;
 
 // 25w02a+ Removed default classes for DiggerItem/SwordItem, these methods will help replace their uses in our code
 public final class ItemClassUtils {
+    private ItemClassUtils() {
+    }
+
     // Created for future use case
     public static boolean isSwordItem(ItemStack stack) {
         return stack.is(ItemTags.SWORDS);
@@ -63,6 +66,6 @@ public final class ItemClassUtils {
 
     // Created for future use case
     public static boolean isShieldItem(Item item) {
-        return item == Items.SHIELD || item instanceof ShieldItem; /* Temporary, could be removed with addition of "blocks_attacks" component */
+        return item == Items.SHIELD || item instanceof ShieldItem;
     }
 }

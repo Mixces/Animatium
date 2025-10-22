@@ -29,10 +29,8 @@ import btw.mixces.animatium.mixins.accessor.RenderPipelinesAccessor;
 import btw.mixces.animatium.packet.AnimatiumInfoPayloadPacket;
 import btw.mixces.animatium.packet.RequestInfoPayloadPacket;
 import btw.mixces.animatium.packet.SetFeaturesPayloadPacket;
-import btw.mixces.animatium.util.Feature;
-import com.mojang.blaze3d.pipeline.BlendFunction;
+import btw.mixces.animatium.util.enums.Feature;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.DepthTestFunction;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.fabricmc.api.ClientModInitializer;
@@ -99,27 +97,14 @@ public final class AnimatiumClient implements ClientModInitializer {
                     .buildSnippet();
 
     public static final RenderPipeline LEGACY_SKY_PIPELINE =
-            RenderPipelinesAccessor.registerPipeline(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
+            RenderPipelinesAccessor.animatium$registerPipeline(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
                     .withLocation(id("pipeline/legacy_sky"))
                     .build());
 
     public static final RenderPipeline LEGACY_SKY_PLANAR_FOG_PIPELINE =
-            RenderPipelinesAccessor.registerPipeline(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
+            RenderPipelinesAccessor.animatium$registerPipeline(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
                     .withLocation(id("pipeline/legacy_sky_planar_fog"))
                     .withShaderDefine("PLANAR_FOG")
-                    .build());
-
-    public static final RenderPipeline LEGACY_GLINT_PIPELINE = RenderPipelines.register(
-            RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
-                    .withLocation(id("pipeline/legacy_glint"))
-                    .withVertexShader(id("core/legacy_glint"))
-                    .withFragmentShader(id("core/legacy_glint"))
-                    .withColorWrite(true, false)
-                    .withCull(true)
-                    .withBlend(BlendFunction.GLINT)
-                    .withDepthTestFunction(DepthTestFunction.EQUAL_DEPTH_TEST)
-                    .withSampler("Sampler0")
-                    .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
                     .build());
 
     // Config State

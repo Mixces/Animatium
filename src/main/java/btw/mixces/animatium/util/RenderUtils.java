@@ -23,29 +23,26 @@
 
 package btw.mixces.animatium.util;
 
-import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.mixins.accessor.ClientLevelDataAccessor;
 import com.mojang.blaze3d.buffers.GpuBuffer;
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.vertex.*;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.util.ARGB;
-import org.joml.Matrix4fStack;
-import org.joml.Vector3f;
 
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.function.Consumer;
 
 public final class RenderUtils {
+    private RenderUtils() {
+    }
+
     private static float LINE_WIDTH = -1.0F;
 
     public static float getLineWidth(Float def) {
@@ -154,16 +151,6 @@ public final class RenderUtils {
         }
     }
 
-    private static GpuBuffer animatium$blueVoidBuffer = null;
-
-    public static GpuBuffer getBlueVoidBuffer() {
-        return animatium$blueVoidBuffer;
-    }
-
-    public static void initializeBlueVoidSky() {
-        animatium$blueVoidBuffer = initializeSky((builder) -> buildSkyHalf(builder, -16.0F, true));
-    }
-
     public static GpuBuffer initializeSky(Consumer<BufferBuilder> bufferBuilderConsumer) {
         VertexFormat.Mode mode = VertexFormat.Mode.QUADS;
         BufferBuilder builder = Tesselator.getInstance().begin(mode, DefaultVertexFormat.POSITION);
@@ -173,30 +160,5 @@ public final class RenderUtils {
         } catch (Exception ignored) {
             return null;
         }
-    }
-
-    public static void renderBlueVoidSky(Minecraft minecraft, int skyColor, double depth) {
-        Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
-        modelViewStack.pushMatrix();
-        modelViewStack.translate(0.0F, -((float) (depth - 16.0)), 0.0F);
-
-        Vector3f skyColorVec = ARGB.vector3fFromRGB24(skyColor);
-        GpuBufferSlice transforms = DynamicTransformsBuilder.of()
-                .withShaderColor(new Vector3f(skyColorVec.x * 0.2F + 0.04F, skyColorVec.y * 0.2F + 0.04F, skyColorVec.z * 0.6F + 0.1F))
-                .build();
-
-        try (RenderPass renderPass = RenderSystem.getDevice()
-                .createCommandEncoder()
-                .createRenderPass(() -> "Blue void disc", minecraft.getMainRenderTarget().getColorTextureView(), OptionalInt.empty(), minecraft.getMainRenderTarget().getDepthTextureView(), OptionalDouble.empty())) {
-            RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
-            renderPass.setPipeline(AnimatiumConfig.instance().planarSkyFog ? AnimatiumClient.LEGACY_SKY_PLANAR_FOG_PIPELINE : AnimatiumClient.LEGACY_SKY_PIPELINE);
-            renderPass.setVertexBuffer(0, animatium$blueVoidBuffer);
-            renderPass.setIndexBuffer(autoStorageIndexBuffer.getBuffer(6), autoStorageIndexBuffer.type());
-            RenderSystem.bindDefaultUniforms(renderPass);
-            renderPass.setUniform("DynamicTransforms", transforms);
-            renderPass.drawIndexed(0, 0, 1014, 1);
-        }
-
-        modelViewStack.popMatrix();
     }
 }

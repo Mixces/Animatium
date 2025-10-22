@@ -26,10 +26,8 @@ package btw.mixces.animatium.util;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.*;
 import org.jetbrains.annotations.Nullable;
@@ -41,23 +39,31 @@ public final class ItemUtils {
     private static final ThreadLocal<@Nullable ItemStack> STACK = ThreadLocal.withInitial(() -> null);
     private static final ThreadLocal<@Nullable ItemDisplayContext> DISPLAY_CONTEXT = ThreadLocal.withInitial(() -> null);
 
+    private ItemUtils() {
+    }
+
+    @Deprecated(forRemoval = true)
     public static void set(ItemStackRenderState renderState, ItemStack stack, ItemDisplayContext displayContext) {
         RENDER_STATE.remove();
         STACK.remove();
         DISPLAY_CONTEXT.remove();
+
         RENDER_STATE.set(renderState);
         STACK.set(stack);
         DISPLAY_CONTEXT.set(displayContext);
     }
 
+    @Deprecated(forRemoval = true)
     public static @Nullable ItemStackRenderState getRenderState() {
         return RENDER_STATE.get();
     }
 
+    @Deprecated(forRemoval = true)
     public static @Nullable ItemStack getStack() {
         return STACK.get();
     }
 
+    @Deprecated(forRemoval = true)
     public static @Nullable ItemDisplayContext getDisplayContext() {
         return DISPLAY_CONTEXT.get();
     }
@@ -85,11 +91,7 @@ public final class ItemUtils {
             return ItemClassUtils.isDiggerItem(stack) ||
                     ItemClassUtils.isSwordItem(stack) ||
                     isFishingRodItem(stack) ||
-                    List.of(Items.MACE,
-                            Items.TRIDENT,
-                            Items.STICK,
-                            Items.BREEZE_ROD,
-                            Items.BLAZE_ROD).contains(stack.getItem());
+                    List.of(Items.MACE, Items.TRIDENT, Items.STICK, Items.BREEZE_ROD, Items.BLAZE_ROD).contains(stack.getItem());
         } else {
             return false;
         }
@@ -165,16 +167,11 @@ public final class ItemUtils {
         poseStack.mulPose(Axis.YP.rotationDegrees(direction * -45.0F));
     }
 
-    public static boolean shouldApplyItemPositionsInThirdperson(EntityRenderState entityState) {
+    public static boolean shouldApplyItemPositionsInThirdperson(ArmedEntityRenderState armedEntityRenderState) {
         if (AnimatiumConfig.instance().itemPositionsInThirdPerson) {
             return true;
         } else {
-            final Entity entity = EntityUtils.getEntityByState(entityState);
-            if (entity instanceof LivingEntity livingEntity) {
-                return AnimatiumConfig.instance().thirdPersonSwordBlockingPosition && livingEntity.isBlocking();
-            } else {
-                return false;
-            }
+            return AnimatiumConfig.instance().thirdPersonSwordBlockingPosition && PlayerUtils.isBlockingArm(armedEntityRenderState.mainArm, armedEntityRenderState);
         }
     }
 
@@ -187,7 +184,7 @@ public final class ItemUtils {
         }
     }
 
-    public static Rarity getOldItemRarity(ItemStack stack) {
+    public static Rarity getLegacyItemRarity(ItemStack stack) {
         final Item item = stack.getItem();
         if (List.of(Items.GOLDEN_APPLE, Items.END_CRYSTAL).contains(item)) {
             return Rarity.RARE;
@@ -202,6 +199,7 @@ public final class ItemUtils {
         }
     }
 
+    // TODO/NOTE: Might need rework? as vanilla now has the fix as of 1.21.11+ but doesn't seem fully the same/accurate
     public static boolean shouldInstantlyReplaceVisibleItem1_8(ItemStack prevStack, ItemStack currentStack) {
         // TODO/NOTE: Apparently 1.7 doesn't do any special checks inside the inventory
         final boolean itemsMatch = ItemStack.isSameItem(prevStack, currentStack);

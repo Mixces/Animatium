@@ -55,7 +55,7 @@
 	"recommends": {
 		"animatium_extras": "*",
 		"legacy_potion_colors": "*",
-		"nuit": "*",
+		"optiboxes": "*",
 		"polytone": "*",
 		"viafabricplus": "*"
 	}

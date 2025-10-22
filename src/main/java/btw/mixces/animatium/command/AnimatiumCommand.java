@@ -25,7 +25,6 @@ package btw.mixces.animatium.command;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.util.ColourUtils;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -34,15 +33,18 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
+import java.awt.*;
+import java.util.Random;
+
 public class AnimatiumCommand implements Command<FabricClientCommandSource> {
     public static LiteralArgumentBuilder<FabricClientCommandSource> create() {
         LiteralArgumentBuilder<FabricClientCommandSource> command = ClientCommandManager.literal("animatium").executes(new AnimatiumCommand());
 
         command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("on").executes((context) -> {
             if (AnimatiumClient.isEnabled()) {
-                context.getSource().sendFeedback(Component.literal("Mod is already enabled!").withColor(0x00FF00));
+                context.getSource().sendFeedback(Component.literal("Mod is already enabled!").withColor(Color.YELLOW.getRGB()));
             } else {
-                context.getSource().sendFeedback(Component.literal("Mod enabled.").withColor(0x00FF00));
+                context.getSource().sendFeedback(Component.literal("Mod enabled.").withColor(Color.GREEN.getRGB()));
                 AnimatiumClient.ENABLED = true;
                 Minecraft.getInstance().reloadResourcePacks();
                 if (!AnimatiumClient.saveEnabledState()) {
@@ -55,9 +57,9 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
 
         command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("off").executes((context) -> {
             if (!AnimatiumClient.isEnabled()) {
-                context.getSource().sendFeedback(Component.literal("Mod is already disabled!").withColor(0x00FF00));
+                context.getSource().sendFeedback(Component.literal("Mod is already disabled!").withColor(Color.YELLOW.getRGB()));
             } else {
-                context.getSource().sendFeedback(Component.literal("Mod disabled.").withColor(0xFF0000));
+                context.getSource().sendFeedback(Component.literal("Mod disabled.").withColor(Color.RED.getRGB()));
                 AnimatiumClient.ENABLED = false;
                 Minecraft.getInstance().reloadResourcePacks();
                 AnimatiumClient.saveEnabledState();
@@ -66,19 +68,18 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
             return Command.SINGLE_SUCCESS;
         }));
 
-        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("configure").executes((context) -> {
-            context.getSource().sendFeedback(Component.literal("Opening config menu...").withColor(0x00FF00));
-            Minecraft minecraft = Minecraft.getInstance();
-            minecraft.schedule(() -> minecraft.setScreen(AnimatiumConfig.getConfigScreen(null)));
-            return Command.SINGLE_SUCCESS;
-        }));
-
         return command;
     }
 
     @Override
     public int run(CommandContext<FabricClientCommandSource> context) {
-        context.getSource().sendFeedback(Component.literal("Hello there!").withColor(ColourUtils.randomColor()));
+        context.getSource().sendFeedback(Component.literal("Opening config menu...").withColor(randomColor()));
+        Minecraft minecraft = Minecraft.getInstance();
+        minecraft.schedule(() -> minecraft.setScreen(AnimatiumConfig.getConfigScreen(null)));
         return Command.SINGLE_SUCCESS;
+    }
+
+    private static int randomColor() {
+        return new Random().nextInt(0xFFFFFF);
     }
 }

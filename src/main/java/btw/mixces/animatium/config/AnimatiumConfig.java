@@ -24,8 +24,8 @@
 package btw.mixces.animatium.config;
 
 import btw.mixces.animatium.config.category.*;
-import btw.mixces.animatium.util.CameraVersion;
-import btw.mixces.animatium.util.FishingRodVersion;
+import btw.mixces.animatium.util.enums.CameraVersion;
+import btw.mixces.animatium.util.enums.FishingRodVersion;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
@@ -166,7 +166,6 @@ public final class AnimatiumConfig {
     @SerialEntry public boolean itemGlintOnEntity = true;
     @SerialEntry public boolean maxGlintProperties = true;
     @SerialEntry public boolean armorHurtRendering = false;
-    @SerialEntry public boolean glintRendering = false;
     @SerialEntry public boolean highAttackSpeedVisual = false;
     @SerialEntry public boolean entityGlowOutline = true;
     @SerialEntry public boolean modernCombatSounds = true;

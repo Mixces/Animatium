@@ -39,15 +39,15 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 public final class PlayerUtils {
+    private PlayerUtils() {
+    }
+
     public static int getHandMultiplier(Player player) {
         InteractionHand hand = MoreObjects.firstNonNull(player.swingingArm, InteractionHand.MAIN_HAND);
         final int direction = getHandMultiplier(player, hand);
@@ -64,10 +64,6 @@ public final class PlayerUtils {
 
     public static Vec3 getPosWithEyeHeight(Player entity, float tickDelta, double eyeHeight) {
         return entity.getPosition(tickDelta).add(0.0, eyeHeight, 0.0);
-    }
-
-    public static boolean isBlocking(LivingEntity livingEntity, ItemStack stack) {
-        return (livingEntity instanceof Player player && player.getUseItemRemainingTicks() > 0 && stack.getUseAnimation() == ItemUseAnimation.BLOCK);
     }
 
     public static boolean isBlockingArm(HumanoidArm arm, ArmedEntityRenderState armedEntityState) {
@@ -99,12 +95,12 @@ public final class PlayerUtils {
     }
 
     public static boolean isNotSwinging(Player player) {
-        return !player.swinging || player.swingTime >= ((LivingEntityAccessor) player).getSwingDuration() / 2 || player.swingTime < 0;
+        return !player.swinging || player.swingTime >= ((LivingEntityAccessor) player).animatium$getSwingDuration() / 2 || player.swingTime < 0;
     }
 
     public static float lerpCameraPosition(Camera camera) {
         final CameraAccessor cameraAccessor = (CameraAccessor) camera;
-        return Mth.lerp(camera.getPartialTickTime(), cameraAccessor.getEyeHeightOld(), cameraAccessor.getEyeHeight());
+        return Mth.lerp(camera.getPartialTickTime(), cameraAccessor.animatium$getEyeHeightOld(), cameraAccessor.animatium$getEyeHeight());
     }
 
     public static void applySwingWhilstMining(ClientLevel level, Player player, HitResult hitResult) {

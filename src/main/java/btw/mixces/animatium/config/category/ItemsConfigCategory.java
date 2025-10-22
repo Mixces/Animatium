@@ -24,7 +24,7 @@
 package btw.mixces.animatium.config.category;
 
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.util.FishingRodVersion;
+import btw.mixces.animatium.util.enums.FishingRodVersion;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
