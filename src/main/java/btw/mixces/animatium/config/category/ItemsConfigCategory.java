@@ -190,15 +190,15 @@ public final class ItemsConfigCategory {
                             (newVal) -> config.itemDropsFaceCameraRotationFix = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
-            drops2dGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.itemDrops2D"))
-                    .description(OptionDescription.of(Component.translatable("animatium.itemDrops2D.description")))
-                    .binding(
-                            defaults.itemDrops2D,
-                            () -> config.itemDrops2D,
-                            (newVal) -> config.itemDrops2D = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
+//            drops2dGroup.option(Option.<Boolean>createBuilder()
+//                    .name(Component.translatable("animatium.itemDrops2D"))
+//                    .description(OptionDescription.of(Component.translatable("animatium.itemDrops2D.description")))
+//                    .binding(
+//                            defaults.itemDrops2D,
+//                            () -> config.itemDrops2D,
+//                            (newVal) -> config.itemDrops2D = newVal)
+//                    .controller(TickBoxControllerBuilder::create)
+//                    .build());
             drops2dGroup.option(Option.<Boolean>createBuilder()
                     .name(Component.translatable("animatium.itemFramed2D"))
                     .description(OptionDescription.of(Component.translatable("animatium.itemFramed2D.description")))

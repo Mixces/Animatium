@@ -121,7 +121,7 @@ public final class AnimatiumConfig {
     // (Items) 2D Drops
     @SerialEntry public boolean itemDropsFaceCamera = true;
     @SerialEntry public boolean itemDropsFaceCameraRotationFix = false;
-    @SerialEntry public boolean itemDrops2D = true;
+    //@SerialEntry public boolean itemDrops2D = true;
     @SerialEntry public boolean itemFramed2D = true;
     @SerialEntry public boolean itemColors2D = true;
     // (Items) Transformations
