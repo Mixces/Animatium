@@ -50,11 +50,12 @@ public abstract class MixinItemStackRenderLayerState {
 
     @ModifyArg(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemDisplayContext;III[ILjava/util/List;Lnet/minecraft/client/renderer/RenderType;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"), index = 8)
     private ItemStackRenderState.FoilType animatium$disableGlintOn2dItems(ItemStackRenderState.FoilType glint) {
-        boolean glintDropped = !AnimatiumConfig.instance().glintOnItemDrops2D;
-        boolean glintFramed = !AnimatiumConfig.instance().glintOnItemFramed2D;
-        if (AnimatiumClient.isEnabled() && ItemUtils.getDisplayContext() != null &&
-                (glintDropped && ItemUtils.getDisplayContext() == ItemDisplayContext.GROUND) ||
-                (glintFramed && ItemUtils.getDisplayContext() == ItemDisplayContext.FIXED)) {
+        final boolean glintDropped = !AnimatiumConfig.instance().glintOnItemDrops2D;
+        final boolean glintFramed = !AnimatiumConfig.instance().glintOnItemFramed2D;
+        final ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
+        if (AnimatiumClient.isEnabled() &&
+                (glintDropped && displayContext == ItemDisplayContext.GROUND) ||
+                (glintFramed && displayContext == ItemDisplayContext.FIXED)) {
             return ItemStackRenderState.FoilType.NONE;
         } else {
             return glint;
@@ -65,8 +66,8 @@ public abstract class MixinItemStackRenderLayerState {
     @Inject(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack$Pose;)V"))
     private void animatium$itemPositionsRod(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int light, int overlay, int k, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled()) {
-            ItemStack stack = ItemUtils.getStack();
-            ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
+            final ItemStack stack = ItemStack.EMPTY; // TODO
+            final ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
             if (stack != null && displayContext != null) {
                 boolean isGui = displayContext == ItemDisplayContext.GUI;
                 boolean isFirstPerson = displayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || displayContext == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
@@ -108,7 +109,7 @@ public abstract class MixinItemStackRenderLayerState {
                     poseStack.mulPose(Axis.XP.rotationDegrees(Utils.toRadians(rotZ)));
                     poseStack.mulPose(Axis.YP.rotationDegrees(Utils.toRadians(rotY)));
                     poseStack.mulPose(Axis.ZP.rotationDegrees(Utils.toRadians(rotX)));
-                    poseStack.scale(0.9f, 0.9f, 0.9f);
+                    poseStack.scale(0.9F, 0.9F, 0.9F);
                     poseStack.scale(scaleX, scaleY, scaleZ);
                     animatium$doInverseTransformations(poseStack);
                 }
@@ -118,11 +119,10 @@ public abstract class MixinItemStackRenderLayerState {
 
     @Unique
     private void animatium$doInverseTransformations(PoseStack poseStack) {
-        ItemTransform transform = this.transform;
-        poseStack.scale(1 / transform.scale().x(), 1 / transform.scale().y(), 1 / transform.scale().z());
-        poseStack.mulPose(Axis.ZP.rotationDegrees(-Utils.toRadians(transform.rotation().x())));
-        poseStack.mulPose(Axis.YP.rotationDegrees(-Utils.toRadians(transform.rotation().y())));
-        poseStack.mulPose(Axis.XP.rotationDegrees(-Utils.toRadians(transform.rotation().z())));
-        poseStack.translate(-transform.translation().x(), -transform.translation().y(), -transform.translation().z());
+        poseStack.scale(1 / this.transform.scale().x(), 1 / this.transform.scale().y(), 1 / this.transform.scale().z());
+        poseStack.mulPose(Axis.ZP.rotationDegrees(-Utils.toRadians(this.transform.rotation().x())));
+        poseStack.mulPose(Axis.YP.rotationDegrees(-Utils.toRadians(this.transform.rotation().y())));
+        poseStack.mulPose(Axis.XP.rotationDegrees(-Utils.toRadians(this.transform.rotation().z())));
+        poseStack.translate(-this.transform.translation().x(), -this.transform.translation().y(), -this.transform.translation().z());
     }
 }

@@ -35,35 +35,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public final class ItemUtils {
-    private static final ThreadLocal<@Nullable ItemStackRenderState> RENDER_STATE = ThreadLocal.withInitial(() -> null);
-    private static final ThreadLocal<@Nullable ItemStack> STACK = ThreadLocal.withInitial(() -> null);
     private static final ThreadLocal<@Nullable ItemDisplayContext> DISPLAY_CONTEXT = ThreadLocal.withInitial(() -> null);
 
     private ItemUtils() {
     }
 
-    @Deprecated(forRemoval = true)
-    public static void set(ItemStackRenderState renderState, ItemStack stack, ItemDisplayContext displayContext) {
-        RENDER_STATE.remove();
-        STACK.remove();
-        DISPLAY_CONTEXT.remove();
-
-        RENDER_STATE.set(renderState);
-        STACK.set(stack);
+    public static void setDisplayContext(ItemDisplayContext displayContext) {
         DISPLAY_CONTEXT.set(displayContext);
     }
 
-    @Deprecated(forRemoval = true)
-    public static @Nullable ItemStackRenderState getRenderState() {
-        return RENDER_STATE.get();
-    }
-
-    @Deprecated(forRemoval = true)
-    public static @Nullable ItemStack getStack() {
-        return STACK.get();
-    }
-
-    @Deprecated(forRemoval = true)
     public static @Nullable ItemDisplayContext getDisplayContext() {
         return DISPLAY_CONTEXT.get();
     }

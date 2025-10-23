@@ -83,7 +83,7 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
     @Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/item/ItemStackRenderState;submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V"))
     private void animatium$itemPositionsThird(S armedEntityRenderState, ItemStackRenderState itemStackRenderState, HumanoidArm humanoidArm, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled() && ItemUtils.shouldApplyItemPositionsInThirdperson(armedEntityRenderState)) {
-            int direction = PlayerUtils.getArmMultiplier(humanoidArm);
+            final int direction = PlayerUtils.getArmMultiplier(humanoidArm);
             UtilityRenderState itemArmedEntityRenderState = (UtilityRenderState) armedEntityRenderState;
             ItemStack stack = itemArmedEntityRenderState.animatium$getItemHeldByArm(humanoidArm);
             Item item = stack.getItem();
@@ -93,13 +93,13 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
                         item == Items.FISHING_ROD &&
                         (itemArmedEntityRenderState.animatium$isPlayer() && itemArmedEntityRenderState.animatium$isFishing());
                 if (ItemUtils.isBlock3d(stack, itemStackRenderState)) {
-                    float scale = 0.375F;
+                    final float scale = 0.375F;
                     poseStack.translate(0.0F, 0.1875F, -0.3125F);
                     poseStack.mulPose(Axis.XP.rotationDegrees(20.0F));
                     poseStack.mulPose(Axis.YP.rotationDegrees(direction * 45.0F));
                     poseStack.scale(-scale, -scale, scale);
                 } else if (item instanceof BowItem) {
-                    float scale = 0.625F;
+                    final float scale = 0.625F;
                     poseStack.translate(direction * 0.0F, 0.125F, 0.3125F);
                     poseStack.mulPose(Axis.YP.rotationDegrees(direction * -20.0F));
                     poseStack.translate(direction * -0.0625F, 0.0F, 0.0F);
@@ -109,7 +109,7 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
                     poseStack.mulPose(Axis.YP.rotationDegrees(direction * -145.0F));
                     poseStack.translate(-0.011765625F, 0.0F, 0.002125F);
                 } else if (ItemUtils.isHandheldItem(stack)) {
-                    float scale = 0.625F;
+                    final float scale = 0.625F;
                     if (ItemUtils.isFishingRodItem(stack) && !isStickRod) {
                         poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 180.0F));
                         poseStack.translate(0.0F, -0.125F, 0.0F);
@@ -129,7 +129,7 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
                     poseStack.mulPose(Axis.YP.rotationDegrees(direction * -145));
                     poseStack.translate(-0.011765625F, 0.0F, 0.002125F);
                 } else {
-                    float scale = 0.375F;
+                    final float scale = 0.375F;
                     poseStack.translate(direction * 0.25F, 0.1875F, -0.1875F);
                     poseStack.scale(scale, scale, scale);
                     poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 60.0F));
@@ -160,7 +160,7 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
                     poseStack.mulPose(Axis.XP.rotationDegrees(80.0F));
                     poseStack.translate(direction * 0.0625F, 2.0F * 0.0625F, -2.5F * 0.0625F);
                 } else if (ItemUtils.isHandheldItem(stack)) {
-                    boolean isRod = ItemUtils.isFishingRodItem(stack) && !isStickRod;
+                    final boolean isRod = ItemUtils.isFishingRodItem(stack) && !isStickRod;
                     poseStack.scale(1 / 0.85F, 1 / 0.85F, 1 / 0.85F);
                     poseStack.mulPose(Axis.ZP.rotationDegrees(direction * -55.0F));
                     poseStack.mulPose(Axis.YP.rotationDegrees(direction * 90.0F));

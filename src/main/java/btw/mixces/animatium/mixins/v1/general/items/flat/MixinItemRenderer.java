@@ -25,7 +25,7 @@ package btw.mixces.animatium.mixins.v1.general.items.flat;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.util.ItemUtils;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
@@ -42,9 +42,12 @@ import java.util.stream.Collectors;
 @Mixin(ItemRenderer.class)
 public abstract class MixinItemRenderer {
     @ModifyArg(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderQuadList(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Ljava/util/List;[III)V"), index = 2)
-    private static List<BakedQuad> animatium$itemDrops2D(List<BakedQuad> quads) {
-        final ItemStackRenderState itemStackRenderState = ItemUtils.getRenderState();
-        if (AnimatiumClient.isEnabled() && animatium$isTransformationModeValid() && itemStackRenderState != null && !itemStackRenderState.usesBlockLight()) {
+    private static List<BakedQuad> animatium$itemDrops2D(List<BakedQuad> quads, @Local(argsOnly = true) ItemDisplayContext displayContext) {
+        final ItemStackRenderState itemStackRenderState = new ItemStackRenderState(); // TODO
+        if (AnimatiumClient.isEnabled() &&
+                animatium$isTransformationModeValid(displayContext) &&
+                itemStackRenderState != null &&
+                !itemStackRenderState.usesBlockLight()) {
             return quads.stream().filter(baked -> baked.direction() == Direction.SOUTH).collect(Collectors.toList());
         } else {
             return quads;
@@ -52,8 +55,7 @@ public abstract class MixinItemRenderer {
     }
 
     @Unique
-    private static boolean animatium$isTransformationModeValid() {
-        final ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
+    private static boolean animatium$isTransformationModeValid(ItemDisplayContext displayContext) {
         boolean itemDrops2D = AnimatiumConfig.instance().itemDrops2D;
         boolean itemFramed2D = AnimatiumConfig.instance().itemFramed2D;
         return (itemDrops2D && displayContext == ItemDisplayContext.GROUND) || (itemFramed2D && displayContext == ItemDisplayContext.FIXED);

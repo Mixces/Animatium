@@ -122,10 +122,10 @@ public abstract class MixinMinecraft {
         // TODO: This fixes projectile equip, but it isn't going to be 100% accurate in some other areas. This needs to be worked on :)
         if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().equipAnimationOnItemUse) {
             // The equip animation plays when right-clicking blocks in creative mode in <1.8.x
-            boolean isAimedAtBlock = this.hitResult != null && this.hitResult.getType() == HitResult.Type.BLOCK;
+            final boolean isAimedAtBlock = this.hitResult != null && this.hitResult.getType() == HitResult.Type.BLOCK;
             // This might need to be revamped a bit. We are already checking for creative mode in the actual method,
             // however this seems to narrow things down
-            boolean isInCreative = this.gameMode != null && this.gameMode.getPlayerMode().isCreative();
+            final boolean isInCreative = this.gameMode != null && this.gameMode.getPlayerMode().isCreative();
             return isAimedAtBlock && isInCreative;
         } else {
             return true;

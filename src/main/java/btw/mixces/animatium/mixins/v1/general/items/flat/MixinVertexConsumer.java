@@ -25,7 +25,7 @@ package btw.mixces.animatium.mixins.v1.general.items.flat;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.util.ItemUtils;
+
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -41,9 +41,12 @@ public interface MixinVertexConsumer {
     // TODO: this is only half of the battle + framed item 2d colors are disabled
     @ModifyArg(method = "putBulkData(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;[FFFFF[IIZ)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack$Pose;transformNormal(Lorg/joml/Vector3fc;Lorg/joml/Vector3f;)Lorg/joml/Vector3f;"), index = 0, require = 0)
     default Vector3fc animatium$itemColors2D(Vector3fc vector3fc) {
-        final ItemStackRenderState state = ItemUtils.getRenderState();
-        final ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemColors2D && state != null && !state.usesBlockLight() && displayContext == ItemDisplayContext.GROUND) {
+        final ItemStackRenderState state = new ItemStackRenderState(); // TODO
+        if (AnimatiumClient.isEnabled() &&
+                AnimatiumConfig.instance().itemColors2D &&
+                state != null &&
+                !state.usesBlockLight() &&
+                state.displayContext == ItemDisplayContext.GROUND) {
             return new Vector3f(vector3fc.x(), vector3fc.z(), vector3fc.y());
         } else {
             return vector3fc;
