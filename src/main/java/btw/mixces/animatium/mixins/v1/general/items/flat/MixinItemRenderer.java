@@ -25,7 +25,11 @@ package btw.mixces.animatium.mixins.v1.general.items.flat;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
@@ -41,9 +45,13 @@ import java.util.stream.Collectors;
 
 @Mixin(ItemRenderer.class)
 public abstract class MixinItemRenderer {
+    @Unique
+    private static ItemDisplayContext animatium$displayContext = null;
+
     @ModifyArg(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderQuadList(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Ljava/util/List;[III)V"), index = 2)
     private static List<BakedQuad> animatium$itemDrops2D(List<BakedQuad> quads, @Local(argsOnly = true) ItemDisplayContext displayContext) {
-        final ItemStackRenderState itemStackRenderState = new ItemStackRenderState(); // TODO
+        animatium$displayContext = displayContext;
+        final ItemStackRenderState itemStackRenderState = new ItemStackRenderState(); // TODO/STACKSTATE
         if (AnimatiumClient.isEnabled() &&
                 animatium$isTransformationModeValid(displayContext) &&
                 itemStackRenderState != null &&
@@ -52,6 +60,22 @@ public abstract class MixinItemRenderer {
         } else {
             return quads;
         }
+    }
+
+    // TODO: this is only half of the battle + framed item 2d colors are disabled
+    @WrapOperation(method = "renderQuadList", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexConsumer;putBulkData(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;FFFFII)V"))
+    private static void animatium$itemColors2D(VertexConsumer instance, PoseStack.Pose pose, BakedQuad bakedQuad, float f, float g, float h, float i, int j, int k, Operation<Void> original) {
+        final ItemStackRenderState itemStackRenderState = new ItemStackRenderState(); // TODO/STACKSTATE
+        if (AnimatiumClient.isEnabled() &&
+                AnimatiumConfig.instance().itemColors2D &&
+                itemStackRenderState != null &&
+                !itemStackRenderState.usesBlockLight() &&
+                animatium$displayContext == ItemDisplayContext.GROUND) {
+            // TODO/Modify: bakedQuad.direction().getUnitVec3f();
+            // return new Vector3f(vector3fc.x(), vector3fc.z(), vector3fc.y());
+        }
+
+        original.call(instance, pose, bakedQuad, f, g, h, i, j, k);
     }
 
     @Unique

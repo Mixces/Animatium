@@ -46,7 +46,6 @@
 		"v1.general.items.flat.MixinItemFrameRenderer",
 		"v1.general.items.flat.MixinItemRenderer",
 		"v1.general.items.flat.MixinItemStackRenderLayerState",
-		"v1.general.items.flat.MixinVertexConsumer",
 		"v1.general.items.usage.MixinFishingRodCast",
 		"v1.general.items.usage.MixinIsUsingItem",
 		"v1.general.items.usage.MixinMinecraft",

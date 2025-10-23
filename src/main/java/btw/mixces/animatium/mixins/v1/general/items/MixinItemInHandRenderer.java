@@ -132,16 +132,16 @@ public abstract class MixinItemInHandRenderer {
                 poseStack.mulPose(Axis.YP.rotationDegrees(direction * 180.0F));
             }
 
-            ItemStackRenderState scratchItemStackRenderState = new ItemStackRenderState();
+            ItemStackRenderState itemStackRenderState = new ItemStackRenderState();
             itemModelResolver.updateForTopItem(
-                    scratchItemStackRenderState,
+                    itemStackRenderState,
                     stack,
                     hand == InteractionHand.MAIN_HAND ? ItemDisplayContext.FIRST_PERSON_RIGHT_HAND : ItemDisplayContext.FIRST_PERSON_LEFT_HAND,
                     player.level(),
                     player,
                     light
             ); // TODO/NOTE: Might be wrong
-            if (AnimatiumConfig.instance().itemPositions && !ItemUtils.isBlock3d(stack, scratchItemStackRenderState) && !ItemUtils.isItemBlacklisted(stack)) {
+            if (AnimatiumConfig.instance().itemPositions && !ItemUtils.isBlock3d(stack, itemStackRenderState) && !ItemUtils.isItemBlacklisted(stack)) {
                 final float angle = Utils.toRadians(25);
 
                 poseStack.scale(0.6F, 0.6F, 0.6F);
