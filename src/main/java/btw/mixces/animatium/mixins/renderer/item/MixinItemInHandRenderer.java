@@ -135,7 +135,7 @@ public abstract class MixinItemInHandRenderer {
                 poseStack.mulPose(Axis.YP.rotationDegrees(direction * 180.0F));
             }
 
-            if (AnimatiumConfig.instance().itemPositions && !ItemUtils.isBlock3d(stack, ((ItemRendererAccessor) itemRenderer).getScratchItemStackRenderState()) && !ItemUtils.isItemBlacklisted(stack)) {
+            if (AnimatiumConfig.instance().itemPositions && !ItemUtils.isBlock3d(stack, ((ItemRendererAccessor) itemRenderer).animatium$getScratchItemStackRenderState()) && !ItemUtils.isItemBlacklisted(stack)) {
                 float angle = MathUtils.toRadians(25);
 
                 poseStack.scale(0.6F, 0.6F, 0.6F);

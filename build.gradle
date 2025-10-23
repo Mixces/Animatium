@@ -4,7 +4,7 @@ plugins {
     id "com.diffplug.spotless" version "7.0.2"
 }
 
-version = "${project.mod_version}-${getCheckedOutGitCommitHash()}"
+version = "${project.mod_version}-${getCheckedOutGitCommitHash()}+mc${project.minecraft_version}"
 group = project.maven_group
 
 base {
@@ -35,16 +35,22 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
 
     // Fabric API - Needs to be specified, otherwise an older version might be defaulted and cause issues.
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
+    modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-networking-api-v1", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-command-api-v2", project.fabric_version))
 
     // YACL - TO BE REPLACED WITH LIGHTCONFIG
-    modImplementation("dev.isxander:yet-another-config-lib:${project.yacl_version}") {
-        exclude group: 'net.fabricmc.fabric-api'
+    if (project.hasProperty("yacl_version")) {
+        modImplementation("dev.isxander:yet-another-config-lib:${project.yacl_version}") {
+            exclude group: 'net.fabricmc.fabric-api'
+        }
     }
 
     // Mod Menu
-    modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") {
-        exclude group: 'net.fabricmc.fabric-api'
+    if (project.hasProperty("modmenu_version")) {
+        modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") {
+            exclude group: 'net.fabricmc.fabric-api'
+        }
     }
 }
 

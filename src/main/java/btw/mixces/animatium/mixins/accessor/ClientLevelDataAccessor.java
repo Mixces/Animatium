@@ -30,5 +30,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(ClientLevel.ClientLevelData.class)
 public interface ClientLevelDataAccessor {
     @Accessor("isFlat")
-    boolean isFlatWorld();
+    boolean animatium$isFlatWorld();
 }

@@ -94,10 +94,10 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
             CameraAccessor cameraAccessor = (CameraAccessor) entityRenderDispatcher.camera;
             float eyeHeight;
             if (AnimatiumConfig.instance().fishingRodLineInterpolation) {
-                eyeHeight = Mth.lerp(v, cameraAccessor.getEyeHeightOld(), cameraAccessor.getEyeHeight());
+                eyeHeight = Mth.lerp(v, cameraAccessor.animatium$getEyeHeightOld(), cameraAccessor.animatium$getEyeHeight());
             } else if (AnimatiumConfig.instance().fakeOldSneakEyeHeight) {
                 // Non-lerped eyeheight trick
-                eyeHeight = cameraAccessor.getEyeHeight();
+                eyeHeight = cameraAccessor.animatium$getEyeHeight();
             } else {
                 return originalPos;
             }

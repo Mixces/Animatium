@@ -179,15 +179,6 @@ public final class OtherConfigCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.glintRendering"))
-                .description(OptionDescription.of(Component.translatable("animatium.glintRendering.description")))
-                .binding(
-                        defaults.glintRendering,
-                        () -> config.glintRendering,
-                        (newVal) -> config.glintRendering = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
                 .name(Component.translatable("animatium.highAttackSpeedVisual"))
                 .description(OptionDescription.of(Component.translatable("animatium.highAttackSpeedVisual.description")))
                 .binding(

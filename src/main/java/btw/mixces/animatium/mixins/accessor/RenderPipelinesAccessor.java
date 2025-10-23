@@ -31,7 +31,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(RenderPipelines.class)
 public interface RenderPipelinesAccessor {
     @Invoker("register")
-    static RenderPipeline registerPipeline(RenderPipeline renderPipeline) {
+    static RenderPipeline animatium$registerPipeline(RenderPipeline renderPipeline) {
         return null;
     }
 }

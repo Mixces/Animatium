@@ -44,13 +44,15 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.16.7",
-		"minecraft": "~1.21.6-beta.4",
-		"fabric-api": "*"
+		"minecraft": "~1.21.6",
+		"fabric-networking-api-v1": "*",
+		"fabric-command-api-v2": "*",
+		"fabric-resource-loader-v0": "*"
 	},
 	"recommends": {
 		"animatium_extras": "*",
 		"legacy_potion_colors": "*",
-		"nuit": "*",
+		"optiboxes": "*",
 		"polytone": "*",
 		"viafabricplus": "*"
 	}

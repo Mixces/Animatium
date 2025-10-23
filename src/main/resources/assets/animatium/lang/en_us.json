@@ -196,8 +196,6 @@
 	"animatium.maxGlintProperties.description": "Forces the glint to use the maximum speed and strength by default like in older mc versions.",
 	"animatium.armorHurtRendering": "[~1.8] Armor hurt rendering",
 	"animatium.armorHurtRendering.description": "Restores the old armor hurt tint rendering from ~1.8.",
-	"animatium.glintRendering": "[1.14] Legacy glint rendering",
-	"animatium.glintRendering.description": "Restores the old item/armor glint rendering found in <=1.14.4.",
 	"animatium.highAttackSpeedVisual": "[1.8] Force high attack speed visual",
 	"animatium.highAttackSpeedVisual.description": "Fakes the high attack speed visual, which stops the attack cooldown animation on items like the sword.",
 	"animatium.entityGlowOutline": "[1.8] Entity glow outline",

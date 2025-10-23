@@ -62,7 +62,7 @@ public final class RenderUtils {
 
     public static double getLevelHorizonHeight(ClientLevel level) {
         if (AnimatiumConfig.instance().skyHorizonHeight) {
-            if (((ClientLevelDataAccessor) level.getLevelData()).isFlatWorld()) {
+            if (((ClientLevelDataAccessor) level.getLevelData()).animatium$isFlatWorld()) {
                 return 0.0D;
             } else {
                 return 63.0D;

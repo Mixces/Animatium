@@ -166,7 +166,6 @@ public final class AnimatiumConfig {
     @SerialEntry public boolean itemGlintOnEntity = true;
     @SerialEntry public boolean maxGlintProperties = true;
     @SerialEntry public boolean armorHurtRendering = false;
-    @SerialEntry public boolean glintRendering = false;
     @SerialEntry public boolean highAttackSpeedVisual = false;
     @SerialEntry public boolean entityGlowOutline = true;
     @SerialEntry public boolean modernCombatSounds = true;

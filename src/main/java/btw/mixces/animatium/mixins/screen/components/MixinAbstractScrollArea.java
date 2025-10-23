@@ -56,7 +56,7 @@ public abstract class MixinAbstractScrollArea {
                 maxScrollY /= 2;
             }
 
-            if (!((AbstractSelectionListAccessor) abstractSelectionList).shouldCenterVertically() && maxScrollY < 0) {
+            if (!((AbstractSelectionListAccessor) abstractSelectionList).animatium$shouldCenterVertically() && maxScrollY < 0) {
                 maxScrollY = 0;
             }
 

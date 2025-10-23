@@ -31,5 +31,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(ItemRenderer.class)
 public interface ItemRendererAccessor {
     @Accessor("scratchItemStackRenderState")
-    ItemStackRenderState getScratchItemStackRenderState();
+    ItemStackRenderState animatium$getScratchItemStackRenderState();
 }

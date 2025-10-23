@@ -107,12 +107,12 @@ public final class PlayerUtils {
     }
 
     public static boolean isNotSwinging(Player player) {
-        return !player.swinging || player.swingTime >= ((LivingEntityAccessor) player).getSwingDuration() / 2 || player.swingTime < 0;
+        return !player.swinging || player.swingTime >= ((LivingEntityAccessor) player).animatium$getSwingDuration() / 2 || player.swingTime < 0;
     }
 
     public static float lerpCameraPosition(Camera camera) {
         CameraAccessor cameraAccessor = (CameraAccessor) camera;
-        return Mth.lerp(camera.getPartialTickTime(), cameraAccessor.getEyeHeightOld(), cameraAccessor.getEyeHeight());
+        return Mth.lerp(camera.getPartialTickTime(), cameraAccessor.animatium$getEyeHeightOld(), cameraAccessor.animatium$getEyeHeight());
     }
 
     public static void applySwingWhilstMining(Level level, Player player, HitResult hitResult, ParticleEngine particleEngine) {
