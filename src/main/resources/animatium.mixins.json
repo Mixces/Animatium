@@ -39,7 +39,6 @@
 		"v1.general.combat.particles.MixinPlayer",
 		"v1.general.combat.sounds.MixinSoundManager",
 		"v1.general.items.MixinItem",
-		"v1.general.items.MixinItemFeatureRenderer",
 		"v1.general.items.MixinItemInHandLayer",
 		"v1.general.items.MixinItemInHandRenderer",
 		"v1.general.items.MixinItemStack",

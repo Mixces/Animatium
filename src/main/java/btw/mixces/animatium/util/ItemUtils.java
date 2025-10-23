@@ -30,22 +30,11 @@ import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.*;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public final class ItemUtils {
-    private static final ThreadLocal<@Nullable ItemDisplayContext> DISPLAY_CONTEXT = ThreadLocal.withInitial(() -> null);
-
     private ItemUtils() {
-    }
-
-    public static void setDisplayContext(ItemDisplayContext displayContext) {
-        DISPLAY_CONTEXT.set(displayContext);
-    }
-
-    public static @Nullable ItemDisplayContext getDisplayContext() {
-        return DISPLAY_CONTEXT.get();
     }
 
     public static boolean isFishingRodItem(ItemStack stack) {

@@ -35,6 +35,7 @@ import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -48,14 +49,17 @@ public abstract class MixinItemStackRenderLayerState {
     @Shadow
     ItemTransform transform;
 
+    @Shadow
+    @Final
+    ItemStackRenderState field_55345; // ItemStackRenderState.this
+
     @ModifyArg(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemDisplayContext;III[ILjava/util/List;Lnet/minecraft/client/renderer/RenderType;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"), index = 8)
-    private ItemStackRenderState.FoilType animatium$disableGlintOn2dItems(ItemStackRenderState.FoilType glint) {
+    private ItemStackRenderState.FoilType animatium$disableGlintOn2DItems(ItemStackRenderState.FoilType glint) {
         final boolean glintDropped = !AnimatiumConfig.instance().glintOnItemDrops2D;
         final boolean glintFramed = !AnimatiumConfig.instance().glintOnItemFramed2D;
-        final ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
         if (AnimatiumClient.isEnabled() &&
-                (glintDropped && displayContext == ItemDisplayContext.GROUND) ||
-                (glintFramed && displayContext == ItemDisplayContext.FIXED)) {
+                (glintDropped && field_55345.displayContext == ItemDisplayContext.GROUND) ||
+                (glintFramed && field_55345.displayContext == ItemDisplayContext.FIXED)) {
             return ItemStackRenderState.FoilType.NONE;
         } else {
             return glint;
@@ -67,11 +71,10 @@ public abstract class MixinItemStackRenderLayerState {
     private void animatium$itemPositionsRod(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int light, int overlay, int k, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled()) {
             final ItemStack stack = ItemStack.EMPTY; // TODO
-            final ItemDisplayContext displayContext = ItemUtils.getDisplayContext();
-            if (stack != null && displayContext != null) {
-                boolean isGui = displayContext == ItemDisplayContext.GUI;
-                boolean isFirstPerson = displayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || displayContext == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
-                boolean isThirdPerson = displayContext == ItemDisplayContext.THIRD_PERSON_LEFT_HAND || displayContext == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
+            if (!stack.isEmpty()) {
+                boolean isGui = field_55345.displayContext == ItemDisplayContext.GUI;
+                boolean isFirstPerson = field_55345.displayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || field_55345.displayContext == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
+                boolean isThirdPerson = field_55345.displayContext == ItemDisplayContext.THIRD_PERSON_LEFT_HAND || field_55345.displayContext == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
                 ItemTransform transform = this.transform;
                 float x = transform.translation().x();
                 float y = transform.translation().y();
