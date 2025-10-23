@@ -25,7 +25,6 @@ package btw.mixces.animatium;
 
 import btw.mixces.animatium.command.AnimatiumCommand;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.mixins.accessor.RenderPipelinesAccessor;
 import btw.mixces.animatium.packet.AnimatiumInfoPayloadPacket;
 import btw.mixces.animatium.packet.RequestInfoPayloadPacket;
 import btw.mixces.animatium.packet.SetFeaturesPayloadPacket;
@@ -97,12 +96,12 @@ public final class AnimatiumClient implements ClientModInitializer {
                     .buildSnippet();
 
     public static final RenderPipeline LEGACY_SKY_PIPELINE =
-            RenderPipelinesAccessor.animatium$registerPipeline(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
+            RenderPipelines.register(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
                     .withLocation(id("pipeline/legacy_sky"))
                     .build());
 
     public static final RenderPipeline LEGACY_SKY_PLANAR_FOG_PIPELINE =
-            RenderPipelinesAccessor.animatium$registerPipeline(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
+            RenderPipelines.register(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
                     .withLocation(id("pipeline/legacy_sky_planar_fog"))
                     .withShaderDefine("PLANAR_FOG")
                     .build());

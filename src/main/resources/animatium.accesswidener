@@ -1,21 +1,9 @@
 accessWidener v2 named
-accessible class net/minecraft/client/gui/Gui$HeartType
 accessible class net/minecraft/client/gui/Font$PreparedTextBuilder
-accessible method net/minecraft/client/gui/components/debug/DebugScreenEntries register (Ljava/lang/String;Lnet/minecraft/client/gui/components/debug/DebugScreenEntry;)Lnet/minecraft/resources/ResourceLocation;
-accessible method net/minecraft/client/gui/components/debug/DebugScreenEntries register (Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/gui/components/debug/DebugScreenEntry;)Lnet/minecraft/resources/ResourceLocation;
-
-accessible field net/minecraft/world/entity/Avatar STANDING_DIMENSIONS Lnet/minecraft/world/entity/EntityDimensions;
-accessible class net/minecraft/client/renderer/RenderType$CompositeState
+accessible class net/minecraft/client/gui/Gui$HeartType
 accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
-accessible class net/minecraft/client/renderer/RenderStateShard$TextureStateShard
-accessible class net/minecraft/client/renderer/RenderStateShard$EmptyTextureStateShard
-accessible class net/minecraft/client/renderer/RenderStateShard$LayeringStateShard
-accessible class net/minecraft/client/renderer/RenderStateShard$OutputStateShard
-accessible class net/minecraft/client/renderer/RenderStateShard$TexturingStateShard
+accessible method net/minecraft/client/gui/components/debug/DebugScreenEntries register (Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/gui/components/debug/DebugScreenEntry;)Lnet/minecraft/resources/ResourceLocation;
+accessible field net/minecraft/world/entity/Avatar STANDING_DIMENSIONS Lnet/minecraft/world/entity/EntityDimensions;
 accessible field net/minecraft/client/renderer/RenderPipelines MATRICES_PROJECTION_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
 accessible field net/minecraft/client/renderer/RenderPipelines MATRICES_FOG_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
-accessible field net/minecraft/client/renderer/RenderStateShard ITEM_ENTITY_TARGET Lnet/minecraft/client/renderer/RenderStateShard$OutputStateShard;
-accessible field net/minecraft/client/renderer/RenderStateShard MAIN_TARGET Lnet/minecraft/client/renderer/RenderStateShard$OutputStateShard;
-accessible field net/minecraft/client/renderer/RenderStateShard VIEW_OFFSET_Z_LAYERING Lnet/minecraft/client/renderer/RenderStateShard$LayeringStateShard;
-accessible field net/minecraft/client/renderer/RenderStateShard NO_LAYERING Lnet/minecraft/client/renderer/RenderStateShard$LayeringStateShard;
 accessible method net/minecraft/client/renderer/RenderPipelines register (Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Lcom/mojang/blaze3d/pipeline/RenderPipeline;

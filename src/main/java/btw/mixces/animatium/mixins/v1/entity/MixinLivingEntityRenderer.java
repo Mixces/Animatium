@@ -49,10 +49,10 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
     @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal = 1))
     private void animatium$syncPlayerModelWithEyeHeight(S livingEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().syncPlayerModelWithEyeHeight) {
-            Minecraft client = Minecraft.getInstance();
-            LocalPlayer player = client.player;
-            if (livingEntityRenderState instanceof AvatarRenderState state && player != null && state.id == player.getId()) {
-                float cameraLerpValue = PlayerUtils.lerpCameraPosition(client.gameRenderer.getMainCamera());
+            final Minecraft client = Minecraft.getInstance();
+            final LocalPlayer player = client.player;
+            if (livingEntityRenderState instanceof AvatarRenderState avatarRenderState && player != null && avatarRenderState.id == player.getId()) {
+                final float cameraLerpValue = PlayerUtils.lerpCameraPosition(client.gameRenderer.getMainCamera());
                 poseStack.translate(0.0F, (Avatar.STANDING_DIMENSIONS.eyeHeight() * player.getScale()) - cameraLerpValue, 0.0F);
             }
         }

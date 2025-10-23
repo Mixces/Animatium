@@ -32,7 +32,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.feature.FlameFeatureRenderer;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.Avatar;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -63,9 +63,9 @@ public abstract class MixinFlameFeatureRenderer {
     @ModifyArg(method = "renderFlame", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack$Pose;translate(FFF)Lorg/joml/Matrix4f;", ordinal = 0), index = 1)
     private float animatium$flameOffset(float original, @Local(argsOnly = true) EntityRenderState entityRenderState) {
         if (AnimatiumClient.isEnabled() && entityRenderState instanceof AvatarRenderState avatarRenderState) {
-            boolean shouldSyncPlayerModelWithEyeHeight = AnimatiumConfig.instance().syncPlayerModelWithEyeHeight;
+            final boolean shouldSyncPlayerModelWithEyeHeight = AnimatiumConfig.instance().syncPlayerModelWithEyeHeight;
             if (shouldSyncPlayerModelWithEyeHeight) {
-                original = (Player.STANDING_DIMENSIONS.eyeHeight() * avatarRenderState.scale) - PlayerUtils.lerpCameraPosition(Objects.requireNonNull(Minecraft.getInstance().getEntityRenderDispatcher().camera));
+                original = (Avatar.STANDING_DIMENSIONS.eyeHeight() * avatarRenderState.scale) - PlayerUtils.lerpCameraPosition(Objects.requireNonNull(Minecraft.getInstance().getEntityRenderDispatcher().camera));
             }
 
             if (AnimatiumConfig.instance().flameOffset) {
