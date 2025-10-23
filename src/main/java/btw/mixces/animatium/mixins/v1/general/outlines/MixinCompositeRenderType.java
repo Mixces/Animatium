@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package btw.mixces.animatium.mixins.v1.general.util;
+package btw.mixces.animatium.mixins.v1.general.outlines;
 
 import btw.mixces.animatium.util.RenderUtils;
 import net.minecraft.client.renderer.RenderType;
