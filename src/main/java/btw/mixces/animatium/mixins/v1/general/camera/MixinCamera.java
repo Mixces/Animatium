@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.general.camera;
@@ -60,7 +62,7 @@ public abstract class MixinCamera {
 
     @Inject(method = "setup", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setRotation(FF)V", shift = At.Shift.AFTER))
     private void animatium$removeSmoothSneaking(CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().smoothSneaking) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().movement.smoothSneaking) {
             this.eyeHeightOld = eyeHeight;
             this.eyeHeight = this.animatium$getStandingEyeHeight();
         }
@@ -68,7 +70,7 @@ public abstract class MixinCamera {
 
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getEyeHeight()F"))
     private float animatium$useOldEyeHeight(Entity instance, Operation<Float> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fakeOldSneakEyeHeight) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().movement.fakeOldSneakEyeHeight) {
             return this.animatium$getStandingEyeHeight();
         } else {
             return original.call(instance);
@@ -77,7 +79,7 @@ public abstract class MixinCamera {
 
     @WrapOperation(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/Camera;eyeHeight:F"))
     private void animatium$oldSneakAnimationInterpolation(Camera instance, float value, Operation<Void> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().sneakAnimationInterpolation && AnimatiumConfig.instance().smoothSneaking && this.entity.getEyeHeight() < eyeHeight) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().movement.sneakAnimationInterpolation && AnimatiumConfig.instance().movement.smoothSneaking && this.entity.getEyeHeight() < eyeHeight) {
             this.eyeHeight = this.animatium$getStandingEyeHeight();
         } else {
             original.call(instance, value);
@@ -86,7 +88,7 @@ public abstract class MixinCamera {
 
     @WrapOperation(method = "getMaxZoom", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/ClipContext$Block;VISUAL:Lnet/minecraft/world/level/ClipContext$Block;"))
     private ClipContext.Block animatium$cameraTransparentPassthrough(Operation<ClipContext.Block> original) {
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().cameraTransparentPassthrough) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().screen.cameraTransparentPassthrough) {
             return ClipContext.Block.OUTLINE;
         } else {
             return original.call();
@@ -96,8 +98,8 @@ public abstract class MixinCamera {
     @Inject(method = "setup", at = @At(value = "TAIL"))
     private void animatium$oldCameraVersion(BlockGetter area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
         // TODO: Fix bed/sleeping position
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().cameraVersion != CameraVersion.LATEST && !thirdPerson && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
-            final int ordinal = AnimatiumConfig.instance().cameraVersion.ordinal();
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().screen.cameraVersion != CameraVersion.VANILLA && !thirdPerson && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
+            final int ordinal = AnimatiumConfig.instance().screen.cameraVersion.ordinal();
             if (ordinal <= CameraVersion.V1_14_V1_14_3.ordinal()) {
                 // <= 1.14.3
                 this.move(-0.05000000074505806F, 0.0F, 0.0F);
@@ -117,7 +119,7 @@ public abstract class MixinCamera {
     private float animatium$getStandingEyeHeight() {
         final float standingEyeHeight = this.entity.getEyeHeight();
         if (AnimatiumClient.isEnabled() &&
-                AnimatiumConfig.instance().fakeOldSneakEyeHeight &&
+                AnimatiumConfig.instance().movement.fakeOldSneakEyeHeight &&
                 this.entity.hasPose(Pose.CROUCHING) &&
                 this.entity instanceof Player player &&
                 ((PlayerAccessor) player).animatium$canChangeIntoPose(Pose.STANDING)) {

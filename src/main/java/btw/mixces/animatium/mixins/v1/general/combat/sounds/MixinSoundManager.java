@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.general.combat.sounds;
@@ -51,7 +53,7 @@ public abstract class MixinSoundManager {
 
     @Redirect(method = "play", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/sounds/SoundEngine;play(Lnet/minecraft/client/resources/sounds/SoundInstance;)Lnet/minecraft/client/sounds/SoundEngine$PlayResult;"))
     private SoundEngine.PlayResult animatium$modernCombatSounds(SoundEngine instance, SoundInstance soundInstance) {
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().modernCombatSounds && animatium$ignoreSounds.contains(soundInstance.getLocation())) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().other.modernCombatSounds && animatium$ignoreSounds.contains(soundInstance.getLocation())) {
             return null;
         } else {
             return instance.play(soundInstance);

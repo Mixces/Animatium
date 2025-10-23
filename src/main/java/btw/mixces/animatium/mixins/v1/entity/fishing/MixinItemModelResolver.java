@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.entity.fishing;
@@ -46,7 +48,7 @@ public abstract class MixinItemModelResolver {
     private Object animatium$stickModelWhenCastInThirdperson(ItemStack instance, DataComponentType<ResourceLocation> dataComponentType, Operation<ResourceLocation> original, @Local(argsOnly = true) ItemDisplayContext displayContext, @Local(argsOnly = true) ItemOwner itemOwner, @Local(argsOnly = true) ItemStack itemStack) {
         final LivingEntity livingEntity = itemOwner == null ? null : itemOwner.asLivingEntity();
         if (AnimatiumClient.isEnabled() &&
-                AnimatiumConfig.instance().stickModelWhenCastInThirdperson &&
+                AnimatiumConfig.instance().items.stickModelWhenCastInThirdperson &&
                 itemStack.getItem() == Items.FISHING_ROD &&
                 (livingEntity instanceof Player player && player.fishing != null) &&
                 ((displayContext == ItemDisplayContext.THIRD_PERSON_LEFT_HAND && livingEntity.getOffhandItem() == itemStack) ||

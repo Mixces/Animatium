@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.gui.old_inventory_rendering;
@@ -48,17 +50,18 @@ public abstract class MixinDrawContext {
 
     @WrapOperation(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/tooltip/TooltipRenderUtil;renderTooltipBackground(Lnet/minecraft/client/gui/GuiGraphics;IIIILnet/minecraft/resources/ResourceLocation;)V"))
     private void animatium$tooltipStyleRendering(GuiGraphics context, int i, int j, int k, int l, ResourceLocation resourceLocation, Operation<Void> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().tooltipStyleRendering) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().screen.tooltipStyleRendering) {
             int n = i - 3;
             int o = j - 3;
             int p = k + 3 + 3;
             int q = l + 3 + 3;
             // TODO/NOTE: Figure out good names for these variables LOL
-            RenderUtils.fillHorizontalLine(context, n, o - 1, p, -267386864);
-            RenderUtils.fillHorizontalLine(context, n, o + q, p, -267386864);
-            RenderUtils.fillRectangle(context, n, o, p, q, -267386864);
-            RenderUtils.fillVerticalLine(context, n - 1, o, q, -267386864);
-            RenderUtils.fillVerticalLine(context, n + p, o, q, -267386864);
+            final int lineColor = -267386864;
+            RenderUtils.fillHorizontalLine(context, n, o - 1, p, lineColor);
+            RenderUtils.fillHorizontalLine(context, n, o + q, p, lineColor);
+            RenderUtils.fillRectangle(context, n, o, p, q, lineColor);
+            RenderUtils.fillVerticalLine(context, n - 1, o, q, lineColor);
+            RenderUtils.fillVerticalLine(context, n + p, o, q, lineColor);
             animatium$drawFrameGradient(context, n, o + 1, p, q, 1347420415, 1344798847);
         } else {
             original.call(context, i, j, k, l, resourceLocation);
@@ -67,7 +70,7 @@ public abstract class MixinDrawContext {
 
     @Inject(method = "renderItemBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(Lcom/mojang/blaze3d/pipeline/RenderPipeline;IIIII)V", ordinal = 0, shift = At.Shift.AFTER))
     private void animatium$oldDurabilityBar(ItemStack stack, int x, int y, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().durabilityBarColors && !(stack.getItem() instanceof BundleItem)) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().items.durabilityBarColors && !(stack.getItem() instanceof BundleItem)) {
             int i = x + 2;
             int j = y + 13;
             int color = ARGB.color((255 - ItemUtils.getLegacyDurabilityColorValue(stack)) / 4, 64, 0);

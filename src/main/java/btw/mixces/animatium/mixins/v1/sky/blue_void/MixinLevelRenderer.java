@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.sky.blue_void;
@@ -53,7 +55,7 @@ public abstract class MixinLevelRenderer {
 
     @Inject(method = "method_62215", at = @At("TAIL"))
     private void animatium$blueVoidSky(GpuBufferSlice gpuBufferSlice, SkyRenderState skyRenderState, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().blueVoidSky && skyRenderState.skyType != DimensionSpecialEffects.SkyType.END && this.level != null && this.minecraft.player != null) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.blueVoidSky && skyRenderState.skyType != DimensionSpecialEffects.SkyType.END && this.level != null && this.minecraft.player != null) {
             float tickDelta = this.minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true);
             int skyColor = this.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), tickDelta);
             BlueVoidSkyRenderer.renderBlueVoid(this.minecraft.getMainRenderTarget(), skyColor, this.minecraft.player.getEyePosition(tickDelta).y - RenderUtils.getLevelHorizonHeight(this.level));

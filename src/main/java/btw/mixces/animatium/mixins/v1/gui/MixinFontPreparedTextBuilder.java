@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.gui;
@@ -38,7 +40,7 @@ public abstract class MixinFontPreparedTextBuilder {
 
     @ModifyArg(method = "accept(ILnet/minecraft/network/chat/Style;Lnet/minecraft/client/gui/font/glyphs/BakedGlyph;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/font/glyphs/EffectGlyph;createEffect(FFFFFIIF)Lnet/minecraft/client/gui/font/TextRenderable;", ordinal = 0), index = 1)
     private float animatium$fixTextStrikethroughStyle$minY(float minY) {
-        if (AnimatiumConfig.instance().fixTextStrikethroughStyle && this.animatium$shouldApply()) {
+        if (AnimatiumConfig.instance().fixes.fixTextStrikethroughStyle && this.animatium$shouldApply()) {
             return minY - animatium$strikethroughOffset;
         } else {
             return minY;
@@ -47,7 +49,7 @@ public abstract class MixinFontPreparedTextBuilder {
 
     @ModifyArg(method = "accept(ILnet/minecraft/network/chat/Style;Lnet/minecraft/client/gui/font/glyphs/BakedGlyph;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/font/glyphs/EffectGlyph;createEffect(FFFFFIIF)Lnet/minecraft/client/gui/font/TextRenderable;", ordinal = 0), index = 3)
     private float animatium$fixTextStrikethroughStyle$maxY(float maxY) {
-        if (AnimatiumConfig.instance().fixTextStrikethroughStyle && this.animatium$shouldApply()) {
+        if (AnimatiumConfig.instance().fixes.fixTextStrikethroughStyle && this.animatium$shouldApply()) {
             return maxY - animatium$strikethroughOffset;
         } else {
             return maxY;

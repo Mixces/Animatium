@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.general.camera.view_bobbing;
@@ -52,7 +54,7 @@ public abstract class MixinGameRenderer {
 
     @WrapOperation(method = "bobHurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getHurtDir()F"))
     private float animatium$damageTilt(LivingEntity instance, Operation<Float> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().damageTilt) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().movement.damageTilt) {
             return 0.0F;
         } else {
             return original.call(instance);
@@ -62,7 +64,7 @@ public abstract class MixinGameRenderer {
     @WrapOperation(method = "bobHurt", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/LivingEntity;hurtTime:I"))
     private int animatium$offsetHurtTime(LivingEntity instance, Operation<Integer> original) {
         int hurtTime = original.call(instance);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().offsetHurtTime) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().movement.offsetHurtTime) {
             return Math.max(hurtTime - 1, 0);
         } else {
             return hurtTime;
@@ -71,7 +73,7 @@ public abstract class MixinGameRenderer {
 
     @Inject(method = "bobView", at = @At("TAIL"))
     private void animatium$fixVerticalBobbingTilt(PoseStack poseStack, float tickDelta, CallbackInfo ci) {
-        if (AnimatiumConfig.instance().fixVerticalBobbingTilt && this.minecraft.getCameraEntity() instanceof Player player) {
+        if (AnimatiumConfig.instance().fixes.fixVerticalBobbingTilt && this.minecraft.getCameraEntity() instanceof Player player) {
             ViewBobbingStorage bobbingAccessor = (ViewBobbingStorage) player;
             float j = Mth.lerp(tickDelta, bobbingAccessor.animatium$getPreviousBobbingTilt(), bobbingAccessor.animatium$getBobbingTilt());
             poseStack.mulPose(Axis.XP.rotationDegrees(j));
@@ -80,9 +82,9 @@ public abstract class MixinGameRenderer {
 
     @WrapOperation(method = "bobView", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/ClientAvatarState;getBackwardsInterpolatedWalkDistance(F)F"))
     private float animatium$viewBobbing$changeDistance(ClientAvatarState instance, float tickDelta, Operation<Float> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().viewBobbing && this.minecraft.getCameraEntity() instanceof Player player) {
-            float walkDist = ((ViewBobbingStorage) player).animatium$getHorizontalSpeed();
-            float walkDistO = ((ViewBobbingStorage) player).animatium$getPreviousHorizontalSpeed();
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().movement.viewBobbing && this.minecraft.getCameraEntity() instanceof Player player) {
+            final float walkDist = ((ViewBobbingStorage) player).animatium$getHorizontalSpeed();
+            final float walkDistO = ((ViewBobbingStorage) player).animatium$getPreviousHorizontalSpeed();
             return -(walkDist + (walkDist - walkDistO) * tickDelta);
         } else {
             return original.call(instance, tickDelta);
@@ -92,7 +94,7 @@ public abstract class MixinGameRenderer {
     // TODO/MOVE
     @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlobalSettingsUniform;update(IIDJLnet/minecraft/client/DeltaTracker;I)V"), index = 2)
     private double animatium$forceMaxGlintStrength(double original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().maxGlintProperties) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.maxGlintProperties) {
             // 100% glint strength
             return 1.0F;
         } else {

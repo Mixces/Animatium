@@ -19,21 +19,34 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.config.category;
 
-import btw.mixces.animatium.AnimatiumClient;
-import btw.mixces.animatium.config.AnimatiumConfig;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
 public class FixesConfigCategory {
-    public static ConfigCategory setup(AnimatiumConfig defaults, AnimatiumConfig config) {
+    public boolean fixSneakingFeetPosition = true;
+    public boolean fixMirrorArmSwing = true;
+    public boolean fixOffHandUsingPose = true;
+    public boolean fixCastLineCheck = true;
+    public boolean fixCastLineSwing = true;
+    public boolean fixEquipAnimation = true;
+    public boolean fixFireballClientsideVisual = true;
+    public boolean fixTextStrikethroughStyle = true;
+    public boolean fixHighAttackSpeedIndicator = true;
+    public boolean fixVerticalBobbingTilt = true;
+    public boolean upMinPixelTransparencyLimit = true;
+
+    public static ConfigCategory setup(FixesConfigCategory defaults, FixesConfigCategory config) {
         ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.fixes"));
         category.option(Option.<Boolean>createBuilder()
@@ -99,7 +112,7 @@ public class FixesConfigCategory {
                         (newVal) -> config.fixFireballClientsideVisual = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
-        if (!AnimatiumClient.isVFPInstalled()) {
+        if (!FabricLoader.getInstance().isModLoaded("viafabricplus")) {
             category.option(Option.<Boolean>createBuilder()
                     .name(Component.translatable("animatium.fixTextStrikethroughStyle"))
                     .description(OptionDescription.of(Component.translatable("animatium.fixTextStrikethroughStyle.description")))

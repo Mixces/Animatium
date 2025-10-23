@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.entity.projectile_age;
@@ -37,7 +39,7 @@ public abstract class MixinWindCharge {
     @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/projectile/windcharge/WindCharge;tickCount:I"))
     private int animatium$projectileAgeCheck(WindCharge instance, Operation<Integer> original) {
         final int originalTick = original.call(instance);
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().projectileAgeCheck) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().other.projectileAgeCheck) {
             return originalTick + 2;
         } else {
             return originalTick;

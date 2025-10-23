@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.general.items.flat;
@@ -46,7 +48,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinItemEntityRenderer {
     @WrapOperation(method = "submit(Lnet/minecraft/client/renderer/entity/state/ItemEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;getSpin(FF)F"))
     private float animatium$itemDropsFaceCamera(float age, float uniqueOffset, Operation<Float> original, @Local(argsOnly = true) ItemEntityRenderState itemEntityRenderState, @Local(argsOnly = true) PoseStack poseStack) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemDropsFaceCamera) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().items.itemDropsFaceCamera) {
             if (!itemEntityRenderState.item.usesBlockLight()) {
                 final Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
                 return Utils.toRadians(180F - camera.getYRot());
@@ -58,7 +60,7 @@ public abstract class MixinItemEntityRenderer {
 
     @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/ItemEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lorg/joml/Quaternionfc;)V", shift = At.Shift.AFTER))
     private void animatium$fixItemDrops2dRotation(ItemEntityRenderState itemEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemDropsFaceCamera && AnimatiumConfig.instance().itemDropsFaceCameraRotationFix) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().items.itemDropsFaceCamera && AnimatiumConfig.instance().items.itemDropsFaceCameraRotationFix) {
             if (!itemEntityRenderState.item.usesBlockLight()) {
                 final Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
                 poseStack.mulPose(Axis.XP.rotationDegrees(-camera.getXRot()));

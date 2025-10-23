@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.general.combat.particles;
@@ -36,11 +38,11 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinPlayer {
     @WrapWithCondition(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"))
     private boolean animatium$modernCombatParticles$damageIndicator(ServerLevel instance, ParticleOptions particleOptions, double d, double e, double f, int i, double g, double h, double j, double k) {
-        return !AnimatiumClient.isEnabled() || AnimatiumConfig.instance().modernCombatParticles;
+        return !AnimatiumClient.isEnabled() || AnimatiumConfig.instance().other.modernCombatParticles;
     }
 
     @WrapWithCondition(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;sweepAttack()V"))
     private boolean animatium$modernCombatParticles$sweep(Player instance) {
-        return !AnimatiumClient.isEnabled() || AnimatiumConfig.instance().modernCombatParticles;
+        return !AnimatiumClient.isEnabled() || AnimatiumConfig.instance().other.modernCombatParticles;
     }
 }

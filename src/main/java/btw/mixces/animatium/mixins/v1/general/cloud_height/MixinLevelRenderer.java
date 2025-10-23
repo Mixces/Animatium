@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.general.cloud_height;
@@ -38,7 +40,7 @@ import java.util.Optional;
 public abstract class MixinLevelRenderer {
     @WrapOperation(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/dimension/DimensionType;cloudHeight()Ljava/util/Optional;"))
     private Optional<Integer> animatium$cloudHeight(DimensionType instance, Operation<Optional<Integer>> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().cloudHeight && instance.natural()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.cloudHeight && instance.natural()) {
             return Optional.of(128);
         } else {
             return original.call(instance);

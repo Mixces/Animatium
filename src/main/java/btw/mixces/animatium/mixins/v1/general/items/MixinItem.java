@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.general.items;
@@ -39,7 +41,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MixinItem {
     @Inject(method = "getBarColor", at = @At("HEAD"), cancellable = true)
     private void animatium$durabilityBarColors(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().durabilityBarColors && !((Item) (Object) this instanceof BundleItem)) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().items.durabilityBarColors && !((Item) (Object) this instanceof BundleItem)) {
             final int value = ItemUtils.getLegacyDurabilityColorValue(stack);
             cir.setReturnValue(ARGB.color(255 - value, value, 0));
         }

@@ -19,11 +19,12 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.config.category;
 
-import btw.mixces.animatium.config.AnimatiumConfig;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
@@ -31,8 +32,31 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.minecraft.network.chat.Component;
 
-public final class MovementConfigCategory {
-    public static ConfigCategory setup(AnimatiumConfig defaults, AnimatiumConfig config) {
+public class MovementConfigCategory {
+    // (Movement) Sneaking
+    public boolean smoothSneaking = true;
+    public boolean sneakAnimationInterpolation = false;
+    public boolean fakeOldSneakEyeHeight = false;
+    public boolean sneakingFeetPosition = true;
+    public boolean syncPlayerModelWithEyeHeight = false;
+    public boolean sneakAnimationWhileFlying = true;
+    // (Movement) Other
+    public boolean rotateBackwardsWalking = true;
+    public boolean uncapBlockingHeadRotation = true;
+    public boolean headRotationInterpolation = false;
+    public boolean viewBobbing = true;
+    public boolean deathLimbs = true;
+    public boolean bowArmMovement = true;
+    public boolean damageTilt = false;
+    public boolean offsetHurtTime = false;
+    // (Movement) Cape
+    public boolean capeMovement = true;
+    public boolean clampCapeLean = false;
+    public boolean capeSwingRotation = true;
+    public boolean capeChestplateTranslation = true;
+    public boolean capeSneakPosition = false;
+
+    public static ConfigCategory setup(MovementConfigCategory defaults, MovementConfigCategory config) {
         ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.movement"));
 

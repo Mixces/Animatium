@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.entity.flame;
@@ -44,7 +46,7 @@ import java.util.Objects;
 public abstract class MixinFlameFeatureRenderer {
     @ModifyExpressionValue(method = "renderFlame", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;boundingBoxWidth:F"))
     private float animatium$flameWidth(float original, @Local(argsOnly = true) EntityRenderState entityRenderState) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().flameDimensions && entityRenderState instanceof AvatarRenderState) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.flameDimensions && entityRenderState instanceof AvatarRenderState) {
             return 0.6F;
         } else {
             return original;
@@ -53,7 +55,7 @@ public abstract class MixinFlameFeatureRenderer {
 
     @ModifyExpressionValue(method = "renderFlame", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;boundingBoxHeight:F"))
     private float animatium$flameHeight(float original, @Local(argsOnly = true) EntityRenderState entityRenderState) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().flameDimensions && entityRenderState instanceof AvatarRenderState) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.flameDimensions && entityRenderState instanceof AvatarRenderState) {
             return 1.8F;
         } else {
             return original;
@@ -63,12 +65,12 @@ public abstract class MixinFlameFeatureRenderer {
     @ModifyArg(method = "renderFlame", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack$Pose;translate(FFF)Lorg/joml/Matrix4f;", ordinal = 0), index = 1)
     private float animatium$flameOffset(float original, @Local(argsOnly = true) EntityRenderState entityRenderState) {
         if (AnimatiumClient.isEnabled() && entityRenderState instanceof AvatarRenderState avatarRenderState) {
-            final boolean shouldSyncPlayerModelWithEyeHeight = AnimatiumConfig.instance().syncPlayerModelWithEyeHeight;
+            final boolean shouldSyncPlayerModelWithEyeHeight = AnimatiumConfig.instance().movement.syncPlayerModelWithEyeHeight;
             if (shouldSyncPlayerModelWithEyeHeight) {
                 original = (Avatar.STANDING_DIMENSIONS.eyeHeight() * avatarRenderState.scale) - PlayerUtils.lerpCameraPosition(Objects.requireNonNull(Minecraft.getInstance().getEntityRenderDispatcher().camera));
             }
 
-            if (AnimatiumConfig.instance().flameOffset) {
+            if (AnimatiumConfig.instance().other.flameOffset) {
                 original += ((shouldSyncPlayerModelWithEyeHeight && avatarRenderState.isCrouching ? 0.140625F : 0.296875F) * avatarRenderState.scale);
             }
         }

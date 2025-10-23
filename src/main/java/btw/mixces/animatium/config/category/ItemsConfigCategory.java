@@ -19,11 +19,12 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.config.category;
 
-import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.enums.FishingRodVersion;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
@@ -33,8 +34,46 @@ import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.minecraft.network.chat.Component;
 
-public final class ItemsConfigCategory {
-    public static ConfigCategory setup(AnimatiumConfig defaults, AnimatiumConfig config) {
+public class ItemsConfigCategory {
+    // (Items) Fishing Rod
+    public boolean fishingRodTextureStackCheck = true;
+    public boolean fishingRodLineInterpolation = true;
+    public boolean noMoveFishingRodLine = false;
+    public boolean fishingRodLinePositionThirdPerson = true;
+    public boolean fishingRodLineThickness = true;
+    public boolean thinFishingRodLineThickness = false;
+    public boolean stickModelWhenCastInThirdperson = true;
+    // (Items) Fixes
+    public boolean equipAnimationOnItemUse = false;
+    public boolean itemUsageVisualInGUI = false;
+    // (Items) Enchantment Glint
+    public boolean glintSpeed = true;
+    public boolean glintOnItemDrops2D = true;
+    public boolean glintOnItemFramed2D = true;
+    // (Items) 2D Drops
+    public boolean itemDropsFaceCamera = true;
+    public boolean itemDropsFaceCameraRotationFix = false;
+    // public boolean itemDrops2D = true;
+    public boolean itemFramed2D = true;
+    public boolean itemColors2D = true;
+    // (Items) Transformations
+    public boolean itemPositions = true;
+    public boolean itemPositionsInThirdPerson = true;
+    public boolean thinBlockPositions = true;
+    public boolean skullPosition = true;
+    public FishingRodVersion fishingRodVersion = FishingRodVersion.V1_7;
+    // (Items) Other
+    public boolean itemUsageSwinging = true;
+    public boolean swingOnUse = false;
+    public boolean swingOnDrop = false;
+    public boolean swingOnEntityInteract = false;
+    public boolean itemUsingTextureInGui = true;
+    public boolean durabilityBarColors = true;
+    public boolean itemRarities = true;
+    public boolean heldItemVisibilityInBoat = true;
+    public boolean itemPickupPosition = true;
+
+    public static ConfigCategory setup(ItemsConfigCategory defaults, ItemsConfigCategory config) {
         ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.items"));
 

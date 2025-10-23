@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.general.items.flat;
@@ -55,8 +57,8 @@ public abstract class MixinItemStackRenderLayerState {
 
     @ModifyArg(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemDisplayContext;III[ILjava/util/List;Lnet/minecraft/client/renderer/RenderType;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"), index = 8)
     private ItemStackRenderState.FoilType animatium$disableGlintOn2DItems(ItemStackRenderState.FoilType glint) {
-        final boolean glintDropped = !AnimatiumConfig.instance().glintOnItemDrops2D;
-        final boolean glintFramed = !AnimatiumConfig.instance().glintOnItemFramed2D;
+        final boolean glintDropped = !AnimatiumConfig.instance().items.glintOnItemDrops2D;
+        final boolean glintFramed = !AnimatiumConfig.instance().items.glintOnItemFramed2D;
         if (AnimatiumClient.isEnabled() &&
                 (glintDropped && field_55345.displayContext == ItemDisplayContext.GROUND) ||
                 (glintFramed && field_55345.displayContext == ItemDisplayContext.FIXED)) {
@@ -85,8 +87,8 @@ public abstract class MixinItemStackRenderLayerState {
                 float scaleX = transform.scale().x();
                 float scaleY = transform.scale().y();
                 float scaleZ = transform.scale().z();
-                if (AnimatiumConfig.instance().fishingRodVersion != FishingRodVersion.LATEST && ItemUtils.isFishingRodItem(stack) && isFirstPerson) {
-                    int ordinal = AnimatiumConfig.instance().fishingRodVersion.ordinal();
+                if (AnimatiumConfig.instance().items.fishingRodVersion != FishingRodVersion.LATEST && ItemUtils.isFishingRodItem(stack) && isFirstPerson) {
+                    int ordinal = AnimatiumConfig.instance().items.fishingRodVersion.ordinal();
                     if (ordinal <= FishingRodVersion.V1_8.ordinal()) {
                         poseStack.translate(0.070625, 0.1, 0.020625);
                     }
@@ -99,7 +101,7 @@ public abstract class MixinItemStackRenderLayerState {
                     poseStack.translate(-x, -y, -z);
                 }
 
-                if (AnimatiumConfig.instance().thinBlockPositions && ItemUtils.isThinBlockItem(stack)) {
+                if (AnimatiumConfig.instance().items.thinBlockPositions && ItemUtils.isThinBlockItem(stack)) {
                     if (isFirstPerson) {
                         poseStack.translate(0, -4.2 * 0.0625, 0);
                     } else if (isThirdPerson) {
@@ -107,7 +109,8 @@ public abstract class MixinItemStackRenderLayerState {
                     }
                 }
 
-                if (AnimatiumConfig.instance().skullPosition && ItemUtils.isSkullBlock(stack) && isGui) {
+                // TODO/NEED TO FIX
+                if (AnimatiumConfig.instance().items.skullPosition && ItemUtils.isSkullBlock(stack) && isGui) {
                     poseStack.translate(x, y, z);
                     poseStack.mulPose(Axis.XP.rotationDegrees(Utils.toRadians(rotZ)));
                     poseStack.mulPose(Axis.YP.rotationDegrees(Utils.toRadians(rotY)));

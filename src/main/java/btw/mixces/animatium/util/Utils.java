@@ -19,10 +19,15 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.util;
 
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -46,5 +51,33 @@ public final class Utils {
                         Shapes.create(new AABB(minX, minY, minZ, maxX, maxY, maxZ).inflate(value)),
                         BooleanOp.OR)));
         return voxelShape.get();
+    }
+
+    public static boolean isSwordItem(ItemStack stack) {
+        return stack.is(ItemTags.SWORDS);
+    }
+
+    public static boolean isAxeItem(ItemStack stack) {
+        return stack.is(ItemTags.AXES);
+    }
+
+    public static boolean isPickaxeItem(ItemStack stack) {
+        return stack.is(ItemTags.PICKAXES);
+    }
+
+    public static boolean isShovelItem(ItemStack stack) {
+        return stack.is(ItemTags.SHOVELS);
+    }
+
+    public static boolean isHoeItem(ItemStack stack) {
+        return stack.is(ItemTags.HOES);
+    }
+
+    public static boolean isDiggerItem(ItemStack stack) {
+        return isAxeItem(stack) || isPickaxeItem(stack) || isShovelItem(stack) || isHoeItem(stack);
+    }
+
+    public static boolean isShieldItem(ItemStack stack) {
+        return stack.is(Items.SHIELD);
     }
 }

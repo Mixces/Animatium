@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.general.outlines;
@@ -52,14 +54,14 @@ public abstract class MixinLevelRenderer {
     // Old Block Outline
     @Inject(method = "renderBlockOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderHitOutline(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;DDDLnet/minecraft/client/renderer/state/BlockOutlineRenderState;I)V", shift = At.Shift.BEFORE))
     private void animatium$setBlockOutlineWidth$on(MultiBufferSource.BufferSource bufferSource, PoseStack poseStack, boolean bl, LevelRenderState levelRenderState, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().blockOutlineRendering) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.blockOutlineRendering) {
             RenderUtils.setLineWidth(2.0F);
         }
     }
 
     @Inject(method = "renderBlockOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderHitOutline(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;DDDLnet/minecraft/client/renderer/state/BlockOutlineRenderState;I)V", shift = At.Shift.BEFORE))
     private void animatium$setBlockOutlineWidth$off(MultiBufferSource.BufferSource bufferSource, PoseStack poseStack, boolean bl, LevelRenderState levelRenderState, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().blockOutlineRendering) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.blockOutlineRendering) {
             RenderUtils.setLineWidth(-1.0F);
         }
     }
@@ -67,8 +69,8 @@ public abstract class MixinLevelRenderer {
     @WrapOperation(method = "renderHitOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/state/BlockOutlineRenderState;shape()Lnet/minecraft/world/phys/shapes/VoxelShape;"))
     private VoxelShape animatium$blockOutlineRendering(BlockOutlineRenderState instance, Operation<VoxelShape> original) {
         VoxelShape shape = original.call(instance);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().blockOutlineRendering) {
-            return Utils.expandVoxelShape(shape, 0.0020000000949949026F);
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.blockOutlineRendering) {
+            return Utils.expandVoxelShape(shape, 0.0020000000949949026F); // Value sourced from older minecraft version
         } else {
             return shape;
         }
@@ -84,7 +86,7 @@ public abstract class MixinLevelRenderer {
     @WrapOperation(method = "doEntityOutline", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;blitAndBlendToTexture(Lcom/mojang/blaze3d/textures/GpuTextureView;)V"))
     private void animatium$entityGlowOutline(RenderTarget instance, GpuTextureView gpuTextureView, Operation<Void> original) {
         GpuTextureView textureView = gpuTextureView;
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().entityGlowOutline && RenderSystem.getDevice() instanceof GlDevice glDevice) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().other.entityGlowOutline && RenderSystem.getDevice() instanceof GlDevice glDevice) {
             if (this.animatium$blankTexture == null) {
                 this.animatium$blankTexture = glDevice.createTexture(() -> "Blank", 15, TextureFormat.RGBA8, 1, 1, 1, 1);
             }

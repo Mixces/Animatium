@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.general.min_transparency;
@@ -35,7 +37,7 @@ public abstract class MixinSpriteContents {
     @WrapOperation(method = "isTransparent", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/ARGB;alpha(I)I"))
     private int animatium$upMinPixelTransparencyLimit(int argb, Operation<Integer> original) {
         final int alpha = original.call(argb);
-        if (AnimatiumConfig.instance().upMinPixelTransparencyLimit && (alpha / 255.0F) <= 0.1F) {
+        if (AnimatiumConfig.instance().fixes.upMinPixelTransparencyLimit && (alpha / 255.0F) <= 0.1F) {
             return 0;
         } else {
             return alpha;

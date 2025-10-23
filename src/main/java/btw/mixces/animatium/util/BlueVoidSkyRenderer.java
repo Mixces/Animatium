@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.util;
@@ -66,7 +68,7 @@ public final class BlueVoidSkyRenderer {
                 .createCommandEncoder()
                 .createRenderPass(() -> "Blue void disc", renderTarget.getColorTextureView(), OptionalInt.empty(), renderTarget.getDepthTextureView(), OptionalDouble.empty())) {
             RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
-            renderPass.setPipeline(AnimatiumConfig.instance().planarSkyFog ? AnimatiumClient.LEGACY_SKY_PLANAR_FOG_PIPELINE : AnimatiumClient.LEGACY_SKY_PIPELINE);
+            renderPass.setPipeline(AnimatiumConfig.instance().other.planarSkyFog ? AnimatiumClient.LEGACY_SKY_PLANAR_FOG_PIPELINE : AnimatiumClient.LEGACY_SKY_PIPELINE);
             renderPass.setVertexBuffer(0, getGpuBuffer());
             renderPass.setIndexBuffer(autoStorageIndexBuffer.getBuffer(6), autoStorageIndexBuffer.type());
             RenderSystem.bindDefaultUniforms(renderPass);

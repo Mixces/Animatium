@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.util;
@@ -57,8 +59,8 @@ public final class ItemUtils {
 
     public static boolean isHandheldItem(ItemStack stack) {
         if (!stack.isEmpty()) {
-            return ItemClassUtils.isDiggerItem(stack) ||
-                    ItemClassUtils.isSwordItem(stack) ||
+            return Utils.isDiggerItem(stack) ||
+                    Utils.isSwordItem(stack) ||
                     isFishingRodItem(stack) ||
                     List.of(Items.MACE, Items.TRIDENT, Items.STICK, Items.BREEZE_ROD, Items.BLAZE_ROD).contains(stack.getItem());
         } else {
@@ -99,10 +101,9 @@ public final class ItemUtils {
 
     public static boolean isItemBlacklisted(ItemStack stack) {
         if (!stack.isEmpty()) {
-            final Item item = stack.getItem();
-            return ItemClassUtils.isShieldItem(item) ||
+            return Utils.isShieldItem(stack) ||
                     isBlockItemBlacklisted(stack) ||
-                    item instanceof CrossbowItem;
+                    stack.is(Items.CROSSBOW);
         } else {
             return false;
         }
@@ -137,10 +138,10 @@ public final class ItemUtils {
     }
 
     public static boolean shouldApplyItemPositionsInThirdperson(ArmedEntityRenderState armedEntityRenderState) {
-        if (AnimatiumConfig.instance().itemPositionsInThirdPerson) {
+        if (AnimatiumConfig.instance().items.itemPositionsInThirdPerson) {
             return true;
         } else {
-            return AnimatiumConfig.instance().thirdPersonSwordBlockingPosition && PlayerUtils.isBlockingArm(armedEntityRenderState.mainArm, armedEntityRenderState);
+            return AnimatiumConfig.instance().other.thirdPersonSwordBlockingPosition && PlayerUtils.isBlockingArm(armedEntityRenderState.mainArm, armedEntityRenderState);
         }
     }
 

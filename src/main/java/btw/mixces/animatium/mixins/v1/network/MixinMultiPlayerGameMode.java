@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.network;
@@ -49,14 +51,14 @@ public abstract class MixinMultiPlayerGameMode {
 
     @Inject(method = "getDestroyStage", at = @At(value = "RETURN"), cancellable = true)
     private void animatium$blockMiningProgress(CallbackInfoReturnable<Integer> cir) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().blockMiningProgress && destroyProgress > 0.0F) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.blockMiningProgress && destroyProgress > 0.0F) {
             cir.setReturnValue((int) (this.destroyProgress * 10.0F));
         }
     }
 
     @WrapOperation(method = "performUseItemOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;useOn(Lnet/minecraft/world/item/context/UseOnContext;)Lnet/minecraft/world/InteractionResult;"))
     private InteractionResult animatium$fixFireballClientsideVisual(ItemStack stack, UseOnContext useOnContext, Operation<InteractionResult> original) {
-        if (AnimatiumConfig.instance().fixFireballClientsideVisual && !stack.isEmpty() && stack.is(Items.FIRE_CHARGE) && useOnContext.getLevel().isClientSide() && !this.localPlayerMode.isCreative()) {
+        if (AnimatiumConfig.instance().fixes.fixFireballClientsideVisual && !stack.isEmpty() && stack.is(Items.FIRE_CHARGE) && useOnContext.getLevel().isClientSide() && !this.localPlayerMode.isCreative()) {
             return InteractionResult.SUCCESS;
         } else {
             return original.call(stack, useOnContext);

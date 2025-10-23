@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.general.camera.view_bobbing;
@@ -43,10 +45,10 @@ public abstract class MixinPlayer extends LivingEntity {
 
     @Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;setSpeed(F)V", shift = At.Shift.AFTER))
     private void animatium$updateBobbingTiltValues(CallbackInfo ci) {
-        if (AnimatiumConfig.instance().fixVerticalBobbingTilt) {
+        if (AnimatiumConfig.instance().fixes.fixVerticalBobbingTilt) {
             ViewBobbingStorage bobbingAccessor = (ViewBobbingStorage) this;
-            float g = this.onGround() || this.getHealth() <= 0.0F ? 0.0F : (float) (Math.atan(-this.getDeltaMovement().y * (double) 0.2F) * 15.0F);
-            bobbingAccessor.animatium$setBobbingTilt(Mth.lerp(0.8F, bobbingAccessor.animatium$getBobbingTilt(), g));
+            final float tilt = this.onGround() || this.getHealth() <= 0.0F ? 0.0F : (float) (Math.atan(-this.getDeltaMovement().y * (double) 0.2F) * 15.0F);
+            bobbingAccessor.animatium$setBobbingTilt(Mth.lerp(0.8F, bobbingAccessor.animatium$getBobbingTilt(), tilt));
         }
     }
 }

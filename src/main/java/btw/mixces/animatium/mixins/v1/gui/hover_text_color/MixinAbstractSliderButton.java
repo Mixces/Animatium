@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.gui.hover_text_color;
@@ -40,7 +42,7 @@ public abstract class MixinAbstractSliderButton extends AbstractWidget {
 
     @ModifyConstant(method = "renderWidget", constant = @Constant(intValue = 0xFFFFFFFF))
     private int animatium$renderWidget$old$textColor(int constant) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().buttonTextColors) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().screen.buttonTextColors) {
             return !active ? 0xFFE0E0E0 : (isHoveredOrFocused() ? 0xFFFFFFA0 : 0xFFE0E0E0);
         } else {
             return constant;

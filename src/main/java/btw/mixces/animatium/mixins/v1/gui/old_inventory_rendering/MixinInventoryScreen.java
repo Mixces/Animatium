@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.gui.old_inventory_rendering;
@@ -35,11 +37,11 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinInventoryScreen {
     @WrapWithCondition(method = "renderEntityInInventoryFollowsMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;enableScissor(IIII)V"))
     private static boolean animatium$entityScissor(GuiGraphics instance, int i, int j, int k, int l) {
-        return !AnimatiumClient.isEnabled() || AnimatiumConfig.instance().inventoryEntityScissor;
+        return !AnimatiumClient.isEnabled() || AnimatiumConfig.instance().other.inventoryEntityScissor;
     }
 
     @WrapWithCondition(method = "renderEntityInInventoryFollowsMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;disableScissor()V"))
     private static boolean animatium$entityScissor(GuiGraphics instance) {
-        return !AnimatiumClient.isEnabled() || AnimatiumConfig.instance().inventoryEntityScissor;
+        return !AnimatiumClient.isEnabled() || AnimatiumConfig.instance().other.inventoryEntityScissor;
     }
 }

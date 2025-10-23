@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.sky.horizon_height;
@@ -39,7 +41,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinSkyRenderer {
     @WrapOperation(method = "shouldRenderDarkDisc", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel$ClientLevelData;getHorizonHeight(Lnet/minecraft/world/level/LevelHeightAccessor;)D"))
     private double animatium$skyHorizonHeight(ClientLevel.ClientLevelData instance, LevelHeightAccessor levelHeightAccessor, Operation<Double> original, @Local(argsOnly = true) ClientLevel level) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().skyHorizonHeight && level != null) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.skyHorizonHeight && level != null) {
             return RenderUtils.getLevelHorizonHeight(level);
         } else {
             return original.call(instance, levelHeightAccessor);

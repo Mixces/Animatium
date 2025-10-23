@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.general.items;
@@ -89,7 +91,7 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
             Item item = stack.getItem();
             if (!stack.isEmpty() && !ItemUtils.isItemBlacklisted(stack)) {
                 boolean isStickRod = AnimatiumClient.isEnabled() &&
-                        AnimatiumConfig.instance().stickModelWhenCastInThirdperson &&
+                        AnimatiumConfig.instance().items.stickModelWhenCastInThirdperson &&
                         item == Items.FISHING_ROD &&
                         (itemArmedEntityRenderState.animatium$isPlayer() && itemArmedEntityRenderState.animatium$isFishing());
                 if (ItemUtils.isBlock3d(stack, itemStackRenderState)) {

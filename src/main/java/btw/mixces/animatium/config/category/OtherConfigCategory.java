@@ -19,11 +19,12 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.config.category;
 
-import btw.mixces.animatium.config.AnimatiumConfig;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
@@ -31,8 +32,32 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.minecraft.network.chat.Component;
 
-public final class OtherConfigCategory {
-    public static ConfigCategory setup(AnimatiumConfig defaults, AnimatiumConfig config) {
+public class OtherConfigCategory {
+    public boolean thirdPersonSwordBlockingPosition = true;
+    public boolean lockBlockingArmRotation = true;
+    public boolean projectileAgeCheck = false;
+    public boolean blockMiningProgress = true;
+    public boolean inventoryEntityScissor = false;
+    public boolean blockOutlineRendering = true;
+    public boolean modelWhilstSleeping = false;
+    public boolean entityArmorHurtTint = true;
+    public boolean itemGlintOnEntity = true;
+    public boolean maxGlintProperties = true;
+    public boolean armorHurtRendering = false;
+    public boolean highAttackSpeedVisual = false;
+    public boolean entityGlowOutline = true;
+    public boolean modernCombatSounds = true;
+    public boolean modernCombatParticles = true; // TODO/NOTE: Fix, it's broken on servers
+    public boolean heldItemArmLogic = true;
+    public boolean flameDimensions = true;
+    public boolean flameOffset = true;
+    // (Other) Sky
+    public boolean blueVoidSky = true;
+    public boolean skyHorizonHeight = true;
+    public boolean planarSkyFog = true;
+    public boolean cloudHeight = true;
+
+    public static ConfigCategory setup(OtherConfigCategory defaults, OtherConfigCategory config) {
         ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.other"));
 

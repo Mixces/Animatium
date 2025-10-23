@@ -19,14 +19,16 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.sky.planar_fog;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.util.RenderUtils;
 import btw.mixces.animatium.util.BlueVoidSkyRenderer;
+import btw.mixces.animatium.util.RenderUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.buffers.GpuBuffer;
@@ -58,7 +60,7 @@ public abstract class MixinSkyRenderer {
     @WrapOperation(method = "renderSkyDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setPipeline(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V"))
     private void animatium$planarFogPipeline$skyDisc(RenderPass instance, RenderPipeline renderPipeline, Operation<Void> original) {
         RenderPipeline pipeline = renderPipeline;
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().planarSkyFog) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
             pipeline = AnimatiumClient.LEGACY_SKY_PLANAR_FOG_PIPELINE;
         }
 
@@ -68,7 +70,7 @@ public abstract class MixinSkyRenderer {
     @WrapOperation(method = "renderSkyDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setVertexBuffer(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V", ordinal = 0))
     private void animatium$planarFogPipeline$skyDisc$vertexBuffer(RenderPass instance, int index, GpuBuffer gpuBuffer, Operation<Void> original) {
         GpuBuffer buffer = gpuBuffer;
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().planarSkyFog) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
             buffer = animatium$topSkyBuffer;
             instance.setIndexBuffer(animatium$skyIndexBuffer.getBuffer(6), animatium$skyIndexBuffer.type());
         }
@@ -79,7 +81,7 @@ public abstract class MixinSkyRenderer {
     @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setPipeline(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V"))
     private void animatium$planarFogPipeline$darkSkyDisc(RenderPass instance, RenderPipeline renderPipeline, Operation<Void> original) {
         RenderPipeline pipeline = renderPipeline;
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().planarSkyFog) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
             pipeline = AnimatiumClient.LEGACY_SKY_PLANAR_FOG_PIPELINE;
         }
 
@@ -88,7 +90,7 @@ public abstract class MixinSkyRenderer {
 
     @WrapOperation(method = "renderSkyDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;draw(II)V", ordinal = 0))
     private void animatium$planarFogPipeline$skyDisc$draw(RenderPass instance, int i, int j, Operation<Void> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().planarSkyFog) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
             instance.drawIndexed(i, 0, 1014, 1);
         } else {
             original.call(instance, i, j);
@@ -98,7 +100,7 @@ public abstract class MixinSkyRenderer {
     @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setVertexBuffer(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V", ordinal = 0))
     private void animatium$planarFogPipeline$darkSkyDisc$vertexBuffer(RenderPass instance, int index, GpuBuffer gpuBuffer, Operation<Void> original) {
         GpuBuffer buffer = gpuBuffer;
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().planarSkyFog) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
             buffer = BlueVoidSkyRenderer.getGpuBuffer();
             instance.setIndexBuffer(animatium$skyIndexBuffer.getBuffer(6), animatium$skyIndexBuffer.type());
         }
@@ -108,7 +110,7 @@ public abstract class MixinSkyRenderer {
 
     @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;draw(II)V", ordinal = 0))
     private void animatium$planarFogPipeline$darkSkyDisc$draw(RenderPass instance, int i, int j, Operation<Void> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().planarSkyFog) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
             instance.drawIndexed(i, 0, 1014, 1);
         } else {
             original.call(instance, i, j);

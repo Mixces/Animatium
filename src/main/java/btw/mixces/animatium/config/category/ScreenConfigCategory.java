@@ -19,11 +19,12 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.config.category;
 
-import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.enums.CameraVersion;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
@@ -32,8 +33,23 @@ import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.minecraft.network.chat.Component;
 
-public final class ScreenConfigCategory {
-    public static ConfigCategory setup(AnimatiumConfig defaults, AnimatiumConfig config) {
+public class ScreenConfigCategory {
+    public boolean crosshairInThirdPerson = false;
+    public boolean heartFlash = false;
+    public boolean centerScrollableListWidgets = true;
+    public boolean listWidgetSelectedBorderColor = true;
+    public boolean buttonTextColors = true;
+    public boolean debugHudBackground = true;
+    public boolean debugHudTextShadow = false;
+    public boolean cameraTransparentPassthrough = true;
+    public boolean tooltipStyleRendering = true;
+    public boolean slotHoverStyleRendering = true;
+    public boolean effectsInventoryPosition = true;
+    public boolean recipeBook = false;
+    public boolean panoramaRendering = true;
+    public CameraVersion cameraVersion = CameraVersion.V1_8;
+
+    public static ConfigCategory setup(ScreenConfigCategory defaults, ScreenConfigCategory config) {
         ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.screen"));
         category.option(Option.<Boolean>createBuilder()

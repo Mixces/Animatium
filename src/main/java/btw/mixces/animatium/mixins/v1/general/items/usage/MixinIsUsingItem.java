@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.general.items.usage;
@@ -39,7 +41,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinIsUsingItem {
     @ModifyReturnValue(method = "get", at = @At(value = "RETURN"))
     private boolean animatium$getValue(boolean original, @Local(argsOnly = true) LivingEntity livingEntity, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) ItemDisplayContext displayContext) {
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().itemUsingTextureInGui && ItemUtils.isRangedWeaponItem(stack) && displayContext == ItemDisplayContext.GUI) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().items.itemUsingTextureInGui && ItemUtils.isRangedWeaponItem(stack) && displayContext == ItemDisplayContext.GUI) {
             return false;
         } else {
             return original;

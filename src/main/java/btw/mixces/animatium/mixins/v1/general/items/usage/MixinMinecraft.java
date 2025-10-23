@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.general.items.usage;
@@ -73,7 +75,7 @@ public abstract class MixinMinecraft {
 
     @ModifyVariable(method = "startUseItem", at = @At(value = "STORE", ordinal = 0))
     private ItemStack animatium$fixCopyStackUseItem(ItemStack original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixEquipAnimation) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimation) {
             // Update the stack to match mutations to the stack in other classes
             return original.copy();
         } else {
@@ -83,7 +85,7 @@ public abstract class MixinMinecraft {
 
     @WrapOperation(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V", ordinal = 2))
     private void animatium$swingOnUse(LocalPlayer instance, InteractionHand hand, Operation<Void> original, @Local InteractionHand interactionHand, @Local ItemStack itemStack) {
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().swingOnUse && ItemUtils.isSwingItemBlacklisted(itemStack)) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().items.swingOnUse && ItemUtils.isSwingItemBlacklisted(itemStack)) {
             PlayerUtils.sendSwingPacket(instance, hand);
         } else {
             original.call(instance, hand);
@@ -92,7 +94,7 @@ public abstract class MixinMinecraft {
 
     @WrapOperation(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V"))
     private void animatium$swingOnDrop(LocalPlayer instance, InteractionHand hand, Operation<Void> original) {
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().swingOnDrop) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().items.swingOnDrop) {
             PlayerUtils.sendSwingPacket(instance, hand);
         } else {
             original.call(instance, hand);
@@ -101,7 +103,7 @@ public abstract class MixinMinecraft {
 
     @WrapOperation(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V", ordinal = 0))
     private void animatium$swingOnEntityInteract(LocalPlayer instance, InteractionHand hand, Operation<Void> original) {
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().swingOnEntityInteract) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().items.swingOnEntityInteract) {
             PlayerUtils.sendSwingPacket(instance, hand);
         } else {
             original.call(instance, hand);
@@ -110,7 +112,7 @@ public abstract class MixinMinecraft {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void animatium$applySwingWhilstMining(CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemUsageSwinging) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().items.itemUsageSwinging) {
             if (this.player != null && !(this.player.getItemInHand(this.player.getUsedItemHand()).isEmpty() || !this.player.isUsingItem() || !this.options.keyAttack.isDown())) {
                 PlayerUtils.applySwingWhilstMining(this.level, this.player, this.hitResult);
             }
@@ -120,7 +122,7 @@ public abstract class MixinMinecraft {
     @WrapWithCondition(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;itemUsed(Lnet/minecraft/world/InteractionHand;)V"))
     private boolean animatium$equipAnimationOnItemUse(ItemInHandRenderer instance, InteractionHand interactionHand) {
         // TODO: This fixes projectile equip, but it isn't going to be 100% accurate in some other areas. This needs to be worked on :)
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().equipAnimationOnItemUse) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().items.equipAnimationOnItemUse) {
             // The equip animation plays when right-clicking blocks in creative mode in <1.8.x
             final boolean isAimedAtBlock = this.hitResult != null && this.hitResult.getType() == HitResult.Type.BLOCK;
             // This might need to be revamped a bit. We are already checking for creative mode in the actual method,

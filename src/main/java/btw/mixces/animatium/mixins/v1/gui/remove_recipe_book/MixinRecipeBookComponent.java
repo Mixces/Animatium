@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.gui.remove_recipe_book;
@@ -35,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinRecipeBookComponent {
     @WrapOperation(method = "isVisible", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;visible:Z"))
     private boolean animatium$recipeBook(RecipeBookComponent<?> instance, Operation<Boolean> original) {
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().recipeBook) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().screen.recipeBook) {
             return false;
         } else {
             return original.call(instance);

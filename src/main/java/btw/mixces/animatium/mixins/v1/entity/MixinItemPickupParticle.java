@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.entity;
@@ -40,7 +42,7 @@ public abstract class MixinItemPickupParticle {
 
     @ModifyExpressionValue(method = "updatePosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getEyeY()D"))
     private double animatium$itemPickupPosition(double original) {
-        if (AnimatiumConfig.instance().itemPickupPosition) {
+        if (AnimatiumConfig.instance().items.itemPickupPosition) {
             return this.target.position().y;
         } else {
             return original;

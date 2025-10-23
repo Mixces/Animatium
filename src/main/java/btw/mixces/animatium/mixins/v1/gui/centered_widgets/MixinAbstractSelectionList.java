@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.gui.centered_widgets;
@@ -39,14 +41,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinAbstractSelectionList {
     @Inject(method = "renderWidget", at = @At("HEAD"))
     private void animatium$updateScroll(GuiGraphics context, int mouseX, int mouseY, float tickDelta, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().centerScrollableListWidgets) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().screen.centerScrollableListWidgets) {
             ((AbstractScrollArea) (Object) this).refreshScrollAmount();
         }
     }
 
     @WrapOperation(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/AbstractSelectionList;isFocused()Z"))
     private boolean animatium$listWidgetSelectedBorderColor(AbstractSelectionList<?> instance, Operation<Boolean> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().listWidgetSelectedBorderColor) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().screen.listWidgetSelectedBorderColor) {
             return false;
         } else {
             return original.call(instance);

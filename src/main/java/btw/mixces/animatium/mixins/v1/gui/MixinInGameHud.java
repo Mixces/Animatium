@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.gui;
@@ -41,7 +43,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinInGameHud {
     @WrapOperation(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/CameraType;isFirstPerson()Z"))
     private boolean animatium$crosshairInThirdPerson(CameraType instance, Operation<Boolean> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().crosshairInThirdPerson) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().screen.crosshairInThirdPerson) {
             return true;
         } else {
             return original.call(instance);
@@ -50,7 +52,7 @@ public abstract class MixinInGameHud {
 
     @WrapWithCondition(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/ResourceLocation;IIII)V", ordinal = 2))
     private boolean animatium$fixHighAttackSpeedIndicator(GuiGraphics instance, RenderPipeline renderPipeline, ResourceLocation resourceLocation, int i, int j, int k, int l, @Local float f) {
-        if (AnimatiumConfig.instance().fixHighAttackSpeedIndicator) {
+        if (AnimatiumConfig.instance().fixes.fixHighAttackSpeedIndicator) {
             return (int) (f * 17.0F) != 0;
         } else {
             return true;
@@ -59,6 +61,6 @@ public abstract class MixinInGameHud {
 
     @WrapWithCondition(method = "renderHearts", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderHeart(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Gui$HeartType;IIZZZ)V"))
     private boolean animatium$heartFlash(Gui instance, GuiGraphics guiGraphics, Gui.HeartType type, int x, int y, boolean hardcore, boolean blinking, boolean half) {
-        return !AnimatiumClient.isEnabled() || AnimatiumConfig.instance().heartFlash || !blinking || type == Gui.HeartType.CONTAINER;
+        return !AnimatiumClient.isEnabled() || AnimatiumConfig.instance().screen.heartFlash || !blinking || type == Gui.HeartType.CONTAINER;
     }
 }

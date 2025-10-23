@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.general.items;
@@ -37,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinItemStack {
     @WrapOperation(method = "getStyledHoverName", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getRarity()Lnet/minecraft/world/item/Rarity;"))
     private Rarity animatium$itemRarities$getFormattedName(ItemStack instance, Operation<Rarity> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemRarities) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().items.itemRarities) {
             return ItemUtils.getLegacyItemRarity((ItemStack) (Object) this);
         } else {
             return original.call(instance);
@@ -46,7 +48,7 @@ public abstract class MixinItemStack {
 
     @WrapOperation(method = "getDisplayName", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getRarity()Lnet/minecraft/world/item/Rarity;"))
     private Rarity animatium$itemRarities$toHoverableText(ItemStack instance, Operation<Rarity> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemRarities) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().items.itemRarities) {
             return ItemUtils.getLegacyItemRarity((ItemStack) (Object) this);
         } else {
             return original.call(instance);

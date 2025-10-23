@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.gui.debug;
@@ -36,12 +38,12 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public abstract class MixinDebugScreenOverlay {
     @WrapWithCondition(method = "renderLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V"))
     private boolean animatium$removeDebugBackground(GuiGraphics instance, int x1, int y1, int x2, int y2, int color) {
-        return !AnimatiumClient.isEnabled() || AnimatiumConfig.instance().debugHudBackground;
+        return !AnimatiumClient.isEnabled() || AnimatiumConfig.instance().screen.debugHudBackground;
     }
 
     @ModifyArg(method = "renderLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)V"), index = 5)
     private boolean animatium$addDebugShadow(boolean shadow) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().debugHudTextShadow) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().screen.debugHudTextShadow) {
             return true;
         } else {
             return shadow;

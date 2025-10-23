@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.entity.cape_movement;
@@ -65,7 +67,7 @@ public abstract class MixinAvatarRenderer extends LivingEntityRenderer<AbstractC
 
     @WrapOperation(method = "extractCapeState", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;rotLerp(FFF)F"))
     private static float animatium$changeLerpMethod(float delta, float start, float end, Operation<Float> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().capeMovement) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().movement.capeMovement) {
             return Mth.lerp(delta, start, end);
         } else {
             return original.call(delta, start, end);
@@ -74,7 +76,7 @@ public abstract class MixinAvatarRenderer extends LivingEntityRenderer<AbstractC
 
     @ModifyArg(method = "extractCapeState", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F", ordinal = 1), index = 2)
     private static float animatium$uncapRotation(float original) {
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().clampCapeLean) {
+        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().movement.clampCapeLean) {
             return Float.MAX_VALUE;
         } else {
             return original;
@@ -83,18 +85,18 @@ public abstract class MixinAvatarRenderer extends LivingEntityRenderer<AbstractC
 
     @WrapWithCondition(method = "extractCapeState", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;capeLean:F", ordinal = 1))
     private static boolean animatium$dontAssignLeanField(AvatarRenderState instance, float value) {
-        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().capeMovement;
+        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().movement.capeMovement;
     }
 
     @WrapWithCondition(method = "extractCapeState", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;capeLean2:F", ordinal = 1))
     private static boolean animatium$dontAssignLean2Field(AvatarRenderState instance, float value) {
-        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().capeMovement;
+        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().movement.capeMovement;
     }
 
     // TODO/MOVE
     @WrapOperation(method = "getRenderOffset(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;)Lnet/minecraft/world/phys/Vec3;", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;isCrouching:Z"))
     private boolean animatium$fixSneakingFeetPosition(AvatarRenderState instance, Operation<Boolean> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixSneakingFeetPosition) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixes.fixSneakingFeetPosition) {
             return false;
         } else {
             return original.call(instance);
@@ -104,7 +106,7 @@ public abstract class MixinAvatarRenderer extends LivingEntityRenderer<AbstractC
     // TODO/MOVE
     @Inject(method = "renderHand", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/model/geom/ModelPart;visible:Z", ordinal = 2))
     private void animatium$heldItemArmLogic(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, ResourceLocation resourceLocation, ModelPart modelPart, boolean bl, CallbackInfo ci, @Local PlayerModel playerModel) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().heldItemArmLogic) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.heldItemArmLogic) {
             AbstractClientPlayer player = Minecraft.getInstance().player; // TODO/NOTE: Get actual entity render state here for proper visualization for other participants
             HumanoidArm arm = modelPart == model.rightArm ? HumanoidArm.RIGHT : HumanoidArm.LEFT;
             if (player != null && getArmPose(player, arm) == HumanoidModel.ArmPose.ITEM) {

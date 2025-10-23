@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.entity.sneaking;
@@ -37,7 +39,7 @@ public class MixinElytraAnimationState {
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isCrouching()Z"))
     private boolean animatium$sneakAnimationWhileFlying(LivingEntity livingEntity, Operation<Boolean> original) {
         final boolean isCrouching = original.call(livingEntity);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().sneakAnimationWhileFlying) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().movement.sneakAnimationWhileFlying) {
             return isCrouching || livingEntity.isShiftKeyDown();
         } else {
             return isCrouching;

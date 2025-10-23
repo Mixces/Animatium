@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.general.camera.view_bobbing;
@@ -46,14 +48,14 @@ public abstract class MixinEntity implements ViewBobbingStorage {
 
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;handlePortal()V", shift = At.Shift.AFTER))
     private void animatium$storePreviousHorizontalSpeed(CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().viewBobbing) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().movement.viewBobbing) {
             this.animatium$previousHorizontalSpeed = this.animatium$horizontalSpeed;
         }
     }
 
     @Inject(method = "applyMovementEmissionAndPlaySound", at = @At("HEAD"))
     private void animatium$storeHorizontalSpeed(Entity.MovementEmission movementEmission, Vec3 vec3d, BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().viewBobbing) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().movement.viewBobbing) {
             this.animatium$horizontalSpeed = this.animatium$horizontalSpeed + (float) vec3d.horizontalDistance() * 0.6F;
         }
     }

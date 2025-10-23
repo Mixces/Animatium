@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.entity.fishing;
@@ -63,8 +65,8 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
 
     @ModifyArgs(method = "getPlayerHandPos", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera$NearPlane;getPointOnPlane(FF)Lnet/minecraft/world/phys/Vec3;"))
     private void animatium$moveCastLineY(Args args) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fishingRodVersion != FishingRodVersion.LATEST) {
-            final FishingRodVersion version = AnimatiumConfig.instance().fishingRodVersion;
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().items.fishingRodVersion != FishingRodVersion.LATEST) {
+            final FishingRodVersion version = AnimatiumConfig.instance().items.fishingRodVersion;
             if (version == FishingRodVersion.V1_8) {
                 animatium$modifyPlanarScale(args, 0);
             }
@@ -79,9 +81,9 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
     private void animatium$fishingRodLineThickness(FishingHookRenderState fishingHookRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled()) {
             // TODO/NOTE: 1.21.11 removes setLineWidth, lineWidth is now part of the buffer
-            if (AnimatiumConfig.instance().thinFishingRodLineThickness) {
+            if (AnimatiumConfig.instance().items.thinFishingRodLineThickness) {
                 RenderUtils.setLineWidth(1.0F);
-            } else if (AnimatiumConfig.instance().fishingRodLineThickness) {
+            } else if (AnimatiumConfig.instance().items.fishingRodLineThickness) {
                 RenderUtils.setLineWidth(2.0F);
             }
         }
@@ -93,9 +95,9 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
         if (AnimatiumClient.isEnabled()) {
             CameraAccessor cameraAccessor = (CameraAccessor) entityRenderDispatcher.camera;
             float eyeHeight;
-            if (AnimatiumConfig.instance().fishingRodLineInterpolation) {
+            if (AnimatiumConfig.instance().items.fishingRodLineInterpolation) {
                 eyeHeight = Mth.lerp(v, cameraAccessor.animatium$getEyeHeightOld(), cameraAccessor.animatium$getEyeHeight());
-            } else if (AnimatiumConfig.instance().fakeOldSneakEyeHeight) {
+            } else if (AnimatiumConfig.instance().movement.fakeOldSneakEyeHeight) {
                 // Non-lerped eyeheight trick
                 eyeHeight = cameraAccessor.animatium$getEyeHeight();
             } else {
@@ -110,7 +112,7 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
 
     @ModifyExpressionValue(method = "getPlayerHandPos", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isCrouching()Z"))
     private boolean animatium$noMoveFishingRodLine(boolean original, @Local(argsOnly = true) Player player) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().noMoveFishingRodLine) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().items.noMoveFishingRodLine) {
             return false;
         } else {
             return original;
@@ -119,7 +121,7 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
 
     @ModifyExpressionValue(method = "getPlayerHandPos", at = @At(value = "CONSTANT", args = "doubleValue=0.8"))
     private double animatium$fishingRodLinePositionThirdPerson(double original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fishingRodLinePositionThirdPerson) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().items.fishingRodLinePositionThirdPerson) {
             return original + 0.05;
         } else {
             return original;
@@ -129,7 +131,7 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
     @WrapOperation(method = "getPlayerHandPos", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/FishingHookRenderer;getHoldingArm(Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/world/entity/HumanoidArm;"))
     private HumanoidArm animatium$fixCastLineCheck(Player player, Operation<HumanoidArm> original) {
         final HumanoidArm value = original.call(player);
-        if (AnimatiumConfig.instance().fixCastLineCheck && value != player.getMainArm() && !(player.getOffhandItem().getItem() instanceof FishingRodItem)) {
+        if (AnimatiumConfig.instance().fixes.fixCastLineCheck && value != player.getMainArm() && !(player.getOffhandItem().getItem() instanceof FishingRodItem)) {
             return value.getOpposite();
         } else {
             return value;
@@ -139,7 +141,7 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
     @ModifyArg(method = "extractRenderState(Lnet/minecraft/world/entity/projectile/FishingHook;Lnet/minecraft/client/renderer/entity/state/FishingHookRenderState;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/FishingHookRenderer;getPlayerHandPos(Lnet/minecraft/world/entity/player/Player;FF)Lnet/minecraft/world/phys/Vec3;"), index = 1)
     private float animatium$fixCastLineSwing(float original, @Local(argsOnly = true) FishingHook fishingHook) {
         final Player player = fishingHook.getPlayerOwner();
-        if (AnimatiumConfig.instance().fixCastLineSwing && player != null) {
+        if (AnimatiumConfig.instance().fixes.fixCastLineSwing && player != null) {
             return original * PlayerUtils.getHandMultiplier(player);
         } else {
             return original;

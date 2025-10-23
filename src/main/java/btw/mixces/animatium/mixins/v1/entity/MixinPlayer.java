@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.entity;
@@ -35,6 +37,6 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinPlayer {
     @WrapOperation(method = "getMaxHeadRotationRelativeToBody", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isBlocking()Z"))
     private boolean animatium$uncapBlockingHeadRotation(Player instance, Operation<Boolean> original) {
-        return !(AnimatiumClient.isEnabled() && AnimatiumConfig.instance().uncapBlockingHeadRotation) && original.call(instance);
+        return !(AnimatiumClient.isEnabled() && AnimatiumConfig.instance().movement.uncapBlockingHeadRotation) && original.call(instance);
     }
 }

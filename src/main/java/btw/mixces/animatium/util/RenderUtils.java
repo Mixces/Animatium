@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.util;
@@ -59,7 +61,7 @@ public final class RenderUtils {
     }
 
     public static double getLevelHorizonHeight(ClientLevel level) {
-        if (AnimatiumConfig.instance().skyHorizonHeight) {
+        if (AnimatiumConfig.instance().other.skyHorizonHeight) {
             return ((ClientLevelDataAccessor) level.getLevelData()).animatium$isFlatWorld() ? 0.0D : 63.0D;
         } else {
             return level.getLevelData().getHorizonHeight(level);

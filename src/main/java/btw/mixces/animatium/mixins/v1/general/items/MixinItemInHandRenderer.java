@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.general.items;
@@ -85,7 +87,7 @@ public abstract class MixinItemInHandRenderer {
 
     @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;isUsingItem()Z", ordinal = 1))
     private boolean animatium$itemUsageVisualInGUI(AbstractClientPlayer instance, Operation<Boolean> original) {
-        if (!AnimatiumConfig.instance().itemUsageVisualInGUI && this.minecraft.screen != null) {
+        if (!AnimatiumConfig.instance().items.itemUsageVisualInGUI && this.minecraft.screen != null) {
             return false;
         } else {
             return original.call(instance);
@@ -95,13 +97,13 @@ public abstract class MixinItemInHandRenderer {
     @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V", ordinal = 1))
     private void animatium$postBowTransform(PoseStack poseStack, float x, float y, float z, Operation<Void> original, @Local(argsOnly = true) AbstractClientPlayer player, @Local(argsOnly = true) InteractionHand hand) {
         final int direction = PlayerUtils.getHandMultiplier(player, hand);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemPositions) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().items.itemPositions) {
             poseStack.mulPose(Axis.ZP.rotationDegrees(direction * -335));
             poseStack.mulPose(Axis.YP.rotationDegrees(direction * -50.0F));
         }
 
         original.call(poseStack, x, y, z);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemPositions) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().items.itemPositions) {
             poseStack.mulPose(Axis.YP.rotationDegrees(direction * 50.0F));
             poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 335));
         }
@@ -109,7 +111,7 @@ public abstract class MixinItemInHandRenderer {
 
     @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getItem()Lnet/minecraft/world/item/Item;"))
     private Item animatium$oldFirstPersonSwordBlock(ItemStack instance, Operation<Item> original, @Local(argsOnly = true) AbstractClientPlayer player, @Local(argsOnly = true) InteractionHand hand, @Local(argsOnly = true) PoseStack poseStack) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemPositions && !(instance.getItem() instanceof ShieldItem)) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().items.itemPositions && !(instance.getItem() instanceof ShieldItem)) {
             final int direction = PlayerUtils.getHandMultiplier(player, hand);
             // We do this to fix a rounding error in Mojangs code.
             ItemUtils.applyLegacyFirstpersonTransforms(poseStack, direction, () -> {
@@ -128,7 +130,7 @@ public abstract class MixinItemInHandRenderer {
     private void animatium$itemPositions(AbstractClientPlayer player, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack stack, float equipProgress, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int light, CallbackInfo ci) {
         final int direction = PlayerUtils.getHandMultiplier(player, hand);
         if (AnimatiumClient.isEnabled()) {
-            if (AnimatiumConfig.instance().fishingRodVersion == FishingRodVersion.V1_7 && ItemUtils.isFishingRodItem(stack)) {
+            if (AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersion.V1_7 && ItemUtils.isFishingRodItem(stack)) {
                 poseStack.mulPose(Axis.YP.rotationDegrees(direction * 180.0F));
             }
 
@@ -141,7 +143,7 @@ public abstract class MixinItemInHandRenderer {
                     player,
                     light
             ); // TODO/NOTE: Might be wrong
-            if (AnimatiumConfig.instance().itemPositions && !ItemUtils.isBlock3d(stack, itemStackRenderState) && !ItemUtils.isItemBlacklisted(stack)) {
+            if (AnimatiumConfig.instance().items.itemPositions && !ItemUtils.isBlock3d(stack, itemStackRenderState) && !ItemUtils.isItemBlacklisted(stack)) {
                 final float angle = Utils.toRadians(25);
 
                 poseStack.scale(0.6F, 0.6F, 0.6F);
@@ -155,7 +157,7 @@ public abstract class MixinItemInHandRenderer {
                 poseStack.translate(direction * -1.13 * 0.0625F, -3.2 * 0.0625F, -1.13 * 0.0625F);
             }
 
-            if (AnimatiumConfig.instance().skullPosition && ItemUtils.isSkullBlock(stack)) {
+            if (AnimatiumConfig.instance().items.skullPosition && ItemUtils.isSkullBlock(stack)) {
                 poseStack.mulPose(Axis.YP.rotationDegrees(45.0F));
                 poseStack.scale(0.4F, 0.4F, 0.4F);
 
@@ -174,14 +176,14 @@ public abstract class MixinItemInHandRenderer {
                     to = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;applyItemArmTransform(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/HumanoidArm;F)V", ordinal = 6)
             ))
     private void animatium$itemUsageSwinging(AbstractClientPlayer abstractClientPlayer, float tickDelta, float pitch, InteractionHand interactionHand, float swingProgress, ItemStack itemStack, float equipProgress, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int light, CallbackInfo ci, @Local HumanoidArm arm) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemUsageSwinging) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().items.itemUsageSwinging) {
             applyItemArmAttackTransform(poseStack, arm, swingProgress);
         }
     }
 
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getAttackStrengthScale(F)F"))
     private float animatium$highAttackSpeedVisual(LocalPlayer instance, float defaultAttackScale, Operation<Float> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().highAttackSpeedVisual) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.highAttackSpeedVisual) {
             return defaultAttackScale;
         } else {
             return original.call(instance, defaultAttackScale);
@@ -190,12 +192,12 @@ public abstract class MixinItemInHandRenderer {
 
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isHandsBusy()Z"))
     private boolean animatium$heldItemVisibilityInBoat(LocalPlayer instance, Operation<Boolean> original) {
-        return (!AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().heldItemVisibilityInBoat) && original.call(instance);
+        return (!AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().items.heldItemVisibilityInBoat) && original.call(instance);
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getOffhandItem()Lnet/minecraft/world/item/ItemStack;"))
     private void animatium$createCopyStack(CallbackInfo ci, @Local LocalPlayer localPlayer, @Local ItemStack itemStack, @Share("copyStack") LocalRef<ItemStack> copyStack) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixEquipAnimation) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimation) {
             // Initialize our copied stack
             copyStack.set(itemStack.copy());
             final boolean slotsMatch = this.animatium$currentSlot == localPlayer.getInventory().getSelectedSlot();
@@ -212,7 +214,7 @@ public abstract class MixinItemInHandRenderer {
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;shouldInstantlyReplaceVisibleItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z", ordinal = 0))
     private boolean animatium$fixEquipAnimationItemCheck2(ItemInHandRenderer instance, ItemStack itemStack, ItemStack itemStack2, Operation<Boolean> original, @Local LocalPlayer localPlayer) {
         final boolean value = original.call(instance, itemStack, itemStack2);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixEquipAnimation) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimation) {
             // Apply our equip logic fix to offhand items
             final boolean slotsMatch = this.animatium$currentSlot == localPlayer.getInventory().getSelectedSlot();
             return (slotsMatch && ItemUtils.shouldInstantlyReplaceVisibleItem1_8(itemStack, itemStack2)) || value;
@@ -224,7 +226,7 @@ public abstract class MixinItemInHandRenderer {
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;shouldInstantlyReplaceVisibleItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z", ordinal = 1))
     private boolean animatium$fixEquipAnimationItemCheck(ItemInHandRenderer instance, ItemStack itemStack, ItemStack itemStack2, Operation<Boolean> original) {
         final boolean value = original.call(instance, itemStack, itemStack2);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixEquipAnimation) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimation) {
             // Apply our equip logic fix to offhand items
             return ItemUtils.shouldInstantlyReplaceVisibleItem1_8(itemStack, itemStack2) || value;
         } else {
@@ -234,7 +236,7 @@ public abstract class MixinItemInHandRenderer {
 
     @ModifyExpressionValue(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;mainHandItem:Lnet/minecraft/world/item/ItemStack;", ordinal = 1))
     private ItemStack animatium$useCopyStackField(ItemStack original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixEquipAnimation) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimation) {
             // Use the copy stack field for the stack comparison
             return this.animatium$mainHandItem;
         } else {
@@ -244,7 +246,7 @@ public abstract class MixinItemInHandRenderer {
 
     @ModifyVariable(method = "tick", at = @At(value = "LOAD", ordinal = 2), index = 2, name = "itemStack")
     private ItemStack animatium$useLocalCopyStack(ItemStack original, @Share("copyStack") LocalRef<ItemStack> copyStack) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixEquipAnimation) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimation) {
             // Use the local copied stack for the stack comparison
             return copyStack.get();
         } else {
@@ -255,7 +257,7 @@ public abstract class MixinItemInHandRenderer {
     @Inject(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;mainHandHeight:F", ordinal = 4))
     private void animatium$setCurrentSlotAndCopyStack(CallbackInfo ci, @Share("copyStack") LocalRef<ItemStack> copyStack) {
         final LocalPlayer localPlayer = this.minecraft.player;
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixEquipAnimation && localPlayer != null && this.mainHandHeight < 0.1F) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimation && localPlayer != null && this.mainHandHeight < 0.1F) {
             // Update our copied stack
             this.animatium$mainHandItem = copyStack.get();
             // Cache the previous slot item to use in our comparison above
@@ -265,7 +267,7 @@ public abstract class MixinItemInHandRenderer {
 
     @ModifyArg(method = "renderHandsWithItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderArmWithItem(Lnet/minecraft/client/player/AbstractClientPlayer;FFLnet/minecraft/world/InteractionHand;FLnet/minecraft/world/item/ItemStack;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V", ordinal = 0), index = 5)
     private ItemStack animatium$useCopyStackFieldForRender(ItemStack original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixEquipAnimation) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimation) {
             // Use our copied stack field for hand animations
             return animatium$mainHandItem;
         } else {
@@ -275,7 +277,7 @@ public abstract class MixinItemInHandRenderer {
 
     @ModifyArg(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V"), index = 1)
     private ItemStack animatium$useActualStackForRender(ItemStack original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixEquipAnimation) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimation) {
             // Use the original stack for rendering to avoid rendering issues
             return original == animatium$mainHandItem && !mainHandItem.isEmpty() ? mainHandItem : original;
         } else {

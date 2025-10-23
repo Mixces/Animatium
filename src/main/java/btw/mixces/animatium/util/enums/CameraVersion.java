@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.util.enums;
@@ -27,5 +29,5 @@ public enum CameraVersion {
     V1_8,
     V1_9_V1_13_2,
     V1_14_V1_14_3,
-    LATEST
+    VANILLA
 }

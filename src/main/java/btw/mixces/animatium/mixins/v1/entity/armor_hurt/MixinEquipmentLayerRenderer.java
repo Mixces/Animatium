@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.entity.armor_hurt;
@@ -54,7 +56,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public abstract class MixinEquipmentLayerRenderer {
     @WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/ResourceLocation;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;armorCutoutNoCull(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;"))
     private RenderType animatium$renderLayerArmorTint(ResourceLocation resourceLocation, Operation<RenderType> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().entityArmorHurtTint) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.entityArmorHurtTint) {
             return RenderType.entityCutoutNoCullZOffset(resourceLocation);
         } else {
             return original.call(resourceLocation);
@@ -63,7 +65,7 @@ public abstract class MixinEquipmentLayerRenderer {
 
     @WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/ResourceLocation;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/Sheets;armorTrimsSheet(Z)Lnet/minecraft/client/renderer/RenderType;"))
     private RenderType animatium$renderLayerArmorTrimTint(boolean bl, Operation<RenderType> original, @Local TextureAtlasSprite textureAtlasSprite) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().entityArmorHurtTint) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.entityArmorHurtTint) {
             return RenderType.entityCutoutNoCullZOffset(textureAtlasSprite.atlasLocation());
         } else {
             return original.call(bl);
@@ -84,8 +86,8 @@ public abstract class MixinEquipmentLayerRenderer {
     private <S> void animatium$armorHurtRendering(OrderedSubmitNodeCollector instance, Model<? super S> model, S renderState, PoseStack poseStack, RenderType renderType, int light, int overlay, int color, TextureAtlasSprite textureAtlasSprite, int i, ModelFeatureRenderer.CrumblingOverlay crumblingOverlay, Operation<Void> original) {
         original.call(instance, model, renderState, poseStack, renderType, light, overlay, color, textureAtlasSprite, i, crumblingOverlay);
         if (AnimatiumClient.isEnabled() &&
-                AnimatiumConfig.instance().entityArmorHurtTint &&
-                AnimatiumConfig.instance().armorHurtRendering &&
+                AnimatiumConfig.instance().other.entityArmorHurtTint &&
+                AnimatiumConfig.instance().other.armorHurtRendering &&
                 renderState instanceof LivingEntityRenderState livingEntityRenderState) {
             // TODO: Check if this code even does anything at all
             // TODO: Too strong? & glint needs to be tinted hurt color
@@ -106,7 +108,7 @@ public abstract class MixinEquipmentLayerRenderer {
 
     @Unique
     private int animatium$getPackUv(int original, EntityRenderState entityRenderState) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().entityArmorHurtTint && entityRenderState instanceof LivingEntityRenderState livingEntityRenderState) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.entityArmorHurtTint && entityRenderState instanceof LivingEntityRenderState livingEntityRenderState) {
             return OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(livingEntityRenderState.hasRedOverlay));
         } else {
             return original;

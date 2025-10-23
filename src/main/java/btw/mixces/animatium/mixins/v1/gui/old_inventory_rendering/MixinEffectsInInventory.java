@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.gui.old_inventory_rendering;
@@ -46,7 +48,7 @@ public abstract class MixinEffectsInInventory {
     @WrapOperation(method = "renderEffects", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;imageWidth:I"))
     private int animatium$effectsInventoryPosition(AbstractContainerScreen<?> instance, Operation<Integer> original) {
         final int imageWidth = original.call(instance);
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().effectsInventoryPosition && !(this.screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && ((AbstractRecipeBookScreenAccessor) recipeBookScreen).animatium$getRecipeBookComponent().isVisible())) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().screen.effectsInventoryPosition && !(this.screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && ((AbstractRecipeBookScreenAccessor) recipeBookScreen).animatium$getRecipeBookComponent().isVisible())) {
             return 0;
         } else {
             return imageWidth;
@@ -55,7 +57,7 @@ public abstract class MixinEffectsInInventory {
 
     @ModifyExpressionValue(method = "renderEffects", at = @At(value = "CONSTANT", args = "intValue=2"))
     private int animatium$effectsInventoryPosition(int original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().effectsInventoryPosition && !(this.screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && ((AbstractRecipeBookScreenAccessor) recipeBookScreen).animatium$getRecipeBookComponent().isVisible())) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().screen.effectsInventoryPosition && !(this.screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && ((AbstractRecipeBookScreenAccessor) recipeBookScreen).animatium$getRecipeBookComponent().isVisible())) {
             return -124;
         } else {
             return original;

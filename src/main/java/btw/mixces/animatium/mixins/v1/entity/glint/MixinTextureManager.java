@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.entity.glint;
@@ -36,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public abstract class MixinTextureManager {
     @ModifyVariable(method = "getTexture", at = @At("HEAD"), argsOnly = true)
     private ResourceLocation animatium$useItemGlint(ResourceLocation original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().itemGlintOnEntity && original == ItemRenderer.ENCHANTED_GLINT_ARMOR) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.itemGlintOnEntity && original == ItemRenderer.ENCHANTED_GLINT_ARMOR) {
             return ItemRenderer.ENCHANTED_GLINT_ITEM;
         } else {
             return original;

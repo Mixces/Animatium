@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.gui.old_inventory_rendering;
@@ -44,13 +46,13 @@ public abstract class MixinAbstractContainerScreen {
 
     @WrapWithCondition(method = "renderContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderSlotHighlightBack(Lnet/minecraft/client/gui/GuiGraphics;)V"))
     private boolean animatium$slotHoverStyleRendering$disableBack(AbstractContainerScreen<?> instance, GuiGraphics context) {
-        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().slotHoverStyleRendering;
+        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().screen.slotHoverStyleRendering;
     }
 
     @WrapOperation(method = "renderContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderSlotHighlightFront(Lnet/minecraft/client/gui/GuiGraphics;)V"))
     private void animatium$slotHoverStyleRendering(AbstractContainerScreen<?> instance, GuiGraphics context, Operation<Void> original) {
         final Slot slot = this.hoveredSlot;
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().slotHoverStyleRendering && slot != null && slot.isHighlightable()) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().screen.slotHoverStyleRendering && slot != null && slot.isHighlightable()) {
             context.fillGradient(slot.x, slot.y, slot.x + 16, slot.y + 16, -2130706433, -2130706433);
         } else {
             original.call(instance, context);

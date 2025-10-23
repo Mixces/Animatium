@@ -19,6 +19,8 @@
  * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
 package btw.mixces.animatium.mixins.v1.general.camera.view_bobbing;
@@ -42,7 +44,7 @@ public abstract class MixinLivingEntity implements ViewBobbingStorage {
 
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;tickEffects()V", shift = At.Shift.BEFORE))
     private void animatium$updatePreviousBobbingTiltValue(CallbackInfo ci) {
-        if (AnimatiumConfig.instance().fixVerticalBobbingTilt) {
+        if (AnimatiumConfig.instance().fixes.fixVerticalBobbingTilt) {
             this.animatium$previousBobbingTilt = this.animatium$bobbingTilt;
         }
     }
