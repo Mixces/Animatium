@@ -34,7 +34,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -54,8 +53,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
-
-import java.util.Objects;
 
 @Mixin(FishingHookRenderer.class)
 public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHook, FishingHookRenderState> {
@@ -140,9 +137,10 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
     }
 
     @ModifyArg(method = "extractRenderState(Lnet/minecraft/world/entity/projectile/FishingHook;Lnet/minecraft/client/renderer/entity/state/FishingHookRenderState;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/FishingHookRenderer;getPlayerHandPos(Lnet/minecraft/world/entity/player/Player;FF)Lnet/minecraft/world/phys/Vec3;"), index = 1)
-    private float animatium$fixCastLineSwing(float original) {
-        if (AnimatiumConfig.instance().fixCastLineSwing) {
-            return original * PlayerUtils.getHandMultiplier(Objects.requireNonNull(Minecraft.getInstance().player));
+    private float animatium$fixCastLineSwing(float original, @Local(argsOnly = true) FishingHook fishingHook) {
+        final Player player = fishingHook.getPlayerOwner();
+        if (AnimatiumConfig.instance().fixCastLineSwing && player != null) {
+            return original * PlayerUtils.getHandMultiplier(player);
         } else {
             return original;
         }
