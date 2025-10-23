@@ -24,7 +24,6 @@
 package btw.mixces.animatium.mixins.v1.render_states;
 
 import btw.mixces.animatium.util.states.UtilityRenderState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.world.entity.HumanoidArm;
@@ -53,9 +52,6 @@ public abstract class MixinArmedEntityRenderState implements UtilityRenderState 
     private boolean animatium$isFishing = false;
 
     @Unique
-    private boolean animatium$isYou = false;
-
-    @Unique
     private boolean animatium$isSleeping = false;
 
     @Inject(method = "extractArmedEntityRenderState", at = @At("TAIL"))
@@ -67,10 +63,6 @@ public abstract class MixinArmedEntityRenderState implements UtilityRenderState 
             utilityRenderState.animatium$setPlayer();
             if (player.fishing != null) {
                 utilityRenderState.animatium$setFishing();
-            }
-
-            if (player == Minecraft.getInstance().player) {
-                utilityRenderState.animatium$setIsYou();
             }
         }
 
@@ -119,16 +111,6 @@ public abstract class MixinArmedEntityRenderState implements UtilityRenderState 
     @Override
     public void animatium$setFishing() {
         animatium$isFishing = true;
-    }
-
-    @Override
-    public boolean animatium$isYou() {
-        return animatium$isYou;
-    }
-
-    @Override
-    public void animatium$setIsYou() {
-        animatium$isYou = true;
     }
 
     @Override

@@ -71,9 +71,10 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
     private void animatium$modelWhilstSleeping(S livingEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().modelWhilstSleeping &&
                 livingEntityRenderState instanceof AvatarRenderState avatarRenderState &&
+                avatarRenderState.id == Minecraft.getInstance().player.getId() &&
                 avatarRenderState.hasPose(Pose.SLEEPING)) {
             UtilityRenderState utilityRenderState = (UtilityRenderState) avatarRenderState;
-            if (utilityRenderState.animatium$isYou() && utilityRenderState.animatium$isSleeping()) {
+            if (utilityRenderState.animatium$isSleeping()) {
                 ci.cancel();
             }
         }
