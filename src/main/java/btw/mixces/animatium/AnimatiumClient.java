@@ -28,6 +28,7 @@ import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.packet.AnimatiumInfoPayloadPacket;
 import btw.mixces.animatium.packet.RequestInfoPayloadPacket;
 import btw.mixces.animatium.packet.SetFeaturesPayloadPacket;
+import btw.mixces.animatium.util.AnimatiumDebugEntry;
 import btw.mixces.animatium.util.enums.Feature;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -40,16 +41,9 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.client.gui.components.debug.DebugEntryCategory;
-import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
 import net.minecraft.client.gui.components.debug.DebugScreenEntries;
-import net.minecraft.client.gui.components.debug.DebugScreenEntry;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.chunk.LevelChunk;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -141,9 +135,6 @@ public final class AnimatiumClient implements ClientModInitializer {
         return ENABLED;
     }
 
-    private static final DebugEntryCategory ANIMATIUM_DEBUG_CATEGORY = new DebugEntryCategory(Component.translatable("animatium.category.debug"), 9999.0F);
-    private static final ResourceLocation ANIMATIUM_GROUP = id("debug");
-
     @Override
     public void onInitializeClient() {
         AnimatiumConfig.load();
@@ -184,29 +175,6 @@ public final class AnimatiumClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(RequestInfoPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> ClientPlayNetworking.send(AnimatiumClient.getInfoPayload())));
 
         // Debug
-        DebugScreenEntries.register(ANIMATIUM_GROUP, new DebugScreenEntry() {
-            @Override
-            public void display(DebugScreenDisplayer debugScreenDisplayer, @Nullable Level level, @Nullable LevelChunk levelChunk, @Nullable LevelChunk levelChunk2) {
-                if (!AnimatiumClient.ENABLED_FEATURES.isEmpty()) {
-                    List<String> list = new ArrayList<>();
-                    list.add("Animatium Enabled Server Features:");
-                    for (Feature feature : AnimatiumClient.ENABLED_FEATURES) {
-                        list.add(" - " + Component.translatable(feature.getTranslateKey()).getString());
-                    }
-
-                    debugScreenDisplayer.addToGroup(ANIMATIUM_GROUP, list);
-                }
-            }
-
-            @Override
-            public boolean isAllowed(boolean bl) {
-                return true;
-            }
-
-            @Override
-            public @NotNull DebugEntryCategory category() {
-                return ANIMATIUM_DEBUG_CATEGORY;
-            }
-        });
+        DebugScreenEntries.register(AnimatiumDebugEntry.GROUP, new AnimatiumDebugEntry());
     }
 }

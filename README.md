@@ -441,7 +441,7 @@ Allows the server to enable/disable server-only features that enhance gameplay.
 
 #### Info (Serverbound)
 
-Sent to the server when receiving the "minecraft:register" payload, and it contains "Animatium".
+Sent to the server when receiving the "animatium:request_info" payload.
 
 | Identifier     | Field Name          | Field Type      | Description                                                                         |
 |----------------|---------------------|-----------------|-------------------------------------------------------------------------------------|
