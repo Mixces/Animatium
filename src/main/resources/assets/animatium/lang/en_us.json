@@ -69,6 +69,8 @@
 	"animatium.effectsInventoryPosition.description": "Restores the old potion effects status position in the inventory to like it was in <=1.11/1.19.",
 	"animatium.recipeBook": "[*] Hide recipe book",
 	"animatium.recipeBook.description": "Hides the recipe book from the inventory, including the button.",
+	"animatium.panoramaRendering": "[1.12.2] Legacy Panorama Rendering",
+	"animatium.panoramaRendering.description": "Restores the legacy way of rendering the panorama in the main menu like in 1.12.2 and below.\n\nNOTE: This replaces the panorama rendering including the resource pack overlay texture!",
 	"animatium.cameraVersion": "[*] Change camera position to be as it was in",
 	"animatium.cameraVersion.description": "Change the camera position to be as it was in said version range.",
 	"animatium.enum.CameraVersion.LATEST": "Latest",

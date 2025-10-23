@@ -110,7 +110,7 @@ public abstract class MixinPanoramaRenderer {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CubeMap;render(Lnet/minecraft/client/Minecraft;FF)V", ordinal = 0, shift = At.Shift.AFTER))
     private void animatium$panoramaFinish(GuiGraphics guiGraphics, int width, int height, boolean bl, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().panoramaRendering) {
-            RenderTarget renderTarget = minecraft.getMainRenderTarget();
+            final RenderTarget renderTarget = minecraft.getMainRenderTarget();
             for (int i = 0; i < 6; ++i) {
                 this.animatium$writeAndBlitBlurTexture(guiGraphics, renderTarget, animatium$backgroundTextureView, width, height);
             }
@@ -145,9 +145,10 @@ public abstract class MixinPanoramaRenderer {
             );
         }
 
-        ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(DefaultVertexFormat.POSITION_TEX_COLOR.getVertexSize() * 12);
-        BufferBuilder bufferBuilder = new BufferBuilder(byteBufferBuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        Matrix3x2f matrix = drawContext.pose();
+        RenderPipeline pipeline = animatium$BLUR_TEXTURE;
+        ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(pipeline.getVertexFormat().getVertexSize() * 12);
+        BufferBuilder bufferBuilder = new BufferBuilder(byteBufferBuilder, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
+        final Matrix3x2f matrix = drawContext.pose();
         for (int i = 0; i < 3; ++i) {
             float growth = (float) (i - 1) / 256.0F;
             int color = ARGB.colorFromFloat(1.0F / (float) (i + 1), 1.0F, 1.0F, 1.0F);
@@ -157,8 +158,9 @@ public abstract class MixinPanoramaRenderer {
             bufferBuilder.addVertexWith2DPose(matrix, 0.0F, height).setUv(0.0F + growth, 0.0F).setColor(color);
         }
 
-        RenderSystem.setShaderTexture(0, texture);
-        RenderUtils.drawBuffer(bufferBuilder, renderTarget, animatium$BLUR_TEXTURE);
+        RenderUtils.drawBuffer(animatium$BLUR_TEXTURE, renderTarget, bufferBuilder.buildOrThrow(), (pass) -> {
+            pass.bindSampler("Sampler0", texture);
+        });
     }
 
     @Unique
@@ -166,14 +168,16 @@ public abstract class MixinPanoramaRenderer {
         float f = 120.0F / (float) (Math.max(width, height));
         float g = (float) height * f / 256.0F;
         float h = (float) width * f / 256.0F;
-        int color = ARGB.white(1.0F);
-        ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(DefaultVertexFormat.POSITION_TEX_COLOR.getVertexSize() * 4);
-        BufferBuilder bufferBuilder = new BufferBuilder(byteBufferBuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        final int color = ARGB.white(1.0F);
+        RenderPipeline pipeline = animatium$BASIC_TEXTURE;
+        ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(pipeline.getVertexFormat().getVertexSize() * 4);
+        BufferBuilder bufferBuilder = new BufferBuilder(byteBufferBuilder, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
         bufferBuilder.addVertex(0.0F, height, 0.0F).setUv(0.5F - g, 0.5F + h).setColor(color);
         bufferBuilder.addVertex(width, height, 0.0F).setUv(0.5F - g, 0.5F - h).setColor(color);
         bufferBuilder.addVertex(width, 0.0F, 0.0F).setUv(0.5F + g, 0.5F - h).setColor(color);
         bufferBuilder.addVertex(0.0F, 0.0F, 0.0F).setUv(0.5F + g, 0.5F + h).setColor(color);
-        RenderSystem.setShaderTexture(0, texture);
-        RenderUtils.drawBuffer(bufferBuilder, renderTarget, animatium$BASIC_TEXTURE);
+        RenderUtils.drawBuffer(animatium$BASIC_TEXTURE, renderTarget, bufferBuilder.buildOrThrow(), (pass) -> {
+            pass.bindSampler("Sampler0", texture);
+        });
     }
 }

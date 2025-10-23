@@ -26,6 +26,7 @@ package btw.mixces.animatium.util;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.mixins.accessor.ClientLevelDataAccessor;
 import com.mojang.blaze3d.buffers.GpuBuffer;
+import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderPass;
@@ -85,14 +86,12 @@ public final class RenderUtils {
         context.fill(x, y, x + width, y + height, color);
     }
 
-    public static void drawBuffer(BufferBuilder builder, RenderTarget renderTarget, RenderPipeline renderPipeline) {
-        GpuBuffer vertexBuffer;
-        GpuBuffer indexBuffer;
-        VertexFormat.IndexType indexType;
-        int indexCount;
-        try (MeshData meshData = builder.buildOrThrow()) {
-            indexCount = meshData.drawState().indexCount();
-            vertexBuffer = renderPipeline.getVertexFormat().uploadImmediateVertexBuffer(meshData.vertexBuffer());
+    public static void drawBuffer(RenderPipeline renderPipeline, RenderTarget renderTarget, MeshData meshData, Consumer<RenderPass> renderPassConsumer) {
+        GpuBufferSlice dynamicTransforms = DynamicTransformsBuilder.of().build();
+        try {
+            GpuBuffer vertexBuffer = renderPipeline.getVertexFormat().uploadImmediateVertexBuffer(meshData.vertexBuffer());
+            GpuBuffer indexBuffer;
+            VertexFormat.IndexType indexType;
             if (meshData.indexBuffer() == null) {
                 RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(meshData.drawState().mode());
                 indexBuffer = autoStorageIndexBuffer.getBuffer(meshData.drawState().indexCount());
@@ -101,32 +100,45 @@ public final class RenderUtils {
                 indexBuffer = renderPipeline.getVertexFormat().uploadImmediateIndexBuffer(meshData.indexBuffer());
                 indexType = meshData.drawState().indexType();
             }
-        } catch (Exception e) {
-            vertexBuffer = null;
-            indexBuffer = null;
-            indexType = null;
-            indexCount = 0;
-        }
 
-        if (vertexBuffer == null) {
-            throw new RuntimeException("Vertex buffer was null when trying to render buffer.");
-        }
+            GpuTextureView colorTextureView = RenderSystem.outputColorTextureOverride != null ? RenderSystem.outputColorTextureOverride : renderTarget.getColorTextureView();
+            GpuTextureView depthTextureView = renderTarget.useDepth ? (RenderSystem.outputDepthTextureOverride != null ? RenderSystem.outputDepthTextureOverride : renderTarget.getDepthTextureView()) : null;
+            try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Immediate draw for " + renderPipeline, colorTextureView, OptionalInt.empty(), depthTextureView, OptionalDouble.empty())) {
+                renderPass.setPipeline(renderPipeline);
+                for (int i = 0; i < 12; ++i) {
+                    GpuTextureView textureView = RenderSystem.getShaderTexture(i);
+                    if (textureView != null) {
+                        renderPass.bindSampler("Sampler" + i, textureView);
+                    }
+                }
 
-        try (RenderPass renderPass = RenderSystem.getDevice()
-                .createCommandEncoder()
-                .createRenderPass(() -> "Immediate Rendering", renderTarget.getColorTextureView(), OptionalInt.empty(), renderTarget.useDepth ? renderTarget.getDepthTextureView() : null, OptionalDouble.empty())) {
-            renderPass.setPipeline(renderPipeline);
-            renderPass.setVertexBuffer(0, vertexBuffer);
-            renderPass.setIndexBuffer(indexBuffer, indexType);
-            for (int i = 0; i < 12; i++) {
-                GpuTextureView gpuTexture = RenderSystem.getShaderTexture(i);
-                if (gpuTexture != null) {
-                    renderPass.bindSampler("Sampler" + i, gpuTexture);
+                renderPass.setUniform("DynamicTransforms", dynamicTransforms);
+                renderPassConsumer.accept(renderPass);
+                RenderSystem.bindDefaultUniforms(renderPass);
+                renderPass.setVertexBuffer(0, vertexBuffer);
+                renderPass.setIndexBuffer(indexBuffer, indexType);
+                renderPass.drawIndexed(0, 0, meshData.drawState().indexCount(), 1);
+            }
+        } catch (Throwable var17) {
+            if (meshData != null) {
+                try {
+                    meshData.close();
+                } catch (Throwable var14) {
+                    var17.addSuppressed(var14);
                 }
             }
 
-            renderPass.drawIndexed(0, 0, indexCount, 1);
+            throw var17;
         }
+
+        if (meshData != null) {
+            meshData.close();
+        }
+    }
+
+    public static void drawBuffer(RenderPipeline renderPipeline, RenderTarget renderTarget, MeshData meshData) {
+        drawBuffer(renderPipeline, renderTarget, meshData, (pass) -> {
+        });
     }
 
     // Sky Stuff
