@@ -40,7 +40,7 @@ import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
-import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -86,10 +86,10 @@ public abstract class MixinEquipmentLayerRenderer {
         if (AnimatiumClient.isEnabled() &&
                 AnimatiumConfig.instance().entityArmorHurtTint &&
                 AnimatiumConfig.instance().armorHurtRendering &&
-                renderState instanceof HumanoidRenderState humanoidRenderState) {
+                renderState instanceof LivingEntityRenderState livingEntityRenderState) {
             // TODO: Check if this code even does anything at all
             // TODO: Too strong? & glint needs to be tinted hurt color
-            boolean isHurt = humanoidRenderState.hasRedOverlay;
+            boolean isHurt = livingEntityRenderState.hasRedOverlay;
             if (isHurt) {
                 // Code sourced from 1.7/1.8
                 Minecraft.getInstance().gameRenderer.lightTexture().turnOffLightLayer();
@@ -106,8 +106,8 @@ public abstract class MixinEquipmentLayerRenderer {
 
     @Unique
     private int animatium$getPackUv(int original, EntityRenderState entityRenderState) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().entityArmorHurtTint && entityRenderState instanceof HumanoidRenderState humanoidRenderState) {
-            return OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(humanoidRenderState.hasRedOverlay));
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().entityArmorHurtTint && entityRenderState instanceof LivingEntityRenderState livingEntityRenderState) {
+            return OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(livingEntityRenderState.hasRedOverlay));
         } else {
             return original;
         }
