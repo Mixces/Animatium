@@ -73,12 +73,6 @@ public final class AnimatiumClient implements ClientModInitializer {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
 
-    private static boolean hasVFP = false;
-
-    public static boolean isVFPInstalled() {
-        return hasVFP;
-    }
-
     // Shaders
     private static final RenderPipeline.Snippet LEGACY_SKY_PIPELINE_SNIPPET =
             RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
@@ -144,8 +138,6 @@ public final class AnimatiumClient implements ClientModInitializer {
             ENABLED = true;
             System.err.println("Failed to load enabled state, defaulting to true...");
         }
-
-        hasVFP = FabricLoader.getInstance().isModLoaded("viafabricplus");
 
         // Packs
         ResourceManagerHelper.registerBuiltinResourcePack(id("classic_textures"), MOD_CONTAINER, ResourcePackActivationType.DEFAULT_ENABLED);

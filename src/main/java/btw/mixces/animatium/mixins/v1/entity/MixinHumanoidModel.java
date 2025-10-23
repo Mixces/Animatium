@@ -129,21 +129,19 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
     @Inject(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At(value = "CONSTANT", args = "floatValue=0.0", ordinal = 1))
     private void animatium$bowArmMovement(T humanoidRenderState, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().bowArmMovement) {
-            HumanoidModel.ArmPose leftArmPose = humanoidRenderState.leftArmPose;
-            HumanoidModel.ArmPose rightArmPose = humanoidRenderState.rightArmPose;
-            final boolean isRightArmPose = rightArmPose == HumanoidModel.ArmPose.BOW_AND_ARROW;
-            final boolean isLeftArmPose = leftArmPose == HumanoidModel.ArmPose.BOW_AND_ARROW;
-            if (isRightArmPose || isLeftArmPose) {
-                if (isRightArmPose) {
-                    rightArm.zRot = 0.0F;
-                    rightArm.yRot = -0.1F + head.yRot;
-                    leftArm.yRot = 0.1F + head.yRot + 0.4F;
-                }
-
+            final boolean isLeftArmPose = humanoidRenderState.leftArmPose == HumanoidModel.ArmPose.BOW_AND_ARROW;
+            final boolean isRightArmPose = humanoidRenderState.rightArmPose == HumanoidModel.ArmPose.BOW_AND_ARROW;
+            if (isLeftArmPose || isRightArmPose) {
                 if (isLeftArmPose) {
                     leftArm.zRot = 0.0F;
                     rightArm.yRot = -0.1F + head.yRot - 0.4F;
                     leftArm.yRot = 0.1F + head.yRot;
+                }
+
+                if (isRightArmPose) {
+                    rightArm.zRot = 0.0F;
+                    rightArm.yRot = -0.1F + head.yRot;
+                    leftArm.yRot = 0.1F + head.yRot + 0.4F;
                 }
 
                 rightArm.xRot = (float) (-Math.PI / 2) + head.xRot;
@@ -158,7 +156,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().thirdPersonSwordBlockingPosition) {
             ItemStack stack = ((UtilityRenderState) humanoidRenderState).animatium$getItemHeldByArm(rightArm ? HumanoidArm.RIGHT : HumanoidArm.LEFT);
             if (!(stack.getItem() instanceof ShieldItem)) {
-                arm.xRot = arm.xRot * 0.5F - ((float) Math.PI / 10F) * 2F;
+                arm.xRot = arm.xRot * 0.5F - ((float) Math.PI / 10.0F) * 2.0F;
                 arm.yRot = 0;
             }
         }

@@ -29,9 +29,7 @@ import btw.mixces.animatium.util.ItemUtils;
 import btw.mixces.animatium.util.RenderUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.item.BundleItem;
@@ -46,7 +44,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(GuiGraphics.class)
 public abstract class MixinDrawContext {
     @Shadow
-    public abstract void fill(RenderPipeline renderPipeline, int i, int j, int k, int l, int m);
+    public abstract void fill(int i, int j, int k, int l, int m);
 
     @WrapOperation(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/tooltip/TooltipRenderUtil;renderTooltipBackground(Lnet/minecraft/client/gui/GuiGraphics;IIIILnet/minecraft/resources/ResourceLocation;)V"))
     private void animatium$tooltipStyleRendering(GuiGraphics context, int i, int j, int k, int l, ResourceLocation resourceLocation, Operation<Void> original) {
@@ -73,7 +71,7 @@ public abstract class MixinDrawContext {
             int i = x + 2;
             int j = y + 13;
             int color = ARGB.color((255 - ItemUtils.getLegacyDurabilityColorValue(stack)) / 4, 64, 0);
-            this.fill(RenderPipelines.GUI, i, j, i + 12, j + 1, ARGB.opaque(color));
+            this.fill(i, j, i + 12, j + 1, ARGB.opaque(color));
         }
     }
 

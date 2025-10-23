@@ -60,11 +60,7 @@ public final class RenderUtils {
 
     public static double getLevelHorizonHeight(ClientLevel level) {
         if (AnimatiumConfig.instance().skyHorizonHeight) {
-            if (((ClientLevelDataAccessor) level.getLevelData()).animatium$isFlatWorld()) {
-                return 0.0D;
-            } else {
-                return 63.0D;
-            }
+            return ((ClientLevelDataAccessor) level.getLevelData()).animatium$isFlatWorld() ? 0.0D : 63.0D;
         } else {
             return level.getLevelData().getHorizonHeight(level);
         }
@@ -136,18 +132,13 @@ public final class RenderUtils {
         }
     }
 
-    public static void drawBuffer(RenderPipeline renderPipeline, RenderTarget renderTarget, MeshData meshData) {
-        drawBuffer(renderPipeline, renderTarget, meshData, (pass) -> {
-        });
-    }
-
     // Sky Stuff
     public static void buildSkyHalf(VertexConsumer vertexConsumer, float y, boolean bottom) {
         final int width = 64;
         for (int k = -384; k <= 384; k += width) {
             for (int l = -384; l <= 384; l += width) {
-                float g = (float) k;
-                float h = (float) (k + width);
+                float g = k;
+                float h = k + width;
                 if (bottom) {
                     // Swap them
                     float b = g;
@@ -155,10 +146,10 @@ public final class RenderUtils {
                     h = b;
                 }
 
-                vertexConsumer.addVertex(g, y, (float) l);
-                vertexConsumer.addVertex(h, y, (float) l);
-                vertexConsumer.addVertex(h, y, (float) (l + width));
-                vertexConsumer.addVertex(g, y, (float) (l + width));
+                vertexConsumer.addVertex(g, y, l);
+                vertexConsumer.addVertex(h, y, l);
+                vertexConsumer.addVertex(h, y, (l + width));
+                vertexConsumer.addVertex(g, y, (l + width));
             }
         }
     }

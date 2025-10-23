@@ -23,8 +23,8 @@
 
 package btw.mixces.animatium.mixins.v1.gui;
 
-import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.Font;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -56,6 +56,6 @@ public abstract class MixinFontPreparedTextBuilder {
 
     @Unique
     private boolean animatium$shouldApply() {
-        return !AnimatiumClient.isVFPInstalled();
+        return !FabricLoader.getInstance().isModLoaded("viafabricplus");
     }
 }

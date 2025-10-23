@@ -73,7 +73,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
                 livingEntityRenderState instanceof AvatarRenderState avatarRenderState &&
                 avatarRenderState.id == Minecraft.getInstance().player.getId() &&
                 avatarRenderState.hasPose(Pose.SLEEPING)) {
-            UtilityRenderState utilityRenderState = (UtilityRenderState) avatarRenderState;
+            final UtilityRenderState utilityRenderState = (UtilityRenderState) avatarRenderState;
             if (utilityRenderState.animatium$isSleeping()) {
                 ci.cancel();
             }

@@ -198,11 +198,11 @@ public abstract class MixinItemInHandRenderer {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixEquipAnimation) {
             // Initialize our copied stack
             copyStack.set(itemStack.copy());
-            boolean slotsMatch = this.animatium$currentSlot == localPlayer.getInventory().getSelectedSlot();
+            final boolean slotsMatch = this.animatium$currentSlot == localPlayer.getInventory().getSelectedSlot();
             // Equip logic fix
-            boolean shouldSwap1_8 = ItemUtils.shouldInstantlyReplaceVisibleItem1_8(this.animatium$mainHandItem, copyStack.get());
+            final boolean shouldSwap1_8 = ItemUtils.shouldInstantlyReplaceVisibleItem1_8(this.animatium$mainHandItem, copyStack.get());
             // Original equip logic
-            boolean shouldSwap = this.shouldInstantlyReplaceVisibleItem(this.animatium$mainHandItem, copyStack.get());
+            final boolean shouldSwap = this.shouldInstantlyReplaceVisibleItem(this.animatium$mainHandItem, copyStack.get());
             if ((slotsMatch && shouldSwap1_8) || shouldSwap) {
                 this.animatium$mainHandItem = copyStack.get();
             }
@@ -211,10 +211,10 @@ public abstract class MixinItemInHandRenderer {
 
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;shouldInstantlyReplaceVisibleItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z", ordinal = 0))
     private boolean animatium$fixEquipAnimationItemCheck2(ItemInHandRenderer instance, ItemStack itemStack, ItemStack itemStack2, Operation<Boolean> original, @Local LocalPlayer localPlayer) {
-        boolean value = original.call(instance, itemStack, itemStack2);
+        final boolean value = original.call(instance, itemStack, itemStack2);
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixEquipAnimation) {
             // Apply our equip logic fix to offhand items
-            boolean slotsMatch = this.animatium$currentSlot == localPlayer.getInventory().getSelectedSlot();
+            final boolean slotsMatch = this.animatium$currentSlot == localPlayer.getInventory().getSelectedSlot();
             return (slotsMatch && ItemUtils.shouldInstantlyReplaceVisibleItem1_8(itemStack, itemStack2)) || value;
         } else {
             return value;
@@ -223,7 +223,7 @@ public abstract class MixinItemInHandRenderer {
 
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;shouldInstantlyReplaceVisibleItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z", ordinal = 1))
     private boolean animatium$fixEquipAnimationItemCheck(ItemInHandRenderer instance, ItemStack itemStack, ItemStack itemStack2, Operation<Boolean> original) {
-        boolean value = original.call(instance, itemStack, itemStack2);
+        final boolean value = original.call(instance, itemStack, itemStack2);
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixEquipAnimation) {
             // Apply our equip logic fix to offhand items
             return ItemUtils.shouldInstantlyReplaceVisibleItem1_8(itemStack, itemStack2) || value;
@@ -254,7 +254,7 @@ public abstract class MixinItemInHandRenderer {
 
     @Inject(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;mainHandHeight:F", ordinal = 4))
     private void animatium$setCurrentSlotAndCopyStack(CallbackInfo ci, @Share("copyStack") LocalRef<ItemStack> copyStack) {
-        LocalPlayer localPlayer = this.minecraft.player;
+        final LocalPlayer localPlayer = this.minecraft.player;
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixEquipAnimation && localPlayer != null && this.mainHandHeight < 0.1F) {
             // Update our copied stack
             this.animatium$mainHandItem = copyStack.get();

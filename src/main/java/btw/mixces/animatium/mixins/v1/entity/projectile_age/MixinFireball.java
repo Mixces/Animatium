@@ -36,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinFireball {
     @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/projectile/Fireball;tickCount:I"))
     private int animatium$projectileAgeCheck(Fireball instance, Operation<Integer> original) {
-        int originalTick = original.call(instance);
+        final int originalTick = original.call(instance);
         if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().projectileAgeCheck) {
             return originalTick + 2;
         } else {

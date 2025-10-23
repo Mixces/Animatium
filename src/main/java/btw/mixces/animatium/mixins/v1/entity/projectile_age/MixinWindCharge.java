@@ -36,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinWindCharge {
     @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/projectile/windcharge/WindCharge;tickCount:I"))
     private int animatium$projectileAgeCheck(WindCharge instance, Operation<Integer> original) {
-        int originalTick = original.call(instance);
+        final int originalTick = original.call(instance);
         if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().projectileAgeCheck) {
             return originalTick + 2;
         } else {
