@@ -54,7 +54,7 @@ public class ItemsConfigCategory {
     // (Items) 2D Drops
     public boolean itemDropsFaceCamera = true;
     public boolean itemDropsFaceCameraRotationFix = false;
-    // public boolean itemDrops2D = true;
+    public boolean itemDrops2D = true;
     public boolean itemFramed2D = true;
     public boolean itemColors2D = true;
     // (Items) Transformations

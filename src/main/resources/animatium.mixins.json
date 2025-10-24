@@ -22,7 +22,7 @@
 		"v1.entity.flame.MixinFlameFeatureRenderer",
 		"v1.entity.glint.MixinRenderStateShard",
 		"v1.entity.glint.MixinTextureManager",
-		"v1.entity.nametag.MixinEntityRenderer",
+		"v1.entity.nametag.MixinNameTagFeatureStorage",
 		"v1.entity.nametag.MixinLivingEntityRenderer",
 		"v1.entity.particles.MixinLivingEntity",
 		"v1.entity.particles.MixinParticle",
