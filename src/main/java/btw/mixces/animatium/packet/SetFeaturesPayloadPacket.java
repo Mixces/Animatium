@@ -34,7 +34,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public record SetFeaturesPayloadPacket(List<Feature> features) implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, SetFeaturesPayloadPacket> CODEC = CustomPacketPayload.codec(null, SetFeaturesPayloadPacket::read);
@@ -45,7 +44,7 @@ public record SetFeaturesPayloadPacket(List<Feature> features) implements Custom
 
         List<Feature> features = new ArrayList<>();
         for (int i = 0; i < size; ++i) {
-            Optional.ofNullable(Feature.byId(buffer.readUtf())).ifPresent(features::add);
+            Feature.byId(buffer.readUtf()).ifPresent(features::add);
         }
 
         return new SetFeaturesPayloadPacket(features);

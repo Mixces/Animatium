@@ -26,9 +26,9 @@
 package btw.mixces.animatium.util.enums;
 
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public enum Feature {
     MISS_PENALTY("miss_penalty", Component.translatable("animatium.miss_penalty.description")),
@@ -40,8 +40,8 @@ public enum Feature {
 
     public static final Feature[] VALUES = values();
 
-    public static @Nullable Feature byId(String id) {
-        return Arrays.stream(VALUES).filter(feature -> feature.id.equals(id)).findFirst().orElse(null);
+    public static Optional<Feature> byId(String id) {
+        return Arrays.stream(VALUES).filter(feature -> feature.id.equals(id)).findFirst();
     }
 
     Feature(String id, Component translate) {
@@ -49,7 +49,11 @@ public enum Feature {
         this.translate = translate;
     }
 
-    public Component getTranslateKey() {
+    public String getId() {
+        return id;
+    }
+
+    public Component getTranslate() {
         return translate;
     }
 }

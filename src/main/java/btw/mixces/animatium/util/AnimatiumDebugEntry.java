@@ -49,7 +49,7 @@ public class AnimatiumDebugEntry implements DebugScreenEntry {
             List<String> list = new ArrayList<>();
             list.add("Animatium Enabled Server Features:");
             for (Feature feature : AnimatiumClient.ENABLED_FEATURES) {
-                list.add(" - " + feature.getTranslateKey().getString());
+                list.add(" - " + feature.getTranslate().getString());
             }
 
             debugScreenDisplayer.addToGroup(GROUP, list);
