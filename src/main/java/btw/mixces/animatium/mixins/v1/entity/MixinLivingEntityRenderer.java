@@ -41,7 +41,6 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.Pose;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -55,10 +54,8 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
     @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal = 1))
     private void animatium$syncPlayerModelWithEyeHeight(S livingEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().movement.syncPlayerModelWithEyeHeight) {
-            if (livingEntityRenderState instanceof AvatarRenderState) {
-                final float cameraLerpValue = Utils.lerpCameraPosition((CameraUtilityRenderState) cameraRenderState);
-                poseStack.translate(0.0F, (Avatar.STANDING_DIMENSIONS.eyeHeight() * livingEntityRenderState.scale) - cameraLerpValue, 0.0F);
-            }
+            final float cameraLerpValue = Utils.lerpCameraPosition((CameraUtilityRenderState) cameraRenderState);
+            poseStack.translate(0.0F, (livingEntityRenderState.eyeHeight * livingEntityRenderState.scale) - cameraLerpValue, 0.0F);
         }
     }
 
