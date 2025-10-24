@@ -43,6 +43,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.BowItem;
@@ -93,7 +94,7 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
                 boolean isStickRod = AnimatiumClient.ENABLED &&
                         AnimatiumConfig.instance().items.stickModelWhenCastInThirdperson &&
                         item == Items.FISHING_ROD &&
-                        (itemArmedEntityRenderState.animatium$isPlayer() && itemArmedEntityRenderState.animatium$isFishing());
+                        (armedEntityRenderState instanceof AvatarRenderState && itemArmedEntityRenderState.animatium$isFishing());
                 if (ItemUtils.isBlock3d(stack, itemStackRenderState)) {
                     final float scale = 0.375F;
                     poseStack.translate(0.0F, 0.1875F, -0.3125F);

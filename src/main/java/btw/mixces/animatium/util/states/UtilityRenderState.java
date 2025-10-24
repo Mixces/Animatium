@@ -33,10 +33,6 @@ public interface UtilityRenderState {
 
     void animatium$setItemHeldByArm(HumanoidArm arm, ItemStack itemStack);
 
-    boolean animatium$isPlayer();
-
-    void animatium$setPlayer();
-
     boolean animatium$isFishing();
 
     void animatium$setFishing();

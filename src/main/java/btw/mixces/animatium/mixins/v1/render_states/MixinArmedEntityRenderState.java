@@ -48,9 +48,6 @@ public abstract class MixinArmedEntityRenderState implements UtilityRenderState 
     private ItemStack animatium$rightStack = ItemStack.EMPTY;
 
     @Unique
-    private boolean animatium$isPlayer = false;
-
-    @Unique
     private boolean animatium$isFishing = false;
 
     @Unique
@@ -61,11 +58,8 @@ public abstract class MixinArmedEntityRenderState implements UtilityRenderState 
         UtilityRenderState utilityRenderState = (UtilityRenderState) armedEntityRenderState;
         utilityRenderState.animatium$setItemHeldByArm(HumanoidArm.LEFT, livingEntity.getItemHeldByArm(HumanoidArm.LEFT));
         utilityRenderState.animatium$setItemHeldByArm(HumanoidArm.RIGHT, livingEntity.getItemHeldByArm(HumanoidArm.RIGHT));
-        if (livingEntity instanceof Player player) {
-            utilityRenderState.animatium$setPlayer();
-            if (player.fishing != null) {
-                utilityRenderState.animatium$setFishing();
-            }
+        if (livingEntity instanceof Player player && player.fishing != null) {
+            utilityRenderState.animatium$setFishing();
         }
 
         if (livingEntity.isSleeping()) {
@@ -93,16 +87,6 @@ public abstract class MixinArmedEntityRenderState implements UtilityRenderState 
         } else {
             throw new UnsupportedOperationException();
         }
-    }
-
-    @Override
-    public boolean animatium$isPlayer() {
-        return animatium$isPlayer;
-    }
-
-    @Override
-    public void animatium$setPlayer() {
-        animatium$isPlayer = true;
     }
 
     @Override
