@@ -27,21 +27,19 @@ package btw.mixces.animatium.mixins.v1.entity.nametag;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.Options;
 import net.minecraft.client.renderer.feature.NameTagFeatureRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(NameTagFeatureRenderer.Storage.class)
-public abstract class MixinNameTagFeatureStorage {
-    @WrapOperation(method = "add", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Options;getBackgroundOpacity(F)F"))
-    private float animatium$nameTagBackground(Options instance, float fallback, Operation<Float> original) {
-        if (!AnimatiumClient.isEnabled() && AnimatiumConfig.instance().extras.hideNameTagBackground) {
-            return 0F;
+@Mixin(NameTagFeatureRenderer.class)
+public abstract class MixinNameTagFeatureRenderer {
+    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Font;drawInBatch(Lnet/minecraft/network/chat/Component;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)V"), index = 4)
+    private boolean animatium$nameTagTextShadow(boolean shadow) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().extras.nameTagTextShadow) {
+            return true;
         } else {
-            return original.call(instance, fallback);
+            return shadow;
         }
     }
 }
