@@ -29,10 +29,7 @@ import btw.mixces.animatium.mixins.accessor.CameraAccessor;
 import btw.mixces.animatium.util.states.CameraUtilityRenderState;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Camera;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -68,33 +65,5 @@ public final class Utils {
 
     public static float lerpCameraPosition(CameraUtilityRenderState cameraUtilityRenderState) {
         return Mth.lerp(cameraUtilityRenderState.animatium$getPartialTickTime(), cameraUtilityRenderState.animatium$getOldEyeHeight(), cameraUtilityRenderState.animatium$getEyeHeight());
-    }
-
-    public static boolean isSwordItem(ItemStack stack) {
-        return stack.is(ItemTags.SWORDS);
-    }
-
-    public static boolean isAxeItem(ItemStack stack) {
-        return stack.is(ItemTags.AXES);
-    }
-
-    public static boolean isPickaxeItem(ItemStack stack) {
-        return stack.is(ItemTags.PICKAXES);
-    }
-
-    public static boolean isShovelItem(ItemStack stack) {
-        return stack.is(ItemTags.SHOVELS);
-    }
-
-    public static boolean isHoeItem(ItemStack stack) {
-        return stack.is(ItemTags.HOES);
-    }
-
-    public static boolean isDiggerItem(ItemStack stack) {
-        return isAxeItem(stack) || isPickaxeItem(stack) || isShovelItem(stack) || isHoeItem(stack);
-    }
-
-    public static boolean isShieldItem(ItemStack stack) {
-        return stack.is(Items.SHIELD);
     }
 }

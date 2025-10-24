@@ -30,6 +30,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.*;
 
@@ -37,6 +38,34 @@ import java.util.List;
 
 public final class ItemUtils {
     private ItemUtils() {
+    }
+
+    public static boolean isSwordItem(ItemStack stack) {
+        return stack.is(ItemTags.SWORDS);
+    }
+
+    public static boolean isAxeItem(ItemStack stack) {
+        return stack.is(ItemTags.AXES);
+    }
+
+    public static boolean isPickaxeItem(ItemStack stack) {
+        return stack.is(ItemTags.PICKAXES);
+    }
+
+    public static boolean isShovelItem(ItemStack stack) {
+        return stack.is(ItemTags.SHOVELS);
+    }
+
+    public static boolean isHoeItem(ItemStack stack) {
+        return stack.is(ItemTags.HOES);
+    }
+
+    public static boolean isDiggerItem(ItemStack stack) {
+        return isAxeItem(stack) || isPickaxeItem(stack) || isShovelItem(stack) || isHoeItem(stack);
+    }
+
+    public static boolean isShieldItem(ItemStack stack) {
+        return stack.is(Items.SHIELD);
     }
 
     public static boolean isFishingRodItem(ItemStack stack) {
@@ -59,8 +88,8 @@ public final class ItemUtils {
 
     public static boolean isHandheldItem(ItemStack stack) {
         if (!stack.isEmpty()) {
-            return Utils.isDiggerItem(stack) ||
-                    Utils.isSwordItem(stack) ||
+            return isDiggerItem(stack) ||
+                    isSwordItem(stack) ||
                     isFishingRodItem(stack) ||
                     List.of(Items.MACE, Items.TRIDENT, Items.STICK, Items.BREEZE_ROD, Items.BLAZE_ROD).contains(stack.getItem());
         } else {
@@ -101,7 +130,7 @@ public final class ItemUtils {
 
     public static boolean isItemBlacklisted(ItemStack stack) {
         if (!stack.isEmpty()) {
-            return Utils.isShieldItem(stack) ||
+            return isShieldItem(stack) ||
                     isBlockItemBlacklisted(stack) ||
                     stack.is(Items.CROSSBOW);
         } else {
