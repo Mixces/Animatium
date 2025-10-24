@@ -37,11 +37,11 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinAbstractRecipeBookScreen {
     @WrapWithCondition(method = "initButton", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractRecipeBookScreen;addRenderableWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;"))
     private boolean animatium$recipeBook$button(AbstractRecipeBookScreen<?> instance, GuiEventListener guiEventListener) {
-        return !AnimatiumClient.isEnabled() || AnimatiumConfig.instance().screen.recipeBook;
+        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().screen.hideRecipeBook;
     }
 
     @WrapWithCondition(method = "initButton", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractRecipeBookScreen;addWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;"))
     private boolean animatium$recipeBook$widget(AbstractRecipeBookScreen<?> instance, GuiEventListener guiEventListener) {
-        return !AnimatiumClient.isEnabled() || AnimatiumConfig.instance().screen.recipeBook;
+        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().screen.hideRecipeBook;
     }
 }

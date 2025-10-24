@@ -31,6 +31,7 @@ import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public class ScreenConfigCategory {
@@ -45,7 +46,7 @@ public class ScreenConfigCategory {
     public boolean tooltipStyleRendering = true;
     public boolean slotHoverStyleRendering = true;
     public boolean effectsInventoryPosition = true;
-    public boolean recipeBook = false;
+    public boolean hideRecipeBook = true;
     public boolean panoramaRendering = true;
     public CameraVersion cameraVersion = CameraVersion.V1_8;
 
@@ -125,7 +126,7 @@ public class ScreenConfigCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.tooltipStyleRendering"))
+                .name(Component.translatable("animatium.tooltipStyleRendering").withStyle(ChatFormatting.GOLD))
                 .description(OptionDescription.of(Component.translatable("animatium.tooltipStyleRendering.description")))
                 .binding(
                         defaults.tooltipStyleRendering,
@@ -134,7 +135,7 @@ public class ScreenConfigCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.slotHoverStyleRendering"))
+                .name(Component.translatable("animatium.slotHoverStyleRendering").withStyle(ChatFormatting.GOLD))
                 .description(OptionDescription.of(Component.translatable("animatium.slotHoverStyleRendering.description")))
                 .binding(
                         defaults.slotHoverStyleRendering,
@@ -155,13 +156,13 @@ public class ScreenConfigCategory {
                 .name(Component.translatable("animatium.recipeBook"))
                 .description(OptionDescription.of(Component.translatable("animatium.recipeBook.description")))
                 .binding(
-                        defaults.recipeBook,
-                        () -> config.recipeBook,
-                        (newVal) -> config.recipeBook = newVal)
+                        defaults.hideRecipeBook,
+                        () -> config.hideRecipeBook,
+                        (newVal) -> config.hideRecipeBook = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.panoramaRendering"))
+                .name(Component.translatable("animatium.panoramaRendering").withStyle(ChatFormatting.GOLD))
                 .description(OptionDescription.of(Component.translatable("animatium.panoramaRendering.description")))
                 .binding(
                         defaults.panoramaRendering,

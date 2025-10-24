@@ -30,6 +30,7 @@ import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public class MovementConfigCategory {
@@ -83,7 +84,7 @@ public class MovementConfigCategory {
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             sneakingGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.fakeOldSneakEyeHeight"))
+                    .name(Component.translatable("animatium.fakeOldSneakEyeHeight").withStyle(ChatFormatting.GOLD))
                     .description(OptionDescription.of(Component.translatable("animatium.fakeOldSneakEyeHeight.description")))
                     .binding(
                             defaults.fakeOldSneakEyeHeight,

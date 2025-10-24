@@ -53,7 +53,6 @@
 		"fabric-resource-loader-v0": "*"
 	},
 	"recommends": {
-		"animatium_extras": "*",
 		"legacy_potion_colors": "*",
 		"optiboxes": "*",
 		"polytone": "*",

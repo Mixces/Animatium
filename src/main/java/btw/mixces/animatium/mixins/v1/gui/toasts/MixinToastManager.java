@@ -23,24 +23,25 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package btw.mixces.animatium.mixins.v1.gui.remove_recipe_book;
+package btw.mixces.animatium.mixins.v1.gui.toasts;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.client.gui.components.toasts.RecipeToast;
+import net.minecraft.client.gui.components.toasts.Toast;
+import net.minecraft.client.gui.components.toasts.ToastManager;
+import net.minecraft.client.gui.components.toasts.TutorialToast;
+import net.minecraft.client.sounds.SoundManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(RecipeBookComponent.class)
-public abstract class MixinRecipeBookComponent {
-    @WrapOperation(method = "isVisible", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;visible:Z"))
-    private boolean animatium$recipeBook(RecipeBookComponent<?> instance, Operation<Boolean> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().screen.hideRecipeBook) {
-            return false;
-        } else {
-            return original.call(instance);
-        }
+@Mixin(ToastManager.class)
+public abstract class MixinToastManager {
+    @WrapWithCondition(method = "method_61991", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/toasts/Toast$Visibility;playSound(Lnet/minecraft/client/sounds/SoundManager;)V"))
+    private boolean animatium$disableToastSounds(Toast.Visibility instance, SoundManager soundManager, @Local(argsOnly = true) ToastManager.ToastInstance<Toast> toastInstance) {
+        final Toast toast = toastInstance.getToast();
+        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts || (!(toast instanceof RecipeToast) && !(toast instanceof TutorialToast));
     }
 }

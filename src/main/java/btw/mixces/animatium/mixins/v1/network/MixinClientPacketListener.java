@@ -23,24 +23,22 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package btw.mixces.animatium.mixins.v1.gui.remove_recipe_book;
+package btw.mixces.animatium.mixins.v1.network;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(RecipeBookComponent.class)
-public abstract class MixinRecipeBookComponent {
-    @WrapOperation(method = "isVisible", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;visible:Z"))
-    private boolean animatium$recipeBook(RecipeBookComponent<?> instance, Operation<Boolean> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().screen.hideRecipeBook) {
-            return false;
-        } else {
-            return original.call(instance);
-        }
+@Mixin(ClientPacketListener.class)
+public abstract class MixinClientPacketListener {
+    @WrapWithCondition(method = "handleContainerClose", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;clientSideCloseContainer()V"))
+    private boolean animatium$dontCloseChat(LocalPlayer instance) {
+        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().extras.dontCloseChat || !(Minecraft.getInstance().screen instanceof ChatScreen);
     }
 }

@@ -30,6 +30,9 @@ import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.PlayerUtils;
 import btw.mixces.animatium.util.states.UtilityRenderState;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -40,6 +43,7 @@ import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.Pose;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -66,6 +70,15 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
             return true;
         } else {
             return original;
+        }
+    }
+
+    @WrapOperation(method = "setupRotations", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;deathTime:F", opcode = Opcodes.GETFIELD))
+    private float animatium$entityDeathTopple(LivingEntityRenderState instance, Operation<Float> original, @Local(argsOnly = true) S livingRenderState) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().extras.disableEntityDeathTopple && livingRenderState instanceof AvatarRenderState) {
+            return 0;
+        } else {
+            return original.call(instance);
         }
     }
 

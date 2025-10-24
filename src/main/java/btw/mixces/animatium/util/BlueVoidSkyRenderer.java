@@ -57,7 +57,7 @@ public final class BlueVoidSkyRenderer {
     public static void renderBlueVoid(RenderTarget renderTarget, int skyColor, double depth) {
         Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
         modelViewStack.pushMatrix();
-        modelViewStack.translate(0.0F, -((float) (depth - 16.0)), 0.0F);
+        modelViewStack.translate(0.0F, AnimatiumConfig.instance().extras.dontMoveBlueVoid ? 12.0F : -((float) (depth - 16.0)), 0.0F);
 
         Vector3f skyColorVec = ARGB.vector3fFromRGB24(skyColor);
         GpuBufferSlice transforms = DynamicTransformsBuilder.of()

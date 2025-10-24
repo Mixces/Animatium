@@ -23,24 +23,32 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package btw.mixces.animatium.mixins.v1.gui.remove_recipe_book;
+package btw.mixces.animatium.mixins.v1.gui.toasts;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.toasts.ToastManager;
+import net.minecraft.client.gui.components.toasts.TutorialToast;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(RecipeBookComponent.class)
-public abstract class MixinRecipeBookComponent {
-    @WrapOperation(method = "isVisible", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;visible:Z"))
-    private boolean animatium$recipeBook(RecipeBookComponent<?> instance, Operation<Boolean> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().screen.hideRecipeBook) {
-            return false;
-        } else {
-            return original.call(instance);
+@Mixin(TutorialToast.class)
+public abstract class MixinTutorialToast {
+    @Inject(method = "update", at = @At("HEAD"), cancellable = true)
+    private void animatium$disableTutorialToast(ToastManager toastManager, long l, CallbackInfo ci) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "render", at = @At("HEAD"), cancellable = true)
+    private void animatium$disableTutorialToast(GuiGraphics guiGraphics, Font font, long l, CallbackInfo ci) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts) {
+            ci.cancel();
         }
     }
 }

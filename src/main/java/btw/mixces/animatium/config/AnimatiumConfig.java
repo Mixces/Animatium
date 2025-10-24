@@ -50,6 +50,7 @@ public final class AnimatiumConfig {
             builder.category(ItemsConfigCategory.setup(defaults.items, config.items));
             builder.category(FixesConfigCategory.setup(defaults.fixes, config.fixes));
             builder.category(OtherConfigCategory.setup(defaults.other, config.other));
+            builder.category(ExtrasConfigCategory.setup(defaults.extras, config.extras));
             return builder;
         }).generateScreen(parent);
     }
@@ -76,4 +77,7 @@ public final class AnimatiumConfig {
 
     @SerialEntry
     public OtherConfigCategory other = new OtherConfigCategory();
+
+    @SerialEntry
+    public ExtrasConfigCategory extras = new ExtrasConfigCategory();
 }

@@ -23,24 +23,35 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package btw.mixces.animatium.mixins.v1.gui.remove_recipe_book;
+package btw.mixces.animatium.mixins.v1.entity.particles;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(RecipeBookComponent.class)
-public abstract class MixinRecipeBookComponent {
-    @WrapOperation(method = "isVisible", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;visible:Z"))
-    private boolean animatium$recipeBook(RecipeBookComponent<?> instance, Operation<Boolean> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().screen.hideRecipeBook) {
-            return false;
-        } else {
-            return original.call(instance);
+@Mixin(Particle.class)
+public abstract class MixinParticle {
+    @Shadow
+    public abstract AABB getBoundingBox();
+
+    @Shadow
+    public abstract void setBoundingBox(AABB aABB);
+
+    @Shadow
+    protected abstract void setLocationFromBoundingbox();
+
+    @Inject(method = "move", at = @At("HEAD"), cancellable = true)
+    private void animatium$particlePhysics(double x, double y, double z, CallbackInfo ci) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().extras.disableParticlePhysics) {
+            ci.cancel();
+            this.setBoundingBox(this.getBoundingBox().move(x, y, z));
+            this.setLocationFromBoundingbox();
         }
     }
 }

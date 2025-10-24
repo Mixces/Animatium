@@ -49,4 +49,13 @@ public abstract class MixinDebugScreenOverlay {
             return shadow;
         }
     }
+
+    @ModifyArg(method = "renderLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)V"), index = 4)
+    private int animatium$debugHudTextColor(int color) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().extras.debugHudTextColor) {
+            return -1;
+        } else {
+            return color;
+        }
+    }
 }

@@ -25,6 +25,7 @@
 
 package btw.mixces.animatium.util;
 
+import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.mixins.accessor.CameraAccessor;
 import btw.mixces.animatium.mixins.accessor.LivingEntityAccessor;
 import com.google.common.base.MoreObjects;
@@ -107,7 +108,7 @@ public final class PlayerUtils {
 
     public static void applySwingWhilstMining(ClientLevel level, Player player, HitResult hitResult) {
         final InteractionHand activeHand = player.getUsedItemHand();
-        final InteractionHand hand = InteractionHand.MAIN_HAND;
+        final InteractionHand hand = AnimatiumConfig.instance().extras.offhandUsageSwinging ? activeHand : InteractionHand.MAIN_HAND;
         if (hitResult != null && hitResult.getType() == HitResult.Type.BLOCK && activeHand.equals(hand)) {
             final BlockHitResult blockHitResult = (BlockHitResult) hitResult;
             final BlockPos blockPos = blockHitResult.getBlockPos();

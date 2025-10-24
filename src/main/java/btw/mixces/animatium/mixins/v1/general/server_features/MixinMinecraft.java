@@ -26,22 +26,39 @@
 package btw.mixces.animatium.mixins.v1.general.server_features;
 
 import btw.mixces.animatium.AnimatiumClient;
+import btw.mixces.animatium.config.AnimatiumConfig;
+import btw.mixces.animatium.util.PlayerUtils;
 import btw.mixces.animatium.util.enums.Feature;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft {
     @Shadow
     @Nullable
     public HitResult hitResult;
+
+    @Shadow
+    @Nullable
+    public LocalPlayer player;
+
+    @Inject(method = "startAttack", at = @At(value = "RETURN", ordinal = 0))
+    private void animatium$fakeMissPenaltySwing(CallbackInfoReturnable<Boolean> cir) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().extras.fakeMissPenaltySwing && player != null) {
+            PlayerUtils.fakeHandSwing(player, InteractionHand.MAIN_HAND);
+        }
+    }
 
     @WrapOperation(method = "startAttack", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 0))
     private int animatium$disableSwingMissPenalty(Minecraft instance, Operation<Integer> original) {

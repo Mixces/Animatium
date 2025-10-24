@@ -58,6 +58,7 @@ public final class AnimatiumClient implements ClientModInitializer {
     // Settings
     public static final String MOD_ID = "animatium";
     public static boolean ENABLED = true;
+    public static boolean SHOULD_RELOAD_OVERLAY_TEXTURE = true;
     public static List<Feature> ENABLED_FEATURES = new ArrayList<>();
 
     // Info

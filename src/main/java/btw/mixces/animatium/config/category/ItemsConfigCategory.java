@@ -32,6 +32,7 @@ import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public class ItemsConfigCategory {
@@ -187,7 +188,7 @@ public class ItemsConfigCategory {
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             glintGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.glintOnItemDrops2D"))
+                    .name(Component.translatable("animatium.glintOnItemDrops2D").withStyle(ChatFormatting.GOLD))
                     .description(OptionDescription.of(Component.translatable("animatium.glintOnItemDrops2D.description")))
                     .binding(
                             defaults.glintOnItemDrops2D,
@@ -196,7 +197,7 @@ public class ItemsConfigCategory {
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             glintGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.glintOnItemFramed2D"))
+                    .name(Component.translatable("animatium.glintOnItemFramed2D").withStyle(ChatFormatting.GOLD))
                     .description(OptionDescription.of(Component.translatable("animatium.glintOnItemFramed2D.description")))
                     .binding(
                             defaults.glintOnItemFramed2D,
@@ -207,7 +208,7 @@ public class ItemsConfigCategory {
             category.group(glintGroup.build());
         }
 
-        // 2d Drops
+        // 2D Drops
         {
             OptionGroup.Builder drops2dGroup = OptionGroup.createBuilder();
             drops2dGroup.name(Component.translatable("animatium.category.items.group.2d_drops"));
