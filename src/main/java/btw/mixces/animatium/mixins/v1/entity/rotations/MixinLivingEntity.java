@@ -76,7 +76,7 @@ public abstract class MixinLivingEntity extends Entity {
 
     @WrapOperation(method = "lerpHeadRotationStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;rotLerp(DDD)D"))
     public double animatium$headRotationInterpolation(double delta, double start, double end, Operation<Double> original) {
-        if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().movement.headRotationInterpolation) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.disableHeadRotationInterpolation) {
             return end;
         } else {
             return original.call(delta, start, end);

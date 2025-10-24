@@ -36,26 +36,26 @@ import net.minecraft.network.chat.Component;
 public class MovementConfigCategory {
     // (Movement) Sneaking
     public boolean smoothSneaking = true;
-    public boolean sneakAnimationInterpolation = false;
+    public boolean sneakAnimationInterpolation = true;
     public boolean fakeOldSneakEyeHeight = false;
     public boolean sneakingFeetPosition = true;
-    public boolean syncPlayerModelWithEyeHeight = false;
+    public boolean syncPlayerModelWithEyeHeight = true;
     public boolean sneakAnimationWhileFlying = true;
-    // (Movement) Other
-    public boolean rotateBackwardsWalking = true;
-    public boolean uncapBlockingHeadRotation = true;
-    public boolean headRotationInterpolation = false;
-    public boolean viewBobbing = true;
-    public boolean deathLimbs = true;
-    public boolean bowArmMovement = true;
-    public boolean damageTilt = false;
-    public boolean offsetHurtTime = false;
     // (Movement) Cape
     public boolean capeMovement = true;
     public boolean clampCapeLean = false;
     public boolean capeSwingRotation = true;
     public boolean capeChestplateTranslation = true;
-    public boolean capeSneakPosition = false;
+    public boolean capeSneakPosition = true;
+    // (Movement) Other
+    public boolean rotateBackwardsWalking = true;
+    public boolean uncapBlockingHeadRotation = true;
+    public boolean disableHeadRotationInterpolation = true;
+    public boolean viewBobbing = true;
+    public boolean deathLimbs = true;
+    public boolean bowArmMovement = true;
+    public boolean legacyDamageTilt = true;
+    public boolean offsetHurtTime = true;
 
     public static ConfigCategory setup(MovementConfigCategory defaults, MovementConfigCategory config) {
         ConfigCategory.Builder category = ConfigCategory.createBuilder();
@@ -196,12 +196,12 @@ public class MovementConfigCategory {
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.headRotationInterpolation"))
-                    .description(OptionDescription.of(Component.translatable("animatium.headRotationInterpolation.description")))
+                    .name(Component.translatable("animatium.disableHeadRotationInterpolation"))
+                    .description(OptionDescription.of(Component.translatable("animatium.disableHeadRotationInterpolation.description")))
                     .binding(
-                            defaults.headRotationInterpolation,
-                            () -> config.headRotationInterpolation,
-                            (newVal) -> config.headRotationInterpolation = newVal)
+                            defaults.disableHeadRotationInterpolation,
+                            () -> config.disableHeadRotationInterpolation,
+                            (newVal) -> config.disableHeadRotationInterpolation = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             otherGroup.option(Option.<Boolean>createBuilder()
@@ -232,12 +232,12 @@ public class MovementConfigCategory {
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.damageTilt"))
-                    .description(OptionDescription.of(Component.translatable("animatium.damageTilt.description")))
+                    .name(Component.translatable("animatium.legacyDamageTilt"))
+                    .description(OptionDescription.of(Component.translatable("animatium.legacyDamageTilt.description")))
                     .binding(
-                            defaults.damageTilt,
-                            () -> config.damageTilt,
-                            (newVal) -> config.damageTilt = newVal)
+                            defaults.legacyDamageTilt,
+                            () -> config.legacyDamageTilt,
+                            (newVal) -> config.legacyDamageTilt = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             otherGroup.option(Option.<Boolean>createBuilder()

@@ -55,7 +55,7 @@ public abstract class MixinGameRenderer {
 
     @WrapOperation(method = "bobHurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getHurtDir()F"))
     private float animatium$damageTilt(LivingEntity instance, Operation<Float> original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.damageTilt) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.legacyDamageTilt) {
             return 0.0F;
         } else {
             return original.call(instance);

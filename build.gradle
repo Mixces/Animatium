@@ -1,8 +1,8 @@
 import com.diffplug.spotless.LineEnding
 
 plugins {
-    id 'fabric-loom' version "${loom_version}"
-    id 'maven-publish'
+    id "fabric-loom" version "${loom_version}"
+    id "maven-publish"
     id "com.diffplug.spotless" version "7.0.2"
 }
 
@@ -14,7 +14,7 @@ base {
 }
 
 static def getCheckedOutGitCommitHash() {
-    'git rev-parse --verify --short HEAD'.execute().text.trim()
+    "git rev-parse --verify --short HEAD".execute().text.trim()
 }
 
 repositories {
@@ -44,14 +44,14 @@ dependencies {
     // YACL - TO BE REPLACED WITH LIGHTCONFIG
     if (project.hasProperty("yacl_version")) {
         modImplementation("dev.isxander:yet-another-config-lib:${project.yacl_version}") {
-            exclude group: 'net.fabricmc.fabric-api'
+            exclude group: "net.fabricmc.fabric-api"
         }
     }
 
     // Mod Menu
     if (project.hasProperty("modmenu_version")) {
         modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") {
-            exclude group: 'net.fabricmc.fabric-api'
+            exclude group: "net.fabricmc.fabric-api"
         }
     }
 }
@@ -79,7 +79,6 @@ jar {
     }
 }
 
-// configure the maven publication
 publishing {
     publications {
         create("mavenJava", MavenPublication) {
@@ -88,7 +87,6 @@ publishing {
         }
     }
 
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
     }
 }

@@ -25,16 +25,18 @@
 
 package btw.mixces.animatium.util.enums;
 
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
 public enum Feature {
-    MISS_PENALTY("miss_penalty", "animatium.miss_penalty.description"),
-    LEFT_CLICK_ITEM_USAGE("left_click_item_usage", "animatium.left_click_item_usage.description");
+    MISS_PENALTY("miss_penalty", Component.translatable("animatium.miss_penalty.description")),
+    LEFT_CLICK_ITEM_USAGE("left_click_item_usage", Component.translatable("animatium.left_click_item_usage.description")),
+    HIDE_FIRSTPERSON_ROD_BOBBER("hide_rod_bobber", Component.translatable("animatium.hide_firstperson_rod_bobber.description")); // TODO
 
     private final String id;
-    private final String translate;
+    private final Component translate;
 
     public static final Feature[] VALUES = values();
 
@@ -42,12 +44,12 @@ public enum Feature {
         return Arrays.stream(VALUES).filter(feature -> feature.id.equals(id)).findFirst().orElse(null);
     }
 
-    Feature(String id, String translate) {
+    Feature(String id, Component translate) {
         this.id = id;
         this.translate = translate;
     }
 
-    public String getTranslateKey() {
+    public Component getTranslateKey() {
         return translate;
     }
 }

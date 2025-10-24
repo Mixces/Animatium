@@ -48,6 +48,7 @@ public class OtherConfigCategory {
     public boolean entityGlowOutline = true;
     public boolean modernCombatSounds = true;
     public boolean modernCombatParticles = true; // TODO/NOTE: Fix, it's broken on servers
+    public boolean restoreParticleBlending = true;
     public boolean heldItemArmLogic = true;
     public boolean flameDimensions = true;
     public boolean flameOffset = true;
@@ -237,6 +238,15 @@ public class OtherConfigCategory {
                         defaults.modernCombatParticles,
                         () -> config.modernCombatParticles,
                         (newVal) -> config.modernCombatParticles = newVal)
+                .controller(TickBoxControllerBuilder::create)
+                .build());
+        category.option(Option.<Boolean>createBuilder()
+                .name(Component.translatable("animatium.restoreParticleBlending"))
+                .description(OptionDescription.of(Component.translatable("animatium.restoreParticleBlending.description")))
+                .binding(
+                        defaults.restoreParticleBlending,
+                        () -> config.restoreParticleBlending,
+                        (newVal) -> config.restoreParticleBlending = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()

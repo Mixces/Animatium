@@ -35,13 +35,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public class ScreenConfigCategory {
-    public boolean crosshairInThirdPerson = false;
-    public boolean heartFlash = false;
+    public boolean crosshairInThirdPerson = true;
+    public boolean heartFlash = true;
     public boolean centerScrollableListWidgets = true;
     public boolean listWidgetSelectedBorderColor = true;
     public boolean buttonTextColors = true;
-    public boolean debugHudBackground = true;
-    public boolean debugHudTextShadow = false;
+    public boolean disableDebugHudBackground = true;
+    public boolean debugHudTextShadow = true;
     public boolean cameraTransparentPassthrough = true;
     public boolean tooltipStyleRendering = true;
     public boolean slotHoverStyleRendering = true;
@@ -99,12 +99,12 @@ public class ScreenConfigCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.debugHudBackground"))
-                .description(OptionDescription.of(Component.translatable("animatium.debugHudBackground.description")))
+                .name(Component.translatable("animatium.disableDebugHudBackground"))
+                .description(OptionDescription.of(Component.translatable("animatium.disableDebugHudBackground.description")))
                 .binding(
-                        defaults.debugHudBackground,
-                        () -> config.debugHudBackground,
-                        (newVal) -> config.debugHudBackground = newVal)
+                        defaults.disableDebugHudBackground,
+                        () -> config.disableDebugHudBackground,
+                        (newVal) -> config.disableDebugHudBackground = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
