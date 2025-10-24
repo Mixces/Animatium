@@ -84,6 +84,7 @@
 		"v1.render_states.MixinArmedEntityRenderState",
 		"v1.render_states.MixinCameraRenderState",
 		"v1.render_states.MixinGameRenderer",
+		"v1.render_states.MixinItemStackRenderState",
 		"v1.sky.blue_void.MixinLevelRenderer",
 		"v1.sky.horizon_height.MixinSkyRenderer",
 		"v1.sky.planar_fog.MixinSkyRenderer"

@@ -30,6 +30,7 @@ import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.ItemUtils;
 import btw.mixces.animatium.util.Utils;
 import btw.mixces.animatium.util.enums.FishingRodVersion;
+import btw.mixces.animatium.util.states.ItemUtilityRenderState;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -72,11 +73,12 @@ public abstract class MixinItemStackRenderLayerState {
     @Inject(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack$Pose;)V"))
     private void animatium$itemPositionsRod(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int light, int overlay, int k, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled()) {
-            final ItemStack stack = ItemStack.EMPTY; // TODO
+            final ItemStack stack = ((ItemUtilityRenderState) field_55345).animatium$getItemStack();
             if (!stack.isEmpty()) {
-                boolean isGui = field_55345.displayContext == ItemDisplayContext.GUI;
-                boolean isFirstPerson = field_55345.displayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || field_55345.displayContext == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
-                boolean isThirdPerson = field_55345.displayContext == ItemDisplayContext.THIRD_PERSON_LEFT_HAND || field_55345.displayContext == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
+                final ItemDisplayContext itemDisplayContext = field_55345.displayContext;
+                boolean isGui = itemDisplayContext == ItemDisplayContext.GUI;
+                boolean isFirstPerson = itemDisplayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || itemDisplayContext == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
+                boolean isThirdPerson = itemDisplayContext == ItemDisplayContext.THIRD_PERSON_LEFT_HAND || itemDisplayContext == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
                 ItemTransform transform = this.transform;
                 float x = transform.translation().x();
                 float y = transform.translation().y();
