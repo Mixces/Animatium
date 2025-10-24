@@ -32,11 +32,10 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.ClientAvatarEntity;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -46,23 +45,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.HumanoidArm;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AvatarRenderer.class)
-public abstract class MixinAvatarRenderer extends LivingEntityRenderer<AbstractClientPlayer, AvatarRenderState, PlayerModel> {
+public abstract class MixinAvatarRenderer<AvatarLikeEntity extends Avatar & ClientAvatarEntity> extends LivingEntityRenderer<AvatarLikeEntity, AvatarRenderState, PlayerModel> {
     public MixinAvatarRenderer(EntityRendererProvider.Context context, PlayerModel entityModel, float f) {
         super(context, entityModel, f);
-    }
-
-    @Shadow
-    private static HumanoidModel.ArmPose getArmPose(Avatar avatar, HumanoidArm humanoidArm) {
-        return null;
     }
 
     @WrapOperation(method = "extractCapeState", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;rotLerp(FFF)F"))
@@ -104,12 +99,20 @@ public abstract class MixinAvatarRenderer extends LivingEntityRenderer<AbstractC
     }
 
     // TODO/MOVE
+    @Unique
+    private final ThreadLocal<@Nullable AvatarRenderState> animatium$renderState = ThreadLocal.withInitial(() -> null);
+
+    @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;F)V", at = @At("TAIL"))
+    private void animatium$storeAvatarState(AvatarLikeEntity avatar, AvatarRenderState avatarRenderState, float f, CallbackInfo ci) {
+        animatium$renderState.set(avatarRenderState);
+    }
+
     @Inject(method = "renderHand", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/model/geom/ModelPart;visible:Z", ordinal = 2))
     private void animatium$heldItemArmLogic(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, ResourceLocation resourceLocation, ModelPart modelPart, boolean bl, CallbackInfo ci, @Local PlayerModel playerModel) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.heldItemArmLogic) {
-            AbstractClientPlayer player = Minecraft.getInstance().player; // TODO/NOTE: Get actual entity render state here for proper visualization for other participants
             HumanoidArm arm = modelPart == model.rightArm ? HumanoidArm.RIGHT : HumanoidArm.LEFT;
-            if (player != null && getArmPose(player, arm) == HumanoidModel.ArmPose.ITEM) {
+            final AvatarRenderState avatarRenderState = animatium$renderState.get();
+            if (avatarRenderState != null && (arm == HumanoidArm.LEFT ? avatarRenderState.leftArmPose : avatarRenderState.rightArmPose) == HumanoidModel.ArmPose.ITEM) {
                 // Adapted from the ITEM arm pose rotations in HumanoidModel#poseRightArm/poseLeftArm
                 modelPart.xRot = modelPart.xRot * 0.5F - (float) (Math.PI / 10);
                 modelPart.yRot = 0.0F;
