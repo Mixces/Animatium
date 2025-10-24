@@ -27,6 +27,7 @@ package btw.mixces.animatium.mixins.v1.gui.toasts;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
+import btw.mixces.animatium.util.Utils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.ToastManager;
@@ -40,14 +41,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinTutorialToast {
     @Inject(method = "update", at = @At("HEAD"), cancellable = true)
     private void animatium$disableTutorialToast(ToastManager toastManager, long l, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts && !Utils.HAS_SODIUM_EXTRA) {
             ci.cancel();
         }
     }
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private void animatium$disableTutorialToast(GuiGraphics guiGraphics, Font font, long l, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts) {
+        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts && !Utils.HAS_SODIUM_EXTRA) {
             ci.cancel();
         }
     }

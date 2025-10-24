@@ -19,6 +19,7 @@
 	},
 	"license": "GPL-3.0",
 	"icon": "assets/animatium/icon.png",
+	"accessWidener": "animatium.accesswidener",
 	"environment": "client",
 	"entrypoints": {
 		"client": [

@@ -42,6 +42,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public final class Utils {
     public static final boolean HAS_VIAFABRICPLUS = FabricLoader.getInstance().isModLoaded("viafabricplus");
+    public static final boolean HAS_SODIUM_EXTRA = FabricLoader.getInstance().isModLoaded("sodium-extra");
 
     private Utils() {
     }

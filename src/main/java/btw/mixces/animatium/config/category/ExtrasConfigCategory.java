@@ -26,6 +26,7 @@
 package btw.mixces.animatium.config.category;
 
 import btw.mixces.animatium.AnimatiumClient;
+import btw.mixces.animatium.util.Utils;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
@@ -41,7 +42,7 @@ public class ExtrasConfigCategory {
     public boolean persistentBlockOutline = false;
     public boolean offhandUsageSwinging = false;
     public boolean alwaysSharpParticles = false;
-    public boolean disableRecipeAndTutorialToasts = false;
+    public boolean disableRecipeAndTutorialToasts = false; // Disabled if "sodium-extra" is detected
     public boolean showArmWhileInvisible = false;
     public boolean fakeMissPenaltySwing = false;
     public boolean dontMoveBlueVoid = false;
@@ -127,15 +128,17 @@ public class ExtrasConfigCategory {
                         (newVal) -> config.alwaysSharpParticles = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.disableRecipeAndTutorialToasts"))
-                .description(OptionDescription.of(Component.translatable("animatium.disableRecipeAndTutorialToasts.description")))
-                .binding(
-                        defaults.disableRecipeAndTutorialToasts,
-                        () -> config.disableRecipeAndTutorialToasts,
-                        (newVal) -> config.disableRecipeAndTutorialToasts = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
+        if (!Utils.HAS_SODIUM_EXTRA) {
+            category.option(Option.<Boolean>createBuilder()
+                    .name(Component.translatable("animatium.disableRecipeAndTutorialToasts"))
+                    .description(OptionDescription.of(Component.translatable("animatium.disableRecipeAndTutorialToasts.description")))
+                    .binding(
+                            defaults.disableRecipeAndTutorialToasts,
+                            () -> config.disableRecipeAndTutorialToasts,
+                            (newVal) -> config.disableRecipeAndTutorialToasts = newVal)
+                    .controller(TickBoxControllerBuilder::create)
+                    .build());
+        }
         category.option(Option.<Boolean>createBuilder()
                 .name(Component.translatable("animatium.showArmWhileInvisible"))
                 .description(OptionDescription.of(Component.translatable("animatium.showArmWhileInvisible.description")))

@@ -41,7 +41,7 @@ public class FixesConfigCategory {
     public boolean fixCastLineSwing = true;
     public boolean fixEquipAnimation = true;
     public boolean fixFireballClientsideVisual = true;
-    public boolean fixTextStrikethroughStyle = true;
+    public boolean fixTextStrikethroughStyle = true; // Disabled if "viafabricplus" is detected
     public boolean fixHighAttackSpeedIndicator = true;
     public boolean fixVerticalBobbingTilt = true;
     public boolean upMinPixelTransparencyLimit = true;
