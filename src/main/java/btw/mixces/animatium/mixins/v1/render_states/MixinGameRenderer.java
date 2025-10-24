@@ -47,6 +47,7 @@ public abstract class MixinGameRenderer {
     @Inject(method = "extractCamera", at = @At("TAIL"))
     private void animatium$setupCameraState(CallbackInfo ci, @Local CameraRenderState cameraRenderState) {
         CameraUtilityRenderState cameraUtilityRenderState = (CameraUtilityRenderState) cameraRenderState;
+        cameraUtilityRenderState.animatium$setId(this.mainCamera.getEntity().getId());
         cameraUtilityRenderState.animatium$setPartialTickTime(this.mainCamera.getPartialTickTime());
         cameraUtilityRenderState.animatium$setOldEyeHeight(((CameraAccessor) this.mainCamera).animatium$getOldEyeHeight());
         cameraUtilityRenderState.animatium$setEyeHeight(((CameraAccessor) this.mainCamera).animatium$getEyeHeight());

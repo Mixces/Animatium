@@ -26,6 +26,10 @@
 package btw.mixces.animatium.util.states;
 
 public interface CameraUtilityRenderState {
+    int animatium$getId();
+
+    void animatium$setId(int id);
+
     float animatium$getPartialTickTime();
 
     void animatium$setPartialTickTime(float partialTickTime);

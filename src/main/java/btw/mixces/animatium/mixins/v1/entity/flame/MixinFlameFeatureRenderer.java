@@ -30,11 +30,11 @@ import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.Utils;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.feature.FlameFeatureRenderer;
-import net.minecraft.world.entity.Avatar;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -62,10 +62,12 @@ public abstract class MixinFlameFeatureRenderer {
 
     @ModifyArg(method = "renderFlame", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack$Pose;translate(FFF)Lorg/joml/Matrix4f;", ordinal = 0), index = 1)
     private float animatium$flameOffset(float original, @Local(argsOnly = true) EntityRenderState entityRenderState) {
-        if (AnimatiumClient.isEnabled() && entityRenderState instanceof AvatarRenderState avatarRenderState) {
+        final Camera camera = Minecraft.getInstance().getEntityRenderDispatcher().camera;
+        if (AnimatiumClient.isEnabled() && entityRenderState instanceof AvatarRenderState avatarRenderState && camera != null && camera.getEntity().getId() == avatarRenderState.id) {
             final boolean shouldSyncPlayerModelWithEyeHeight = AnimatiumConfig.instance().movement.syncPlayerModelWithEyeHeight;
             if (shouldSyncPlayerModelWithEyeHeight) {
-                original = (Avatar.STANDING_DIMENSIONS.eyeHeight() * avatarRenderState.scale) - Utils.lerpCameraPosition(Minecraft.getInstance().getEntityRenderDispatcher().camera);
+                final float cameraLerpValue = Utils.lerpCameraPosition(camera);
+                original = (avatarRenderState.eyeHeight * avatarRenderState.scale) - cameraLerpValue;
             }
 
             if (AnimatiumConfig.instance().other.flameOffset) {
