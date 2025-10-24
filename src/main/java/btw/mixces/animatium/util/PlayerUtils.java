@@ -26,10 +26,8 @@
 package btw.mixces.animatium.util;
 
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.mixins.accessor.CameraAccessor;
 import btw.mixces.animatium.mixins.accessor.LivingEntityAccessor;
 import com.google.common.base.MoreObjects;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -39,7 +37,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
 import net.minecraft.network.protocol.game.ServerboundSwingPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
@@ -99,11 +96,6 @@ public final class PlayerUtils {
 
     public static boolean isNotSwinging(Player player) {
         return !player.swinging || player.swingTime >= ((LivingEntityAccessor) player).animatium$getSwingDuration() / 2 || player.swingTime < 0;
-    }
-
-    public static float lerpCameraPosition(Camera camera) {
-        final CameraAccessor cameraAccessor = (CameraAccessor) camera;
-        return Mth.lerp(camera.getPartialTickTime(), cameraAccessor.animatium$getEyeHeightOld(), cameraAccessor.animatium$getEyeHeight());
     }
 
     public static void applySwingWhilstMining(ClientLevel level, Player player, HitResult hitResult) {

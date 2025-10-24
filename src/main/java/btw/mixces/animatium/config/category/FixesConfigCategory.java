@@ -25,11 +25,11 @@
 
 package btw.mixces.animatium.config.category;
 
+import btw.mixces.animatium.util.Utils;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
@@ -112,7 +112,7 @@ public class FixesConfigCategory {
                         (newVal) -> config.fixFireballClientsideVisual = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
-        if (!FabricLoader.getInstance().isModLoaded("viafabricplus")) {
+        if (!Utils.HAS_VIAFABRICPLUS) {
             category.option(Option.<Boolean>createBuilder()
                     .name(Component.translatable("animatium.fixTextStrikethroughStyle"))
                     .description(OptionDescription.of(Component.translatable("animatium.fixTextStrikethroughStyle.description")))

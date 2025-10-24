@@ -27,7 +27,7 @@ package btw.mixces.animatium.mixins.v1.entity.flame;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.util.PlayerUtils;
+import btw.mixces.animatium.util.Utils;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.Minecraft;
@@ -39,8 +39,6 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-
-import java.util.Objects;
 
 @Mixin(FlameFeatureRenderer.class)
 public abstract class MixinFlameFeatureRenderer {
@@ -67,7 +65,7 @@ public abstract class MixinFlameFeatureRenderer {
         if (AnimatiumClient.isEnabled() && entityRenderState instanceof AvatarRenderState avatarRenderState) {
             final boolean shouldSyncPlayerModelWithEyeHeight = AnimatiumConfig.instance().movement.syncPlayerModelWithEyeHeight;
             if (shouldSyncPlayerModelWithEyeHeight) {
-                original = (Avatar.STANDING_DIMENSIONS.eyeHeight() * avatarRenderState.scale) - PlayerUtils.lerpCameraPosition(Objects.requireNonNull(Minecraft.getInstance().getEntityRenderDispatcher().camera));
+                original = (Avatar.STANDING_DIMENSIONS.eyeHeight() * avatarRenderState.scale) - Utils.lerpCameraPosition(Minecraft.getInstance().getEntityRenderDispatcher().camera);
             }
 
             if (AnimatiumConfig.instance().other.flameOffset) {

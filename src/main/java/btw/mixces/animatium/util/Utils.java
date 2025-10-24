@@ -25,7 +25,12 @@
 
 package btw.mixces.animatium.util;
 
+import btw.mixces.animatium.mixins.accessor.CameraAccessor;
+import btw.mixces.animatium.util.states.CameraUtilityRenderState;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.Camera;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
@@ -36,6 +41,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.concurrent.atomic.AtomicReference;
 
 public final class Utils {
+    public static final boolean HAS_VIAFABRICPLUS = FabricLoader.getInstance().isModLoaded("viafabricplus");
+
     private Utils() {
     }
 
@@ -51,6 +58,15 @@ public final class Utils {
                         Shapes.create(new AABB(minX, minY, minZ, maxX, maxY, maxZ).inflate(value)),
                         BooleanOp.OR)));
         return voxelShape.get();
+    }
+
+    public static float lerpCameraPosition(Camera camera) {
+        final CameraAccessor cameraAccessor = (CameraAccessor) camera;
+        return Mth.lerp(camera.getPartialTickTime(), cameraAccessor.animatium$getOldEyeHeight(), cameraAccessor.animatium$getEyeHeight());
+    }
+
+    public static float lerpCameraPosition(CameraUtilityRenderState cameraUtilityRenderState) {
+        return Mth.lerp(cameraUtilityRenderState.animatium$getPartialTickTime(), cameraUtilityRenderState.animatium$getOldEyeHeight(), cameraUtilityRenderState.animatium$getEyeHeight());
     }
 
     public static boolean isSwordItem(ItemStack stack) {

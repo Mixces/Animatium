@@ -27,7 +27,8 @@ package btw.mixces.animatium.mixins.v1.entity;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.util.PlayerUtils;
+import btw.mixces.animatium.util.Utils;
+import btw.mixces.animatium.util.states.CameraUtilityRenderState;
 import btw.mixces.animatium.util.states.UtilityRenderState;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -35,7 +36,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
@@ -55,11 +55,9 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
     @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal = 1))
     private void animatium$syncPlayerModelWithEyeHeight(S livingEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
         if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().movement.syncPlayerModelWithEyeHeight) {
-            final Minecraft client = Minecraft.getInstance();
-            final LocalPlayer player = client.player;
-            if (livingEntityRenderState instanceof AvatarRenderState avatarRenderState && player != null && avatarRenderState.id == player.getId()) {
-                final float cameraLerpValue = PlayerUtils.lerpCameraPosition(client.gameRenderer.getMainCamera());
-                poseStack.translate(0.0F, (Avatar.STANDING_DIMENSIONS.eyeHeight() * player.getScale()) - cameraLerpValue, 0.0F);
+            if (livingEntityRenderState instanceof AvatarRenderState) {
+                final float cameraLerpValue = Utils.lerpCameraPosition((CameraUtilityRenderState) cameraRenderState);
+                poseStack.translate(0.0F, (Avatar.STANDING_DIMENSIONS.eyeHeight() * livingEntityRenderState.scale) - cameraLerpValue, 0.0F);
             }
         }
     }

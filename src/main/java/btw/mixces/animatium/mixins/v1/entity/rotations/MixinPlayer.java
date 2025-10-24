@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package btw.mixces.animatium.mixins.v1.entity;
+package btw.mixces.animatium.mixins.v1.entity.rotations;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;

@@ -23,17 +23,18 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package btw.mixces.animatium.mixins.accessor;
+package btw.mixces.animatium.util.states;
 
-import net.minecraft.client.Camera;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+public interface CameraUtilityRenderState {
+    float animatium$getPartialTickTime();
 
-@Mixin(Camera.class)
-public interface CameraAccessor {
-    @Accessor("eyeHeight")
+    void animatium$setPartialTickTime(float partialTickTime);
+
+    float animatium$getOldEyeHeight();
+
+    void animatium$setOldEyeHeight(float oldEyeHeight);
+
     float animatium$getEyeHeight();
 
-    @Accessor("eyeHeightOld")
-    float animatium$getOldEyeHeight();
+    void animatium$setEyeHeight(float eyeHeight);
 }
