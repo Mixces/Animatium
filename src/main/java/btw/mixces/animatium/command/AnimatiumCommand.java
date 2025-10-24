@@ -27,6 +27,7 @@ package btw.mixces.animatium.command;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
+import btw.mixces.animatium.util.ConfigUtil;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -43,14 +44,14 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
         LiteralArgumentBuilder<FabricClientCommandSource> command = ClientCommandManager.literal("animatium").executes(new AnimatiumCommand());
 
         command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("on").executes((context) -> {
-            if (AnimatiumClient.isEnabled()) {
+            if (AnimatiumClient.ENABLED) {
                 context.getSource().sendFeedback(Component.literal("Mod is already enabled!").withStyle(ChatFormatting.YELLOW));
             } else {
                 context.getSource().sendFeedback(Component.literal("Mod enabled.").withStyle(ChatFormatting.GREEN));
                 AnimatiumClient.ENABLED = true;
                 AnimatiumClient.SHOULD_RELOAD_OVERLAY_TEXTURE = true;
                 Minecraft.getInstance().reloadResourcePacks();
-                if (!AnimatiumClient.saveEnabledState()) {
+                if (!ConfigUtil.saveState()) {
                     System.err.println("Failed to save enabled state...");
                 }
             }
@@ -59,14 +60,14 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
         }));
 
         command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("off").executes((context) -> {
-            if (!AnimatiumClient.isEnabled()) {
+            if (!AnimatiumClient.ENABLED) {
                 context.getSource().sendFeedback(Component.literal("Mod is already disabled!").withStyle(ChatFormatting.YELLOW));
             } else {
                 context.getSource().sendFeedback(Component.literal("Mod disabled.").withStyle(ChatFormatting.RED));
                 AnimatiumClient.ENABLED = false;
                 AnimatiumClient.SHOULD_RELOAD_OVERLAY_TEXTURE = true;
                 Minecraft.getInstance().reloadResourcePacks();
-                AnimatiumClient.saveEnabledState();
+                ConfigUtil.saveState();
             }
 
             return Command.SINGLE_SUCCESS;

@@ -43,6 +43,6 @@ public abstract class MixinToastManager {
     @WrapWithCondition(method = "method_61991", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/toasts/Toast$Visibility;playSound(Lnet/minecraft/client/sounds/SoundManager;)V"))
     private boolean animatium$disableToastSounds(Toast.Visibility instance, SoundManager soundManager, @Local(argsOnly = true) ToastManager.ToastInstance<Toast> toastInstance) {
         final Toast toast = toastInstance.getToast();
-        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts || Utils.HAS_SODIUM_EXTRA || (!(toast instanceof RecipeToast) && !(toast instanceof TutorialToast));
+        return !AnimatiumClient.ENABLED || !AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts || Utils.HAS_SODIUM_EXTRA || (!(toast instanceof RecipeToast) && !(toast instanceof TutorialToast));
     }
 }

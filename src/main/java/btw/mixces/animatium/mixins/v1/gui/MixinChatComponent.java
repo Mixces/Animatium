@@ -38,7 +38,7 @@ import org.spongepowered.asm.mixin.Mixin;
 public abstract class MixinChatComponent {
     @WrapMethod(method = "clearMessages")
     private void animatium$dontClearChat(boolean bl, Operation<Void> original) {
-        if (!AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().extras.dontClearChat || GLFW.glfwGetKey(Minecraft.getInstance().getWindow().handle(), GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS) {
+        if (!AnimatiumClient.ENABLED || !AnimatiumConfig.instance().extras.dontClearChat || GLFW.glfwGetKey(Minecraft.getInstance().getWindow().handle(), GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS) {
             original.call(bl);
         }
     }

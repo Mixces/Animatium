@@ -23,26 +23,45 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package btw.mixces.animatium.mixins.v1.entity.projectile_age;
+package btw.mixces.animatium.util;
 
 import btw.mixces.animatium.AnimatiumClient;
-import btw.mixces.animatium.config.AnimatiumConfig;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.world.entity.projectile.ThrowableProjectile;
-import org.objectweb.asm.Opcodes;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
+import net.fabricmc.loader.api.FabricLoader;
 
-@Mixin(ThrowableProjectile.class)
-public abstract class MixinThrowableProjectile {
-    @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/projectile/ThrowableProjectile;tickCount:I"))
-    private int animatium$projectileAgeCheck(ThrowableProjectile instance, Operation<Integer> original) {
-        final int originalTick = original.call(instance);
-        if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().other.projectileAgeCheck) {
-            return originalTick + 2;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
+public final class ConfigUtil {
+    private static final File STATE_FILE = new File(FabricLoader.getInstance().getGameDir().toFile(), "animatium_state.txt");
+
+    private ConfigUtil() {
+    }
+
+    public static void loadState() throws IOException {
+        if (STATE_FILE.exists()) {
+            AnimatiumClient.ENABLED = Files.readString(STATE_FILE.toPath()).equals("true");
         } else {
-            return originalTick;
+            if (!saveState()) {
+                System.err.println("Failed to save enabled state...");
+            }
         }
+    }
+
+    public static boolean saveState() {
+        boolean success = true;
+        try {
+            if (!STATE_FILE.exists()) {
+                success = STATE_FILE.createNewFile();
+            }
+
+            if (success) {
+                Files.writeString(STATE_FILE.toPath(), String.valueOf(AnimatiumClient.ENABLED));
+            }
+        } catch (Exception exception) {
+            success = false;
+        }
+
+        return success;
     }
 }

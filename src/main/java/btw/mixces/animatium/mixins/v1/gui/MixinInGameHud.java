@@ -43,7 +43,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinInGameHud {
     @WrapOperation(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/CameraType;isFirstPerson()Z"))
     private boolean animatium$crosshairInThirdPerson(CameraType instance, Operation<Boolean> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().screen.crosshairInThirdPerson) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().screen.crosshairInThirdPerson) {
             return true;
         } else {
             return original.call(instance);
@@ -61,6 +61,6 @@ public abstract class MixinInGameHud {
 
     @WrapWithCondition(method = "renderHearts", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderHeart(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Gui$HeartType;IIZZZ)V"))
     private boolean animatium$heartFlash(Gui instance, GuiGraphics guiGraphics, Gui.HeartType type, int x, int y, boolean hardcore, boolean blinking, boolean half) {
-        return !AnimatiumClient.isEnabled() || AnimatiumConfig.instance().screen.heartFlash || !blinking || type == Gui.HeartType.CONTAINER;
+        return !AnimatiumClient.ENABLED || AnimatiumConfig.instance().screen.heartFlash || !blinking || type == Gui.HeartType.CONTAINER;
     }
 }

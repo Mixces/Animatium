@@ -41,7 +41,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinSkyRenderer {
     @WrapOperation(method = "shouldRenderDarkDisc", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel$ClientLevelData;getHorizonHeight(Lnet/minecraft/world/level/LevelHeightAccessor;)D"))
     private double animatium$skyHorizonHeight(ClientLevel.ClientLevelData instance, LevelHeightAccessor levelHeightAccessor, Operation<Double> original, @Local(argsOnly = true) ClientLevel level) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.skyHorizonHeight && level != null) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.skyHorizonHeight && level != null) {
             return RenderUtils.getLevelHorizonHeight(level);
         } else {
             return original.call(instance, levelHeightAccessor);

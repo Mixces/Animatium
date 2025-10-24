@@ -39,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinItemStack {
     @WrapOperation(method = "getStyledHoverName", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getRarity()Lnet/minecraft/world/item/Rarity;"))
     private Rarity animatium$itemRarities$getFormattedName(ItemStack instance, Operation<Rarity> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().items.itemRarities) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().items.itemRarities) {
             return ItemUtils.getLegacyItemRarity((ItemStack) (Object) this);
         } else {
             return original.call(instance);
@@ -48,7 +48,7 @@ public abstract class MixinItemStack {
 
     @WrapOperation(method = "getDisplayName", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getRarity()Lnet/minecraft/world/item/Rarity;"))
     private Rarity animatium$itemRarities$toHoverableText(ItemStack instance, Operation<Rarity> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().items.itemRarities) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().items.itemRarities) {
             return ItemUtils.getLegacyItemRarity((ItemStack) (Object) this);
         } else {
             return original.call(instance);

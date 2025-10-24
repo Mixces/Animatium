@@ -25,7 +25,6 @@
 
 package btw.mixces.animatium.util;
 
-import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
@@ -68,7 +67,7 @@ public final class BlueVoidSkyRenderer {
                 .createCommandEncoder()
                 .createRenderPass(() -> "Blue void disc", renderTarget.getColorTextureView(), OptionalInt.empty(), renderTarget.getDepthTextureView(), OptionalDouble.empty())) {
             RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
-            renderPass.setPipeline(AnimatiumConfig.instance().other.planarSkyFog ? AnimatiumClient.LEGACY_SKY_PLANAR_FOG_PIPELINE : AnimatiumClient.LEGACY_SKY_PIPELINE);
+            renderPass.setPipeline(AnimatiumConfig.instance().other.planarSkyFog ? RenderUtils.LEGACY_SKY_PLANAR_FOG_PIPELINE : RenderUtils.LEGACY_SKY_PIPELINE);
             renderPass.setVertexBuffer(0, getGpuBuffer());
             renderPass.setIndexBuffer(autoStorageIndexBuffer.getBuffer(6), autoStorageIndexBuffer.type());
             RenderSystem.bindDefaultUniforms(renderPass);

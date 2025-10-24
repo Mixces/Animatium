@@ -39,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinLivingEntityRenderer {
     @WrapOperation(method = "shouldShowName(Lnet/minecraft/world/entity/LivingEntity;D)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;getCameraEntity()Lnet/minecraft/world/entity/Entity;"))
     private Entity animatium$nameTagInThirdPerson(Minecraft instance, Operation<Entity> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().extras.showNameTagInThirdPerson) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().extras.showNameTagInThirdPerson) {
             return null;
         } else {
             return original.call(instance);

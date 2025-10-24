@@ -62,7 +62,7 @@ public abstract class MixinAvatarRenderer<AvatarLikeEntity extends Avatar & Clie
 
     @WrapOperation(method = "extractCapeState", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;rotLerp(FFF)F"))
     private static float animatium$changeLerpMethod(float delta, float start, float end, Operation<Float> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().movement.capeMovement) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.capeMovement) {
             return Mth.lerp(delta, start, end);
         } else {
             return original.call(delta, start, end);
@@ -71,7 +71,7 @@ public abstract class MixinAvatarRenderer<AvatarLikeEntity extends Avatar & Clie
 
     @ModifyArg(method = "extractCapeState", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F", ordinal = 1), index = 2)
     private static float animatium$uncapRotation(float original) {
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().movement.clampCapeLean) {
+        if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().movement.clampCapeLean) {
             return Float.MAX_VALUE;
         } else {
             return original;
@@ -80,18 +80,18 @@ public abstract class MixinAvatarRenderer<AvatarLikeEntity extends Avatar & Clie
 
     @WrapWithCondition(method = "extractCapeState", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;capeLean:F", ordinal = 1))
     private static boolean animatium$dontAssignLeanField(AvatarRenderState instance, float value) {
-        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().movement.capeMovement;
+        return !AnimatiumClient.ENABLED || !AnimatiumConfig.instance().movement.capeMovement;
     }
 
     @WrapWithCondition(method = "extractCapeState", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;capeLean2:F", ordinal = 1))
     private static boolean animatium$dontAssignLean2Field(AvatarRenderState instance, float value) {
-        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().movement.capeMovement;
+        return !AnimatiumClient.ENABLED || !AnimatiumConfig.instance().movement.capeMovement;
     }
 
     // TODO/MOVE
     @WrapOperation(method = "getRenderOffset(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;)Lnet/minecraft/world/phys/Vec3;", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;isCrouching:Z"))
     private boolean animatium$fixSneakingFeetPosition(AvatarRenderState instance, Operation<Boolean> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().fixes.fixSneakingFeetPosition) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().fixes.fixSneakingFeetPosition) {
             return false;
         } else {
             return original.call(instance);
@@ -109,7 +109,7 @@ public abstract class MixinAvatarRenderer<AvatarLikeEntity extends Avatar & Clie
 
     @Inject(method = "renderHand", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/model/geom/ModelPart;visible:Z", ordinal = 2))
     private void animatium$heldItemArmLogic(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, ResourceLocation resourceLocation, ModelPart modelPart, boolean bl, CallbackInfo ci, @Local PlayerModel playerModel) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.heldItemArmLogic) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.heldItemArmLogic) {
             HumanoidArm arm = modelPart == model.rightArm ? HumanoidArm.RIGHT : HumanoidArm.LEFT;
             final AvatarRenderState avatarRenderState = animatium$renderState.get();
             if (avatarRenderState != null && (arm == HumanoidArm.LEFT ? avatarRenderState.leftArmPose : avatarRenderState.rightArmPose) == HumanoidModel.ArmPose.ITEM) {

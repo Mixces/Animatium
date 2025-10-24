@@ -31,10 +31,8 @@ import btw.mixces.animatium.packet.AnimatiumInfoPayloadPacket;
 import btw.mixces.animatium.packet.RequestInfoPayloadPacket;
 import btw.mixces.animatium.packet.SetFeaturesPayloadPacket;
 import btw.mixces.animatium.util.AnimatiumDebugEntry;
+import btw.mixces.animatium.util.ConfigUtil;
 import btw.mixces.animatium.util.enums.Feature;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.networking.v1.*;
@@ -44,13 +42,10 @@ import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.gui.components.debug.DebugScreenEntries;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +57,6 @@ public final class AnimatiumClient implements ClientModInitializer {
     public static List<Feature> ENABLED_FEATURES = new ArrayList<>();
 
     // Info
-    // TODO/NOTE: Find a better way/cleanup
     private static final ModContainer MOD_CONTAINER = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow(() -> new RuntimeException("Mod not found"));
     private static final String[] VERSION_PARTS = MOD_CONTAINER.getMetadata().getVersion().getFriendlyString().split("-");
     public static Double VERSION = Double.parseDouble(VERSION_PARTS[0]);
@@ -76,79 +70,23 @@ public final class AnimatiumClient implements ClientModInitializer {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
 
-    // Shaders
-    private static final RenderPipeline.Snippet LEGACY_SKY_PIPELINE_SNIPPET =
-            RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
-                    .withLocation(id("pipeline/legacy_sky"))
-                    .withVertexShader(id("core/legacy_sky"))
-                    .withFragmentShader(id("core/legacy_sky"))
-                    .withDepthWrite(false)
-                    .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
-                    .buildSnippet();
-
-    public static final RenderPipeline LEGACY_SKY_PIPELINE =
-            RenderPipelines.register(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
-                    .withLocation(id("pipeline/legacy_sky"))
-                    .build());
-
-    public static final RenderPipeline LEGACY_SKY_PLANAR_FOG_PIPELINE =
-            RenderPipelines.register(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
-                    .withLocation(id("pipeline/legacy_sky_planar_fog"))
-                    .withShaderDefine("PLANAR_FOG")
-                    .build());
-
-    // Config State
-    private static final File STATE_FILE = new File(FabricLoader.getInstance().getGameDir().toFile(), "animatium_state.txt");
-
-    public static void loadEnabledState() throws IOException {
-        if (STATE_FILE.exists()) {
-            ENABLED = Files.readString(STATE_FILE.toPath()).equals("true");
-        } else {
-            if (!saveEnabledState()) {
-                System.err.println("Failed to save enabled state...");
-            }
-        }
-    }
-
-    public static boolean saveEnabledState() {
-        boolean success = true;
-        try {
-            if (!STATE_FILE.exists()) {
-                success = STATE_FILE.createNewFile();
-            }
-
-            if (success) {
-                Files.writeString(STATE_FILE.toPath(), String.valueOf(ENABLED));
-            }
-        } catch (Exception exception) {
-            success = false;
-        }
-
-        return success;
-    }
-
-    // Other
-    public static boolean isEnabled() {
-        return ENABLED;
-    }
-
     @Override
     public void onInitializeClient() {
         AnimatiumConfig.load();
         try {
-            loadEnabledState();
+            ConfigUtil.loadState();
         } catch (IOException e) {
             ENABLED = true;
             System.err.println("Failed to load enabled state, defaulting to true...");
         }
 
-        // Packs
         ResourceManagerHelper.registerBuiltinResourcePack(id("classic_textures"), MOD_CONTAINER, ResourcePackActivationType.DEFAULT_ENABLED);
-
-        // Commands
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) -> dispatcher.register(AnimatiumCommand.create()));
+        DebugScreenEntries.register(AnimatiumDebugEntry.GROUP, new AnimatiumDebugEntry());
+        registerPayloads();
+    }
 
-        // Packets
+    private void registerPayloads() {
         ClientLoginConnectionEvents.DISCONNECT.register((packet, client) -> ENABLED_FEATURES.clear());
         ClientConfigurationConnectionEvents.DISCONNECT.register((packet, client) -> ENABLED_FEATURES.clear());
         ClientPlayConnectionEvents.DISCONNECT.register((packet, client) -> ENABLED_FEATURES.clear());
@@ -168,8 +106,5 @@ public final class AnimatiumClient implements ClientModInitializer {
         PayloadTypeRegistry.playC2S().register(AnimatiumInfoPayloadPacket.PAYLOAD_ID, AnimatiumInfoPayloadPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(RequestInfoPayloadPacket.PAYLOAD_ID, RequestInfoPayloadPacket.CODEC);
         ClientPlayNetworking.registerGlobalReceiver(RequestInfoPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> ClientPlayNetworking.send(AnimatiumClient.getInfoPayload())));
-
-        // Debug
-        DebugScreenEntries.register(AnimatiumDebugEntry.GROUP, new AnimatiumDebugEntry());
     }
 }

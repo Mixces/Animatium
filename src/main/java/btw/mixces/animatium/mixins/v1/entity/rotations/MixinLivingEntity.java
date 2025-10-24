@@ -52,7 +52,7 @@ public abstract class MixinLivingEntity extends Entity {
 
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;abs(F)F"))
     private float animatium$rotateBackwardsWalking(float value, Operation<Float> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().movement.rotateBackwardsWalking) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.rotateBackwardsWalking) {
             return 0F;
         } else {
             return original.call(value);
@@ -61,7 +61,7 @@ public abstract class MixinLivingEntity extends Entity {
 
     @WrapOperation(method = "tickHeadTurn", at = @At(value = "INVOKE", target = "Ljava/lang/Math;abs(F)F"))
     private float animatium$headRotationInterpolation(float g, Operation<Float> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().movement.rotateBackwardsWalking) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.rotateBackwardsWalking) {
             g = Mth.clamp(g, -75.0F, 75.0F);
             this.yBodyRot = this.getYRot() - g;
             if (Math.abs(g) > 50.0F) {
@@ -76,7 +76,7 @@ public abstract class MixinLivingEntity extends Entity {
 
     @WrapOperation(method = "lerpHeadRotationStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;rotLerp(DDD)D"))
     public double animatium$headRotationInterpolation(double delta, double start, double end, Operation<Double> original) {
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().movement.headRotationInterpolation) {
+        if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().movement.headRotationInterpolation) {
             return end;
         } else {
             return original.call(delta, start, end);
@@ -86,7 +86,7 @@ public abstract class MixinLivingEntity extends Entity {
     // TODO/MOVE
     @WrapOperation(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;swing(Lnet/minecraft/world/InteractionHand;)V"))
     private void animatium$swingOnDropInventory(LivingEntity entity, InteractionHand hand, Operation<Void> original) {
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().items.swingOnDrop && entity instanceof LocalPlayer localPlayer) {
+        if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().items.swingOnDrop && entity instanceof LocalPlayer localPlayer) {
             PlayerUtils.sendSwingPacket(localPlayer, hand);
         } else {
             original.call(entity, hand);

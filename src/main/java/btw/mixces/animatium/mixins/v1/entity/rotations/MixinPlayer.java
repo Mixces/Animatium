@@ -37,6 +37,6 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinPlayer {
     @WrapOperation(method = "getMaxHeadRotationRelativeToBody", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isBlocking()Z"))
     private boolean animatium$uncapBlockingHeadRotation(Player instance, Operation<Boolean> original) {
-        return !(AnimatiumClient.isEnabled() && AnimatiumConfig.instance().movement.uncapBlockingHeadRotation) && original.call(instance);
+        return !(AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.uncapBlockingHeadRotation) && original.call(instance);
     }
 }

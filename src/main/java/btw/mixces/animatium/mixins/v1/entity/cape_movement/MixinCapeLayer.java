@@ -48,7 +48,7 @@ public abstract class MixinCapeLayer {
 
     @ModifyExpressionValue(method = "submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/client/renderer/entity/state/AvatarRenderState;FF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/layers/CapeLayer;hasLayer(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;)Z", ordinal = 1))
     private boolean animatium$capeChestplateTranslation(boolean original) {
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().movement.capeChestplateTranslation) {
+        if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().movement.capeChestplateTranslation) {
             return false;
         } else {
             return original;
@@ -57,14 +57,14 @@ public abstract class MixinCapeLayer {
 
     @Inject(method = "submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/client/renderer/entity/state/AvatarRenderState;FF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/RenderType;IIILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V", shift = At.Shift.BEFORE))
     private void animatium$capeSneakPosition(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, AvatarRenderState avatarRenderState, float f, float g, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().movement.capeSneakPosition && avatarRenderState.isCrouching) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.capeSneakPosition && avatarRenderState.isCrouching) {
             poseStack.translate(0.0F, avatarRenderState.scale * 2.0F / 16.0F, 0.0F);
         }
     }
 
     @Inject(method = "submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/client/renderer/entity/state/AvatarRenderState;FF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/RenderType;IIILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V", shift = At.Shift.BEFORE))
     private void animatium$capeSwingRotation(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, AvatarRenderState avatarRenderState, float f, float g, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().movement.capeSwingRotation) {
+        if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().movement.capeSwingRotation) {
             model.body.yRot = 0;
         }
     }

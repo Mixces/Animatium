@@ -65,32 +65,32 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
 
     @Inject(method = "submitArmWithItem", at = @At("HEAD"))
     private void animatium$setRef(S armedEntityRenderState, ItemStackRenderState itemStackRenderState, HumanoidArm humanoidArm, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, CallbackInfo ci, @Share("stack") LocalRef<ItemStack> stackRef) {
-        if (AnimatiumClient.isEnabled() && ItemUtils.shouldApplyItemPositionsInThirdperson(armedEntityRenderState) && !itemStackRenderState.isEmpty()) {
+        if (AnimatiumClient.ENABLED && ItemUtils.shouldApplyItemPositionsInThirdperson(armedEntityRenderState) && !itemStackRenderState.isEmpty()) {
             stackRef.set(((UtilityRenderState) armedEntityRenderState).animatium$getItemHeldByArm(humanoidArm));
         }
     }
 
     @ModifyArgs(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V"))
     private void animatium$oldTransformTranslation(Args args, @Local(argsOnly = true) S entityState, @Share("stack") LocalRef<ItemStack> stackRef) {
-        if (AnimatiumClient.isEnabled() && ItemUtils.shouldApplyItemPositionsInThirdperson(entityState) && !ItemUtils.isItemBlacklisted(stackRef.get())) {
+        if (AnimatiumClient.ENABLED && ItemUtils.shouldApplyItemPositionsInThirdperson(entityState) && !ItemUtils.isItemBlacklisted(stackRef.get())) {
             args.setAll((float) args.get(0) * -1.0F, 0.4375F, (float) args.get(2) / 10 * -1.0F);
         }
     }
 
     @WrapWithCondition(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lorg/joml/Quaternionfc;)V"))
     private boolean animatium$removeTransformMultiply(PoseStack instance, Quaternionfc quaternionfc, @Local(argsOnly = true) S entityState, @Share("stack") LocalRef<ItemStack> stackRef) {
-        return !AnimatiumClient.isEnabled() || !ItemUtils.shouldApplyItemPositionsInThirdperson(entityState) || ItemUtils.isItemBlacklisted(stackRef.get());
+        return !AnimatiumClient.ENABLED || !ItemUtils.shouldApplyItemPositionsInThirdperson(entityState) || ItemUtils.isItemBlacklisted(stackRef.get());
     }
 
     @Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/item/ItemStackRenderState;submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V"))
     private void animatium$itemPositionsThird(S armedEntityRenderState, ItemStackRenderState itemStackRenderState, HumanoidArm humanoidArm, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && ItemUtils.shouldApplyItemPositionsInThirdperson(armedEntityRenderState)) {
+        if (AnimatiumClient.ENABLED && ItemUtils.shouldApplyItemPositionsInThirdperson(armedEntityRenderState)) {
             final int direction = PlayerUtils.getArmMultiplier(humanoidArm);
             UtilityRenderState itemArmedEntityRenderState = (UtilityRenderState) armedEntityRenderState;
             ItemStack stack = itemArmedEntityRenderState.animatium$getItemHeldByArm(humanoidArm);
             Item item = stack.getItem();
             if (!stack.isEmpty() && !ItemUtils.isItemBlacklisted(stack)) {
-                boolean isStickRod = AnimatiumClient.isEnabled() &&
+                boolean isStickRod = AnimatiumClient.ENABLED &&
                         AnimatiumConfig.instance().items.stickModelWhenCastInThirdperson &&
                         item == Items.FISHING_ROD &&
                         (itemArmedEntityRenderState.animatium$isPlayer() && itemArmedEntityRenderState.animatium$isFishing());

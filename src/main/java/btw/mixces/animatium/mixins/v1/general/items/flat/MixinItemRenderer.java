@@ -52,7 +52,7 @@ public abstract class MixinItemRenderer {
     @ModifyArg(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderQuadList(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Ljava/util/List;[III)V"), index = 2)
     private static List<BakedQuad> animatium$itemDrops2D(List<BakedQuad> quads, @Local(argsOnly = true) ItemDisplayContext displayContext, @Local(argsOnly = true) RenderType renderType) {
         animatium$displayContext = displayContext;
-//        if (AnimatiumClient.isEnabled() && animatium$isTransformationModeValid(displayContext) /* && !blocksLight */) {
+//        if (AnimatiumClient.ENABLED && animatium$isTransformationModeValid(displayContext) /* && !blocksLight */) {
 //            return quads.stream().filter(baked -> baked.direction() == Direction.SOUTH).collect(Collectors.toList());
 //        } else {
         return quads;
@@ -62,7 +62,7 @@ public abstract class MixinItemRenderer {
     // TODO: this is only half of the battle + framed item 2d colors are disabled
     @WrapOperation(method = "renderQuadList", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexConsumer;putBulkData(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;FFFFII)V"))
     private static void animatium$itemColors2D(VertexConsumer instance, PoseStack.Pose pose, BakedQuad bakedQuad, float f, float g, float h, float i, int j, int k, Operation<Void> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().items.itemColors2D && animatium$displayContext == ItemDisplayContext.GROUND /* && !blocksLight */) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().items.itemColors2D && animatium$displayContext == ItemDisplayContext.GROUND /* && !blocksLight */) {
             // TODO/Modify: bakedQuad.direction().getUnitVec3f();
             // return new Vector3f(vector3fc.x(), vector3fc.z(), vector3fc.y());
         }

@@ -25,6 +25,7 @@
 
 package btw.mixces.animatium.util;
 
+import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.mixins.accessor.ClientLevelDataAccessor;
 import com.mojang.blaze3d.buffers.GpuBuffer;
@@ -37,12 +38,33 @@ import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.RenderPipelines;
 
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.function.Consumer;
 
 public final class RenderUtils {
+    private static final RenderPipeline.Snippet LEGACY_SKY_PIPELINE_SNIPPET =
+            RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
+                    .withLocation(AnimatiumClient.id("pipeline/legacy_sky"))
+                    .withVertexShader(AnimatiumClient.id("core/legacy_sky"))
+                    .withFragmentShader(AnimatiumClient.id("core/legacy_sky"))
+                    .withDepthWrite(false)
+                    .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
+                    .buildSnippet();
+
+    public static final RenderPipeline LEGACY_SKY_PIPELINE =
+            RenderPipelines.register(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
+                    .withLocation(AnimatiumClient.id("pipeline/legacy_sky"))
+                    .build());
+
+    public static final RenderPipeline LEGACY_SKY_PLANAR_FOG_PIPELINE =
+            RenderPipelines.register(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
+                    .withLocation(AnimatiumClient.id("pipeline/legacy_sky_planar_fog"))
+                    .withShaderDefine("PLANAR_FOG")
+                    .build());
+
     private RenderUtils() {
     }
 

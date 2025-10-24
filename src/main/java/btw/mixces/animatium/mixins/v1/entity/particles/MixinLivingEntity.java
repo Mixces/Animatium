@@ -40,6 +40,6 @@ public abstract class MixinLivingEntity {
     @WrapWithCondition(method = "tickEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))
     private boolean animatium$hideFirstpersonParticles(Level instance, ParticleOptions particleOptions, double d, double e, double f, double g, double h, double i) {
         final Minecraft client = Minecraft.getInstance();
-        return !AnimatiumClient.isEnabled() || !AnimatiumConfig.instance().extras.disableFirstPersonParticles || (Object) this != client.player || !client.options.getCameraType().isFirstPerson();
+        return !AnimatiumClient.ENABLED || !AnimatiumConfig.instance().extras.disableFirstPersonParticles || (Object) this != client.player || !client.options.getCameraType().isFirstPerson();
     }
 }

@@ -38,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public abstract class MixinTextureManager {
     @ModifyVariable(method = "getTexture", at = @At("HEAD"), argsOnly = true)
     private ResourceLocation animatium$useItemGlint(ResourceLocation original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.itemGlintOnEntity && original == ItemRenderer.ENCHANTED_GLINT_ARMOR) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.itemGlintOnEntity && original == ItemRenderer.ENCHANTED_GLINT_ARMOR) {
             return ItemRenderer.ENCHANTED_GLINT_ITEM;
         } else {
             return original;

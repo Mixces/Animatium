@@ -39,7 +39,7 @@ public abstract class MixinFireball {
     @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/projectile/Fireball;tickCount:I"))
     private int animatium$projectileAgeCheck(Fireball instance, Operation<Integer> original) {
         final int originalTick = original.call(instance);
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().other.projectileAgeCheck) {
+        if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().other.projectileAgeCheck) {
             return originalTick + 2;
         } else {
             return originalTick;

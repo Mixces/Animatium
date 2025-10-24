@@ -60,7 +60,7 @@ public abstract class MixinItemStackRenderLayerState {
     private ItemStackRenderState.FoilType animatium$disableGlintOn2DItems(ItemStackRenderState.FoilType glint) {
         final boolean glintDropped = !AnimatiumConfig.instance().items.glintOnItemDrops2D;
         final boolean glintFramed = !AnimatiumConfig.instance().items.glintOnItemFramed2D;
-        if (AnimatiumClient.isEnabled() &&
+        if (AnimatiumClient.ENABLED &&
                 (glintDropped && field_55345.displayContext == ItemDisplayContext.GROUND) ||
                 (glintFramed && field_55345.displayContext == ItemDisplayContext.FIXED)) {
             return ItemStackRenderState.FoilType.NONE;
@@ -72,7 +72,7 @@ public abstract class MixinItemStackRenderLayerState {
     // TODO/MOVE
     @Inject(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack$Pose;)V"))
     private void animatium$itemPositionsRod(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int light, int overlay, int k, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled()) {
+        if (AnimatiumClient.ENABLED) {
             final ItemStack stack = ((ItemUtilityRenderState) field_55345).animatium$getItemStack();
             if (!stack.isEmpty()) {
                 final ItemDisplayContext itemDisplayContext = field_55345.displayContext;

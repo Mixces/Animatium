@@ -50,7 +50,7 @@ public abstract class MixinDrawContext {
 
     @WrapOperation(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/tooltip/TooltipRenderUtil;renderTooltipBackground(Lnet/minecraft/client/gui/GuiGraphics;IIIILnet/minecraft/resources/ResourceLocation;)V"))
     private void animatium$tooltipStyleRendering(GuiGraphics context, int i, int j, int k, int l, ResourceLocation resourceLocation, Operation<Void> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().screen.tooltipStyleRendering) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().screen.tooltipStyleRendering) {
             int n = i - 3;
             int o = j - 3;
             int p = k + 3 + 3;
@@ -70,7 +70,7 @@ public abstract class MixinDrawContext {
 
     @Inject(method = "renderItemBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(Lcom/mojang/blaze3d/pipeline/RenderPipeline;IIIII)V", ordinal = 0, shift = At.Shift.AFTER))
     private void animatium$oldDurabilityBar(ItemStack stack, int x, int y, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().items.durabilityBarColors && !(stack.getItem() instanceof BundleItem)) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().items.durabilityBarColors && !(stack.getItem() instanceof BundleItem)) {
             int i = x + 2;
             int j = y + 13;
             int color = ARGB.color((255 - ItemUtils.getLegacyDurabilityColorValue(stack)) / 4, 64, 0);

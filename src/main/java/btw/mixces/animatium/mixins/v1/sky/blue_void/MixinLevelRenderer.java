@@ -55,7 +55,7 @@ public abstract class MixinLevelRenderer {
 
     @Inject(method = "method_62215", at = @At("TAIL"))
     private void animatium$blueVoidSky(GpuBufferSlice gpuBufferSlice, SkyRenderState skyRenderState, CallbackInfo ci) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().other.blueVoidSky && skyRenderState.skyType != DimensionSpecialEffects.SkyType.END && this.level != null && this.minecraft.player != null) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.blueVoidSky && skyRenderState.skyType != DimensionSpecialEffects.SkyType.END && this.level != null && this.minecraft.player != null) {
             float tickDelta = this.minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true);
             int skyColor = this.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), tickDelta);
             BlueVoidSkyRenderer.renderBlueVoid(this.minecraft.getMainRenderTarget(), skyColor, this.minecraft.player.getEyePosition(tickDelta).y - RenderUtils.getLevelHorizonHeight(this.level));

@@ -42,7 +42,7 @@ public abstract class MixinAbstractSliderButton extends AbstractWidget {
 
     @ModifyConstant(method = "renderWidget", constant = @Constant(intValue = 0xFFFFFFFF))
     private int animatium$renderWidget$old$textColor(int constant) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().screen.buttonTextColors) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().screen.buttonTextColors) {
             return !active ? 0xFFE0E0E0 : (isHoveredOrFocused() ? 0xFFFFFFA0 : 0xFFE0E0E0);
         } else {
             return constant;

@@ -37,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinGameRenderer {
     @WrapOperation(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GameRenderer;shouldRenderBlockOutline()Z"))
     private boolean animatium$persistentBlockOutline(GameRenderer instance, Operation<Boolean> original) {
-        if (AnimatiumClient.isEnabled() && AnimatiumConfig.instance().extras.persistentBlockOutline) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().extras.persistentBlockOutline) {
             return true;
         } else {
             return original.call(instance);

@@ -53,7 +53,7 @@ public abstract class MixinSoundManager {
 
     @Redirect(method = "play", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/sounds/SoundEngine;play(Lnet/minecraft/client/resources/sounds/SoundInstance;)Lnet/minecraft/client/sounds/SoundEngine$PlayResult;"))
     private SoundEngine.PlayResult animatium$modernCombatSounds(SoundEngine instance, SoundInstance soundInstance) {
-        if (AnimatiumClient.isEnabled() && !AnimatiumConfig.instance().other.modernCombatSounds && animatium$ignoreSounds.contains(soundInstance.getLocation())) {
+        if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().other.modernCombatSounds && animatium$ignoreSounds.contains(soundInstance.getLocation())) {
             return null;
         } else {
             return instance.play(soundInstance);
