@@ -61,6 +61,7 @@
 		"v1.general.outlines.MixinCompositeRenderType",
 		"v1.general.outlines.MixinGameRenderer",
 		"v1.general.outlines.MixinLevelRenderer",
+		"v1.general.server_features.MixinFishingHookRenderer",
 		"v1.general.server_features.MixinMinecraft",
 		"v1.gui.MixinChatComponent",
 		"v1.gui.MixinFontPreparedTextBuilder",
