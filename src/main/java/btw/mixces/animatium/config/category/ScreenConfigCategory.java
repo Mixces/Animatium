@@ -45,6 +45,7 @@ public class ScreenConfigCategory {
     public boolean cameraTransparentPassthrough = true;
     public boolean tooltipStyleRendering = true;
     public boolean slotHoverStyleRendering = true;
+    public boolean listBackgroundGradient = true;
     public boolean effectsInventoryPosition = true;
     public boolean hideRecipeBook = true;
     public boolean panoramaRendering = true;
@@ -141,6 +142,15 @@ public class ScreenConfigCategory {
                         defaults.slotHoverStyleRendering,
                         () -> config.slotHoverStyleRendering,
                         (newVal) -> config.slotHoverStyleRendering = newVal)
+                .controller(TickBoxControllerBuilder::create)
+                .build());
+        category.option(Option.<Boolean>createBuilder()
+                .name(Component.translatable("animatium.listBackgroundGradient"))
+                .description(OptionDescription.of(Component.translatable("animatium.listBackgroundGradient.description")))
+                .binding(
+                        defaults.listBackgroundGradient,
+                        () -> config.listBackgroundGradient,
+                        (newVal) -> config.listBackgroundGradient = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()

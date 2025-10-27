@@ -44,7 +44,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GuiGraphics.class)
-public abstract class MixinDrawContext {
+public abstract class MixinGuiGraphics {
     @Shadow
     public abstract void fill(int i, int j, int k, int l, int m);
 

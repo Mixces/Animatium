@@ -65,6 +65,8 @@
 	"animatium.tooltipStyleRendering.description": "Restores the corners of the tooltip texture that were removed in 1.21.2.\n\nNOTE: If you are using a resource pack with a custom tooltip texture, turn this setting OFF to not cause issues!",
 	"animatium.slotHoverStyleRendering": "[1.20] Restore old inventory slot hover",
 	"animatium.slotHoverStyleRendering.description": "Restores the old inventory slot hover visual to how it was prior to 1.21.2.\n\nNOTE: If you are using a resource pack with a custom slot hover texture, turn this setting OFF to not cause issues!",
+	"animatium.listBackgroundGradient": "[1.20.4] Restore old list background gradient",
+	"animatium.listBackgroundGradient.description": "Restores the old list widget background gradient from <=1.20.4.",
 	"animatium.effectsInventoryPosition": "[1.11] Inventory status-effects position",
 	"animatium.effectsInventoryPosition.description": "Restores the old potion effects status position in the inventory to like it was in <=1.11/1.19.",
 	"animatium.recipeBook": "[1.11] Hide recipe book",

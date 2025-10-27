@@ -133,7 +133,7 @@ public abstract class MixinPanoramaRenderer {
     }
 
     @Unique
-    private void animatium$writeAndBlitBlurTexture(GuiGraphics drawContext, RenderTarget renderTarget, GlTextureView texture, int width, int height) {
+    private void animatium$writeAndBlitBlurTexture(GuiGraphics guiGraphics, RenderTarget renderTarget, GlTextureView texture, int width, int height) {
         texture.texture().setTextureFilter(FilterMode.LINEAR, false);
         // Ensures enough width/height for it to not crash when window is resized
         if (renderTarget.width >= 256 && renderTarget.height >= 256) {
@@ -150,10 +150,10 @@ public abstract class MixinPanoramaRenderer {
         RenderPipeline pipeline = animatium$BLUR_TEXTURE;
         ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(pipeline.getVertexFormat().getVertexSize() * 12);
         BufferBuilder bufferBuilder = new BufferBuilder(byteBufferBuilder, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
-        final Matrix3x2f matrix = drawContext.pose();
+        final Matrix3x2f matrix = guiGraphics.pose();
         for (int i = 0; i < 3; ++i) {
-            float growth = (float) (i - 1) / 256.0F;
-            int color = ARGB.colorFromFloat(1.0F / (float) (i + 1), 1.0F, 1.0F, 1.0F);
+            final float growth = (float) (i - 1) / 256.0F;
+            final int color = ARGB.colorFromFloat(1.0F / (float) (i + 1), 1.0F, 1.0F, 1.0F);
             bufferBuilder.addVertexWith2DPose(matrix, width, height).setUv(0.0F + growth, 1.0F).setColor(color);
             bufferBuilder.addVertexWith2DPose(matrix, width, 0.0F).setUv(1.0F + growth, 1.0F).setColor(color);
             bufferBuilder.addVertexWith2DPose(matrix, 0.0F, 0.0F).setUv(1.0F + growth, 0.0F).setColor(color);
