@@ -17,7 +17,7 @@
 		"sources": "https://github.com/Legacy-Visuals-Project/Animatium/",
 		"issues": "https://github.com/Legacy-Visuals-Project/Animatium/issues"
 	},
-	"license": "GPL-3.0",
+	"license": "GPL-3.0-with-linking-exception",
 	"icon": "assets/animatium/icon.png",
 	"accessWidener": "animatium.accesswidener",
 	"environment": "client",

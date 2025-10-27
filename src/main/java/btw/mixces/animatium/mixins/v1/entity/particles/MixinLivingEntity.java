@@ -30,6 +30,7 @@ import btw.mixces.animatium.config.AnimatiumConfig;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ColorParticleOption;
@@ -47,10 +48,8 @@ import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
-import java.util.Collection;
 import java.util.Map;
 
 @Mixin(LivingEntity.class)
@@ -74,26 +73,16 @@ public abstract class MixinLivingEntity extends Entity {
     }
 
     @WrapOperation(method = "tickEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))
-    private void animatium$blendParticles(Level instance, ParticleOptions particle, double x, double y, double z, double r, double g, double b, Operation<Void> original) {
-        final int color = animatium$getPotionColor(this.activeEffects.values());
+    private void animatium$blendPotionParticleColors(Level instance, ParticleOptions particle, double x, double y, double z, double r, double g, double b, Operation<Void> original, @Local boolean hasAmbience) {
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.restoreParticleBlending) {
-            final boolean hasAmbience = this.entityData.get(DATA_EFFECT_AMBIENCE_ID);
-            if (color != 0) {
-                particle = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, ARGB.color(hasAmbience ? 0.15F : 1.0F, color));
-                r = ARGB.redFloat(color);
-                g = ARGB.greenFloat(color);
-                b = ARGB.blueFloat(color);
-            } else {
-                return;
-            }
+            final int color = PotionContents.getColorOptional(this.activeEffects.values()).orElse(0xFF385DC6);
+            particle = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, ARGB.color(hasAmbience ? 0.15F : 1.0F, color));
+            r = ARGB.redFloat(color);
+            g = ARGB.greenFloat(color);
+            b = ARGB.blueFloat(color);
         }
 
         original.call(instance, particle, x, y, z, r, g, b);
-    }
-
-    @Unique
-    private static int animatium$getPotionColor(Collection<MobEffectInstance> effects) {
-        return effects.isEmpty() ? 0xFF385DC6 : PotionContents.getColorOptional(effects).orElse(0);
     }
 }
 
