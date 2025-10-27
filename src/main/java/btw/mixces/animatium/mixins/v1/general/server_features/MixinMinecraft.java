@@ -28,7 +28,7 @@ package btw.mixces.animatium.mixins.v1.general.server_features;
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.Utils;
-import btw.mixces.animatium.util.enums.Feature;
+import btw.mixces.animatium.util.enums.ServerFeature;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.Minecraft;
@@ -62,7 +62,7 @@ public abstract class MixinMinecraft {
 
     @WrapOperation(method = "startAttack", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 0))
     private int animatium$disableSwingMissPenalty(Minecraft instance, Operation<Integer> original) {
-        if (AnimatiumClient.ENABLED_FEATURES.contains(Feature.MISS_PENALTY) && (this.hitResult != null && this.hitResult.getType() != HitResult.Type.BLOCK)) {
+        if (AnimatiumClient.ENABLED_SERVER_FEATURES.contains(ServerFeature.MISS_PENALTY) && (this.hitResult != null && this.hitResult.getType() != HitResult.Type.BLOCK)) {
             return 0;
         } else {
             return original.call(instance);
@@ -71,7 +71,7 @@ public abstract class MixinMinecraft {
 
     @WrapOperation(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;isDestroying()Z"))
     private boolean animatium$leftClickItemUsage(MultiPlayerGameMode instance, Operation<Boolean> original) {
-        if (AnimatiumClient.ENABLED_FEATURES.contains(Feature.LEFT_CLICK_ITEM_USAGE)) {
+        if (AnimatiumClient.ENABLED_SERVER_FEATURES.contains(ServerFeature.LEFT_CLICK_ITEM_USAGE)) {
             return false;
         } else {
             return original.call(instance);

@@ -30,7 +30,7 @@ import net.minecraft.network.chat.Component;
 import java.util.Arrays;
 import java.util.Optional;
 
-public enum Feature {
+public enum ServerFeature {
     MISS_PENALTY("miss_penalty", Component.translatable("animatium.miss_penalty.description")),
     LEFT_CLICK_ITEM_USAGE("left_click_item_usage", Component.translatable("animatium.left_click_item_usage.description")),
     HIDE_FIRSTPERSON_ROD_BOBBER("hide_rod_bobber", Component.translatable("animatium.hide_firstperson_rod_bobber.description")); // TODO
@@ -38,13 +38,13 @@ public enum Feature {
     private final String id;
     private final Component translate;
 
-    public static final Feature[] VALUES = values();
+    public static final ServerFeature[] VALUES = values();
 
-    public static Optional<Feature> byId(String id) {
+    public static Optional<ServerFeature> byId(String id) {
         return Arrays.stream(VALUES).filter(feature -> feature.id.equals(id)).findFirst();
     }
 
-    Feature(String id, Component translate) {
+    ServerFeature(String id, Component translate) {
         this.id = id;
         this.translate = translate;
     }

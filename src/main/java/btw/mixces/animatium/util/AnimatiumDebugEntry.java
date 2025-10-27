@@ -26,7 +26,7 @@
 package btw.mixces.animatium.util;
 
 import btw.mixces.animatium.AnimatiumClient;
-import btw.mixces.animatium.util.enums.Feature;
+import btw.mixces.animatium.util.enums.ServerFeature;
 import net.minecraft.client.gui.components.debug.DebugEntryCategory;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
@@ -45,10 +45,10 @@ public class AnimatiumDebugEntry implements DebugScreenEntry {
 
     @Override
     public void display(DebugScreenDisplayer debugScreenDisplayer, @Nullable Level level, @Nullable LevelChunk levelChunk, @Nullable LevelChunk levelChunk2) {
-        if (!AnimatiumClient.ENABLED_FEATURES.isEmpty()) {
+        if (!AnimatiumClient.ENABLED_SERVER_FEATURES.isEmpty()) {
             List<String> list = new ArrayList<>();
             list.add("Animatium Enabled Server Features:");
-            for (Feature feature : AnimatiumClient.ENABLED_FEATURES) {
+            for (ServerFeature feature : AnimatiumClient.ENABLED_SERVER_FEATURES) {
                 list.add(" - " + feature.getTranslate().getString());
             }
 

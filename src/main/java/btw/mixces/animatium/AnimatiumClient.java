@@ -29,10 +29,10 @@ import btw.mixces.animatium.command.AnimatiumCommand;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.packet.AnimatiumInfoPayloadPacket;
 import btw.mixces.animatium.packet.RequestInfoPayloadPacket;
-import btw.mixces.animatium.packet.SetFeaturesPayloadPacket;
+import btw.mixces.animatium.packet.SetServerFeaturesPayloadPacket;
 import btw.mixces.animatium.util.AnimatiumDebugEntry;
 import btw.mixces.animatium.util.ConfigUtil;
-import btw.mixces.animatium.util.enums.Feature;
+import btw.mixces.animatium.util.enums.ServerFeature;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.networking.v1.*;
@@ -54,7 +54,7 @@ public final class AnimatiumClient implements ClientModInitializer {
     public static final String MOD_ID = "animatium";
     public static boolean ENABLED = true;
     public static boolean SHOULD_RELOAD_OVERLAY_TEXTURE = true;
-    public static List<Feature> ENABLED_FEATURES = new ArrayList<>();
+    public static List<ServerFeature> ENABLED_SERVER_FEATURES = new ArrayList<>();
 
     // Info
     private static final ModContainer MOD_CONTAINER = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow(() -> new RuntimeException("Mod not found"));
@@ -87,20 +87,20 @@ public final class AnimatiumClient implements ClientModInitializer {
     }
 
     private void registerPayloads() {
-        ClientLoginConnectionEvents.DISCONNECT.register((packet, client) -> ENABLED_FEATURES.clear());
-        ClientConfigurationConnectionEvents.DISCONNECT.register((packet, client) -> ENABLED_FEATURES.clear());
-        ClientPlayConnectionEvents.DISCONNECT.register((packet, client) -> ENABLED_FEATURES.clear());
+        ClientLoginConnectionEvents.DISCONNECT.register((packet, client) -> ENABLED_SERVER_FEATURES.clear());
+        ClientConfigurationConnectionEvents.DISCONNECT.register((packet, client) -> ENABLED_SERVER_FEATURES.clear());
+        ClientPlayConnectionEvents.DISCONNECT.register((packet, client) -> ENABLED_SERVER_FEATURES.clear());
 
-        PayloadTypeRegistry.configurationS2C().register(SetFeaturesPayloadPacket.PAYLOAD_ID, SetFeaturesPayloadPacket.CODEC);
-        ClientConfigurationNetworking.registerGlobalReceiver(SetFeaturesPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> {
-            ENABLED_FEATURES.clear();
-            ENABLED_FEATURES.addAll(payload.features());
+        PayloadTypeRegistry.configurationS2C().register(SetServerFeaturesPayloadPacket.PAYLOAD_ID, SetServerFeaturesPayloadPacket.CODEC);
+        ClientConfigurationNetworking.registerGlobalReceiver(SetServerFeaturesPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> {
+            ENABLED_SERVER_FEATURES.clear();
+            ENABLED_SERVER_FEATURES.addAll(payload.features());
         }));
 
-        PayloadTypeRegistry.playS2C().register(SetFeaturesPayloadPacket.PAYLOAD_ID, SetFeaturesPayloadPacket.CODEC);
-        ClientPlayNetworking.registerGlobalReceiver(SetFeaturesPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> {
-            ENABLED_FEATURES.clear();
-            ENABLED_FEATURES.addAll(payload.features());
+        PayloadTypeRegistry.playS2C().register(SetServerFeaturesPayloadPacket.PAYLOAD_ID, SetServerFeaturesPayloadPacket.CODEC);
+        ClientPlayNetworking.registerGlobalReceiver(SetServerFeaturesPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> {
+            ENABLED_SERVER_FEATURES.clear();
+            ENABLED_SERVER_FEATURES.addAll(payload.features());
         }));
 
         PayloadTypeRegistry.playC2S().register(AnimatiumInfoPayloadPacket.PAYLOAD_ID, AnimatiumInfoPayloadPacket.CODEC);

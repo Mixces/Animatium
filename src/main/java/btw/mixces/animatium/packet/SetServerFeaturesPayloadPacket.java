@@ -26,7 +26,7 @@
 package btw.mixces.animatium.packet;
 
 import btw.mixces.animatium.AnimatiumClient;
-import btw.mixces.animatium.util.enums.Feature;
+import btw.mixces.animatium.util.enums.ServerFeature;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -35,19 +35,19 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public record SetFeaturesPayloadPacket(List<Feature> features) implements CustomPacketPayload {
-    public static final StreamCodec<FriendlyByteBuf, SetFeaturesPayloadPacket> CODEC = CustomPacketPayload.codec(null, SetFeaturesPayloadPacket::read);
-    public static final Type<SetFeaturesPayloadPacket> PAYLOAD_ID = new Type<>(AnimatiumClient.id("set_features"));
+public record SetServerFeaturesPayloadPacket(List<ServerFeature> features) implements CustomPacketPayload {
+    public static final StreamCodec<FriendlyByteBuf, SetServerFeaturesPayloadPacket> CODEC = CustomPacketPayload.codec(null, SetServerFeaturesPayloadPacket::read);
+    public static final Type<SetServerFeaturesPayloadPacket> PAYLOAD_ID = new Type<>(AnimatiumClient.id("set_features"));
 
-    private static SetFeaturesPayloadPacket read(FriendlyByteBuf buffer) {
+    private static SetServerFeaturesPayloadPacket read(FriendlyByteBuf buffer) {
         final int size = buffer.readVarInt();
 
-        List<Feature> features = new ArrayList<>();
+        List<ServerFeature> features = new ArrayList<>();
         for (int i = 0; i < size; ++i) {
-            Feature.byId(buffer.readUtf()).ifPresent(features::add);
+            ServerFeature.byId(buffer.readUtf()).ifPresent(features::add);
         }
 
-        return new SetFeaturesPayloadPacket(features);
+        return new SetServerFeaturesPayloadPacket(features);
     }
 
     @Override
