@@ -27,7 +27,7 @@ package btw.mixces.animatium.mixins.v1.entity.rotations;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.util.PlayerUtils;
+import btw.mixces.animatium.util.Utils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.player.LocalPlayer;
@@ -87,7 +87,7 @@ public abstract class MixinLivingEntity extends Entity {
     @WrapOperation(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;swing(Lnet/minecraft/world/InteractionHand;)V"))
     private void animatium$swingOnDropInventory(LivingEntity entity, InteractionHand hand, Operation<Void> original) {
         if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().items.swingOnDrop && entity instanceof LocalPlayer localPlayer) {
-            PlayerUtils.sendSwingPacket(localPlayer, hand);
+            Utils.sendSwingPacket(localPlayer, hand);
         } else {
             original.call(entity, hand);
         }

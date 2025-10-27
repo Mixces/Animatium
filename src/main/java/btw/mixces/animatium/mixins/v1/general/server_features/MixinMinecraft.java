@@ -27,7 +27,7 @@ package btw.mixces.animatium.mixins.v1.general.server_features;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.util.PlayerUtils;
+import btw.mixces.animatium.util.Utils;
 import btw.mixces.animatium.util.enums.Feature;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -56,7 +56,7 @@ public abstract class MixinMinecraft {
     @Inject(method = "startAttack", at = @At(value = "RETURN", ordinal = 0))
     private void animatium$fakeMissPenaltySwing(CallbackInfoReturnable<Boolean> cir) {
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().extras.fakeMissPenaltySwing && player != null) {
-            PlayerUtils.fakeHandSwing(player, InteractionHand.MAIN_HAND);
+            Utils.fakeHandSwing(player, InteractionHand.MAIN_HAND);
         }
     }
 

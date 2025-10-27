@@ -28,7 +28,7 @@ package btw.mixces.animatium.mixins.v1.general.items.usage;
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.ItemUtils;
-import btw.mixces.animatium.util.PlayerUtils;
+import btw.mixces.animatium.util.Utils;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -86,7 +86,7 @@ public abstract class MixinMinecraft {
     @WrapOperation(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V", ordinal = 2))
     private void animatium$swingOnUse(LocalPlayer instance, InteractionHand hand, Operation<Void> original, @Local InteractionHand interactionHand, @Local ItemStack itemStack) {
         if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().items.swingOnUse && ItemUtils.isSwingItemBlacklisted(itemStack)) {
-            PlayerUtils.sendSwingPacket(instance, hand);
+            Utils.sendSwingPacket(instance, hand);
         } else {
             original.call(instance, hand);
         }
@@ -95,7 +95,7 @@ public abstract class MixinMinecraft {
     @WrapOperation(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V"))
     private void animatium$swingOnDrop(LocalPlayer instance, InteractionHand hand, Operation<Void> original) {
         if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().items.swingOnDrop) {
-            PlayerUtils.sendSwingPacket(instance, hand);
+            Utils.sendSwingPacket(instance, hand);
         } else {
             original.call(instance, hand);
         }
@@ -104,7 +104,7 @@ public abstract class MixinMinecraft {
     @WrapOperation(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V", ordinal = 0))
     private void animatium$swingOnEntityInteract(LocalPlayer instance, InteractionHand hand, Operation<Void> original) {
         if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().items.swingOnEntityInteract) {
-            PlayerUtils.sendSwingPacket(instance, hand);
+            Utils.sendSwingPacket(instance, hand);
         } else {
             original.call(instance, hand);
         }
@@ -114,7 +114,7 @@ public abstract class MixinMinecraft {
     private void animatium$applySwingWhilstMining(CallbackInfo ci) {
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().items.itemUsageSwinging) {
             if (this.player != null && !(this.player.getItemInHand(this.player.getUsedItemHand()).isEmpty() || !this.player.isUsingItem() || !this.options.keyAttack.isDown())) {
-                PlayerUtils.applySwingWhilstMining(this.level, this.player, this.hitResult);
+                Utils.applySwingWhilstMining(this.level, this.player, this.hitResult);
             }
         }
     }

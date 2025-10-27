@@ -28,8 +28,8 @@ package btw.mixces.animatium.mixins.v1.entity.fishing;
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.mixins.accessor.CameraAccessor;
-import btw.mixces.animatium.util.PlayerUtils;
 import btw.mixces.animatium.util.RenderUtils;
+import btw.mixces.animatium.util.Utils;
 import btw.mixces.animatium.util.enums.FishingRodVersion;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -90,13 +90,13 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
     }
 
     @WrapOperation(method = "getPlayerHandPos", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getEyePosition(F)Lnet/minecraft/world/phys/Vec3;"))
-    private Vec3 animatium$fishingRodLineInterpolation(Player instance, float v, Operation<Vec3> original) {
-        final Vec3 originalPos = original.call(instance, v);
+    private Vec3 animatium$fishingRodLineInterpolation(Player instance, float tickDelta, Operation<Vec3> original) {
+        final Vec3 originalPos = original.call(instance, tickDelta);
         if (AnimatiumClient.ENABLED) {
             CameraAccessor cameraAccessor = (CameraAccessor) entityRenderDispatcher.camera;
             float eyeHeight;
             if (AnimatiumConfig.instance().items.fishingRodLineInterpolation) {
-                eyeHeight = Mth.lerp(v, cameraAccessor.animatium$getOldEyeHeight(), cameraAccessor.animatium$getEyeHeight());
+                eyeHeight = Mth.lerp(tickDelta, cameraAccessor.animatium$getOldEyeHeight(), cameraAccessor.animatium$getEyeHeight());
             } else if (AnimatiumConfig.instance().movement.fakeOldSneakEyeHeight) {
                 // Non-lerped eyeheight trick
                 eyeHeight = cameraAccessor.animatium$getEyeHeight();
@@ -104,7 +104,7 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
                 return originalPos;
             }
 
-            return PlayerUtils.getPosWithEyeHeight(instance, v, eyeHeight);
+            return Utils.getPosWithEyeHeight(instance, tickDelta, eyeHeight);
         } else {
             return originalPos;
         }
@@ -142,7 +142,7 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
     private float animatium$fixCastLineSwing(float original, @Local(argsOnly = true) FishingHook fishingHook) {
         final Player player = fishingHook.getPlayerOwner();
         if (AnimatiumConfig.instance().fixes.fixCastLineSwing && player != null) {
-            return original * PlayerUtils.getHandMultiplier(player);
+            return original * Utils.getHandMultiplier(player);
         } else {
             return original;
         }

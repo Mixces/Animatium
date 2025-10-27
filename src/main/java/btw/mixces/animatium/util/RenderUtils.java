@@ -188,4 +188,8 @@ public final class RenderUtils {
             return null;
         }
     }
+
+    static {
+        IrisUtil.assignPipeline(IrisUtil.skyBasic(), LEGACY_SKY_PIPELINE, LEGACY_SKY_PLANAR_FOG_PIPELINE);
+    }
 }

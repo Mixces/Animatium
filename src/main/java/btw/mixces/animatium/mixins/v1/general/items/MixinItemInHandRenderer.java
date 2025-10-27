@@ -28,7 +28,6 @@ package btw.mixces.animatium.mixins.v1.general.items;
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.ItemUtils;
-import btw.mixces.animatium.util.PlayerUtils;
 import btw.mixces.animatium.util.Utils;
 import btw.mixces.animatium.util.enums.FishingRodVersion;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
@@ -96,7 +95,7 @@ public abstract class MixinItemInHandRenderer {
 
     @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V", ordinal = 1))
     private void animatium$postBowTransform(PoseStack poseStack, float x, float y, float z, Operation<Void> original, @Local(argsOnly = true) AbstractClientPlayer player, @Local(argsOnly = true) InteractionHand hand) {
-        final int direction = PlayerUtils.getHandMultiplier(player, hand);
+        final int direction = Utils.getHandMultiplier(player, hand);
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().items.itemPositions) {
             poseStack.mulPose(Axis.ZP.rotationDegrees(direction * -335));
             poseStack.mulPose(Axis.YP.rotationDegrees(direction * -50.0F));
@@ -112,7 +111,7 @@ public abstract class MixinItemInHandRenderer {
     @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getItem()Lnet/minecraft/world/item/Item;"))
     private Item animatium$oldFirstPersonSwordBlock(ItemStack instance, Operation<Item> original, @Local(argsOnly = true) AbstractClientPlayer player, @Local(argsOnly = true) InteractionHand hand, @Local(argsOnly = true) PoseStack poseStack) {
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().items.itemPositions && !(instance.getItem() instanceof ShieldItem)) {
-            final int direction = PlayerUtils.getHandMultiplier(player, hand);
+            final int direction = Utils.getHandMultiplier(player, hand);
             // We do this to fix a rounding error in Mojangs code.
             ItemUtils.applyLegacyFirstpersonTransforms(poseStack, direction, () -> {
                 poseStack.translate(direction * -0.5F, 0.2F, 0.0F);
@@ -128,7 +127,7 @@ public abstract class MixinItemInHandRenderer {
 
     @Inject(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V"))
     private void animatium$itemPositions(AbstractClientPlayer player, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack stack, float equipProgress, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int light, CallbackInfo ci) {
-        final int direction = PlayerUtils.getHandMultiplier(player, hand);
+        final int direction = Utils.getHandMultiplier(player, hand);
         if (AnimatiumClient.ENABLED) {
             if (AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersion.V1_7 && ItemUtils.isFishingRodItem(stack)) {
                 poseStack.mulPose(Axis.YP.rotationDegrees(direction * 180.0F));

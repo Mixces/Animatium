@@ -170,7 +170,7 @@ public final class ItemUtils {
         if (AnimatiumConfig.instance().items.itemPositionsInThirdPerson) {
             return true;
         } else {
-            return AnimatiumConfig.instance().other.thirdPersonSwordBlockingPosition && PlayerUtils.isBlockingArm(armedEntityRenderState.mainArm, armedEntityRenderState);
+            return AnimatiumConfig.instance().other.thirdPersonSwordBlockingPosition && Utils.isBlockingArm(armedEntityRenderState.mainArm, armedEntityRenderState);
         }
     }
 

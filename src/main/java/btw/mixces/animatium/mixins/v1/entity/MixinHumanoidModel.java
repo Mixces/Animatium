@@ -27,7 +27,7 @@ package btw.mixces.animatium.mixins.v1.entity;
 
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
-import btw.mixces.animatium.util.PlayerUtils;
+import btw.mixces.animatium.util.Utils;
 import btw.mixces.animatium.util.states.UtilityRenderState;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -113,10 +113,10 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
     @ModifyExpressionValue(method = "setupAttackAnimation", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;sin(F)F", ordinal = 5))
     public float animatium$fixMirrorArmSwing$sin(float original, @Local HumanoidArm arm) {
         if (AnimatiumConfig.instance().fixes.fixMirrorArmSwing) {
-            return PlayerUtils.getArmMultiplier(arm) * original;
-        } else {
-            return original;
+            original *= Utils.getArmMultiplier(arm);
         }
+
+        return original;
     }
 
     @WrapOperation(method = "poseBlockingArm", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F"))

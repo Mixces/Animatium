@@ -28,7 +28,7 @@ package btw.mixces.animatium.mixins.v1.general.items;
 import btw.mixces.animatium.AnimatiumClient;
 import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.ItemUtils;
-import btw.mixces.animatium.util.PlayerUtils;
+import btw.mixces.animatium.util.Utils;
 import btw.mixces.animatium.util.states.UtilityRenderState;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -86,7 +86,7 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
     @Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/item/ItemStackRenderState;submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V"))
     private void animatium$itemPositionsThird(S armedEntityRenderState, ItemStackRenderState itemStackRenderState, HumanoidArm humanoidArm, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, CallbackInfo ci) {
         if (AnimatiumClient.ENABLED && ItemUtils.shouldApplyItemPositionsInThirdperson(armedEntityRenderState)) {
-            final int direction = PlayerUtils.getArmMultiplier(humanoidArm);
+            final int direction = Utils.getArmMultiplier(humanoidArm);
             UtilityRenderState itemArmedEntityRenderState = (UtilityRenderState) armedEntityRenderState;
             ItemStack stack = itemArmedEntityRenderState.animatium$getItemHeldByArm(humanoidArm);
             Item item = stack.getItem();
@@ -118,7 +118,7 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
                         poseStack.translate(0.0F, -0.125F, 0.0F);
                     }
 
-                    if (PlayerUtils.isBlockingArm(humanoidArm, armedEntityRenderState)) {
+                    if (Utils.isBlockingArm(humanoidArm, armedEntityRenderState)) {
                         poseStack.translate(direction * 0.05F, 0.0F, -0.1F);
                         poseStack.mulPose(Axis.YP.rotationDegrees(direction * -50.0F));
                         poseStack.mulPose(Axis.XP.rotationDegrees(-10.0F));
