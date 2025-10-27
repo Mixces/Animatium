@@ -166,7 +166,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
         - 1.8 and below (V1_8)
         - 1.9 through to 1.13.2 (V1_9_V1_13_2)
         - 1.14 through to 1.14.3 (V1_14_V1_14_3)
-        - LATEST
+        - Vanilla
   </details>
 
 <details>
@@ -262,7 +262,7 @@ want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
     - Type: ENUM
         - 1.7 and below (V1_7)
         - 1.8 (V1_8)
-        - LATEST
+        - Vanilla
 
 ### Other
 

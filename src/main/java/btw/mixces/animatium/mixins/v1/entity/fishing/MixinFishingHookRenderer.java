@@ -65,7 +65,7 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
 
     @ModifyArgs(method = "getPlayerHandPos", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera$NearPlane;getPointOnPlane(FF)Lnet/minecraft/world/phys/Vec3;"))
     private void animatium$moveCastLineY(Args args) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().items.fishingRodVersion != FishingRodVersion.LATEST) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().items.fishingRodVersion != FishingRodVersion.VANILLA) {
             final FishingRodVersion version = AnimatiumConfig.instance().items.fishingRodVersion;
             if (version == FishingRodVersion.V1_8) {
                 animatium$modifyPlanarScale(args, 0);

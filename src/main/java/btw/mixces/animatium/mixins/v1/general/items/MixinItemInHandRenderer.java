@@ -142,7 +142,7 @@ public abstract class MixinItemInHandRenderer {
                     player,
                     light
             ); // TODO/NOTE: Might be wrong
-            if (AnimatiumConfig.instance().items.itemPositions && !ItemUtils.isBlock3d(stack, itemStackRenderState) && !ItemUtils.isItemBlacklisted(stack)) {
+            if (AnimatiumConfig.instance().items.itemPositions && !ItemUtils.isBlock3d(stack, itemStackRenderState.usesBlockLight()) && !ItemUtils.isItemBlacklisted(stack)) {
                 final float angle = Utils.toRadians(25);
 
                 poseStack.scale(0.6F, 0.6F, 0.6F);

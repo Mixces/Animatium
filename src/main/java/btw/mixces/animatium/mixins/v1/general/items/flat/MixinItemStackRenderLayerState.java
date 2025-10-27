@@ -89,7 +89,7 @@ public abstract class MixinItemStackRenderLayerState {
                 float scaleX = transform.scale().x();
                 float scaleY = transform.scale().y();
                 float scaleZ = transform.scale().z();
-                if (AnimatiumConfig.instance().items.fishingRodVersion != FishingRodVersion.LATEST && ItemUtils.isFishingRodItem(stack) && isFirstPerson) {
+                if (AnimatiumConfig.instance().items.fishingRodVersion != FishingRodVersion.VANILLA && ItemUtils.isFishingRodItem(stack) && isFirstPerson) {
                     int ordinal = AnimatiumConfig.instance().items.fishingRodVersion.ordinal();
                     if (ordinal <= FishingRodVersion.V1_8.ordinal()) {
                         poseStack.translate(0.070625, 0.1, 0.020625);
