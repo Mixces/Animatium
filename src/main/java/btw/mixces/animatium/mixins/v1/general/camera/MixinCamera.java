@@ -58,7 +58,7 @@ public abstract class MixinCamera {
     private Entity entity;
 
     @Shadow
-    protected abstract void move(float f, float g, float h);
+    protected abstract void move(float zoom, float dy, float dx);
 
     @Inject(method = "setup", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setRotation(FF)V", shift = At.Shift.AFTER))
     private void animatium$removeSmoothSneaking(CallbackInfo ci) {
@@ -120,8 +120,8 @@ public abstract class MixinCamera {
         final float standingEyeHeight = this.entity.getEyeHeight();
         if (AnimatiumClient.ENABLED &&
                 AnimatiumConfig.instance().movement.fakeOldSneakEyeHeight &&
-                this.entity.hasPose(Pose.CROUCHING) &&
                 this.entity instanceof Player player &&
+                player.isCrouching() &&
                 ((PlayerAccessor) player).animatium$canChangeIntoPose(Pose.STANDING)) {
             return 1.54F * player.getScale();
         } else {

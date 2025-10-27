@@ -46,25 +46,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(GuiGraphics.class)
 public abstract class MixinGuiGraphics {
     @Shadow
-    public abstract void fill(int i, int j, int k, int l, int m);
+    public abstract void fill(int minX, int minY, int maxX, int maxY, int color);
 
     @WrapOperation(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/tooltip/TooltipRenderUtil;renderTooltipBackground(Lnet/minecraft/client/gui/GuiGraphics;IIIILnet/minecraft/resources/ResourceLocation;)V"))
-    private void animatium$tooltipStyleRendering(GuiGraphics context, int i, int j, int k, int l, ResourceLocation resourceLocation, Operation<Void> original) {
+    private void animatium$tooltipStyleRendering(GuiGraphics guiGraphics, int x, int y, int width, int height, ResourceLocation sprite, Operation<Void> original) {
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().screen.tooltipStyleRendering) {
-            int n = i - 3;
-            int o = j - 3;
-            int p = k + 3 + 3;
-            int q = l + 3 + 3;
+            int n = x - 3;
+            int o = y - 3;
+            int p = width + 6;
+            int q = height + 6;
             // TODO/NOTE: Figure out good names for these variables LOL
             final int lineColor = -267386864;
-            RenderUtils.fillHorizontalLine(context, n, o - 1, p, lineColor);
-            RenderUtils.fillHorizontalLine(context, n, o + q, p, lineColor);
-            RenderUtils.fillRectangle(context, n, o, p, q, lineColor);
-            RenderUtils.fillVerticalLine(context, n - 1, o, q, lineColor);
-            RenderUtils.fillVerticalLine(context, n + p, o, q, lineColor);
-            animatium$drawFrameGradient(context, n, o + 1, p, q, 1347420415, 1344798847);
+            RenderUtils.fillHorizontalLine(guiGraphics, n, o - 1, p, lineColor);
+            RenderUtils.fillHorizontalLine(guiGraphics, n, o + q, p, lineColor);
+            RenderUtils.fillRectangle(guiGraphics, n, o, p, q, lineColor);
+            RenderUtils.fillVerticalLine(guiGraphics, n - 1, o, q, lineColor);
+            RenderUtils.fillVerticalLine(guiGraphics, n + p, o, q, lineColor);
+            animatium$drawFrameGradient(guiGraphics, n, o + 1, p, q, 1347420415, 1344798847);
         } else {
-            original.call(context, i, j, k, l, resourceLocation);
+            original.call(guiGraphics, x, y, width, height, sprite);
         }
     }
 
@@ -73,8 +73,8 @@ public abstract class MixinGuiGraphics {
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().items.durabilityBarColors && !(stack.getItem() instanceof BundleItem)) {
             int i = x + 2;
             int j = y + 13;
-            int color = ARGB.color((255 - ItemUtils.getLegacyDurabilityColorValue(stack)) / 4, 64, 0);
-            this.fill(i, j, i + 12, j + 1, ARGB.opaque(color));
+            final int color = ARGB.opaque(ARGB.color((255 - ItemUtils.getLegacyDurabilityColorValue(stack)) / 4, 64, 0));
+            this.fill(i, j, i + 12, j + 1, color);
         }
     }
 

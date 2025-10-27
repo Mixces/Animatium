@@ -40,7 +40,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(AbstractSelectionList.class)
 public abstract class MixinAbstractSelectionList {
     @Inject(method = "renderWidget", at = @At("HEAD"))
-    private void animatium$updateScroll(GuiGraphics context, int mouseX, int mouseY, float tickDelta, CallbackInfo ci) {
+    private void animatium$updateScroll(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().screen.centerScrollableListWidgets) {
             ((AbstractScrollArea) (Object) this).refreshScrollAmount();
         }

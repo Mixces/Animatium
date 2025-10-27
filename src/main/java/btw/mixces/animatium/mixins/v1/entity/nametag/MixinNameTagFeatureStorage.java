@@ -37,11 +37,11 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(NameTagFeatureRenderer.Storage.class)
 public abstract class MixinNameTagFeatureStorage {
     @WrapOperation(method = "add", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Options;getBackgroundOpacity(F)F"))
-    private float animatium$nameTagBackground(Options instance, float fallback, Operation<Float> original) {
+    private float animatium$nameTagBackground(Options instance, float opacity, Operation<Float> original) {
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().extras.hideNameTagBackground) {
             return 0F;
         } else {
-            return original.call(instance, fallback);
+            return original.call(instance, opacity);
         }
     }
 }

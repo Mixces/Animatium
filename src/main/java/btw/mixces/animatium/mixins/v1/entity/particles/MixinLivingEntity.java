@@ -30,16 +30,22 @@ import btw.mixces.animatium.config.AnimatiumConfig;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(LivingEntity.class)
-public abstract class MixinLivingEntity {
+public abstract class MixinLivingEntity extends Entity {
+    public MixinLivingEntity(EntityType<?> entityType, Level level) {
+        super(entityType, level);
+    }
+
     @WrapWithCondition(method = "tickEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))
-    private boolean animatium$hideFirstpersonParticles(Level instance, ParticleOptions particleOptions, double d, double e, double f, double g, double h, double i) {
+    private boolean animatium$hideFirstpersonParticles(Level instance, ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
         final Minecraft client = Minecraft.getInstance();
-        return !AnimatiumClient.ENABLED || !AnimatiumConfig.instance().extras.disableFirstPersonParticles || (Object) this != client.player || !client.options.getCameraType().isFirstPerson();
+        return !AnimatiumClient.ENABLED || !AnimatiumConfig.instance().extras.disableFirstPersonParticles || this.getId() != client.player.getId() || !client.options.getCameraType().isFirstPerson();
     }
 }

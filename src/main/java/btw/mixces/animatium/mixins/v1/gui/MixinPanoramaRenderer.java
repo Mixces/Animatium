@@ -97,7 +97,7 @@ public abstract class MixinPanoramaRenderer {
     private GlTextureView animatium$backgroundTextureView;
 
     @Inject(method = "render", at = @At("HEAD"))
-    private void animatium$panoramaStart(GuiGraphics guiGraphics, int i, int j, boolean bl, CallbackInfo ci) {
+    private void animatium$panoramaStart(GuiGraphics guiGraphics, int width, int height, boolean spin, CallbackInfo ci) {
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().screen.panoramaRendering) {
             if (animatium$backgroundTexture == null) {
                 GpuDevice device = RenderSystem.getDevice();
@@ -110,7 +110,7 @@ public abstract class MixinPanoramaRenderer {
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CubeMap;render(Lnet/minecraft/client/Minecraft;FF)V", ordinal = 0, shift = At.Shift.AFTER))
-    private void animatium$panoramaFinish(GuiGraphics guiGraphics, int width, int height, boolean bl, CallbackInfo ci) {
+    private void animatium$panoramaFinish(GuiGraphics guiGraphics, int width, int height, boolean spin, CallbackInfo ci) {
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().screen.panoramaRendering) {
             final RenderTarget renderTarget = minecraft.getMainRenderTarget();
             for (int i = 0; i < 6; ++i) {
@@ -123,12 +123,12 @@ public abstract class MixinPanoramaRenderer {
     }
 
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/ResourceLocation;IIFFIIIIII)V"))
-    private void animatium$panoramaGradient(GuiGraphics instance, RenderPipeline renderPipeline, ResourceLocation resourceLocation, int i, int j, float f, float g, int width, int height, int m, int n, int o, int p, Operation<Void> original) {
+    private void animatium$panoramaGradient(GuiGraphics instance, RenderPipeline pipeline, ResourceLocation atlas, int x, int y, float u, float v, int width, int height, int uWidth, int vHeight, int textureWidth, int textureHeight, Operation<Void> original) {
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().screen.panoramaRendering) {
             instance.fillGradient(0, 0, width, height, -2130706433, 16777215);
             instance.fillGradient(0, 0, width, height, 0, Integer.MIN_VALUE);
         } else {
-            original.call(instance, renderPipeline, resourceLocation, i, j, f, g, width, height, m, n, o, p);
+            original.call(instance, pipeline, atlas, x, y, u, v, width, height, uWidth, vHeight, textureWidth, textureHeight);
         }
     }
 

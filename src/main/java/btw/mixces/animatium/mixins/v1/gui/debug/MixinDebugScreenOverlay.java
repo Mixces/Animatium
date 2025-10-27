@@ -37,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 @Mixin(DebugScreenOverlay.class)
 public abstract class MixinDebugScreenOverlay {
     @WrapWithCondition(method = "renderLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V"))
-    private boolean animatium$removeDebugBackground(GuiGraphics instance, int x1, int y1, int x2, int y2, int color) {
+    private boolean animatium$removeDebugBackground(GuiGraphics instance, int minX, int minY, int maxX, int maxY, int color) {
         return !AnimatiumClient.ENABLED || !AnimatiumConfig.instance().screen.disableDebugHudBackground;
     }
 

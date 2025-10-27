@@ -35,6 +35,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.entity.ClientAvatarEntity;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -56,8 +57,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AvatarRenderer.class)
 public abstract class MixinAvatarRenderer<AvatarLikeEntity extends Avatar & ClientAvatarEntity> extends LivingEntityRenderer<AvatarLikeEntity, AvatarRenderState, PlayerModel> {
-    public MixinAvatarRenderer(EntityRendererProvider.Context context, PlayerModel entityModel, float f) {
-        super(context, entityModel, f);
+    public MixinAvatarRenderer(EntityRendererProvider.Context context, boolean slim) {
+        super(context, new PlayerModel(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER), slim), 0.5F);
     }
 
     @WrapOperation(method = "extractCapeState", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;rotLerp(FFF)F"))

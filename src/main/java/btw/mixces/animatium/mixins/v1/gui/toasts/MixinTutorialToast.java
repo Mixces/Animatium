@@ -40,14 +40,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(TutorialToast.class)
 public abstract class MixinTutorialToast {
     @Inject(method = "update", at = @At("HEAD"), cancellable = true)
-    private void animatium$disableTutorialToast(ToastManager toastManager, long l, CallbackInfo ci) {
+    private void animatium$disableTutorialToast(ToastManager toastManager, long visibilityTime, CallbackInfo ci) {
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts && !Utils.HAS_SODIUM_EXTRA) {
             ci.cancel();
         }
     }
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
-    private void animatium$disableTutorialToast(GuiGraphics guiGraphics, Font font, long l, CallbackInfo ci) {
+    private void animatium$disableTutorialToast(GuiGraphics guiGraphics, Font font, long visibilityTime, CallbackInfo ci) {
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts && !Utils.HAS_SODIUM_EXTRA) {
             ci.cancel();
         }

@@ -241,6 +241,8 @@
 	"animatium.persistentBlockOutline.description": "Always show block outline, no matter the gamemode or state.",
 	"animatium.offhandUsageSwinging": "[*] Allow off-hand usage swinging",
 	"animatium.offhandUsageSwinging.description": "Swings the offhand whilst using item and holding right click.",
+	"animatium.alwaysUsageSwing": "[*] Allow usage swinging always",
+	"animatium.alwaysUsageSwing.description": "Allows you to swing/use the item in the air/always.",
 	"animatium.alwaysSharpParticles": "[*] Always show sharp particles on damage",
 	"animatium.alwaysSharpParticles.description": "Always show the sharpness particles when damaging/hitting an entity.",
 	"animatium.disableRecipeAndTutorialToasts": "[*] Disable recipe and tutorial toasts",

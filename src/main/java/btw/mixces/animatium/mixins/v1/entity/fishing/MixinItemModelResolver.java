@@ -55,7 +55,7 @@ public abstract class MixinItemModelResolver {
     }
 
     @WrapOperation(method = "appendItemLayers", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;get(Lnet/minecraft/core/component/DataComponentType;)Ljava/lang/Object;"))
-    private Object animatium$stickModelWhenCastInThirdperson(ItemStack instance, DataComponentType<ResourceLocation> dataComponentType, Operation<ResourceLocation> original, @Local(argsOnly = true) ItemDisplayContext displayContext, @Local(argsOnly = true) ItemOwner itemOwner, @Local(argsOnly = true) ItemStack itemStack) {
+    private Object animatium$stickModelWhenCastInThirdperson(ItemStack instance, DataComponentType<?> dataComponentType, Operation<Object> original, @Local(argsOnly = true) ItemDisplayContext displayContext, @Local(argsOnly = true) ItemOwner itemOwner, @Local(argsOnly = true) ItemStack itemStack) {
         final LivingEntity livingEntity = itemOwner == null ? null : itemOwner.asLivingEntity();
         if (AnimatiumClient.ENABLED &&
                 AnimatiumConfig.instance().items.stickModelWhenCastInThirdperson &&

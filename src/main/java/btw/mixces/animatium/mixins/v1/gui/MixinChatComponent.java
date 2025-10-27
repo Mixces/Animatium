@@ -37,9 +37,9 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(ChatComponent.class)
 public abstract class MixinChatComponent {
     @WrapMethod(method = "clearMessages")
-    private void animatium$dontClearChat(boolean bl, Operation<Void> original) {
+    private void animatium$dontClearChat(boolean clearSentMsgHistory, Operation<Void> original) {
         if (!AnimatiumClient.ENABLED || !AnimatiumConfig.instance().extras.dontClearChat || GLFW.glfwGetKey(Minecraft.getInstance().getWindow().handle(), GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS) {
-            original.call(bl);
+            original.call(clearSentMsgHistory);
         }
     }
 }

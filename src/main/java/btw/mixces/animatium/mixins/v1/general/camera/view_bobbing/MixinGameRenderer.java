@@ -35,6 +35,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.ClientAvatarState;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -63,13 +64,13 @@ public abstract class MixinGameRenderer {
     }
 
     @WrapWithCondition(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GameRenderer;bobView(Lcom/mojang/blaze3d/vertex/PoseStack;F)V"))
-    private boolean animatium$minimalViewBobbing(GameRenderer instance, PoseStack poseStack, float tickDelta) {
+    private boolean animatium$minimalViewBobbing(GameRenderer instance, PoseStack poseStack, float partialTicks) {
         return !AnimatiumClient.ENABLED || !AnimatiumConfig.instance().extras.minimalViewBobbing;
     }
 
     @WrapOperation(method = "bobHurt", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/LivingEntity;hurtTime:I"))
     private int animatium$offsetHurtTime(LivingEntity instance, Operation<Integer> original) {
-        int hurtTime = original.call(instance);
+        final int hurtTime = original.call(instance);
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.offsetHurtTime) {
             return Math.max(hurtTime - 1, 0);
         } else {
@@ -78,22 +79,22 @@ public abstract class MixinGameRenderer {
     }
 
     @Inject(method = "bobView", at = @At("TAIL"))
-    private void animatium$fixVerticalBobbingTilt(PoseStack poseStack, float tickDelta, CallbackInfo ci) {
+    private void animatium$fixVerticalBobbingTilt(PoseStack poseStack, float partialTicks, CallbackInfo ci) {
         if (AnimatiumConfig.instance().fixes.fixVerticalBobbingTilt && this.minecraft.getCameraEntity() instanceof Player player) {
             ViewBobbingStorage bobbingAccessor = (ViewBobbingStorage) player;
-            float j = Mth.lerp(tickDelta, bobbingAccessor.animatium$getPreviousBobbingTilt(), bobbingAccessor.animatium$getBobbingTilt());
+            float j = Mth.lerp(partialTicks, bobbingAccessor.animatium$getPreviousBobbingTilt(), bobbingAccessor.animatium$getBobbingTilt());
             poseStack.mulPose(Axis.XP.rotationDegrees(j));
         }
     }
 
     @WrapOperation(method = "bobView", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/ClientAvatarState;getBackwardsInterpolatedWalkDistance(F)F"))
-    private float animatium$viewBobbing$changeDistance(ClientAvatarState instance, float tickDelta, Operation<Float> original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.viewBobbing && this.minecraft.getCameraEntity() instanceof Player player) {
-            final float walkDist = ((ViewBobbingStorage) player).animatium$getHorizontalSpeed();
-            final float walkDistO = ((ViewBobbingStorage) player).animatium$getPreviousHorizontalSpeed();
-            return -(walkDist + (walkDist - walkDistO) * tickDelta);
+    private float animatium$viewBobbing$changeDistance(ClientAvatarState instance, float partialTicks, Operation<Float> original) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.viewBobbing && this.minecraft.getCameraEntity() instanceof AbstractClientPlayer abstractClientPlayer) {
+            final float walkDist = ((ViewBobbingStorage) abstractClientPlayer).animatium$getHorizontalSpeed();
+            final float walkDistO = ((ViewBobbingStorage) abstractClientPlayer).animatium$getPreviousHorizontalSpeed();
+            return -(walkDist + (walkDist - walkDistO) * partialTicks);
         } else {
-            return original.call(instance, tickDelta);
+            return original.call(instance, partialTicks);
         }
     }
 

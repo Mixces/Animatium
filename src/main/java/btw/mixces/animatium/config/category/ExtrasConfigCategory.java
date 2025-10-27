@@ -41,6 +41,7 @@ public class ExtrasConfigCategory {
     public boolean debugHudTextColor = false;
     public boolean persistentBlockOutline = false;
     public boolean offhandUsageSwinging = false;
+    public boolean alwaysUsageSwing = false;
     public boolean alwaysSharpParticles = false;
     public boolean disableRecipeAndTutorialToasts = false; // Disabled if "sodium-extra" is detected
     public boolean showArmWhileInvisible = false;
@@ -117,6 +118,15 @@ public class ExtrasConfigCategory {
                         defaults.offhandUsageSwinging,
                         () -> config.offhandUsageSwinging,
                         (newVal) -> config.offhandUsageSwinging = newVal)
+                .controller(TickBoxControllerBuilder::create)
+                .build());
+        category.option(Option.<Boolean>createBuilder()
+                .name(Component.translatable("animatium.alwaysUsageSwing"))
+                .description(OptionDescription.of(Component.translatable("animatium.alwaysUsageSwing.description")))
+                .binding(
+                        defaults.alwaysUsageSwing,
+                        () -> config.alwaysUsageSwing,
+                        (newVal) -> config.alwaysUsageSwing = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()

@@ -36,6 +36,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(HumanoidMobRenderer.class)
 public abstract class MixinHumanoidMobRenderer {
+    // TODO: Improve sneaking animation when spamming for parity for older mc versions
     @WrapOperation(method = "extractHumanoidRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isCrouching()Z"))
     private static boolean animatium$sneakAnimationWhileFlying(LivingEntity livingEntity, Operation<Boolean> original) {
         final boolean isCrouching = original.call(livingEntity);

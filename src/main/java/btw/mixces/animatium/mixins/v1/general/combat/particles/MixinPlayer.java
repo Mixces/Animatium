@@ -37,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(Player.class)
 public abstract class MixinPlayer {
     @WrapWithCondition(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"))
-    private boolean animatium$modernCombatParticles$damageIndicator(ServerLevel instance, ParticleOptions particleOptions, double d, double e, double f, int i, double g, double h, double j, double k) {
+    private boolean animatium$modernCombatParticles$damageIndicator(ServerLevel instance, ParticleOptions particleOptions, double posX, double posY, double posZ, int particleCount, double xOffset, double yOffset, double zOffset, double speed) {
         return !AnimatiumClient.ENABLED || AnimatiumConfig.instance().other.modernCombatParticles;
     }
 
