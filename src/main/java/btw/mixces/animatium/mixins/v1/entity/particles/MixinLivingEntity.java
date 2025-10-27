@@ -93,7 +93,7 @@ public abstract class MixinLivingEntity extends Entity {
 
     @Unique
     private static int animatium$getPotionColor(Collection<MobEffectInstance> effects) {
-        return effects.isEmpty() ? 3694022 : PotionContents.getColorOptional(effects).orElse(0);
+        return effects.isEmpty() ? 0xFF385DC6 : PotionContents.getColorOptional(effects).orElse(0);
     }
 }
 
