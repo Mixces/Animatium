@@ -36,7 +36,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -57,10 +56,6 @@ public abstract class MixinLivingEntity extends Entity {
     @Shadow
     @Final
     private Map<Holder<MobEffect>, MobEffectInstance> activeEffects;
-
-    @Shadow
-    @Final
-    private static EntityDataAccessor<Boolean> DATA_EFFECT_AMBIENCE_ID;
 
     public MixinLivingEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
