@@ -113,7 +113,7 @@ public abstract class MixinItemInHandRenderer {
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().items.itemPositions && !(instance.getItem() instanceof ShieldItem)) {
             final int direction = Utils.getHandMultiplier(player, hand);
             // We do this to fix a rounding error in Mojangs code.
-            ItemUtils.applyLegacyFirstpersonTransforms(poseStack, direction, () -> {
+            ItemUtils.applyLegacyFirstPersonTransforms(poseStack, direction, () -> {
                 poseStack.translate(direction * -0.5F, 0.2F, 0.0F);
                 poseStack.mulPose(Axis.YP.rotationDegrees(direction * 30.0F));
                 poseStack.mulPose(Axis.XP.rotationDegrees(-80.0F));

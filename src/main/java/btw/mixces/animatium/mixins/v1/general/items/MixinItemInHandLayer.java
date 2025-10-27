@@ -32,22 +32,14 @@ import btw.mixces.animatium.util.Utils;
 import btw.mixces.animatium.util.states.UtilityRenderState;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.Share;
-import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.model.ArmedModel;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
-import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.joml.Quaternionfc;
@@ -59,49 +51,40 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(ItemInHandLayer.class)
-public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M extends EntityModel<S> & ArmedModel> extends RenderLayer<S, M> {
-    public MixinItemInHandLayer(RenderLayerParent<S, M> context) {
-        super(context);
-    }
-
-    @Inject(method = "submitArmWithItem", at = @At("HEAD"))
-    private void animatium$setRef(S armedEntityRenderState, ItemStackRenderState itemStackRenderState, HumanoidArm humanoidArm, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, CallbackInfo ci, @Share("stack") LocalRef<ItemStack> stackRef) {
-        if (AnimatiumClient.ENABLED && ItemUtils.shouldApplyItemPositionsInThirdperson(armedEntityRenderState) && !itemStackRenderState.isEmpty()) {
-            stackRef.set(((UtilityRenderState) armedEntityRenderState).animatium$getItemHeldByArm(humanoidArm));
-        }
-    }
-
+public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState> {
     @ModifyArgs(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V"))
-    private void animatium$oldTransformTranslation(Args args, @Local(argsOnly = true) S entityState, @Share("stack") LocalRef<ItemStack> stackRef) {
-        if (AnimatiumClient.ENABLED && ItemUtils.shouldApplyItemPositionsInThirdperson(entityState) && !ItemUtils.isItemBlacklisted(stackRef.get())) {
+    private void animatium$oldTransformTranslation(Args args, @Local(argsOnly = true) S armedEntityRenderState, @Local(argsOnly = true) HumanoidArm humanoidArm) {
+        final ItemStack stack = ((UtilityRenderState) armedEntityRenderState).animatium$getItemHeldByArm(humanoidArm);
+        if (AnimatiumClient.ENABLED && ItemUtils.shouldApplyItemPositionsInThirdPerson(armedEntityRenderState) && !ItemUtils.isItemBlacklisted(stack)) {
             args.setAll((float) args.get(0) * -1.0F, 0.4375F, (float) args.get(2) / 10 * -1.0F);
         }
     }
 
     @WrapWithCondition(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lorg/joml/Quaternionfc;)V"))
-    private boolean animatium$removeTransformMultiply(PoseStack instance, Quaternionfc quaternionfc, @Local(argsOnly = true) S entityState, @Share("stack") LocalRef<ItemStack> stackRef) {
-        return !AnimatiumClient.ENABLED || !ItemUtils.shouldApplyItemPositionsInThirdperson(entityState) || ItemUtils.isItemBlacklisted(stackRef.get());
+    private boolean animatium$removeTransformMultiply(PoseStack instance, Quaternionfc quaternionfc, @Local(argsOnly = true) S armedEntityRenderState, @Local(argsOnly = true) HumanoidArm humanoidArm) {
+        final ItemStack stack = ((UtilityRenderState) armedEntityRenderState).animatium$getItemHeldByArm(humanoidArm);
+        return !AnimatiumClient.ENABLED || !ItemUtils.shouldApplyItemPositionsInThirdPerson(armedEntityRenderState) || ItemUtils.isItemBlacklisted(stack);
     }
 
     @Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/item/ItemStackRenderState;submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V"))
     private void animatium$itemPositionsThird(S armedEntityRenderState, ItemStackRenderState itemStackRenderState, HumanoidArm humanoidArm, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, CallbackInfo ci) {
-        if (AnimatiumClient.ENABLED && ItemUtils.shouldApplyItemPositionsInThirdperson(armedEntityRenderState)) {
+        if (AnimatiumClient.ENABLED && ItemUtils.shouldApplyItemPositionsInThirdPerson(armedEntityRenderState)) {
             final int direction = Utils.getArmMultiplier(humanoidArm);
-            UtilityRenderState itemArmedEntityRenderState = (UtilityRenderState) armedEntityRenderState;
-            ItemStack stack = itemArmedEntityRenderState.animatium$getItemHeldByArm(humanoidArm);
-            Item item = stack.getItem();
+            UtilityRenderState utilityRenderState = (UtilityRenderState) armedEntityRenderState;
+            ItemStack stack = utilityRenderState.animatium$getItemHeldByArm(humanoidArm);
             if (!stack.isEmpty() && !ItemUtils.isItemBlacklisted(stack)) {
-                boolean isStickRod = AnimatiumClient.ENABLED &&
+                final boolean isStickRod = AnimatiumClient.ENABLED &&
                         AnimatiumConfig.instance().items.stickModelWhenCastInThirdperson &&
-                        item == Items.FISHING_ROD &&
-                        (armedEntityRenderState instanceof AvatarRenderState && itemArmedEntityRenderState.animatium$isFishing());
-                if (ItemUtils.isBlock3d(stack, itemStackRenderState)) {
+                        stack.is(Items.FISHING_ROD) &&
+                        (armedEntityRenderState instanceof AvatarRenderState && utilityRenderState.animatium$isFishing());
+                final boolean usesBlockLight = itemStackRenderState.usesBlockLight();
+                if (ItemUtils.isBlock3d(stack, usesBlockLight)) {
                     final float scale = 0.375F;
                     poseStack.translate(0.0F, 0.1875F, -0.3125F);
                     poseStack.mulPose(Axis.XP.rotationDegrees(20.0F));
                     poseStack.mulPose(Axis.YP.rotationDegrees(direction * 45.0F));
                     poseStack.scale(-scale, -scale, scale);
-                } else if (item instanceof BowItem) {
+                } else if (stack.is(Items.BOW)) {
                     final float scale = 0.625F;
                     poseStack.translate(direction * 0.0F, 0.125F, 0.3125F);
                     poseStack.mulPose(Axis.YP.rotationDegrees(direction * -20.0F));
@@ -140,7 +123,7 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
                     poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 20.0F));
                 }
 
-                if (!ItemUtils.isBlock3d(stack, itemStackRenderState)) {
+                if (!ItemUtils.isBlock3d(stack, usesBlockLight)) {
                     poseStack.translate(0.0F, -0.3F, 0.0F);
                     poseStack.scale(1.5F, 1.5F, 1.5F);
                     poseStack.mulPose(Axis.YP.rotationDegrees(direction * 50.0F));
@@ -151,12 +134,12 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState, M e
                     poseStack.translate(direction * -0.5F, 0.5F, 0.03125F);
                 }
 
-                if (ItemUtils.isBlock3d(stack, itemStackRenderState)) {
+                if (ItemUtils.isBlock3d(stack, usesBlockLight)) {
                     poseStack.scale(1 / 0.375F, 1 / 0.375F, 1 / 0.375F);
                     poseStack.mulPose(Axis.YP.rotationDegrees(direction * -45.0F));
                     poseStack.mulPose(Axis.XP.rotationDegrees(-75.0F));
                     poseStack.translate(0.0F, -2.5F * 0.0625F, 0.0F);
-                } else if (item instanceof BowItem) {
+                } else if (stack.is(Items.BOW)) {
                     poseStack.scale(1 / 0.9F, 1 / 0.9F, 1 / 0.9F);
                     poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 40.0F));
                     poseStack.mulPose(Axis.YP.rotationDegrees(direction * -260.0F));

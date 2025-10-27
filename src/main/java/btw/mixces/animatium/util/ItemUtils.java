@@ -29,7 +29,6 @@ import btw.mixces.animatium.config.AnimatiumConfig;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
-import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.*;
@@ -109,56 +108,36 @@ public final class ItemUtils {
     }
 
     public static boolean isSkullBlock(ItemStack stack) {
-        if (!stack.isEmpty()) {
-            return Block.byItem(stack.getItem()) instanceof SkullBlock;
-        } else {
-            return false;
-        }
+        return Block.byItem(stack.getItem()) instanceof SkullBlock;
     }
 
     public static boolean isBlockItemBlacklisted(ItemStack stack) {
-        if (!stack.isEmpty()) {
-            final Block block = Block.byItem(stack.getItem());
-            return block instanceof BannerBlock ||
-                    block instanceof RodBlock ||
-                    block instanceof BedBlock ||
-                    isSkullBlock(stack);
-        } else {
-            return false;
-        }
+        final Block block = Block.byItem(stack.getItem());
+        return block instanceof BannerBlock ||
+                block instanceof RodBlock ||
+                block instanceof BedBlock ||
+                isSkullBlock(stack);
     }
 
     public static boolean isItemBlacklisted(ItemStack stack) {
-        if (!stack.isEmpty()) {
-            return isShieldItem(stack) ||
-                    isBlockItemBlacklisted(stack) ||
-                    stack.is(Items.CROSSBOW);
-        } else {
-            return false;
-        }
+        return isShieldItem(stack) ||
+                isBlockItemBlacklisted(stack) ||
+                stack.is(Items.CROSSBOW);
     }
 
     public static boolean isSwingItemBlacklisted(ItemStack stack) {
-        if (!stack.isEmpty()) {
-            final Item item = stack.getItem();
-            return item instanceof ProjectileItem ||
-                    item instanceof BucketItem ||
-                    item instanceof ShearsItem ||
-                    item instanceof EnderpearlItem;
-        } else {
-            return false;
-        }
+        final Item item = stack.getItem();
+        return item instanceof ProjectileItem ||
+                item instanceof BucketItem ||
+                item instanceof ShearsItem ||
+                item instanceof EnderpearlItem;
     }
 
-    public static boolean isBlock3d(ItemStack stack, ItemStackRenderState itemStackRenderState) {
-        if (!stack.isEmpty()) {
-            return stack.getItem() instanceof BlockItem && itemStackRenderState.usesBlockLight();
-        } else {
-            return false;
-        }
+    public static boolean isBlock3d(ItemStack stack, boolean usesBlockLight) {
+        return stack.getItem() instanceof BlockItem && usesBlockLight;
     }
 
-    public static void applyLegacyFirstpersonTransforms(PoseStack poseStack, int direction, Runnable runnable) {
+    public static void applyLegacyFirstPersonTransforms(PoseStack poseStack, int direction, Runnable runnable) {
         poseStack.mulPose(Axis.YP.rotationDegrees(direction * 45.0F));
         poseStack.scale(0.4F, 0.4F, 0.4F);
         runnable.run();
@@ -166,11 +145,12 @@ public final class ItemUtils {
         poseStack.mulPose(Axis.YP.rotationDegrees(direction * -45.0F));
     }
 
-    public static boolean shouldApplyItemPositionsInThirdperson(ArmedEntityRenderState armedEntityRenderState) {
+    public static boolean shouldApplyItemPositionsInThirdPerson(ArmedEntityRenderState armedEntityRenderState) {
         if (AnimatiumConfig.instance().items.itemPositionsInThirdPerson) {
             return true;
         } else {
-            return AnimatiumConfig.instance().other.thirdPersonSwordBlockingPosition && Utils.isBlockingArm(armedEntityRenderState.mainArm, armedEntityRenderState);
+            return AnimatiumConfig.instance().other.thirdPersonSwordBlockingPosition &&
+                    Utils.isBlockingArm(armedEntityRenderState.mainArm, armedEntityRenderState);
         }
     }
 

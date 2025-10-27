@@ -38,7 +38,6 @@ public class DynamicTransformsBuilder {
     private Optional<Vector4f> colorModulator = Optional.empty();
     private Optional<Vector3f> modelOffset = Optional.empty();
     private Optional<Matrix4f> textureMatrix = Optional.empty();
-    private Optional<Float> lineWidth = Optional.empty();
 
     public static DynamicTransformsBuilder of() {
         return new DynamicTransformsBuilder();
@@ -68,18 +67,13 @@ public class DynamicTransformsBuilder {
         return this;
     }
 
-    public DynamicTransformsBuilder withLineWidth(float lineWidth) {
-        this.lineWidth = Optional.of(lineWidth);
-        return this;
-    }
-
     public GpuBufferSlice build() {
         return RenderSystem.getDynamicUniforms().writeTransform(
                 this.modelViewMatrix.orElse(RenderSystem.getModelViewMatrix()),
                 this.colorModulator.orElse(new Vector4f(1.0F, 1.0F, 1.0F, 1.0F)),
                 this.modelOffset.orElse(new Vector3f()),
                 this.textureMatrix.orElse(RenderSystem.getTextureMatrix()),
-                this.lineWidth.orElse(RenderUtils.getLineWidth(RenderSystem.getShaderLineWidth()))
+                RenderUtils.getLineWidth(RenderSystem.getShaderLineWidth())
         );
     }
 }

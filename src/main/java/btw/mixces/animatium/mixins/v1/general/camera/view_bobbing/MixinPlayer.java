@@ -25,7 +25,6 @@
 
 package btw.mixces.animatium.mixins.v1.general.camera.view_bobbing;
 
-import btw.mixces.animatium.config.AnimatiumConfig;
 import btw.mixces.animatium.util.ViewBobbingStorage;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
@@ -45,10 +44,8 @@ public abstract class MixinPlayer extends LivingEntity {
 
     @Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;setSpeed(F)V", shift = At.Shift.AFTER))
     private void animatium$updateBobbingTiltValues(CallbackInfo ci) {
-        if (AnimatiumConfig.instance().fixes.fixVerticalBobbingTilt) {
-            ViewBobbingStorage bobbingAccessor = (ViewBobbingStorage) this;
-            final float tilt = this.onGround() || this.getHealth() <= 0.0F ? 0.0F : (float) (Math.atan(-this.getDeltaMovement().y * (double) 0.2F) * 15.0F);
-            bobbingAccessor.animatium$setBobbingTilt(Mth.lerp(0.8F, bobbingAccessor.animatium$getBobbingTilt(), tilt));
-        }
+        ViewBobbingStorage bobbingStorage = (ViewBobbingStorage) this;
+        final float tilt = this.onGround() || this.getHealth() <= 0.0F ? 0.0F : (float) (Math.atan(-this.getDeltaMovement().y * (double) 0.2F) * 15.0F);
+        bobbingStorage.animatium$setBobbingTilt(Mth.lerp(0.8F, bobbingStorage.animatium$getBobbingTilt(), tilt));
     }
 }
