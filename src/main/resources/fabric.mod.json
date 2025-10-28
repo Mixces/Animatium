@@ -1,9 +1,9 @@
 {
 	"schemaVersion": 1,
-	"id": "animatium",
+	"id": "${id}",
 	"version": "${version}",
-	"name": "Animatium",
-	"description": "Visual Tweaks/QOL Settings For Modern Minecraft Versions, Aimed At 1.7/1.8 players.",
+	"name": "${name}",
+	"description": "${description}",
 	"authors": [
 		"Mixces",
 		"lowercasebtw"
@@ -17,41 +17,26 @@
 		"sources": "https://github.com/Legacy-Visuals-Project/Animatium/",
 		"issues": "https://github.com/Legacy-Visuals-Project/Animatium/issues"
 	},
-	"license": "GPL-3.0-with-linking-exception",
+	"license": "${license}",
 	"icon": "assets/animatium/icon.png",
 	"accessWidener": "animatium.accesswidener",
 	"environment": "client",
-	"entrypoints": {
-		"client": [
-			"btw.mixces.animatium.AnimatiumClient"
-		],
-		"modmenu": [
-			"btw.mixces.animatium.config.ModMenuIntegration"
-		]
+	"depends": {
+		"fabricloader": ">=${fabric_loader_version}",
+		"minecraft": "${mcdep}",
+		"fabric-networking-api-v1": "*",
+		"fabric-command-api-v2": "*",
+		"fabric-resource-loader-v0": "*"
 	},
 	"custom": {
 		"modmenu": {
 			"links": {
-				"modmenu.discord": "https://discord.gg/U48eDmst68"
+				"modmenu.discord": "${discord}",
+				"modmenu.modrinth": "${modrinth}",
+				"modmenu.curseforge": "${curseforge}"
 			},
 			"update_checker": true
 		}
-	},
-	"mixins": [
-		{
-			"config": "animatium.mixins.json",
-			"environment": "client"
-		}
-	],
-	"depends": {
-		"fabricloader": ">=0.16.7",
-		"minecraft": [
-			">=1.21.9",
-			"<1.21.11"
-		],
-		"fabric-networking-api-v1": "*",
-		"fabric-command-api-v2": "*",
-		"fabric-resource-loader-v0": "*"
 	},
 	"recommends": {
 		"optiboxes": "*",

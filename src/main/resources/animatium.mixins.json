@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "btw.mixces.animatium.mixins",
+	"package": "org.visuals.legacy.animatium.mixins",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
 		"accessor.AbstractRecipeBookScreenAccessor",

@@ -268,6 +268,7 @@
 	"animatium.dontCloseChat": "[*] Don't close chat",
 	"animatium.dontCloseChat.description": "Stops minecraft from closing the chat screen on teleport/some situations.",
 
+	"animatium.category.debug": "Animatium",
 	"animatium.miss_penalty.description": "animatium.miss_penalty.description",
 	"animatium.left_click_item_usage.description": "animatium.left_click_item_usage.description",
 	"animatium.hide_firstperson_rod_bobber.description": "animatium.hide_firstperson_rod_bobber.description"
