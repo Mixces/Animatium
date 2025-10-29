@@ -25,7 +25,6 @@
 
 package org.visuals.legacy.animatium.config.category;
 
-import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
@@ -34,6 +33,7 @@ import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
 
 public class ItemsConfigCategory {
     // (Items) Fishing Rod

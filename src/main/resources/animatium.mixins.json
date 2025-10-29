@@ -79,6 +79,7 @@
 		"v1.gui.remove_recipe_book.MixinAbstractRecipeBookScreen",
 		"v1.gui.remove_recipe_book.MixinRecipeBookComponent",
 		"v1.gui.screen_tweaks.MixinAbstractSelectionList",
+		"v1.gui.screen_tweaks.MixinAbstractSliderButton",
 		"v1.gui.toasts.MixinRecipeToast",
 		"v1.gui.toasts.MixinToastManager",
 		"v1.gui.toasts.MixinTutorialToast",

@@ -69,6 +69,8 @@
 	"animatium.listBackgroundGradient.description": "Restores the old list widget background gradient from <=1.20.4.",
 	"animatium.effectsInventoryPosition": "[1.11] Inventory status-effects position",
 	"animatium.effectsInventoryPosition.description": "Restores the old potion effects status position in the inventory to like it was in <=1.11/1.19.",
+	"animatium.snappySliderMovement": "[1.12.2] Accurate slider movement",
+	"animatium.snappySliderMovement.description": "Makes the slider handle jump/move when the value changes instead of fractional stepping, making it work like it was in <=1.12.2.",
 	"animatium.recipeBook": "[1.11] Hide recipe book",
 	"animatium.recipeBook.description": "Hides the recipe book from the inventory, including the button.",
 	"animatium.panoramaRendering": "[1.12.2] Legacy Panorama Rendering",

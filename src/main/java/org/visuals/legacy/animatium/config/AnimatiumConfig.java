@@ -25,7 +25,6 @@
 
 package org.visuals.legacy.animatium.config;
 
-import org.visuals.legacy.animatium.config.category.*;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
@@ -34,6 +33,7 @@ import dev.isxander.yacl3.platform.YACLPlatform;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
+import org.visuals.legacy.animatium.config.category.*;
 
 public final class AnimatiumConfig {
     private static final ConfigClassHandler<AnimatiumConfig> CONFIG = ConfigClassHandler.createBuilder(AnimatiumConfig.class)

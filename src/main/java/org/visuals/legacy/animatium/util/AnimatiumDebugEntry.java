@@ -34,7 +34,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.Nullable;
 import org.visuals.legacy.animatium.AnimatiumClient;
-import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +48,7 @@ public class AnimatiumDebugEntry implements DebugScreenEntry {
         list.add("Animatium " + AnimatiumClient.VERSION + (AnimatiumClient.DEVELOPMENT_VERSION.isEmpty() ? "" : " - Development Version (" + AnimatiumClient.DEVELOPMENT_VERSION + ")"));
         if (!AnimatiumClient.ENABLED_SERVER_FEATURES.isEmpty()) {
             list.add("Enabled Server Features:");
-            for (ServerFeature feature : AnimatiumClient.ENABLED_SERVER_FEATURES) {
-                list.add(" - " + feature.getTranslate().getString());
-            }
+            AnimatiumClient.ENABLED_SERVER_FEATURES.forEach((feature) -> list.add(" - " + feature.getTranslate().getString()));
         }
         debugScreenDisplayer.addToGroup(GROUP, list);
     }

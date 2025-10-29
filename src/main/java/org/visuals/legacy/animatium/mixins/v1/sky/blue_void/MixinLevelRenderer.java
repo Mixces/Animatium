@@ -25,10 +25,6 @@
 
 package org.visuals.legacy.animatium.mixins.v1.sky.blue_void;
 
-import org.visuals.legacy.animatium.AnimatiumClient;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.BlueVoidSkyRenderer;
-import org.visuals.legacy.animatium.util.RenderUtils;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -42,6 +38,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.util.BlueVoidSkyRenderer;
+import org.visuals.legacy.animatium.util.RenderUtils;
 
 @Mixin(LevelRenderer.class)
 public abstract class MixinLevelRenderer {

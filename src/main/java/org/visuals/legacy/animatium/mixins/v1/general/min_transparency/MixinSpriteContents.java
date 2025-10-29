@@ -25,12 +25,12 @@
 
 package org.visuals.legacy.animatium.mixins.v1.general.min_transparency;
 
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(SpriteContents.class)
 public abstract class MixinSpriteContents {

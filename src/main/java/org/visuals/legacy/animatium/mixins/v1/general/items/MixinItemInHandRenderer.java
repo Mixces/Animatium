@@ -25,11 +25,6 @@
 
 package org.visuals.legacy.animatium.mixins.v1.general.items;
 
-import org.visuals.legacy.animatium.AnimatiumClient;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.ItemUtils;
-import org.visuals.legacy.animatium.util.Utils;
-import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -55,6 +50,11 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.util.ItemUtils;
+import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
 
 @Mixin(value = ItemInHandRenderer.class, priority = 500)
 public abstract class MixinItemInHandRenderer {

@@ -74,7 +74,7 @@ public final class AnimatiumClient implements ClientModInitializer {
         AnimatiumConfig.load();
         try {
             ConfigUtil.loadState();
-        } catch (IOException e) {
+        } catch (IOException ignored) {
             ENABLED = true;
             System.err.println("Failed to load enabled state, defaulting to true...");
         }

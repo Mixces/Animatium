@@ -25,12 +25,6 @@
 
 package org.visuals.legacy.animatium.mixins.v1.entity.fishing;
 
-import org.visuals.legacy.animatium.AnimatiumClient;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.mixins.accessor.CameraAccessor;
-import org.visuals.legacy.animatium.util.RenderUtils;
-import org.visuals.legacy.animatium.util.Utils;
-import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -56,6 +50,12 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
+import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.mixins.accessor.CameraAccessor;
+import org.visuals.legacy.animatium.util.RenderUtils;
+import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
 
 @Mixin(FishingHookRenderer.class)
 public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHook, FishingHookRenderState> {

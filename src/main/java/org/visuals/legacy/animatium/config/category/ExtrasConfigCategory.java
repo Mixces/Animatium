@@ -25,13 +25,13 @@
 
 package org.visuals.legacy.animatium.config.category;
 
-import org.visuals.legacy.animatium.AnimatiumClient;
-import org.visuals.legacy.animatium.util.Utils;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.minecraft.network.chat.Component;
+import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.util.Utils;
 
 public class ExtrasConfigCategory {
     public boolean minimalViewBobbing = false;

@@ -25,12 +25,12 @@
 
 package org.visuals.legacy.animatium.packet;
 
-import org.visuals.legacy.animatium.AnimatiumClient;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.visuals.legacy.animatium.AnimatiumClient;
 
 import java.util.Optional;
 

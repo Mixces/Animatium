@@ -25,7 +25,6 @@
 
 package org.visuals.legacy.animatium.mixins.v1.entity.armor_hurt;
 
-import org.visuals.legacy.animatium.AnimatiumClient;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import org.spongepowered.asm.mixin.Final;
@@ -35,6 +34,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.visuals.legacy.animatium.AnimatiumClient;
 
 @Mixin(GameRenderer.class)
 public abstract class MixinGameRenderer {

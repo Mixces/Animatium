@@ -25,13 +25,13 @@
 
 package org.visuals.legacy.animatium.util;
 
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.*;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 import java.util.List;
 

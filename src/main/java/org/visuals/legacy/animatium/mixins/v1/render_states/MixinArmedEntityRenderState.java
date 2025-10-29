@@ -25,7 +25,6 @@
 
 package org.visuals.legacy.animatium.mixins.v1.render_states;
 
-import org.visuals.legacy.animatium.util.states.UtilityRenderState;
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.world.entity.HumanoidArm;
@@ -37,6 +36,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.visuals.legacy.animatium.util.states.UtilityRenderState;
 
 @Mixin(ArmedEntityRenderState.class)
 public abstract class MixinArmedEntityRenderState implements UtilityRenderState {

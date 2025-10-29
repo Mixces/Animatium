@@ -25,9 +25,6 @@
 
 package org.visuals.legacy.animatium.mixins.v1.gui.toasts;
 
-import org.visuals.legacy.animatium.AnimatiumClient;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.Utils;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.gui.components.toasts.RecipeToast;
@@ -37,6 +34,9 @@ import net.minecraft.client.gui.components.toasts.TutorialToast;
 import net.minecraft.client.sounds.SoundManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.util.Utils;
 
 @Mixin(ToastManager.class)
 public abstract class MixinToastManager {

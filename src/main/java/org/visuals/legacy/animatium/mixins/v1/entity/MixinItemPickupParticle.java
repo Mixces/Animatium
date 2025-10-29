@@ -25,7 +25,6 @@
 
 package org.visuals.legacy.animatium.mixins.v1.entity;
 
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.client.particle.ItemPickupParticle;
 import net.minecraft.world.entity.Entity;
@@ -33,6 +32,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(ItemPickupParticle.class)
 public abstract class MixinItemPickupParticle {

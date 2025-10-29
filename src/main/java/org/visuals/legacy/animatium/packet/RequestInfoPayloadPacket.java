@@ -25,11 +25,11 @@
 
 package org.visuals.legacy.animatium.packet;
 
-import org.visuals.legacy.animatium.AnimatiumClient;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;
+import org.visuals.legacy.animatium.AnimatiumClient;
 
 public record RequestInfoPayloadPacket() implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, RequestInfoPayloadPacket> CODEC = CustomPacketPayload.codec(null, RequestInfoPayloadPacket::read);

@@ -25,10 +25,6 @@
 
 package org.visuals.legacy.animatium.util;
 
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.mixins.accessor.CameraAccessor;
-import org.visuals.legacy.animatium.mixins.accessor.LivingEntityAccessor;
-import org.visuals.legacy.animatium.util.states.CameraUtilityRenderState;
 import com.google.common.base.MoreObjects;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Camera;
@@ -52,6 +48,10 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.mixins.accessor.CameraAccessor;
+import org.visuals.legacy.animatium.mixins.accessor.LivingEntityAccessor;
+import org.visuals.legacy.animatium.util.states.CameraUtilityRenderState;
 
 import java.util.concurrent.atomic.AtomicReference;
 

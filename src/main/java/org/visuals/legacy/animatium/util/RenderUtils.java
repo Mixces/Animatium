@@ -25,9 +25,6 @@
 
 package org.visuals.legacy.animatium.util;
 
-import org.visuals.legacy.animatium.AnimatiumClient;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.mixins.accessor.ClientLevelDataAccessor;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -39,6 +36,9 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderPipelines;
+import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.mixins.accessor.ClientLevelDataAccessor;
 
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
@@ -139,21 +139,19 @@ public final class RenderUtils {
                 renderPass.setIndexBuffer(indexBuffer, indexType);
                 renderPass.drawIndexed(0, 0, meshData.drawState().indexCount(), 1);
             }
-        } catch (Throwable var17) {
+        } catch (Throwable throwable) {
             if (meshData != null) {
                 try {
                     meshData.close();
                 } catch (Throwable var14) {
-                    var17.addSuppressed(var14);
+                    throwable.addSuppressed(var14);
                 }
             }
 
-            throw var17;
+            throw throwable;
         }
 
-        if (meshData != null) {
-            meshData.close();
-        }
+        meshData.close();
     }
 
     // Sky Stuff
@@ -190,6 +188,6 @@ public final class RenderUtils {
     }
 
     static {
-        IrisUtil.assignPipeline(IrisUtil.skyBasic(), LEGACY_SKY_PIPELINE, LEGACY_SKY_PLANAR_FOG_PIPELINE);
+        IrisUtil.assignPipeline(IrisPipeline.SKY_BASIC, LEGACY_SKY_PIPELINE, LEGACY_SKY_PLANAR_FOG_PIPELINE);
     }
 }

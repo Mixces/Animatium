@@ -25,10 +25,10 @@
 
 package org.visuals.legacy.animatium.mixins.v1.render_states;
 
-import org.visuals.legacy.animatium.util.states.CameraUtilityRenderState;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+import org.visuals.legacy.animatium.util.states.CameraUtilityRenderState;
 
 @Mixin(CameraRenderState.class)
 public abstract class MixinCameraRenderState implements CameraUtilityRenderState {

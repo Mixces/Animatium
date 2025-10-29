@@ -25,10 +25,6 @@
 
 package org.visuals.legacy.animatium.mixins.v1.general.camera;
 
-import org.visuals.legacy.animatium.AnimatiumClient;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.mixins.accessor.PlayerAccessor;
-import org.visuals.legacy.animatium.util.enums.CameraVersion;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.Camera;
@@ -45,6 +41,10 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.mixins.accessor.PlayerAccessor;
+import org.visuals.legacy.animatium.util.enums.CameraVersion;
 
 @Mixin(Camera.class)
 public abstract class MixinCamera {

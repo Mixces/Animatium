@@ -25,8 +25,8 @@
 
 package org.visuals.legacy.animatium.util;
 
-import org.visuals.legacy.animatium.AnimatiumClient;
 import net.fabricmc.loader.api.FabricLoader;
+import org.visuals.legacy.animatium.AnimatiumClient;
 
 import java.io.File;
 import java.io.IOException;

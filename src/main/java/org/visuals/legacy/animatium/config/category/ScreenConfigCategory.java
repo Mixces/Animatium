@@ -25,7 +25,6 @@
 
 package org.visuals.legacy.animatium.config.category;
 
-import org.visuals.legacy.animatium.util.enums.CameraVersion;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
@@ -33,6 +32,7 @@ import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import org.visuals.legacy.animatium.util.enums.CameraVersion;
 
 public class ScreenConfigCategory {
     public boolean crosshairInThirdPerson = true;
@@ -47,6 +47,7 @@ public class ScreenConfigCategory {
     public boolean slotHoverStyleRendering = true;
     public boolean listBackgroundGradient = true;
     public boolean effectsInventoryPosition = true;
+    public boolean snappySliderMovement = true;
     public boolean hideRecipeBook = true;
     public boolean panoramaRendering = true;
     public CameraVersion cameraVersion = CameraVersion.V1_8;
@@ -162,6 +163,16 @@ public class ScreenConfigCategory {
                         (newVal) -> config.effectsInventoryPosition = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
+        // TODO
+//        category.option(Option.<Boolean>createBuilder()
+//                .name(Component.translatable("animatium.snappySliderMovement"))
+//                .description(OptionDescription.of(Component.translatable("animatium.snappySliderMovement.description")))
+//                .binding(
+//                        defaults.snappySliderMovement,
+//                        () -> config.snappySliderMovement,
+//                        (newVal) -> config.snappySliderMovement = newVal)
+//                .controller(TickBoxControllerBuilder::create)
+//                .build());
         category.option(Option.<Boolean>createBuilder()
                 .name(Component.translatable("animatium.recipeBook"))
                 .description(OptionDescription.of(Component.translatable("animatium.recipeBook.description")))

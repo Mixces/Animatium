@@ -25,7 +25,6 @@
 
 package org.visuals.legacy.animatium.util;
 
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.RenderTarget;
@@ -35,6 +34,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.util.ARGB;
 import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 import java.util.OptionalDouble;
 import java.util.OptionalInt;

@@ -25,11 +25,6 @@
 
 package org.visuals.legacy.animatium.mixins.v1.general.items;
 
-import org.visuals.legacy.animatium.AnimatiumClient;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.ItemUtils;
-import org.visuals.legacy.animatium.util.Utils;
-import org.visuals.legacy.animatium.util.states.UtilityRenderState;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -49,6 +44,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
+import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.util.ItemUtils;
+import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.states.UtilityRenderState;
 
 @Mixin(ItemInHandLayer.class)
 public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState> {
