@@ -25,8 +25,6 @@
 
 package org.visuals.legacy.animatium.mixins.v1.gui.old_inventory_rendering;
 
-import org.visuals.legacy.animatium.AnimatiumClient;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -37,6 +35,8 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(AbstractContainerScreen.class)
 public abstract class MixinAbstractContainerScreen {

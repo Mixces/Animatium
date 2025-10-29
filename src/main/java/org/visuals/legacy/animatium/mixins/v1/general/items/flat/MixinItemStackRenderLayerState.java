@@ -25,12 +25,6 @@
 
 package org.visuals.legacy.animatium.mixins.v1.general.items.flat;
 
-import org.visuals.legacy.animatium.AnimatiumClient;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.ItemUtils;
-import org.visuals.legacy.animatium.util.Utils;
-import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
-import org.visuals.legacy.animatium.util.states.ItemUtilityRenderState;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -46,6 +40,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.util.ItemUtils;
+import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
+import org.visuals.legacy.animatium.util.states.ItemUtilityRenderState;
 
 @Mixin(ItemStackRenderState.LayerRenderState.class)
 public abstract class MixinItemStackRenderLayerState {

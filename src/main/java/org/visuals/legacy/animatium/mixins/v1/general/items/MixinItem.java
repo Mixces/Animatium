@@ -25,9 +25,6 @@
 
 package org.visuals.legacy.animatium.mixins.v1.general.items;
 
-import org.visuals.legacy.animatium.AnimatiumClient;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.ItemUtils;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.Item;
@@ -36,6 +33,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.util.ItemUtils;
 
 @Mixin(Item.class)
 public abstract class MixinItem {

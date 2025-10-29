@@ -25,8 +25,6 @@
 
 package org.visuals.legacy.animatium.mixins.v1.gui.screen_tweaks;
 
-import org.visuals.legacy.animatium.AnimatiumClient;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractContainerWidget;
 import net.minecraft.client.gui.components.AbstractSelectionList;
@@ -35,6 +33,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(AbstractSelectionList.class)
 public abstract class MixinAbstractSelectionList extends AbstractContainerWidget {

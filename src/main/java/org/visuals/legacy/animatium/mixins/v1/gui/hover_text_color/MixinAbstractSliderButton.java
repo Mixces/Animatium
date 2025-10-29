@@ -25,14 +25,14 @@
 
 package org.visuals.legacy.animatium.mixins.v1.gui.hover_text_color;
 
-import org.visuals.legacy.animatium.AnimatiumClient;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(AbstractSliderButton.class)
 public abstract class MixinAbstractSliderButton extends AbstractWidget {

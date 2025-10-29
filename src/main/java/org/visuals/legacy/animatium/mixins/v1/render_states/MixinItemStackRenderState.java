@@ -25,11 +25,11 @@
 
 package org.visuals.legacy.animatium.mixins.v1.render_states;
 
-import org.visuals.legacy.animatium.util.states.ItemUtilityRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+import org.visuals.legacy.animatium.util.states.ItemUtilityRenderState;
 
 @Mixin(ItemStackRenderState.class)
 public abstract class MixinItemStackRenderState implements ItemUtilityRenderState {

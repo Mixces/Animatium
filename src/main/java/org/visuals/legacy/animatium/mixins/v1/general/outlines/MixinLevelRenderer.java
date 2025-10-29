@@ -25,10 +25,6 @@
 
 package org.visuals.legacy.animatium.mixins.v1.general.outlines;
 
-import org.visuals.legacy.animatium.AnimatiumClient;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.RenderUtils;
-import org.visuals.legacy.animatium.util.Utils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.opengl.GlDevice;
@@ -45,6 +41,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.util.RenderUtils;
+import org.visuals.legacy.animatium.util.Utils;
 
 @Mixin(LevelRenderer.class)
 public abstract class MixinLevelRenderer {
