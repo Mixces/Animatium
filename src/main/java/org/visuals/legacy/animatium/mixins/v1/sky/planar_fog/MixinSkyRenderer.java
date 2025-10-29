@@ -40,8 +40,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.AnimatiumClient;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.BlueVoidSkyRenderer;
-import org.visuals.legacy.animatium.util.RenderUtils;
+import org.visuals.legacy.animatium.util.SkyRendererUtility;
 
 @Mixin(SkyRenderer.class)
 public abstract class MixinSkyRenderer {
@@ -53,7 +52,7 @@ public abstract class MixinSkyRenderer {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
-        animatium$topSkyBuffer = RenderUtils.initializeSky((builder) -> RenderUtils.buildSkyHalf(builder, 16.0F, false));
+        animatium$topSkyBuffer = SkyRendererUtility.initializeSky((builder) -> SkyRendererUtility.buildSkyHalf(builder, 16.0F, false));
         animatium$skyIndexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
     }
 
@@ -61,7 +60,7 @@ public abstract class MixinSkyRenderer {
     private void animatium$planarFogPipeline$skyDisc(RenderPass instance, RenderPipeline renderPipeline, Operation<Void> original) {
         RenderPipeline pipeline = renderPipeline;
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.planarSkyFog) {
-            pipeline = RenderUtils.LEGACY_SKY_PLANAR_FOG_PIPELINE;
+            pipeline = SkyRendererUtility.LEGACY_SKY_PLANAR_FOG_PIPELINE;
         }
 
         original.call(instance, pipeline);
@@ -82,7 +81,7 @@ public abstract class MixinSkyRenderer {
     private void animatium$planarFogPipeline$darkSkyDisc(RenderPass instance, RenderPipeline renderPipeline, Operation<Void> original) {
         RenderPipeline pipeline = renderPipeline;
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.planarSkyFog) {
-            pipeline = RenderUtils.LEGACY_SKY_PLANAR_FOG_PIPELINE;
+            pipeline = SkyRendererUtility.LEGACY_SKY_PLANAR_FOG_PIPELINE;
         }
 
         original.call(instance, pipeline);
@@ -101,7 +100,7 @@ public abstract class MixinSkyRenderer {
     private void animatium$planarFogPipeline$darkSkyDisc$vertexBuffer(RenderPass instance, int index, GpuBuffer gpuBuffer, Operation<Void> original) {
         GpuBuffer buffer = gpuBuffer;
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.planarSkyFog) {
-            buffer = BlueVoidSkyRenderer.getGpuBuffer();
+            buffer = SkyRendererUtility.getGpuBuffer();
             instance.setIndexBuffer(animatium$skyIndexBuffer.getBuffer(6), animatium$skyIndexBuffer.type());
         }
 

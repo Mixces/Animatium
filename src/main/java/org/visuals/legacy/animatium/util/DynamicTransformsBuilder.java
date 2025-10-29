@@ -53,8 +53,8 @@ public class DynamicTransformsBuilder {
         return this;
     }
 
-    public DynamicTransformsBuilder withShaderColor(Vector3f vector3f) {
-        return this.withShaderColor(new Vector4f(vector3f, 1.0F));
+    public DynamicTransformsBuilder withShaderColor(float red, float green, float blue) {
+        return this.withShaderColor(new Vector4f(red, green, blue, 1.0F));
     }
 
     public DynamicTransformsBuilder withModelOffset(Vector3f vector3f) {

@@ -32,11 +32,10 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuTextureView;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.MeshData;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.RenderPipelines;
-import org.visuals.legacy.animatium.AnimatiumClient;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.mixins.accessor.ClientLevelDataAccessor;
 
@@ -45,26 +44,6 @@ import java.util.OptionalInt;
 import java.util.function.Consumer;
 
 public final class RenderUtils {
-    private static final RenderPipeline.Snippet LEGACY_SKY_PIPELINE_SNIPPET =
-            RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
-                    .withLocation(AnimatiumClient.id("pipeline/legacy_sky"))
-                    .withVertexShader(AnimatiumClient.id("core/legacy_sky"))
-                    .withFragmentShader(AnimatiumClient.id("core/legacy_sky"))
-                    .withDepthWrite(false)
-                    .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
-                    .buildSnippet();
-
-    public static final RenderPipeline LEGACY_SKY_PIPELINE =
-            RenderPipelines.register(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
-                    .withLocation(AnimatiumClient.id("pipeline/legacy_sky"))
-                    .build());
-
-    public static final RenderPipeline LEGACY_SKY_PLANAR_FOG_PIPELINE =
-            RenderPipelines.register(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
-                    .withLocation(AnimatiumClient.id("pipeline/legacy_sky_planar_fog"))
-                    .withShaderDefine("PLANAR_FOG")
-                    .build());
-
     private RenderUtils() {
     }
 
@@ -152,42 +131,5 @@ public final class RenderUtils {
         }
 
         meshData.close();
-    }
-
-    // Sky Stuff
-    public static void buildSkyHalf(VertexConsumer vertexConsumer, float y, boolean bottom) {
-        final int width = 64;
-        for (int k = -384; k <= 384; k += width) {
-            for (int l = -384; l <= 384; l += width) {
-                float g = k;
-                float h = k + width;
-                if (bottom) {
-                    // Swap them
-                    float b = g;
-                    g = h;
-                    h = b;
-                }
-
-                vertexConsumer.addVertex(g, y, l);
-                vertexConsumer.addVertex(h, y, l);
-                vertexConsumer.addVertex(h, y, (l + width));
-                vertexConsumer.addVertex(g, y, (l + width));
-            }
-        }
-    }
-
-    public static GpuBuffer initializeSky(Consumer<BufferBuilder> bufferBuilderConsumer) {
-        VertexFormat.Mode mode = VertexFormat.Mode.QUADS;
-        BufferBuilder builder = Tesselator.getInstance().begin(mode, DefaultVertexFormat.POSITION);
-        bufferBuilderConsumer.accept(builder);
-        try (MeshData meshData = builder.buildOrThrow()) {
-            return RenderSystem.getDevice().createBuffer(() -> "Static sky vertex buffer", GpuBuffer.USAGE_COPY_DST, meshData.vertexBuffer());
-        } catch (Exception ignored) {
-            return null;
-        }
-    }
-
-    static {
-        IrisUtil.assignPipeline(IrisPipeline.SKY_BASIC, LEGACY_SKY_PIPELINE, LEGACY_SKY_PLANAR_FOG_PIPELINE);
     }
 }
