@@ -63,7 +63,7 @@ public abstract class MixinLevelRenderer {
 
     @WrapOperation(method = "renderHitOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/state/BlockOutlineRenderState;shape()Lnet/minecraft/world/phys/shapes/VoxelShape;"))
     private VoxelShape animatium$blockOutlineRendering(BlockOutlineRenderState instance, Operation<VoxelShape> original) {
-        VoxelShape shape = original.call(instance);
+        final VoxelShape shape = original.call(instance);
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.blockOutlineRendering) {
             return Utils.expandVoxelShape(shape, 0.0020000000949949026F); // Value sourced from older minecraft version
         } else {

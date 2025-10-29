@@ -41,7 +41,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -68,11 +67,7 @@ public final class Utils {
 
     public static VoxelShape expandVoxelShape(VoxelShape shape, float value) {
         AtomicReference<VoxelShape> voxelShape = new AtomicReference<>(Shapes.empty());
-        shape.forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) ->
-                voxelShape.set(Shapes.join(
-                        voxelShape.get(),
-                        Shapes.create(new AABB(minX, minY, minZ, maxX, maxY, maxZ).inflate(value)),
-                        BooleanOp.OR)));
+        shape.toAabbs().forEach((aabb) -> voxelShape.set(Shapes.join(voxelShape.get(), Shapes.create(aabb.inflate(value)), BooleanOp.OR)));
         return voxelShape.get();
     }
 
@@ -86,7 +81,7 @@ public final class Utils {
     }
 
     public static int getHandMultiplier(Player player) {
-        InteractionHand hand = MoreObjects.firstNonNull(player.swingingArm, InteractionHand.MAIN_HAND);
+        final InteractionHand hand = MoreObjects.firstNonNull(player.swingingArm, InteractionHand.MAIN_HAND);
         final int direction = getHandMultiplier(player, hand);
         return (Minecraft.getInstance().options.getCameraType().isFirstPerson() ? 1 : -1) * direction;
     }

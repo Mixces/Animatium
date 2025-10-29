@@ -29,9 +29,11 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
 
 public interface UtilityRenderState {
+    // TODO/REMOVE 1.21.11
     ItemStack animatium$getItemHeldByArm(HumanoidArm humanoidArm);
 
     void animatium$setItemHeldByArm(HumanoidArm arm, ItemStack itemStack);
+    // TODO/REMOVE 1.21.11
 
     boolean animatium$isFishing();
 

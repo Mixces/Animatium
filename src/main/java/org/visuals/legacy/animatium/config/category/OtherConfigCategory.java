@@ -249,15 +249,16 @@ public class OtherConfigCategory {
                         (newVal) -> config.restoreParticleBlending = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.heldItemArmLogic"))
-                .description(OptionDescription.of(Component.translatable("animatium.heldItemArmLogic.description")))
-                .binding(
-                        defaults.heldItemArmLogic,
-                        () -> config.heldItemArmLogic,
-                        (newVal) -> config.heldItemArmLogic = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
+        // TODO/FIX
+//        category.option(Option.<Boolean>createBuilder()
+//                .name(Component.translatable("animatium.heldItemArmLogic"))
+//                .description(OptionDescription.of(Component.translatable("animatium.heldItemArmLogic.description")))
+//                .binding(
+//                        defaults.heldItemArmLogic,
+//                        () -> config.heldItemArmLogic,
+//                        (newVal) -> config.heldItemArmLogic = newVal)
+//                .controller(TickBoxControllerBuilder::create)
+//                .build());
         category.option(Option.<Boolean>createBuilder()
                 .name(Component.translatable("animatium.flameDimensions"))
                 .description(OptionDescription.of(Component.translatable("animatium.flameDimensions.description")))

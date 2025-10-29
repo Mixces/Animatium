@@ -111,13 +111,14 @@ public abstract class MixinAvatarRenderer<AvatarLikeEntity extends Avatar & Clie
     @Inject(method = "renderHand", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/model/geom/ModelPart;visible:Z", ordinal = 2))
     private void animatium$heldItemArmLogic(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, ResourceLocation resourceLocation, ModelPart modelPart, boolean bl, CallbackInfo ci, @Local PlayerModel playerModel) {
         if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.heldItemArmLogic) {
-            HumanoidArm arm = modelPart == model.rightArm ? HumanoidArm.RIGHT : HumanoidArm.LEFT;
+            final HumanoidArm arm = modelPart == model.rightArm ? HumanoidArm.RIGHT : HumanoidArm.LEFT;
             final AvatarRenderState avatarRenderState = animatium$renderState.get();
-            if (avatarRenderState != null && (arm == HumanoidArm.LEFT ? avatarRenderState.leftArmPose : avatarRenderState.rightArmPose) == HumanoidModel.ArmPose.ITEM) {
-                // Adapted from the ITEM arm pose rotations in HumanoidModel#poseRightArm/poseLeftArm
-                modelPart.xRot = modelPart.xRot * 0.5F - (float) (Math.PI / 10);
-                modelPart.yRot = 0.0F;
-            }
+            // TODO/FIX @Mixces
+            // if (avatarRenderState != null && (avatarRenderState.mainArm == arm ? avatarRenderState.rightArmPose : avatarRenderState.leftArmPose) == HumanoidModel.ArmPose.ITEM) {
+            //     // Adapted from the ITEM arm pose rotations in HumanoidModel#poseRightArm/poseLeftArm
+            //     modelPart.xRot = modelPart.xRot * 0.5F - (float) (Math.PI / 10);
+            //     modelPart.yRot = 0.0F;
+            // }
         }
     }
 }
