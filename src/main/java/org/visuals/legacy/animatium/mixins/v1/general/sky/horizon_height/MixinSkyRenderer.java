@@ -23,27 +23,28 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.general.cloud_height;
+package org.visuals.legacy.animatium.mixins.v1.general.sky.horizon_height;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.world.level.dimension.DimensionType;
+import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.SkyRenderer;
+import net.minecraft.world.level.LevelHeightAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.AnimatiumClient;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.util.RenderUtils;
 
-import java.util.Optional;
-
-@Mixin(LevelRenderer.class)
-public abstract class MixinLevelRenderer {
-    @WrapOperation(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/dimension/DimensionType;cloudHeight()Ljava/util/Optional;"))
-    private Optional<Integer> animatium$cloudHeight(DimensionType instance, Operation<Optional<Integer>> original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.cloudHeight && instance.natural()) {
-            return Optional.of(128);
+@Mixin(SkyRenderer.class)
+public abstract class MixinSkyRenderer {
+    @WrapOperation(method = "shouldRenderDarkDisc", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel$ClientLevelData;getHorizonHeight(Lnet/minecraft/world/level/LevelHeightAccessor;)D"))
+    private double animatium$skyHorizonHeight(ClientLevel.ClientLevelData instance, LevelHeightAccessor levelHeightAccessor, Operation<Double> original, @Local(argsOnly = true) ClientLevel level) {
+        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.skyHorizonHeight && level != null) {
+            return RenderUtils.getLevelHorizonHeight(level);
         } else {
-            return original.call(instance);
+            return original.call(instance, levelHeightAccessor);
         }
     }
 }

@@ -43,7 +43,6 @@
 		"v1.general.camera.view_bobbing.MixinGameRenderer",
 		"v1.general.camera.view_bobbing.MixinLivingEntity",
 		"v1.general.camera.view_bobbing.MixinPlayer",
-		"v1.general.cloud_height.MixinLevelRenderer",
 		"v1.general.combat.particles.MixinPlayer",
 		"v1.general.combat.sounds.MixinSoundManager",
 		"v1.general.items.MixinItem",
@@ -63,6 +62,10 @@
 		"v1.general.outlines.MixinLevelRenderer",
 		"v1.general.server_features.MixinFishingHookRenderer",
 		"v1.general.server_features.MixinMinecraft",
+		"v1.general.sky.blue_void.MixinLevelRenderer",
+		"v1.general.sky.cloud_height.MixinLevelRenderer",
+		"v1.general.sky.horizon_height.MixinSkyRenderer",
+		"v1.general.sky.planar_fog.MixinSkyRenderer",
 		"v1.gui.MixinChatComponent",
 		"v1.gui.MixinFontPreparedTextBuilder",
 		"v1.gui.MixinInGameHud",
@@ -88,10 +91,7 @@
 		"v1.render_states.MixinArmedEntityRenderState",
 		"v1.render_states.MixinCameraRenderState",
 		"v1.render_states.MixinGameRenderer",
-		"v1.render_states.MixinItemStackRenderState",
-		"v1.sky.blue_void.MixinLevelRenderer",
-		"v1.sky.horizon_height.MixinSkyRenderer",
-		"v1.sky.planar_fog.MixinSkyRenderer"
+		"v1.render_states.MixinItemStackRenderState"
 	],
 	"injectors": {
 		"defaultRequire": 1
