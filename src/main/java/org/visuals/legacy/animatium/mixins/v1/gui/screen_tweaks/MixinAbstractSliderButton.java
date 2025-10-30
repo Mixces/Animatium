@@ -26,9 +26,14 @@
 package org.visuals.legacy.animatium.mixins.v1.gui.screen_tweaks;
 
 import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 
+// OptionInstanceSliderButton
 @Mixin(AbstractSliderButton.class)
-public abstract class MixinAbstractSliderButton {
-    // TODO: snappySliderMovement
+public abstract class MixinAbstractSliderButton extends AbstractWidget {
+    public MixinAbstractSliderButton(int x, int y, int width, int height, Component message) {
+        super(x, y, width, height, message);
+    }
 }
