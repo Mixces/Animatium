@@ -1,6 +1,6 @@
 # Animatium
 
-Join our discord: https://discord.gg/U48eDmst68
+Join our discord: https://discord.gg/zqnXSUqedW
 
 ## License
 
@@ -30,7 +30,7 @@ These features currently won't work properly:
 Have any issues or need support? Feel free to use
 our [issue tracker](https://github.com/Legacy-Visuals-Project/Animatium/issues) to address that. If you are reporting a
 crash, make sure you include information about the mods you are using and attach any relevant log files you have. If you
-want to suggest features, join our [discord](https://discord.gg/U48eDmst68)!
+want to suggest features, join our [discord](https://discord.gg/zqnXSUqedW)!
 
 # Available Config Categories
 

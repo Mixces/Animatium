@@ -139,7 +139,7 @@ dependencies {
         modImplementation(fabricApi.module("fabric-command-api-v2", deps.fabricApiVersion))
 
         optionalProp("deps.modmenu_version") { prop ->
-            modImplementation("com.terraformersmc:modmenu:${prop}") {
+            modImplementation("com.terraformersmc:modmenu:$prop") {
                 exclude(group, "net.fabricmc.fabric-api")
             }
         }
