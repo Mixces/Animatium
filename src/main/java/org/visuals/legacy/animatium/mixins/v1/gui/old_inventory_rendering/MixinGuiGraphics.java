@@ -62,7 +62,7 @@ public abstract class MixinGuiGraphics {
             RenderUtils.fillRectangle(guiGraphics, n, o, p, q, lineColor);
             RenderUtils.fillVerticalLine(guiGraphics, n - 1, o, q, lineColor);
             RenderUtils.fillVerticalLine(guiGraphics, n + p, o, q, lineColor);
-            animatium$drawFrameGradient(guiGraphics, n, o + 1, p, q, 1347420415, 1344798847);
+            animatium$drawFrameGradient(guiGraphics, n, o + 1, p, q, 0x505000FF, 0x5028007F);
         } else {
             original.call(guiGraphics, x, y, width, height, sprite);
         }
@@ -79,10 +79,10 @@ public abstract class MixinGuiGraphics {
     }
 
     @Unique
-    private static void animatium$drawFrameGradient(GuiGraphics context, int x, int y, int width, int height, int startColor, int endColor) {
-        RenderUtils.fillVerticalGradientLine(context, x, y, height - 2, startColor, endColor);
-        RenderUtils.fillVerticalGradientLine(context, x + width - 1, y, height - 2, startColor, endColor);
-        RenderUtils.fillHorizontalLine(context, x, y - 1, width, startColor);
-        RenderUtils.fillHorizontalLine(context, x, y - 1 + height - 1, width, endColor);
+    private static void animatium$drawFrameGradient(GuiGraphics guiGraphics, int x, int y, int width, int height, int startColor, int endColor) {
+        RenderUtils.fillVerticalGradientLine(guiGraphics, x, y, height - 2, startColor, endColor);
+        RenderUtils.fillVerticalGradientLine(guiGraphics, x + width - 1, y, height - 2, startColor, endColor);
+        RenderUtils.fillHorizontalLine(guiGraphics, x, y - 1, width, startColor);
+        RenderUtils.fillHorizontalLine(guiGraphics, x, y - 1 + height - 1, width, endColor);
     }
 }
