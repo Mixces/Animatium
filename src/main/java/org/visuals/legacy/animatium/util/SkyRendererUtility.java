@@ -32,48 +32,53 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import lombok.experimental.UtilityClass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.ARGB;
 import org.joml.Matrix4fStack;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.util.compatibility.IrisPipeline;
+import org.visuals.legacy.animatium.util.compatibility.IrisUtil;
 
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.function.Consumer;
 
-public final class SkyRendererUtility {
-    private static final RenderPipeline.Snippet LEGACY_SKY_PIPELINE_SNIPPET =
+@UtilityClass
+public class SkyRendererUtility {
+    private final RenderPipeline.Snippet LEGACY_SKY_PIPELINE_SNIPPET =
             RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
-                    .withLocation(AnimatiumClient.id("pipeline/legacy_sky"))
-                    .withVertexShader(AnimatiumClient.id("core/legacy_sky"))
-                    .withFragmentShader(AnimatiumClient.id("core/legacy_sky"))
+                    .withLocation(Animatium.id("pipeline/legacy_sky"))
+                    .withVertexShader(Animatium.id("core/legacy_sky"))
+                    .withFragmentShader(Animatium.id("core/legacy_sky"))
                     .withDepthWrite(false)
                     .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
                     .buildSnippet();
 
-    public static final RenderPipeline LEGACY_SKY_PIPELINE =
+    public final RenderPipeline LEGACY_SKY_PIPELINE =
             RenderPipelines.register(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
-                    .withLocation(AnimatiumClient.id("pipeline/legacy_sky"))
+                    .withLocation(Animatium.id("pipeline/legacy_sky"))
                     .build());
 
-    public static final RenderPipeline LEGACY_SKY_PLANAR_FOG_PIPELINE =
+    public final RenderPipeline LEGACY_SKY_PLANAR_FOG_PIPELINE =
             RenderPipelines.register(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
-                    .withLocation(AnimatiumClient.id("pipeline/legacy_sky_planar_fog"))
+                    .withLocation(Animatium.id("pipeline/legacy_sky_planar_fog"))
                     .withShaderDefine("PLANAR_FOG")
                     .build());
 
-    private static GpuBuffer vertexBuffer = null;
+    private GpuBuffer vertexBuffer = null;
 
-    private SkyRendererUtility() {
+    static {
+        IrisUtil.assignPipeline(IrisPipeline.SKY_BASIC, LEGACY_SKY_PIPELINE, LEGACY_SKY_PLANAR_FOG_PIPELINE);
     }
 
-    public static RenderPipeline getLegacySkyPipeline(boolean planar) {
+    public RenderPipeline getLegacySkyPipeline(boolean planar) {
         return planar ? LEGACY_SKY_PLANAR_FOG_PIPELINE : LEGACY_SKY_PIPELINE;
     }
 
-    public static GpuBuffer getGpuBuffer() {
+    public GpuBuffer getGpuBuffer() {
         if (vertexBuffer == null) {
             vertexBuffer = initializeSky((builder) -> buildSkyHalf(builder, -16.0F, true));
         }
@@ -81,16 +86,13 @@ public final class SkyRendererUtility {
         return vertexBuffer;
     }
 
-    public static void renderBlueVoid(int skyColor, double depth) {
-        Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
+    public void renderBlueVoid(int skyColor, double depth) {
+        final Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
         modelViewStack.pushMatrix();
         modelViewStack.translate(0.0F, AnimatiumConfig.instance().extras.dontMoveBlueVoid ? 12.0F : -((float) (depth - 16.0)), 0.0F);
 
-        float red = ARGB.redFloat(skyColor);
-        float green = ARGB.greenFloat(skyColor);
-        float blue = ARGB.blueFloat(skyColor);
         GpuBufferSlice transforms = DynamicTransformsBuilder.of()
-                .withShaderColor(red * 0.2F + 0.04F, green * 0.2F + 0.04F, blue * 0.6F + 0.1F)
+                .withShaderColor(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F)
                 .build();
 
         RenderSystem.AutoStorageIndexBuffer quadsIndexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
@@ -109,7 +111,7 @@ public final class SkyRendererUtility {
         modelViewStack.popMatrix();
     }
 
-    public static void buildSkyHalf(VertexConsumer vertexConsumer, float y, boolean bottom) {
+    public void buildSkyHalf(VertexConsumer vertexConsumer, float y, boolean bottom) {
         final int width = 64;
         for (int k = -384; k <= 384; k += width) {
             for (int l = -384; l <= 384; l += width) {
@@ -130,7 +132,7 @@ public final class SkyRendererUtility {
         }
     }
 
-    public static GpuBuffer initializeSky(Consumer<BufferBuilder> bufferBuilderConsumer) {
+    public GpuBuffer initializeSky(Consumer<BufferBuilder> bufferBuilderConsumer) {
         try (ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(8112)) {
             BufferBuilder builder = new BufferBuilder(byteBufferBuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
             bufferBuilderConsumer.accept(builder);
@@ -140,9 +142,5 @@ public final class SkyRendererUtility {
                 return null;
             }
         }
-    }
-
-    static {
-        IrisUtil.assignPipeline(IrisPipeline.SKY_BASIC, LEGACY_SKY_PIPELINE, LEGACY_SKY_PLANAR_FOG_PIPELINE);
     }
 }

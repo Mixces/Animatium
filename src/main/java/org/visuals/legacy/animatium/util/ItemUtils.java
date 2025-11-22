@@ -27,6 +27,7 @@ package org.visuals.legacy.animatium.util;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import lombok.experimental.UtilityClass;
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.*;
@@ -35,39 +36,37 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 import java.util.List;
 
-public final class ItemUtils {
-    private ItemUtils() {
-    }
-
-    public static boolean isSwordItem(ItemStack stack) {
+@UtilityClass
+public class ItemUtils {
+    public boolean isSwordItem(ItemStack stack) {
         return stack.is(ItemTags.SWORDS);
     }
 
-    public static boolean isAxeItem(ItemStack stack) {
+    public boolean isAxeItem(ItemStack stack) {
         return stack.is(ItemTags.AXES);
     }
 
-    public static boolean isPickaxeItem(ItemStack stack) {
+    public boolean isPickaxeItem(ItemStack stack) {
         return stack.is(ItemTags.PICKAXES);
     }
 
-    public static boolean isShovelItem(ItemStack stack) {
+    public boolean isShovelItem(ItemStack stack) {
         return stack.is(ItemTags.SHOVELS);
     }
 
-    public static boolean isHoeItem(ItemStack stack) {
+    public boolean isHoeItem(ItemStack stack) {
         return stack.is(ItemTags.HOES);
     }
 
-    public static boolean isDiggerItem(ItemStack stack) {
+    public boolean isDiggerItem(ItemStack stack) {
         return isAxeItem(stack) || isPickaxeItem(stack) || isShovelItem(stack) || isHoeItem(stack);
     }
 
-    public static boolean isShieldItem(ItemStack stack) {
+    public boolean isShieldItem(ItemStack stack) {
         return stack.is(Items.SHIELD);
     }
 
-    public static boolean isFishingRodItem(ItemStack stack) {
+    public boolean isFishingRodItem(ItemStack stack) {
         if (!stack.isEmpty()) {
             final Item item = stack.getItem();
             return item instanceof FishingRodItem ||
@@ -77,7 +76,7 @@ public final class ItemUtils {
         }
     }
 
-    public static boolean isRangedWeaponItem(ItemStack stack) {
+    public boolean isRangedWeaponItem(ItemStack stack) {
         if (!stack.isEmpty()) {
             return stack.getItem() instanceof ProjectileWeaponItem;
         } else {
@@ -85,7 +84,7 @@ public final class ItemUtils {
         }
     }
 
-    public static boolean isHandheldItem(ItemStack stack) {
+    public boolean isHandheldItem(ItemStack stack) {
         if (!stack.isEmpty()) {
             return isDiggerItem(stack) ||
                     isSwordItem(stack) ||
@@ -96,7 +95,7 @@ public final class ItemUtils {
         }
     }
 
-    public static boolean isThinBlockItem(ItemStack stack) {
+    public boolean isThinBlockItem(ItemStack stack) {
         if (!stack.isEmpty()) {
             final Block block = Block.byItem(stack.getItem());
             return block instanceof CarpetBlock ||
@@ -107,11 +106,11 @@ public final class ItemUtils {
         }
     }
 
-    public static boolean isSkullBlock(ItemStack stack) {
+    public boolean isSkullBlock(ItemStack stack) {
         return Block.byItem(stack.getItem()) instanceof SkullBlock;
     }
 
-    public static boolean isBlockItemBlacklisted(ItemStack stack) {
+    public boolean isBlockItemBlacklisted(ItemStack stack) {
         final Block block = Block.byItem(stack.getItem());
         return block instanceof BannerBlock ||
                 block instanceof RodBlock ||
@@ -119,13 +118,13 @@ public final class ItemUtils {
                 isSkullBlock(stack);
     }
 
-    public static boolean isItemBlacklisted(ItemStack stack) {
+    public boolean isItemBlacklisted(ItemStack stack) {
         return isShieldItem(stack) ||
                 isBlockItemBlacklisted(stack) ||
                 stack.is(Items.CROSSBOW);
     }
 
-    public static boolean isSwingItemBlacklisted(ItemStack stack) {
+    public boolean isSwingItemBlacklisted(ItemStack stack) {
         final Item item = stack.getItem();
         return item instanceof ProjectileItem ||
                 item instanceof BucketItem ||
@@ -133,11 +132,11 @@ public final class ItemUtils {
                 item instanceof EnderpearlItem;
     }
 
-    public static boolean isBlock3d(ItemStack stack, boolean usesBlockLight) {
+    public boolean isBlock3d(ItemStack stack, boolean usesBlockLight) {
         return stack.getItem() instanceof BlockItem && usesBlockLight;
     }
 
-    public static void applyLegacyFirstPersonTransforms(PoseStack poseStack, int direction, Runnable runnable) {
+    public void applyLegacyFirstPersonTransforms(PoseStack poseStack, int direction, Runnable runnable) {
         poseStack.mulPose(Axis.YP.rotationDegrees(direction * 45.0F));
         poseStack.scale(0.4F, 0.4F, 0.4F);
         runnable.run();
@@ -145,7 +144,7 @@ public final class ItemUtils {
         poseStack.mulPose(Axis.YP.rotationDegrees(direction * -45.0F));
     }
 
-    public static boolean shouldApplyItemPositionsInThirdPerson(ArmedEntityRenderState armedEntityRenderState) {
+    public boolean shouldApplyItemPositionsInThirdPerson(ArmedEntityRenderState armedEntityRenderState) {
         if (AnimatiumConfig.instance().items.itemPositionsInThirdPerson) {
             return true;
         } else {
@@ -154,7 +153,7 @@ public final class ItemUtils {
         }
     }
 
-    public static int getLegacyDurabilityColorValue(ItemStack stack) {
+    public int getLegacyDurabilityColorValue(ItemStack stack) {
         final double value = (255.0 - (double) stack.getDamageValue() * 255.0 / (double) stack.getMaxDamage());
         if (!Double.isNaN(value)) {
             return (int) Math.round(value);
@@ -163,7 +162,7 @@ public final class ItemUtils {
         }
     }
 
-    public static Rarity getLegacyItemRarity(ItemStack stack) {
+    public Rarity getLegacyItemRarity(ItemStack stack) {
         final Item item = stack.getItem();
         if (List.of(Items.GOLDEN_APPLE, Items.END_CRYSTAL).contains(item)) {
             return Rarity.RARE;
@@ -179,7 +178,7 @@ public final class ItemUtils {
     }
 
     // TODO/NOTE: Might need rework? as vanilla now has the fix as of 1.21.11+ but doesn't seem fully the same/accurate
-    public static boolean shouldInstantlyReplaceVisibleItem1_8(ItemStack prevStack, ItemStack currentStack) {
+    public boolean shouldInstantlyReplaceVisibleItem1_8(ItemStack prevStack, ItemStack currentStack) {
         // TODO/NOTE: Apparently 1.7 doesn't do any special checks inside the inventory
         final boolean itemsMatch = ItemStack.isSameItem(prevStack, currentStack);
         final boolean durabilitiesMatch = prevStack.getDamageValue() == currentStack.getDamageValue();

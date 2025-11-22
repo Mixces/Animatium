@@ -31,14 +31,14 @@ import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(TextureManager.class)
 public abstract class MixinTextureManager {
     @ModifyVariable(method = "getTexture", at = @At("HEAD"), argsOnly = true)
     private ResourceLocation animatium$useItemGlint(ResourceLocation original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.itemGlintOnEntity && original == ItemRenderer.ENCHANTED_GLINT_ARMOR) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().other.itemGlintOnEntity && original == ItemRenderer.ENCHANTED_GLINT_ARMOR) {
             return ItemRenderer.ENCHANTED_GLINT_ITEM;
         } else {
             return original;

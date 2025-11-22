@@ -31,7 +31,7 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.world.level.dimension.DimensionType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 import java.util.Optional;
@@ -40,7 +40,7 @@ import java.util.Optional;
 public abstract class MixinLevelRenderer {
     @WrapOperation(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/dimension/DimensionType;cloudHeight()Ljava/util/Optional;"))
     private Optional<Integer> animatium$cloudHeight(DimensionType instance, Operation<Optional<Integer>> original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.cloudHeight && instance.natural()) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().other.cloudHeight && instance.natural()) {
             return Optional.of(128);
         } else {
             return original.call(instance);

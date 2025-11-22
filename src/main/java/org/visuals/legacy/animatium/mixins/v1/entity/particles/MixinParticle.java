@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(Particle.class)
@@ -48,7 +48,7 @@ public abstract class MixinParticle {
 
     @Inject(method = "move", at = @At("HEAD"), cancellable = true)
     private void animatium$particlePhysics(double x, double y, double z, CallbackInfo ci) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().extras.disableParticlePhysics) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().extras.disableParticlePhysics) {
             ci.cancel();
             this.setBoundingBox(this.getBoundingBox().move(x, y, z));
             this.setLocationFromBoundingbox();

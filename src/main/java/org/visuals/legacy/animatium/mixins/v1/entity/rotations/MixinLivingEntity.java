@@ -37,7 +37,7 @@ import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.Utils;
 
@@ -52,7 +52,7 @@ public abstract class MixinLivingEntity extends Entity {
 
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;abs(F)F"))
     private float animatium$rotateBackwardsWalking(float value, Operation<Float> original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.rotateBackwardsWalking) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.rotateBackwardsWalking) {
             return 0F;
         } else {
             return original.call(value);
@@ -61,7 +61,7 @@ public abstract class MixinLivingEntity extends Entity {
 
     @WrapOperation(method = "tickHeadTurn", at = @At(value = "INVOKE", target = "Ljava/lang/Math;abs(F)F"))
     private float animatium$headRotationInterpolation(float value, Operation<Float> original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.rotateBackwardsWalking) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.rotateBackwardsWalking) {
             value = Mth.clamp(value, -75.0F, 75.0F);
             this.yBodyRot = this.getYRot() - value;
             if (Math.abs(value) > 50.0F) {
@@ -76,7 +76,7 @@ public abstract class MixinLivingEntity extends Entity {
 
     @WrapOperation(method = "lerpHeadRotationStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;rotLerp(DDD)D"))
     public double animatium$headRotationInterpolation(double delta, double start, double end, Operation<Double> original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.disableHeadRotationInterpolation) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.disableHeadRotationInterpolation) {
             return end;
         } else {
             return original.call(delta, start, end);
@@ -86,7 +86,7 @@ public abstract class MixinLivingEntity extends Entity {
     // TODO/MOVE
     @WrapOperation(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;swing(Lnet/minecraft/world/InteractionHand;)V"))
     private void animatium$swingOnDropInventory(LivingEntity entity, InteractionHand hand, Operation<Void> original) {
-        if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().items.swingOnDrop && entity instanceof LocalPlayer localPlayer) {
+        if (Animatium.ENABLED && !AnimatiumConfig.instance().items.swingOnDrop && entity instanceof LocalPlayer localPlayer) {
             Utils.sendSwingPacket(localPlayer, hand);
         } else {
             original.call(entity, hand);

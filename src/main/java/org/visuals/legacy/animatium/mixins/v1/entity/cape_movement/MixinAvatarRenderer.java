@@ -31,7 +31,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.entity.ClientAvatarEntity;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
@@ -52,18 +51,22 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(AvatarRenderer.class)
 public abstract class MixinAvatarRenderer<AvatarLikeEntity extends Avatar & ClientAvatarEntity> extends LivingEntityRenderer<AvatarLikeEntity, AvatarRenderState, PlayerModel> {
+    // TODO/MOVE
+    @Unique
+    private final ThreadLocal<@Nullable AvatarRenderState> animatium$renderState = ThreadLocal.withInitial(() -> null);
+
     public MixinAvatarRenderer(EntityRendererProvider.Context context, boolean slim) {
         super(context, new PlayerModel(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER), slim), 0.5F);
     }
 
     @WrapOperation(method = "extractCapeState", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;rotLerp(FFF)F"))
     private static float animatium$changeLerpMethod(float delta, float start, float end, Operation<Float> original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.capeMovement) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.capeMovement) {
             return Mth.lerp(delta, start, end);
         } else {
             return original.call(delta, start, end);
@@ -72,7 +75,7 @@ public abstract class MixinAvatarRenderer<AvatarLikeEntity extends Avatar & Clie
 
     @ModifyArg(method = "extractCapeState", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F", ordinal = 1), index = 2)
     private static float animatium$uncapRotation(float original) {
-        if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().movement.clampCapeLean) {
+        if (Animatium.ENABLED && !AnimatiumConfig.instance().movement.clampCapeLean) {
             return Float.MAX_VALUE;
         } else {
             return original;
@@ -81,27 +84,23 @@ public abstract class MixinAvatarRenderer<AvatarLikeEntity extends Avatar & Clie
 
     @WrapWithCondition(method = "extractCapeState", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;capeLean:F", ordinal = 1))
     private static boolean animatium$dontAssignLeanField(AvatarRenderState instance, float value) {
-        return !AnimatiumClient.ENABLED || !AnimatiumConfig.instance().movement.capeMovement;
+        return !Animatium.ENABLED || !AnimatiumConfig.instance().movement.capeMovement;
     }
 
     @WrapWithCondition(method = "extractCapeState", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;capeLean2:F", ordinal = 1))
     private static boolean animatium$dontAssignLean2Field(AvatarRenderState instance, float value) {
-        return !AnimatiumClient.ENABLED || !AnimatiumConfig.instance().movement.capeMovement;
+        return !Animatium.ENABLED || !AnimatiumConfig.instance().movement.capeMovement;
     }
 
     // TODO/MOVE
     @WrapOperation(method = "getRenderOffset(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;)Lnet/minecraft/world/phys/Vec3;", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;isCrouching:Z"))
     private boolean animatium$fixSneakingFeetPosition(AvatarRenderState instance, Operation<Boolean> original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().fixes.fixSneakingFeetPosition) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixSneakingFeetPosition) {
             return false;
         } else {
             return original.call(instance);
         }
     }
-
-    // TODO/MOVE
-    @Unique
-    private final ThreadLocal<@Nullable AvatarRenderState> animatium$renderState = ThreadLocal.withInitial(() -> null);
 
     @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;F)V", at = @At("TAIL"))
     private void animatium$storeAvatarState(AvatarLikeEntity avatar, AvatarRenderState avatarRenderState, float f, CallbackInfo ci) {
@@ -110,7 +109,7 @@ public abstract class MixinAvatarRenderer<AvatarLikeEntity extends Avatar & Clie
 
     @Inject(method = "renderHand", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/model/geom/ModelPart;visible:Z", ordinal = 2))
     private void animatium$heldItemArmLogic(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, ResourceLocation resourceLocation, ModelPart modelPart, boolean bl, CallbackInfo ci, @Local PlayerModel playerModel) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.heldItemArmLogic) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().other.heldItemArmLogic) {
             final HumanoidArm arm = modelPart == model.rightArm ? HumanoidArm.RIGHT : HumanoidArm.LEFT;
             final AvatarRenderState avatarRenderState = animatium$renderState.get();
             // TODO/FIX @Mixces

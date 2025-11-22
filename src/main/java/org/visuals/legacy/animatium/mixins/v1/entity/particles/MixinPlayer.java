@@ -29,7 +29,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(Player.class)
@@ -37,7 +37,7 @@ public abstract class MixinPlayer {
     // TODO: Improve parity/exactness
     @ModifyExpressionValue(method = "attack", at = @At(value = "CONSTANT", args = "floatValue=0.0", ordinal = 5))
     private float animatium$alwaysShowSharpParticles(float original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().extras.alwaysSharpParticles) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().extras.alwaysSharpParticles) {
             return -1.0F;
         } else {
             return original;

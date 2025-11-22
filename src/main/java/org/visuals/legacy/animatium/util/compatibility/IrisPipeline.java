@@ -23,18 +23,42 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.general.outlines;
+package org.visuals.legacy.animatium.util.compatibility;
 
-import net.minecraft.client.renderer.RenderType;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.visuals.legacy.animatium.util.RenderUtils;
+// NOTE: Enum values fetched from Iris mod
+public enum IrisPipeline {
+    BASIC,
+    TEXTURED,
+    TERRAIN,
+    TERRAIN_SOLID,
+    TERRAIN_CUTOUT,
+    TRANSLUCENT,
+    SKY_BASIC,
+    SKY_TEXTURED,
+    ARMOR_GLINT,
+    ENTITIES,
+    ENTITIES_TRANSLUCENT,
+    CLOUDS,
+    BLOCK,
+    BLOCK_TRANSLUCENT,
+    HAND,
+    HAND_TRANSLUCENT,
+    PARTICLES,
+    PARTICLES_TRANSLUCENT,
+    EMISSIVE_ENTITIES,
+    BEACON_BEAM,
+    LINES;
 
-@Mixin(RenderType.CompositeRenderType.class)
-public abstract class MixinCompositeRenderType {
-    @ModifyArg(method = "draw", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/DynamicUniforms;writeTransform(Lorg/joml/Matrix4fc;Lorg/joml/Vector4fc;Lorg/joml/Vector3fc;Lorg/joml/Matrix4fc;F)Lcom/mojang/blaze3d/buffers/GpuBufferSlice;"), index = 4)
-    private float animatium$blockOutlineRendering$lineWidth(float original) {
-        return RenderUtils.getLineWidth(original);
+    public static final IrisPipeline[] VALUES = values();
+
+    private Enum<?> value = null;
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public void initialize(Class<? extends Enum> clazz) {
+        this.value = Enum.valueOf(clazz, this.name());
+    }
+
+    public Enum<?> internal() {
+        return this.value;
     }
 }

@@ -23,24 +23,17 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.general.outlines;
+package org.visuals.legacy.animatium.mixins.accessor;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(GameRenderer.class)
-public abstract class MixinGameRenderer {
-    @WrapOperation(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GameRenderer;shouldRenderBlockOutline()Z"))
-    private boolean animatium$persistentBlockOutline(GameRenderer instance, Operation<Boolean> original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().extras.persistentBlockOutline) {
-            return true;
-        } else {
-            return original.call(instance);
-        }
-    }
+public interface GameRendererAccessor {
+    @Accessor("overlayTexture")
+    @Mutable
+    void animatium$setOverlayTexture(OverlayTexture overlayTexture);
 }

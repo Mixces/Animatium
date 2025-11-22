@@ -25,31 +25,30 @@
 
 package org.visuals.legacy.animatium.mixins.v1.gui.toasts;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.gui.components.toasts.TutorialToast;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.compatibility.Mods;
 
 @Mixin(TutorialToast.class)
 public abstract class MixinTutorialToast {
-    @Inject(method = "update", at = @At("HEAD"), cancellable = true)
-    private void animatium$disableTutorialToast(ToastManager toastManager, long visibilityTime, CallbackInfo ci) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts && !Utils.HAS_SODIUM_EXTRA) {
-            ci.cancel();
+    @WrapMethod(method = "update")
+    private void animatium$disableTutorialToast(ToastManager toastManager, long visibilityTime, Operation<Void> original) {
+        if (!Animatium.ENABLED || !AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts || Mods.HAS_SODIUM_EXTRAS) {
+            original.call(toastManager, visibilityTime);
         }
     }
 
-    @Inject(method = "render", at = @At("HEAD"), cancellable = true)
-    private void animatium$disableTutorialToast(GuiGraphics guiGraphics, Font font, long visibilityTime, CallbackInfo ci) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts && !Utils.HAS_SODIUM_EXTRA) {
-            ci.cancel();
+    @WrapMethod(method = "render")
+    private void animatium$disableTutorialToast(GuiGraphics guiGraphics, Font font, long visibilityTime, Operation<Void> original) {
+        if (!Animatium.ENABLED || !AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts || Mods.HAS_SODIUM_EXTRAS) {
+            original.call(guiGraphics, font, visibilityTime);
         }
     }
 }

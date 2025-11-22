@@ -32,23 +32,24 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AnimatiumDebugEntry implements DebugScreenEntry {
     public static final DebugEntryCategory CATEGORY = new DebugEntryCategory(Component.translatable("animatium.category.debug"), 9999.0F);
-    public static final ResourceLocation GROUP = AnimatiumClient.id("debug");
+    public static final ResourceLocation GROUP = Animatium.id("debug");
 
     @Override
     public void display(DebugScreenDisplayer debugScreenDisplayer, @Nullable Level level, @Nullable LevelChunk levelChunk, @Nullable LevelChunk levelChunk2) {
-        List<String> list = new ArrayList<>();
-        list.add("Animatium " + AnimatiumClient.VERSION + (AnimatiumClient.DEVELOPMENT_VERSION.isEmpty() ? "" : " - Development Version (" + AnimatiumClient.DEVELOPMENT_VERSION + ")"));
-        if (!AnimatiumClient.ENABLED_SERVER_FEATURES.isEmpty()) {
+        final List<String> list = new ArrayList<>();
+        list.add("Animatium " + Animatium.VERSION + (Animatium.DEVELOPMENT_VERSION.isEmpty() ? "" : " - Development Version (" + Animatium.DEVELOPMENT_VERSION + ")"));
+        if (!Animatium.ENABLED_SERVER_FEATURES.isEmpty()) {
             list.add("Enabled Server Features:");
-            AnimatiumClient.ENABLED_SERVER_FEATURES.forEach((feature) -> list.add(" - " + feature.getTranslate().getString()));
+            Animatium.ENABLED_SERVER_FEATURES.forEach((feature) -> list.add(" - " + feature.getTranslate().getString()));
         }
         debugScreenDisplayer.addToGroup(GROUP, list);
     }
@@ -59,7 +60,7 @@ public class AnimatiumDebugEntry implements DebugScreenEntry {
     }
 
     @Override
-    public DebugEntryCategory category() {
+    public @NotNull DebugEntryCategory category() {
         return CATEGORY;
     }
 }

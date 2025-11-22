@@ -38,7 +38,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.RenderUtils;
 import org.visuals.legacy.animatium.util.SkyRendererUtility;
@@ -55,9 +55,9 @@ public abstract class MixinLevelRenderer {
 
     @Inject(method = "method_62215", at = @At("TAIL"))
     private void animatium$blueVoidSky(GpuBufferSlice gpuBufferSlice, SkyRenderState skyRenderState, CallbackInfo ci) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.blueVoidSky && skyRenderState.skyType != DimensionSpecialEffects.SkyType.END && this.level != null && this.minecraft.player != null) {
-            float tickDelta = this.minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true);
-            int skyColor = this.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), tickDelta);
+        if (Animatium.ENABLED && AnimatiumConfig.instance().other.blueVoidSky && skyRenderState.skyType != DimensionSpecialEffects.SkyType.END && this.level != null && this.minecraft.player != null) {
+            final float tickDelta = this.minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true);
+            final int skyColor = this.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), tickDelta);
             SkyRendererUtility.renderBlueVoid(skyColor, this.minecraft.player.getEyePosition(tickDelta).y - RenderUtils.getLevelHorizonHeight(this.level));
         }
     }

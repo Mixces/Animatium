@@ -14,16 +14,16 @@
 		"Wyvest"
 	],
 	"contact": {
-		"sources": "https://github.com/Legacy-Visuals-Project/Animatium/",
-		"issues": "https://github.com/Legacy-Visuals-Project/Animatium/issues"
+		"sources": "${source}",
+		"issues": "${issues}"
 	},
 	"license": "${license}",
-	"icon": "assets/animatium/icon.png",
+	"icon": "assets/${id}/icon.png",
 	"accessWidener": "animatium.accesswidener",
 	"environment": "client",
 	"depends": {
 		"fabricloader": ">=${fabric_loader_version}",
-		"minecraft": "${mcdep}",
+		"minecraft": "${minecraft_version_range}",
 		"fabric-networking-api-v1": "*",
 		"fabric-command-api-v2": "*",
 		"fabric-resource-loader-v0": "*"
@@ -37,11 +37,5 @@
 			},
 			"update_checker": true
 		}
-	},
-	"recommends": {
-		"optiboxes": "*",
-		"legacy_potion_colors": "*",
-		"polytone": "*",
-		"viafabricplus": "*"
 	}
 }

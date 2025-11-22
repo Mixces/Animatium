@@ -30,18 +30,18 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(InventoryScreen.class)
 public abstract class MixinInventoryScreen {
     @WrapWithCondition(method = "renderEntityInInventoryFollowsMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;enableScissor(IIII)V"))
     private static boolean animatium$entityScissor(GuiGraphics instance, int minX, int minY, int maxX, int maxY) {
-        return !AnimatiumClient.ENABLED || AnimatiumConfig.instance().other.inventoryEntityScissor;
+        return !Animatium.ENABLED || AnimatiumConfig.instance().other.inventoryEntityScissor;
     }
 
     @WrapWithCondition(method = "renderEntityInInventoryFollowsMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;disableScissor()V"))
     private static boolean animatium$entityScissor(GuiGraphics instance) {
-        return !AnimatiumClient.ENABLED || AnimatiumConfig.instance().other.inventoryEntityScissor;
+        return !Animatium.ENABLED || AnimatiumConfig.instance().other.inventoryEntityScissor;
     }
 }

@@ -38,7 +38,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(MultiPlayerGameMode.class)
@@ -51,7 +51,7 @@ public abstract class MixinMultiPlayerGameMode {
 
     @Inject(method = "getDestroyStage", at = @At(value = "RETURN"), cancellable = true)
     private void animatium$blockMiningProgress(CallbackInfoReturnable<Integer> cir) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.blockMiningProgress && destroyProgress > 0.0F) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().other.blockMiningProgress && destroyProgress > 0.0F) {
             cir.setReturnValue((int) (this.destroyProgress * 10.0F));
         }
     }

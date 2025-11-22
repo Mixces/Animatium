@@ -32,9 +32,11 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.util.ConfigUtil;
 
 import java.util.Random;
@@ -44,15 +46,15 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
         LiteralArgumentBuilder<FabricClientCommandSource> command = ClientCommandManager.literal("animatium").executes(new AnimatiumCommand());
 
         command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("on").executes((context) -> {
-            if (AnimatiumClient.ENABLED) {
+            if (Animatium.ENABLED) {
                 context.getSource().sendFeedback(Component.literal("Mod is already enabled!").withStyle(ChatFormatting.YELLOW));
             } else {
                 context.getSource().sendFeedback(Component.literal("Mod enabled.").withStyle(ChatFormatting.GREEN));
-                AnimatiumClient.ENABLED = true;
-                AnimatiumClient.SHOULD_RELOAD_OVERLAY_TEXTURE = true;
+                ConfigUtil.put("enabled", Animatium.ENABLED = true);
+                ((GameRendererAccessor) context.getSource().getClient().gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
                 Minecraft.getInstance().reloadResourcePacks();
-                if (!ConfigUtil.saveState()) {
-                    System.err.println("Failed to save enabled state...");
+                if (!ConfigUtil.save()) {
+                    System.err.println("Failed to save animatium utility config...");
                 }
             }
 
@@ -60,14 +62,14 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
         }));
 
         command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("off").executes((context) -> {
-            if (!AnimatiumClient.ENABLED) {
+            if (!Animatium.ENABLED) {
                 context.getSource().sendFeedback(Component.literal("Mod is already disabled!").withStyle(ChatFormatting.YELLOW));
             } else {
                 context.getSource().sendFeedback(Component.literal("Mod disabled.").withStyle(ChatFormatting.RED));
-                AnimatiumClient.ENABLED = false;
-                AnimatiumClient.SHOULD_RELOAD_OVERLAY_TEXTURE = true;
+                ConfigUtil.put("enabled", Animatium.ENABLED = false);
+                ((GameRendererAccessor) context.getSource().getClient().gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
                 Minecraft.getInstance().reloadResourcePacks();
-                ConfigUtil.saveState();
+                ConfigUtil.save();
             }
 
             return Command.SINGLE_SUCCESS;

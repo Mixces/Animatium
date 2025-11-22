@@ -29,9 +29,11 @@ import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
-import org.visuals.legacy.animatium.AnimatiumClient;
-import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
+import org.visuals.legacy.animatium.util.compatibility.Mods;
 
 public class ExtrasConfigCategory {
     public boolean minimalViewBobbing = false;
@@ -43,7 +45,7 @@ public class ExtrasConfigCategory {
     public boolean offhandUsageSwinging = false;
     public boolean alwaysUsageSwing = false;
     public boolean alwaysSharpParticles = false;
-    public boolean disableRecipeAndTutorialToasts = false; // Disabled if "sodium-extra" is detected
+    public boolean disableRecipeAndTutorialToasts = false;
     public boolean showArmWhileInvisible = false;
     public boolean fakeMissPenaltySwing = false;
     public boolean dontMoveBlueVoid = false;
@@ -138,7 +140,7 @@ public class ExtrasConfigCategory {
                         (newVal) -> config.alwaysSharpParticles = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
-        if (!Utils.HAS_SODIUM_EXTRA) {
+        if (!Mods.HAS_SODIUM_EXTRAS) {
             category.option(Option.<Boolean>createBuilder()
                     .name(Component.translatable("animatium.disableRecipeAndTutorialToasts"))
                     .description(OptionDescription.of(Component.translatable("animatium.disableRecipeAndTutorialToasts.description")))
@@ -193,7 +195,7 @@ public class ExtrasConfigCategory {
                         () -> config.deepRedHurtTint,
                         (newVal) -> {
                             config.deepRedHurtTint = newVal;
-                            AnimatiumClient.SHOULD_RELOAD_OVERLAY_TEXTURE = true;
+                            ((GameRendererAccessor) Minecraft.getInstance().gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
                         })
                 .controller(TickBoxControllerBuilder::create)
                 .build());

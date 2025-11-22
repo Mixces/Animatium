@@ -34,6 +34,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import lombok.experimental.UtilityClass;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
@@ -43,13 +44,11 @@ import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.function.Consumer;
 
-public final class RenderUtils {
-    private RenderUtils() {
-    }
+@UtilityClass
+public class RenderUtils {
+    private float LINE_WIDTH = -1.0F;
 
-    private static float LINE_WIDTH = -1.0F;
-
-    public static float getLineWidth(Float def) {
+    public float getLineWidth(Float def) {
         if (LINE_WIDTH == -1.0F) {
             return def == null ? RenderSystem.getShaderLineWidth() : def;
         } else {
@@ -57,11 +56,11 @@ public final class RenderUtils {
         }
     }
 
-    public static void setLineWidth(float width) {
+    public void setLineWidth(float width) {
         LINE_WIDTH = width;
     }
 
-    public static double getLevelHorizonHeight(ClientLevel level) {
+    public double getLevelHorizonHeight(ClientLevel level) {
         if (AnimatiumConfig.instance().other.skyHorizonHeight) {
             return ((ClientLevelDataAccessor) level.getLevelData()).animatium$isFlatWorld() ? 0.0D : 63.0D;
         } else {
@@ -69,23 +68,23 @@ public final class RenderUtils {
         }
     }
 
-    public static void fillVerticalLine(GuiGraphics context, int x, int y, int length, int color) {
+    public void fillVerticalLine(GuiGraphics context, int x, int y, int length, int color) {
         context.fill(x, y, x + 1, y + length, color);
     }
 
-    public static void fillVerticalGradientLine(GuiGraphics context, int x, int y, int length, int startColor, int endColor) {
+    public void fillVerticalGradientLine(GuiGraphics context, int x, int y, int length, int startColor, int endColor) {
         context.fillGradient(x, y, x + 1, y + length, startColor, endColor);
     }
 
-    public static void fillHorizontalLine(GuiGraphics context, int x, int y, int length, int color) {
+    public void fillHorizontalLine(GuiGraphics context, int x, int y, int length, int color) {
         context.fill(x, y, x + length, y + 1, color);
     }
 
-    public static void fillRectangle(GuiGraphics context, int x, int y, int width, int height, int color) {
+    public void fillRectangle(GuiGraphics context, int x, int y, int width, int height, int color) {
         context.fill(x, y, x + width, y + height, color);
     }
 
-    public static void drawBuffer(RenderPipeline renderPipeline, RenderTarget renderTarget, MeshData meshData, Consumer<RenderPass> renderPassConsumer) {
+    public void drawBuffer(RenderPipeline renderPipeline, RenderTarget renderTarget, MeshData meshData, Consumer<RenderPass> renderPassConsumer) {
         GpuBufferSlice dynamicTransforms = DynamicTransformsBuilder.of().build();
         try {
             GpuBuffer vertexBuffer = renderPipeline.getVertexFormat().uploadImmediateVertexBuffer(meshData.vertexBuffer());

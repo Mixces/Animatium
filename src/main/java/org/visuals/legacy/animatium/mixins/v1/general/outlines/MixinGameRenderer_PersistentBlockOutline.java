@@ -23,42 +23,24 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util;
+package org.visuals.legacy.animatium.mixins.v1.general.outlines;
 
-// NOTE: Enum values fetched from Iris mod
-public enum IrisPipeline {
-    BASIC,
-    TEXTURED,
-    TERRAIN,
-    TERRAIN_SOLID,
-    TERRAIN_CUTOUT,
-    TRANSLUCENT,
-    SKY_BASIC,
-    SKY_TEXTURED,
-    ARMOR_GLINT,
-    ENTITIES,
-    ENTITIES_TRANSLUCENT,
-    CLOUDS,
-    BLOCK,
-    BLOCK_TRANSLUCENT,
-    HAND,
-    HAND_TRANSLUCENT,
-    PARTICLES,
-    PARTICLES_TRANSLUCENT,
-    EMISSIVE_ENTITIES,
-    BEACON_BEAM,
-    LINES;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.renderer.GameRenderer;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-    public static final IrisPipeline[] VALUES = values();
-
-    private Enum<?> value = null;
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public void initialize(Class<? extends Enum> clazz) {
-        this.value = Enum.valueOf(clazz, this.name());
-    }
-
-    public Enum<?> internal() {
-        return this.value;
+@Mixin(GameRenderer.class)
+public abstract class MixinGameRenderer_PersistentBlockOutline {
+    @WrapOperation(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GameRenderer;shouldRenderBlockOutline()Z"))
+    private boolean animatium$persistentBlockOutline(GameRenderer instance, Operation<Boolean> original) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().extras.persistentBlockOutline) {
+            return true;
+        } else {
+            return original.call(instance);
+        }
     }
 }

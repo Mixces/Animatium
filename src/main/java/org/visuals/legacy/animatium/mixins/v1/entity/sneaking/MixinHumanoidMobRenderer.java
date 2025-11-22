@@ -31,7 +31,7 @@ import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(HumanoidMobRenderer.class)
@@ -40,7 +40,7 @@ public abstract class MixinHumanoidMobRenderer {
     @WrapOperation(method = "extractHumanoidRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isCrouching()Z"))
     private static boolean animatium$sneakAnimationWhileFlying(LivingEntity livingEntity, Operation<Boolean> original) {
         final boolean isCrouching = original.call(livingEntity);
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.sneakAnimationWhileFlying) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.sneakAnimationWhileFlying) {
             return isCrouching || livingEntity.isShiftKeyDown();
         } else {
             return isCrouching;

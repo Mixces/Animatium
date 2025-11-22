@@ -30,14 +30,14 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(RecipeBookComponent.class)
 public abstract class MixinRecipeBookComponent {
     @WrapOperation(method = "isVisible", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;visible:Z"))
     private boolean animatium$recipeBook(RecipeBookComponent<?> instance, Operation<Boolean> original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().screen.hideRecipeBook) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.hideRecipeBook) {
             return false;
         } else {
             return original.call(instance);

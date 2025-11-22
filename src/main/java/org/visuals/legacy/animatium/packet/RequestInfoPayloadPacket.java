@@ -29,11 +29,11 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 
 public record RequestInfoPayloadPacket() implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, RequestInfoPayloadPacket> CODEC = CustomPacketPayload.codec(null, RequestInfoPayloadPacket::read);
-    public static final Type<RequestInfoPayloadPacket> PAYLOAD_ID = new Type<>(AnimatiumClient.id("request_info"));
+    public static final Type<RequestInfoPayloadPacket> PAYLOAD_ID = new Type<>(Animatium.id("request_info"));
 
     private static RequestInfoPayloadPacket read(FriendlyByteBuf buffer) {
         return new RequestInfoPayloadPacket();

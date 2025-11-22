@@ -33,14 +33,14 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.FishingHook;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
 @Mixin(FishingHookRenderer.class)
-public abstract class MixinFishingHookRenderer {
+public abstract class MixinFishingHookRenderer_HideFirstPersonBobber {
     @ModifyReturnValue(method = "shouldRender(Lnet/minecraft/world/entity/projectile/FishingHook;Lnet/minecraft/client/renderer/culling/Frustum;DDD)Z", at = @At("RETURN"))
     private boolean animatium$hideBobberAttachedToSelf(boolean original, @Local(argsOnly = true) FishingHook fishingHook) {
-        if (AnimatiumClient.ENABLED_SERVER_FEATURES.contains(ServerFeature.HIDE_FIRSTPERSON_ROD_BOBBER) &&
+        if (Animatium.ENABLED_SERVER_FEATURES.contains(ServerFeature.HIDE_FIRSTPERSON_ROD_BOBBER) &&
                 fishingHook.getHookedIn() instanceof Entity entity &&
                 entity.getId() == Minecraft.getInstance().player.getId()) {
             return false;

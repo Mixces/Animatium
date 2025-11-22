@@ -31,7 +31,7 @@ import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(ThrowableProjectile.class)
@@ -39,7 +39,7 @@ public abstract class MixinThrowableProjectile {
     @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/projectile/ThrowableProjectile;tickCount:I"))
     private int animatium$projectileAgeCheck(ThrowableProjectile instance, Operation<Integer> original) {
         final int originalTick = original.call(instance);
-        if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().other.projectileAgeCheck) {
+        if (Animatium.ENABLED && !AnimatiumConfig.instance().other.projectileAgeCheck) {
             return originalTick + 2;
         } else {
             return originalTick;

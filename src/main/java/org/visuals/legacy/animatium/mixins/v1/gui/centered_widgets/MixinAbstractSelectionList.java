@@ -34,21 +34,21 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(AbstractSelectionList.class)
 public abstract class MixinAbstractSelectionList {
     @Inject(method = "renderWidget", at = @At("HEAD"))
     private void animatium$updateScroll(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().screen.centerScrollableListWidgets) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.centerScrollableListWidgets) {
             ((AbstractScrollArea) (Object) this).refreshScrollAmount();
         }
     }
 
     @WrapOperation(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/AbstractSelectionList;isFocused()Z"))
     private boolean animatium$listWidgetSelectedBorderColor(AbstractSelectionList<?> instance, Operation<Boolean> original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().screen.listWidgetSelectedBorderColor) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.listWidgetSelectedBorderColor) {
             return false;
         } else {
             return original.call(instance);

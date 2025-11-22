@@ -23,24 +23,18 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.general.min_transparency;
+package org.visuals.legacy.animatium.util.states;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.renderer.texture.SpriteContents;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
+public interface ViewBobbingStorage {
+    // Bobbing Tilt
+    void animatium$setBobbingTilt(float bobbingTilt);
 
-@Mixin(SpriteContents.class)
-public abstract class MixinSpriteContents {
-    @WrapOperation(method = "isTransparent", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/ARGB;alpha(I)I"))
-    private int animatium$upMinPixelTransparencyLimit(int argb, Operation<Integer> original) {
-        final int alpha = original.call(argb);
-        if (AnimatiumConfig.instance().fixes.upMinPixelTransparencyLimit && (alpha / 255.0F) <= 0.1F) {
-            return 0;
-        } else {
-            return alpha;
-        }
-    }
+    float animatium$getBobbingTilt();
+
+    float animatium$getPreviousBobbingTilt();
+
+    // Horizontal Speed
+    float animatium$getHorizontalSpeed();
+
+    float animatium$getPreviousHorizontalSpeed();
 }

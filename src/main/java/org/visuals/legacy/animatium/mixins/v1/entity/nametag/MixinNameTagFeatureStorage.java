@@ -31,14 +31,14 @@ import net.minecraft.client.Options;
 import net.minecraft.client.renderer.feature.NameTagFeatureRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(NameTagFeatureRenderer.Storage.class)
 public abstract class MixinNameTagFeatureStorage {
     @WrapOperation(method = "add", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Options;getBackgroundOpacity(F)F"))
     private float animatium$nameTagBackground(Options instance, float opacity, Operation<Float> original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().extras.hideNameTagBackground) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().extras.hideNameTagBackground) {
             return 0F;
         } else {
             return original.call(instance, opacity);

@@ -46,7 +46,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 import java.util.Map;
@@ -64,12 +64,12 @@ public abstract class MixinLivingEntity extends Entity {
     @WrapWithCondition(method = "tickEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))
     private boolean animatium$hideFirstPersonParticles(Level instance, ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
         final Minecraft client = Minecraft.getInstance();
-        return !AnimatiumClient.ENABLED || !AnimatiumConfig.instance().extras.disableFirstPersonParticles || this.getId() != client.player.getId() || !client.options.getCameraType().isFirstPerson();
+        return !Animatium.ENABLED || !AnimatiumConfig.instance().extras.disableFirstPersonParticles || this.getId() != client.player.getId() || !client.options.getCameraType().isFirstPerson();
     }
 
     @WrapOperation(method = "tickEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))
     private void animatium$blendPotionParticleColors(Level instance, ParticleOptions particle, double x, double y, double z, double r, double g, double b, Operation<Void> original, @Local boolean hasAmbience) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.restoreParticleBlending) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().other.restoreParticleBlending) {
             // TODO/NOTE: come back and check if activeEffects is empty, return 0xFF385DC6 else return color.orElse(0), if color == 0, don't render
             //            ONLY if people notice the smallllll issue currently/care
             final int color = PotionContents.getColorOptional(this.activeEffects.values()).orElse(0xFF385DC6);

@@ -30,13 +30,13 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(Player.class)
 public abstract class MixinPlayer {
     @WrapOperation(method = "getMaxHeadRotationRelativeToBody", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isBlocking()Z"))
     private boolean animatium$uncapBlockingHeadRotation(Player instance, Operation<Boolean> original) {
-        return !(AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.uncapBlockingHeadRotation) && original.call(instance);
+        return !(Animatium.ENABLED && AnimatiumConfig.instance().movement.uncapBlockingHeadRotation) && original.call(instance);
     }
 }

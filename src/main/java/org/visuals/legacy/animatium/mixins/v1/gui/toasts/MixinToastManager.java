@@ -34,15 +34,15 @@ import net.minecraft.client.gui.components.toasts.TutorialToast;
 import net.minecraft.client.sounds.SoundManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.compatibility.Mods;
 
 @Mixin(ToastManager.class)
 public abstract class MixinToastManager {
     @WrapWithCondition(method = "method_61991", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/toasts/Toast$Visibility;playSound(Lnet/minecraft/client/sounds/SoundManager;)V"))
     private boolean animatium$disableToastSounds(Toast.Visibility instance, SoundManager soundManager, @Local(argsOnly = true) ToastManager.ToastInstance<Toast> toastInstance) {
         final Toast toast = toastInstance.getToast();
-        return !AnimatiumClient.ENABLED || !AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts || Utils.HAS_SODIUM_EXTRA || (!(toast instanceof RecipeToast) && !(toast instanceof TutorialToast));
+        return !Animatium.ENABLED || !AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts || Mods.HAS_SODIUM_EXTRAS || (!(toast instanceof RecipeToast) && !(toast instanceof TutorialToast));
     }
 }

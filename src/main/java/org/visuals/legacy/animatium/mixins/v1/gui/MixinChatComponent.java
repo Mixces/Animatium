@@ -31,14 +31,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ChatComponent;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(ChatComponent.class)
 public abstract class MixinChatComponent {
     @WrapMethod(method = "clearMessages")
     private void animatium$dontClearChat(boolean clearSentMsgHistory, Operation<Void> original) {
-        if (!AnimatiumClient.ENABLED || !AnimatiumConfig.instance().extras.dontClearChat || GLFW.glfwGetKey(Minecraft.getInstance().getWindow().handle(), GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS) {
+        if (!Animatium.ENABLED || !AnimatiumConfig.instance().extras.dontClearChat || GLFW.glfwGetKey(Minecraft.getInstance().getWindow().handle(), GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS) {
             original.call(clearSentMsgHistory);
         }
     }

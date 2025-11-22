@@ -43,7 +43,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.states.CameraUtilityRenderState;
@@ -55,7 +55,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
     @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal = 1))
     private void animatium$syncPlayerModelWithEyeHeight(S livingEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
         final CameraUtilityRenderState cameraUtilityRenderState = (CameraUtilityRenderState) cameraRenderState;
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.syncPlayerModelWithEyeHeight && livingEntityRenderState instanceof AvatarRenderState avatarRenderState && cameraUtilityRenderState.animatium$getId() == avatarRenderState.id) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.syncPlayerModelWithEyeHeight && livingEntityRenderState instanceof AvatarRenderState avatarRenderState && cameraUtilityRenderState.animatium$getId() == avatarRenderState.id) {
             final float cameraLerpValue = Utils.lerpCameraPosition(cameraUtilityRenderState);
             poseStack.translate(0.0F, (livingEntityRenderState.eyeHeight * livingEntityRenderState.scale) - cameraLerpValue, 0.0F);
         }
@@ -63,7 +63,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
 
     @ModifyExpressionValue(method = "extractRenderState(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isAlive()Z"))
     private boolean animatium$deathLimbs(boolean original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().movement.deathLimbs) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.deathLimbs) {
             return true;
         } else {
             return original;
@@ -72,7 +72,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
 
     @WrapOperation(method = "setupRotations", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;deathTime:F", opcode = Opcodes.GETFIELD))
     private float animatium$entityDeathTopple(LivingEntityRenderState instance, Operation<Float> original, @Local(argsOnly = true) S livingRenderState) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().extras.disableEntityDeathTopple && livingRenderState instanceof AvatarRenderState) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().extras.disableEntityDeathTopple && livingRenderState instanceof AvatarRenderState) {
             return 0;
         } else {
             return original.call(instance);
@@ -82,7 +82,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
     @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At("HEAD"), cancellable = true)
     private void animatium$modelWhilstSleeping(S livingEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
         final Player player = Minecraft.getInstance().player;
-        if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().other.modelWhilstSleeping &&
+        if (Animatium.ENABLED && !AnimatiumConfig.instance().other.modelWhilstSleeping &&
                 livingEntityRenderState instanceof AvatarRenderState avatarRenderState &&
                 player != null &&
                 avatarRenderState.id == player.getId() &&

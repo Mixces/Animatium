@@ -33,7 +33,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.ItemUtils;
 
@@ -41,7 +41,7 @@ import org.visuals.legacy.animatium.util.ItemUtils;
 public abstract class MixinIsUsingItem {
     @ModifyReturnValue(method = "get", at = @At(value = "RETURN"))
     private boolean animatium$getValue(boolean original, @Local(argsOnly = true) LivingEntity livingEntity, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) ItemDisplayContext displayContext) {
-        if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().items.itemUsingTextureInGui && ItemUtils.isRangedWeaponItem(stack) && displayContext == ItemDisplayContext.GUI) {
+        if (Animatium.ENABLED && !AnimatiumConfig.instance().items.itemUsingTextureInGui && ItemUtils.isRangedWeaponItem(stack) && displayContext == ItemDisplayContext.GUI) {
             return false;
         } else {
             return original;

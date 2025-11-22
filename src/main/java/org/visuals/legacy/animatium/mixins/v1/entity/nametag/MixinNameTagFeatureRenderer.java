@@ -29,13 +29,13 @@ import net.minecraft.client.renderer.feature.NameTagFeatureRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(NameTagFeatureRenderer.class)
 public abstract class MixinNameTagFeatureRenderer {
     @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Font;drawInBatch(Lnet/minecraft/network/chat/Component;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)V"), index = 4)
     private boolean animatium$nameTagTextShadow(boolean shadow) {
-        return (AnimatiumClient.ENABLED && AnimatiumConfig.instance().extras.nameTagTextShadow) || shadow;
+        return (Animatium.ENABLED && AnimatiumConfig.instance().extras.nameTagTextShadow) || shadow;
     }
 }

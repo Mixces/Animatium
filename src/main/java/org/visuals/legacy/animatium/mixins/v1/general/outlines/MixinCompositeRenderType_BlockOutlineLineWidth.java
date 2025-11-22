@@ -23,31 +23,18 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.armor_hurt;
+package org.visuals.legacy.animatium.mixins.v1.general.outlines;
 
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.client.renderer.RenderType;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.visuals.legacy.animatium.util.RenderUtils;
 
-@Mixin(GameRenderer.class)
-public abstract class MixinGameRenderer {
-    @Mutable
-    @Shadow
-    @Final
-    private OverlayTexture overlayTexture;
-
-    @Inject(method = "tick", at = @At("HEAD"))
-    private void animatium$reloadOverlayTexture(CallbackInfo ci) {
-        if (AnimatiumClient.SHOULD_RELOAD_OVERLAY_TEXTURE) {
-            this.overlayTexture = new OverlayTexture();
-            AnimatiumClient.SHOULD_RELOAD_OVERLAY_TEXTURE = false;
-        }
+@Mixin(RenderType.CompositeRenderType.class)
+public abstract class MixinCompositeRenderType_BlockOutlineLineWidth {
+    @ModifyArg(method = "draw", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/DynamicUniforms;writeTransform(Lorg/joml/Matrix4fc;Lorg/joml/Vector4fc;Lorg/joml/Vector3fc;Lorg/joml/Matrix4fc;F)Lcom/mojang/blaze3d/buffers/GpuBufferSlice;"), index = 4)
+    private float animatium$blockOutlineRendering$lineWidth(float original) {
+        return RenderUtils.getLineWidth(original);
     }
 }

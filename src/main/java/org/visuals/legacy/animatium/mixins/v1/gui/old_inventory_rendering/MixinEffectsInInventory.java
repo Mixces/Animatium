@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.mixins.accessor.AbstractRecipeBookScreenAccessor;
 
@@ -48,7 +48,7 @@ public abstract class MixinEffectsInInventory {
     @WrapOperation(method = "renderEffects", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;imageWidth:I"))
     private int animatium$effectsInventoryPosition(AbstractContainerScreen<?> instance, Operation<Integer> original) {
         final int imageWidth = original.call(instance);
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().screen.effectsInventoryPosition && !(this.screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && ((AbstractRecipeBookScreenAccessor) recipeBookScreen).animatium$getRecipeBookComponent().isVisible())) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.effectsInventoryPosition && !(this.screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && ((AbstractRecipeBookScreenAccessor) recipeBookScreen).animatium$getRecipeBookComponent().isVisible())) {
             return 0;
         } else {
             return imageWidth;
@@ -57,7 +57,7 @@ public abstract class MixinEffectsInInventory {
 
     @ModifyExpressionValue(method = "renderEffects", at = @At(value = "CONSTANT", args = "intValue=2"))
     private int animatium$effectsInventoryPosition(int original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().screen.effectsInventoryPosition && !(this.screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && ((AbstractRecipeBookScreenAccessor) recipeBookScreen).animatium$getRecipeBookComponent().isVisible())) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.effectsInventoryPosition && !(this.screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && ((AbstractRecipeBookScreenAccessor) recipeBookScreen).animatium$getRecipeBookComponent().isVisible())) {
             return -124;
         } else {
             return original;

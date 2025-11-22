@@ -33,12 +33,13 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
@@ -55,14 +56,14 @@ public abstract class MixinMinecraft {
 
     @Inject(method = "startAttack", at = @At(value = "RETURN", ordinal = 0))
     private void animatium$fakeMissPenaltySwing(CallbackInfoReturnable<Boolean> cir) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().extras.fakeMissPenaltySwing && player != null) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().extras.fakeMissPenaltySwing && player != null) {
             Utils.fakeHandSwing(player, InteractionHand.MAIN_HAND);
         }
     }
 
-    @WrapOperation(method = "startAttack", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 0))
+    @WrapOperation(method = "startAttack", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 0, opcode = Opcodes.GETFIELD))
     private int animatium$disableSwingMissPenalty(Minecraft instance, Operation<Integer> original) {
-        if (AnimatiumClient.ENABLED_SERVER_FEATURES.contains(ServerFeature.MISS_PENALTY) && (this.hitResult != null && this.hitResult.getType() != HitResult.Type.BLOCK)) {
+        if (Animatium.ENABLED_SERVER_FEATURES.contains(ServerFeature.MISS_PENALTY) && (this.hitResult != null && this.hitResult.getType() != HitResult.Type.BLOCK)) {
             return 0;
         } else {
             return original.call(instance);
@@ -71,7 +72,7 @@ public abstract class MixinMinecraft {
 
     @WrapOperation(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;isDestroying()Z"))
     private boolean animatium$leftClickItemUsage(MultiPlayerGameMode instance, Operation<Boolean> original) {
-        if (AnimatiumClient.ENABLED_SERVER_FEATURES.contains(ServerFeature.LEFT_CLICK_ITEM_USAGE)) {
+        if (Animatium.ENABLED_SERVER_FEATURES.contains(ServerFeature.LEFT_CLICK_ITEM_USAGE)) {
             return false;
         } else {
             return original.call(instance);

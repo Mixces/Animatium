@@ -30,13 +30,14 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 
 import java.util.Optional;
 
-public record AnimatiumInfoPayloadPacket(double version, @Nullable String developmentVersion) implements CustomPacketPayload {
+public record AnimatiumInfoPayloadPacket(double version,
+                                         @Nullable String developmentVersion) implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, AnimatiumInfoPayloadPacket> CODEC = CustomPacketPayload.codec(AnimatiumInfoPayloadPacket::write, null);
-    public static final CustomPacketPayload.Type<AnimatiumInfoPayloadPacket> PAYLOAD_ID = new CustomPacketPayload.Type<>(AnimatiumClient.id("info"));
+    public static final CustomPacketPayload.Type<AnimatiumInfoPayloadPacket> PAYLOAD_ID = new CustomPacketPayload.Type<>(Animatium.id("info"));
 
     private void write(FriendlyByteBuf buffer) {
         buffer.writeDouble(version);

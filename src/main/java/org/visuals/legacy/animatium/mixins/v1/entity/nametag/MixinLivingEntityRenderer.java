@@ -32,14 +32,14 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(LivingEntityRenderer.class)
 public abstract class MixinLivingEntityRenderer {
     @WrapOperation(method = "shouldShowName(Lnet/minecraft/world/entity/LivingEntity;D)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;getCameraEntity()Lnet/minecraft/world/entity/Entity;"))
     private Entity animatium$nameTagInThirdPerson(Minecraft instance, Operation<Entity> original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().extras.showNameTagInThirdPerson) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().extras.showNameTagInThirdPerson) {
             return null;
         } else {
             return original.call(instance);

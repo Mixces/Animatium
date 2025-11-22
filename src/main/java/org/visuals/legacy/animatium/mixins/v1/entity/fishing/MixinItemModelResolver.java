@@ -43,7 +43,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.states.ItemUtilityRenderState;
 
@@ -57,7 +57,7 @@ public abstract class MixinItemModelResolver {
     @WrapOperation(method = "appendItemLayers", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;get(Lnet/minecraft/core/component/DataComponentType;)Ljava/lang/Object;"))
     private Object animatium$stickModelWhenCastInThirdperson(ItemStack instance, DataComponentType<?> dataComponentType, Operation<Object> original, @Local(argsOnly = true) ItemDisplayContext displayContext, @Local(argsOnly = true) ItemOwner itemOwner, @Local(argsOnly = true) ItemStack itemStack) {
         final LivingEntity livingEntity = itemOwner == null ? null : itemOwner.asLivingEntity();
-        if (AnimatiumClient.ENABLED &&
+        if (Animatium.ENABLED &&
                 AnimatiumConfig.instance().items.stickModelWhenCastInThirdperson &&
                 itemStack.getItem() == Items.FISHING_ROD &&
                 (livingEntity instanceof Player player && player.fishing != null) &&

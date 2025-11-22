@@ -23,22 +23,24 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.network;
+package org.visuals.legacy.animatium.mixins.v1.general.min_transparency;
 
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.ChatScreen;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.player.LocalPlayer;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.renderer.texture.SpriteContents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(ClientPacketListener.class)
-public abstract class MixinClientPacketListener {
-    @WrapWithCondition(method = "handleContainerClose", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;clientSideCloseContainer()V"))
-    private boolean animatium$dontCloseChat(LocalPlayer instance) {
-        return !Animatium.ENABLED || !AnimatiumConfig.instance().extras.dontCloseChat || !(Minecraft.getInstance().screen instanceof ChatScreen);
+@Mixin(SpriteContents.class)
+public abstract class MixinSpriteContents_FixTransparencyLimit {
+    @WrapOperation(method = "isTransparent", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/ARGB;alpha(I)I"))
+    private int animatium$upMinPixelTransparencyLimit(int argb, Operation<Integer> original) {
+        final int alpha = original.call(argb);
+        if (AnimatiumConfig.instance().fixes.upMinPixelTransparencyLimit && (alpha / 255.0F) <= 0.1F) {
+            return 0;
+        } else {
+            return alpha;
+        }
     }
 }

@@ -57,16 +57,12 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.RenderUtils;
 
 @Mixin(PanoramaRenderer.class)
 public abstract class MixinPanoramaRenderer {
-    @Shadow
-    @Final
-    private Minecraft minecraft;
-
     @Unique
     private static final RenderPipeline.Snippet animatium$TEXTURE_SNIPPET =
             RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
@@ -75,21 +71,21 @@ public abstract class MixinPanoramaRenderer {
                     .withSampler("Sampler0")
                     .withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
                     .buildSnippet();
-
     @Unique
     private static final RenderPipeline animatium$BLUR_TEXTURE =
             RenderPipeline.builder(animatium$TEXTURE_SNIPPET)
-                    .withLocation(AnimatiumClient.id("pipeline/blur_texture"))
+                    .withLocation(Animatium.id("pipeline/blur_texture"))
                     .withColorWrite(true, false)
                     .withBlend(new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO))
                     .build();
-
     @Unique
     private static final RenderPipeline animatium$BASIC_TEXTURE =
             RenderPipeline.builder(animatium$TEXTURE_SNIPPET)
-                    .withLocation(AnimatiumClient.id("pipeline/basic_texture"))
+                    .withLocation(Animatium.id("pipeline/basic_texture"))
                     .build();
-
+    @Shadow
+    @Final
+    private Minecraft minecraft;
     @Unique
     private GlTexture animatium$backgroundTexture;
 
@@ -98,7 +94,7 @@ public abstract class MixinPanoramaRenderer {
 
     @Inject(method = "render", at = @At("HEAD"))
     private void animatium$panoramaStart(GuiGraphics guiGraphics, int width, int height, boolean spin, CallbackInfo ci) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().screen.panoramaRendering) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.panoramaRendering) {
             if (animatium$backgroundTexture == null) {
                 GpuDevice device = RenderSystem.getDevice();
                 animatium$backgroundTexture = (GlTexture) device.createTexture(() -> "Background texture", 15, TextureFormat.RGBA8, 256, 256, 1, 1);
@@ -111,7 +107,7 @@ public abstract class MixinPanoramaRenderer {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CubeMap;render(Lnet/minecraft/client/Minecraft;FF)V", ordinal = 0, shift = At.Shift.AFTER))
     private void animatium$panoramaFinish(GuiGraphics guiGraphics, int width, int height, boolean spin, CallbackInfo ci) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().screen.panoramaRendering) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.panoramaRendering) {
             final RenderTarget renderTarget = minecraft.getMainRenderTarget();
             for (int i = 0; i < 6; ++i) {
                 this.animatium$writeAndBlitBlurTexture(guiGraphics, renderTarget, animatium$backgroundTextureView, width, height);
@@ -124,7 +120,7 @@ public abstract class MixinPanoramaRenderer {
 
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/ResourceLocation;IIFFIIIIII)V"))
     private void animatium$panoramaGradient(GuiGraphics instance, RenderPipeline pipeline, ResourceLocation atlas, int x, int y, float u, float v, int width, int height, int uWidth, int vHeight, int textureWidth, int textureHeight, Operation<Void> original) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().screen.panoramaRendering) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.panoramaRendering) {
             instance.fillGradient(0, 0, width, height, -2130706433, 16777215);
             instance.fillGradient(0, 0, width, height, 0, Integer.MIN_VALUE);
         } else {

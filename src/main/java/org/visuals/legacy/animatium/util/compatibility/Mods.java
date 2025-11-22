@@ -23,18 +23,14 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util;
+package org.visuals.legacy.animatium.util.compatibility;
 
-public interface ViewBobbingStorage {
-    // Bobbing Tilt
-    void animatium$setBobbingTilt(float bobbingTilt);
+import lombok.experimental.UtilityClass;
+import net.fabricmc.loader.api.FabricLoader;
 
-    float animatium$getBobbingTilt();
-
-    float animatium$getPreviousBobbingTilt();
-
-    // Horizontal Speed
-    float animatium$getHorizontalSpeed();
-
-    float animatium$getPreviousHorizontalSpeed();
+@UtilityClass
+public class Mods {
+    public final boolean HAS_VIAFABRICPLUS = FabricLoader.getInstance().isModLoaded("viafabricplus");
+    public final boolean HAS_SODIUM_EXTRAS = FabricLoader.getInstance().isModLoaded("sodium-extra");
+    public final boolean HAS_LUNAR_CLIENT = FabricLoader.getInstance().isModLoaded("ichor");
 }

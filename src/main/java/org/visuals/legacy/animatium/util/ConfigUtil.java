@@ -25,38 +25,55 @@
 
 package org.visuals.legacy.animatium.util;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.Strictness;
+import lombok.experimental.UtilityClass;
 import net.fabricmc.loader.api.FabricLoader;
-import org.visuals.legacy.animatium.AnimatiumClient;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public final class ConfigUtil {
-    private static final File STATE_FILE = new File(FabricLoader.getInstance().getGameDir().toFile(), "animatium_state.txt");
+@UtilityClass
+public class ConfigUtil {
+    private final Gson GSON = new GsonBuilder().setStrictness(Strictness.LENIENT).create();
+    private final File CONFIG_FILE = new File(FabricLoader.getInstance().getGameDir().toFile(), "animatium_utility.json");
+    private JsonObject data = new JsonObject();
 
-    private ConfigUtil() {
-    }
-
-    public static void loadState() throws IOException {
-        if (STATE_FILE.exists()) {
-            AnimatiumClient.ENABLED = Files.readString(STATE_FILE.toPath()).equals("true");
+    public static void load() throws IOException {
+        if (CONFIG_FILE.exists()) {
+            data = GSON.fromJson(Files.readString(CONFIG_FILE.toPath()), JsonObject.class);
         } else {
-            if (!saveState()) {
-                System.err.println("Failed to save enabled state...");
+            if (!save()) {
+                System.err.println("Failed to save animatium utility config...");
             }
         }
     }
 
-    public static boolean saveState() {
+    public static boolean bool(String name) {
+        if (data.has(name)) {
+            return data.get(name).getAsBoolean();
+        } else {
+            data.addProperty(name, false);
+            return false;
+        }
+    }
+
+    public static void put(String name, boolean value) {
+        data.addProperty(name, value);
+    }
+
+    public static boolean save() {
         boolean success = true;
         try {
-            if (!STATE_FILE.exists()) {
-                success = STATE_FILE.createNewFile();
+            if (!CONFIG_FILE.exists()) {
+                success = CONFIG_FILE.createNewFile();
             }
 
             if (success) {
-                Files.writeString(STATE_FILE.toPath(), String.valueOf(AnimatiumClient.ENABLED));
+                Files.writeString(CONFIG_FILE.toPath(), GSON.toJson(data));
             }
         } catch (Exception exception) {
             success = false;

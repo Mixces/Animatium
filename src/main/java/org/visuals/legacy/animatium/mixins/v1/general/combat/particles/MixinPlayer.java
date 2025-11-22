@@ -26,23 +26,29 @@
 package org.visuals.legacy.animatium.mixins.v1.general.combat.particles;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(Player.class)
 public abstract class MixinPlayer {
-    @WrapWithCondition(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"))
-    private boolean animatium$modernCombatParticles$damageIndicator(ServerLevel instance, ParticleOptions particleOptions, double posX, double posY, double posZ, int particleCount, double xOffset, double yOffset, double zOffset, double speed) {
-        return !AnimatiumClient.ENABLED || AnimatiumConfig.instance().other.modernCombatParticles;
+    @WrapOperation(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"))
+    private <T> int animatium$modernCombatParticles$damageIndicator(ServerLevel instance, ParticleOptions particleOptions, double posX, double posY, double posZ, int particleCount, double xOffset, double yOffset, double zOffset, double speed, Operation<Integer> original) {
+        if (Animatium.ENABLED && !AnimatiumConfig.instance().other.modernCombatParticles) {
+            return 0;
+        } else {
+            return original.call(instance, particleOptions, posX, posY, posZ, particleCount, xOffset, yOffset, zOffset, speed);
+        }
     }
 
     @WrapWithCondition(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;sweepAttack()V"))
     private boolean animatium$modernCombatParticles$sweep(Player instance) {
-        return !AnimatiumClient.ENABLED || AnimatiumConfig.instance().other.modernCombatParticles;
+        return !Animatium.ENABLED || AnimatiumConfig.instance().other.modernCombatParticles;
     }
 }

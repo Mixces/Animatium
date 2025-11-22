@@ -31,17 +31,17 @@ import net.minecraft.client.renderer.item.properties.conditional.FishingRodCast;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(FishingRodCast.class)
 public abstract class MixinFishingRodCast {
     @ModifyReturnValue(method = "get", at = @At(value = "RETURN", ordinal = 0))
     private boolean animatium$getValue(boolean original, @Local(argsOnly = true) ItemDisplayContext displayContext) {
-        if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().items.itemUsingTextureInGui && displayContext == ItemDisplayContext.GUI) {
+        if (Animatium.ENABLED && !AnimatiumConfig.instance().items.itemUsingTextureInGui && displayContext == ItemDisplayContext.GUI) {
             return false;
         } else {
-            return (AnimatiumClient.ENABLED && AnimatiumConfig.instance().items.fishingRodTextureStackCheck) || original;
+            return (Animatium.ENABLED && AnimatiumConfig.instance().items.fishingRodTextureStackCheck) || original;
         }
     }
 }

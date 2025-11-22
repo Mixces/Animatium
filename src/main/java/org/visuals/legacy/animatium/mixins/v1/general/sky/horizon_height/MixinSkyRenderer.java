@@ -33,7 +33,7 @@ import net.minecraft.client.renderer.SkyRenderer;
 import net.minecraft.world.level.LevelHeightAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.RenderUtils;
 
@@ -41,7 +41,7 @@ import org.visuals.legacy.animatium.util.RenderUtils;
 public abstract class MixinSkyRenderer {
     @WrapOperation(method = "shouldRenderDarkDisc", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel$ClientLevelData;getHorizonHeight(Lnet/minecraft/world/level/LevelHeightAccessor;)D"))
     private double animatium$skyHorizonHeight(ClientLevel.ClientLevelData instance, LevelHeightAccessor levelHeightAccessor, Operation<Double> original, @Local(argsOnly = true) ClientLevel level) {
-        if (AnimatiumClient.ENABLED && AnimatiumConfig.instance().other.skyHorizonHeight && level != null) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().other.skyHorizonHeight && level != null) {
             return RenderUtils.getLevelHorizonHeight(level);
         } else {
             return original.call(instance, levelHeightAccessor);

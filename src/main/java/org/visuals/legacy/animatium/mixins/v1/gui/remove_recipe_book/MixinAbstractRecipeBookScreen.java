@@ -25,23 +25,32 @@
 
 package org.visuals.legacy.animatium.mixins.v1.gui.remove_recipe_book;
 
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(AbstractRecipeBookScreen.class)
 public abstract class MixinAbstractRecipeBookScreen {
-    @WrapWithCondition(method = "initButton", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractRecipeBookScreen;addRenderableWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;"))
-    private boolean animatium$recipeBook$button(AbstractRecipeBookScreen<?> instance, GuiEventListener guiEventListener) {
-        return !AnimatiumClient.ENABLED || !AnimatiumConfig.instance().screen.hideRecipeBook;
+    @WrapOperation(method = "initButton", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractRecipeBookScreen;addRenderableWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;"))
+    private GuiEventListener animatium$recipeBook$button(AbstractRecipeBookScreen<?> instance, GuiEventListener guiEventListener, Operation<GuiEventListener> original) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.hideRecipeBook) {
+            return null;
+        } else {
+            return original.call(instance, guiEventListener);
+        }
     }
 
-    @WrapWithCondition(method = "initButton", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractRecipeBookScreen;addWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;"))
-    private boolean animatium$recipeBook$widget(AbstractRecipeBookScreen<?> instance, GuiEventListener guiEventListener) {
-        return !AnimatiumClient.ENABLED || !AnimatiumConfig.instance().screen.hideRecipeBook;
+    @WrapOperation(method = "initButton", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractRecipeBookScreen;addWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;"))
+    private GuiEventListener animatium$recipeBook$widget(AbstractRecipeBookScreen<?> instance, GuiEventListener guiEventListener, Operation<GuiEventListener> original) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.hideRecipeBook) {
+            return null;
+        } else {
+            return original.call(instance, guiEventListener);
+        }
     }
 }

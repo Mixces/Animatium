@@ -29,25 +29,17 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.EnumSet;
 
-public record SetServerFeaturesPayloadPacket(List<ServerFeature> features) implements CustomPacketPayload {
+public record SetServerFeaturesPayloadPacket(EnumSet<ServerFeature> features) implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, SetServerFeaturesPayloadPacket> CODEC = CustomPacketPayload.codec(null, SetServerFeaturesPayloadPacket::read);
-    public static final Type<SetServerFeaturesPayloadPacket> PAYLOAD_ID = new Type<>(AnimatiumClient.id("set_features"));
+    public static final Type<SetServerFeaturesPayloadPacket> PAYLOAD_ID = new Type<>(Animatium.id("set_features"));
 
     private static SetServerFeaturesPayloadPacket read(FriendlyByteBuf buffer) {
-        final int size = buffer.readVarInt();
-
-        List<ServerFeature> features = new ArrayList<>();
-        for (int i = 0; i < size; ++i) {
-            ServerFeature.byId(buffer.readUtf()).ifPresent(features::add);
-        }
-
-        return new SetServerFeaturesPayloadPacket(features);
+        return new SetServerFeaturesPayloadPacket(buffer.readEnumSet(ServerFeature.class));
     }
 
     @Override

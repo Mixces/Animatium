@@ -31,7 +31,7 @@ import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.compatibility.Mods;
 
 public class FixesConfigCategory {
     public boolean fixSneakingFeetPosition = true;
@@ -41,7 +41,7 @@ public class FixesConfigCategory {
     public boolean fixCastLineSwing = true;
     public boolean fixEquipAnimation = true;
     public boolean fixFireballClientsideVisual = true;
-    public boolean fixTextStrikethroughStyle = true; // Disabled if "viafabricplus" is detected
+    public boolean fixTextStrikethroughStyle = true;
     public boolean fixHighAttackSpeedIndicator = true;
     public boolean fixVerticalBobbingTilt = true;
     public boolean upMinPixelTransparencyLimit = true;
@@ -112,7 +112,7 @@ public class FixesConfigCategory {
                         (newVal) -> config.fixFireballClientsideVisual = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
-        if (!Utils.HAS_VIAFABRICPLUS) {
+        if (!Mods.HAS_VIAFABRICPLUS) {
             category.option(Option.<Boolean>createBuilder()
                     .name(Component.translatable("animatium.fixTextStrikethroughStyle"))
                     .description(OptionDescription.of(Component.translatable("animatium.fixTextStrikethroughStyle.description")))

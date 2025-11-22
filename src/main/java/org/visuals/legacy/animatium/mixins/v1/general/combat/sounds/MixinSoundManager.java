@@ -35,7 +35,7 @@ import net.minecraft.sounds.SoundEvents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.AnimatiumClient;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public abstract class MixinSoundManager {
 
     @WrapOperation(method = "play", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/sounds/SoundEngine;play(Lnet/minecraft/client/resources/sounds/SoundInstance;)Lnet/minecraft/client/sounds/SoundEngine$PlayResult;"))
     private SoundEngine.PlayResult animatium$modernCombatSounds(SoundEngine instance, SoundInstance sound, Operation<SoundEngine.PlayResult> original) {
-        if (AnimatiumClient.ENABLED && !AnimatiumConfig.instance().other.modernCombatSounds && animatium$ignoreSounds.contains(sound.getLocation())) {
+        if (Animatium.ENABLED && !AnimatiumConfig.instance().other.modernCombatSounds && animatium$ignoreSounds.contains(sound.getLocation())) {
             return null;
         } else {
             return original.call(instance, sound);
