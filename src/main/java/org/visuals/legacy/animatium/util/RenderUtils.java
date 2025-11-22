@@ -35,8 +35,10 @@ import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import lombok.experimental.UtilityClass;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
+import org.joml.Matrix3x2fStack;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.mixins.accessor.ClientLevelDataAccessor;
 
@@ -82,6 +84,18 @@ public class RenderUtils {
 
     public void fillRectangle(GuiGraphics context, int x, int y, int width, int height, int color) {
         context.fill(x, y, x + width, y + height, color);
+    }
+
+    public void drawScaledText(GuiGraphics guiGraphics, Font font, String text, int x, int y, float scale) {
+        final Matrix3x2fStack stack = guiGraphics.pose();
+        stack.pushMatrix();
+        final float originX = stack.m20;
+        final float originY = stack.m21;
+        stack.setTranslation(0.0F, 0.0F);
+        stack.scale(scale, scale);
+        stack.setTranslation(originX, originY);
+        guiGraphics.drawCenteredString(font, text, (int) (x / scale), (int) (y / scale), 0xFFFFFFFF);
+        stack.popMatrix();
     }
 
     public void drawBuffer(RenderPipeline renderPipeline, RenderTarget renderTarget, MeshData meshData, Consumer<RenderPass> renderPassConsumer) {

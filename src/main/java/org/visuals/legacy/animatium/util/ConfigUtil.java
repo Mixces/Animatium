@@ -42,6 +42,11 @@ public class ConfigUtil {
     private final File CONFIG_FILE = new File(FabricLoader.getInstance().getGameDir().toFile(), "animatium_utility.json");
     private JsonObject data = new JsonObject();
 
+    static {
+        data.addProperty("enabled", true);
+        data.addProperty("onboarding", true);
+    }
+
     public static void load() throws IOException {
         if (CONFIG_FILE.exists()) {
             data = GSON.fromJson(Files.readString(CONFIG_FILE.toPath()), JsonObject.class);
@@ -56,13 +61,14 @@ public class ConfigUtil {
         if (data.has(name)) {
             return data.get(name).getAsBoolean();
         } else {
-            data.addProperty(name, false);
+            put(name, false);
             return false;
         }
     }
 
     public static void put(String name, boolean value) {
         data.addProperty(name, value);
+        save();
     }
 
     public static boolean save() {

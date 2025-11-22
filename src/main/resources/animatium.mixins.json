@@ -70,6 +70,7 @@
 		"v1.gui.MixinChatComponent",
 		"v1.gui.MixinFontPreparedTextBuilder",
 		"v1.gui.MixinInGameHud",
+		"v1.gui.MixinMinecraft",
 		"v1.gui.MixinPanoramaRenderer",
 		"v1.gui.centered_widgets.MixinAbstractScrollArea",
 		"v1.gui.centered_widgets.MixinAbstractSelectionList",
