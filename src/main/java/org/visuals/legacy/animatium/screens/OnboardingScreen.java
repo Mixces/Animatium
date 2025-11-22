@@ -26,8 +26,10 @@
 package org.visuals.legacy.animatium.screens;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import org.visuals.legacy.animatium.util.ConfigUtil;
@@ -44,16 +46,25 @@ public class OnboardingScreen extends Screen {
     @Override
     @SuppressWarnings({"DataFlowIssue"})
     protected void init() {
-        this.original.init(this.minecraft, this.width, this.height);
         if (!ConfigUtil.bool("onboarding")) {
             this.minecraft.setScreen(this.original);
+            return;
         }
+
+        this.original.init(this.minecraft, this.width, this.height);
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> {
+            ConfigUtil.put("onboarding", false);
+            this.minecraft.setScreen(this.original);
+        }).pos((this.width / 2) - (Button.DEFAULT_WIDTH / 2), (int) (this.height / 1.2F)).build());
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.original.render(guiGraphics, 0, 0, partialTick);
+
         guiGraphics.fill(0, 0, this.width, this.height, ARGB.color(0.67F, 0x000000));
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+
         RenderUtils.drawScaledText(guiGraphics, this.font, "Welcome to Animatium Onboarding!", this.width / 2, this.height / 4, 1.67F);
     }
 
