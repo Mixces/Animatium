@@ -35,7 +35,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.states.ViewBobbingStorage;
 
 @Mixin(LivingEntity.class)
-public abstract class MixinLivingEntity implements ViewBobbingStorage {
+public abstract class MixinLivingEntity_ViewBobbingTilt implements ViewBobbingStorage {
     @Unique
     private float animatium$bobbingTilt = 0.0F;
 

@@ -23,23 +23,32 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.gui;
+package org.visuals.legacy.animatium.mixins.v1.gui.toasts;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ChatComponent;
-import org.lwjgl.glfw.GLFW;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.toasts.ToastManager;
+import net.minecraft.client.gui.components.toasts.TutorialToast;
 import org.spongepowered.asm.mixin.Mixin;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.util.compatibility.Mods;
 
-@Mixin(ChatComponent.class)
-public abstract class MixinChatComponent {
-    @WrapMethod(method = "clearMessages")
-    private void animatium$dontClearChat(boolean clearSentMsgHistory, Operation<Void> original) {
-        if (!Animatium.ENABLED || !AnimatiumConfig.instance().extras.dontClearChat || GLFW.glfwGetKey(Minecraft.getInstance().getWindow().handle(), GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS) {
-            original.call(clearSentMsgHistory);
+@Mixin(TutorialToast.class)
+public abstract class MixinTutorialToast_DisableToast {
+    @WrapMethod(method = "update")
+    private void animatium$disableTutorialToast(ToastManager toastManager, long visibilityTime, Operation<Void> original) {
+        if (!Animatium.ENABLED || !AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts || Mods.HAS_SODIUM_EXTRAS) {
+            original.call(toastManager, visibilityTime);
+        }
+    }
+
+    @WrapMethod(method = "render")
+    private void animatium$disableTutorialToast(GuiGraphics guiGraphics, Font font, long visibilityTime, Operation<Void> original) {
+        if (!Animatium.ENABLED || !AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts || Mods.HAS_SODIUM_EXTRAS) {
+            original.call(guiGraphics, font, visibilityTime);
         }
     }
 }

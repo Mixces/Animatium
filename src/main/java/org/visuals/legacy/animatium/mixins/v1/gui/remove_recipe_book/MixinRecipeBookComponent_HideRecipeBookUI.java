@@ -27,30 +27,20 @@ package org.visuals.legacy.animatium.mixins.v1.gui.remove_recipe_book;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(AbstractRecipeBookScreen.class)
-public abstract class MixinAbstractRecipeBookScreen {
-    @WrapOperation(method = "initButton", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractRecipeBookScreen;addRenderableWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;"))
-    private GuiEventListener animatium$recipeBook$button(AbstractRecipeBookScreen<?> instance, GuiEventListener guiEventListener, Operation<GuiEventListener> original) {
+@Mixin(RecipeBookComponent.class)
+public abstract class MixinRecipeBookComponent_HideRecipeBookUI {
+    @WrapOperation(method = "isVisible", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;visible:Z"))
+    private boolean animatium$recipeBook(RecipeBookComponent<?> instance, Operation<Boolean> original) {
         if (Animatium.ENABLED && AnimatiumConfig.instance().screen.hideRecipeBook) {
-            return null;
+            return false;
         } else {
-            return original.call(instance, guiEventListener);
-        }
-    }
-
-    @WrapOperation(method = "initButton", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractRecipeBookScreen;addWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;"))
-    private GuiEventListener animatium$recipeBook$widget(AbstractRecipeBookScreen<?> instance, GuiEventListener guiEventListener, Operation<GuiEventListener> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.hideRecipeBook) {
-            return null;
-        } else {
-            return original.call(instance, guiEventListener);
+            return original.call(instance);
         }
     }
 }

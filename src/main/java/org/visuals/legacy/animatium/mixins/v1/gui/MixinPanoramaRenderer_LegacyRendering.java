@@ -62,7 +62,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.RenderUtils;
 
 @Mixin(PanoramaRenderer.class)
-public abstract class MixinPanoramaRenderer {
+public abstract class MixinPanoramaRenderer_LegacyRendering {
     @Unique
     private static final RenderPipeline.Snippet animatium$TEXTURE_SNIPPET =
             RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)

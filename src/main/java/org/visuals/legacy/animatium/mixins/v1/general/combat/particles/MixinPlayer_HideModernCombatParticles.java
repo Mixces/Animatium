@@ -37,7 +37,7 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(Player.class)
-public abstract class MixinPlayer {
+public abstract class MixinPlayer_HideModernCombatParticles {
     @WrapOperation(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"))
     private <T> int animatium$modernCombatParticles$damageIndicator(ServerLevel instance, ParticleOptions particleOptions, double posX, double posY, double posZ, int particleCount, double xOffset, double yOffset, double zOffset, double speed, Operation<Integer> original) {
         if (Animatium.ENABLED && !AnimatiumConfig.instance().other.modernCombatParticles) {

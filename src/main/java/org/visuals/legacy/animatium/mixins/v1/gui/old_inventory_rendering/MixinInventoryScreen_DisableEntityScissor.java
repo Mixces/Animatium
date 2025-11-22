@@ -23,27 +23,25 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.sneaking;
+package org.visuals.legacy.animatium.mixins.v1.gui.old_inventory_rendering;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.world.entity.Pose;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(EntityRenderer.class)
-public abstract class MixinEntityRenderer {
-    @WrapOperation(method = "submitNameTag", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;isDiscrete:Z"))
-    private boolean animatium$sneakAnimationWhileFlying(EntityRenderState instance, Operation<Boolean> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.sneakAnimationWhileFlying && instance instanceof LivingEntityRenderState livingEntityRenderState) {
-            return livingEntityRenderState.isDiscrete || livingEntityRenderState.hasPose(Pose.CROUCHING);
-        } else {
-            return original.call(instance);
-        }
+@Mixin(InventoryScreen.class)
+public abstract class MixinInventoryScreen_DisableEntityScissor {
+    @WrapWithCondition(method = "renderEntityInInventoryFollowsMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;enableScissor(IIII)V"))
+    private static boolean animatium$entityScissor(GuiGraphics instance, int minX, int minY, int maxX, int maxY) {
+        return !Animatium.ENABLED || AnimatiumConfig.instance().other.inventoryEntityScissor;
+    }
+
+    @WrapWithCondition(method = "renderEntityInInventoryFollowsMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;disableScissor()V"))
+    private static boolean animatium$entityScissor(GuiGraphics instance) {
+        return !Animatium.ENABLED || AnimatiumConfig.instance().other.inventoryEntityScissor;
     }
 }

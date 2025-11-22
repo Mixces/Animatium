@@ -34,7 +34,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.compatibility.Mods;
 
 @Mixin(Font.PreparedTextBuilder.class)
-public abstract class MixinFontPreparedTextBuilder {
+public abstract class MixinFontPreparedTextBuilder_FixStrikethroughStyle {
     @Unique
     private static final float animatium$strikethroughOffset = 0.5F;
 

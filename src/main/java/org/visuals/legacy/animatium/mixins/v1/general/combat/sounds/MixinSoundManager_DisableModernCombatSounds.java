@@ -41,7 +41,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import java.util.List;
 
 @Mixin(SoundManager.class)
-public abstract class MixinSoundManager {
+public abstract class MixinSoundManager_DisableModernCombatSounds {
     @Unique
     private static final List<ResourceLocation> animatium$ignoreSounds = List.of(
             SoundEvents.PLAYER_ATTACK_KNOCKBACK.location(),

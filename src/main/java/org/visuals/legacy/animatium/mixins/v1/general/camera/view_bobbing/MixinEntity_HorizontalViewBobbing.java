@@ -39,7 +39,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.states.ViewBobbingStorage;
 
 @Mixin(Entity.class)
-public abstract class MixinEntity implements ViewBobbingStorage {
+public abstract class MixinEntity_HorizontalViewBobbing implements ViewBobbingStorage {
     @Unique
     private float animatium$horizontalSpeed = 0.0F;
 

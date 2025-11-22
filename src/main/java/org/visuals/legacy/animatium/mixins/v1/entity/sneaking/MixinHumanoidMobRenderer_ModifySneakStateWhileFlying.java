@@ -23,27 +23,27 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.general.sky.cloud_height;
+package org.visuals.legacy.animatium.mixins.v1.entity.sneaking;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-import java.util.Optional;
-
-@Mixin(LevelRenderer.class)
-public abstract class MixinLevelRenderer {
-    @WrapOperation(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/dimension/DimensionType;cloudHeight()Ljava/util/Optional;"))
-    private Optional<Integer> animatium$cloudHeight(DimensionType instance, Operation<Optional<Integer>> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().other.cloudHeight && instance.natural()) {
-            return Optional.of(128);
+@Mixin(HumanoidMobRenderer.class)
+public abstract class MixinHumanoidMobRenderer_ModifySneakStateWhileFlying {
+    // TODO: Improve sneaking animation when spamming for parity for older mc versions
+    @WrapOperation(method = "extractHumanoidRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isCrouching()Z"))
+    private static boolean animatium$sneakAnimationWhileFlying(LivingEntity livingEntity, Operation<Boolean> original) {
+        final boolean isCrouching = original.call(livingEntity);
+        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.sneakAnimationWhileFlying) {
+            return isCrouching || livingEntity.isShiftKeyDown();
         } else {
-            return original.call(instance);
+            return isCrouching;
         }
     }
 }

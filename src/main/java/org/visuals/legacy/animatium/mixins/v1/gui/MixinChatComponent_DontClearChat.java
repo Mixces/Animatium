@@ -23,26 +23,23 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.sneaking;
+package org.visuals.legacy.animatium.mixins.v1.gui;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.world.entity.ElytraAnimationState;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.ChatComponent;
+import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(ElytraAnimationState.class)
-public class MixinElytraAnimationState {
-    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isCrouching()Z"))
-    private boolean animatium$sneakAnimationWhileFlying(LivingEntity livingEntity, Operation<Boolean> original) {
-        final boolean isCrouching = original.call(livingEntity);
-        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.sneakAnimationWhileFlying) {
-            return isCrouching || livingEntity.isShiftKeyDown();
-        } else {
-            return isCrouching;
+@Mixin(ChatComponent.class)
+public abstract class MixinChatComponent_DontClearChat {
+    @WrapMethod(method = "clearMessages")
+    private void animatium$dontClearChat(boolean clearSentMsgHistory, Operation<Void> original) {
+        if (!Animatium.ENABLED || !AnimatiumConfig.instance().extras.dontClearChat || GLFW.glfwGetKey(Minecraft.getInstance().getWindow().handle(), GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS) {
+            original.call(clearSentMsgHistory);
         }
     }
 }

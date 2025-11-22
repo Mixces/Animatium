@@ -23,28 +23,26 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.general.sky.horizon_height;
+package org.visuals.legacy.animatium.mixins.v1.entity.sneaking;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.SkyRenderer;
-import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.entity.ElytraAnimationState;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.RenderUtils;
 
-@Mixin(SkyRenderer.class)
-public abstract class MixinSkyRenderer {
-    @WrapOperation(method = "shouldRenderDarkDisc", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel$ClientLevelData;getHorizonHeight(Lnet/minecraft/world/level/LevelHeightAccessor;)D"))
-    private double animatium$skyHorizonHeight(ClientLevel.ClientLevelData instance, LevelHeightAccessor levelHeightAccessor, Operation<Double> original, @Local(argsOnly = true) ClientLevel level) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().other.skyHorizonHeight && level != null) {
-            return RenderUtils.getLevelHorizonHeight(level);
+@Mixin(ElytraAnimationState.class)
+public class MixinElytraAnimationState_SneakAnimationWhileGliding {
+    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isCrouching()Z"))
+    private boolean animatium$sneakAnimationWhileGliding(LivingEntity livingEntity, Operation<Boolean> original) {
+        final boolean isCrouching = original.call(livingEntity);
+        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.sneakAnimationWhileFlying) {
+            return isCrouching || livingEntity.isShiftKeyDown();
         } else {
-            return original.call(instance, levelHeightAccessor);
+            return isCrouching;
         }
     }
 }

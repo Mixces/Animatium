@@ -43,7 +43,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.SkyRendererUtility;
 
 @Mixin(SkyRenderer.class)
-public abstract class MixinSkyRenderer {
+public abstract class MixinSkyRenderer_PlanarFogSky {
     @Unique
     private static GpuBuffer animatium$topSkyBuffer = null;
 

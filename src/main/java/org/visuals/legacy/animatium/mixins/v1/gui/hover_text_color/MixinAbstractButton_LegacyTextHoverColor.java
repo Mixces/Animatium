@@ -23,27 +23,29 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.sneaking;
+package org.visuals.legacy.animatium.mixins.v1.gui.hover_text_color;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(HumanoidMobRenderer.class)
-public abstract class MixinHumanoidMobRenderer {
-    // TODO: Improve sneaking animation when spamming for parity for older mc versions
-    @WrapOperation(method = "extractHumanoidRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isCrouching()Z"))
-    private static boolean animatium$sneakAnimationWhileFlying(LivingEntity livingEntity, Operation<Boolean> original) {
-        final boolean isCrouching = original.call(livingEntity);
-        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.sneakAnimationWhileFlying) {
-            return isCrouching || livingEntity.isShiftKeyDown();
+@Mixin(AbstractButton.class)
+public abstract class MixinAbstractButton_LegacyTextHoverColor extends AbstractWidget {
+    public MixinAbstractButton_LegacyTextHoverColor(int x, int y, int width, int height, Component message) {
+        super(x, y, width, height, message);
+    }
+
+    @ModifyConstant(method = "renderWidget", constant = @Constant(intValue = 0xFFFFFFFF))
+    private int animatium$renderWidget$old$textColor(int constant) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.buttonTextColors) {
+            return !active ? 0xFFE0E0E0 : (isHoveredOrFocused() ? 0xFFFFFFA0 : 0xFFE0E0E0);
         } else {
-            return isCrouching;
+            return constant;
         }
     }
 }

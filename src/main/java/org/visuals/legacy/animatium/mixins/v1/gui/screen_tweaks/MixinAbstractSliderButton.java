@@ -30,7 +30,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 
-// OptionInstanceSliderButton
+// TODO/WIP: OptionInstanceSliderButton
 @Mixin(AbstractSliderButton.class)
 public abstract class MixinAbstractSliderButton extends AbstractWidget {
     public MixinAbstractSliderButton(int x, int y, int width, int height, Component message) {

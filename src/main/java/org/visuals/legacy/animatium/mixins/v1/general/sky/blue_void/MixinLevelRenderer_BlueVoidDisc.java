@@ -44,7 +44,7 @@ import org.visuals.legacy.animatium.util.RenderUtils;
 import org.visuals.legacy.animatium.util.SkyRendererUtility;
 
 @Mixin(LevelRenderer.class)
-public abstract class MixinLevelRenderer {
+public abstract class MixinLevelRenderer_BlueVoidDisc {
     @Shadow
     @Final
     private Minecraft minecraft;

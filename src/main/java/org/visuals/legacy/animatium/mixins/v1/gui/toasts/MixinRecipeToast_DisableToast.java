@@ -36,7 +36,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.compatibility.Mods;
 
 @Mixin(RecipeToast.class)
-public abstract class MixinRecipeToast {
+public abstract class MixinRecipeToast_DisableToast {
     @WrapMethod(method = "addOrUpdate")
     private static void animatium$animatium$disableRecipeToast(ToastManager toastManager, RecipeDisplay recipeDisplay, Operation<Void> original) {
         if (!Animatium.ENABLED && (!AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts || Mods.HAS_SODIUM_EXTRAS)) {

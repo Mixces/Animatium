@@ -25,21 +25,26 @@
 
 package org.visuals.legacy.animatium.mixins.v1.entity.sneaking;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.minecraft.client.model.ElytraModel;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.world.entity.Pose;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(ElytraModel.class)
-public class MixinElytraModel {
-    @ModifyExpressionValue(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At(value = "CONSTANT", args = "floatValue=3.0"))
-    private float animatium$fixSneakTranslationWhileFlying(float original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.sneakingFeetPosition) {
-            return 0.0F;
+@Mixin(EntityRenderer.class)
+public abstract class MixinEntityRenderer_SneakAnimationWhileFlying {
+    @WrapOperation(method = "submitNameTag", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;isDiscrete:Z", opcode = Opcodes.GETFIELD))
+    private boolean animatium$sneakAnimationWhileFlying(EntityRenderState instance, Operation<Boolean> original) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.sneakAnimationWhileFlying && instance instanceof LivingEntityRenderState livingEntityRenderState) {
+            return livingEntityRenderState.isDiscrete || livingEntityRenderState.hasPose(Pose.CROUCHING);
         } else {
-            return original;
+            return original.call(instance);
         }
     }
 }

@@ -37,8 +37,8 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(AbstractSelectionList.class)
-public abstract class MixinAbstractSelectionList extends AbstractContainerWidget {
-    public MixinAbstractSelectionList(int width, int height, int y, int itemHeight) {
+public abstract class MixinAbstractSelectionList_ListGradientBackground extends AbstractContainerWidget {
+    public MixinAbstractSelectionList_ListGradientBackground(int width, int height, int y, int itemHeight) {
         super(0, y, width, height, CommonComponents.EMPTY);
     }
 

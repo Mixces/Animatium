@@ -36,6 +36,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -48,7 +49,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.states.ViewBobbingStorage;
 
 @Mixin(GameRenderer.class)
-public abstract class MixinGameRenderer {
+public abstract class MixinGameRenderer_ModifyViewBobbing {
     @Shadow
     @Final
     private Minecraft minecraft;
@@ -67,7 +68,7 @@ public abstract class MixinGameRenderer {
         return !Animatium.ENABLED || !AnimatiumConfig.instance().extras.minimalViewBobbing;
     }
 
-    @WrapOperation(method = "bobHurt", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/LivingEntity;hurtTime:I"))
+    @WrapOperation(method = "bobHurt", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/LivingEntity;hurtTime:I", opcode = Opcodes.GETFIELD))
     private int animatium$offsetHurtTime(LivingEntity instance, Operation<Integer> original) {
         final int hurtTime = original.call(instance);
         if (Animatium.ENABLED && AnimatiumConfig.instance().movement.offsetHurtTime) {
