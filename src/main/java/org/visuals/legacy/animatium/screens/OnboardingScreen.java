@@ -25,7 +25,6 @@
 
 package org.visuals.legacy.animatium.screens;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -116,7 +115,11 @@ public class OnboardingScreen extends Screen {
 
     @Override
     public void onClose() {
-        ConfigUtil.put("onboarding", false);
+        // NOTE: Only allow escaping if you used the ``/animatium onboarding`` command
+        if (this.original == null) {
+            ConfigUtil.put("onboarding", false);
+            super.onClose();
+        }
     }
 
     private void updateVersionButtonMessage(Button button) {
