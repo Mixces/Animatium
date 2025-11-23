@@ -25,6 +25,7 @@
 
 package org.visuals.legacy.animatium.screens;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -111,6 +112,11 @@ public class OnboardingScreen extends Screen {
         } else {
             return super.mouseClicked(event, isDoubleClick);
         }
+    }
+
+    @Override
+    public void onClose() {
+        ConfigUtil.put("onboarding", false);
     }
 
     private void updateVersionButtonMessage(Button button) {
