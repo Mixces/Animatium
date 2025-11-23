@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.visuals.legacy.animatium.screens.OnboardingScreen;
-import org.visuals.legacy.animatium.util.ConfigUtil;
+import org.visuals.legacy.animatium.util.config.ConfigUtil;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft_OnboardingScreen {

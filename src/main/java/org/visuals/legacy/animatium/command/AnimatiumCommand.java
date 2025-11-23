@@ -37,7 +37,7 @@ import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
-import org.visuals.legacy.animatium.util.ConfigUtil;
+import org.visuals.legacy.animatium.util.config.ConfigUtil;
 
 import java.util.Random;
 

@@ -29,14 +29,22 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
-import org.visuals.legacy.animatium.util.ConfigUtil;
 import org.visuals.legacy.animatium.util.RenderUtils;
+import org.visuals.legacy.animatium.util.config.ConfigUtil;
+import org.visuals.legacy.animatium.util.config.Version;
+import org.visuals.legacy.animatium.util.config.VersionUtil;
 
 public class OnboardingScreen extends Screen {
     private final TitleScreen original;
+    private Version version = Version.MODERN;
+
+    private Button v1_7Button = null;
+    private Button v1_8Button = null;
+    private Button modernButton = null;
 
     public OnboardingScreen(TitleScreen original) {
         super(Component.literal("Onboarding"));
@@ -52,8 +60,22 @@ public class OnboardingScreen extends Screen {
         }
 
         this.original.init(this.minecraft, this.width, this.height);
+
+        final int buttonWidth = 120;
+        this.v1_7Button = this.addRenderableWidget(Button.builder(Component.literal("1.7"), button -> this.version = Version.V1_7)
+                .bounds(((this.width / 2) - (buttonWidth / 2) - (buttonWidth + Button.DEFAULT_SPACING)), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
+                .build());
+        this.v1_8Button = this.addRenderableWidget(Button.builder(Component.literal("1.8"), button -> this.version = Version.V1_8)
+                .bounds((this.width / 2) - (buttonWidth / 2), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
+                .build());
+        this.modernButton = this.addRenderableWidget(Button.builder(Component.literal("Modern"), button -> this.version = Version.MODERN)
+                .bounds(((this.width / 2) - (buttonWidth / 2) + (buttonWidth + Button.DEFAULT_SPACING)), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
+                .build());
+        updateVersionButtonState();
+
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> {
             ConfigUtil.put("onboarding", false);
+            VersionUtil.setVersion(this.version);
             this.minecraft.setScreen(this.original);
         }).pos((this.width / 2) - (Button.DEFAULT_WIDTH / 2), (int) (this.height / 1.2F)).build());
     }
@@ -62,15 +84,39 @@ public class OnboardingScreen extends Screen {
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.original.render(guiGraphics, 0, 0, partialTick);
 
-        guiGraphics.fill(0, 0, this.width, this.height, ARGB.color(0.67F, 0x000000));
+        guiGraphics.fill(0, 0, this.width, this.height, ARGB.color(0.72F, 0x000000));
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderUtils.drawScaledText(guiGraphics, this.font, "Welcome to Animatium Onboarding!", this.width / 2, this.height / 4, 1.67F);
+        RenderUtils.drawScaledText(guiGraphics, this.font, "Welcome to Animatium Onboarding!", this.width / 2, this.height / 4, 2.0F);
+        guiGraphics.drawCenteredString(this.font, "Hello! Thank you for downloading Animatium!", this.width / 2, (int) (this.height / 2.8), 0xFFD6D6D6);
+        guiGraphics.drawCenteredString(this.font, "Please select the version of visuals you would like to use!", this.width / 2, (int) (this.height / 2.4), 0xFFD6D6D6);
+
+        guiGraphics.drawCenteredString(this.font, "NOTE: If you have already went through this,", this.width / 2, (int) (this.height / 1.4F), 0xFFFFA600);
+        guiGraphics.drawCenteredString(this.font, "ask for help in the discord before continuing!", this.width / 2, (int) (this.height / 1.3F), 0xFFFFA600);
     }
 
     @Override
-    @SuppressWarnings({"DataFlowIssue"})
-    public void onClose() {
-        // ConfigUtil.put("onboarding", false);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (this.v1_7Button.mouseClicked(event, isDoubleClick) || this.v1_8Button.mouseClicked(event, isDoubleClick) || this.modernButton.mouseClicked(event, isDoubleClick)) {
+            updateVersionButtonState();
+            return true;
+        } else {
+            return super.mouseClicked(event, isDoubleClick);
+        }
+    }
+
+    private void updateVersionButtonMessage(Button button) {
+        button.setMessage(button.getMessage().copy().withColor(button.isActive() ? ARGB.white(1.0F) : 0xFFFFFFA0));
+    }
+
+    private void updateVersionButtonState() {
+        this.v1_7Button.active = this.version != Version.V1_7;
+        updateVersionButtonMessage(this.v1_7Button);
+
+        this.v1_8Button.active = this.version != Version.V1_8;
+        updateVersionButtonMessage(this.v1_8Button);
+
+        this.modernButton.active = this.version != Version.MODERN;
+        updateVersionButtonMessage(this.modernButton);
     }
 }

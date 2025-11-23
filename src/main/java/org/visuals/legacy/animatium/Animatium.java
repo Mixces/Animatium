@@ -29,7 +29,7 @@ import lombok.experimental.UtilityClass;
 import net.minecraft.resources.ResourceLocation;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.packet.AnimatiumInfoPayloadPacket;
-import org.visuals.legacy.animatium.util.ConfigUtil;
+import org.visuals.legacy.animatium.util.config.ConfigUtil;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
 import java.io.IOException;

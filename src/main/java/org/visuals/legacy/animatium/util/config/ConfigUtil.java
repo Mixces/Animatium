@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util;
+package org.visuals.legacy.animatium.util.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
