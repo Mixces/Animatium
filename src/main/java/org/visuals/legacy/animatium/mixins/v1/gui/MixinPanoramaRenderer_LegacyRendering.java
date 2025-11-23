@@ -27,6 +27,7 @@ package org.visuals.legacy.animatium.mixins.v1.gui;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.opengl.GlTexture;
 import com.mojang.blaze3d.opengl.GlTextureView;
@@ -34,14 +35,15 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.TextureFormat;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.CubeMap;
 import net.minecraft.client.renderer.PanoramaRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.PanoramaRendererUtility;
@@ -51,22 +53,37 @@ public abstract class MixinPanoramaRenderer_LegacyRendering {
     @Unique
     private GlTextureView animatium$backgroundTextureView;
 
-    @Inject(method = "render", at = @At("HEAD"))
-    private void animatium$panoramaStart(GuiGraphics guiGraphics, int width, int height, boolean spin, CallbackInfo ci) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.panoramaRendering) {
+    @Unique
+    private float animatium$spin = 0.0F;
+
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CubeMap;render(Lnet/minecraft/client/Minecraft;FF)V", ordinal = 0))
+    private void animatium$panoramaRendering(
+            CubeMap instance,
+            Minecraft minecraft,
+            float xRot,
+            float yRot,
+            Operation<Void> original,
+            @Local(argsOnly = true) GuiGraphics guiGraphics,
+            @Local(argsOnly = true, ordinal = 0) int width,
+            @Local(argsOnly = true, ordinal = 1) int height
+    ) {
+        final boolean enabled = Animatium.ENABLED && AnimatiumConfig.instance().screen.panoramaRendering;
+        if (enabled) {
             if (animatium$backgroundTextureView == null) {
                 final GpuDevice device = RenderSystem.getDevice();
                 final GlTexture animatium$backgroundTexture = (GlTexture) device.createTexture(() -> "Background texture", 15, TextureFormat.RGBA8, 256, 256, 1, 1);
                 animatium$backgroundTextureView = (GlTextureView) device.createTextureView(animatium$backgroundTexture);
             }
 
+            animatium$spin += minecraft.getDeltaTracker().getRealtimeDeltaTicks();
+            xRot = Mth.sin(animatium$spin / 400.0F) * 25.0F + 20.0F;
+            yRot = -animatium$spin * 0.1F;
+
             GlStateManager._viewport(0, 0, 256, 256);
         }
-    }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CubeMap;render(Lnet/minecraft/client/Minecraft;FF)V", ordinal = 0, shift = At.Shift.AFTER))
-    private void animatium$panoramaFinish(GuiGraphics guiGraphics, int width, int height, boolean spin, CallbackInfo ci) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.panoramaRendering) {
+        original.call(instance, minecraft, xRot, yRot);
+        if (enabled) {
             PanoramaRendererUtility.render(guiGraphics.pose(), animatium$backgroundTextureView, width, height);
         }
     }

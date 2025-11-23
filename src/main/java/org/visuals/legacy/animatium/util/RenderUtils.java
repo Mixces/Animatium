@@ -129,6 +129,7 @@ public class RenderUtils {
 
                 renderPass.setUniform("DynamicTransforms", dynamicTransforms);
                 renderPassConsumer.accept(renderPass);
+
                 RenderSystem.bindDefaultUniforms(renderPass);
                 renderPass.setVertexBuffer(0, vertexBuffer);
                 renderPass.setIndexBuffer(indexBuffer, indexType);

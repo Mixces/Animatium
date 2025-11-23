@@ -67,18 +67,26 @@ public class PanoramaRendererUtility {
                     .withLocation(Animatium.location("pipeline/basic_texture"))
                     .build();
 
-    // To be called after ``cubeMap.render``
+    /**
+     * In PanoramaRenderer, before ``cubeMap.render``, set viewPort to (0, 0, 256, 256)
+     * then call this method after ``cubeMap.render``
+     *
+     * @param matrix      The GUI matrix
+     * @param textureView The texture we are drawing to
+     * @param width       Screen width
+     * @param height      Screen Height
+     */
     public void render(Matrix3x2f matrix, GlTextureView textureView, int width, int height) {
         final RenderTarget renderTarget = Minecraft.getInstance().getMainRenderTarget();
-        for (int i = 0; i < 6; ++i) {
-            PanoramaRendererUtility.writeAndBlitBlurTexture(matrix, renderTarget, textureView, width, height);
+        for (int i = 0; i < 7; ++i) {
+            writeAndBlitBlurTexture(matrix, renderTarget, textureView, width, height);
         }
 
-        PanoramaRendererUtility.renderFinalTexture(renderTarget, textureView, width, height);
+        renderFinalTexture(renderTarget, textureView, width, height);
     }
 
-    public void writeAndBlitBlurTexture(Matrix3x2f matrix, RenderTarget renderTarget, GlTextureView texture, int width, int height) {
-        texture.texture().setTextureFilter(FilterMode.LINEAR, false);
+    private void writeAndBlitBlurTexture(Matrix3x2f matrix, RenderTarget renderTarget, GlTextureView texture, int width, int height) {
+        texture.texture().setTextureFilter(FilterMode.LINEAR, FilterMode.LINEAR, false);
         // Ensures enough width/height for it to not crash when window is resized
         if (renderTarget.width >= 256 && renderTarget.height >= 256) {
             RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(
@@ -103,13 +111,19 @@ public class PanoramaRendererUtility {
                 bufferBuilder.addVertexWith2DPose(matrix, 0.0F, height).setUv(0.0F + growth, 0.0F).setColor(color);
             }
 
-            RenderUtils.drawBuffer(pipeline, renderTarget, bufferBuilder.buildOrThrow(), (pass) -> {
-                pass.bindSampler("Sampler0", texture);
-            });
+            RenderUtils.drawBuffer(pipeline, renderTarget, bufferBuilder.buildOrThrow(), (pass) -> pass.bindSampler("Sampler0", texture));
         }
     }
 
-    public void renderFinalTexture(RenderTarget renderTarget, GlTextureView texture, int width, int height) {
+    /**
+     * Renders the final full image to the screen
+     *
+     * @param renderTarget The render target we are drawing to
+     * @param texture      The temporary texture
+     * @param width        Screen width
+     * @param height       Screen height
+     */
+    private void renderFinalTexture(RenderTarget renderTarget, GlTextureView texture, int width, int height) {
         float aspect = 120.0F / (float) (Math.max(width, height));
         float sw = (float) width * aspect / 256.0F;
         float sh = (float) height * aspect / 256.0F;
@@ -121,9 +135,7 @@ public class PanoramaRendererUtility {
             bufferBuilder.addVertex(width, height, 0.0F).setUv(0.5F - sh, 0.5F - sw).setColor(color);
             bufferBuilder.addVertex(width, 0.0F, 0.0F).setUv(0.5F + sh, 0.5F - sw).setColor(color);
             bufferBuilder.addVertex(0.0F, 0.0F, 0.0F).setUv(0.5F + sh, 0.5F + sw).setColor(color);
-            RenderUtils.drawBuffer(pipeline, renderTarget, bufferBuilder.buildOrThrow(), (pass) -> {
-                pass.bindSampler("Sampler0", texture);
-            });
+            RenderUtils.drawBuffer(pipeline, renderTarget, bufferBuilder.buildOrThrow(), (pass) -> pass.bindSampler("Sampler0", texture));
         }
     }
 }
