@@ -56,8 +56,8 @@ public class ExtrasConfigCategory {
     public boolean dontClearChat = false;
     public boolean dontCloseChat = false;
 
-    public static ConfigCategory setup(ExtrasConfigCategory defaults, ExtrasConfigCategory config) {
-        ConfigCategory.Builder category = ConfigCategory.createBuilder();
+    public static ConfigCategory setup(final ExtrasConfigCategory defaults, final ExtrasConfigCategory config) {
+        final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.extras"));
         category.option(Option.<Boolean>createBuilder()
                 .name(Component.translatable("animatium.minimalViewBobbing"))

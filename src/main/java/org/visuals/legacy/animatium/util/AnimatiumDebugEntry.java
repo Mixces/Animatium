@@ -49,8 +49,9 @@ public class AnimatiumDebugEntry implements DebugScreenEntry {
         list.add("Animatium " + Animatium.VERSION + (Animatium.DEVELOPMENT_VERSION.isEmpty() ? "" : " - Development Version (" + Animatium.DEVELOPMENT_VERSION + ")"));
         if (!Animatium.ENABLED_SERVER_FEATURES.isEmpty()) {
             list.add("Enabled Server Features:");
-            Animatium.ENABLED_SERVER_FEATURES.forEach((feature) -> list.add(" - " + feature.getTranslate().getString()));
+            Animatium.ENABLED_SERVER_FEATURES.forEach((feature) -> list.add(" - " + feature.getId()));
         }
+
         debugScreenDisplayer.addToGroup(GROUP, list);
     }
 

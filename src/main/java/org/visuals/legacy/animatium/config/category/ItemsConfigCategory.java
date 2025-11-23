@@ -44,11 +44,8 @@ public class ItemsConfigCategory {
     public boolean fishingRodLineThickness = true;
     public boolean thinFishingRodLineThickness = false;
     public boolean stickModelWhenCastInThirdperson = true;
-    // (Items) Fixes
-    public boolean equipAnimationOnItemUse = false;
-    public boolean itemUsageVisualInGUI = false;
     // (Items) Enchantment Glint
-    public boolean glintSpeed = true;
+    public boolean legacyGlintSpeed = true;
     public boolean glintOnItemDrops2D = true;
     public boolean glintOnItemFramed2D = true;
     // (Items) 2D Drops
@@ -74,13 +71,13 @@ public class ItemsConfigCategory {
     public boolean heldItemVisibilityInBoat = true;
     public boolean itemPickupPosition = true;
 
-    public static ConfigCategory setup(ItemsConfigCategory defaults, ItemsConfigCategory config) {
-        ConfigCategory.Builder category = ConfigCategory.createBuilder();
+    public static ConfigCategory setup(final ItemsConfigCategory defaults, final ItemsConfigCategory config) {
+        final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.items"));
 
         // Fishing Rod
         {
-            OptionGroup.Builder fishingRodGroup = OptionGroup.createBuilder();
+            final OptionGroup.Builder fishingRodGroup = OptionGroup.createBuilder();
             fishingRodGroup.name(Component.translatable("animatium.category.items.group.fishing_rod"));
             fishingRodGroup.option(Option.<Boolean>createBuilder()
                     .name(Component.translatable("animatium.fishingRodTextureStackCheck"))
@@ -149,42 +146,17 @@ public class ItemsConfigCategory {
             category.group(fishingRodGroup.build());
         }
 
-        // Fixes
-        {
-            OptionGroup.Builder itemFixesGroup = OptionGroup.createBuilder();
-            itemFixesGroup.name(Component.translatable("animatium.category.items.group.item_fixes"));
-            itemFixesGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.equipAnimationOnItemUse"))
-                    .description(OptionDescription.of(Component.translatable("animatium.equipAnimationOnItemUse.description")))
-                    .binding(
-                            defaults.equipAnimationOnItemUse,
-                            () -> config.equipAnimationOnItemUse,
-                            (newVal) -> config.equipAnimationOnItemUse = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            itemFixesGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.itemUsageVisualInGUI"))
-                    .description(OptionDescription.of(Component.translatable("animatium.itemUsageVisualInGUI.description")))
-                    .binding(
-                            defaults.itemUsageVisualInGUI,
-                            () -> config.itemUsageVisualInGUI,
-                            (newVal) -> config.itemUsageVisualInGUI = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            category.group(itemFixesGroup.build());
-        }
-
         // Glint
         {
-            OptionGroup.Builder glintGroup = OptionGroup.createBuilder();
+            final OptionGroup.Builder glintGroup = OptionGroup.createBuilder();
             glintGroup.name(Component.translatable("animatium.category.items.group.glint"));
             glintGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.glintSpeed"))
-                    .description(OptionDescription.of(Component.translatable("animatium.glintSpeed.description")))
+                    .name(Component.translatable("animatium.legacyGlintSpeed"))
+                    .description(OptionDescription.of(Component.translatable("animatium.legacyGlintSpeed.description")))
                     .binding(
-                            defaults.glintSpeed,
-                            () -> config.glintSpeed,
-                            (newVal) -> config.glintSpeed = newVal)
+                            defaults.legacyGlintSpeed,
+                            () -> config.legacyGlintSpeed,
+                            (newVal) -> config.legacyGlintSpeed = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             glintGroup.option(Option.<Boolean>createBuilder()
@@ -210,7 +182,7 @@ public class ItemsConfigCategory {
 
         // 2D Drops
         {
-            OptionGroup.Builder drops2dGroup = OptionGroup.createBuilder();
+            final OptionGroup.Builder drops2dGroup = OptionGroup.createBuilder();
             drops2dGroup.name(Component.translatable("animatium.category.items.group.2d_drops"));
             drops2dGroup.option(Option.<Boolean>createBuilder()
                     .name(Component.translatable("animatium.itemDropsFaceCamera"))
@@ -262,7 +234,7 @@ public class ItemsConfigCategory {
 
         // 2d Drops
         {
-            OptionGroup.Builder transformationsGroup = OptionGroup.createBuilder();
+            final OptionGroup.Builder transformationsGroup = OptionGroup.createBuilder();
             transformationsGroup.name(Component.translatable("animatium.category.items.group.transformations"));
             transformationsGroup.option(Option.<Boolean>createBuilder()
                     .name(Component.translatable("animatium.itemPositions"))
@@ -317,7 +289,7 @@ public class ItemsConfigCategory {
 
         // Other
         {
-            OptionGroup.Builder otherGroup = OptionGroup.createBuilder();
+            final OptionGroup.Builder otherGroup = OptionGroup.createBuilder();
             otherGroup.name(Component.translatable("animatium.category.items.group.other"));
             otherGroup.option(Option.<Boolean>createBuilder()
                     .name(Component.translatable("animatium.itemUsageSwinging"))

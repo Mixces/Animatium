@@ -59,6 +59,10 @@ public final class AnimatiumConfig {
         CONFIG.load();
     }
 
+    public static void save() {
+        CONFIG.save();
+    }
+
     public static AnimatiumConfig instance() {
         return CONFIG.instance();
     }

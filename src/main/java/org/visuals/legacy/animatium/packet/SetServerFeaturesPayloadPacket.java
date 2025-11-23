@@ -32,14 +32,46 @@ import org.jetbrains.annotations.NotNull;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
+import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.Optional;
 
 public record SetServerFeaturesPayloadPacket(EnumSet<ServerFeature> features) implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, SetServerFeaturesPayloadPacket> CODEC = CustomPacketPayload.codec(null, SetServerFeaturesPayloadPacket::read);
     public static final Type<SetServerFeaturesPayloadPacket> PAYLOAD_ID = new Type<>(Animatium.id("set_features"));
 
     private static SetServerFeaturesPayloadPacket read(FriendlyByteBuf buffer) {
-        return new SetServerFeaturesPayloadPacket(buffer.readEnumSet(ServerFeature.class));
+        buffer.markReaderIndex();
+        final int size = buffer.readVarInt();
+        buffer.resetReaderIndex();
+        // TODO/NOTE: This is very hacky and stupid rah, hope it doesn't cause anyone issues
+        if (size > 0 && size <= ServerFeature.VALUES.length) {
+            // v0 @Deprecated
+            return new SetServerFeaturesPayloadPacket(readV0(buffer));
+        } else {
+            // v1
+            return new SetServerFeaturesPayloadPacket(readV1(buffer));
+        }
+    }
+
+    @Deprecated
+    private static EnumSet<ServerFeature> readV0(final FriendlyByteBuf buffer) {
+        System.out.println("Server sent features using v0 api! This is deprecated and will be removed in the future!");
+        final EnumSet<ServerFeature> enumSet = EnumSet.noneOf(ServerFeature.class);
+
+        final int size = buffer.readVarInt();
+        for (int i = 0; i < size; ++i) {
+            final String name = buffer.readUtf();
+            final Optional<ServerFeature> optionalServerFeature = Arrays.stream(ServerFeature.VALUES).filter(feature -> feature.getId().equals(name)).findFirst();
+            optionalServerFeature.ifPresent(enumSet::add);
+        }
+
+        return enumSet;
+    }
+
+    // TODO/NOTE: Servers should instead use this as v0 will be removed in the future
+    private static EnumSet<ServerFeature> readV1(final FriendlyByteBuf buffer) {
+        return buffer.readEnumSet(ServerFeature.class);
     }
 
     @Override

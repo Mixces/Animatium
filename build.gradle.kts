@@ -94,6 +94,7 @@ loom.runs {
             property("mixin.hotSwap", "true")
             property("mixin.debug.export", "true") // Puts mixin outputs in /run/.mixin.out
             property("devauth.enabled", "true")
+            property("devauth.account", "main")
         }
     }
 }

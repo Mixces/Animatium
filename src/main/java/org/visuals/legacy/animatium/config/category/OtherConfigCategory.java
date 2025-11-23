@@ -58,13 +58,13 @@ public class OtherConfigCategory {
     public boolean planarSkyFog = true;
     public boolean cloudHeight = true;
 
-    public static ConfigCategory setup(OtherConfigCategory defaults, OtherConfigCategory config) {
-        ConfigCategory.Builder category = ConfigCategory.createBuilder();
+    public static ConfigCategory setup(final OtherConfigCategory defaults, final OtherConfigCategory config) {
+        final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.other"));
 
         // Sky
         {
-            OptionGroup.Builder skyGroup = OptionGroup.createBuilder();
+            final OptionGroup.Builder skyGroup = OptionGroup.createBuilder();
             skyGroup.name(Component.translatable("animatium.category.other.group.sky"));
             skyGroup.option(Option.<Boolean>createBuilder()
                     .name(Component.translatable("animatium.blueVoidSky"))

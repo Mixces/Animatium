@@ -57,13 +57,13 @@ public class MovementConfigCategory {
     public boolean legacyDamageTilt = true;
     public boolean offsetHurtTime = true;
 
-    public static ConfigCategory setup(MovementConfigCategory defaults, MovementConfigCategory config) {
-        ConfigCategory.Builder category = ConfigCategory.createBuilder();
+    public static ConfigCategory setup(final MovementConfigCategory defaults, final MovementConfigCategory config) {
+        final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.movement"));
 
         // Sneaking
         {
-            OptionGroup.Builder sneakingGroup = OptionGroup.createBuilder();
+            final OptionGroup.Builder sneakingGroup = OptionGroup.createBuilder();
             sneakingGroup.name(Component.translatable("animatium.category.movement.group.sneaking"));
             sneakingGroup.option(Option.<Boolean>createBuilder()
                     .name(Component.translatable("animatium.smoothSneaking"))
@@ -123,7 +123,7 @@ public class MovementConfigCategory {
         }
 
         {
-            OptionGroup.Builder capeGroup = OptionGroup.createBuilder();
+            final OptionGroup.Builder capeGroup = OptionGroup.createBuilder();
             capeGroup.name(Component.translatable("animatium.category.movement.group.cape"));
             capeGroup.option(Option.<Boolean>createBuilder()
                     .name(Component.translatable("animatium.capeMovement"))
@@ -175,7 +175,7 @@ public class MovementConfigCategory {
 
         // Other
         {
-            OptionGroup.Builder otherGroup = OptionGroup.createBuilder();
+            final OptionGroup.Builder otherGroup = OptionGroup.createBuilder();
             otherGroup.name(Component.translatable("animatium.category.movement.group.other"));
             otherGroup.option(Option.<Boolean>createBuilder()
                     .name(Component.translatable("animatium.rotateBackwardsWalking"))

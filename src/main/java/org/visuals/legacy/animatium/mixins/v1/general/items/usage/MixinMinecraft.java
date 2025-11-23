@@ -122,7 +122,7 @@ public abstract class MixinMinecraft {
     @WrapWithCondition(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;itemUsed(Lnet/minecraft/world/InteractionHand;)V"))
     private boolean animatium$equipAnimationOnItemUse(ItemInHandRenderer instance, InteractionHand interactionHand) {
         // TODO: This fixes projectile equip, but it isn't going to be 100% accurate in some other areas. This needs to be worked on :)
-        if (Animatium.ENABLED && !AnimatiumConfig.instance().items.equipAnimationOnItemUse) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimationOnItemUse) {
             // The equip animation plays when right-clicking blocks in creative mode in <1.8.x
             final boolean isAimedAtBlock = this.hitResult != null && this.hitResult.getType() == HitResult.Type.BLOCK;
             // This might need to be revamped a bit. We are already checking for creative mode in the actual method,

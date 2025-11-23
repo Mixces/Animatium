@@ -28,17 +28,17 @@ package org.visuals.legacy.animatium.screens;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.RenderUtils;
 import org.visuals.legacy.animatium.util.config.ConfigUtil;
 import org.visuals.legacy.animatium.util.config.Version;
 
 public class OnboardingScreen extends Screen {
-    private final TitleScreen original;
+    private final Screen original;
     private Version version = Version.MODERN;
 
     private Button v1_7Button = null;
@@ -46,7 +46,7 @@ public class OnboardingScreen extends Screen {
     // private Button v1_12Button = null;
     private Button modernButton = null;
 
-    public OnboardingScreen(TitleScreen original) {
+    public OnboardingScreen(Screen original) {
         super(Component.literal("Onboarding"));
         this.original = original;
     }
@@ -59,7 +59,9 @@ public class OnboardingScreen extends Screen {
             return;
         }
 
-        this.original.init(this.minecraft, this.width, this.height);
+        if (this.original != null) {
+            this.original.init(this.minecraft, this.width, this.height);
+        }
 
         final int buttonWidth = 100;
         this.v1_7Button = this.addRenderableWidget(Button.builder(Component.literal("1.7"), button -> this.version = Version.V1_7)
@@ -78,14 +80,17 @@ public class OnboardingScreen extends Screen {
 
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> {
             ConfigUtil.put("onboarding", false);
-            this.version.apply();
+            this.version.apply(AnimatiumConfig.instance());
+            AnimatiumConfig.save();
             this.minecraft.setScreen(this.original);
         }).pos((this.width / 2) - (Button.DEFAULT_WIDTH / 2), (int) (this.height / 1.2F)).build());
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.original.render(guiGraphics, 0, 0, partialTick);
+        if (this.original != null) {
+            this.original.render(guiGraphics, -999, -999, partialTick);
+        }
 
         guiGraphics.fill(0, 0, this.width, this.height, ARGB.color(0.72F, 0x000000));
         super.render(guiGraphics, mouseX, mouseY, partialTick);

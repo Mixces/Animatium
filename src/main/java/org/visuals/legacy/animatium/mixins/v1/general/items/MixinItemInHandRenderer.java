@@ -86,7 +86,7 @@ public abstract class MixinItemInHandRenderer {
 
     @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;isUsingItem()Z", ordinal = 1))
     private boolean animatium$itemUsageVisualInGUI(AbstractClientPlayer instance, Operation<Boolean> original) {
-        if (!AnimatiumConfig.instance().items.itemUsageVisualInGUI && this.minecraft.screen != null) {
+        if (AnimatiumConfig.instance().fixes.fixItemUsageVisualInGUI && this.minecraft.screen != null) {
             return false;
         } else {
             return original.call(instance);

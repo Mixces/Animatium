@@ -47,7 +47,7 @@ public abstract class MixinRenderStateShard {
 
     @ModifyExpressionValue(method = "setupGlintTexturing", at = @At(value = "CONSTANT", args = "doubleValue=8.0"))
     private static double animatium$glintSpeed(double original, @Local(argsOnly = true) float f) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().items.glintSpeed && f == 8.0F) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().items.legacyGlintSpeed && f == 8.0F) {
             // Value taken from 1.8
             return 1.0D;
         } else {
@@ -57,7 +57,7 @@ public abstract class MixinRenderStateShard {
 
     @ModifyExpressionValue(method = "setupGlintTexturing", at = @At(value = "CONSTANT", args = "floatValue=110000.0"))
     private static float animatium$glintSpeed$horizontal(float original, @Local(argsOnly = true) float f) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().items.glintSpeed && f == 8.0F) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().items.legacyGlintSpeed && f == 8.0F) {
             // Value taken from 1.7/1.8
             return 4873.0F;
         } else {
@@ -67,7 +67,7 @@ public abstract class MixinRenderStateShard {
 
     @ModifyExpressionValue(method = "setupGlintTexturing", at = @At(value = "CONSTANT", args = "floatValue=30000.0"))
     private static float animatium$glintSpeed$diagonal(float original, @Local(argsOnly = true) float f) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().items.glintSpeed && f == 8.0F) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().items.legacyGlintSpeed && f == 8.0F) {
             // Value taken from 1.7/1.8
             return 3000.0F;
         } else {

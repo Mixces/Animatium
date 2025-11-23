@@ -62,36 +62,34 @@ public enum Version {
         movement.offsetHurtTime = true;
 
         final ItemsConfigCategory items = config.items;
-//        items.fishingRodTextureStackCheck = true;
-//        items.fishingRodLineInterpolation = true;
-//        items.noMoveFishingRodLine = false;
-//        items.fishingRodLinePositionThirdPerson = true;
-//        items.fishingRodLineThickness = true;
-//        items.thinFishingRodLineThickness = false;
+        items.fishingRodTextureStackCheck = true;
+        items.fishingRodLineInterpolation = true;
+        items.noMoveFishingRodLine = true;
+        items.fishingRodLinePositionThirdPerson = true;
+        items.fishingRodLineThickness = true;
+        items.thinFishingRodLineThickness = false;
         items.stickModelWhenCastInThirdperson = true;
-//        items.equipAnimationOnItemUse = false;
-//        items.itemUsageVisualInGUI = false;
-//        items.glintSpeed = true;
-//        items.glintOnItemDrops2D = true;
-//        items.glintOnItemFramed2D = true;
-//        items.itemDropsFaceCamera = true;
-//        items.itemDropsFaceCameraRotationFix = false;
-//        items.itemDrops2D = true;
-//        items.itemFramed2D = true;
-//        items.itemColors2D = true;
-//        items.itemPositions = true;
+        items.legacyGlintSpeed = true;
+//        items.glintOnItemDrops2D = true; // TODO
+//        items.glintOnItemFramed2D = true; // TODO
+        items.itemDropsFaceCamera = true;
+        items.itemDropsFaceCameraRotationFix = false;
+        items.itemDrops2D = true;
+        items.itemFramed2D = true;
+        items.itemColors2D = true;
+        items.itemPositions = true;
         items.itemPositionsInThirdPerson = true;
-//        items.thinBlockPositions = true;
-//        items.skullPosition = true;
+        items.thinBlockPositions = true;
+        items.skullPosition = true;
         items.fishingRodVersion = FishingRodVersion.V1_7;
         items.itemUsageSwinging = true;
-//        items.swingOnUse = false;
-//        items.swingOnDrop = false;
-//        items.swingOnEntityInteract = false;
+        items.swingOnUse = false;
+        items.swingOnDrop = false;
+        items.swingOnEntityInteract = false;
         items.itemUsingTextureInGui = false;
         items.durabilityBarColors = true;
         items.legacyItemRarities = true;
-//        items.heldItemVisibilityInBoat = true;
+        items.heldItemVisibilityInBoat = true;
         items.itemPickupPosition = true;
 
         final ScreenConfigCategory screen = config.screen;
@@ -161,36 +159,34 @@ public enum Version {
         movement.offsetHurtTime = false;
 
         final ItemsConfigCategory items = config.items;
-//        items.fishingRodTextureStackCheck = true;
-//        items.fishingRodLineInterpolation = true;
-//        items.noMoveFishingRodLine = false;
-//        items.fishingRodLinePositionThirdPerson = true;
-//        items.fishingRodLineThickness = true;
-//        items.thinFishingRodLineThickness = false;
+        items.fishingRodTextureStackCheck = true;
+        items.fishingRodLineInterpolation = true;
+        items.noMoveFishingRodLine = false;
+        items.fishingRodLinePositionThirdPerson = false;
+        items.fishingRodLineThickness = true;
+        items.thinFishingRodLineThickness = false;
         items.stickModelWhenCastInThirdperson = false;
-//        items.equipAnimationOnItemUse = false;
-//        items.itemUsageVisualInGUI = false;
-//        items.glintSpeed = true;
-//        items.glintOnItemDrops2D = true;
-//        items.glintOnItemFramed2D = true;
-//        items.itemDropsFaceCamera = true;
-//        items.itemDropsFaceCameraRotationFix = false;
-//        items.itemDrops2D = true;
-//        items.itemFramed2D = true;
-//        items.itemColors2D = true;
-//        items.itemPositions = true;
+        items.legacyGlintSpeed = true;
+//        items.glintOnItemDrops2D = true; // TODO
+//        items.glintOnItemFramed2D = true; // TODO
+        items.itemDropsFaceCamera = false;
+        items.itemDropsFaceCameraRotationFix = false;
+        items.itemDrops2D = false;
+        items.itemFramed2D = false;
+        items.itemColors2D = false;
+        items.itemPositions = false;
         items.itemPositionsInThirdPerson = false;
-//        items.thinBlockPositions = true;
-//        items.skullPosition = true;
+        items.thinBlockPositions = false;
+        items.skullPosition = true;
         items.fishingRodVersion = FishingRodVersion.V1_8;
         items.itemUsageSwinging = false;
-//        items.swingOnUse = false;
-//        items.swingOnDrop = false;
-//        items.swingOnEntityInteract = false;
+        items.swingOnUse = false;
+        items.swingOnDrop = false;
+        items.swingOnEntityInteract = false;
         items.itemUsingTextureInGui = false;
         items.durabilityBarColors = true;
         items.legacyItemRarities = true;
-//        items.heldItemVisibilityInBoat = true;
+        items.heldItemVisibilityInBoat = true;
         items.itemPickupPosition = false;
 
         final ScreenConfigCategory screen = config.screen;
@@ -238,6 +234,16 @@ public enum Version {
     }),
 
     V1_12((final AnimatiumConfig config) -> {
+        final MovementConfigCategory movement = config.movement;
+        // TODO
+
+        final ItemsConfigCategory items = config.items;
+        // TODO
+
+        final ScreenConfigCategory screen = config.screen;
+        // TODO
+
+        final OtherConfigCategory other = config.other;
         // TODO
     }),
 
@@ -264,36 +270,34 @@ public enum Version {
         movement.offsetHurtTime = false;
 
         final ItemsConfigCategory items = config.items;
-//        items.fishingRodTextureStackCheck = true;
-//        items.fishingRodLineInterpolation = true;
-//        items.noMoveFishingRodLine = false;
-//        items.fishingRodLinePositionThirdPerson = true;
-//        items.fishingRodLineThickness = true;
-//        items.thinFishingRodLineThickness = false;
+        items.fishingRodTextureStackCheck = false;
+        items.fishingRodLineInterpolation = false;
+        items.noMoveFishingRodLine = false;
+        items.fishingRodLinePositionThirdPerson = false;
+        items.fishingRodLineThickness = false;
+        items.thinFishingRodLineThickness = false;
         items.stickModelWhenCastInThirdperson = false;
-//        items.equipAnimationOnItemUse = false;
-//        items.itemUsageVisualInGUI = false;
-//        items.glintSpeed = true;
-//        items.glintOnItemDrops2D = true;
-//        items.glintOnItemFramed2D = true;
-//        items.itemDropsFaceCamera = true;
-//        items.itemDropsFaceCameraRotationFix = false;
-//        items.itemDrops2D = true;
-//        items.itemFramed2D = true;
-//        items.itemColors2D = true;
-//        items.itemPositions = true;
+        items.legacyGlintSpeed = false;
+//        items.glintOnItemDrops2D = true; // TODO
+//        items.glintOnItemFramed2D = true; // TODO
+        items.itemDropsFaceCamera = false;
+        items.itemDropsFaceCameraRotationFix = false;
+        items.itemDrops2D = false;
+        items.itemFramed2D = false;
+        items.itemColors2D = false;
+        items.itemPositions = false;
         items.itemPositionsInThirdPerson = false;
-//        items.thinBlockPositions = true;
-//        items.skullPosition = true;
+        items.thinBlockPositions = false;
+        items.skullPosition = false;
         items.fishingRodVersion = FishingRodVersion.VANILLA;
         items.itemUsageSwinging = false;
-//        items.swingOnUse = false;
-//        items.swingOnDrop = false;
-//        items.swingOnEntityInteract = false;
+        items.swingOnUse = true;
+        items.swingOnDrop = true;
+        items.swingOnEntityInteract = true;
         items.itemUsingTextureInGui = true;
         items.durabilityBarColors = false;
         items.legacyItemRarities = false;
-//        items.heldItemVisibilityInBoat = true;
+        items.heldItemVisibilityInBoat = false;
         items.itemPickupPosition = false;
 
         final ScreenConfigCategory screen = config.screen;
@@ -346,11 +350,11 @@ public enum Version {
         this.applier = applier;
     }
 
-    public void apply() {
-        this.applier.accept(AnimatiumConfig.instance());
+    public void apply(final AnimatiumConfig config) {
+        this.applier.accept(config);
 
         final Minecraft minecraft = Minecraft.getInstance();
-        minecraft.reloadResourcePacks();
         ((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
+        minecraft.reloadResourcePacks();
     }
 }

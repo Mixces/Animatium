@@ -37,6 +37,7 @@ import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
+import org.visuals.legacy.animatium.screens.OnboardingScreen;
 import org.visuals.legacy.animatium.util.config.ConfigUtil;
 
 import java.util.Random;
@@ -75,13 +76,20 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
             return Command.SINGLE_SUCCESS;
         }));
 
+        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("onboarding").executes((context) -> {
+            ConfigUtil.put("onboarding", true);
+            final Minecraft minecraft = context.getSource().getClient();
+            minecraft.schedule(() -> minecraft.setScreen(new OnboardingScreen(minecraft.screen)));
+            return Command.SINGLE_SUCCESS;
+        }));
+
         return command;
     }
 
     @Override
     public int run(CommandContext<FabricClientCommandSource> context) {
         context.getSource().sendFeedback(Component.literal("Opening config menu...").withColor(new Random().nextInt(0xFFFFFF)));
-        Minecraft minecraft = Minecraft.getInstance();
+        final Minecraft minecraft = context.getSource().getClient();
         minecraft.schedule(() -> minecraft.setScreen(AnimatiumConfig.getConfigScreen(null)));
         return Command.SINGLE_SUCCESS;
     }

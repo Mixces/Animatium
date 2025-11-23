@@ -98,14 +98,9 @@
 	"animatium.thinFishingRodLineThickness.description": "Makes the fishing rod line super thin. Overrides the above setting.",
 	"animatium.stickModelWhenCastInThirdperson": "[1.7] Use stick model in third-person whilst casted",
 	"animatium.stickModelWhenCastInThirdperson.description": "Makes the fishing rod model in third-person a stick when cast like in <=1.7.x.",
-	"animatium.category.items.group.item_fixes": "Fixes",
-	"animatium.equipAnimationOnItemUse": "[1.8] Toggle the equip animation when using a item",
-	"animatium.equipAnimationOnItemUse.description": "Enable/disable the equip animation when blocking/etc.",
-	"animatium.itemUsageVisualInGUI": "[*] Toggle item usage visual whilst in GUI",
-	"animatium.itemUsageVisualInGUI.description": "Enable/disable item usage animation whilst inside a GUI, for example the continuous visual blocking, etc.",
 	"animatium.category.items.group.glint": "Enchantment Glint",
-	"animatium.glintSpeed": "[1.8] Enchantment glint speed",
-	"animatium.glintSpeed.description": "Restores the old enchantment glint speed like in <=1.8.x.",
+	"animatium.legacyGlintSpeed": "[1.8] Enchantment glint speed",
+	"animatium.legacyGlintSpeed.description": "Restores the old enchantment glint speed like in <=1.8.x.",
 	"animatium.glintOnItemDrops2D": "[1.7] Toggle glint on dropped items",
 	"animatium.glintOnItemDrops2D.description": "Disables the enchantment glint on dropped items.\n\nNOTE: Intended to be used along side the 2D dropped items feature to match <1.7.x.",
 	"animatium.glintOnItemFramed2D": "[1.7] Toggle glint on framed items",
@@ -178,6 +173,10 @@
 	"animatium.fixVerticalBobbingTilt.description": "Brings back the camera tilting when falling/flying up like it was in <=1.13.x. (Fixes MC-225335)",
 	"animatium.upMinPixelTransparencyLimit": "[*] Up min pixel transparency limit",
 	"animatium.upMinPixelTransparencyLimit.description": "Makes the minimum 0-transparency value less than or equal to 0.1. This fixes textures with invisible pixels that cause issues.",
+	"animatium.fixEquipAnimationOnItemUse": "[1.8] Toggle the equip animation when using a item",
+	"animatium.fixEquipAnimationOnItemUse.description": "Enable/disable the equip animation when blocking/etc.",
+	"animatium.fixItemUsageVisualInGUI": "[*] Fix item usage visual whilst in GUI",
+	"animatium.fixItemUsageVisualInGUI.description": "Enable/disable item usage animation whilst inside a GUI, for example the continuous visual blocking, etc.",
 
 	"animatium.category.other": "Other",
 	"animatium.thirdPersonSwordBlockingPosition": "[1.7] Third-person arm block animation",
@@ -270,8 +269,5 @@
 	"animatium.dontCloseChat": "[*] Don't close chat",
 	"animatium.dontCloseChat.description": "Stops minecraft from closing the chat screen on teleport/some situations.",
 
-	"animatium.category.debug": "Animatium",
-	"animatium.miss_penalty.description": "animatium.miss_penalty.description",
-	"animatium.left_click_item_usage.description": "animatium.left_click_item_usage.description",
-	"animatium.hide_firstperson_rod_bobber.description": "animatium.hide_firstperson_rod_bobber.description"
+	"animatium.category.debug": "Animatium"
 }

@@ -26,20 +26,17 @@
 package org.visuals.legacy.animatium.util.enums;
 
 import lombok.Getter;
-import net.minecraft.network.chat.Component;
 
 @Getter
 public enum ServerFeature {
-    MISS_PENALTY("miss_penalty", Component.translatable("animatium.miss_penalty.description")),
-    LEFT_CLICK_ITEM_USAGE("left_click_item_usage", Component.translatable("animatium.left_click_item_usage.description")),
-    HIDE_FIRSTPERSON_ROD_BOBBER("hide_rod_bobber", Component.translatable("animatium.hide_firstperson_rod_bobber.description")); // TODO
+    MISS_PENALTY("miss_penalty"),
+    LEFT_CLICK_ITEM_USAGE("left_click_item_usage"),
+    HIDE_FIRSTPERSON_ROD_BOBBER("hide_rod_bobber");
 
     public static final ServerFeature[] VALUES = values();
     private final String id;
-    private final Component translate;
 
-    ServerFeature(String id, Component translate) {
+    ServerFeature(String id) {
         this.id = id;
-        this.translate = translate;
     }
 }

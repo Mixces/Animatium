@@ -45,9 +45,11 @@ public class FixesConfigCategory {
     public boolean fixHighAttackSpeedIndicator = true;
     public boolean fixVerticalBobbingTilt = true;
     public boolean upMinPixelTransparencyLimit = true;
+    public boolean fixEquipAnimationOnItemUse = true;
+    public boolean fixItemUsageVisualInGUI = true;
 
-    public static ConfigCategory setup(FixesConfigCategory defaults, FixesConfigCategory config) {
-        ConfigCategory.Builder category = ConfigCategory.createBuilder();
+    public static ConfigCategory setup(final FixesConfigCategory defaults, final FixesConfigCategory config) {
+        final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.fixes"));
         category.option(Option.<Boolean>createBuilder()
                 .name(Component.translatable("animatium.fixSneakingFeetPosition"))
@@ -151,6 +153,24 @@ public class FixesConfigCategory {
                             config.upMinPixelTransparencyLimit = newVal;
                             Minecraft.getInstance().reloadResourcePacks();
                         })
+                .controller(TickBoxControllerBuilder::create)
+                .build());
+        category.option(Option.<Boolean>createBuilder()
+                .name(Component.translatable("animatium.fixEquipAnimationOnItemUse"))
+                .description(OptionDescription.of(Component.translatable("animatium.fixEquipAnimationOnItemUse.description")))
+                .binding(
+                        defaults.fixEquipAnimationOnItemUse,
+                        () -> config.fixEquipAnimationOnItemUse,
+                        (newVal) -> config.fixEquipAnimationOnItemUse = newVal)
+                .controller(TickBoxControllerBuilder::create)
+                .build());
+        category.option(Option.<Boolean>createBuilder()
+                .name(Component.translatable("animatium.fixItemUsageVisualInGUI"))
+                .description(OptionDescription.of(Component.translatable("animatium.fixItemUsageVisualInGUI.description")))
+                .binding(
+                        defaults.fixItemUsageVisualInGUI,
+                        () -> config.fixItemUsageVisualInGUI,
+                        (newVal) -> config.fixItemUsageVisualInGUI = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         return category.build();
