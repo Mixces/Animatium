@@ -36,7 +36,6 @@ import net.minecraft.util.ARGB;
 import org.visuals.legacy.animatium.util.RenderUtils;
 import org.visuals.legacy.animatium.util.config.ConfigUtil;
 import org.visuals.legacy.animatium.util.config.Version;
-import org.visuals.legacy.animatium.util.config.VersionUtil;
 
 public class OnboardingScreen extends Screen {
     private final TitleScreen original;
@@ -44,6 +43,7 @@ public class OnboardingScreen extends Screen {
 
     private Button v1_7Button = null;
     private Button v1_8Button = null;
+    // private Button v1_12Button = null;
     private Button modernButton = null;
 
     public OnboardingScreen(TitleScreen original) {
@@ -61,13 +61,16 @@ public class OnboardingScreen extends Screen {
 
         this.original.init(this.minecraft, this.width, this.height);
 
-        final int buttonWidth = 120;
+        final int buttonWidth = 100;
         this.v1_7Button = this.addRenderableWidget(Button.builder(Component.literal("1.7"), button -> this.version = Version.V1_7)
                 .bounds(((this.width / 2) - (buttonWidth / 2) - (buttonWidth + Button.DEFAULT_SPACING)), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
                 .build());
         this.v1_8Button = this.addRenderableWidget(Button.builder(Component.literal("1.8"), button -> this.version = Version.V1_8)
                 .bounds((this.width / 2) - (buttonWidth / 2), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
                 .build());
+        // this.v1_12Button = this.addRenderableWidget(Button.builder(Component.literal("1.12"), button -> this.version = Version.V1_12)
+        //         .bounds((this.width / 2) - (buttonWidth / 2), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
+        //         .build());
         this.modernButton = this.addRenderableWidget(Button.builder(Component.literal("Modern"), button -> this.version = Version.MODERN)
                 .bounds(((this.width / 2) - (buttonWidth / 2) + (buttonWidth + Button.DEFAULT_SPACING)), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
                 .build());
@@ -75,7 +78,7 @@ public class OnboardingScreen extends Screen {
 
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> {
             ConfigUtil.put("onboarding", false);
-            VersionUtil.setVersion(this.version);
+            this.version.apply();
             this.minecraft.setScreen(this.original);
         }).pos((this.width / 2) - (Button.DEFAULT_WIDTH / 2), (int) (this.height / 1.2F)).build());
     }
@@ -115,6 +118,9 @@ public class OnboardingScreen extends Screen {
 
         this.v1_8Button.active = this.version != Version.V1_8;
         updateVersionButtonMessage(this.v1_8Button);
+
+        // this.v1_12.active = this.version != Version.V1_12;
+        // updateVersionButtonMessage(this.v1_12Button);
 
         this.modernButton.active = this.version != Version.MODERN;
         updateVersionButtonMessage(this.modernButton);

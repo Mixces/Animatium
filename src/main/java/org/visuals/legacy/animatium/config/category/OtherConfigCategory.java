@@ -37,7 +37,7 @@ public class OtherConfigCategory {
     public boolean lockBlockingArmRotation = true;
     public boolean projectileAgeCheck = false;
     public boolean blockMiningProgress = true;
-    public boolean inventoryEntityScissor = false;
+    public boolean disableInventoryEntityScissor = false;
     public boolean blockOutlineRendering = true;
     public boolean modelWhilstSleeping = false;
     public boolean entityArmorHurtTint = true;
@@ -45,7 +45,7 @@ public class OtherConfigCategory {
     public boolean maxGlintProperties = true;
     public boolean armorHurtRendering = false;
     public boolean highAttackSpeedVisual = false;
-    public boolean entityGlowOutline = true;
+    public boolean disableEntityGlowOutline = false;
     public boolean modernCombatSounds = true;
     public boolean modernCombatParticles = true; // TODO/NOTE: Fix, it's broken on servers
     public boolean restoreParticleBlending = true;
@@ -145,9 +145,9 @@ public class OtherConfigCategory {
                 .name(Component.translatable("animatium.inventoryEntityScissor"))
                 .description(OptionDescription.of(Component.translatable("animatium.inventoryEntityScissor.description")))
                 .binding(
-                        defaults.inventoryEntityScissor,
-                        () -> config.inventoryEntityScissor,
-                        (newVal) -> config.inventoryEntityScissor = newVal)
+                        defaults.disableInventoryEntityScissor,
+                        () -> config.disableInventoryEntityScissor,
+                        (newVal) -> config.disableInventoryEntityScissor = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
@@ -217,9 +217,9 @@ public class OtherConfigCategory {
                 .name(Component.translatable("animatium.entityGlowOutline"))
                 .description(OptionDescription.of(Component.translatable("animatium.entityGlowOutline.description")))
                 .binding(
-                        defaults.entityGlowOutline,
-                        () -> config.entityGlowOutline,
-                        (newVal) -> config.entityGlowOutline = newVal)
+                        defaults.disableEntityGlowOutline,
+                        () -> config.disableEntityGlowOutline,
+                        (newVal) -> config.disableEntityGlowOutline = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()

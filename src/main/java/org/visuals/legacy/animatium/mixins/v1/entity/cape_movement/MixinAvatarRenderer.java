@@ -75,7 +75,7 @@ public abstract class MixinAvatarRenderer<AvatarLikeEntity extends Avatar & Clie
 
     @ModifyArg(method = "extractCapeState", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F", ordinal = 1), index = 2)
     private static float animatium$uncapRotation(float original) {
-        if (Animatium.ENABLED && !AnimatiumConfig.instance().movement.clampCapeLean) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.disableCapeLean) {
             return Float.MAX_VALUE;
         } else {
             return original;

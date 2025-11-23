@@ -70,7 +70,7 @@ public class ItemsConfigCategory {
     public boolean swingOnEntityInteract = false;
     public boolean itemUsingTextureInGui = true;
     public boolean durabilityBarColors = true;
-    public boolean itemRarities = true;
+    public boolean legacyItemRarities = true;
     public boolean heldItemVisibilityInBoat = true;
     public boolean itemPickupPosition = true;
 
@@ -374,12 +374,12 @@ public class ItemsConfigCategory {
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.itemRarities"))
-                    .description(OptionDescription.of(Component.translatable("animatium.itemRarities.description")))
+                    .name(Component.translatable("animatium.legacyItemRarities"))
+                    .description(OptionDescription.of(Component.translatable("animatium.legacyItemRarities.description")))
                     .binding(
-                            defaults.itemRarities,
-                            () -> config.itemRarities,
-                            (newVal) -> config.itemRarities = newVal)
+                            defaults.legacyItemRarities,
+                            () -> config.legacyItemRarities,
+                            (newVal) -> config.legacyItemRarities = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             otherGroup.option(Option.<Boolean>createBuilder()

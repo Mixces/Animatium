@@ -43,7 +43,7 @@ public class MovementConfigCategory {
     public boolean sneakAnimationWhileFlying = true;
     // (Movement) Cape
     public boolean capeMovement = true;
-    public boolean clampCapeLean = false;
+    public boolean disableCapeLean = false;
     public boolean capeSwingRotation = true;
     public boolean capeChestplateTranslation = true;
     public boolean capeSneakPosition = true;
@@ -51,7 +51,7 @@ public class MovementConfigCategory {
     public boolean rotateBackwardsWalking = true;
     public boolean uncapBlockingHeadRotation = true;
     public boolean disableHeadRotationInterpolation = true;
-    public boolean viewBobbing = true;
+    public boolean handViewBobbingMovement = true;
     public boolean deathLimbs = true;
     public boolean bowArmMovement = true;
     public boolean legacyDamageTilt = true;
@@ -135,12 +135,12 @@ public class MovementConfigCategory {
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             capeGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.clampCapeLean"))
-                    .description(OptionDescription.of(Component.translatable("animatium.clampCapeLean.description")))
+                    .name(Component.translatable("animatium.disableCapeLean"))
+                    .description(OptionDescription.of(Component.translatable("animatium.disableCapeLean.description")))
                     .binding(
-                            defaults.clampCapeLean,
-                            () -> config.clampCapeLean,
-                            (newVal) -> config.clampCapeLean = newVal)
+                            defaults.disableCapeLean,
+                            () -> config.disableCapeLean,
+                            (newVal) -> config.disableCapeLean = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             capeGroup.option(Option.<Boolean>createBuilder()
@@ -205,12 +205,12 @@ public class MovementConfigCategory {
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.viewBobbing"))
-                    .description(OptionDescription.of(Component.translatable("animatium.viewBobbing.description")))
+                    .name(Component.translatable("animatium.handViewBobbingMovement"))
+                    .description(OptionDescription.of(Component.translatable("animatium.handViewBobbingMovement.description")))
                     .binding(
-                            defaults.viewBobbing,
-                            () -> config.viewBobbing,
-                            (newVal) -> config.viewBobbing = newVal)
+                            defaults.handViewBobbingMovement,
+                            () -> config.handViewBobbingMovement,
+                            (newVal) -> config.handViewBobbingMovement = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build());
             otherGroup.option(Option.<Boolean>createBuilder()

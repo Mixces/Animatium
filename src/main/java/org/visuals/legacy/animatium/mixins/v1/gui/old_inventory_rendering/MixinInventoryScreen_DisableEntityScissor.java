@@ -37,11 +37,11 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinInventoryScreen_DisableEntityScissor {
     @WrapWithCondition(method = "renderEntityInInventoryFollowsMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;enableScissor(IIII)V"))
     private static boolean animatium$entityScissor(GuiGraphics instance, int minX, int minY, int maxX, int maxY) {
-        return !Animatium.ENABLED || AnimatiumConfig.instance().other.inventoryEntityScissor;
+        return !Animatium.ENABLED || !AnimatiumConfig.instance().other.disableInventoryEntityScissor;
     }
 
     @WrapWithCondition(method = "renderEntityInInventoryFollowsMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;disableScissor()V"))
     private static boolean animatium$entityScissor(GuiGraphics instance) {
-        return !Animatium.ENABLED || AnimatiumConfig.instance().other.inventoryEntityScissor;
+        return !Animatium.ENABLED || !AnimatiumConfig.instance().other.disableInventoryEntityScissor;
     }
 }

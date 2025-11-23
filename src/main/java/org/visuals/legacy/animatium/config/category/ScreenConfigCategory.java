@@ -39,7 +39,7 @@ public class ScreenConfigCategory {
     public boolean heartFlash = true;
     public boolean centerScrollableListWidgets = true;
     public boolean listWidgetSelectedBorderColor = true;
-    public boolean buttonTextColors = true;
+    public boolean legacyButtonHoverTextColor = true;
     public boolean disableDebugHudBackground = true;
     public boolean debugHudTextShadow = true;
     public boolean cameraTransparentPassthrough = true;
@@ -92,12 +92,12 @@ public class ScreenConfigCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.buttonTextColors"))
-                .description(OptionDescription.of(Component.translatable("animatium.buttonTextColors.description")))
+                .name(Component.translatable("animatium.legacyButtonHoverTextColor"))
+                .description(OptionDescription.of(Component.translatable("animatium.legacyButtonHoverTextColor.description")))
                 .binding(
-                        defaults.buttonTextColors,
-                        () -> config.buttonTextColors,
-                        (newVal) -> config.buttonTextColors = newVal)
+                        defaults.legacyButtonHoverTextColor,
+                        () -> config.legacyButtonHoverTextColor,
+                        (newVal) -> config.legacyButtonHoverTextColor = newVal)
                 .controller(TickBoxControllerBuilder::create)
                 .build());
         category.option(Option.<Boolean>createBuilder()
