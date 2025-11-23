@@ -33,7 +33,7 @@ import org.visuals.legacy.animatium.Animatium;
 
 public record RequestInfoPayloadPacket() implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, RequestInfoPayloadPacket> CODEC = CustomPacketPayload.codec(null, RequestInfoPayloadPacket::read);
-    public static final Type<RequestInfoPayloadPacket> PAYLOAD_ID = new Type<>(Animatium.id("request_info"));
+    public static final Type<RequestInfoPayloadPacket> PAYLOAD_ID = new Type<>(Animatium.location("request_info"));
 
     private static RequestInfoPayloadPacket read(FriendlyByteBuf buffer) {
         return new RequestInfoPayloadPacket();

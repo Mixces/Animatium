@@ -77,8 +77,7 @@ public class Utils {
 
     public int getHandMultiplier(Player player) {
         final InteractionHand hand = MoreObjects.firstNonNull(player.swingingArm, InteractionHand.MAIN_HAND);
-        final int direction = getHandMultiplier(player, hand);
-        return (Minecraft.getInstance().options.getCameraType().isFirstPerson() ? 1 : -1) * direction;
+        return (Minecraft.getInstance().options.getCameraType().isFirstPerson() ? 1 : -1) * getHandMultiplier(player, hand);
     }
 
     public int getHandMultiplier(Player player, InteractionHand hand) {

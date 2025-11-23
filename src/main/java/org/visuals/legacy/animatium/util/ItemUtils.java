@@ -43,7 +43,7 @@ public class ItemUtils {
     }
 
     public boolean isAxeItem(ItemStack stack) {
-        return stack.is(ItemTags.AXES);
+        return stack.getItem() instanceof AxeItem || stack.is(ItemTags.AXES);
     }
 
     public boolean isPickaxeItem(ItemStack stack) {
@@ -51,11 +51,11 @@ public class ItemUtils {
     }
 
     public boolean isShovelItem(ItemStack stack) {
-        return stack.is(ItemTags.SHOVELS);
+        return stack.getItem() instanceof ShovelItem || stack.is(ItemTags.SHOVELS);
     }
 
     public boolean isHoeItem(ItemStack stack) {
-        return stack.is(ItemTags.HOES);
+        return stack.getItem() instanceof HoeItem || stack.is(ItemTags.HOES);
     }
 
     public boolean isDiggerItem(ItemStack stack) {
@@ -63,47 +63,32 @@ public class ItemUtils {
     }
 
     public boolean isShieldItem(ItemStack stack) {
-        return stack.is(Items.SHIELD);
+        return stack.getItem() instanceof ShieldItem || stack.is(Items.SHIELD);
     }
 
     public boolean isFishingRodItem(ItemStack stack) {
-        if (!stack.isEmpty()) {
-            final Item item = stack.getItem();
-            return item instanceof FishingRodItem ||
-                    item instanceof FoodOnAStickItem<?>;
-        } else {
-            return false;
-        }
+        final Item item = stack.getItem();
+        return item instanceof FishingRodItem || item instanceof FoodOnAStickItem<?>;
     }
 
     public boolean isRangedWeaponItem(ItemStack stack) {
-        if (!stack.isEmpty()) {
-            return stack.getItem() instanceof ProjectileWeaponItem;
-        } else {
-            return false;
-        }
+        return stack.getItem() instanceof ProjectileWeaponItem;
     }
 
     public boolean isHandheldItem(ItemStack stack) {
-        if (!stack.isEmpty()) {
-            return isDiggerItem(stack) ||
-                    isSwordItem(stack) ||
-                    isFishingRodItem(stack) ||
-                    List.of(Items.MACE, Items.TRIDENT, Items.STICK, Items.BREEZE_ROD, Items.BLAZE_ROD).contains(stack.getItem());
-        } else {
-            return false;
-        }
+        return isDiggerItem(stack) ||
+                isSwordItem(stack) ||
+                isFishingRodItem(stack) ||
+                List.of(Items.MACE, Items.TRIDENT, Items.STICK, Items.BREEZE_ROD, Items.BLAZE_ROD).contains(stack.getItem());
     }
 
     public boolean isThinBlockItem(ItemStack stack) {
-        if (!stack.isEmpty()) {
-            final Block block = Block.byItem(stack.getItem());
-            return block instanceof CarpetBlock ||
-                    block instanceof TrapDoorBlock || block instanceof PressurePlateBlock ||
-                    block instanceof SnowLayerBlock || block instanceof DaylightDetectorBlock;
-        } else {
-            return false;
-        }
+        final Block block = Block.byItem(stack.getItem());
+        return block instanceof CarpetBlock ||
+                block instanceof TrapDoorBlock ||
+                block instanceof PressurePlateBlock ||
+                block instanceof SnowLayerBlock ||
+                block instanceof DaylightDetectorBlock;
     }
 
     public boolean isSkullBlock(ItemStack stack) {

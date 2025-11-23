@@ -70,8 +70,8 @@ public enum Version {
         items.thinFishingRodLineThickness = false;
         items.stickModelWhenCastInThirdperson = true;
         items.legacyGlintSpeed = true;
-//        items.glintOnItemDrops2D = true; // TODO
-//        items.glintOnItemFramed2D = true; // TODO
+        items.glintOnItemDrops2D = true;
+        items.glintOnItemFramed2D = true;
         items.itemDropsFaceCamera = true;
         items.itemDropsFaceCameraRotationFix = false;
         items.itemDrops2D = true;
@@ -167,8 +167,8 @@ public enum Version {
         items.thinFishingRodLineThickness = false;
         items.stickModelWhenCastInThirdperson = false;
         items.legacyGlintSpeed = true;
-//        items.glintOnItemDrops2D = true; // TODO
-//        items.glintOnItemFramed2D = true; // TODO
+        items.glintOnItemDrops2D = false;
+        items.glintOnItemFramed2D = false;
         items.itemDropsFaceCamera = false;
         items.itemDropsFaceCameraRotationFix = false;
         items.itemDrops2D = false;
@@ -250,7 +250,7 @@ public enum Version {
     MODERN((final AnimatiumConfig config) -> {
         final MovementConfigCategory movement = config.movement;
         movement.smoothSneaking = true;
-        movement.sneakAnimationInterpolation = true;
+        movement.sneakAnimationInterpolation = false;
         movement.fakeOldSneakEyeHeight = false;
         movement.sneakingFeetPosition = false;
         movement.syncPlayerModelWithEyeHeight = false;
@@ -278,8 +278,8 @@ public enum Version {
         items.thinFishingRodLineThickness = false;
         items.stickModelWhenCastInThirdperson = false;
         items.legacyGlintSpeed = false;
-//        items.glintOnItemDrops2D = true; // TODO
-//        items.glintOnItemFramed2D = true; // TODO
+        items.glintOnItemDrops2D = false;
+        items.glintOnItemFramed2D = false;
         items.itemDropsFaceCamera = false;
         items.itemDropsFaceCameraRotationFix = false;
         items.itemDrops2D = false;

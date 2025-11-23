@@ -32,7 +32,6 @@ import org.visuals.legacy.animatium.packet.AnimatiumInfoPayloadPacket;
 import org.visuals.legacy.animatium.util.config.ConfigUtil;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
-import java.io.IOException;
 import java.util.EnumSet;
 
 @UtilityClass
@@ -48,7 +47,7 @@ public final class Animatium {
         return new AnimatiumInfoPayloadPacket(VERSION, DEVELOPMENT_VERSION.isEmpty() ? null : DEVELOPMENT_VERSION);
     }
 
-    public ResourceLocation id(String path) {
+    public ResourceLocation location(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
 
@@ -56,8 +55,9 @@ public final class Animatium {
         AnimatiumConfig.load();
         try {
             ConfigUtil.load();
-        } catch (IOException ignored) {
-            Animatium.ENABLED = true;
+            System.err.println("Successfully loaded the animatium utility config!");
+        } catch (Exception ignored) {
+            Animatium.ENABLED = ConfigUtil.bool("enabled");
             System.err.println("Failed to load animatium utility config, defaulting...");
         }
     }

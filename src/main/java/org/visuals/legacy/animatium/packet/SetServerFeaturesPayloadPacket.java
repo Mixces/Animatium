@@ -38,7 +38,7 @@ import java.util.Optional;
 
 public record SetServerFeaturesPayloadPacket(EnumSet<ServerFeature> features) implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, SetServerFeaturesPayloadPacket> CODEC = CustomPacketPayload.codec(null, SetServerFeaturesPayloadPacket::read);
-    public static final Type<SetServerFeaturesPayloadPacket> PAYLOAD_ID = new Type<>(Animatium.id("set_features"));
+    public static final Type<SetServerFeaturesPayloadPacket> PAYLOAD_ID = new Type<>(Animatium.location("set_features"));
 
     private static SetServerFeaturesPayloadPacket read(FriendlyByteBuf buffer) {
         buffer.markReaderIndex();

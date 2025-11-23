@@ -50,21 +50,21 @@ import java.util.function.Consumer;
 public class SkyRendererUtility {
     private final RenderPipeline.Snippet LEGACY_SKY_PIPELINE_SNIPPET =
             RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
-                    .withLocation(Animatium.id("pipeline/legacy_sky"))
-                    .withVertexShader(Animatium.id("core/legacy_sky"))
-                    .withFragmentShader(Animatium.id("core/legacy_sky"))
+                    .withLocation(Animatium.location("pipeline/legacy_sky"))
+                    .withVertexShader(Animatium.location("core/legacy_sky"))
+                    .withFragmentShader(Animatium.location("core/legacy_sky"))
                     .withDepthWrite(false)
                     .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
                     .buildSnippet();
 
     public final RenderPipeline LEGACY_SKY_PIPELINE =
             RenderPipelines.register(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
-                    .withLocation(Animatium.id("pipeline/legacy_sky"))
+                    .withLocation(Animatium.location("pipeline/legacy_sky"))
                     .build());
 
     public final RenderPipeline LEGACY_SKY_PLANAR_FOG_PIPELINE =
             RenderPipelines.register(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
-                    .withLocation(Animatium.id("pipeline/legacy_sky_planar_fog"))
+                    .withLocation(Animatium.location("pipeline/legacy_sky_planar_fog"))
                     .withShaderDefine("PLANAR_FOG")
                     .build());
 

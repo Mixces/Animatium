@@ -48,8 +48,10 @@ import java.util.function.Consumer;
 
 @UtilityClass
 public class RenderUtils {
+    // TODO/NOTE: To be removed in 1.21.11+
     private float LINE_WIDTH = -1.0F;
 
+    // TODO/NOTE: To be removed in 1.21.11+
     public float getLineWidth(Float def) {
         if (LINE_WIDTH == -1.0F) {
             return def == null ? RenderSystem.getShaderLineWidth() : def;
@@ -58,6 +60,7 @@ public class RenderUtils {
         }
     }
 
+    // TODO/NOTE: To be removed in 1.21.11+
     public void setLineWidth(float width) {
         LINE_WIDTH = width;
     }
@@ -99,8 +102,8 @@ public class RenderUtils {
     }
 
     public void drawBuffer(RenderPipeline renderPipeline, RenderTarget renderTarget, MeshData meshData, Consumer<RenderPass> renderPassConsumer) {
-        GpuBufferSlice dynamicTransforms = DynamicTransformsBuilder.of().build();
         try {
+            GpuBufferSlice dynamicTransforms = DynamicTransformsBuilder.of().build();
             GpuBuffer vertexBuffer = renderPipeline.getVertexFormat().uploadImmediateVertexBuffer(meshData.vertexBuffer());
             GpuBuffer indexBuffer;
             VertexFormat.IndexType indexType;

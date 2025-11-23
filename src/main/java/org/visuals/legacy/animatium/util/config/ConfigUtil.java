@@ -33,7 +33,6 @@ import lombok.experimental.UtilityClass;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 
 @UtilityClass
@@ -43,17 +42,16 @@ public class ConfigUtil {
     private JsonObject data = new JsonObject();
 
     static {
+        // Defaults
         data.addProperty("enabled", true);
         data.addProperty("onboarding", true);
     }
 
-    public static void load() throws IOException {
+    public static void load() throws Exception {
         if (CONFIG_FILE.exists()) {
             data = GSON.fromJson(Files.readString(CONFIG_FILE.toPath()), JsonObject.class);
-        } else {
-            if (!save()) {
-                System.err.println("Failed to save animatium utility config...");
-            }
+        } else if (!save()) {
+            throw new Exception("Failed to save animatium utility config...");
         }
     }
 

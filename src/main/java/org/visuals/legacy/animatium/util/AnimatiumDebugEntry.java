@@ -41,7 +41,7 @@ import java.util.List;
 
 public class AnimatiumDebugEntry implements DebugScreenEntry {
     public static final DebugEntryCategory CATEGORY = new DebugEntryCategory(Component.translatable("animatium.category.debug"), 9999.0F);
-    public static final ResourceLocation GROUP = Animatium.id("debug");
+    public static final ResourceLocation GROUP = Animatium.location("debug");
 
     @Override
     public void display(DebugScreenDisplayer debugScreenDisplayer, @Nullable Level level, @Nullable LevelChunk levelChunk, @Nullable LevelChunk levelChunk2) {
