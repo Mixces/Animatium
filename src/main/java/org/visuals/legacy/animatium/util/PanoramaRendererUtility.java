@@ -71,7 +71,7 @@ public class PanoramaRendererUtility {
      * In PanoramaRenderer, before ``cubeMap.render``, set viewPort to (0, 0, 256, 256)
      * then call this method after ``cubeMap.render``
      *
-     * @param matrix      The GUI matrix
+     * @param matrix      The 2D GUI matrix
      * @param textureView The texture we are drawing to
      * @param width       Screen width
      * @param height      Screen Height
@@ -82,7 +82,7 @@ public class PanoramaRendererUtility {
             writeAndBlitBlurTexture(matrix, renderTarget, textureView, width, height);
         }
 
-        renderFinalTexture(renderTarget, textureView, width, height);
+        renderFinalTexture(matrix, renderTarget, textureView, width, height);
     }
 
     private void writeAndBlitBlurTexture(Matrix3x2f matrix, RenderTarget renderTarget, GlTextureView texture, int width, int height) {
@@ -118,12 +118,13 @@ public class PanoramaRendererUtility {
     /**
      * Renders the final full image to the screen
      *
+     * @param matrix       The 2D GUI matrix
      * @param renderTarget The render target we are drawing to
      * @param texture      The temporary texture
      * @param width        Screen width
      * @param height       Screen height
      */
-    private void renderFinalTexture(RenderTarget renderTarget, GlTextureView texture, int width, int height) {
+    private void renderFinalTexture(Matrix3x2f matrix, RenderTarget renderTarget, GlTextureView texture, int width, int height) {
         float aspect = 120.0F / (float) (Math.max(width, height));
         float sw = (float) width * aspect / 256.0F;
         float sh = (float) height * aspect / 256.0F;
@@ -131,10 +132,10 @@ public class PanoramaRendererUtility {
         final RenderPipeline pipeline = BASIC_TEXTURED_PIPELINE;
         try (ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(pipeline.getVertexFormat().getVertexSize() * 4)) {
             final BufferBuilder bufferBuilder = new BufferBuilder(byteBufferBuilder, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
-            bufferBuilder.addVertex(0.0F, height, 0.0F).setUv(0.5F - sh, 0.5F + sw).setColor(color);
-            bufferBuilder.addVertex(width, height, 0.0F).setUv(0.5F - sh, 0.5F - sw).setColor(color);
-            bufferBuilder.addVertex(width, 0.0F, 0.0F).setUv(0.5F + sh, 0.5F - sw).setColor(color);
-            bufferBuilder.addVertex(0.0F, 0.0F, 0.0F).setUv(0.5F + sh, 0.5F + sw).setColor(color);
+            bufferBuilder.addVertexWith2DPose(matrix, 0.0F, height).setUv(0.5F - sh, 0.5F + sw).setColor(color);
+            bufferBuilder.addVertexWith2DPose(matrix, width, height).setUv(0.5F - sh, 0.5F - sw).setColor(color);
+            bufferBuilder.addVertexWith2DPose(matrix, width, 0.0F).setUv(0.5F + sh, 0.5F - sw).setColor(color);
+            bufferBuilder.addVertexWith2DPose(matrix, 0.0F, 0.0F).setUv(0.5F + sh, 0.5F + sw).setColor(color);
             RenderUtils.drawBuffer(pipeline, renderTarget, bufferBuilder.buildOrThrow(), (pass) -> pass.bindSampler("Sampler0", texture));
         }
     }
