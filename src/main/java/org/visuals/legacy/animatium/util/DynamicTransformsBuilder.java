@@ -27,6 +27,7 @@ package org.visuals.legacy.animatium.util;
 
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.util.ARGB;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -51,6 +52,10 @@ public class DynamicTransformsBuilder {
     public DynamicTransformsBuilder withShaderColor(Vector4f vector4f) {
         this.colorModulator = Optional.of(vector4f);
         return this;
+    }
+
+    public DynamicTransformsBuilder withShaderColor(int color) {
+        return this.withShaderColor(new Vector4f(ARGB.redFloat(color), ARGB.greenFloat(color), ARGB.blueFloat(color), ARGB.alphaFloat(color)));
     }
 
     public DynamicTransformsBuilder withShaderColor(float red, float green, float blue) {

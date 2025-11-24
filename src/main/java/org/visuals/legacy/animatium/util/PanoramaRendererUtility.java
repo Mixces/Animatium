@@ -37,15 +37,18 @@ import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.textures.TextureFormat;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.gui.render.TextureSetup;
+import net.minecraft.client.gui.render.state.GuiElementRenderState;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2f;
 import org.visuals.legacy.animatium.Animatium;
 
@@ -60,18 +63,6 @@ public class PanoramaRendererUtility {
                     .withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
                     .buildSnippet();
 
-    private final RenderPipeline BLUR_TEXTURED_PIPELINE =
-            RenderPipeline.builder(TEXTURE_SNIPPET)
-                    .withLocation(Animatium.location("pipeline/blur_texture"))
-                    .withColorWrite(true, false)
-                    .withBlend(new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO))
-                    .build();
-
-    private final RenderPipeline BASIC_TEXTURED_PIPELINE =
-            RenderPipeline.builder(TEXTURE_SNIPPET)
-                    .withLocation(Animatium.location("pipeline/basic_texture"))
-                    .build();
-
     private GpuTextureView backgroundTextureView = null;
     private float spin = 0.0F;
 
@@ -81,8 +72,8 @@ public class PanoramaRendererUtility {
     public void setup() {
         if (backgroundTextureView == null) {
             final GpuDevice device = RenderSystem.getDevice();
-            final GpuTexture animatium$backgroundTexture = device.createTexture(() -> "Background texture", 15, TextureFormat.RGBA8, 256, 256, 1, 1);
-            backgroundTextureView = device.createTextureView(animatium$backgroundTexture);
+            final GpuTexture backgroundTexture = device.createTexture(() -> "Background texture", 15, TextureFormat.RGBA8, 256, 256, 1, 1);
+            backgroundTextureView = device.createTextureView(backgroundTexture);
         }
 
         GlStateManager._viewport(0, 0, 256, 256);
@@ -91,17 +82,28 @@ public class PanoramaRendererUtility {
     /**
      * In PanoramaRenderer, call this method after ``cubeMap.render``
      *
-     * @param matrix The 2D GUI matrix
-     * @param width  Screen width
-     * @param height Screen Height
+     * @param guiGraphics The GuiGraphics
+     * @param width       Screen width
+     * @param height      Screen Height
      */
-    public void render(Matrix3x2f matrix, int width, int height) {
+    public void render(GuiGraphics guiGraphics, int width, int height) {
         final RenderTarget renderTarget = Minecraft.getInstance().getMainRenderTarget();
         for (int i = 0; i < 7; ++i) {
-            writeAndBlitBlurTexture(matrix, renderTarget, backgroundTextureView, width, height);
+            writeAndBlitBlurTexture(guiGraphics, renderTarget, backgroundTextureView, width, height);
         }
 
-        renderFinalTexture(matrix, renderTarget, backgroundTextureView, width, height);
+        final FinalTextureBlit blurTextureBlit = new FinalTextureBlit(guiGraphics.pose(), backgroundTextureView, width, height, 120.0F / (float) (Math.max(width, height)));
+        try (ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(blurTextureBlit.pipeline().getVertexFormat().getVertexSize() * 4)) {
+            final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, blurTextureBlit.pipeline().getVertexFormatMode(), blurTextureBlit.pipeline().getVertexFormat());
+            blurTextureBlit.buildVertices(builder);
+            RenderUtils.drawBuffer(
+                    blurTextureBlit.pipeline(),
+                    renderTarget,
+                    builder.buildOrThrow(),
+                    DynamicTransformsBuilder.of().build(),
+                    (pass) -> pass.bindSampler("Sampler0", blurTextureBlit.textureSetup().texure0())
+            );
+        }
     }
 
     /**
@@ -124,13 +126,13 @@ public class PanoramaRendererUtility {
     /**
      * Render & Blur the texture
      *
-     * @param matrix       The 2D GUI matrix
+     * @param guiGraphics  The GuiGraphics
      * @param renderTarget The texture we are drawing to
      * @param texture      The temporary texture
      * @param width        Screen width
      * @param height       Screen Height
      */
-    private void writeAndBlitBlurTexture(Matrix3x2f matrix, RenderTarget renderTarget, GpuTextureView texture, int width, int height) {
+    private void writeAndBlitBlurTexture(GuiGraphics guiGraphics, RenderTarget renderTarget, GpuTextureView texture, int width, int height) {
         texture.texture().setTextureFilter(FilterMode.LINEAR, FilterMode.LINEAR, false);
         // Ensures enough width/height for it to not crash when window is resized
         if (renderTarget.width >= 256 && renderTarget.height >= 256) {
@@ -144,44 +146,96 @@ public class PanoramaRendererUtility {
             );
         }
 
-        final RenderPipeline pipeline = BLUR_TEXTURED_PIPELINE;
-        try (ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(pipeline.getVertexFormat().getVertexSize() * 12)) {
-            final BufferBuilder bufferBuilder = new BufferBuilder(byteBufferBuilder, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
-            for (int i = 0; i < 3; ++i) {
-                final float growth = (float) (i - 1) / 256.0F;
-                final int color = ARGB.colorFromFloat(1.0F / (float) (i + 1), 1.0F, 1.0F, 1.0F);
-                bufferBuilder.addVertexWith2DPose(matrix, width, height).setUv(0.0F + growth, 1.0F).setColor(color);
-                bufferBuilder.addVertexWith2DPose(matrix, width, 0.0F).setUv(1.0F + growth, 1.0F).setColor(color);
-                bufferBuilder.addVertexWith2DPose(matrix, 0.0F, 0.0F).setUv(1.0F + growth, 0.0F).setColor(color);
-                bufferBuilder.addVertexWith2DPose(matrix, 0.0F, height).setUv(0.0F + growth, 0.0F).setColor(color);
-            }
-
-            RenderUtils.drawBuffer(pipeline, renderTarget, bufferBuilder.buildOrThrow(), (pass) -> pass.bindSampler("Sampler0", texture));
+        final BlurTextureBlit blurTextureBlit = new BlurTextureBlit(guiGraphics.pose(), texture, width, height);
+        try (ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(blurTextureBlit.pipeline().getVertexFormat().getVertexSize() * 12)) {
+            final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, blurTextureBlit.pipeline().getVertexFormatMode(), blurTextureBlit.pipeline().getVertexFormat());
+            blurTextureBlit.buildVertices(builder);
+            RenderUtils.drawBuffer(
+                    blurTextureBlit.pipeline(),
+                    renderTarget,
+                    builder.buildOrThrow(),
+                    DynamicTransformsBuilder.of().build(),
+                    (pass) -> pass.bindSampler("Sampler0", blurTextureBlit.textureSetup().texure0())
+            );
         }
     }
 
-    /**
-     * Renders the final full image to the screen
-     *
-     * @param matrix       The 2D GUI matrix
-     * @param renderTarget The render target we are drawing to
-     * @param texture      The temporary texture
-     * @param width        Screen width
-     * @param height       Screen height
-     */
-    private void renderFinalTexture(Matrix3x2f matrix, RenderTarget renderTarget, GpuTextureView texture, int width, int height) {
-        float aspect = 120.0F / (float) (Math.max(width, height));
-        float sw = (float) width * aspect / 256.0F;
-        float sh = (float) height * aspect / 256.0F;
-        final int color = ARGB.white(1.0F);
-        final RenderPipeline pipeline = BASIC_TEXTURED_PIPELINE;
-        try (ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(pipeline.getVertexFormat().getVertexSize() * 4)) {
-            final BufferBuilder bufferBuilder = new BufferBuilder(byteBufferBuilder, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
-            bufferBuilder.addVertexWith2DPose(matrix, 0.0F, height).setUv(0.5F - sh, 0.5F + sw).setColor(color);
-            bufferBuilder.addVertexWith2DPose(matrix, width, height).setUv(0.5F - sh, 0.5F - sw).setColor(color);
-            bufferBuilder.addVertexWith2DPose(matrix, width, 0.0F).setUv(0.5F + sh, 0.5F - sw).setColor(color);
-            bufferBuilder.addVertexWith2DPose(matrix, 0.0F, 0.0F).setUv(0.5F + sh, 0.5F + sw).setColor(color);
-            RenderUtils.drawBuffer(pipeline, renderTarget, bufferBuilder.buildOrThrow(), (pass) -> pass.bindSampler("Sampler0", texture));
+    private record BlurTextureBlit(Matrix3x2f pose, GpuTextureView textureView, int width, int height) implements GuiElementRenderState {
+        private static final RenderPipeline BLUR_TEXTURED_PIPELINE =
+                RenderPipeline.builder(TEXTURE_SNIPPET)
+                        .withLocation(Animatium.location("pipeline/blur_texture"))
+                        .withColorWrite(true, false)
+                        .withBlend(new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO))
+                        .build();
+
+        @Override
+        public void buildVertices(VertexConsumer consumer) {
+            for (int i = 0; i < 3; ++i) {
+                final float growth = (float) (i - 1) / 256.0F;
+                final int color = ARGB.white(1.0F / (float) (i + 1));
+                consumer.addVertexWith2DPose(this.pose, this.width, this.height).setUv(0.0F + growth, 1.0F).setColor(color);
+                consumer.addVertexWith2DPose(this.pose, this.width, 0.0F).setUv(1.0F + growth, 1.0F).setColor(color);
+                consumer.addVertexWith2DPose(this.pose, 0.0F, 0.0F).setUv(1.0F + growth, 0.0F).setColor(color);
+                consumer.addVertexWith2DPose(this.pose, 0.0F, this.height).setUv(0.0F + growth, 0.0F).setColor(color);
+            }
+        }
+
+        @Override
+        public @NotNull RenderPipeline pipeline() {
+            return BLUR_TEXTURED_PIPELINE;
+        }
+
+        @Override
+        public @NotNull TextureSetup textureSetup() {
+            return TextureSetup.singleTexture(this.textureView);
+        }
+
+        @Override
+        public @Nullable ScreenRectangle scissorArea() {
+            return null;
+        }
+
+        @Override
+        public @NotNull ScreenRectangle bounds() {
+            return new ScreenRectangle(0, 0, this.width, this.height).transformMaxBounds(pose);
+        }
+    }
+
+    private record FinalTextureBlit(Matrix3x2f pose, GpuTextureView textureView, int width, int height, float aspect) implements GuiElementRenderState {
+        private static final RenderPipeline BASIC_TEXTURED_PIPELINE =
+                RenderPipeline.builder(TEXTURE_SNIPPET)
+                        .withLocation(Animatium.location("pipeline/basic_texture"))
+                        .build();
+
+        @Override
+        public void buildVertices(VertexConsumer consumer) {
+            final int color = ARGB.white(1.0F);
+            final float sw = (float) this.width * this.aspect / 256.0F;
+            final float sh = (float) this.height * this.aspect / 256.0F;
+            consumer.addVertexWith2DPose(this.pose, 0.0F, this.height).setUv(0.5F - sh, 0.5F + sw).setColor(color);
+            consumer.addVertexWith2DPose(this.pose, this.width, this.height).setUv(0.5F - sh, 0.5F - sw).setColor(color);
+            consumer.addVertexWith2DPose(this.pose, this.width, 0.0F).setUv(0.5F + sh, 0.5F - sw).setColor(color);
+            consumer.addVertexWith2DPose(this.pose, 0.0F, 0.0F).setUv(0.5F + sh, 0.5F + sw).setColor(color);
+        }
+
+        @Override
+        public @NotNull RenderPipeline pipeline() {
+            return BASIC_TEXTURED_PIPELINE;
+        }
+
+        @Override
+        public @NotNull TextureSetup textureSetup() {
+            return TextureSetup.singleTexture(this.textureView);
+        }
+
+        @Override
+        public @Nullable ScreenRectangle scissorArea() {
+            return null;
+        }
+
+        @Override
+        public @NotNull ScreenRectangle bounds() {
+            return new ScreenRectangle(0, 0, this.width, this.height).transformMaxBounds(pose);
         }
     }
 }

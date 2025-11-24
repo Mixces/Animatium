@@ -65,7 +65,7 @@ public abstract class MixinPanoramaRenderer_LegacyRendering {
 
         original.call(instance, minecraft, xRot, yRot);
         if (enabled) {
-            PanoramaRendererUtility.render(guiGraphics.pose(), width, height);
+            PanoramaRendererUtility.render(guiGraphics, width, height);
         }
     }
 

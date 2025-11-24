@@ -91,7 +91,7 @@ public class SkyRendererUtility {
         modelViewStack.pushMatrix();
         modelViewStack.translate(0.0F, AnimatiumConfig.instance().extras.dontMoveBlueVoid ? 12.0F : -((float) (depth - 16.0)), 0.0F);
 
-        GpuBufferSlice transforms = DynamicTransformsBuilder.of()
+        final GpuBufferSlice transforms = DynamicTransformsBuilder.of()
                 .withShaderColor(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F)
                 .build();
 

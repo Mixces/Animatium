@@ -101,9 +101,14 @@ public class RenderUtils {
         stack.popMatrix();
     }
 
-    public void drawBuffer(RenderPipeline renderPipeline, RenderTarget renderTarget, MeshData meshData, Consumer<RenderPass> renderPassConsumer) {
+    public void drawBuffer(
+            RenderPipeline renderPipeline,
+            RenderTarget renderTarget,
+            MeshData meshData,
+            GpuBufferSlice dynamicTransforms,
+            Consumer<RenderPass> renderPassConsumer
+    ) {
         try {
-            GpuBufferSlice dynamicTransforms = DynamicTransformsBuilder.of().build();
             GpuBuffer vertexBuffer = renderPipeline.getVertexFormat().uploadImmediateVertexBuffer(meshData.vertexBuffer());
             GpuBuffer indexBuffer;
             VertexFormat.IndexType indexType;
@@ -120,18 +125,18 @@ public class RenderUtils {
             GpuTextureView depthTextureView = renderTarget.useDepth ? (RenderSystem.outputDepthTextureOverride != null ? RenderSystem.outputDepthTextureOverride : renderTarget.getDepthTextureView()) : null;
             try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Immediate draw for " + renderPipeline, colorTextureView, OptionalInt.empty(), depthTextureView, OptionalDouble.empty())) {
                 renderPass.setPipeline(renderPipeline);
+
+                RenderSystem.bindDefaultUniforms(renderPass);
+                renderPass.setUniform("DynamicTransforms", dynamicTransforms);
+                renderPass.setVertexBuffer(0, vertexBuffer);
                 for (int i = 0; i < 12; ++i) {
-                    GpuTextureView textureView = RenderSystem.getShaderTexture(i);
-                    if (textureView != null) {
-                        renderPass.bindSampler("Sampler" + i, textureView);
+                    final GpuTextureView shaderTexture = RenderSystem.getShaderTexture(i);
+                    if (shaderTexture != null) {
+                        renderPass.bindSampler("Sampler" + i, shaderTexture);
                     }
                 }
 
-                renderPass.setUniform("DynamicTransforms", dynamicTransforms);
                 renderPassConsumer.accept(renderPass);
-
-                RenderSystem.bindDefaultUniforms(renderPass);
-                renderPass.setVertexBuffer(0, vertexBuffer);
                 renderPass.setIndexBuffer(indexBuffer, indexType);
                 renderPass.drawIndexed(0, 0, meshData.drawState().indexCount(), 1);
             }
@@ -139,8 +144,8 @@ public class RenderUtils {
             if (meshData != null) {
                 try {
                     meshData.close();
-                } catch (Throwable var14) {
-                    throwable.addSuppressed(var14);
+                } catch (Throwable meshDataThrowable) {
+                    throwable.addSuppressed(meshDataThrowable);
                 }
             }
 
