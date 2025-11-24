@@ -89,19 +89,30 @@ public class PanoramaRendererUtility {
     public void render(GuiGraphics guiGraphics, int width, int height) {
         final RenderTarget renderTarget = Minecraft.getInstance().getMainRenderTarget();
         for (int i = 0; i < 7; ++i) {
-            writeAndBlitBlurTexture(guiGraphics, renderTarget, backgroundTextureView, width, height);
+            final BlurTextureBlit blurTextureBlit = new BlurTextureBlit(guiGraphics.pose(), renderTarget, backgroundTextureView, width, height);
+            try (ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(blurTextureBlit.pipeline().getVertexFormat().getVertexSize() * 12)) {
+                final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, blurTextureBlit.pipeline().getVertexFormatMode(), blurTextureBlit.pipeline().getVertexFormat());
+                blurTextureBlit.buildVertices(builder);
+                RenderUtils.drawBuffer(
+                        blurTextureBlit.pipeline(),
+                        renderTarget,
+                        builder.buildOrThrow(),
+                        DynamicTransformsBuilder.of().build(),
+                        (pass) -> pass.bindSampler("Sampler0", blurTextureBlit.textureSetup().texure0())
+                );
+            }
         }
 
-        final FinalTextureBlit blurTextureBlit = new FinalTextureBlit(guiGraphics.pose(), backgroundTextureView, width, height, 120.0F / (float) (Math.max(width, height)));
-        try (ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(blurTextureBlit.pipeline().getVertexFormat().getVertexSize() * 4)) {
-            final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, blurTextureBlit.pipeline().getVertexFormatMode(), blurTextureBlit.pipeline().getVertexFormat());
-            blurTextureBlit.buildVertices(builder);
+        final FinalTextureBlit finalTextureBlit = new FinalTextureBlit(guiGraphics.pose(), backgroundTextureView, width, height, 120.0F / (float) (Math.max(width, height)));
+        try (ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(finalTextureBlit.pipeline().getVertexFormat().getVertexSize() * 4)) {
+            final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, finalTextureBlit.pipeline().getVertexFormatMode(), finalTextureBlit.pipeline().getVertexFormat());
+            finalTextureBlit.buildVertices(builder);
             RenderUtils.drawBuffer(
-                    blurTextureBlit.pipeline(),
+                    finalTextureBlit.pipeline(),
                     renderTarget,
                     builder.buildOrThrow(),
                     DynamicTransformsBuilder.of().build(),
-                    (pass) -> pass.bindSampler("Sampler0", blurTextureBlit.textureSetup().texure0())
+                    (pass) -> pass.bindSampler("Sampler0", finalTextureBlit.textureSetup().texure0())
             );
         }
     }
@@ -123,50 +134,28 @@ public class PanoramaRendererUtility {
         return -spin * 0.1F;
     }
 
-    /**
-     * Render & Blur the texture
-     *
-     * @param guiGraphics  The GuiGraphics
-     * @param renderTarget The texture we are drawing to
-     * @param texture      The temporary texture
-     * @param width        Screen width
-     * @param height       Screen Height
-     */
-    private void writeAndBlitBlurTexture(GuiGraphics guiGraphics, RenderTarget renderTarget, GpuTextureView texture, int width, int height) {
-        texture.texture().setTextureFilter(FilterMode.LINEAR, FilterMode.LINEAR, false);
-        // Ensures enough width/height for it to not crash when window is resized
-        if (renderTarget.width >= 256 && renderTarget.height >= 256) {
-            RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(
-                    renderTarget.getColorTexture(),
-                    texture.texture(),
-                    0, // mips?
-                    0, 0, // srcXY
-                    0, 0, // dstXY
-                    256, 256 // w/h
-            );
-        }
-
-        final BlurTextureBlit blurTextureBlit = new BlurTextureBlit(guiGraphics.pose(), texture, width, height);
-        try (ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(blurTextureBlit.pipeline().getVertexFormat().getVertexSize() * 12)) {
-            final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, blurTextureBlit.pipeline().getVertexFormatMode(), blurTextureBlit.pipeline().getVertexFormat());
-            blurTextureBlit.buildVertices(builder);
-            RenderUtils.drawBuffer(
-                    blurTextureBlit.pipeline(),
-                    renderTarget,
-                    builder.buildOrThrow(),
-                    DynamicTransformsBuilder.of().build(),
-                    (pass) -> pass.bindSampler("Sampler0", blurTextureBlit.textureSetup().texure0())
-            );
-        }
-    }
-
-    private record BlurTextureBlit(Matrix3x2f pose, GpuTextureView textureView, int width, int height) implements GuiElementRenderState {
+    private record BlurTextureBlit(Matrix3x2f pose, RenderTarget renderTarget, GpuTextureView textureView, int width, int height) implements GuiElementRenderState {
         private static final RenderPipeline BLUR_TEXTURED_PIPELINE =
                 RenderPipeline.builder(TEXTURE_SNIPPET)
                         .withLocation(Animatium.location("pipeline/blur_texture"))
                         .withColorWrite(true, false)
                         .withBlend(new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO))
                         .build();
+
+        public BlurTextureBlit {
+            textureView.texture().setTextureFilter(FilterMode.LINEAR, FilterMode.LINEAR, false);
+            // Ensures enough width/height for it to not crash when window is resized
+            if (renderTarget.width >= 256 && renderTarget.height >= 256) {
+                RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(
+                        renderTarget.getColorTexture(),
+                        textureView.texture(),
+                        0, // mips?
+                        0, 0, // srcXY
+                        0, 0, // dstXY
+                        256, 256 // w/h
+                );
+            }
+        }
 
         @Override
         public void buildVertices(VertexConsumer consumer) {
