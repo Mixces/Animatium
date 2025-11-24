@@ -26,8 +26,6 @@
 package org.visuals.legacy.animatium.util;
 
 import com.mojang.blaze3d.opengl.GlStateManager;
-import com.mojang.blaze3d.opengl.GlTexture;
-import com.mojang.blaze3d.opengl.GlTextureView;
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
@@ -36,6 +34,8 @@ import com.mojang.blaze3d.platform.SourceFactor;
 import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.FilterMode;
+import com.mojang.blaze3d.textures.GpuTexture;
+import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.textures.TextureFormat;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
@@ -72,22 +72,24 @@ public class PanoramaRendererUtility {
                     .withLocation(Animatium.location("pipeline/basic_texture"))
                     .build();
 
-    private GlTextureView backgroundTextureView = null;
+    private GpuTextureView backgroundTextureView = null;
     private float spin = 0.0F;
 
+    /**
+     * In PanoramaRenderer, call this method before ``cubeMap.render``
+     */
     public void setup() {
         if (backgroundTextureView == null) {
             final GpuDevice device = RenderSystem.getDevice();
-            final GlTexture animatium$backgroundTexture = (GlTexture) device.createTexture(() -> "Background texture", 15, TextureFormat.RGBA8, 256, 256, 1, 1);
-            backgroundTextureView = (GlTextureView) device.createTextureView(animatium$backgroundTexture);
+            final GpuTexture animatium$backgroundTexture = device.createTexture(() -> "Background texture", 15, TextureFormat.RGBA8, 256, 256, 1, 1);
+            backgroundTextureView = device.createTextureView(animatium$backgroundTexture);
         }
 
         GlStateManager._viewport(0, 0, 256, 256);
     }
 
     /**
-     * In PanoramaRenderer, before ``cubeMap.render``, set viewPort to (0, 0, 256, 256)
-     * then call this method after ``cubeMap.render``
+     * In PanoramaRenderer, call this method after ``cubeMap.render``
      *
      * @param matrix The 2D GUI matrix
      * @param width  Screen width
@@ -102,6 +104,11 @@ public class PanoramaRendererUtility {
         renderFinalTexture(matrix, renderTarget, backgroundTextureView, width, height);
     }
 
+    /**
+     * In PanoramaRenderer, call this method before ``cubeMap.render`` and after PanoramaRenderUtility#setup
+     *
+     * @param tickDelta The current game tick value
+     */
     public void update(float tickDelta) {
         spin += tickDelta;
     }
@@ -123,7 +130,7 @@ public class PanoramaRendererUtility {
      * @param width        Screen width
      * @param height       Screen Height
      */
-    private void writeAndBlitBlurTexture(Matrix3x2f matrix, RenderTarget renderTarget, GlTextureView texture, int width, int height) {
+    private void writeAndBlitBlurTexture(Matrix3x2f matrix, RenderTarget renderTarget, GpuTextureView texture, int width, int height) {
         texture.texture().setTextureFilter(FilterMode.LINEAR, FilterMode.LINEAR, false);
         // Ensures enough width/height for it to not crash when window is resized
         if (renderTarget.width >= 256 && renderTarget.height >= 256) {
@@ -162,7 +169,7 @@ public class PanoramaRendererUtility {
      * @param width        Screen width
      * @param height       Screen height
      */
-    private void renderFinalTexture(Matrix3x2f matrix, RenderTarget renderTarget, GlTextureView texture, int width, int height) {
+    private void renderFinalTexture(Matrix3x2f matrix, RenderTarget renderTarget, GpuTextureView texture, int width, int height) {
         float aspect = 120.0F / (float) (Math.max(width, height));
         float sw = (float) width * aspect / 256.0F;
         float sh = (float) height * aspect / 256.0F;
