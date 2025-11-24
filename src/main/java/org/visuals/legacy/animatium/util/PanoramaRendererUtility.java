@@ -25,14 +25,18 @@
 
 package org.visuals.legacy.animatium.util;
 
+import com.mojang.blaze3d.opengl.GlStateManager;
+import com.mojang.blaze3d.opengl.GlTexture;
 import com.mojang.blaze3d.opengl.GlTextureView;
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
+import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.FilterMode;
+import com.mojang.blaze3d.textures.TextureFormat;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -41,13 +45,14 @@ import lombok.experimental.UtilityClass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.Mth;
 import org.joml.Matrix3x2f;
 import org.visuals.legacy.animatium.Animatium;
 
 @UtilityClass
 // Ported code of the old <=1.12.2 panorama renderer (w/ blur)
 public class PanoramaRendererUtility {
-    private static final RenderPipeline.Snippet TEXTURE_SNIPPET =
+    private final RenderPipeline.Snippet TEXTURE_SNIPPET =
             RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
                     .withVertexShader("core/position_tex")
                     .withFragmentShader("core/position_tex")
@@ -55,36 +60,69 @@ public class PanoramaRendererUtility {
                     .withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
                     .buildSnippet();
 
-    private static final RenderPipeline BLUR_TEXTURED_PIPELINE =
+    private final RenderPipeline BLUR_TEXTURED_PIPELINE =
             RenderPipeline.builder(TEXTURE_SNIPPET)
                     .withLocation(Animatium.location("pipeline/blur_texture"))
                     .withColorWrite(true, false)
                     .withBlend(new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO))
                     .build();
 
-    private static final RenderPipeline BASIC_TEXTURED_PIPELINE =
+    private final RenderPipeline BASIC_TEXTURED_PIPELINE =
             RenderPipeline.builder(TEXTURE_SNIPPET)
                     .withLocation(Animatium.location("pipeline/basic_texture"))
                     .build();
+
+    private GlTextureView backgroundTextureView = null;
+    private float spin = 0.0F;
+
+    public void setup() {
+        if (backgroundTextureView == null) {
+            final GpuDevice device = RenderSystem.getDevice();
+            final GlTexture animatium$backgroundTexture = (GlTexture) device.createTexture(() -> "Background texture", 15, TextureFormat.RGBA8, 256, 256, 1, 1);
+            backgroundTextureView = (GlTextureView) device.createTextureView(animatium$backgroundTexture);
+        }
+
+        GlStateManager._viewport(0, 0, 256, 256);
+    }
 
     /**
      * In PanoramaRenderer, before ``cubeMap.render``, set viewPort to (0, 0, 256, 256)
      * then call this method after ``cubeMap.render``
      *
-     * @param matrix      The 2D GUI matrix
-     * @param textureView The texture we are drawing to
-     * @param width       Screen width
-     * @param height      Screen Height
+     * @param matrix The 2D GUI matrix
+     * @param width  Screen width
+     * @param height Screen Height
      */
-    public void render(Matrix3x2f matrix, GlTextureView textureView, int width, int height) {
+    public void render(Matrix3x2f matrix, int width, int height) {
         final RenderTarget renderTarget = Minecraft.getInstance().getMainRenderTarget();
         for (int i = 0; i < 7; ++i) {
-            writeAndBlitBlurTexture(matrix, renderTarget, textureView, width, height);
+            writeAndBlitBlurTexture(matrix, renderTarget, backgroundTextureView, width, height);
         }
 
-        renderFinalTexture(matrix, renderTarget, textureView, width, height);
+        renderFinalTexture(matrix, renderTarget, backgroundTextureView, width, height);
     }
 
+    public void update(float tickDelta) {
+        spin += tickDelta;
+    }
+
+    public float getXRot() {
+        return Mth.sin(spin / 400.0F) * 25.0F + 20.0F;
+    }
+
+    public float getYRot() {
+        return -spin * 0.1F;
+    }
+
+    /**
+     * Render & Blur the texture
+     *
+     * @param matrix       The 2D GUI matrix
+     * @param renderTarget The texture we are drawing to
+     * @param texture      The temporary texture
+     * @param width        Screen width
+     * @param height       Screen Height
+     */
     private void writeAndBlitBlurTexture(Matrix3x2f matrix, RenderTarget renderTarget, GlTextureView texture, int width, int height) {
         texture.texture().setTextureFilter(FilterMode.LINEAR, FilterMode.LINEAR, false);
         // Ensures enough width/height for it to not crash when window is resized
