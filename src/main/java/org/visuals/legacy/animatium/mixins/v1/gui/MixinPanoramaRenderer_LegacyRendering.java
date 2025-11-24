@@ -42,8 +42,6 @@ import org.visuals.legacy.animatium.util.PanoramaRendererUtility;
 
 @Mixin(PanoramaRenderer.class)
 public abstract class MixinPanoramaRenderer_LegacyRendering {
-
-
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CubeMap;render(Lnet/minecraft/client/Minecraft;FF)V", ordinal = 0))
     private void animatium$panoramaRendering(
             CubeMap instance,

@@ -26,6 +26,8 @@
 package org.visuals.legacy.animatium.util;
 
 import com.mojang.blaze3d.opengl.GlStateManager;
+import com.mojang.blaze3d.opengl.GlTexture;
+import com.mojang.blaze3d.opengl.GlTextureView;
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
@@ -37,7 +39,7 @@ import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.textures.TextureFormat;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -50,19 +52,13 @@ import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2f;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30C;
 import org.visuals.legacy.animatium.Animatium;
 
 @UtilityClass
 // Ported code of the old <=1.12.2 panorama renderer (w/ blur)
 public class PanoramaRendererUtility {
-    private final RenderPipeline.Snippet TEXTURE_SNIPPET =
-            RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
-                    .withVertexShader("core/position_tex")
-                    .withFragmentShader("core/position_tex")
-                    .withSampler("Sampler0")
-                    .withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
-                    .buildSnippet();
-
     private GpuTextureView backgroundTextureView = null;
     private float spin = 0.0F;
 
@@ -89,32 +85,11 @@ public class PanoramaRendererUtility {
     public void render(GuiGraphics guiGraphics, int width, int height) {
         final RenderTarget renderTarget = Minecraft.getInstance().getMainRenderTarget();
         for (int i = 0; i < 7; ++i) {
-            final BlurTextureBlit blurTextureBlit = new BlurTextureBlit(guiGraphics.pose(), renderTarget, backgroundTextureView, width, height);
-            try (ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(blurTextureBlit.pipeline().getVertexFormat().getVertexSize() * 12)) {
-                final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, blurTextureBlit.pipeline().getVertexFormatMode(), blurTextureBlit.pipeline().getVertexFormat());
-                blurTextureBlit.buildVertices(builder);
-                RenderUtils.drawBuffer(
-                        blurTextureBlit.pipeline(),
-                        renderTarget,
-                        builder.buildOrThrow(),
-                        DynamicTransformsBuilder.of().build(),
-                        (pass) -> pass.bindSampler("Sampler0", blurTextureBlit.textureSetup().texure0())
-                );
-            }
+            guiGraphics.guiRenderState.submitGuiElement(new BlurTextureBlit(guiGraphics.pose(), renderTarget, backgroundTextureView, width, height));
         }
 
-        final FinalTextureBlit finalTextureBlit = new FinalTextureBlit(guiGraphics.pose(), backgroundTextureView, width, height, 120.0F / (float) (Math.max(width, height)));
-        try (ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(finalTextureBlit.pipeline().getVertexFormat().getVertexSize() * 4)) {
-            final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, finalTextureBlit.pipeline().getVertexFormatMode(), finalTextureBlit.pipeline().getVertexFormat());
-            finalTextureBlit.buildVertices(builder);
-            RenderUtils.drawBuffer(
-                    finalTextureBlit.pipeline(),
-                    renderTarget,
-                    builder.buildOrThrow(),
-                    DynamicTransformsBuilder.of().build(),
-                    (pass) -> pass.bindSampler("Sampler0", finalTextureBlit.textureSetup().texure0())
-            );
-        }
+        GlStateManager._bindTexture(((GlTexture) renderTarget.getColorTexture()).glId());
+        guiGraphics.guiRenderState.submitGuiElement(new FinalTextureBlit(guiGraphics.pose(), backgroundTextureView, width, height, 120.0F / (float) (Math.max(width, height))));
     }
 
     /**
@@ -135,26 +110,10 @@ public class PanoramaRendererUtility {
     }
 
     private record BlurTextureBlit(Matrix3x2f pose, RenderTarget renderTarget, GpuTextureView textureView, int width, int height) implements GuiElementRenderState {
-        private static final RenderPipeline BLUR_TEXTURED_PIPELINE =
-                RenderPipeline.builder(TEXTURE_SNIPPET)
-                        .withLocation(Animatium.location("pipeline/blur_texture"))
-                        .withColorWrite(true, false)
-                        .withBlend(new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO))
-                        .build();
-
         public BlurTextureBlit {
             textureView.texture().setTextureFilter(FilterMode.LINEAR, FilterMode.LINEAR, false);
-            // Ensures enough width/height for it to not crash when window is resized
-            if (renderTarget.width >= 256 && renderTarget.height >= 256) {
-                RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(
-                        renderTarget.getColorTexture(),
-                        textureView.texture(),
-                        0, // mips?
-                        0, 0, // srcXY
-                        0, 0, // dstXY
-                        256, 256 // w/h
-                );
-            }
+            GlStateManager._bindTexture(((GlTextureView) textureView).texture().glId());
+            GL30C.glCopyTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 0, 0, 0, 0, 256, 256);
         }
 
         @Override
@@ -171,7 +130,11 @@ public class PanoramaRendererUtility {
 
         @Override
         public @NotNull RenderPipeline pipeline() {
-            return BLUR_TEXTURED_PIPELINE;
+            return RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
+                    .withLocation(Animatium.location("pipeline/blur_texture"))
+                    .withColorWrite(true, false)
+                    .withBlend(new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO))
+                    .build();
         }
 
         @Override
@@ -191,11 +154,6 @@ public class PanoramaRendererUtility {
     }
 
     private record FinalTextureBlit(Matrix3x2f pose, GpuTextureView textureView, int width, int height, float aspect) implements GuiElementRenderState {
-        private static final RenderPipeline BASIC_TEXTURED_PIPELINE =
-                RenderPipeline.builder(TEXTURE_SNIPPET)
-                        .withLocation(Animatium.location("pipeline/basic_texture"))
-                        .build();
-
         @Override
         public void buildVertices(VertexConsumer consumer) {
             final int color = ARGB.white(1.0F);
@@ -209,7 +167,9 @@ public class PanoramaRendererUtility {
 
         @Override
         public @NotNull RenderPipeline pipeline() {
-            return BASIC_TEXTURED_PIPELINE;
+            return RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
+                    .withLocation(Animatium.location("pipeline/basic_texture"))
+                    .build();
         }
 
         @Override
