@@ -25,6 +25,7 @@
 
 package org.visuals.legacy.animatium.util;
 
+import com.mojang.blaze3d.opengl.GlDevice;
 import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.opengl.GlTexture;
 import com.mojang.blaze3d.opengl.GlTextureView;
@@ -33,6 +34,7 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.FilterMode;
@@ -53,7 +55,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2f;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30C;
+import org.lwjgl.opengl.GL30;
 import org.visuals.legacy.animatium.Animatium;
 
 @UtilityClass
@@ -65,14 +67,14 @@ public class PanoramaRendererUtility {
     /**
      * In PanoramaRenderer, call this method before ``cubeMap.render``
      */
-    public void setup() {
+    public void setup(final RenderTarget renderTarget) {
         if (backgroundTextureView == null) {
             final GpuDevice device = RenderSystem.getDevice();
             final GpuTexture backgroundTexture = device.createTexture(() -> "Background texture", 15, TextureFormat.RGBA8, 256, 256, 1, 1);
             backgroundTextureView = device.createTextureView(backgroundTexture);
         }
 
-        GlStateManager._viewport(0, 0, 256, 256);
+        renderTarget.resize(256, 256);
     }
 
     /**
@@ -82,13 +84,13 @@ public class PanoramaRendererUtility {
      * @param width       Screen width
      * @param height      Screen Height
      */
-    public void render(GuiGraphics guiGraphics, int width, int height) {
-        final RenderTarget renderTarget = Minecraft.getInstance().getMainRenderTarget();
+    public void render(final GuiGraphics guiGraphics, final RenderTarget renderTarget, final int width, final int height) {
         for (int i = 0; i < 7; ++i) {
             guiGraphics.guiRenderState.submitGuiElement(new BlurTextureBlit(guiGraphics.pose(), renderTarget, backgroundTextureView, width, height));
         }
 
-        GlStateManager._bindTexture(((GlTexture) renderTarget.getColorTexture()).glId());
+        final Window window = Minecraft.getInstance().getWindow();
+        renderTarget.resize(window.getWidth(), window.getHeight());
         guiGraphics.guiRenderState.submitGuiElement(new FinalTextureBlit(guiGraphics.pose(), backgroundTextureView, width, height, 120.0F / (float) (Math.max(width, height))));
     }
 
@@ -111,9 +113,16 @@ public class PanoramaRendererUtility {
 
     private record BlurTextureBlit(Matrix3x2f pose, RenderTarget renderTarget, GpuTextureView textureView, int width, int height) implements GuiElementRenderState {
         public BlurTextureBlit {
-            textureView.texture().setTextureFilter(FilterMode.LINEAR, FilterMode.LINEAR, false);
-            GlStateManager._bindTexture(((GlTextureView) textureView).texture().glId());
-            GL30C.glCopyTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 0, 0, 0, 0, 256, 256);
+            textureView.texture().setTextureFilter(FilterMode.LINEAR, FilterMode.LINEAR, false); // NOTE: Doesn't actually set the parameters till later on
+            if (textureView instanceof GlTextureView glTextureView) {
+                final int oldFbo = GL11.glGetInteger(GL30.GL_FRAMEBUFFER_BINDING);
+                GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, ((GlTexture) renderTarget.getColorTexture()).getFbo(((GlDevice) RenderSystem.getDevice()).directStateAccess(), renderTarget.getDepthTexture()));
+                GlStateManager._bindTexture(glTextureView.texture().glId());
+                GlStateManager._texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+                GlStateManager._texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+                GL11.glCopyTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 0, 0, 0, 0, 256, 256);
+                GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, oldFbo);
+            }
         }
 
         @Override

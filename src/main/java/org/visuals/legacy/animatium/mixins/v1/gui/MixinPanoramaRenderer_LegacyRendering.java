@@ -29,6 +29,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.CubeMap;
@@ -43,19 +44,11 @@ import org.visuals.legacy.animatium.util.PanoramaRendererUtility;
 @Mixin(PanoramaRenderer.class)
 public abstract class MixinPanoramaRenderer_LegacyRendering {
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CubeMap;render(Lnet/minecraft/client/Minecraft;FF)V", ordinal = 0))
-    private void animatium$panoramaRendering(
-            CubeMap instance,
-            Minecraft minecraft,
-            float xRot,
-            float yRot,
-            Operation<Void> original,
-            @Local(argsOnly = true) GuiGraphics guiGraphics,
-            @Local(argsOnly = true, ordinal = 0) int width,
-            @Local(argsOnly = true, ordinal = 1) int height
-    ) {
+    private void animatium$panoramaRendering(CubeMap instance, Minecraft minecraft, float xRot, float yRot, Operation<Void> original, @Local(argsOnly = true) GuiGraphics guiGraphics, @Local(argsOnly = true, ordinal = 0) int width, @Local(argsOnly = true, ordinal = 1) int height) {
         final boolean enabled = Animatium.ENABLED && AnimatiumConfig.instance().screen.panoramaRendering;
+        final RenderTarget renderTarget = minecraft.getMainRenderTarget();
         if (enabled) {
-            PanoramaRendererUtility.setup();
+            PanoramaRendererUtility.setup(renderTarget);
             PanoramaRendererUtility.update(minecraft.getDeltaTracker().getRealtimeDeltaTicks());
             xRot = PanoramaRendererUtility.getXRot();
             yRot = PanoramaRendererUtility.getYRot();
@@ -63,7 +56,7 @@ public abstract class MixinPanoramaRenderer_LegacyRendering {
 
         original.call(instance, minecraft, xRot, yRot);
         if (enabled) {
-            PanoramaRendererUtility.render(guiGraphics, width, height);
+            PanoramaRendererUtility.render(guiGraphics, renderTarget, width, height);
         }
     }
 
