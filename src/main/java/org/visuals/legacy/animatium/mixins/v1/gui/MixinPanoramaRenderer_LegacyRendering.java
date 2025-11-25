@@ -45,18 +45,12 @@ import org.visuals.legacy.animatium.util.PanoramaRendererUtility;
 public abstract class MixinPanoramaRenderer_LegacyRendering {
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CubeMap;render(Lnet/minecraft/client/Minecraft;FF)V", ordinal = 0))
     private void animatium$panoramaRendering(CubeMap instance, Minecraft minecraft, float xRot, float yRot, Operation<Void> original, @Local(argsOnly = true) GuiGraphics guiGraphics, @Local(argsOnly = true, ordinal = 0) int width, @Local(argsOnly = true, ordinal = 1) int height) {
-        final boolean enabled = Animatium.ENABLED && AnimatiumConfig.instance().screen.panoramaRendering;
-        final RenderTarget renderTarget = minecraft.getMainRenderTarget();
-        if (enabled) {
-            PanoramaRendererUtility.setup(renderTarget);
+        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.panoramaRendering) {
+            final RenderTarget renderTarget = minecraft.getMainRenderTarget();
             PanoramaRendererUtility.update(minecraft.getDeltaTracker().getRealtimeDeltaTicks());
-            xRot = PanoramaRendererUtility.getXRot();
-            yRot = PanoramaRendererUtility.getYRot();
-        }
-
-        original.call(instance, minecraft, xRot, yRot);
-        if (enabled) {
             PanoramaRendererUtility.render(guiGraphics, renderTarget, width, height);
+        } else {
+            original.call(instance, minecraft, xRot, yRot);
         }
     }
 
