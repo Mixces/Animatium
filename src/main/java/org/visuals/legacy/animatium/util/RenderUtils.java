@@ -123,7 +123,7 @@ public class RenderUtils {
             final RenderTarget renderTarget,
             final RenderPipeline renderPipeline,
             final MeshData meshData,
-            final RenderProperties renderProperties,
+            final RenderOverrides renderOverrides,
             final Consumer<RenderPass> renderPassConsumer
     ) {
         try {
@@ -142,8 +142,8 @@ public class RenderUtils {
             final GpuTextureView colorTextureView = RenderSystem.outputColorTextureOverride != null ? RenderSystem.outputColorTextureOverride : renderTarget.getColorTextureView();
             final GpuTextureView depthTextureView = renderTarget.useDepth ? (RenderSystem.outputDepthTextureOverride != null ? RenderSystem.outputDepthTextureOverride : renderTarget.getDepthTextureView()) : null;
             try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Immediate draw for " + renderPipeline, colorTextureView, OptionalInt.empty(), depthTextureView, OptionalDouble.empty())) {
-                final int prevFramebufferId = renderProperties.applyFramebuffer();
-                final IntBuffer viewportBuffer = renderProperties.applyViewport();
+                final int prevFramebufferId = renderOverrides.applyFramebuffer();
+                final IntBuffer viewportBuffer = renderOverrides.applyViewport();
 
                 renderPass.setPipeline(renderPipeline);
                 renderPass.setVertexBuffer(0, vertexBuffer);
@@ -185,10 +185,10 @@ public class RenderUtils {
             final MeshData meshData,
             final Consumer<RenderPass> renderPassConsumer
     ) {
-        drawWithPipeline(renderTarget, renderPipeline, meshData, RenderProperties.DEFAULT, renderPassConsumer);
+        drawWithPipeline(renderTarget, renderPipeline, meshData, RenderOverrides.DEFAULT, renderPassConsumer);
     }
 
-    public void drawInGui(final RenderTarget renderTarget, final GuiElementRenderState element, final RenderProperties renderProperties) {
+    public void drawInGui(final RenderTarget renderTarget, final GuiElementRenderState element, final RenderOverrides renderOverrides) {
         final Minecraft minecraft = Minecraft.getInstance();
         final Window window = minecraft.getWindow();
         final GameRendererAccessor gameRendererAccessor = (GameRendererAccessor) minecraft.gameRenderer;
@@ -215,8 +215,8 @@ public class RenderUtils {
         final GpuTextureView colorTextureView = RenderSystem.outputColorTextureOverride != null ? RenderSystem.outputColorTextureOverride : renderTarget.getColorTextureView();
         final GpuTextureView depthTextureView = renderTarget.useDepth ? (RenderSystem.outputDepthTextureOverride != null ? RenderSystem.outputDepthTextureOverride : renderTarget.getDepthTextureView()) : null;
         try (final RenderPass renderPass = device.createCommandEncoder().createRenderPass(() -> "Immediate GUI RenderPass", colorTextureView, OptionalInt.empty(), depthTextureView, OptionalDouble.empty())) {
-            final int prevFramebufferId = renderProperties.applyFramebuffer();
-            final IntBuffer viewportBuffer = renderProperties.applyViewport();
+            final int prevFramebufferId = renderOverrides.applyFramebuffer();
+            final IntBuffer viewportBuffer = renderOverrides.applyViewport();
 
             renderPass.setPipeline(pipeline);
             renderPass.setVertexBuffer(0, vertexBuffer);
@@ -246,8 +246,8 @@ public class RenderUtils {
         }
     }
 
-    public record RenderProperties(@Nullable Vector4i viewport, int framebufferId) {
-        public static final RenderProperties DEFAULT = new RenderProperties(null, -1);
+    public record RenderOverrides(@Nullable Vector4i viewport, int framebufferId) {
+        public static final RenderOverrides DEFAULT = new RenderOverrides(null, -1);
 
         public int applyFramebuffer() {
             final int prevFbo = GL11.glGetInteger(GL30C.GL_FRAMEBUFFER_BINDING);

@@ -128,7 +128,7 @@ public class PanoramaRendererUtility {
     }
 
     public void render(final GuiGraphics guiGraphics, final RenderTarget renderTarget, final int width, final int height) {
-        final RenderUtils.RenderProperties properties = new RenderUtils.RenderProperties(new Vector4i(0, 0, 256, 256), 0);
+        final RenderUtils.RenderOverrides properties = new RenderUtils.RenderOverrides(new Vector4i(0, 0, 256, 256), 0);
         renderPanorama(PANORAMA, renderTarget, width, height, properties);
         for (int layer = 0; layer < 7; ++layer) {
             final int prevTex = GlStateManager._getInteger(GL11.GL_TEXTURE_BINDING_2D);
@@ -137,13 +137,13 @@ public class PanoramaRendererUtility {
             GlStateManager._texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
             GL11.glCopyTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 0, 0, 0, 0, 256, 256);
             GlStateManager._bindTexture(prevTex);
-            RenderUtils.drawInGui(renderTarget, new BlitBlurTexture(guiGraphics.pose(), backgroundTextureView, width, height), RenderUtils.RenderProperties.DEFAULT);
+            RenderUtils.drawInGui(renderTarget, new BlitBlurTexture(guiGraphics.pose(), backgroundTextureView, width, height), RenderUtils.RenderOverrides.DEFAULT);
         }
 
         // RenderUtils.renderInGui(renderTarget, new BlitFinalTexture(guiGraphics.pose(), backgroundTextureView, width, height), RenderUtils.RenderProperties.DEFAULT);
     }
 
-    private void renderPanorama(final RenderPipeline pipeline, final RenderTarget renderTarget, final int width, final int height, final RenderUtils.RenderProperties renderProperties) {
+    private void renderPanorama(final RenderPipeline pipeline, final RenderTarget renderTarget, final int width, final int height, final RenderUtils.RenderOverrides renderOverrides) {
         RenderSystem.setProjectionMatrix(projectionMatrixBuffer.getBuffer(width, height, 120.0F), ProjectionType.PERSPECTIVE);
         final Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
         modelViewStack.pushMatrix();
@@ -180,7 +180,7 @@ public class PanoramaRendererUtility {
                     builder.addVertex(1.0F, 1.0F, 1.0F).setUv(1.0F, 1.0F).setColor(color);
                     builder.addVertex(-1.0F, 1.0F, 1.0F).setUv(0.0F, 1.0F).setColor(color);
                     final GpuBufferSlice dynamicTransforms = DynamicTransformsBuilder.of().withModelViewMatrix(modelViewStack).build();
-                    RenderUtils.drawWithPipeline(renderTarget, pipeline, builder.buildOrThrow(), renderProperties, (pass) -> {
+                    RenderUtils.drawWithPipeline(renderTarget, pipeline, builder.buildOrThrow(), renderOverrides, (pass) -> {
                         pass.setUniform("DynamicTransforms", dynamicTransforms);
                         pass.bindSampler("Sampler0", panoramaTexture);
                     });
