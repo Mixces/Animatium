@@ -31,7 +31,6 @@ import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuTextureView;
@@ -163,53 +162,64 @@ public class RenderUtils {
         meshData.close();
     }
 
-    public void drawInGui(final RenderTarget renderTarget, final GuiElementRenderState element) {
+    public void drawInGui(
+            final RenderTarget renderTarget,
+            final DynamicTransformsBuilder dynamicTransformsBuilder,
+            final GuiElementRenderState element
+    ) {
+        RenderSystem.backupProjectionMatrix();
         final Minecraft minecraft = Minecraft.getInstance();
         final Window window = minecraft.getWindow();
-        final GameRendererAccessor gameRendererAccessor = (GameRendererAccessor) minecraft.gameRenderer;
-        final GuiRendererAccessor guiRendererAccessor = (GuiRendererAccessor) gameRendererAccessor.animatium$getGuiRenderer();
+        final GuiRendererAccessor guiRendererAccessor = (GuiRendererAccessor) ((GameRendererAccessor) minecraft.gameRenderer).animatium$getGuiRenderer();
         RenderSystem.setProjectionMatrix(guiRendererAccessor.animatium$orthoMatrixBuffer().getBuffer((float) window.getWidth() / (float) window.getGuiScale(), (float) window.getHeight() / (float) window.getGuiScale()), ProjectionType.ORTHOGRAPHIC);
 
         final RenderPipeline pipeline = element.pipeline();
-        final RenderSystem.AutoStorageIndexBuffer indexBuffer = RenderSystem.getSequentialBuffer(pipeline.getVertexFormatMode());
-        final GpuDevice device = RenderSystem.getDevice();
-
         final BufferBuilder builder = Tesselator.getInstance().begin(pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
         element.buildVertices(builder);
-        GpuBuffer vertexBuffer;
-        int indexCount;
         try (final MeshData meshData = builder.buildOrThrow()) {
-            vertexBuffer = device.createBuffer(() -> "Immediate GUI Vertex Buffer", GpuBuffer.USAGE_VERTEX, meshData.vertexBuffer());
-            indexCount = meshData.drawState().indexCount();
+            final GpuBuffer vertexBuffer = pipeline.getVertexFormat().uploadImmediateVertexBuffer(meshData.vertexBuffer());
+            GpuBuffer indexBuffer;
+            VertexFormat.IndexType indexType;
+            if (meshData.indexBuffer() == null) {
+                RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(meshData.drawState().mode());
+                indexBuffer = autoStorageIndexBuffer.getBuffer(meshData.drawState().indexCount());
+                indexType = autoStorageIndexBuffer.type();
+            } else {
+                indexBuffer = pipeline.getVertexFormat().uploadImmediateIndexBuffer(meshData.indexBuffer());
+                indexType = meshData.drawState().indexType();
+            }
+
+            final GpuBufferSlice dynamicTransforms = dynamicTransformsBuilder
+                    .withModelViewMatrix(new Matrix4f().setTranslation(0.0F, 0.0F, -11000.0F))
+                    .build();
+
+            final GpuTextureView colorTextureView = RenderSystem.outputColorTextureOverride != null ? RenderSystem.outputColorTextureOverride : renderTarget.getColorTextureView();
+            final GpuTextureView depthTextureView = renderTarget.useDepth ? (RenderSystem.outputDepthTextureOverride != null ? RenderSystem.outputDepthTextureOverride : renderTarget.getDepthTextureView()) : null;
+            try (final RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Immediate GUI RenderPass", colorTextureView, OptionalInt.empty(), depthTextureView, OptionalDouble.empty())) {
+                renderPass.setPipeline(pipeline);
+                renderPass.setVertexBuffer(0, vertexBuffer);
+                renderPass.setIndexBuffer(indexBuffer, indexType);
+
+                final TextureSetup textureSetup = element.textureSetup();
+                if (textureSetup.texure0() != null) {
+                    renderPass.bindSampler("Sampler0", textureSetup.texure0());
+                }
+
+                if (textureSetup.texure1() != null) {
+                    renderPass.bindSampler("Sampler1", textureSetup.texure1());
+                }
+
+                if (textureSetup.texure2() != null) {
+                    renderPass.bindSampler("Sampler2", textureSetup.texure2());
+                }
+
+                renderPass.setUniform("DynamicTransforms", dynamicTransforms);
+                RenderSystem.bindDefaultUniforms(renderPass);
+                renderPass.drawIndexed(0, 0, meshData.drawState().indexCount(), 1);
+            }
         }
 
-        final GpuBufferSlice dynamicTransforms = DynamicTransformsBuilder.of()
-                .withModelViewMatrix(new Matrix4f().setTranslation(0.0F, 0.0F, -11000.0F))
-                .build();
-
-        final GpuTextureView colorTextureView = RenderSystem.outputColorTextureOverride != null ? RenderSystem.outputColorTextureOverride : renderTarget.getColorTextureView();
-        final GpuTextureView depthTextureView = renderTarget.useDepth ? (RenderSystem.outputDepthTextureOverride != null ? RenderSystem.outputDepthTextureOverride : renderTarget.getDepthTextureView()) : null;
-        try (final RenderPass renderPass = device.createCommandEncoder().createRenderPass(() -> "Immediate GUI RenderPass", colorTextureView, OptionalInt.empty(), depthTextureView, OptionalDouble.empty())) {
-            renderPass.setPipeline(pipeline);
-            renderPass.setVertexBuffer(0, vertexBuffer);
-            renderPass.setIndexBuffer(indexBuffer.getBuffer(indexCount), indexBuffer.type());
-            final TextureSetup textureSetup = element.textureSetup();
-            if (textureSetup.texure0() != null) {
-                renderPass.bindSampler("Sampler0", textureSetup.texure0());
-            }
-
-            if (textureSetup.texure1() != null) {
-                renderPass.bindSampler("Sampler1", textureSetup.texure1());
-            }
-
-            if (textureSetup.texure2() != null) {
-                renderPass.bindSampler("Sampler2", textureSetup.texure2());
-            }
-
-            renderPass.setUniform("DynamicTransforms", dynamicTransforms);
-            RenderSystem.bindDefaultUniforms(renderPass);
-            renderPass.drawIndexed(0, 0, indexCount, 1);
-        }
+        RenderSystem.restoreProjectionMatrix();
     }
 }
 

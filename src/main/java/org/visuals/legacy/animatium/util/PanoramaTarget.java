@@ -33,14 +33,15 @@ import com.mojang.blaze3d.textures.AddressMode;
 import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.textures.TextureFormat;
+import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.Nullable;
 
 // Custom Version of Minecraft MainTarget
 public class PanoramaTarget extends RenderTarget {
-    private final int FLAGS = GpuTexture.USAGE_RENDER_ATTACHMENT | GpuTexture.USAGE_TEXTURE_BINDING | GpuTexture.USAGE_COPY_SRC | GpuTexture.USAGE_COPY_DST;
+    private final int FLAGS = 15;
 
     public PanoramaTarget() {
-        super("Panorama", false );
+        super("Panorama", true);
 
         final MainTarget.Dimension dimension = this.allocateAttachments(256, 256);
         if (this.colorTexture != null) {
@@ -60,6 +61,7 @@ public class PanoramaTarget extends RenderTarget {
         this.width = dimension.width;
         this.height = dimension.height;
         RenderSystem.getDevice().createCommandEncoder().clearColorAndDepthTextures(this.getColorTexture(), 0, this.getDepthTexture(), 1.0F);
+        this.copyDepthFrom(Minecraft.getInstance().getMainRenderTarget());
     }
 
     private MainTarget.Dimension allocateAttachments(int width, int height) {

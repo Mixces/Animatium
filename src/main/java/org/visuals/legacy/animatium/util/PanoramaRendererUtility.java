@@ -29,11 +29,14 @@ import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
+import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.FilterMode;
+import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.textures.GpuTextureView;
+import com.mojang.blaze3d.textures.TextureFormat;
 import com.mojang.blaze3d.vertex.*;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.Minecraft;
@@ -65,22 +68,14 @@ public class PanoramaRendererUtility {
                     .withCull(false)
                     .withDepthWrite(false)
                     .withBlend(PANORAMA_BLEND)
-                    .withColorWrite(true, false)
+//                    .withColorWrite(true, false)
                     .withSampler("Sampler0")
                     .withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
                     .build();
 
-    private final ResourceLocation[] PANORAMA_LOCATIONS = new ResourceLocation[]{
-            ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_0.png"),
-            ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_1.png"),
-            ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_2.png"),
-            ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_3.png"),
-            ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_4.png"),
-            ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_5.png")
-    };
-
-    private CachedPerspectiveProjectionMatrixBuffer projectionMatrixBuffer = null;
-    private PanoramaTarget panoramaTarget = null;
+    private final CachedPerspectiveProjectionMatrixBuffer projectionMatrixBuffer = new CachedPerspectiveProjectionMatrixBuffer("panorama", 0.05F, 10.0F);
+    private final PanoramaTarget panoramaTarget = new PanoramaTarget();
+    private GpuTextureView backgroundTextureView = null;
     private float spin = 0.0F;
 
     static {
@@ -88,25 +83,25 @@ public class PanoramaRendererUtility {
     }
 
     private void setup() {
-        if (panoramaTarget == null) {
-            panoramaTarget = new PanoramaTarget();
-        }
-
-        if (projectionMatrixBuffer == null) {
-            projectionMatrixBuffer = new CachedPerspectiveProjectionMatrixBuffer("panorama", 0.05F, 10.0F);
+        if (backgroundTextureView == null) {
+            final GpuDevice device = RenderSystem.getDevice();
+            final GpuTexture backgroundTexture = device.createTexture(() -> "Background texture", 15, TextureFormat.RGBA8, 256, 256, 1, 1);
+            backgroundTexture.setTextureFilter(FilterMode.LINEAR, FilterMode.LINEAR, false);
+            backgroundTextureView = device.createTextureView(backgroundTexture);
         }
     }
 
     public void render(final GuiGraphics guiGraphics, final int width, final int height) {
-        renderPanorama(PANORAMA, panoramaTarget, width, height);
+        renderPanorama(PANORAMA, width, height);
         for (int layer = 0; layer < 7; ++layer) {
-            RenderUtils.drawInGui(panoramaTarget, new BlitBlurTexture(guiGraphics.pose(), panoramaTarget.getColorTextureView(), width, height));
+            RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(panoramaTarget.getColorTexture(), backgroundTextureView.texture(), 0, 0, 0, 0, 0, 256, 256);
+            RenderUtils.drawInGui(panoramaTarget, DynamicTransformsBuilder.of(), new BlitBlurTexture(guiGraphics.pose(), backgroundTextureView, width, height));
         }
 
-        guiGraphics.guiRenderState.submitGuiElement(new BlitFinalTexture(guiGraphics.pose(), panoramaTarget.getColorTextureView(), width, height, ARGB.white(1.0F)));
+        guiGraphics.guiRenderState.submitGuiElement(new BlitFinalTexture(guiGraphics.pose(), backgroundTextureView, width, height, ARGB.white(1.0F)));
     }
 
-    private void renderPanorama(final RenderPipeline pipeline, final RenderTarget renderTarget, final int width, final int height) {
+    private void renderPanorama(final RenderPipeline pipeline, final int width, final int height) {
         RenderSystem.setProjectionMatrix(projectionMatrixBuffer.getBuffer(width, height, 120.0F), ProjectionType.PERSPECTIVE);
         final Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
         modelViewStack.pushMatrix();
@@ -118,23 +113,23 @@ public class PanoramaRendererUtility {
             float f2 = (i4 % 8 / 8.0F - 0.5F) / 64.0F;
             float f3 = ((float) i4 / 8 / 8.0F - 0.5F) / 64.0F;
             modelViewStack.translate(f2, f3, 0.0F);
-            modelViewStack.rotateX((float) Math.toRadians(getXRot()));
-            modelViewStack.rotateY((float) Math.toRadians(getYRot()));
+            modelViewStack.rotateX(Utils.toRadians(getXRot()));
+            modelViewStack.rotateY(Utils.toRadians(getYRot()));
             for (int panoramaIdx = 0; panoramaIdx < 6; panoramaIdx++) {
                 modelViewStack.pushMatrix();
                 if (panoramaIdx == 1) {
-                    modelViewStack.rotateY((float) Math.toRadians(90.0F));
+                    modelViewStack.rotateY(Utils.toRadians(90.0F));
                 } else if (panoramaIdx == 2) {
-                    modelViewStack.rotateY((float) Math.toRadians(180.0F));
+                    modelViewStack.rotateY(Utils.toRadians(180.0F));
                 } else if (panoramaIdx == 3) {
-                    modelViewStack.rotateY((float) Math.toRadians(-90.0F));
+                    modelViewStack.rotateY(Utils.toRadians(-90.0F));
                 } else if (panoramaIdx == 4) {
-                    modelViewStack.rotateX((float) Math.toRadians(90.0F));
+                    modelViewStack.rotateX(Utils.toRadians(90.0F));
                 } else if (panoramaIdx == 5) {
-                    modelViewStack.rotateX((float) Math.toRadians(-90.0F));
+                    modelViewStack.rotateX(Utils.toRadians(-90.0F));
                 }
 
-                final GpuTextureView panoramaTexture = Minecraft.getInstance().getTextureManager().getTexture(PANORAMA_LOCATIONS[panoramaIdx]).getTextureView();
+                final GpuTextureView panoramaTexture = Minecraft.getInstance().getTextureManager().getTexture(getPanoramaTexture(panoramaIdx)).getTextureView();
                 try (ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(pipeline.getVertexFormat().getVertexSize() * 4)) {
                     final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
                     final int color = ARGB.white(255.0F / (i4 + 1.0F));
@@ -142,8 +137,10 @@ public class PanoramaRendererUtility {
                     builder.addVertex(1.0F, -1.0F, 1.0F).setUv(1.0F, 0.0F).setColor(color);
                     builder.addVertex(1.0F, 1.0F, 1.0F).setUv(1.0F, 1.0F).setColor(color);
                     builder.addVertex(-1.0F, 1.0F, 1.0F).setUv(0.0F, 1.0F).setColor(color);
-                    final GpuBufferSlice dynamicTransforms = DynamicTransformsBuilder.of().withModelViewMatrix(modelViewStack).build();
-                    RenderUtils.drawWithPipeline(renderTarget, pipeline, builder.buildOrThrow(), (pass) -> {
+                    final GpuBufferSlice dynamicTransforms = DynamicTransformsBuilder.of()
+                            .withModelViewMatrix(modelViewStack)
+                            .build();
+                    RenderUtils.drawWithPipeline(panoramaTarget, pipeline, builder.buildOrThrow(), (pass) -> {
                         pass.setUniform("DynamicTransforms", dynamicTransforms);
                         pass.bindSampler("Sampler0", panoramaTexture);
                     });
@@ -170,11 +167,19 @@ public class PanoramaRendererUtility {
         return -spin * 0.1F;
     }
 
-    private record BlitBlurTexture(Matrix3x2f pose, GpuTextureView texture, int width, int height) implements GuiElementRenderState {
+    private ResourceLocation getPanoramaTexture(int side) {
+        return ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_" + side + ".png");
+    }
+
+    private record BlitBlurTexture(
+            Matrix3x2f pose,
+            GpuTextureView texture,
+            int width, int height
+    ) implements GuiElementRenderState {
         @Override
         public void buildVertices(VertexConsumer consumer) {
             for (int cycle = 0; cycle < 3; cycle++) {
-                final int color = ARGB.white(1.0F / (cycle + 1));
+                final int color = ARGB.white(1.0F); // ARGB.white(1.0F / (cycle + 1)); // might be issue
                 final float growth = (cycle - 1) / 256.0F;
                 consumer.addVertexWith2DPose(this.pose, this.width, this.height).setUv(0.0F + growth, 1.0F).setColor(color);
                 consumer.addVertexWith2DPose(this.pose, this.width, 0.0F).setUv(1.0F + growth, 1.0F).setColor(color);
@@ -188,7 +193,7 @@ public class PanoramaRendererUtility {
             return RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
                     .withLocation(Animatium.location("pipeline/panorama_blur"))
                     .withBlend(PANORAMA_BLEND)
-                    .withColorWrite(true, false)
+//                    .withColorWrite(true, false)
                     .build();
         }
 
@@ -208,7 +213,12 @@ public class PanoramaRendererUtility {
         }
     }
 
-    public record BlitFinalTexture(Matrix3x2f pose, GpuTextureView texture, int width, int height, int color) implements GuiElementRenderState {
+    public record BlitFinalTexture(
+            Matrix3x2f pose,
+            GpuTextureView texture,
+            int width, int height,
+            int color
+    ) implements GuiElementRenderState {
         @Override
         public void buildVertices(VertexConsumer consumer) {
             final float aspect = 120.0F / (Math.max(this.width, this.height));

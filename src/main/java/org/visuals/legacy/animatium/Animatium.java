@@ -26,6 +26,7 @@
 package org.visuals.legacy.animatium;
 
 import lombok.experimental.UtilityClass;
+import net.minecraft.SharedConstants;
 import net.minecraft.resources.ResourceLocation;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.packet.AnimatiumInfoPayloadPacket;
@@ -52,6 +53,7 @@ public final class Animatium {
     }
 
     public void initialize() {
+        SharedConstants.IS_RUNNING_IN_IDE = true;
         AnimatiumConfig.load();
         try {
             ConfigUtil.load();
