@@ -188,7 +188,7 @@ public class RenderUtils {
         drawWithPipeline(renderTarget, renderPipeline, meshData, RenderProperties.DEFAULT, renderPassConsumer);
     }
 
-    public void renderInGui(final RenderTarget renderTarget, final GuiElementRenderState element, final RenderProperties renderProperties) {
+    public void drawInGui(final RenderTarget renderTarget, final GuiElementRenderState element, final RenderProperties renderProperties) {
         final Minecraft minecraft = Minecraft.getInstance();
         final Window window = minecraft.getWindow();
         final GameRendererAccessor gameRendererAccessor = (GameRendererAccessor) minecraft.gameRenderer;

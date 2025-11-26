@@ -137,7 +137,7 @@ public class PanoramaRendererUtility {
             GlStateManager._texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
             GL11.glCopyTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 0, 0, 0, 0, 256, 256);
             GlStateManager._bindTexture(prevTex);
-            RenderUtils.renderInGui(renderTarget, new BlitBlurTexture(guiGraphics.pose(), backgroundTextureView, width, height), RenderUtils.RenderProperties.DEFAULT);
+            RenderUtils.drawInGui(renderTarget, new BlitBlurTexture(guiGraphics.pose(), backgroundTextureView, width, height), RenderUtils.RenderProperties.DEFAULT);
         }
 
         // RenderUtils.renderInGui(renderTarget, new BlitFinalTexture(guiGraphics.pose(), backgroundTextureView, width, height), RenderUtils.RenderProperties.DEFAULT);
