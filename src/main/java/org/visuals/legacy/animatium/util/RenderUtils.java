@@ -28,6 +28,7 @@ package org.visuals.legacy.animatium.util;
 import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
+import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.Window;
@@ -38,6 +39,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import lombok.Setter;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -45,19 +47,27 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.render.state.GuiElementRenderState;
 import net.minecraft.client.multiplayer.ClientLevel;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2fStack;
 import org.joml.Matrix4f;
+import org.joml.Vector4i;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.mixins.accessor.ClientLevelDataAccessor;
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.mixins.accessor.GuiRendererAccessor;
 
+import java.nio.IntBuffer;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.function.Consumer;
 
 @UtilityClass
 public class RenderUtils {
+    @Setter
+    private RenderOverrides renderOverrides;
+
     // TODO/NOTE: To be removed in 1.21.11+
     private float LINE_WIDTH = -1.0F;
 
@@ -133,6 +143,7 @@ public class RenderUtils {
             final GpuTextureView colorTextureView = RenderSystem.outputColorTextureOverride != null ? RenderSystem.outputColorTextureOverride : renderTarget.getColorTextureView();
             final GpuTextureView depthTextureView = renderTarget.useDepth ? (RenderSystem.outputDepthTextureOverride != null ? RenderSystem.outputDepthTextureOverride : renderTarget.getDepthTextureView()) : null;
             try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Immediate draw for " + renderPipeline, colorTextureView, OptionalInt.empty(), depthTextureView, OptionalDouble.empty())) {
+                final IntBuffer viewportBuffer = renderOverrides.applyViewport();
                 renderPass.setPipeline(renderPipeline);
                 renderPass.setVertexBuffer(0, vertexBuffer);
                 renderPass.setIndexBuffer(indexBuffer, indexType);
@@ -146,6 +157,9 @@ public class RenderUtils {
                 RenderSystem.bindDefaultUniforms(renderPass);
                 renderPassConsumer.accept(renderPass);
                 renderPass.drawIndexed(0, 0, meshData.drawState().indexCount(), 1);
+                if (viewportBuffer != null) {
+                    GlStateManager._viewport(viewportBuffer.get(), viewportBuffer.get(), viewportBuffer.get(), viewportBuffer.get());
+                }
             }
         } catch (Throwable throwable) {
             if (meshData != null) {
@@ -196,6 +210,7 @@ public class RenderUtils {
             final GpuTextureView colorTextureView = RenderSystem.outputColorTextureOverride != null ? RenderSystem.outputColorTextureOverride : renderTarget.getColorTextureView();
             final GpuTextureView depthTextureView = renderTarget.useDepth ? (RenderSystem.outputDepthTextureOverride != null ? RenderSystem.outputDepthTextureOverride : renderTarget.getDepthTextureView()) : null;
             try (final RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Immediate GUI RenderPass", colorTextureView, OptionalInt.empty(), depthTextureView, OptionalDouble.empty())) {
+                final IntBuffer viewportBuffer = renderOverrides.applyViewport();
                 renderPass.setPipeline(pipeline);
                 renderPass.setVertexBuffer(0, vertexBuffer);
                 renderPass.setIndexBuffer(indexBuffer, indexType);
@@ -216,10 +231,27 @@ public class RenderUtils {
                 renderPass.setUniform("DynamicTransforms", dynamicTransforms);
                 RenderSystem.bindDefaultUniforms(renderPass);
                 renderPass.drawIndexed(0, 0, meshData.drawState().indexCount(), 1);
+                if (viewportBuffer != null) {
+                    GlStateManager._viewport(viewportBuffer.get(), viewportBuffer.get(), viewportBuffer.get(), viewportBuffer.get());
+                }
             }
         }
 
         RenderSystem.restoreProjectionMatrix();
     }
-}
 
+    public record RenderOverrides(@Nullable Vector4i viewport) {
+        public static final RenderOverrides DISABLED = new RenderOverrides(null);
+
+        public @Nullable IntBuffer applyViewport() {
+            IntBuffer viewportBuffer = null;
+            if (this.viewport != null) {
+                viewportBuffer = BufferUtils.createIntBuffer(4);
+                GL11.glGetIntegerv(GL11.GL_VIEWPORT, viewportBuffer);
+                GlStateManager._viewport(this.viewport.x, this.viewport.y, this.viewport.z, this.viewport.w);
+            }
+
+            return viewportBuffer;
+        }
+    }
+}

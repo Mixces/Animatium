@@ -27,14 +27,16 @@ package org.visuals.legacy.animatium.util;
 
 import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
+import com.mojang.blaze3d.opengl.GlTexture;
+import com.mojang.blaze3d.opengl.GlTextureView;
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
 import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.FilterMode;
-import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.textures.TextureFormat;
 import com.mojang.blaze3d.vertex.*;
@@ -53,6 +55,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2f;
 import org.joml.Matrix4fStack;
+import org.joml.Vector4i;
 import org.visuals.legacy.animatium.Animatium;
 
 @UtilityClass
@@ -68,40 +71,36 @@ public class PanoramaRendererUtility {
                     .withCull(false)
                     .withDepthWrite(false)
                     .withBlend(PANORAMA_BLEND)
-//                    .withColorWrite(true, false)
+                    // .withColorWrite(true, false) // TODO/NOTE: Causes it to not render (alpha becomes 0.0?!??!?!)
                     .withSampler("Sampler0")
                     .withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
                     .build();
 
     private final CachedPerspectiveProjectionMatrixBuffer projectionMatrixBuffer = new CachedPerspectiveProjectionMatrixBuffer("panorama", 0.05F, 10.0F);
-    private final PanoramaTarget panoramaTarget = new PanoramaTarget();
-    private GpuTextureView backgroundTextureView = null;
+    private final GlTexture backgroundTexture;
+    private final GlTextureView backgroundTextureView;
     private float spin = 0.0F;
 
     static {
-        setup();
-    }
-
-    private void setup() {
-        if (backgroundTextureView == null) {
-            final GpuDevice device = RenderSystem.getDevice();
-            final GpuTexture backgroundTexture = device.createTexture(() -> "Background texture", 15, TextureFormat.RGBA8, 256, 256, 1, 1);
-            backgroundTexture.setTextureFilter(FilterMode.LINEAR, FilterMode.LINEAR, false);
-            backgroundTextureView = device.createTextureView(backgroundTexture);
-        }
+        final GpuDevice device = RenderSystem.getDevice();
+        backgroundTexture = (GlTexture) device.createTexture(() -> "Background texture", 15, TextureFormat.RGBA8, 256, 256, 1, 1);
+        backgroundTexture.setTextureFilter(FilterMode.LINEAR, FilterMode.LINEAR, false);
+        backgroundTextureView = (GlTextureView) device.createTextureView(backgroundTexture);
     }
 
     public void render(final GuiGraphics guiGraphics, final int width, final int height) {
-        renderPanorama(PANORAMA, width, height);
+        final RenderTarget renderTarget = Minecraft.getInstance().getMainRenderTarget();
+        RenderUtils.setRenderOverrides(new RenderUtils.RenderOverrides(new Vector4i(0, 0, 256, 256)));
+        renderPanorama(PANORAMA, renderTarget, width, height);
         for (int layer = 0; layer < 7; ++layer) {
-            RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(panoramaTarget.getColorTexture(), backgroundTextureView.texture(), 0, 0, 0, 0, 0, 256, 256);
-            RenderUtils.drawInGui(panoramaTarget, DynamicTransformsBuilder.of(), new BlitBlurTexture(guiGraphics.pose(), backgroundTextureView, width, height));
+            RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(renderTarget.getColorTexture(), backgroundTexture, 0, 0, 0, 0, 0, 256, 256);
+            RenderUtils.drawInGui(renderTarget, DynamicTransformsBuilder.of(), new BlitBlurTexture(guiGraphics.pose(), backgroundTextureView, width, height));
         }
-
+        RenderUtils.setRenderOverrides(RenderUtils.RenderOverrides.DISABLED);
         guiGraphics.guiRenderState.submitGuiElement(new BlitFinalTexture(guiGraphics.pose(), backgroundTextureView, width, height, ARGB.white(1.0F)));
     }
 
-    private void renderPanorama(final RenderPipeline pipeline, final int width, final int height) {
+    private void renderPanorama(final RenderPipeline pipeline, final RenderTarget renderTarget, final int width, final int height) {
         RenderSystem.setProjectionMatrix(projectionMatrixBuffer.getBuffer(width, height, 120.0F), ProjectionType.PERSPECTIVE);
         final Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
         modelViewStack.pushMatrix();
@@ -140,7 +139,7 @@ public class PanoramaRendererUtility {
                     final GpuBufferSlice dynamicTransforms = DynamicTransformsBuilder.of()
                             .withModelViewMatrix(modelViewStack)
                             .build();
-                    RenderUtils.drawWithPipeline(panoramaTarget, pipeline, builder.buildOrThrow(), (pass) -> {
+                    RenderUtils.drawWithPipeline(renderTarget, pipeline, builder.buildOrThrow(), (pass) -> {
                         pass.setUniform("DynamicTransforms", dynamicTransforms);
                         pass.bindSampler("Sampler0", panoramaTexture);
                     });
@@ -179,7 +178,7 @@ public class PanoramaRendererUtility {
         @Override
         public void buildVertices(VertexConsumer consumer) {
             for (int cycle = 0; cycle < 3; cycle++) {
-                final int color = ARGB.white(1.0F); // ARGB.white(1.0F / (cycle + 1)); // might be issue
+                final int color = ARGB.white(1.0F / (cycle + 1));
                 final float growth = (cycle - 1) / 256.0F;
                 consumer.addVertexWith2DPose(this.pose, this.width, this.height).setUv(0.0F + growth, 1.0F).setColor(color);
                 consumer.addVertexWith2DPose(this.pose, this.width, 0.0F).setUv(1.0F + growth, 1.0F).setColor(color);
@@ -193,7 +192,7 @@ public class PanoramaRendererUtility {
             return RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
                     .withLocation(Animatium.location("pipeline/panorama_blur"))
                     .withBlend(PANORAMA_BLEND)
-//                    .withColorWrite(true, false)
+                    .withColorWrite(true, false)
                     .build();
         }
 
@@ -222,8 +221,8 @@ public class PanoramaRendererUtility {
         @Override
         public void buildVertices(VertexConsumer consumer) {
             final float aspect = 120.0F / (Math.max(this.width, this.height));
-            final float sw = this.width * aspect / panoramaTarget.width;
-            final float sh = this.height * aspect / panoramaTarget.height;
+            final float sw = this.width * aspect / 256.0F;
+            final float sh = this.height * aspect / 256.0F;
             consumer.addVertexWith2DPose(this.pose, 0.0F, this.height).setUv(0.5F - sh, 0.5F + sw).setColor(this.color);
             consumer.addVertexWith2DPose(this.pose, this.width, this.height).setUv(0.5F - sh, 0.5F - sw).setColor(this.color);
             consumer.addVertexWith2DPose(this.pose, this.width, 0.0F).setUv(0.5F + sh, 0.5F - sw).setColor(this.color);
