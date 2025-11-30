@@ -23,18 +23,27 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.general.outlines;
+package org.visuals.legacy.animatium.util.rendering;
 
-import net.minecraft.client.renderer.RenderType;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.visuals.legacy.animatium.util.rendering.RenderUtils;
+import com.mojang.blaze3d.opengl.GlStateManager;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector4i;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
 
-@Mixin(RenderType.CompositeRenderType.class)
-public abstract class MixinCompositeRenderType_BlockOutlineLineWidth {
-    @ModifyArg(method = "draw", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/DynamicUniforms;writeTransform(Lorg/joml/Matrix4fc;Lorg/joml/Vector4fc;Lorg/joml/Vector3fc;Lorg/joml/Matrix4fc;F)Lcom/mojang/blaze3d/buffers/GpuBufferSlice;"), index = 4)
-    private float animatium$blockOutlineRendering$lineWidth(float original) {
-        return RenderUtils.getLineState().get(original);
+import java.nio.IntBuffer;
+
+public record RenderOverrides(@Nullable Vector4i viewport) {
+    public static final RenderOverrides DISABLED = new RenderOverrides(null);
+
+    public @Nullable IntBuffer applyViewport() {
+        IntBuffer viewportBuffer = null;
+        if (this.viewport != null) {
+            viewportBuffer = BufferUtils.createIntBuffer(4);
+            GL11.glGetIntegerv(GL11.GL_VIEWPORT, viewportBuffer);
+            GlStateManager._viewport(this.viewport.x, this.viewport.y, this.viewport.z, this.viewport.w);
+        }
+
+        return viewportBuffer;
     }
 }

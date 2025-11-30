@@ -53,9 +53,10 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.mixins.accessor.CameraAccessor;
-import org.visuals.legacy.animatium.util.RenderUtils;
 import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
+import org.visuals.legacy.animatium.util.rendering.LineState;
+import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
 @Mixin(FishingHookRenderer.class)
 public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHook, FishingHookRenderState> {
@@ -81,10 +82,11 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
     private void animatium$fishingRodLineThickness(FishingHookRenderState fishingHookRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
         if (Animatium.ENABLED) {
             // TODO/NOTE: 1.21.11 removes setLineWidth, lineWidth is now part of the buffer
+            final LineState lineState = RenderUtils.getLineState();
             if (AnimatiumConfig.instance().items.thinFishingRodLineThickness) {
-                RenderUtils.setLineWidth(1.0F);
+                lineState.setWidth(1.0F);
             } else if (AnimatiumConfig.instance().items.fishingRodLineThickness) {
-                RenderUtils.setLineWidth(2.0F);
+                lineState.setWidth(2.0F);
             }
         }
     }

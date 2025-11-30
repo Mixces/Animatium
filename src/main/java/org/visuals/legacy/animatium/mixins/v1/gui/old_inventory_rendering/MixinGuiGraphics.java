@@ -41,7 +41,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.ItemUtils;
-import org.visuals.legacy.animatium.util.RenderUtils;
+import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
 @Mixin(GuiGraphics.class)
 public abstract class MixinGuiGraphics {

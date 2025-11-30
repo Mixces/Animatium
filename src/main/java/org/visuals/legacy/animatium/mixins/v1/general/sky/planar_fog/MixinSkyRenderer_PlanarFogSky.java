@@ -40,7 +40,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.SkyRendererUtility;
+import org.visuals.legacy.animatium.util.rendering.SkyRendererUtility;
 
 @Mixin(SkyRenderer.class)
 public abstract class MixinSkyRenderer_PlanarFogSky {

@@ -36,20 +36,22 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.RenderUtils;
 import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.rendering.LineState;
+import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
 @Mixin(LevelRenderer.class)
 public abstract class MixinLevelRenderer_BlockOutlines {
     @WrapOperation(method = "renderBlockOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderHitOutline(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;DDDLnet/minecraft/client/renderer/state/BlockOutlineRenderState;I)V"))
     private void animatium$setBlockOutlineWidth(LevelRenderer instance, PoseStack poseStack, VertexConsumer consumer, double camX, double camY, double camZ, BlockOutlineRenderState outlineRenderState, int color, Operation<Void> original) {
+        final LineState lineState = RenderUtils.getLineState();
         if (Animatium.ENABLED && AnimatiumConfig.instance().other.blockOutlineRendering) {
-            RenderUtils.setLineWidth(2.0F);
+            lineState.setWidth(2.0F);
         }
 
         original.call(instance, poseStack, consumer, camX, camY, camZ, outlineRenderState, color);
         if (Animatium.ENABLED && AnimatiumConfig.instance().other.blockOutlineRendering) {
-            RenderUtils.setLineWidth(-1.0F);
+            lineState.setWidth(-1.0F); // Restores vanilla value
         }
     }
 

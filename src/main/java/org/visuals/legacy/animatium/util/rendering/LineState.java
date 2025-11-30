@@ -23,18 +23,22 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.general.outlines;
+package org.visuals.legacy.animatium.util.rendering;
 
-import net.minecraft.client.renderer.RenderType;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.visuals.legacy.animatium.util.rendering.RenderUtils;
+import com.mojang.blaze3d.systems.RenderSystem;
+import lombok.Setter;
+import org.jetbrains.annotations.Nullable;
 
-@Mixin(RenderType.CompositeRenderType.class)
-public abstract class MixinCompositeRenderType_BlockOutlineLineWidth {
-    @ModifyArg(method = "draw", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/DynamicUniforms;writeTransform(Lorg/joml/Matrix4fc;Lorg/joml/Vector4fc;Lorg/joml/Vector3fc;Lorg/joml/Matrix4fc;F)Lcom/mojang/blaze3d/buffers/GpuBufferSlice;"), index = 4)
-    private float animatium$blockOutlineRendering$lineWidth(float original) {
-        return RenderUtils.getLineState().get(original);
+// TODO/NOTE: To be removed in 1.21.11+
+public class LineState {
+    @Setter
+    private float width = -1.0F;
+
+    public float get(@Nullable Float defaultValue) {
+        if (width == -1.0F) {
+            return defaultValue == null ? RenderSystem.getShaderLineWidth() : defaultValue;
+        } else {
+            return width;
+        }
     }
 }

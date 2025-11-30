@@ -38,14 +38,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.PanoramaRendererUtility;
+import org.visuals.legacy.animatium.util.rendering.PanoramaRendererUtility;
 
 @Mixin(PanoramaRenderer.class)
 public abstract class MixinPanoramaRenderer_LegacyRendering {
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CubeMap;render(Lnet/minecraft/client/Minecraft;FF)V", ordinal = 0))
     private void animatium$panoramaRendering(CubeMap instance, Minecraft minecraft, float xRot, float yRot, Operation<Void> original, @Local(argsOnly = true) GuiGraphics guiGraphics, @Local(argsOnly = true, ordinal = 0) int width, @Local(argsOnly = true, ordinal = 1) int height) {
         if (Animatium.ENABLED && AnimatiumConfig.instance().screen.panoramaRendering) {
-            PanoramaRendererUtility.update(minecraft.getDeltaTracker().getRealtimeDeltaTicks());
+            PanoramaRendererUtility.update(minecraft.getDeltaTracker().getGameTimeDeltaTicks());
             PanoramaRendererUtility.render(guiGraphics, width, height);
         } else {
             original.call(instance, minecraft, xRot, yRot);

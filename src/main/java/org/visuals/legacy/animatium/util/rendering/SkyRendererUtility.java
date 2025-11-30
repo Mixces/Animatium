@@ -23,27 +23,24 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util;
+package org.visuals.legacy.animatium.util.rendering;
 
 import com.mojang.blaze3d.buffers.GpuBuffer;
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import lombok.experimental.UtilityClass;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.ARGB;
 import org.joml.Matrix4fStack;
+import org.joml.Vector4f;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.mixins.accessor.ClientLevelDataAccessor;
 import org.visuals.legacy.animatium.util.compatibility.IrisPipeline;
 import org.visuals.legacy.animatium.util.compatibility.IrisUtil;
 
-import java.util.OptionalDouble;
-import java.util.OptionalInt;
 import java.util.function.Consumer;
 
 @UtilityClass
@@ -68,6 +65,7 @@ public class SkyRendererUtility {
                     .withShaderDefine("PLANAR_FOG")
                     .build());
 
+    private Renderer renderer;
     private GpuBuffer vertexBuffer = null;
 
     static {
@@ -91,22 +89,15 @@ public class SkyRendererUtility {
         modelViewStack.pushMatrix();
         modelViewStack.translate(0.0F, AnimatiumConfig.instance().extras.dontMoveBlueVoid ? 12.0F : -((float) (depth - 16.0)), 0.0F);
 
-        final GpuBufferSlice transforms = DynamicTransformsBuilder.of()
-                .withShaderColor(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F)
-                .build();
-
-        RenderSystem.AutoStorageIndexBuffer quadsIndexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
-        RenderTarget renderTarget = Minecraft.getInstance().getMainRenderTarget();
-        try (RenderPass renderPass = RenderSystem.getDevice()
-                .createCommandEncoder()
-                .createRenderPass(() -> "Blue void sky disc", renderTarget.getColorTextureView(), OptionalInt.empty(), renderTarget.getDepthTextureView(), OptionalDouble.empty())) {
-            renderPass.setPipeline(getLegacySkyPipeline(AnimatiumConfig.instance().other.planarSkyFog));
-            renderPass.setVertexBuffer(0, getGpuBuffer());
-            renderPass.setIndexBuffer(quadsIndexBuffer.getBuffer(6), quadsIndexBuffer.type());
-            RenderSystem.bindDefaultUniforms(renderPass);
-            renderPass.setUniform("DynamicTransforms", transforms);
-            renderPass.drawIndexed(0, 0, 1014, 1);
+        final RenderSystem.AutoStorageIndexBuffer quadsIndexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
+        if (renderer == null) {
+            renderer = Renderer.of("Blue void sky disc");
         }
+
+        renderer.setPipeline(getLegacySkyPipeline(AnimatiumConfig.instance().other.planarSkyFog));
+        renderer.setup(getGpuBuffer(), quadsIndexBuffer.getBuffer(6), quadsIndexBuffer.type(), 1014);
+        renderer.setShaderColor(new Vector4f(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F, 1.0F));
+        renderer.draw();
 
         modelViewStack.popMatrix();
     }
@@ -141,6 +132,14 @@ public class SkyRendererUtility {
             } catch (Exception ignored) {
                 return null;
             }
+        }
+    }
+
+    public double getHorizonDepth(ClientLevel level) {
+        if (AnimatiumConfig.instance().other.skyHorizonHeight) {
+            return ((ClientLevelDataAccessor) level.getLevelData()).animatium$isFlatWorld() ? 0.0D : 63.0D;
+        } else {
+            return level.getLevelData().getHorizonHeight(level);
         }
     }
 }

@@ -33,7 +33,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.RenderUtils;
+import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 import org.visuals.legacy.animatium.util.config.ConfigUtil;
 import org.visuals.legacy.animatium.util.config.Version;
 

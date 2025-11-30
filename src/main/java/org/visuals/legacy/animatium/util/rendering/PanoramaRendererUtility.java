@@ -23,15 +23,14 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util;
+package org.visuals.legacy.animatium.util.rendering;
 
 import com.mojang.blaze3d.ProjectionType;
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.opengl.GlTexture;
 import com.mojang.blaze3d.opengl.GlTextureView;
 import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
 import com.mojang.blaze3d.systems.GpuDevice;
@@ -39,9 +38,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.textures.TextureFormat;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import lombok.experimental.UtilityClass;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
@@ -54,20 +54,21 @@ import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2f;
-import org.joml.Matrix4fStack;
+import org.joml.Matrix4f;
 import org.joml.Vector4i;
 import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.util.Utils;
 
 @UtilityClass
 // Ported code of the old <=1.12.2 panorama renderer (w/ blur)
 public class PanoramaRendererUtility {
     private final BlendFunction PANORAMA_BLEND = new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
 
-    private final RenderPipeline PANORAMA =
+    private final RenderPipeline LEGACY_PANORAMA =
             RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
-                    .withLocation(Animatium.location("pipeline/panorama"))
-                    .withVertexShader("core/position_tex_color")
-                    .withFragmentShader("core/position_tex_color")
+                    .withLocation(Animatium.location("pipeline/legacy_panorama"))
+                    .withVertexShader(Animatium.location("core/legacy_panorama"))
+                    .withFragmentShader(Animatium.location("core/legacy_panorama"))
                     .withCull(false)
                     .withDepthWrite(false)
                     .withBlend(PANORAMA_BLEND)
@@ -76,7 +77,19 @@ public class PanoramaRendererUtility {
                     .withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
                     .build();
 
+    private final RenderPipeline LEGACY_PANORAMA_BLUR =
+            RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
+                    .withLocation(Animatium.location("pipeline/legacy_panorama_blur"))
+                    .withVertexShader(Animatium.location("core/legacy_panorama_blur"))
+                    .withFragmentShader(Animatium.location("core/legacy_panorama_blur"))
+                    .withBlend(PANORAMA_BLEND)
+                    .withColorWrite(true, false)
+                    .build();
+
+    private final Vector4i VIEWPORT = new Vector4i(0, 0, 256, 256);
+
     private final CachedPerspectiveProjectionMatrixBuffer projectionMatrixBuffer = new CachedPerspectiveProjectionMatrixBuffer("panorama", 0.05F, 10.0F);
+    private final MainTarget panoramaTarget = new MainTarget(256, 256);
     private final GlTexture backgroundTexture;
     private final GlTextureView backgroundTextureView;
     private float spin = 0.0F;
@@ -86,133 +99,99 @@ public class PanoramaRendererUtility {
         backgroundTexture = (GlTexture) device.createTexture(() -> "Background texture", 15, TextureFormat.RGBA8, 256, 256, 1, 1);
         backgroundTexture.setTextureFilter(FilterMode.LINEAR, FilterMode.LINEAR, false);
         backgroundTextureView = (GlTextureView) device.createTextureView(backgroundTexture);
+        device.createCommandEncoder().clearDepthTexture(panoramaTarget.getDepthTexture(), 1.0F);
     }
 
     public void render(final GuiGraphics guiGraphics, final int width, final int height) {
-        final RenderTarget renderTarget = Minecraft.getInstance().getMainRenderTarget();
-        RenderUtils.setRenderOverrides(new RenderUtils.RenderOverrides(new Vector4i(0, 0, 256, 256)));
-        renderPanorama(PANORAMA, renderTarget, width, height);
-        for (int layer = 0; layer < 7; ++layer) {
-            RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(renderTarget.getColorTexture(), backgroundTexture, 0, 0, 0, 0, 0, 256, 256);
-            RenderUtils.drawInGui(renderTarget, DynamicTransformsBuilder.of(), new BlitBlurTexture(guiGraphics.pose(), backgroundTextureView, width, height));
+        renderPanorama(width, height);
+        for (int pass = 0; pass < 7; ++pass) {
+            panoramaBlurPass(guiGraphics.pose(), width, height);
         }
-        RenderUtils.setRenderOverrides(RenderUtils.RenderOverrides.DISABLED);
+
         guiGraphics.guiRenderState.submitGuiElement(new BlitFinalTexture(guiGraphics.pose(), backgroundTextureView, width, height, ARGB.white(1.0F)));
     }
 
-    private void renderPanorama(final RenderPipeline pipeline, final RenderTarget renderTarget, final int width, final int height) {
+    private void renderPanorama(final int width, final int height) {
         RenderSystem.setProjectionMatrix(projectionMatrixBuffer.getBuffer(width, height, 120.0F), ProjectionType.PERSPECTIVE);
-        final Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
-        modelViewStack.pushMatrix();
-        modelViewStack.identity();
-        modelViewStack.rotateX((float) Math.toRadians(180.0F));
-        modelViewStack.rotateZ((float) Math.toRadians(90.0F));
-        for (int i4 = 0; i4 < 64; i4++) {
-            modelViewStack.pushMatrix();
-            float f2 = (i4 % 8 / 8.0F - 0.5F) / 64.0F;
-            float f3 = ((float) i4 / 8 / 8.0F - 0.5F) / 64.0F;
-            modelViewStack.translate(f2, f3, 0.0F);
-            modelViewStack.rotateX(Utils.toRadians(getXRot()));
-            modelViewStack.rotateY(Utils.toRadians(getYRot()));
+        final Matrix4f rootMatrix = new Matrix4f().identity().rotateX(Utils.toRadians(180.0F)).rotateZ(Utils.toRadians(90.0F));
+        for (int layer = 0; layer < 64; layer++) {
+            float x = (layer % 8 / 8.0F - 0.5F) / 64.0F;
+            float y = ((float) layer / 8 / 8.0F - 0.5F) / 64.0F;
+            final Matrix4f layerMatrix = new Matrix4f(rootMatrix).translate(x, y, 0.0F).rotateX(Utils.toRadians(getXRot())).rotateY(Utils.toRadians(getYRot()));
             for (int panoramaIdx = 0; panoramaIdx < 6; panoramaIdx++) {
-                modelViewStack.pushMatrix();
+                final Matrix4f faceMatrix = new Matrix4f(layerMatrix);
                 if (panoramaIdx == 1) {
-                    modelViewStack.rotateY(Utils.toRadians(90.0F));
+                    faceMatrix.rotateY(Utils.toRadians(90.0F));
                 } else if (panoramaIdx == 2) {
-                    modelViewStack.rotateY(Utils.toRadians(180.0F));
+                    faceMatrix.rotateY(Utils.toRadians(180.0F));
                 } else if (panoramaIdx == 3) {
-                    modelViewStack.rotateY(Utils.toRadians(-90.0F));
+                    faceMatrix.rotateY(Utils.toRadians(-90.0F));
                 } else if (panoramaIdx == 4) {
-                    modelViewStack.rotateX(Utils.toRadians(90.0F));
+                    faceMatrix.rotateX(Utils.toRadians(90.0F));
                 } else if (panoramaIdx == 5) {
-                    modelViewStack.rotateX(Utils.toRadians(-90.0F));
+                    faceMatrix.rotateX(Utils.toRadians(-90.0F));
                 }
 
-                final GpuTextureView panoramaTexture = Minecraft.getInstance().getTextureManager().getTexture(getPanoramaTexture(panoramaIdx)).getTextureView();
-                try (ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(pipeline.getVertexFormat().getVertexSize() * 4)) {
-                    final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
-                    final int color = ARGB.white(255.0F / (i4 + 1.0F));
-                    builder.addVertex(-1.0F, -1.0F, 1.0F).setUv(0.0F, 0.0F).setColor(color);
-                    builder.addVertex(1.0F, -1.0F, 1.0F).setUv(1.0F, 0.0F).setColor(color);
-                    builder.addVertex(1.0F, 1.0F, 1.0F).setUv(1.0F, 1.0F).setColor(color);
-                    builder.addVertex(-1.0F, 1.0F, 1.0F).setUv(0.0F, 1.0F).setColor(color);
-                    final GpuBufferSlice dynamicTransforms = DynamicTransformsBuilder.of()
-                            .withModelViewMatrix(modelViewStack)
-                            .build();
-                    RenderUtils.drawWithPipeline(renderTarget, pipeline, builder.buildOrThrow(), (pass) -> {
-                        pass.setUniform("DynamicTransforms", dynamicTransforms);
-                        pass.bindSampler("Sampler0", panoramaTexture);
-                    });
-                }
+                try (final Renderer renderer = Renderer.of("Panorama")) {
+                    renderer.setPipeline(LEGACY_PANORAMA);
+                    renderer.setViewport(VIEWPORT);
+                    renderer.setRenderTarget(panoramaTarget);
+                    renderer.setModelViewMatrix(faceMatrix);
 
-                modelViewStack.popMatrix();
+                    final int currentLayer = layer;
+                    renderer.setup((builder) -> {
+                        final int color = ARGB.white(255.0F / (currentLayer + 1.0F));
+                        builder.addVertex(-1.0F, -1.0F, 1.0F).setUv(0.0F, 0.0F).setColor(color);
+                        builder.addVertex(1.0F, -1.0F, 1.0F).setUv(1.0F, 0.0F).setColor(color);
+                        builder.addVertex(1.0F, 1.0F, 1.0F).setUv(1.0F, 1.0F).setColor(color);
+                        builder.addVertex(-1.0F, 1.0F, 1.0F).setUv(0.0F, 1.0F).setColor(color);
+                    }, 4);
+
+                    renderer.setTexture(0, getPanoramaTexture(panoramaIdx));
+                    renderer.draw();
+                }
             }
-
-            modelViewStack.popMatrix();
         }
+    }
 
-        modelViewStack.popMatrix();
+    private void panoramaBlurPass(final Matrix3x2f pose, final int width, final int height) {
+        RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(panoramaTarget.getColorTexture(), backgroundTexture, 0, 0, 0, 0, 0, 256, 256);
+        try (final Renderer renderer = Renderer.of("Panorama Blur Pass")) {
+            renderer.setPipeline(LEGACY_PANORAMA_BLUR);
+            renderer.setViewport(VIEWPORT);
+            renderer.setRenderTarget(panoramaTarget);
+            renderer.setup((builder) -> {
+                for (int cycle = 0; cycle < 3; cycle++) {
+                    final int color = ARGB.white(1.0F / (cycle + 1.0F));
+                    final float growth = (cycle - 1.0F) / 256.0F;
+                    builder.addVertexWith2DPose(pose, width, height).setUv(0.0F + growth, 1.0F).setColor(color);
+                    builder.addVertexWith2DPose(pose, width, 0.0F).setUv(1.0F + growth, 1.0F).setColor(color);
+                    builder.addVertexWith2DPose(pose, 0.0F, 0.0F).setUv(1.0F + growth, 0.0F).setColor(color);
+                    builder.addVertexWith2DPose(pose, 0.0F, height).setUv(0.0F + growth, 0.0F).setColor(color);
+                }
+            }, 12);
+            renderer.setTexture(0, backgroundTextureView);
+            renderer.drawInGui();
+        }
     }
 
     public void update(float tickDelta) {
         spin += tickDelta;
     }
 
-    private float getXRot() {
+    public float getXRot() {
         return Mth.sin(spin / 400.0F) * 25.0F + 20.0F;
     }
 
-    private float getYRot() {
+    public float getYRot() {
         return -spin * 0.1F;
     }
 
-    private ResourceLocation getPanoramaTexture(int side) {
+    public ResourceLocation getPanoramaTexture(int side) {
         return ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_" + side + ".png");
     }
 
-    private record BlitBlurTexture(
-            Matrix3x2f pose,
-            GpuTextureView texture,
-            int width, int height
-    ) implements GuiElementRenderState {
-        @Override
-        public void buildVertices(VertexConsumer consumer) {
-            for (int cycle = 0; cycle < 3; cycle++) {
-                final int color = ARGB.white(1.0F / (cycle + 1));
-                final float growth = (cycle - 1) / 256.0F;
-                consumer.addVertexWith2DPose(this.pose, this.width, this.height).setUv(0.0F + growth, 1.0F).setColor(color);
-                consumer.addVertexWith2DPose(this.pose, this.width, 0.0F).setUv(1.0F + growth, 1.0F).setColor(color);
-                consumer.addVertexWith2DPose(this.pose, 0.0F, 0.0F).setUv(1.0F + growth, 0.0F).setColor(color);
-                consumer.addVertexWith2DPose(this.pose, 0.0F, this.height).setUv(0.0F + growth, 0.0F).setColor(color);
-            }
-        }
-
-        @Override
-        public @NotNull RenderPipeline pipeline() {
-            return RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
-                    .withLocation(Animatium.location("pipeline/panorama_blur"))
-                    .withBlend(PANORAMA_BLEND)
-                    .withColorWrite(true, false)
-                    .build();
-        }
-
-        @Override
-        public @NotNull TextureSetup textureSetup() {
-            return TextureSetup.singleTexture(this.texture);
-        }
-
-        @Override
-        public @Nullable ScreenRectangle scissorArea() {
-            return null;
-        }
-
-        @Override
-        public @NotNull ScreenRectangle bounds() {
-            return new ScreenRectangle(0, 0, this.width, this.height).transformMaxBounds(this.pose);
-        }
-    }
-
-    public record BlitFinalTexture(
+    private record BlitFinalTexture(
             Matrix3x2f pose,
             GpuTextureView texture,
             int width, int height,
@@ -220,7 +199,7 @@ public class PanoramaRendererUtility {
     ) implements GuiElementRenderState {
         @Override
         public void buildVertices(VertexConsumer consumer) {
-            final float aspect = 120.0F / (Math.max(this.width, this.height));
+            final float aspect = 120.0F / Math.max(this.width, this.height);
             final float sw = this.width * aspect / 256.0F;
             final float sh = this.height * aspect / 256.0F;
             consumer.addVertexWith2DPose(this.pose, 0.0F, this.height).setUv(0.5F - sh, 0.5F + sw).setColor(this.color);
