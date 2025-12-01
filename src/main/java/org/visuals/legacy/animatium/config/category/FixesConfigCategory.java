@@ -44,7 +44,7 @@ public class FixesConfigCategory extends Category {
     public boolean fixEquipAnimationOnItemUse = true;
     public boolean fixItemUsageVisualInGUI = true;
 
-    public static ConfigCategory setup(final FixesConfigCategory defaults, final FixesConfigCategory config) {
+    public static ConfigCategory create(final FixesConfigCategory defaults, final FixesConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.fixes"));
         category.option(booleanOption("fixSneakingFeetPosition", defaults, config));

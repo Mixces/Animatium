@@ -25,17 +25,19 @@
 
 package org.visuals.legacy.animatium.screens;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 import org.visuals.legacy.animatium.util.config.ConfigUtil;
 import org.visuals.legacy.animatium.util.config.Version;
+import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
 public class OnboardingScreen extends Screen {
     private final Screen original;
@@ -43,7 +45,7 @@ public class OnboardingScreen extends Screen {
 
     private Button v1_7Button = null;
     private Button v1_8Button = null;
-    // private Button v1_12Button = null;
+    private Button v1_12Button = null;
     private Button modernButton = null;
 
     public OnboardingScreen(Screen original) {
@@ -70,9 +72,9 @@ public class OnboardingScreen extends Screen {
         this.v1_8Button = this.addRenderableWidget(Button.builder(Component.literal("1.8"), button -> this.version = Version.V1_8)
                 .bounds((this.width / 2) - (buttonWidth / 2), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
                 .build());
-        // this.v1_12Button = this.addRenderableWidget(Button.builder(Component.literal("1.12"), button -> this.version = Version.V1_12)
-        //         .bounds((this.width / 2) - (buttonWidth / 2), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
-        //         .build());
+        this.v1_12Button = Button.builder(Component.literal("1.12"), button -> this.version = Version.V1_12)
+                .bounds((this.width / 2) - (buttonWidth / 2), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
+                .build();
         this.modernButton = this.addRenderableWidget(Button.builder(Component.literal("Modern"), button -> this.version = Version.MODERN)
                 .bounds(((this.width / 2) - (buttonWidth / 2) + (buttonWidth + Button.DEFAULT_SPACING)), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
                 .build());
@@ -83,7 +85,7 @@ public class OnboardingScreen extends Screen {
             this.version.apply(AnimatiumConfig.instance());
             AnimatiumConfig.save();
             this.minecraft.setScreen(this.original);
-        }).pos((this.width / 2) - (Button.DEFAULT_WIDTH / 2), (int) (this.height / 1.2F)).build());
+        }).pos((this.width / 2) - (Button.DEFAULT_WIDTH / 2), (int) (this.height / 1.2F)).tooltip(Tooltip.create(Component.literal("WARNING! THIS WILL RESET ALL YOUR SETTINGS").withStyle(ChatFormatting.RED))).build());
     }
 
     @Override
@@ -133,8 +135,8 @@ public class OnboardingScreen extends Screen {
         this.v1_8Button.active = this.version != Version.V1_8;
         updateVersionButtonMessage(this.v1_8Button);
 
-        // this.v1_12.active = this.version != Version.V1_12;
-        // updateVersionButtonMessage(this.v1_12Button);
+        this.v1_12Button.active = this.version != Version.V1_12;
+        updateVersionButtonMessage(this.v1_12Button);
 
         this.modernButton.active = this.version != Version.MODERN;
         updateVersionButtonMessage(this.modernButton);

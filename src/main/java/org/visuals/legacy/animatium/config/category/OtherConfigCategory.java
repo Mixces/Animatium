@@ -57,7 +57,7 @@ public class OtherConfigCategory extends Category {
     public boolean flameOffset = true;
     public boolean disableRandomBlockRotations = true;
 
-    public static ConfigCategory setup(final OtherConfigCategory defaults, final OtherConfigCategory config) {
+    public static ConfigCategory create(final OtherConfigCategory defaults, final OtherConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.other"));
 

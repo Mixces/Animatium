@@ -45,12 +45,12 @@ public final class AnimatiumConfig {
     public static Screen getConfigScreen(@Nullable Screen parent) {
         return YetAnotherConfigLib.create(CONFIG, (defaults, config, builder) -> {
             builder.title(Component.translatable("animatium.title"));
-            builder.category(MovementConfigCategory.setup(defaults.movement, config.movement));
-            builder.category(ScreenConfigCategory.setup(defaults.screen, config.screen));
-            builder.category(ItemsConfigCategory.setup(defaults.items, config.items));
-            builder.category(FixesConfigCategory.setup(defaults.fixes, config.fixes));
-            builder.category(OtherConfigCategory.setup(defaults.other, config.other));
-            builder.category(ExtrasConfigCategory.setup(defaults.extras, config.extras));
+            builder.category(MovementConfigCategory.create(defaults.movement, config.movement));
+            builder.category(ScreenConfigCategory.create(defaults.screen, config.screen));
+            builder.category(ItemsConfigCategory.create(defaults.items, config.items));
+            builder.category(FixesConfigCategory.create(defaults.fixes, config.fixes));
+            builder.category(OtherConfigCategory.create(defaults.other, config.other));
+            builder.category(ExtrasConfigCategory.create(defaults.extras, config.extras));
             return builder;
         }).generateScreen(parent);
     }

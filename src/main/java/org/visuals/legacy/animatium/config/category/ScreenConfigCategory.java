@@ -47,7 +47,7 @@ public class ScreenConfigCategory extends Category {
     public boolean panoramaRendering = true;
     public CameraVersion cameraVersion = CameraVersion.V1_8;
 
-    public static ConfigCategory setup(final ScreenConfigCategory defaults, final ScreenConfigCategory config) {
+    public static ConfigCategory create(final ScreenConfigCategory defaults, final ScreenConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.screen"));
         category.option(booleanOption("crosshairInThirdPerson", defaults, config));

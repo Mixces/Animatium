@@ -56,7 +56,7 @@ public class ExtrasConfigCategory extends Category {
     public boolean ignoreHasteSpeed = false;
     public boolean ignoreMiningFatigueSpeed = false;
 
-    public static ConfigCategory setup(final ExtrasConfigCategory defaults, final ExtrasConfigCategory config) {
+    public static ConfigCategory create(final ExtrasConfigCategory defaults, final ExtrasConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.extras"));
         category.option(booleanOption("minimalViewBobbing", defaults, config));

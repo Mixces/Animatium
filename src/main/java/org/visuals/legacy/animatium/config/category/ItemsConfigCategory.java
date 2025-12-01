@@ -66,7 +66,7 @@ public class ItemsConfigCategory extends Category {
     public boolean heldItemVisibilityInBoat = true;
     public boolean itemPickupPosition = true;
 
-    public static ConfigCategory setup(final ItemsConfigCategory defaults, final ItemsConfigCategory config) {
+    public static ConfigCategory create(final ItemsConfigCategory defaults, final ItemsConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.items"));
 

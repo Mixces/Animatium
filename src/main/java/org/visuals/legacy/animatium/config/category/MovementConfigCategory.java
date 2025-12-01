@@ -53,7 +53,7 @@ public class MovementConfigCategory extends Category {
     public boolean legacyDamageTilt = true;
     public boolean offsetHurtTime = true;
 
-    public static ConfigCategory setup(final MovementConfigCategory defaults, final MovementConfigCategory config) {
+    public static ConfigCategory create(final MovementConfigCategory defaults, final MovementConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.movement"));
 
