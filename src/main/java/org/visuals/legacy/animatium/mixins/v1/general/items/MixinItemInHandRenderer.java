@@ -71,8 +71,10 @@ public abstract class MixinItemInHandRenderer {
     @Shadow
     @Final
     private ItemModelResolver itemModelResolver;
+
     @Unique
     private int animatium$currentSlot = -1;
+
     @Unique
     private ItemStack animatium$mainHandItem = ItemStack.EMPTY;
 
