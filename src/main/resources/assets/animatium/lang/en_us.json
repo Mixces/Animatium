@@ -149,6 +149,8 @@
 	"animatium.heldItemVisibilityInBoat.description": "Enable/disable held item visibility while you're in a moving boat. Turn this on to be like it was in <=1.8.x.",
 	"animatium.itemPickupPosition": "[1.8] Item pickup position",
 	"animatium.itemPickupPosition.description": "Removes the eye-height level item pickup position to match 1.8-1.17. Disable this feature to match <=1.7.x",
+	"animatium.mobHeadIcons": "[1.7] 2D Head Item Icons",
+	"animatium.mobHeadIcons.description": "Changes the held item model for heads to be 2d icons like in <=1.7.",
 
 	"animatium.category.fixes": "Fixes",
 	"animatium.fixSneakingFeetPosition": "[1.11] Fix sneaking feet position",

@@ -1,0 +1,10 @@
+{
+	"model": {
+		"type": "minecraft:special",
+		"base": "animatium:item/wither_skeleton_skull",
+		"model": {
+			"type": "minecraft:head",
+			"kind": "wither_skeleton"
+		}
+	}
+}

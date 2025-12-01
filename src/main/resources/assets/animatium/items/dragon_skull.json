@@ -1,0 +1,10 @@
+{
+	"model": {
+		"type": "minecraft:special",
+		"base": "animatium:item/dragon_skull",
+		"model": {
+			"type": "minecraft:head",
+			"kind": "dragon"
+		}
+	}
+}

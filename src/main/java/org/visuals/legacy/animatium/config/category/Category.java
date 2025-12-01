@@ -32,7 +32,7 @@ import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.minecraft.network.chat.Component;
-import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.AnimatiumConstants;
 
 import java.lang.reflect.Field;
 import java.util.function.Function;
@@ -43,7 +43,7 @@ public abstract class Category {
     }
 
     public static <T extends Category, S extends Enum<S>> Option<S> enumOption(String fieldName, T defaults, T current, Class<S> enumClazz) {
-        return option(fieldName, defaults, current, (opt) -> EnumControllerBuilder.create(opt).enumClass(enumClazz).formatValue(it -> Component.translatable(Animatium.MOD_ID + ".enum." + enumClazz.getSimpleName() + "." + it.name())));
+        return option(fieldName, defaults, current, (opt) -> EnumControllerBuilder.create(opt).enumClass(enumClazz).formatValue(it -> Component.translatable(AnimatiumConstants.MOD_ID + ".enum." + enumClazz.getSimpleName() + "." + it.name())));
     }
 
     public static <T extends Category> Option<Float> floatSliderOption(String fieldName, T defaults, T current, float min, float max, float step) {
@@ -52,7 +52,7 @@ public abstract class Category {
 
     public static <T extends Category, S> Option<S> option(String fieldName, T defaults, T current, Function<Option<S>, ControllerBuilder<S>> controllerBuilder) {
         final Reference<S> reference = Reference.get(fieldName, defaults, current);
-        final String id = Animatium.MOD_ID + "." + fieldName;
+        final String id = AnimatiumConstants.MOD_ID + "." + fieldName;
         return Option.<S>createBuilder()
                 .name(Component.translatable(id))
                 .description(OptionDescription.of(Component.translatable(id + ".description")))

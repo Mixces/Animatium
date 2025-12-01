@@ -1,0 +1,9 @@
+{
+	"model": {
+		"type": "minecraft:special",
+		"base": "animatium:item/player_skull",
+		"model": {
+			"type": "minecraft:player_head"
+		}
+	}
+}

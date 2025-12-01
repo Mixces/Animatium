@@ -65,6 +65,7 @@ public class ItemsConfigCategory extends Category {
     public boolean legacyItemRarities = true;
     public boolean heldItemVisibilityInBoat = true;
     public boolean itemPickupPosition = true;
+    public boolean mobHeadIcons = true;
 
     public static ConfigCategory create(final ItemsConfigCategory defaults, final ItemsConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
@@ -131,6 +132,7 @@ public class ItemsConfigCategory extends Category {
             otherGroup.option(booleanOption("legacyItemRarities", defaults, config));
             otherGroup.option(booleanOption("heldItemVisibilityInBoat", defaults, config));
             otherGroup.option(booleanOption("itemPickupPosition", defaults, config));
+            otherGroup.option(booleanOption("mobHeadIcons", defaults, config));
             category.group(otherGroup.build());
         }
 

@@ -71,18 +71,16 @@ public abstract class MixinItemInHandRenderer {
     @Shadow
     @Final
     private ItemModelResolver itemModelResolver;
+    @Unique
+    private int animatium$currentSlot = -1;
+    @Unique
+    private ItemStack animatium$mainHandItem = ItemStack.EMPTY;
 
     @Shadow
     protected abstract void applyItemArmAttackTransform(PoseStack matrices, HumanoidArm arm, float swingProgress);
 
     @Shadow
     protected abstract boolean shouldInstantlyReplaceVisibleItem(ItemStack itemStack, ItemStack itemStack2);
-
-    @Unique
-    private int animatium$currentSlot = -1;
-
-    @Unique
-    private ItemStack animatium$mainHandItem = ItemStack.EMPTY;
 
     @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;isUsingItem()Z", ordinal = 1))
     private boolean animatium$itemUsageVisualInGUI(AbstractClientPlayer instance, Operation<Boolean> original) {
@@ -133,11 +131,12 @@ public abstract class MixinItemInHandRenderer {
                 poseStack.mulPose(Axis.YP.rotationDegrees(direction * 180.0F));
             }
 
-            ItemStackRenderState itemStackRenderState = new ItemStackRenderState();
+            final ItemDisplayContext displayContext = hand == InteractionHand.MAIN_HAND ? ItemDisplayContext.FIRST_PERSON_RIGHT_HAND : ItemDisplayContext.FIRST_PERSON_LEFT_HAND;
+            final ItemStackRenderState itemStackRenderState = new ItemStackRenderState();
             itemModelResolver.updateForTopItem(
                     itemStackRenderState,
                     stack,
-                    hand == InteractionHand.MAIN_HAND ? ItemDisplayContext.FIRST_PERSON_RIGHT_HAND : ItemDisplayContext.FIRST_PERSON_LEFT_HAND,
+                    displayContext,
                     player.level(),
                     player,
                     light
@@ -156,7 +155,7 @@ public abstract class MixinItemInHandRenderer {
                 poseStack.translate(direction * -1.13 * 0.0625F, -3.2 * 0.0625F, -1.13 * 0.0625F);
             }
 
-            if (AnimatiumConfig.instance().items.skullPosition && ItemUtils.isSkullBlock(stack)) {
+            if (AnimatiumConfig.instance().items.skullPosition && ItemUtils.isSkullBlock(stack) && !AnimatiumConfig.instance().items.mobHeadIcons) {
                 poseStack.mulPose(Axis.YP.rotationDegrees(45.0F));
                 poseStack.scale(0.4F, 0.4F, 0.4F);
 

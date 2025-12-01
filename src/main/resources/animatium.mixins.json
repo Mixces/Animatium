@@ -49,6 +49,7 @@
     "v1.general.items.MixinItem",
     "v1.general.items.MixinItemInHandLayer",
     "v1.general.items.MixinItemInHandRenderer",
+	  "v1.general.items.MixinItemModelResolver_MobHeadIcons",
     "v1.general.items.MixinItemStack",
     "v1.general.items.flat.MixinItemEntityRenderer",
     "v1.general.items.flat.MixinItemFrameRenderer",

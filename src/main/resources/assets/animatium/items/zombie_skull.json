@@ -1,0 +1,10 @@
+{
+	"model": {
+		"type": "minecraft:special",
+		"base": "animatium:item/zombie_skull",
+		"model": {
+			"type": "minecraft:head",
+			"kind": "zombie"
+		}
+	}
+}

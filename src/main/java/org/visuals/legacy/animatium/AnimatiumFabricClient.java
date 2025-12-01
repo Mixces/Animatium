@@ -47,7 +47,7 @@ public final class AnimatiumFabricClient implements ClientModInitializer {
     public void onInitializeClient() {
         Animatium.initialize();
 
-        final ModContainer modContainer = FabricLoader.getInstance().getModContainer(Animatium.MOD_ID).orElseThrow(() -> new RuntimeException("Mod container data could not be found for Animatium!"));
+        final ModContainer modContainer = FabricLoader.getInstance().getModContainer(AnimatiumConstants.MOD_ID).orElseThrow(() -> new RuntimeException("Mod container data could not be found for Animatium!"));
         ResourceManagerHelper.registerBuiltinResourcePack(Animatium.location("classic_textures"), modContainer, ResourcePackActivationType.DEFAULT_ENABLED);
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) -> dispatcher.register(AnimatiumCommand.create()));
         DebugScreenEntries.register(AnimatiumDebugEntry.GROUP, new AnimatiumDebugEntry());
@@ -73,6 +73,6 @@ public final class AnimatiumFabricClient implements ClientModInitializer {
 
         PayloadTypeRegistry.playC2S().register(AnimatiumInfoPayloadPacket.PAYLOAD_ID, AnimatiumInfoPayloadPacket.CODEC);
         PayloadTypeRegistry.playS2C().register(RequestInfoPayloadPacket.PAYLOAD_ID, RequestInfoPayloadPacket.CODEC);
-        ClientPlayNetworking.registerGlobalReceiver(RequestInfoPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> ClientPlayNetworking.send(Animatium.getInfoPayload())));
+        ClientPlayNetworking.registerGlobalReceiver(RequestInfoPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> ClientPlayNetworking.send(AnimatiumConstants.getInfoPayload())));
     }
 }

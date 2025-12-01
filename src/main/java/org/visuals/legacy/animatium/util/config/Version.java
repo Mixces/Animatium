@@ -91,6 +91,7 @@ public enum Version {
         items.legacyItemRarities = true;
         items.heldItemVisibilityInBoat = true;
         items.itemPickupPosition = true;
+        items.mobHeadIcons = true;
 
         final ScreenConfigCategory screen = config.screen;
         screen.crosshairInThirdPerson = true;
@@ -189,6 +190,7 @@ public enum Version {
         items.legacyItemRarities = true;
         items.heldItemVisibilityInBoat = true;
         items.itemPickupPosition = false;
+        items.mobHeadIcons = false;
 
         final ScreenConfigCategory screen = config.screen;
         screen.crosshairInThirdPerson = true;
@@ -301,6 +303,7 @@ public enum Version {
         items.legacyItemRarities = false;
         items.heldItemVisibilityInBoat = false;
         items.itemPickupPosition = false;
+        items.mobHeadIcons = false;
 
         final ScreenConfigCategory screen = config.screen;
         screen.crosshairInThirdPerson = false;

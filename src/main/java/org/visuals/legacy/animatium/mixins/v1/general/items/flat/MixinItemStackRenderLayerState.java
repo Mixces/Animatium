@@ -71,26 +71,26 @@ public abstract class MixinItemStackRenderLayerState {
 
     // TODO/MOVE
     @Inject(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack$Pose;)V"))
-    private void animatium$itemPositionsRod(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int light, int overlay, int k, CallbackInfo ci) {
+    private void animatium$itemPositions(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int light, int overlay, int k, CallbackInfo ci) {
         if (Animatium.ENABLED) {
             final ItemStack stack = ((ItemUtilityRenderState) field_55345).animatium$getItemStack();
             if (!stack.isEmpty()) {
-                final ItemDisplayContext itemDisplayContext = field_55345.displayContext;
+                final ItemDisplayContext itemDisplayContext = this.field_55345.displayContext;
                 boolean isGui = itemDisplayContext == ItemDisplayContext.GUI;
                 boolean isFirstPerson = itemDisplayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || itemDisplayContext == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
                 boolean isThirdPerson = itemDisplayContext == ItemDisplayContext.THIRD_PERSON_LEFT_HAND || itemDisplayContext == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
-                ItemTransform transform = this.transform;
-                float x = transform.translation().x();
-                float y = transform.translation().y();
-                float z = transform.translation().z();
-                float rotX = transform.rotation().x();
-                float rotY = transform.rotation().y();
-                float rotZ = transform.rotation().z();
-                float scaleX = transform.scale().x();
-                float scaleY = transform.scale().y();
-                float scaleZ = transform.scale().z();
+
+                float x = this.transform.translation().x();
+                float y = this.transform.translation().y();
+                float z = this.transform.translation().z();
+                float rotX = this.transform.rotation().x();
+                float rotY = this.transform.rotation().y();
+                float rotZ = this.transform.rotation().z();
+                float scaleX = this.transform.scale().x();
+                float scaleY = this.transform.scale().y();
+                float scaleZ = this.transform.scale().z();
                 if (AnimatiumConfig.instance().items.fishingRodVersion != FishingRodVersion.VANILLA && ItemUtils.isFishingRodItem(stack) && isFirstPerson) {
-                    int ordinal = AnimatiumConfig.instance().items.fishingRodVersion.ordinal();
+                    final int ordinal = AnimatiumConfig.instance().items.fishingRodVersion.ordinal();
                     if (ordinal <= FishingRodVersion.V1_8.ordinal()) {
                         poseStack.translate(0.070625, 0.1, 0.020625);
                     }
@@ -112,7 +112,7 @@ public abstract class MixinItemStackRenderLayerState {
                 }
 
                 // TODO/NEED TO FIX
-                if (AnimatiumConfig.instance().items.skullPosition && ItemUtils.isSkullBlock(stack) && isGui) {
+                if (AnimatiumConfig.instance().items.skullPosition && ItemUtils.isSkullBlock(stack) && isGui && !AnimatiumConfig.instance().items.mobHeadIcons) {
                     poseStack.translate(x, y, z);
                     poseStack.mulPose(Axis.XP.rotationDegrees(Utils.toRadians(rotZ)));
                     poseStack.mulPose(Axis.YP.rotationDegrees(Utils.toRadians(rotY)));

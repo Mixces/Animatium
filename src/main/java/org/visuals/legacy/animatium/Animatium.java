@@ -29,7 +29,6 @@ import lombok.experimental.UtilityClass;
 import net.minecraft.SharedConstants;
 import net.minecraft.resources.ResourceLocation;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.packet.AnimatiumInfoPayloadPacket;
 import org.visuals.legacy.animatium.util.config.ConfigUtil;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
@@ -37,19 +36,11 @@ import java.util.EnumSet;
 
 @UtilityClass
 public final class Animatium {
-    public static final String MOD_ID = "@MODID@";
-    public Double VERSION = Double.parseDouble("@VERSION@");
-    public String DEVELOPMENT_VERSION = "@COMMIT@";
-
     public boolean ENABLED = true;
     public EnumSet<ServerFeature> ENABLED_SERVER_FEATURES = EnumSet.noneOf(ServerFeature.class);
 
-    public AnimatiumInfoPayloadPacket getInfoPayload() {
-        return new AnimatiumInfoPayloadPacket(VERSION, DEVELOPMENT_VERSION.isEmpty() ? null : DEVELOPMENT_VERSION);
-    }
-
     public ResourceLocation location(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+        return ResourceLocation.fromNamespaceAndPath(AnimatiumConstants.MOD_ID, path);
     }
 
     public void initialize() {
