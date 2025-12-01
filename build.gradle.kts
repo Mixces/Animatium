@@ -233,32 +233,41 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
 }
 
-tasks.processResources {
-    val props = buildMap {
-        put("id", mod.id)
-        put("name", mod.name)
-        put("version", mod.version)
-        put("description", mod.description)
-        put("source", mod.source)
-        put("issues", mod.issues)
-        put("license", mod.license)
-        put("modrinth", mod.modrinth)
-        put("curseforge", mod.curseforge)
-        put("discord", mod.discord)
-        put("minecraft_version_range", mod.minecraftVersionRange)
+tasks {
+    processResources {
+        val props = buildMap {
+            put("id", mod.id)
+            put("name", mod.name)
+            put("version", mod.version)
+            put("description", mod.description)
+            put("source", mod.source)
+            put("issues", mod.issues)
+            put("license", mod.license)
+            put("modrinth", mod.modrinth)
+            put("curseforge", mod.curseforge)
+            put("discord", mod.discord)
+            put("minecraft_version_range", mod.minecraftVersionRange)
+            if (loader.isFabric) {
+                put("fabric_loader_version", deps.fabricLoaderVersion)
+            }
+        }
+
+        props.forEach(inputs::property)
+        filesMatching("**/lang/en_us.json") { // Defaults description to English translation
+            expand(props)
+            filteringCharset = "UTF-8"
+        }
+
         if (loader.isFabric) {
-            put("fabric_loader_version", deps.fabricLoaderVersion)
+            filesMatching("fabric.mod.json") { expand(props) }
         }
     }
 
-    props.forEach(inputs::property)
-    filesMatching("**/lang/en_us.json") { // Defaults description to English translation
-        expand(props)
-        filteringCharset = "UTF-8"
-    }
-
-    if (loader.isFabric) {
-        filesMatching("fabric.mod.json") { expand(props) }
+    register<Copy>("buildAndCollect") {
+        group = "build"
+        from(remapJar.map { it.archiveFile }, remapSourcesJar.map { it.archiveFile })
+        into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
+        dependsOn("build")
     }
 }
 
