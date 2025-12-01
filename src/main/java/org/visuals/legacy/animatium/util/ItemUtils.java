@@ -100,7 +100,7 @@ public class ItemUtils {
         return block instanceof BannerBlock ||
                 block instanceof RodBlock ||
                 block instanceof BedBlock ||
-                isSkullBlock(stack);
+                (isSkullBlock(stack) && !AnimatiumConfig.instance().items.mobHeadIcons);
     }
 
     public boolean isItemBlacklisted(ItemStack stack) {
@@ -133,8 +133,7 @@ public class ItemUtils {
         if (AnimatiumConfig.instance().items.itemPositionsInThirdPerson) {
             return true;
         } else {
-            return AnimatiumConfig.instance().other.thirdPersonSwordBlockingPosition &&
-                    Utils.isBlockingArm(armedEntityRenderState.mainArm, armedEntityRenderState);
+            return AnimatiumConfig.instance().other.thirdPersonSwordBlockingPosition && Utils.isBlockingArm(armedEntityRenderState.mainArm, armedEntityRenderState);
         }
     }
 
