@@ -26,16 +26,11 @@
 package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
-import dev.isxander.yacl3.api.Option;
-import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
-import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
-import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
 
-public class ItemsConfigCategory {
+public class ItemsConfigCategory extends Category {
     // (Items) Fishing Rod
     public boolean fishingRodTextureStackCheck = true;
     public boolean fishingRodLineInterpolation = true;
@@ -79,70 +74,13 @@ public class ItemsConfigCategory {
         {
             final OptionGroup.Builder fishingRodGroup = OptionGroup.createBuilder();
             fishingRodGroup.name(Component.translatable("animatium.category.items.group.fishing_rod"));
-            fishingRodGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.fishingRodTextureStackCheck"))
-                    .description(OptionDescription.of(Component.translatable("animatium.fishingRodTextureStackCheck.description")))
-                    .binding(
-                            defaults.fishingRodTextureStackCheck,
-                            () -> config.fishingRodTextureStackCheck,
-                            (newVal) -> config.fishingRodTextureStackCheck = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            fishingRodGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.fishingRodLineInterpolation"))
-                    .description(OptionDescription.of(Component.translatable("animatium.fishingRodLineInterpolation.description")))
-                    .binding(
-                            defaults.fishingRodLineInterpolation,
-                            () -> config.fishingRodLineInterpolation,
-                            (newVal) -> config.fishingRodLineInterpolation = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            fishingRodGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.noMoveFishingRodLine"))
-                    .description(OptionDescription.of(Component.translatable("animatium.noMoveFishingRodLine.description")))
-                    .binding(
-                            defaults.noMoveFishingRodLine,
-                            () -> config.noMoveFishingRodLine,
-                            (newVal) -> config.noMoveFishingRodLine = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            fishingRodGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.fishingRodLinePositionThirdPerson"))
-                    .description(OptionDescription.of(Component.translatable("animatium.fishingRodLinePositionThirdPerson.description")))
-                    .binding(
-                            defaults.fishingRodLinePositionThirdPerson,
-                            () -> config.fishingRodLinePositionThirdPerson,
-                            (newVal) -> config.fishingRodLinePositionThirdPerson = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            fishingRodGroup.option(
-                    Option.<Boolean>createBuilder()
-                            .name(Component.translatable("animatium.fishingRodLineThickness"))
-                            .description(OptionDescription.of(Component.translatable("animatium.fishingRodLineThickness.description")))
-                            .binding(
-                                    defaults.fishingRodLineThickness,
-                                    () -> config.fishingRodLineThickness,
-                                    (newVal) -> config.fishingRodLineThickness = newVal)
-                            .controller(TickBoxControllerBuilder::create)
-                            .build());
-            fishingRodGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.thinFishingRodLineThickness"))
-                    .description(OptionDescription.of(Component.translatable("animatium.thinFishingRodLineThickness.description")))
-                    .binding(
-                            defaults.thinFishingRodLineThickness,
-                            () -> config.thinFishingRodLineThickness,
-                            (newVal) -> config.thinFishingRodLineThickness = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            fishingRodGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.stickModelWhenCastInThirdperson"))
-                    .description(OptionDescription.of(Component.translatable("animatium.stickModelWhenCastInThirdperson.description")))
-                    .binding(
-                            defaults.stickModelWhenCastInThirdperson,
-                            () -> config.stickModelWhenCastInThirdperson,
-                            (newVal) -> config.stickModelWhenCastInThirdperson = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
+            fishingRodGroup.option(booleanOption("fishingRodTextureStackCheck", defaults, config));
+            fishingRodGroup.option(booleanOption("fishingRodLineInterpolation", defaults, config));
+            fishingRodGroup.option(booleanOption("noMoveFishingRodLine", defaults, config));
+            fishingRodGroup.option(booleanOption("fishingRodLinePositionThirdPerson", defaults, config));
+            fishingRodGroup.option(booleanOption("fishingRodLineThickness", defaults, config));
+            fishingRodGroup.option(booleanOption("thinFishingRodLineThickness", defaults, config));
+            fishingRodGroup.option(booleanOption("stickModelWhenCastInThirdperson", defaults, config));
             category.group(fishingRodGroup.build());
         }
 
@@ -150,33 +88,9 @@ public class ItemsConfigCategory {
         {
             final OptionGroup.Builder glintGroup = OptionGroup.createBuilder();
             glintGroup.name(Component.translatable("animatium.category.items.group.glint"));
-            glintGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.legacyGlintSpeed"))
-                    .description(OptionDescription.of(Component.translatable("animatium.legacyGlintSpeed.description")))
-                    .binding(
-                            defaults.legacyGlintSpeed,
-                            () -> config.legacyGlintSpeed,
-                            (newVal) -> config.legacyGlintSpeed = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            glintGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.glintOnItemDrops2D").withStyle(ChatFormatting.GOLD))
-                    .description(OptionDescription.of(Component.translatable("animatium.glintOnItemDrops2D.description")))
-                    .binding(
-                            defaults.glintOnItemDrops2D,
-                            () -> config.glintOnItemDrops2D,
-                            (newVal) -> config.glintOnItemDrops2D = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            glintGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.glintOnItemFramed2D").withStyle(ChatFormatting.GOLD))
-                    .description(OptionDescription.of(Component.translatable("animatium.glintOnItemFramed2D.description")))
-                    .binding(
-                            defaults.glintOnItemFramed2D,
-                            () -> config.glintOnItemFramed2D,
-                            (newVal) -> config.glintOnItemFramed2D = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
+            glintGroup.option(booleanOption("legacyGlintSpeed", defaults, config));
+            glintGroup.option(booleanOption("glintOnItemDrops2D", defaults, config));
+            glintGroup.option(booleanOption("glintOnItemFramed2D", defaults, config));
             category.group(glintGroup.build());
         }
 
@@ -184,51 +98,11 @@ public class ItemsConfigCategory {
         {
             final OptionGroup.Builder drops2dGroup = OptionGroup.createBuilder();
             drops2dGroup.name(Component.translatable("animatium.category.items.group.2d_drops"));
-            drops2dGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.itemDropsFaceCamera"))
-                    .description(OptionDescription.of(Component.translatable("animatium.itemDropsFaceCamera.description")))
-                    .binding(
-                            defaults.itemDropsFaceCamera,
-                            () -> config.itemDropsFaceCamera,
-                            (newVal) -> config.itemDropsFaceCamera = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            drops2dGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.itemDropsFaceCameraRotationFix"))
-                    .description(OptionDescription.of(Component.translatable("animatium.itemDropsFaceCameraRotationFix.description")))
-                    .binding(
-                            defaults.itemDropsFaceCameraRotationFix,
-                            () -> config.itemDropsFaceCameraRotationFix,
-                            (newVal) -> config.itemDropsFaceCameraRotationFix = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-//            drops2dGroup.option(Option.<Boolean>createBuilder()
-//                    .name(Component.translatable("animatium.itemDrops2D"))
-//                    .description(OptionDescription.of(Component.translatable("animatium.itemDrops2D.description")))
-//                    .binding(
-//                            defaults.itemDrops2D,
-//                            () -> config.itemDrops2D,
-//                            (newVal) -> config.itemDrops2D = newVal)
-//                    .controller(TickBoxControllerBuilder::create)
-//                    .build());
-            drops2dGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.itemFramed2D"))
-                    .description(OptionDescription.of(Component.translatable("animatium.itemFramed2D.description")))
-                    .binding(
-                            defaults.itemFramed2D,
-                            () -> config.itemFramed2D,
-                            (newVal) -> config.itemFramed2D = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            drops2dGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.itemColors2D"))
-                    .description(OptionDescription.of(Component.translatable("animatium.itemColors2D.description")))
-                    .binding(
-                            defaults.itemColors2D,
-                            () -> config.itemColors2D,
-                            (newVal) -> config.itemColors2D = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
+            drops2dGroup.option(booleanOption("itemDropsFaceCamera", defaults, config));
+            drops2dGroup.option(booleanOption("itemDropsFaceCameraRotationFix", defaults, config));
+            // TODO: drops2dGroup.option(booleanOption("itemDrops2D", defaults, config));
+            drops2dGroup.option(booleanOption("itemFramed2D", defaults, config));
+            drops2dGroup.option(booleanOption("itemColors2D", defaults, config));
             category.group(drops2dGroup.build());
         }
 
@@ -236,54 +110,11 @@ public class ItemsConfigCategory {
         {
             final OptionGroup.Builder transformationsGroup = OptionGroup.createBuilder();
             transformationsGroup.name(Component.translatable("animatium.category.items.group.transformations"));
-            transformationsGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.itemPositions"))
-                    .description(OptionDescription.of(Component.translatable("animatium.itemPositions.description")))
-                    .binding(
-                            defaults.itemPositions,
-                            () -> config.itemPositions,
-                            (newVal) -> config.itemPositions = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            transformationsGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.itemPositionsInThirdPerson"))
-                    .description(OptionDescription.of(Component.translatable("animatium.itemPositionsInThirdPerson.description")))
-                    .binding(
-                            defaults.itemPositionsInThirdPerson,
-                            () -> config.itemPositionsInThirdPerson,
-                            (newVal) -> config.itemPositionsInThirdPerson = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            transformationsGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.thinBlockPositions"))
-                    .description(OptionDescription.of(Component.translatable("animatium.thinBlockPositions.description")))
-                    .binding(
-                            defaults.thinBlockPositions,
-                            () -> config.thinBlockPositions,
-                            (newVal) -> config.thinBlockPositions = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            transformationsGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.skullPosition"))
-                    .description(OptionDescription.of(Component.translatable("animatium.skullPosition.description")))
-                    .binding(
-                            defaults.skullPosition,
-                            () -> config.skullPosition,
-                            (newVal) -> config.skullPosition = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            transformationsGroup.option(Option.<FishingRodVersion>createBuilder()
-                    .name(Component.translatable("animatium.fishingRodVersion"))
-                    .description(OptionDescription.of(Component.translatable("animatium.fishingRodVersion.description")))
-                    .binding(
-                            defaults.fishingRodVersion,
-                            () -> config.fishingRodVersion,
-                            (newVal) -> config.fishingRodVersion = newVal)
-                    .controller((opt) ->
-                            EnumControllerBuilder.create(opt)
-                                    .enumClass(FishingRodVersion.class)
-                                    .formatValue((it) -> Component.translatable("animatium.enum.FishingRodVersion." + it.name())))
-                    .build());
+            transformationsGroup.option(booleanOption("itemPositions", defaults, config));
+            transformationsGroup.option(booleanOption("itemPositionsInThirdPerson", defaults, config));
+            transformationsGroup.option(booleanOption("thinBlockPositions", defaults, config));
+            transformationsGroup.option(booleanOption("skullPosition", defaults, config));
+            transformationsGroup.option(enumOption("fishingRodVersion", defaults, config, FishingRodVersion.class));
             category.group(transformationsGroup.build());
         }
 
@@ -291,87 +122,15 @@ public class ItemsConfigCategory {
         {
             final OptionGroup.Builder otherGroup = OptionGroup.createBuilder();
             otherGroup.name(Component.translatable("animatium.category.items.group.other"));
-            otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.itemUsageSwinging"))
-                    .description(OptionDescription.of(Component.translatable("animatium.itemUsageSwinging.description")))
-                    .binding(
-                            defaults.itemUsageSwinging,
-                            () -> config.itemUsageSwinging,
-                            (newVal) -> config.itemUsageSwinging = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.swingOnUse"))
-                    .description(OptionDescription.of(Component.translatable("animatium.swingOnUse.description")))
-                    .binding(
-                            defaults.swingOnUse,
-                            () -> config.swingOnUse,
-                            (newVal) -> config.swingOnUse = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.swingOnDrop"))
-                    .description(OptionDescription.of(Component.translatable("animatium.swingOnDrop.description")))
-                    .binding(
-                            defaults.swingOnDrop,
-                            () -> config.swingOnDrop,
-                            (newVal) -> config.swingOnDrop = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.swingOnEntityInteract"))
-                    .description(OptionDescription.of(Component.translatable("animatium.swingOnEntityInteract.description")))
-                    .binding(
-                            defaults.swingOnEntityInteract,
-                            () -> config.swingOnEntityInteract,
-                            (newVal) -> config.swingOnEntityInteract = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.itemUsingTextureInGui"))
-                    .description(OptionDescription.of(Component.translatable("animatium.itemUsingTextureInGui.description")))
-                    .binding(
-                            defaults.itemUsingTextureInGui,
-                            () -> config.itemUsingTextureInGui,
-                            (newVal) -> config.itemUsingTextureInGui = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.durabilityBarColors"))
-                    .description(OptionDescription.of(Component.translatable("animatium.durabilityBarColors.description")))
-                    .binding(
-                            defaults.durabilityBarColors,
-                            () -> config.durabilityBarColors,
-                            (newVal) -> config.durabilityBarColors = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.legacyItemRarities"))
-                    .description(OptionDescription.of(Component.translatable("animatium.legacyItemRarities.description")))
-                    .binding(
-                            defaults.legacyItemRarities,
-                            () -> config.legacyItemRarities,
-                            (newVal) -> config.legacyItemRarities = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.heldItemVisibilityInBoat"))
-                    .description(OptionDescription.of(Component.translatable("animatium.heldItemVisibilityInBoat.description")))
-                    .binding(
-                            defaults.heldItemVisibilityInBoat,
-                            () -> config.heldItemVisibilityInBoat,
-                            (newVal) -> config.heldItemVisibilityInBoat = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.itemPickupPosition"))
-                    .description(OptionDescription.of(Component.translatable("animatium.itemPickupPosition.description")))
-                    .binding(
-                            defaults.itemPickupPosition,
-                            () -> config.itemPickupPosition,
-                            (newVal) -> config.itemPickupPosition = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
+            otherGroup.option(booleanOption("itemUsageSwinging", defaults, config));
+            otherGroup.option(booleanOption("swingOnUse", defaults, config));
+            otherGroup.option(booleanOption("swingOnDrop", defaults, config));
+            otherGroup.option(booleanOption("swingOnEntityInteract", defaults, config));
+            otherGroup.option(booleanOption("itemUsingTextureInGui", defaults, config));
+            otherGroup.option(booleanOption("durabilityBarColors", defaults, config));
+            otherGroup.option(booleanOption("legacyItemRarities", defaults, config));
+            otherGroup.option(booleanOption("heldItemVisibilityInBoat", defaults, config));
+            otherGroup.option(booleanOption("itemPickupPosition", defaults, config));
             category.group(otherGroup.build());
         }
 

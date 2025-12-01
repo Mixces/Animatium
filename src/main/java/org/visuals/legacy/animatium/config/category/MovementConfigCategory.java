@@ -26,14 +26,10 @@
 package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
-import dev.isxander.yacl3.api.Option;
-import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
-import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
-public class MovementConfigCategory {
+public class MovementConfigCategory extends Category {
     // (Movement) Sneaking
     public boolean smoothSneaking = true;
     public boolean sneakAnimationInterpolation = true;
@@ -61,194 +57,40 @@ public class MovementConfigCategory {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.movement"));
 
-        // Sneaking
         {
             final OptionGroup.Builder sneakingGroup = OptionGroup.createBuilder();
             sneakingGroup.name(Component.translatable("animatium.category.movement.group.sneaking"));
-            sneakingGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.smoothSneaking"))
-                    .description(OptionDescription.of(Component.translatable("animatium.smoothSneaking.description")))
-                    .binding(
-                            defaults.smoothSneaking,
-                            () -> config.smoothSneaking,
-                            (newVal) -> config.smoothSneaking = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            sneakingGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.sneakAnimationInterpolation"))
-                    .description(OptionDescription.of(Component.translatable("animatium.sneakAnimationInterpolation.description")))
-                    .binding(
-                            defaults.sneakAnimationInterpolation,
-                            () -> config.sneakAnimationInterpolation,
-                            (newVal) -> config.sneakAnimationInterpolation = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            sneakingGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.fakeOldSneakEyeHeight").withStyle(ChatFormatting.GOLD))
-                    .description(OptionDescription.of(Component.translatable("animatium.fakeOldSneakEyeHeight.description")))
-                    .binding(
-                            defaults.fakeOldSneakEyeHeight,
-                            () -> config.fakeOldSneakEyeHeight,
-                            (newVal) -> config.fakeOldSneakEyeHeight = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            sneakingGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.sneakingFeetPosition"))
-                    .description(OptionDescription.of(Component.translatable("animatium.sneakingFeetPosition.description")))
-                    .binding(
-                            defaults.sneakingFeetPosition,
-                            () -> config.sneakingFeetPosition,
-                            (newVal) -> config.sneakingFeetPosition = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            sneakingGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.syncPlayerModelWithEyeHeight"))
-                    .description(OptionDescription.of(Component.translatable("animatium.syncPlayerModelWithEyeHeight.description")))
-                    .binding(
-                            defaults.syncPlayerModelWithEyeHeight,
-                            () -> config.syncPlayerModelWithEyeHeight,
-                            (newVal) -> config.syncPlayerModelWithEyeHeight = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            sneakingGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.sneakAnimationWhileFlying"))
-                    .description(OptionDescription.of(Component.translatable("animatium.sneakAnimationWhileFlying.description")))
-                    .binding(
-                            defaults.sneakAnimationWhileFlying,
-                            () -> config.sneakAnimationWhileFlying,
-                            (newVal) -> config.sneakAnimationWhileFlying = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
+            sneakingGroup.option(booleanOption("smoothSneaking", defaults, config));
+            sneakingGroup.option(booleanOption("sneakAnimationInterpolation", defaults, config));
+            sneakingGroup.option(booleanOption("fakeOldSneakEyeHeight", defaults, config));
+            sneakingGroup.option(booleanOption("sneakingFeetPosition", defaults, config));
+            sneakingGroup.option(booleanOption("syncPlayerModelWithEyeHeight", defaults, config));
+            sneakingGroup.option(booleanOption("sneakAnimationWhileFlying", defaults, config));
             category.group(sneakingGroup.build());
         }
 
         {
             final OptionGroup.Builder capeGroup = OptionGroup.createBuilder();
             capeGroup.name(Component.translatable("animatium.category.movement.group.cape"));
-            capeGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.capeMovement"))
-                    .description(OptionDescription.of(Component.translatable("animatium.capeMovement.description")))
-                    .binding(
-                            defaults.capeMovement,
-                            () -> config.capeMovement,
-                            (newVal) -> config.capeMovement = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            capeGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.disableCapeLean"))
-                    .description(OptionDescription.of(Component.translatable("animatium.disableCapeLean.description")))
-                    .binding(
-                            defaults.disableCapeLean,
-                            () -> config.disableCapeLean,
-                            (newVal) -> config.disableCapeLean = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            capeGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.capeSwingRotation"))
-                    .description(OptionDescription.of(Component.translatable("animatium.capeSwingRotation.description")))
-                    .binding(
-                            defaults.capeSwingRotation,
-                            () -> config.capeSwingRotation,
-                            (newVal) -> config.capeSwingRotation = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            capeGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.capeChestplateTranslation"))
-                    .description(OptionDescription.of(Component.translatable("animatium.capeChestplateTranslation.description")))
-                    .binding(
-                            defaults.capeChestplateTranslation,
-                            () -> config.capeChestplateTranslation,
-                            (newVal) -> config.capeChestplateTranslation = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            capeGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.capeSneakPosition"))
-                    .description(OptionDescription.of(Component.translatable("animatium.capeSneakPosition.description")))
-                    .binding(
-                            defaults.capeSneakPosition,
-                            () -> config.capeSneakPosition,
-                            (newVal) -> config.capeSneakPosition = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
+            capeGroup.option(booleanOption("capeMovement", defaults, config));
+            capeGroup.option(booleanOption("disableCapeLean", defaults, config));
+            capeGroup.option(booleanOption("capeSwingRotation", defaults, config));
+            capeGroup.option(booleanOption("capeChestplateTranslation", defaults, config));
+            capeGroup.option(booleanOption("capeSneakPosition", defaults, config));
             category.group(capeGroup.build());
         }
 
-        // Other
         {
             final OptionGroup.Builder otherGroup = OptionGroup.createBuilder();
             otherGroup.name(Component.translatable("animatium.category.movement.group.other"));
-            otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.rotateBackwardsWalking"))
-                    .description(OptionDescription.of(Component.translatable("animatium.rotateBackwardsWalking.description")))
-                    .binding(
-                            defaults.rotateBackwardsWalking,
-                            () -> config.rotateBackwardsWalking,
-                            (newVal) -> config.rotateBackwardsWalking = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.uncapBlockingHeadRotation"))
-                    .description(OptionDescription.of(Component.translatable("animatium.uncapBlockingHeadRotation.description")))
-                    .binding(
-                            defaults.uncapBlockingHeadRotation,
-                            () -> config.uncapBlockingHeadRotation,
-                            (newVal) -> config.uncapBlockingHeadRotation = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.disableHeadRotationInterpolation"))
-                    .description(OptionDescription.of(Component.translatable("animatium.disableHeadRotationInterpolation.description")))
-                    .binding(
-                            defaults.disableHeadRotationInterpolation,
-                            () -> config.disableHeadRotationInterpolation,
-                            (newVal) -> config.disableHeadRotationInterpolation = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.handViewBobbingMovement"))
-                    .description(OptionDescription.of(Component.translatable("animatium.handViewBobbingMovement.description")))
-                    .binding(
-                            defaults.handViewBobbingMovement,
-                            () -> config.handViewBobbingMovement,
-                            (newVal) -> config.handViewBobbingMovement = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.deathLimbs"))
-                    .description(OptionDescription.of(Component.translatable("animatium.deathLimbs.description")))
-                    .binding(
-                            defaults.deathLimbs,
-                            () -> config.deathLimbs,
-                            (newVal) -> config.deathLimbs = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.bowArmMovement"))
-                    .description(OptionDescription.of(Component.translatable("animatium.bowArmMovement.description")))
-                    .binding(
-                            defaults.bowArmMovement,
-                            () -> config.bowArmMovement,
-                            (newVal) -> config.bowArmMovement = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.legacyDamageTilt"))
-                    .description(OptionDescription.of(Component.translatable("animatium.legacyDamageTilt.description")))
-                    .binding(
-                            defaults.legacyDamageTilt,
-                            () -> config.legacyDamageTilt,
-                            (newVal) -> config.legacyDamageTilt = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
-            otherGroup.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.offsetHurtTime"))
-                    .description(OptionDescription.of(Component.translatable("animatium.offsetHurtTime.description")))
-                    .binding(
-                            defaults.offsetHurtTime,
-                            () -> config.offsetHurtTime,
-                            (newVal) -> config.offsetHurtTime = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
+            otherGroup.option(booleanOption("rotateBackwardsWalking", defaults, config));
+            otherGroup.option(booleanOption("uncapBlockingHeadRotation", defaults, config));
+            otherGroup.option(booleanOption("disableHeadRotationInterpolation", defaults, config));
+            otherGroup.option(booleanOption("handViewBobbingMovement", defaults, config));
+            otherGroup.option(booleanOption("deathLimbs", defaults, config));
+            otherGroup.option(booleanOption("bowArmMovement", defaults, config));
+            otherGroup.option(booleanOption("legacyDamageTilt", defaults, config));
+            otherGroup.option(booleanOption("offsetHurtTime", defaults, config));
             category.group(otherGroup.build());
         }
 

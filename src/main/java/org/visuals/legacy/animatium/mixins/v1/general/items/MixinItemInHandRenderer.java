@@ -196,7 +196,7 @@ public abstract class MixinItemInHandRenderer {
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getOffhandItem()Lnet/minecraft/world/item/ItemStack;"))
     private void animatium$createCopyStack(CallbackInfo ci, @Local LocalPlayer localPlayer, @Local ItemStack itemStack, @Share("copyStack") LocalRef<ItemStack> copyStack) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimation) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
             // Initialize our copied stack
             copyStack.set(itemStack.copy());
             final boolean slotsMatch = this.animatium$currentSlot == localPlayer.getInventory().getSelectedSlot();
@@ -213,7 +213,7 @@ public abstract class MixinItemInHandRenderer {
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;shouldInstantlyReplaceVisibleItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z", ordinal = 0))
     private boolean animatium$fixEquipAnimationItemCheck2(ItemInHandRenderer instance, ItemStack itemStack, ItemStack itemStack2, Operation<Boolean> original, @Local LocalPlayer localPlayer) {
         final boolean value = original.call(instance, itemStack, itemStack2);
-        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimation) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
             // Apply our equip logic fix to offhand items
             final boolean slotsMatch = this.animatium$currentSlot == localPlayer.getInventory().getSelectedSlot();
             return (slotsMatch && ItemUtils.shouldInstantlyReplaceVisibleItem1_8(itemStack, itemStack2)) || value;
@@ -225,7 +225,7 @@ public abstract class MixinItemInHandRenderer {
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;shouldInstantlyReplaceVisibleItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z", ordinal = 1))
     private boolean animatium$fixEquipAnimationItemCheck(ItemInHandRenderer instance, ItemStack itemStack, ItemStack itemStack2, Operation<Boolean> original) {
         final boolean value = original.call(instance, itemStack, itemStack2);
-        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimation) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
             // Apply our equip logic fix to offhand items
             return ItemUtils.shouldInstantlyReplaceVisibleItem1_8(itemStack, itemStack2) || value;
         } else {
@@ -235,7 +235,7 @@ public abstract class MixinItemInHandRenderer {
 
     @ModifyExpressionValue(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;mainHandItem:Lnet/minecraft/world/item/ItemStack;", ordinal = 1))
     private ItemStack animatium$useCopyStackField(ItemStack original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimation) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
             // Use the copy stack field for the stack comparison
             return this.animatium$mainHandItem;
         } else {
@@ -245,7 +245,7 @@ public abstract class MixinItemInHandRenderer {
 
     @ModifyVariable(method = "tick", at = @At(value = "LOAD", ordinal = 2), index = 2, name = "itemStack")
     private ItemStack animatium$useLocalCopyStack(ItemStack original, @Share("copyStack") LocalRef<ItemStack> copyStack) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimation) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
             // Use the local copied stack for the stack comparison
             return copyStack.get();
         } else {
@@ -256,7 +256,7 @@ public abstract class MixinItemInHandRenderer {
     @Inject(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;mainHandHeight:F", ordinal = 4))
     private void animatium$setCurrentSlotAndCopyStack(CallbackInfo ci, @Share("copyStack") LocalRef<ItemStack> copyStack) {
         final LocalPlayer localPlayer = this.minecraft.player;
-        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimation && localPlayer != null && this.mainHandHeight < 0.1F) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck && localPlayer != null && this.mainHandHeight < 0.1F) {
             // Update our copied stack
             this.animatium$mainHandItem = copyStack.get();
             // Cache the previous slot item to use in our comparison above
@@ -266,7 +266,7 @@ public abstract class MixinItemInHandRenderer {
 
     @ModifyArg(method = "renderHandsWithItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderArmWithItem(Lnet/minecraft/client/player/AbstractClientPlayer;FFLnet/minecraft/world/InteractionHand;FLnet/minecraft/world/item/ItemStack;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V", ordinal = 0), index = 5)
     private ItemStack animatium$useCopyStackFieldForRender(ItemStack original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimation) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
             // Use our copied stack field for hand animations
             return animatium$mainHandItem;
         } else {
@@ -276,7 +276,7 @@ public abstract class MixinItemInHandRenderer {
 
     @ModifyArg(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V"), index = 1)
     private ItemStack animatium$useActualStackForRender(ItemStack original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimation) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
             // Use the original stack for rendering to avoid rendering issues
             return original == animatium$mainHandItem && !mainHandItem.isEmpty() ? mainHandItem : original;
         } else {

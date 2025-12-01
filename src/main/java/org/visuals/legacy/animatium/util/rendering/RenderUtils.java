@@ -52,6 +52,13 @@ public class RenderUtils {
         context.fill(x, y, x + width, y + height, color);
     }
 
+    public void fillFrameGradient(GuiGraphics guiGraphics, int x, int y, int width, int height, int startColor, int endColor) {
+        fillVerticalGradientLine(guiGraphics, x, y, height - 2, startColor, endColor);
+        fillVerticalGradientLine(guiGraphics, x + width - 1, y, height - 2, startColor, endColor);
+        fillHorizontalLine(guiGraphics, x, y - 1, width, startColor);
+        fillHorizontalLine(guiGraphics, x, y - 1 + height - 1, width, endColor);
+    }
+
     public void drawScaledText(GuiGraphics guiGraphics, Font font, String text, int x, int y, float scale) {
         final Matrix3x2fStack stack = guiGraphics.pose();
         stack.pushMatrix();

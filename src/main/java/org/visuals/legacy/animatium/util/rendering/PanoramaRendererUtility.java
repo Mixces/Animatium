@@ -135,8 +135,8 @@ public class PanoramaRendererUtility {
                 try (final Renderer renderer = Renderer.of("Panorama")) {
                     renderer.setPipeline(LEGACY_PANORAMA);
                     renderer.setViewport(VIEWPORT);
-                    renderer.setRenderTarget(panoramaTarget);
-                    renderer.setModelViewMatrix(faceMatrix);
+                    renderer.setFramebuffer(panoramaTarget);
+                    renderer.setDynamicTransforms(renderer.getDynamicTransforms().withModelViewMatrix(faceMatrix));
 
                     final int currentLayer = layer;
                     renderer.setup((builder) -> {
@@ -159,7 +159,7 @@ public class PanoramaRendererUtility {
         try (final Renderer renderer = Renderer.of("Panorama Blur Pass")) {
             renderer.setPipeline(LEGACY_PANORAMA_BLUR);
             renderer.setViewport(VIEWPORT);
-            renderer.setRenderTarget(panoramaTarget);
+            renderer.setFramebuffer(panoramaTarget);
             renderer.setup((builder) -> {
                 for (int cycle = 0; cycle < 3; cycle++) {
                     final int color = ARGB.white(1.0F / (cycle + 1.0F));

@@ -26,16 +26,11 @@
 package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
-import dev.isxander.yacl3.api.Option;
-import dev.isxander.yacl3.api.OptionDescription;
-import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.OverlayTexture;
+import dev.isxander.yacl3.api.OptionGroup;
 import net.minecraft.network.chat.Component;
-import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.util.compatibility.Mods;
 
-public class ExtrasConfigCategory {
+public class ExtrasConfigCategory extends Category {
     public boolean minimalViewBobbing = false;
     public boolean showNameTagInThirdPerson = false;
     public boolean hideNameTagBackground = false;
@@ -55,186 +50,49 @@ public class ExtrasConfigCategory {
     public boolean disableFirstPersonParticles = false;
     public boolean dontClearChat = false;
     public boolean dontCloseChat = false;
+    public float itemSwingSpeed = 0.0F;
+    public float hasteSwingSpeed = 0.0F;
+    public float miningFatigueSwingSpeed = 0.0F;
+    public boolean ignoreHasteSpeed = false;
+    public boolean ignoreMiningFatigueSpeed = false;
 
     public static ConfigCategory setup(final ExtrasConfigCategory defaults, final ExtrasConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.extras"));
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.minimalViewBobbing"))
-                .description(OptionDescription.of(Component.translatable("animatium.minimalViewBobbing.description")))
-                .binding(
-                        defaults.minimalViewBobbing,
-                        () -> config.minimalViewBobbing,
-                        (newVal) -> config.minimalViewBobbing = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.showNameTagInThirdPerson"))
-                .description(OptionDescription.of(Component.translatable("animatium.showNameTagInThirdPerson.description")))
-                .binding(
-                        defaults.showNameTagInThirdPerson,
-                        () -> config.showNameTagInThirdPerson,
-                        (newVal) -> config.showNameTagInThirdPerson = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.hideNameTagBackground"))
-                .description(OptionDescription.of(Component.translatable("animatium.hideNameTagBackground.description")))
-                .binding(
-                        defaults.hideNameTagBackground,
-                        () -> config.hideNameTagBackground,
-                        (newVal) -> config.hideNameTagBackground = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.nameTagTextShadow"))
-                .description(OptionDescription.of(Component.translatable("animatium.nameTagTextShadow.description")))
-                .binding(
-                        defaults.nameTagTextShadow,
-                        () -> config.nameTagTextShadow,
-                        (newVal) -> config.nameTagTextShadow = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.debugHudTextColor"))
-                .description(OptionDescription.of(Component.translatable("animatium.debugHudTextColor.description")))
-                .binding(
-                        defaults.debugHudTextColor,
-                        () -> config.debugHudTextColor,
-                        (newVal) -> config.debugHudTextColor = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.persistentBlockOutline"))
-                .description(OptionDescription.of(Component.translatable("animatium.persistentBlockOutline.description")))
-                .binding(
-                        defaults.persistentBlockOutline,
-                        () -> config.persistentBlockOutline,
-                        (newVal) -> config.persistentBlockOutline = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.offhandUsageSwinging"))
-                .description(OptionDescription.of(Component.translatable("animatium.offhandUsageSwinging.description")))
-                .binding(
-                        defaults.offhandUsageSwinging,
-                        () -> config.offhandUsageSwinging,
-                        (newVal) -> config.offhandUsageSwinging = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.alwaysUsageSwing"))
-                .description(OptionDescription.of(Component.translatable("animatium.alwaysUsageSwing.description")))
-                .binding(
-                        defaults.alwaysUsageSwing,
-                        () -> config.alwaysUsageSwing,
-                        (newVal) -> config.alwaysUsageSwing = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.alwaysSharpParticles"))
-                .description(OptionDescription.of(Component.translatable("animatium.alwaysSharpParticles.description")))
-                .binding(
-                        defaults.alwaysSharpParticles,
-                        () -> config.alwaysSharpParticles,
-                        (newVal) -> config.alwaysSharpParticles = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
+        category.option(booleanOption("minimalViewBobbing", defaults, config));
+        category.option(booleanOption("showNameTagInThirdPerson", defaults, config));
+        category.option(booleanOption("hideNameTagBackground", defaults, config));
+        category.option(booleanOption("nameTagTextShadow", defaults, config));
+        category.option(booleanOption("debugHudTextColor", defaults, config));
+        category.option(booleanOption("persistentBlockOutline", defaults, config));
+        category.option(booleanOption("offhandUsageSwinging", defaults, config));
+        category.option(booleanOption("alwaysUsageSwing", defaults, config));
+        category.option(booleanOption("alwaysSharpParticles", defaults, config));
         if (!Mods.HAS_SODIUM_EXTRAS) {
-            category.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.disableRecipeAndTutorialToasts"))
-                    .description(OptionDescription.of(Component.translatable("animatium.disableRecipeAndTutorialToasts.description")))
-                    .binding(
-                            defaults.disableRecipeAndTutorialToasts,
-                            () -> config.disableRecipeAndTutorialToasts,
-                            (newVal) -> config.disableRecipeAndTutorialToasts = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
+            category.option(booleanOption("disableRecipeAndTutorialToasts", defaults, config));
         }
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.showArmWhileInvisible"))
-                .description(OptionDescription.of(Component.translatable("animatium.showArmWhileInvisible.description")))
-                .binding(
-                        defaults.showArmWhileInvisible,
-                        () -> config.showArmWhileInvisible,
-                        (newVal) -> config.showArmWhileInvisible = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.fakeMissPenaltySwing"))
-                .description(OptionDescription.of(Component.translatable("animatium.fakeMissPenaltySwing.description")))
-                .binding(
-                        defaults.fakeMissPenaltySwing,
-                        () -> config.fakeMissPenaltySwing,
-                        (newVal) -> config.fakeMissPenaltySwing = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.dontMoveBlueVoid"))
-                .description(OptionDescription.of(Component.translatable("animatium.dontMoveBlueVoid.description")))
-                .binding(
-                        defaults.dontMoveBlueVoid,
-                        () -> config.dontMoveBlueVoid,
-                        (newVal) -> config.dontMoveBlueVoid = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.disableEntityDeathTopple"))
-                .description(OptionDescription.of(Component.translatable("animatium.disableEntityDeathTopple.description")))
-                .binding(
-                        defaults.disableEntityDeathTopple,
-                        () -> config.disableEntityDeathTopple,
-                        (newVal) -> config.disableEntityDeathTopple = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.deepRedHurtTint"))
-                .description(OptionDescription.of(Component.translatable("animatium.deepRedHurtTint.description")))
-                .binding(
-                        defaults.deepRedHurtTint,
-                        () -> config.deepRedHurtTint,
-                        (newVal) -> {
-                            config.deepRedHurtTint = newVal;
-                            ((GameRendererAccessor) Minecraft.getInstance().gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
-                        })
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.disableParticlePhysics"))
-                .description(OptionDescription.of(Component.translatable("animatium.disableParticlePhysics.description")))
-                .binding(
-                        defaults.disableParticlePhysics,
-                        () -> config.disableParticlePhysics,
-                        (newVal) -> config.disableParticlePhysics = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.disableFirstPersonParticles"))
-                .description(OptionDescription.of(Component.translatable("animatium.disableFirstPersonParticles.description")))
-                .binding(
-                        defaults.disableFirstPersonParticles,
-                        () -> config.disableFirstPersonParticles,
-                        (newVal) -> config.disableFirstPersonParticles = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.dontClearChat"))
-                .description(OptionDescription.of(Component.translatable("animatium.dontClearChat.description")))
-                .binding(
-                        defaults.dontClearChat,
-                        () -> config.dontClearChat,
-                        (newVal) -> config.dontClearChat = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.dontCloseChat"))
-                .description(OptionDescription.of(Component.translatable("animatium.dontCloseChat.description")))
-                .binding(
-                        defaults.dontCloseChat,
-                        () -> config.dontCloseChat,
-                        (newVal) -> config.dontCloseChat = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
+
+        category.option(booleanOption("showArmWhileInvisible", defaults, config));
+        category.option(booleanOption("fakeMissPenaltySwing", defaults, config));
+        category.option(booleanOption("dontMoveBlueVoid", defaults, config));
+        category.option(booleanOption("disableEntityDeathTopple", defaults, config));
+        category.option(booleanOption("deepRedHurtTint", defaults, config));
+        category.option(booleanOption("disableParticlePhysics", defaults, config));
+        category.option(booleanOption("disableFirstPersonParticles", defaults, config));
+        category.option(booleanOption("dontClearChat", defaults, config));
+        category.option(booleanOption("dontCloseChat", defaults, config));
+
+        {
+            final OptionGroup.Builder itemSwingCategory = OptionGroup.createBuilder();
+            itemSwingCategory.name(Component.translatable("animatium.category.extras.item_swing"));
+            itemSwingCategory.option(floatSliderOption("itemSwingSpeed", defaults, config, -1.0F, 1.0F, 0.1F));
+            itemSwingCategory.option(floatSliderOption("hasteSwingSpeed", defaults, config, -1.0F, 1.0F, 0.1F));
+            itemSwingCategory.option(floatSliderOption("miningFatigueSwingSpeed", defaults, config, -1.0F, 1.0F, 0.1F));
+            itemSwingCategory.option(booleanOption("ignoreHasteSpeed", defaults, config));
+            itemSwingCategory.option(booleanOption("ignoreMiningFatigueSpeed", defaults, config));
+            category.group(itemSwingCategory.build());
+        }
+
         return category.build();
     }
 }

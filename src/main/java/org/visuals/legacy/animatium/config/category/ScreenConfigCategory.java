@@ -26,15 +26,10 @@
 package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
-import dev.isxander.yacl3.api.Option;
-import dev.isxander.yacl3.api.OptionDescription;
-import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
-import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.util.enums.CameraVersion;
 
-public class ScreenConfigCategory {
+public class ScreenConfigCategory extends Category {
     public boolean crosshairInThirdPerson = true;
     public boolean heartFlash = true;
     public boolean centerScrollableListWidgets = true;
@@ -55,154 +50,22 @@ public class ScreenConfigCategory {
     public static ConfigCategory setup(final ScreenConfigCategory defaults, final ScreenConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.screen"));
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.crosshairInThirdPerson"))
-                .description(OptionDescription.of(Component.translatable("animatium.crosshairInThirdPerson.description")))
-                .binding(
-                        defaults.crosshairInThirdPerson,
-                        () -> config.crosshairInThirdPerson,
-                        (newVal) -> config.crosshairInThirdPerson = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.heartFlash"))
-                .description(OptionDescription.of(Component.translatable("animatium.heartFlash.description")))
-                .binding(
-                        defaults.heartFlash,
-                        () -> config.heartFlash,
-                        (newVal) -> config.heartFlash = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.centerScrollableListWidgets"))
-                .description(OptionDescription.of(Component.translatable("animatium.centerScrollableListWidgets.description")))
-                .binding(
-                        defaults.centerScrollableListWidgets,
-                        () -> config.centerScrollableListWidgets,
-                        (newVal) -> config.centerScrollableListWidgets = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.listWidgetSelectedBorderColor"))
-                .description(OptionDescription.of(Component.translatable("animatium.listWidgetSelectedBorderColor.description")))
-                .binding(
-                        defaults.listWidgetSelectedBorderColor,
-                        () -> config.listWidgetSelectedBorderColor,
-                        (newVal) -> config.listWidgetSelectedBorderColor = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.legacyButtonHoverTextColor"))
-                .description(OptionDescription.of(Component.translatable("animatium.legacyButtonHoverTextColor.description")))
-                .binding(
-                        defaults.legacyButtonHoverTextColor,
-                        () -> config.legacyButtonHoverTextColor,
-                        (newVal) -> config.legacyButtonHoverTextColor = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.disableDebugHudBackground"))
-                .description(OptionDescription.of(Component.translatable("animatium.disableDebugHudBackground.description")))
-                .binding(
-                        defaults.disableDebugHudBackground,
-                        () -> config.disableDebugHudBackground,
-                        (newVal) -> config.disableDebugHudBackground = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.debugHudTextShadow"))
-                .description(OptionDescription.of(Component.translatable("animatium.debugHudTextShadow.description")))
-                .binding(
-                        defaults.debugHudTextShadow,
-                        () -> config.debugHudTextShadow,
-                        (newVal) -> config.debugHudTextShadow = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.cameraTransparentPassthrough"))
-                .description(OptionDescription.of(Component.translatable("animatium.cameraTransparentPassthrough.description")))
-                .binding(
-                        defaults.cameraTransparentPassthrough,
-                        () -> config.cameraTransparentPassthrough,
-                        (newVal) -> config.cameraTransparentPassthrough = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.tooltipStyleRendering").withStyle(ChatFormatting.GOLD))
-                .description(OptionDescription.of(Component.translatable("animatium.tooltipStyleRendering.description")))
-                .binding(
-                        defaults.tooltipStyleRendering,
-                        () -> config.tooltipStyleRendering,
-                        (newVal) -> config.tooltipStyleRendering = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.slotHoverStyleRendering").withStyle(ChatFormatting.GOLD))
-                .description(OptionDescription.of(Component.translatable("animatium.slotHoverStyleRendering.description")))
-                .binding(
-                        defaults.slotHoverStyleRendering,
-                        () -> config.slotHoverStyleRendering,
-                        (newVal) -> config.slotHoverStyleRendering = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.listBackgroundGradient"))
-                .description(OptionDescription.of(Component.translatable("animatium.listBackgroundGradient.description")))
-                .binding(
-                        defaults.listBackgroundGradient,
-                        () -> config.listBackgroundGradient,
-                        (newVal) -> config.listBackgroundGradient = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.effectsInventoryPosition"))
-                .description(OptionDescription.of(Component.translatable("animatium.effectsInventoryPosition.description")))
-                .binding(
-                        defaults.effectsInventoryPosition,
-                        () -> config.effectsInventoryPosition,
-                        (newVal) -> config.effectsInventoryPosition = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        // TODO
-//        category.option(Option.<Boolean>createBuilder()
-//                .name(Component.translatable("animatium.snappySliderMovement"))
-//                .description(OptionDescription.of(Component.translatable("animatium.snappySliderMovement.description")))
-//                .binding(
-//                        defaults.snappySliderMovement,
-//                        () -> config.snappySliderMovement,
-//                        (newVal) -> config.snappySliderMovement = newVal)
-//                .controller(TickBoxControllerBuilder::create)
-//                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.recipeBook"))
-                .description(OptionDescription.of(Component.translatable("animatium.recipeBook.description")))
-                .binding(
-                        defaults.hideRecipeBook,
-                        () -> config.hideRecipeBook,
-                        (newVal) -> config.hideRecipeBook = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.panoramaRendering").withStyle(ChatFormatting.GOLD))
-                .description(OptionDescription.of(Component.translatable("animatium.panoramaRendering.description")))
-                .binding(
-                        defaults.panoramaRendering,
-                        () -> config.panoramaRendering,
-                        (newVal) -> config.panoramaRendering = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<CameraVersion>createBuilder()
-                .name(Component.translatable("animatium.cameraVersion"))
-                .description(OptionDescription.of(Component.translatable("animatium.cameraVersion.description")))
-                .binding(
-                        defaults.cameraVersion,
-                        () -> config.cameraVersion,
-                        (newVal) -> config.cameraVersion = newVal)
-                .controller((opt) ->
-                        EnumControllerBuilder.create(opt)
-                                .enumClass(CameraVersion.class)
-                                .formatValue((it) -> Component.translatable("animatium.enum.CameraVersion." + it.name())))
-                .build());
+        category.option(booleanOption("crosshairInThirdPerson", defaults, config));
+        category.option(booleanOption("heartFlash", defaults, config));
+        category.option(booleanOption("centerScrollableListWidgets", defaults, config));
+        category.option(booleanOption("listWidgetSelectedBorderColor", defaults, config));
+        category.option(booleanOption("legacyButtonHoverTextColor", defaults, config));
+        category.option(booleanOption("disableDebugHudBackground", defaults, config));
+        category.option(booleanOption("debugHudTextShadow", defaults, config));
+        category.option(booleanOption("cameraTransparentPassthrough", defaults, config));
+        category.option(booleanOption("tooltipStyleRendering", defaults, config));
+        category.option(booleanOption("slotHoverStyleRendering", defaults, config));
+        category.option(booleanOption("listBackgroundGradient", defaults, config));
+        category.option(booleanOption("effectsInventoryPosition", defaults, config));
+        // TODO: category.option(booleanOption("snappySliderMovement", defaults, config));
+        category.option(booleanOption("hideRecipeBook", defaults, config));
+        category.option(booleanOption("panoramaRendering", defaults, config));
+        category.option(enumOption("cameraVersion", defaults, config, CameraVersion.class));
         return category.build();
     }
 }

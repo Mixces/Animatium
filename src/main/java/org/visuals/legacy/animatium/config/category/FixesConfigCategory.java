@@ -26,20 +26,16 @@
 package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
-import dev.isxander.yacl3.api.Option;
-import dev.isxander.yacl3.api.OptionDescription;
-import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.util.compatibility.Mods;
 
-public class FixesConfigCategory {
+public class FixesConfigCategory extends Category {
     public boolean fixSneakingFeetPosition = true;
     public boolean fixMirrorArmSwing = true;
     public boolean fixOffHandUsingPose = true;
     public boolean fixCastLineCheck = true;
     public boolean fixCastLineSwing = true;
-    public boolean fixEquipAnimation = true;
+    public boolean fixEquipAnimationItemCheck = true;
     public boolean fixFireballClientsideVisual = true;
     public boolean fixTextStrikethroughStyle = true;
     public boolean fixHighAttackSpeedIndicator = true;
@@ -51,128 +47,22 @@ public class FixesConfigCategory {
     public static ConfigCategory setup(final FixesConfigCategory defaults, final FixesConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.fixes"));
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.fixSneakingFeetPosition"))
-                .description(OptionDescription.of(Component.translatable("animatium.fixSneakingFeetPosition.description")))
-                .binding(
-                        defaults.fixSneakingFeetPosition,
-                        () -> config.fixSneakingFeetPosition,
-                        (newVal) -> config.fixSneakingFeetPosition = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.fixMirrorArmSwing"))
-                .description(OptionDescription.of(Component.translatable("animatium.fixMirrorArmSwing.description")))
-                .binding(
-                        defaults.fixMirrorArmSwing,
-                        () -> config.fixMirrorArmSwing,
-                        (newVal) -> config.fixMirrorArmSwing = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.fixOffHandUsingPose"))
-                .description(OptionDescription.of(Component.translatable("animatium.fixOffHandUsingPose.description")))
-                .binding(
-                        defaults.fixOffHandUsingPose,
-                        () -> config.fixOffHandUsingPose,
-                        (newVal) -> config.fixOffHandUsingPose = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.fixCastLineCheck"))
-                .description(OptionDescription.of(Component.translatable("animatium.fixCastLineCheck.description")))
-                .binding(
-                        defaults.fixCastLineCheck,
-                        () -> config.fixCastLineCheck,
-                        (newVal) -> config.fixCastLineCheck = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.fixCastLineSwing"))
-                .description(OptionDescription.of(Component.translatable("animatium.fixCastLineSwing.description")))
-                .binding(
-                        defaults.fixCastLineSwing,
-                        () -> config.fixCastLineSwing,
-                        (newVal) -> config.fixCastLineSwing = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.fixEquipAnimationItemCheck"))
-                .description(OptionDescription.of(Component.translatable("animatium.fixEquipAnimationItemCheck.description")))
-                .binding(
-                        defaults.fixEquipAnimation,
-                        () -> config.fixEquipAnimation,
-                        (newVal) -> config.fixEquipAnimation = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.fixFireballClientsideVisual"))
-                .description(OptionDescription.of(Component.translatable("animatium.fixFireballClientsideVisual.description")))
-                .binding(
-                        defaults.fixFireballClientsideVisual,
-                        () -> config.fixFireballClientsideVisual,
-                        (newVal) -> config.fixFireballClientsideVisual = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
+        category.option(booleanOption("fixSneakingFeetPosition", defaults, config));
+        category.option(booleanOption("fixMirrorArmSwing", defaults, config));
+        category.option(booleanOption("fixOffHandUsingPose", defaults, config));
+        category.option(booleanOption("fixCastLineCheck", defaults, config));
+        category.option(booleanOption("fixCastLineSwing", defaults, config));
+        category.option(booleanOption("fixEquipAnimationItemCheck", defaults, config));
+        category.option(booleanOption("fixFireballClientsideVisual", defaults, config));
         if (!Mods.HAS_VIAFABRICPLUS) {
-            category.option(Option.<Boolean>createBuilder()
-                    .name(Component.translatable("animatium.fixTextStrikethroughStyle"))
-                    .description(OptionDescription.of(Component.translatable("animatium.fixTextStrikethroughStyle.description")))
-                    .binding(
-                            defaults.fixTextStrikethroughStyle,
-                            () -> config.fixTextStrikethroughStyle,
-                            (newVal) -> config.fixTextStrikethroughStyle = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build());
+            category.option(booleanOption("fixTextStrikethroughStyle", defaults, config));
         }
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.fixHighAttackSpeedIndicator"))
-                .description(OptionDescription.of(Component.translatable("animatium.fixHighAttackSpeedIndicator.description")))
-                .binding(
-                        defaults.fixHighAttackSpeedIndicator,
-                        () -> config.fixHighAttackSpeedIndicator,
-                        (newVal) -> config.fixHighAttackSpeedIndicator = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.fixVerticalBobbingTilt"))
-                .description(OptionDescription.of(Component.translatable("animatium.fixVerticalBobbingTilt.description")))
-                .binding(
-                        defaults.fixVerticalBobbingTilt,
-                        () -> config.fixVerticalBobbingTilt,
-                        (newVal) -> config.fixVerticalBobbingTilt = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.upMinPixelTransparencyLimit"))
-                .description(OptionDescription.of(Component.translatable("animatium.upMinPixelTransparencyLimit.description")))
-                .binding(
-                        defaults.upMinPixelTransparencyLimit,
-                        () -> config.upMinPixelTransparencyLimit,
-                        (newVal) -> {
-                            config.upMinPixelTransparencyLimit = newVal;
-                            Minecraft.getInstance().reloadResourcePacks();
-                        })
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.fixEquipAnimationOnItemUse"))
-                .description(OptionDescription.of(Component.translatable("animatium.fixEquipAnimationOnItemUse.description")))
-                .binding(
-                        defaults.fixEquipAnimationOnItemUse,
-                        () -> config.fixEquipAnimationOnItemUse,
-                        (newVal) -> config.fixEquipAnimationOnItemUse = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
-        category.option(Option.<Boolean>createBuilder()
-                .name(Component.translatable("animatium.fixItemUsageVisualInGUI"))
-                .description(OptionDescription.of(Component.translatable("animatium.fixItemUsageVisualInGUI.description")))
-                .binding(
-                        defaults.fixItemUsageVisualInGUI,
-                        () -> config.fixItemUsageVisualInGUI,
-                        (newVal) -> config.fixItemUsageVisualInGUI = newVal)
-                .controller(TickBoxControllerBuilder::create)
-                .build());
+
+        category.option(booleanOption("fixHighAttackSpeedIndicator", defaults, config));
+        category.option(booleanOption("fixVerticalBobbingTilt", defaults, config));
+        category.option(booleanOption("upMinPixelTransparencyLimit", defaults, config));
+        category.option(booleanOption("fixEquipAnimationOnItemUse", defaults, config));
+        category.option(booleanOption("fixItemUsageVisualInGUI", defaults, config));
         return category.build();
     }
 }

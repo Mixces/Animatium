@@ -46,6 +46,7 @@ import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
@@ -65,14 +66,13 @@ public class Renderer implements AutoCloseable {
     // Data
     private final Map<String, GpuTextureView> textures;
     private final Map<String, Uniform> uniforms;
-    private GpuBuffer uniformBuffer;
 
     @Getter
     @Setter
     private String displayName;
     @Getter
     @Setter
-    private RenderTarget renderTarget;
+    private RenderTarget framebuffer;
     @Getter
     @Setter
     private RenderPipeline pipeline;
@@ -80,67 +80,39 @@ public class Renderer implements AutoCloseable {
     @Setter
     private Vector4i viewport;
     @Getter
-    private boolean setup;
+    @Setter
+    private DynamicTransforms dynamicTransforms;
 
     // Internal
-    @Getter
-    @Setter
     private GpuBuffer vertexBuffer;
-    @Getter
     private GpuBuffer indexBuffer;
-    @Getter
     private VertexFormat.IndexType indexType;
-    @Getter
     private int indexCount;
-
-    // Dynamic Transforms
+    private GpuBuffer uniformBuffer;
     @Getter
-    @Setter
-    private Matrix4f modelViewMatrix;
-    @Getter
-    @Setter
-    private Matrix4f textureMatrix;
-    @Getter
-    @Setter
-    private Vector4f shaderColor;
-    @Getter
-    @Setter
-    private Vector3f modelOffset;
+    private boolean setup;
 
     private Renderer(String displayName) {
         // Data
         this.textures = new HashMap<>();
         this.uniforms = new HashMap<>();
-        this.uniformBuffer = null;
         this.displayName = displayName;
-        this.renderTarget = Minecraft.getInstance().getMainRenderTarget();
+        this.framebuffer = Minecraft.getInstance().getMainRenderTarget();
         this.pipeline = null;
         this.viewport = null;
-        this.setup = false;
+        this.dynamicTransforms = new DynamicTransforms(null, null, new Vector4f(1.0F), new Vector3f());
 
         // Internal
         this.vertexBuffer = null;
         this.indexBuffer = null;
         this.indexType = null;
         this.indexCount = -1;
-
-        // Dynamic Transforms
-        this.modelViewMatrix = RenderSystem.getModelViewMatrix();
-        this.textureMatrix = RenderSystem.getTextureMatrix();
-        this.shaderColor = new Vector4f(1.0F);
-        this.modelOffset = new Vector3f();
+        this.uniformBuffer = null;
+        this.setup = false;
     }
 
     public static Renderer of(String displayName) {
         return new Renderer(displayName);
-    }
-
-    public GpuBufferSlice getDynamicTransforms() {
-        return RenderSystem.getDynamicUniforms().writeTransform(
-                this.getModelViewMatrix(), this.getShaderColor(),
-                this.getModelOffset(), this.getTextureMatrix(),
-                RenderUtils.getLineState().get(RenderSystem.getShaderLineWidth())
-        );
     }
 
     public void setup(GpuBuffer vertexBuffer, GpuBuffer indexBuffer, VertexFormat.IndexType type, int indexCount) {
@@ -184,12 +156,12 @@ public class Renderer implements AutoCloseable {
         }
     }
 
-    public void setTexture(int id, ResourceLocation resourceLocation) {
-        this.textures.put("Sampler" + id, Minecraft.getInstance().getTextureManager().getTexture(resourceLocation).getTextureView());
-    }
-
     public void setTexture(int id, GpuTextureView textureView) {
         this.textures.put("Sampler" + id, textureView);
+    }
+
+    public void setTexture(int id, ResourceLocation resourceLocation) {
+        this.setTexture(id, Minecraft.getInstance().getTextureManager().getTexture(resourceLocation).getTextureView());
     }
 
     public void setTextures(TextureSetup textureSetup) {
@@ -259,16 +231,12 @@ public class Renderer implements AutoCloseable {
         } else if (this.pipeline == null) {
             throw new RuntimeException("Cannot draw without a pipeline bound!");
         } else {
-            final RenderTarget renderTarget = this.getRenderTarget();
-            final GpuTextureView colorTextureView = RenderSystem.outputColorTextureOverride != null ? RenderSystem.outputColorTextureOverride : this.renderTarget.getColorTextureView();
+            final RenderTarget renderTarget = this.getFramebuffer();
+            final GpuTextureView colorTextureView = RenderSystem.outputColorTextureOverride != null ? RenderSystem.outputColorTextureOverride : this.framebuffer.getColorTextureView();
             final GpuTextureView depthTextureView = renderTarget.useDepth ? (RenderSystem.outputDepthTextureOverride != null ? RenderSystem.outputDepthTextureOverride : renderTarget.getDepthTextureView()) : null;
-            final GpuBufferSlice transforms = this.getDynamicTransforms();
+            final GpuBufferSlice transforms = this.dynamicTransforms.buffer();
             final GpuBufferSlice uniformData = this.setupUniformsBuffer();
-            try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(
-                    () -> this.displayName,
-                    colorTextureView, OptionalInt.empty(),
-                    depthTextureView, OptionalDouble.empty()
-            )) {
+            try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> this.displayName, colorTextureView, OptionalInt.empty(), depthTextureView, OptionalDouble.empty())) {
                 IntBuffer viewportBuffer = null;
                 if (this.viewport != null) {
                     viewportBuffer = BufferUtils.createIntBuffer(4);
@@ -303,7 +271,7 @@ public class Renderer implements AutoCloseable {
         final Window window = minecraft.getWindow();
         final GuiRendererAccessor guiRendererAccessor = (GuiRendererAccessor) ((GameRendererAccessor) minecraft.gameRenderer).animatium$getGuiRenderer();
         RenderSystem.setProjectionMatrix(guiRendererAccessor.animatium$orthoMatrixBuffer().getBuffer((float) window.getWidth() / (float) window.getGuiScale(), (float) window.getHeight() / (float) window.getGuiScale()), ProjectionType.ORTHOGRAPHIC);
-        this.setModelViewMatrix(new Matrix4f(this.getModelViewMatrix()).setTranslation(0.0F, 0.0F, -11000.0F));
+        this.setDynamicTransforms(this.dynamicTransforms.withModelViewMatrix(new Matrix4f(this.dynamicTransforms.getModelViewMatrix()).setTranslation(0.0F, 0.0F, -11000.0F)));
         this.draw();
         RenderSystem.restoreProjectionMatrix();
     }
@@ -311,51 +279,51 @@ public class Renderer implements AutoCloseable {
     private @Nullable GpuBufferSlice setupUniformsBuffer() {
         if (this.uniforms.isEmpty()) {
             return null;
-        }
-
-        int size = 0;
-        for (Uniform uniform : this.uniforms.values()) {
-            size += uniform.size();
-        }
-
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            final Std140Builder builder = Std140Builder.onStack(stack, size);
+        } else {
+            int size = 0;
             for (Uniform uniform : this.uniforms.values()) {
-                switch (uniform.type) {
-                    case INT -> builder.putInt((int) uniform.value);
-                    case INT_ARRAY -> {
-                        int[] array = (int[]) uniform.value;
-                        for (int value : array) {
-                            builder.putFloat(value);
-                        }
-                    }
+                size += uniform.size();
+            }
 
-                    case FLOAT -> builder.putFloat((float) uniform.value);
-                    case FLOAT_ARRAY -> {
-                        float[] array = (float[]) uniform.value;
-                        for (float value : array) {
-                            builder.putFloat(value);
+            try (MemoryStack stack = MemoryStack.stackPush()) {
+                final Std140Builder builder = Std140Builder.onStack(stack, size);
+                for (Uniform uniform : this.uniforms.values()) {
+                    switch (uniform.type) {
+                        case INT -> builder.putInt((int) uniform.value);
+                        case INT_ARRAY -> {
+                            int[] array = (int[]) uniform.value;
+                            for (int value : array) {
+                                builder.putFloat(value);
+                            }
                         }
-                    }
 
-                    case VECTOR2I -> builder.putIVec2((Vector2ic) uniform.value);
-                    case VECTOR2F -> builder.putVec2((Vector2fc) uniform.value);
-                    case VECTOR3I -> builder.putIVec3((Vector3ic) uniform.value);
-                    case VECTOR3F -> builder.putVec3((Vector3fc) uniform.value);
-                    case VECTOR4I -> builder.putIVec4((Vector4ic) uniform.value);
-                    case VECTOR4F -> builder.putVec4((Vector4fc) uniform.value);
-                    case MATRIX4F -> builder.putMat4f((Matrix4fc) uniform.value);
+                        case FLOAT -> builder.putFloat((float) uniform.value);
+                        case FLOAT_ARRAY -> {
+                            float[] array = (float[]) uniform.value;
+                            for (float value : array) {
+                                builder.putFloat(value);
+                            }
+                        }
+
+                        case VECTOR2I -> builder.putIVec2((Vector2ic) uniform.value);
+                        case VECTOR2F -> builder.putVec2((Vector2fc) uniform.value);
+                        case VECTOR3I -> builder.putIVec3((Vector3ic) uniform.value);
+                        case VECTOR3F -> builder.putVec3((Vector3fc) uniform.value);
+                        case VECTOR4I -> builder.putIVec4((Vector4ic) uniform.value);
+                        case VECTOR4F -> builder.putVec4((Vector4fc) uniform.value);
+                        case MATRIX4F -> builder.putMat4f((Matrix4fc) uniform.value);
+                    }
+                }
+
+                if (this.uniformBuffer != null) {
+                    RenderSystem.getDevice().createCommandEncoder().writeToBuffer(this.uniformBuffer.slice(), builder.get());
+                } else {
+                    this.uniformBuffer = RenderSystem.getDevice().createBuffer(() -> this.displayName + " Uniform Buffer", GpuBuffer.USAGE_UNIFORM | GpuBuffer.USAGE_COPY_DST, builder.get());
                 }
             }
 
-            if (this.uniformBuffer != null) {
-                RenderSystem.getDevice().createCommandEncoder().writeToBuffer(this.uniformBuffer.slice(), builder.get());
-            } else {
-                this.uniformBuffer = RenderSystem.getDevice().createBuffer(() -> this.displayName + " Uniform Buffer", GpuBuffer.USAGE_UNIFORM | GpuBuffer.USAGE_COPY_DST, builder.get());
-            }
+            return this.uniformBuffer.slice(0, size);
         }
-
-        return this.uniformBuffer.slice(0, size);
     }
 
     @Override
@@ -372,6 +340,57 @@ public class Renderer implements AutoCloseable {
 
         if (this.uniformBuffer != null) {
             this.uniformBuffer = null;
+        }
+    }
+
+    public record DynamicTransforms(
+            @Nullable Matrix4f modelViewMatrix,
+            @Nullable Matrix4f textureMatrix,
+            Vector4f shaderColor,
+            Vector3f modelOffset
+    ) {
+        public DynamicTransforms withModelViewMatrix(Matrix4f matrix4f) {
+            return new DynamicTransforms(matrix4f, this.textureMatrix, this.shaderColor, this.modelOffset);
+        }
+
+        public DynamicTransforms withTextureMatrix(Matrix4f matrix4f) {
+            return new DynamicTransforms(this.modelViewMatrix, matrix4f, this.shaderColor, this.modelOffset);
+        }
+
+        public DynamicTransforms withShaderColor(Vector4f vector4f) {
+            return new DynamicTransforms(this.modelViewMatrix, this.textureMatrix, vector4f, this.modelOffset);
+        }
+
+        public DynamicTransforms withShaderColor(float red, float green, float blue, float alpha) {
+            return this.withShaderColor(new Vector4f(red, green, blue, alpha));
+        }
+
+        public DynamicTransforms withShaderColor(float red, float green, float blue) {
+            return this.withShaderColor(red, green, blue, 1.0F);
+        }
+
+        public DynamicTransforms withShaderColor(int color) {
+            return this.withShaderColor(ARGB.redFloat(color), ARGB.greenFloat(color), ARGB.blueFloat(color), ARGB.alphaFloat(color));
+        }
+
+        public DynamicTransforms withModelOffset(Vector3f vector3f) {
+            return new DynamicTransforms(this.modelViewMatrix, this.textureMatrix, this.shaderColor, vector3f);
+        }
+
+        public Matrix4f getModelViewMatrix() {
+            return this.modelViewMatrix == null ? new Matrix4f(RenderSystem.getModelViewMatrix()) : this.modelViewMatrix;
+        }
+
+        public Matrix4f getTextureMatrix() {
+            return this.textureMatrix == null ? new Matrix4f(RenderSystem.getTextureMatrix()) : this.textureMatrix;
+        }
+
+        public GpuBufferSlice buffer() {
+            return RenderSystem.getDynamicUniforms().writeTransform(
+                    this.getModelViewMatrix(), this.shaderColor(),
+                    this.modelOffset(), this.getTextureMatrix(),
+                    RenderUtils.getLineState().get(RenderSystem.getShaderLineWidth())
+            );
         }
     }
 

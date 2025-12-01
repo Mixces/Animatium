@@ -47,7 +47,7 @@ public class ConfigUtil {
         data.addProperty("onboarding", true);
     }
 
-    public static void load() throws Exception {
+    public void load() throws Exception {
         if (CONFIG_FILE.exists()) {
             data = GSON.fromJson(Files.readString(CONFIG_FILE.toPath()), JsonObject.class);
         } else if (!save()) {
@@ -55,7 +55,7 @@ public class ConfigUtil {
         }
     }
 
-    public static boolean bool(String name) {
+    public boolean bool(String name) {
         if (data.has(name)) {
             return data.get(name).getAsBoolean();
         } else {
@@ -64,12 +64,12 @@ public class ConfigUtil {
         }
     }
 
-    public static void put(String name, boolean value) {
+    public void put(String name, boolean value) {
         data.addProperty(name, value);
         save();
     }
 
-    public static boolean save() {
+    public boolean save() {
         boolean success = true;
         try {
             if (!CONFIG_FILE.exists()) {

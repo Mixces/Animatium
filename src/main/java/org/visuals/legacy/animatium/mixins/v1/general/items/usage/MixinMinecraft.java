@@ -75,7 +75,7 @@ public abstract class MixinMinecraft {
 
     @ModifyVariable(method = "startUseItem", at = @At(value = "STORE", ordinal = 0))
     private ItemStack animatium$fixCopyStackUseItem(ItemStack original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimation) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
             // Update the stack to match mutations to the stack in other classes
             return original.copy();
         } else {

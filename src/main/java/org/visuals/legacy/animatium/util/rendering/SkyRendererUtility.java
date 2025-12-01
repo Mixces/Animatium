@@ -96,7 +96,7 @@ public class SkyRendererUtility {
 
         renderer.setPipeline(getLegacySkyPipeline(AnimatiumConfig.instance().other.planarSkyFog));
         renderer.setup(getGpuBuffer(), quadsIndexBuffer.getBuffer(6), quadsIndexBuffer.type(), 1014);
-        renderer.setShaderColor(new Vector4f(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F, 1.0F));
+        renderer.setDynamicTransforms(renderer.getDynamicTransforms().withShaderColor(new Vector4f(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F, 1.0F)));
         renderer.draw();
 
         modelViewStack.popMatrix();
