@@ -44,7 +44,10 @@ public final class Animatium {
     }
 
     public void initialize() {
-        SharedConstants.IS_RUNNING_IN_IDE = true;
+        if (AnimatiumConstants.IS_DEVELOPMENT) {
+            SharedConstants.IS_RUNNING_IN_IDE = true;
+        }
+
         AnimatiumConfig.load();
         try {
             ConfigUtil.load();

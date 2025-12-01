@@ -131,6 +131,7 @@ public enum Version {
         other.heldItemArmLogic = false;
         other.flameDimensions = true;
         other.flameOffset = true;
+        other.oldFastSmoothLighting = true;
         other.disableRandomBlockRotations = true;
         other.blueVoidSky = true;
         other.skyHorizonHeight = true;
@@ -230,6 +231,7 @@ public enum Version {
         other.heldItemArmLogic = true;
         other.flameDimensions = true;
         other.flameOffset = false;
+        other.oldFastSmoothLighting = false;
         other.disableRandomBlockRotations = false;
         other.blueVoidSky = true;
         other.skyHorizonHeight = true;
@@ -343,6 +345,7 @@ public enum Version {
         other.heldItemArmLogic = false;
         other.flameDimensions = false;
         other.flameOffset = false;
+        other.oldFastSmoothLighting = false;
         other.disableRandomBlockRotations = false;
         other.blueVoidSky = false;
         other.skyHorizonHeight = false;

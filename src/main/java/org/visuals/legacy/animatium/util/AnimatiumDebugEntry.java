@@ -47,7 +47,7 @@ public class AnimatiumDebugEntry implements DebugScreenEntry {
     @Override
     public void display(DebugScreenDisplayer debugScreenDisplayer, @Nullable Level level, @Nullable LevelChunk levelChunk, @Nullable LevelChunk levelChunk2) {
         final List<String> list = new ArrayList<>();
-        list.add("Animatium " + AnimatiumConstants.VERSION + (AnimatiumConstants.DEVELOPMENT_VERSION.isEmpty() ? "" : " - Development Version (" + AnimatiumConstants.DEVELOPMENT_VERSION + ")"));
+        list.add("Animatium " + AnimatiumConstants.VERSION + (AnimatiumConstants.IS_DEVELOPMENT ? " - Development Version (" + AnimatiumConstants.DEVELOPMENT_VERSION + ")" : ""));
         if (!Animatium.ENABLED_SERVER_FEATURES.isEmpty()) {
             list.add("Enabled Server Features:");
             Animatium.ENABLED_SERVER_FEATURES.forEach((feature) -> list.add(" - " + feature.getId()));

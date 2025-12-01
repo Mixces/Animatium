@@ -1,3 +1,5 @@
+import java.lang.Boolean.parseBoolean
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.loom)
@@ -28,6 +30,7 @@ class ModData {
     val modrinth = property("mod.modrinth") as String
     val curseforge = property("mod.curseforge") as String
     val discord = property("mod.discord") as String
+    val development = parseBoolean(property("mod.development") as String)
 
     val minecraftVersion = property("mod.minecraft_version") as String
     val minecraftVersionRange = property("mod.minecraft_version_range") as String
@@ -68,7 +71,11 @@ val currentCommitHash: String by lazy {
 blossom {
     replaceToken("@MODID@", mod.id)
     replaceToken("@VERSION@", mod.version)
-    replaceToken("@COMMIT@", currentCommitHash) // if development version, put currentCommitHash else put ""
+    replaceToken(
+        "@COMMIT@",
+        if (mod.development) currentCommitHash else ""
+    ) // if development version, put currentCommitHash else put ""
+    replaceToken("@DEVELOPMENT@", mod.development)
 }
 
 loom {

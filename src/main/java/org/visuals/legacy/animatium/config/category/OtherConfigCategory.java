@@ -55,6 +55,7 @@ public class OtherConfigCategory extends Category {
     public boolean heldItemArmLogic = true;
     public boolean flameDimensions = true;
     public boolean flameOffset = true;
+    public boolean oldFastSmoothLighting = true;
     public boolean disableRandomBlockRotations = true;
 
     public static ConfigCategory create(final OtherConfigCategory defaults, final OtherConfigCategory config) {
@@ -91,6 +92,7 @@ public class OtherConfigCategory extends Category {
         // TODO: category.option(booleanOption("heldItemArmLogic", defaults, config));
         category.option(booleanOption("flameDimensions", defaults, config));
         category.option(booleanOption("flameOffset", defaults, config));
+        category.option(booleanOption("oldFastSmoothLighting", defaults, config));
         category.option(booleanOption("disableRandomBlockRotations", defaults, config));
         return category.build();
     }

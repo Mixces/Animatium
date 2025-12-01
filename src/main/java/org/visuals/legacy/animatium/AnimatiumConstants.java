@@ -35,6 +35,7 @@ public class AnimatiumConstants {
     public static final String MOD_ID = "@MODID@";
     public static final Double VERSION = Double.parseDouble("@VERSION@");
     public static final String DEVELOPMENT_VERSION = "@COMMIT@";
+    public static final boolean IS_DEVELOPMENT = Boolean.parseBoolean("@DEVELOPMENT@");
 
     public static @Nullable ResourceLocation getMobHeadLocation(Item item) {
         if (item == Items.CREEPER_HEAD) {
