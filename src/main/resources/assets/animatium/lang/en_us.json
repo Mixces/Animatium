@@ -179,6 +179,8 @@
 	"animatium.fixEquipAnimationOnItemUse.description": "Enable/disable the equip animation when blocking/etc.",
 	"animatium.fixItemUsageVisualInGUI": "[*] Fix item usage visual whilst in GUI",
 	"animatium.fixItemUsageVisualInGUI.description": "Enable/disable item usage animation whilst inside a GUI, for example the continuous visual blocking, etc.",
+	"animatium.fixDoubleUsageVisual": "[*] Fix double item usage visual",
+	"animatium.fixDoubleUsageVisual.description": "Fixes the double item usage issue on servers, usually found when you have high ping.",
 
 	"animatium.category.other": "Other",
 	"animatium.thirdPersonSwordBlockingPosition": "[1.7] Third-person arm block animation",

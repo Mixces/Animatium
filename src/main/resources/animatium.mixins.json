@@ -11,6 +11,7 @@
 		"accessor.GuiRendererAccessor",
 		"accessor.LivingEntityAccessor",
 		"accessor.PlayerAccessor",
+		"v1.entity.MixinHumanoidMobRenderer_FixDoubleUsage",
 		"v1.entity.MixinHumanoidModel",
 		"v1.entity.MixinItemPickupParticle_LegacyPickupPosition",
 		"v1.entity.MixinLivingEntityRenderer",

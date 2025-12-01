@@ -84,12 +84,15 @@ public abstract class MixinItemInHandRenderer {
     @Shadow
     protected abstract boolean shouldInstantlyReplaceVisibleItem(ItemStack itemStack, ItemStack itemStack2);
 
-    @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;isUsingItem()Z", ordinal = 1))
-    private boolean animatium$itemUsageVisualInGUI(AbstractClientPlayer instance, Operation<Boolean> original) {
+    @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;isUsingItem()Z"))
+    private boolean animatium$fixDoubleBlockingVisual$itemUsageVisualInGUI(AbstractClientPlayer instance, Operation<Boolean> original) {
+        final boolean value = original.call(instance);
         if (AnimatiumConfig.instance().fixes.fixItemUsageVisualInGUI && this.minecraft.screen != null) {
             return false;
-        } else {
-            return original.call(instance);
+        } else if (AnimatiumConfig.instance().fixes.fixDoubleUsageVisual) {
+            return value && this.minecraft.options.keyUse.isDown();
+         } else {
+            return value;
         }
     }
 

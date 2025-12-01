@@ -43,6 +43,7 @@ public class FixesConfigCategory extends Category {
     public boolean upMinPixelTransparencyLimit = true;
     public boolean fixEquipAnimationOnItemUse = true;
     public boolean fixItemUsageVisualInGUI = true;
+    public boolean fixDoubleUsageVisual = true;
 
     public static ConfigCategory create(final FixesConfigCategory defaults, final FixesConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
@@ -63,6 +64,7 @@ public class FixesConfigCategory extends Category {
         category.option(booleanOption("upMinPixelTransparencyLimit", defaults, config));
         category.option(booleanOption("fixEquipAnimationOnItemUse", defaults, config));
         category.option(booleanOption("fixItemUsageVisualInGUI", defaults, config));
+        category.option(booleanOption("fixDoubleUsageVisual", defaults, config));
         return category.build();
     }
 }
