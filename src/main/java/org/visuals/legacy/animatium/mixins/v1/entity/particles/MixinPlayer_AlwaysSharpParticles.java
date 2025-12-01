@@ -33,7 +33,7 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(Player.class)
-public abstract class MixinPlayer {
+public abstract class MixinPlayer_AlwaysSharpParticles {
     // TODO: Improve parity/exactness
     @ModifyExpressionValue(method = "attack", at = @At(value = "CONSTANT", args = "floatValue=0.0", ordinal = 5))
     private float animatium$alwaysShowSharpParticles(float original) {

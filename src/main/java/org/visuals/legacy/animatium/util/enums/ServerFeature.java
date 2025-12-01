@@ -31,6 +31,7 @@ import lombok.Getter;
 public enum ServerFeature {
     MISS_PENALTY("miss_penalty"),
     LEFT_CLICK_ITEM_USAGE("left_click_item_usage"),
+    MINING_ITEM_USAGE("mining_item_usage"),
     HIDE_FIRSTPERSON_ROD_BOBBER("hide_rod_bobber");
 
     public static final ServerFeature[] VALUES = values();
