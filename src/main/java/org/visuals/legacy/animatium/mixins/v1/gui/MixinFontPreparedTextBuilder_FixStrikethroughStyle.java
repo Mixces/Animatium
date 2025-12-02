@@ -25,14 +25,15 @@
 
 package org.visuals.legacy.animatium.mixins.v1.gui;
 
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.client.gui.Font;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.compatibility.Mods;
 
+@IfModAbsent(value = "viafabricplus")
 @Mixin(Font.PreparedTextBuilder.class)
 public abstract class MixinFontPreparedTextBuilder_FixStrikethroughStyle {
     @Unique
@@ -40,7 +41,7 @@ public abstract class MixinFontPreparedTextBuilder_FixStrikethroughStyle {
 
     @ModifyArg(method = "accept(ILnet/minecraft/network/chat/Style;Lnet/minecraft/client/gui/font/glyphs/BakedGlyph;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/font/glyphs/EffectGlyph;createEffect(FFFFFIIF)Lnet/minecraft/client/gui/font/TextRenderable;", ordinal = 0), index = 1)
     private float animatium$fixTextStrikethroughStyle$minY(float minY) {
-        if (AnimatiumConfig.instance().fixes.fixTextStrikethroughStyle && !Mods.HAS_VIAFABRICPLUS) {
+        if (AnimatiumConfig.instance().fixes.fixTextStrikethroughStyle) {
             return minY - animatium$strikethroughOffset;
         } else {
             return minY;
@@ -49,7 +50,7 @@ public abstract class MixinFontPreparedTextBuilder_FixStrikethroughStyle {
 
     @ModifyArg(method = "accept(ILnet/minecraft/network/chat/Style;Lnet/minecraft/client/gui/font/glyphs/BakedGlyph;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/font/glyphs/EffectGlyph;createEffect(FFFFFIIF)Lnet/minecraft/client/gui/font/TextRenderable;", ordinal = 0), index = 3)
     private float animatium$fixTextStrikethroughStyle$maxY(float maxY) {
-        if (AnimatiumConfig.instance().fixes.fixTextStrikethroughStyle && !Mods.HAS_VIAFABRICPLUS) {
+        if (AnimatiumConfig.instance().fixes.fixTextStrikethroughStyle) {
             return maxY - animatium$strikethroughOffset;
         } else {
             return maxY;

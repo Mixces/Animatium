@@ -27,19 +27,20 @@ package org.visuals.legacy.animatium.mixins.v1.gui.toasts;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.client.gui.components.toasts.RecipeToast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import org.spongepowered.asm.mixin.Mixin;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.compatibility.Mods;
 
+@IfModAbsent(value = "sodium-extra")
 @Mixin(RecipeToast.class)
 public abstract class MixinRecipeToast_DisableToast {
     @WrapMethod(method = "addOrUpdate")
     private static void animatium$animatium$disableRecipeToast(ToastManager toastManager, RecipeDisplay recipeDisplay, Operation<Void> original) {
-        if (!Animatium.ENABLED && (!AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts || Mods.HAS_SODIUM_EXTRAS)) {
+        if (!Animatium.ENABLED || !AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts) {
             original.call(toastManager, recipeDisplay);
         }
     }

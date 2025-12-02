@@ -27,6 +27,7 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.lighting;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.moulberry.mixinconstraints.annotations.IfModLoaded;
 import net.fabricmc.fabric.impl.client.indigo.Indigo;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,6 +35,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.Properties;
 import java.util.function.Function;
 
+@IfModLoaded(value = "fabric-api")
 @Mixin(Indigo.class)
 public abstract class MixinIndigo {
     // TODO/NOTE: Gross, but I don't have a choice (breaks fastSmoothLighting), sorry Fabric!
