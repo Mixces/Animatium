@@ -109,9 +109,16 @@ public enum Version {
         screen.snappySliderMovement = true;
         screen.hideRecipeBook = true;
         screen.panoramaRendering = true;
+        screen.legacyLoadingScreen = true;
+        screen.oldDepthFar = true;
+        screen.oldChatPosition = true;
         screen.cameraVersion = CameraVersion.V1_8;
 
         final OtherConfigCategory other = config.other;
+        other.blueVoidSky = true;
+        other.skyHorizonHeight = true;
+        other.planarSkyFog = true;
+        other.cloudHeight = true;
         other.thirdPersonSwordBlockingPosition = true;
         other.lockBlockingArmRotation = true;
         other.projectileAgeCheck = true; // TODO/CHECK
@@ -132,11 +139,9 @@ public enum Version {
         other.flameDimensions = true;
         other.flameOffset = true;
         other.oldFastSmoothLighting = true;
+        other.oldCloudRendering = true;
+        other.oldWindowIcon = true;
         other.disableRandomBlockRotations = true;
-        other.blueVoidSky = true;
-        other.skyHorizonHeight = true;
-        other.planarSkyFog = true;
-        other.cloudHeight = true;
     }),
 
     V1_8((final AnimatiumConfig config) -> {
@@ -209,9 +214,16 @@ public enum Version {
         screen.snappySliderMovement = true;
         screen.hideRecipeBook = true;
         screen.panoramaRendering = true;
+        screen.legacyLoadingScreen = true;
+        screen.oldDepthFar = true;
+        screen.oldChatPosition = true;
         screen.cameraVersion = CameraVersion.V1_8;
 
         final OtherConfigCategory other = config.other;
+        other.blueVoidSky = true;
+        other.skyHorizonHeight = true;
+        other.planarSkyFog = true;
+        other.cloudHeight = true;
         other.thirdPersonSwordBlockingPosition = false;
         other.lockBlockingArmRotation = true;
         other.projectileAgeCheck = true; // TODO/CHECK
@@ -232,11 +244,9 @@ public enum Version {
         other.flameDimensions = true;
         other.flameOffset = false;
         other.oldFastSmoothLighting = false;
+        other.oldCloudRendering = true;
+        other.oldWindowIcon = true;
         other.disableRandomBlockRotations = false;
-        other.blueVoidSky = true;
-        other.skyHorizonHeight = true;
-        other.planarSkyFog = true;
-        other.cloudHeight = true;
     }),
 
     V1_12((final AnimatiumConfig config) -> {
@@ -323,9 +333,16 @@ public enum Version {
         screen.snappySliderMovement = false;
         screen.hideRecipeBook = false;
         screen.panoramaRendering = false;
+        screen.legacyLoadingScreen = false;
+        screen.oldDepthFar = false;
+        screen.oldChatPosition = false;
         screen.cameraVersion = CameraVersion.VANILLA;
 
         final OtherConfigCategory other = config.other;
+        other.blueVoidSky = false;
+        other.skyHorizonHeight = false;
+        other.planarSkyFog = false;
+        other.cloudHeight = false;
         other.thirdPersonSwordBlockingPosition = false;
         other.lockBlockingArmRotation = false;
         other.projectileAgeCheck = false; // TODO/CHECK
@@ -346,11 +363,9 @@ public enum Version {
         other.flameDimensions = false;
         other.flameOffset = false;
         other.oldFastSmoothLighting = false;
+        other.oldCloudRendering = false;
+        other.oldWindowIcon = false;
         other.disableRandomBlockRotations = false;
-        other.blueVoidSky = false;
-        other.skyHorizonHeight = false;
-        other.planarSkyFog = false;
-        other.cloudHeight = false;
     });
 
     private final Consumer<AnimatiumConfig> applier;

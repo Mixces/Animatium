@@ -23,23 +23,24 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.gui;
+package org.visuals.legacy.animatium.mixins.v1.gui.loading_screen;
 
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ChatComponent;
-import org.lwjgl.glfw.GLFW;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import net.minecraft.client.gui.screens.TitleScreen;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(ChatComponent.class)
-public abstract class MixinChatComponent_DontClearChat {
-    @WrapMethod(method = "clearMessages")
-    private void animatium$dontClearChat(boolean clearSentMsgHistory, Operation<Void> original) {
-        if (!Animatium.ENABLED || !AnimatiumConfig.instance().extras.dontClearChat || GLFW.glfwGetKey(Minecraft.getInstance().getWindow().handle(), GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS) {
-            original.call(clearSentMsgHistory);
+@Mixin(TitleScreen.class)
+public abstract class MixinTitleScreen_DisableFade {
+    @ModifyExpressionValue(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/TitleScreen;fading:Z", opcode = Opcodes.GETFIELD))
+    private boolean animatium$disableFade(boolean original) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.legacyLoadingScreen) {
+            return false;
+        } else {
+            return original;
         }
     }
 }

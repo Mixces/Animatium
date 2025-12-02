@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.gui;
+package org.visuals.legacy.animatium.mixins.v1.gui.screen_tweaks;
 
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;

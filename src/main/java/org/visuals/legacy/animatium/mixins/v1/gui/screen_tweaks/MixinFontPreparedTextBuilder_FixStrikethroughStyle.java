@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.gui;
+package org.visuals.legacy.animatium.mixins.v1.gui.screen_tweaks;
 
 import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.client.gui.Font;

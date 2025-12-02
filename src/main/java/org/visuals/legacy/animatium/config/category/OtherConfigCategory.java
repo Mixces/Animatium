@@ -56,13 +56,14 @@ public class OtherConfigCategory extends Category {
     public boolean flameDimensions = true;
     public boolean flameOffset = true;
     public boolean oldFastSmoothLighting = true;
+    public boolean oldCloudRendering = true;
+    public boolean oldWindowIcon = true;
     public boolean disableRandomBlockRotations = true;
 
     public static ConfigCategory create(final OtherConfigCategory defaults, final OtherConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.other"));
 
-        // Sky
         {
             final OptionGroup.Builder skyGroup = OptionGroup.createBuilder();
             skyGroup.name(Component.translatable("animatium.category.other.group.sky"));
@@ -93,6 +94,8 @@ public class OtherConfigCategory extends Category {
         category.option(booleanOption("flameDimensions", defaults, config));
         category.option(booleanOption("flameOffset", defaults, config));
         category.option(booleanOption("oldFastSmoothLighting", defaults, config));
+        category.option(booleanOption("oldCloudRendering", defaults, config));
+        category.option(booleanOption("oldWindowIcon", defaults, config));
         category.option(booleanOption("disableRandomBlockRotations", defaults, config));
         return category.build();
     }
