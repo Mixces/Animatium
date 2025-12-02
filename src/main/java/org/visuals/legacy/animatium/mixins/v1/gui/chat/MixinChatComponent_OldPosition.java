@@ -25,10 +25,47 @@
 
 package org.visuals.legacy.animatium.mixins.v1.gui.chat;
 
+import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.client.gui.components.ChatComponent;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(ChatComponent.class)
 public abstract class MixinChatComponent_OldPosition {
-    // TODO
+    @Unique
+    private static final int animatium$oldChatY = 28;
+
+    @Expression("40")
+    @ModifyExpressionValue(method = "render", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private int animatium$oldChatPosition$render(int original) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.oldChatPosition) {
+            return animatium$oldChatY;
+        } else {
+            return original;
+        }
+    }
+
+    @Expression("40.0")
+    @ModifyExpressionValue(method = "handleChatQueueClicked", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private double animatium$oldChatPosition$handleChatQueueClicked(double original) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.oldChatPosition) {
+            return animatium$oldChatY;
+        } else {
+            return original;
+        }
+    }
+
+    @Expression("40.0")
+    @ModifyExpressionValue(method = "screenToChatY", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private double animatium$oldChatPosition$screenToChatY(double original) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.oldChatPosition) {
+            return animatium$oldChatY;
+        } else {
+            return original;
+        }
+    }
 }

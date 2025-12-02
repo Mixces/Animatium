@@ -30,6 +30,7 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import lombok.experimental.UtilityClass;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.ARGB;
@@ -45,6 +46,19 @@ import java.util.function.Consumer;
 
 @UtilityClass
 public class SkyRendererUtility {
+    public final RenderPipeline.Snippet VOID_BOX_SNIPPET =
+            RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
+                    .withVertexShader("core/position")
+                    .withFragmentShader("core/position")
+                    .withDepthWrite(false)
+                    .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
+                    .buildSnippet();
+
+    public final RenderPipeline VOID_BOX_PIPELINE =
+            RenderPipelines.register(RenderPipeline.builder(VOID_BOX_SNIPPET)
+                    .withLocation(Animatium.location("pipeline/void_box"))
+                    .build());
+
     private final RenderPipeline.Snippet LEGACY_SKY_PIPELINE_SNIPPET =
             RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
                     .withLocation(Animatium.location("pipeline/legacy_sky"))
@@ -133,6 +147,42 @@ public class SkyRendererUtility {
                 return null;
             }
         }
+    }
+
+    // TODO/NOTE: Figure out why its rendering differently than in 18w07a (last snapshot to have it)
+    public void renderVoidBox(double depth) {
+        try (final Renderer renderer = Renderer.of("Player Void Box")) {
+            renderer.setPipeline(VOID_BOX_PIPELINE);
+            renderer.setup((builder) -> {
+                final float offset = -((float) (depth + 65.0));
+                builder.addVertex(-1.0F, offset, 1.0F);
+                builder.addVertex(1.0F, offset, 1.0F);
+                builder.addVertex(1.0F, -1.0F, 1.0F);
+                builder.addVertex(-1.0F, -1.0F, 1.0F);
+                builder.addVertex(-1.0F, -1.0F, -1.0F);
+                builder.addVertex(1.0F, -1.0F, -1.0F);
+                builder.addVertex(1.0F, offset, -1.0F);
+                builder.addVertex(-1.0F, offset, -1.0F);
+                builder.addVertex(1.0F, -1.0F, -1.0F);
+                builder.addVertex(1.0F, -1.0F, 1.0F);
+                builder.addVertex(1.0F, offset, 1.0F);
+                builder.addVertex(1.0F, offset, -1.0F);
+                builder.addVertex(-1.0F, offset, -1.0F);
+                builder.addVertex(-1.0F, offset, 1.0F);
+                builder.addVertex(-1.0F, -1.0F, 1.0F);
+                builder.addVertex(-1.0F, -1.0F, -1.0F);
+                builder.addVertex(-1.0F, -1.0F, -1.0F);
+                builder.addVertex(-1.0F, -1.0F, 1.0F);
+                builder.addVertex(1.0F, -1.0F, 1.0F);
+                builder.addVertex(1.0F, -1.0F, -1.0F);
+            }, 20);
+            renderer.setDynamicTransforms(renderer.getDynamicTransforms().withShaderColor(0xFF000000));
+            renderer.draw();
+        }
+    }
+
+    public double getHorizonEyeHeight(ClientLevel level, float tickDelta) {
+        return Minecraft.getInstance().player.getEyePosition(tickDelta).y - getHorizonDepth(level);
     }
 
     public double getHorizonDepth(ClientLevel level) {

@@ -3,7 +3,6 @@
 	"package": "org.visuals.legacy.animatium.mixins",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"v1.gui.loading_screen.MixinMinecraft_LoadOverlayTextures",
 		"accessor.AbstractRecipeBookScreenAccessor",
 		"accessor.AbstractSelectionListAccessor",
 		"accessor.CameraAccessor",
@@ -60,6 +59,7 @@
 		"v1.gui.hover_text_color.MixinAbstractButton_LegacyTextHoverColor",
 		"v1.gui.hover_text_color.MixinAbstractSliderButton_LegacyTextHoverColor",
 		"v1.gui.loading_screen.MixinLoadingOverlay_LegacyLoadingScreen",
+		"v1.gui.loading_screen.MixinMinecraft_LoadOverlayTextures",
 		"v1.gui.loading_screen.MixinTitleScreen_DisableFade",
 		"v1.gui.old_inventory_rendering.MixinAbstractContainerScreen",
 		"v1.gui.old_inventory_rendering.MixinEffectsInInventory",
@@ -97,6 +97,7 @@
 		"v1.rendering.outlines.MixinGameRenderer_PersistentBlockOutline",
 		"v1.rendering.outlines.MixinLevelRenderer_BlockOutlines",
 		"v1.rendering.outlines.MixinLevelRenderer_EntityOutlines",
+		"v1.rendering.sky.MixinLevelRenderer_VoidBox",
 		"v1.rendering.sky.blue_void.MixinLevelRenderer_BlueVoidDisc",
 		"v1.rendering.sky.cloud_height.MixinLevelRenderer_LegacyCloudHeight",
 		"v1.rendering.sky.horizon_height.MixinSkyRenderer_LegacyHorizonHeight",

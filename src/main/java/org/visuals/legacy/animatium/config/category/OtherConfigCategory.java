@@ -35,6 +35,7 @@ public class OtherConfigCategory extends Category {
     public boolean skyHorizonHeight = true;
     public boolean planarSkyFog = true;
     public boolean cloudHeight = true;
+    public boolean playerVoidBox = true;
     // Other
     public boolean thirdPersonSwordBlockingPosition = true;
     public boolean lockBlockingArmRotation = true;
