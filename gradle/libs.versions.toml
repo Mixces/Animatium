@@ -15,4 +15,3 @@ blossom = { id = "net.kyori.blossom", version.ref = "blossom" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 fletchingtable-fabric = { id = "dev.kikugie.fletching-table.fabric", version.ref = "fletchingtable" }
-fletchingtable-neoforge = { id = "dev.kikugie.fletching-table.neoforge", version.ref = "fletchingtable" }
