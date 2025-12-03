@@ -1,5 +1,7 @@
 # Animatium
 
+Visual Tweaks/QOL Settings For Modern Minecraft Versions, Aimed At 1.7/1.8 players.
+
 Join our discord: https://discord.gg/zqnXSUqedW
 
 ## License
@@ -33,12 +35,13 @@ want to suggest features, join our [discord](https://discord.gg/zqnXSUqedW)!
 
 ### Feature
 
-| Feature Name                     | Identifier            | Description                                                                             |
-|----------------------------------|:----------------------|:----------------------------------------------------------------------------------------|
-| Miss Penalty                     | miss_penalty          | Turn on/off the swing miss penalty                                                      |
-| Left Click Item Usage            | left_click_item_usage | Turn on/off the ability to start using a item whilst holding left click                 |
-| Mining Item Usage                | mining_item_usage     | Turn on/off the ability to start mining/break blocks whilst using a item like in 1.7.   |
-| Hide Attached Fishing Rod Bobber | hide_rod_bobber       | Turn on/off the rendering of the fishing rod bobber when attached to you in firstperson |
+| Feature Name                     | Identifier            | Description                                                                               |
+|----------------------------------|:----------------------|:------------------------------------------------------------------------------------------|
+| Miss Penalty                     | miss_penalty          | Turn on/off the swing miss penalty.                                                       |
+| Left Click Item Usage            | left_click_item_usage | Turn on/off the ability to start using a item whilst holding left click.                  |
+| Mining Item Usage                | mining_item_usage     | Turn on/off the ability to start mining/break blocks whilst using a item like in 1.7.     |
+| Hide Attached Fishing Rod Bobber | hide_rod_bobber       | Turn on/off the rendering of the fishing rod bobber when attached to you in first-person. |
+| Pick Inflation                   | pick_inflation        | Turn on/off the 0.1 pick (hitbox) inflation when attacking an entity.                     |
 
 ## Payloads
 

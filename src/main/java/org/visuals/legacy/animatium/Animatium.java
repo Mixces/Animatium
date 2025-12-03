@@ -27,6 +27,7 @@ package org.visuals.legacy.animatium;
 
 import lombok.experimental.UtilityClass;
 import net.minecraft.SharedConstants;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.config.ConfigUtil;
@@ -36,8 +37,12 @@ import java.util.EnumSet;
 
 @UtilityClass
 public final class Animatium {
+    public static final EnumSet<ServerFeature> ENABLED_SERVER_FEATURES = EnumSet.noneOf(ServerFeature.class);
     public boolean ENABLED = true;
-    public EnumSet<ServerFeature> ENABLED_SERVER_FEATURES = EnumSet.noneOf(ServerFeature.class);
+
+    public boolean hasFeature(ServerFeature feature) {
+        return (AnimatiumConstants.IS_DEVELOPMENT && Minecraft.getInstance().isLocalServer()) || ENABLED_SERVER_FEATURES.contains(feature);
+    }
 
     public ResourceLocation location(String path) {
         return ResourceLocation.fromNamespaceAndPath(AnimatiumConstants.MOD_ID, path);

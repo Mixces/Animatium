@@ -32,7 +32,6 @@ import net.minecraft.client.renderer.texture.TextureContents;
 import net.minecraft.client.resources.metadata.texture.TextureMetadataSection;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.ResourceProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -46,9 +45,9 @@ public class LegacyLogoTexture extends ReloadableTexture {
 
     @Override
     public @NotNull TextureContents loadContents(ResourceManager resourceManager) throws IOException {
-        final ResourceProvider resourceProvider = Minecraft.getInstance().getResourceManager();
-        try (final InputStream inputStream = resourceProvider.open(this.resourceId())) {
-            return new TextureContents(NativeImage.read(inputStream), new TextureMetadataSection(false, true));
+        try (final InputStream inputStream = Minecraft.getInstance().getResourceManager().open(this.resourceId())) {
+            // TODO: Get real metadata file
+            return new TextureContents(NativeImage.read(inputStream), new TextureMetadataSection(TextureMetadataSection.DEFAULT_BLUR, TextureMetadataSection.DEFAULT_CLAMP));
         }
     }
 }

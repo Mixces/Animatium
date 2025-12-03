@@ -23,22 +23,22 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.network;
+package org.visuals.legacy.animatium.mixins.v1.general.server_features;
 
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.ChatScreen;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
-@Mixin(ClientPacketListener.class)
-public abstract class MixinClientPacketListener_DontCloseChat {
-    @WrapWithCondition(method = "handleContainerClose", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;clientSideCloseContainer()V"))
-    private boolean animatium$dontCloseChat(LocalPlayer instance) {
-        return !Animatium.ENABLED || !AnimatiumConfig.instance().extras.dontCloseChat || !(Minecraft.getInstance().screen instanceof ChatScreen);
+@Mixin(Entity.class)
+public abstract class MixinEntity_PickInflation {
+    @Inject(method = "getPickRadius", at = @At("HEAD"), cancellable = true)
+    private void animatium$pickInflation(CallbackInfoReturnable<Float> cir) {
+        if (Animatium.hasFeature(ServerFeature.PICK_INFLATION)) {
+            cir.setReturnValue(0.1F);
+        }
     }
 }

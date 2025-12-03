@@ -48,6 +48,7 @@ public class ScreenConfigCategory extends Category {
     public boolean legacyLoadingScreen = true;
     public boolean oldDepthFar = true;
     public boolean oldChatPosition = true;
+    public boolean disconnectServerToTitleScreen = true;
     public CameraVersion cameraVersion = CameraVersion.V1_8;
 
     public static ConfigCategory create(final ScreenConfigCategory defaults, final ScreenConfigCategory config) {
@@ -71,6 +72,7 @@ public class ScreenConfigCategory extends Category {
         category.option(booleanOption("legacyLoadingScreen", defaults, config));
         category.option(booleanOption("oldDepthFar", defaults, config));
         category.option(booleanOption("oldChatPosition", defaults, config));
+        category.option(booleanOption("disconnectServerToTitleScreen", defaults, config));
         category.option(enumOption("cameraVersion", defaults, config, CameraVersion.class));
         return category.build();
     }

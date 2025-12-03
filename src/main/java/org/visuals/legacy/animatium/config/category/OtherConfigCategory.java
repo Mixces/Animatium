@@ -59,6 +59,9 @@ public class OtherConfigCategory extends Category {
     public boolean oldFastSmoothLighting = true;
     public boolean oldCloudRendering = true;
     public boolean oldWindowIcon = true;
+    public boolean voidParticles = true;
+    public boolean voidFog = true;
+    public boolean oldFallParticlePhysics = true;
     public boolean disableRandomBlockRotations = true;
 
     public static ConfigCategory create(final OtherConfigCategory defaults, final OtherConfigCategory config) {
@@ -97,6 +100,9 @@ public class OtherConfigCategory extends Category {
         category.option(booleanOption("oldFastSmoothLighting", defaults, config));
         category.option(booleanOption("oldCloudRendering", defaults, config));
         category.option(booleanOption("oldWindowIcon", defaults, config));
+        category.option(booleanOption("voidParticles", defaults, config));
+        category.option(booleanOption("voidFog", defaults, config));
+        category.option(booleanOption("oldFallParticlePhysics", defaults, config));
         category.option(booleanOption("disableRandomBlockRotations", defaults, config));
         return category.build();
     }

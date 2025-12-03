@@ -30,10 +30,11 @@
 		"v1.entity.particles.MixinLivingEntity",
 		"v1.entity.particles.MixinParticle",
 		"v1.entity.particles.MixinPlayer_AlwaysSharpParticles",
-		"v1.entity.projectile_age.MixinEyeOfEnder",
-		"v1.entity.projectile_age.MixinFireball",
-		"v1.entity.projectile_age.MixinThrowableProjectile",
-		"v1.entity.projectile_age.MixinWindCharge",
+		"v1.entity.projectiles.MixinThrownEgg_SnowballParticles",
+		"v1.entity.projectiles.age.MixinEyeOfEnder",
+		"v1.entity.projectiles.age.MixinFireball",
+		"v1.entity.projectiles.age.MixinThrowableProjectile",
+		"v1.entity.projectiles.age.MixinWindCharge",
 		"v1.entity.rotations.MixinLivingEntity",
 		"v1.entity.rotations.MixinPlayer",
 		"v1.entity.sneaking.MixinElytraAnimationState_SneakAnimationWhileGliding",
@@ -47,10 +48,14 @@
 		"v1.general.camera.view_bobbing.MixinPlayer_SetViewBobbingTilt",
 		"v1.general.combat.particles.MixinPlayer_HideModernCombatParticles",
 		"v1.general.combat.sounds.MixinSoundManager_DisableModernCombatSounds",
+		"v1.general.network.MixinClientPacketListener_DontCloseChat",
+		"v1.general.network.MixinMultiPlayerGameMode",
 		"v1.general.server_features.MixinFishingHookRenderer_HideFirstPersonBobber",
 		"v1.general.server_features.MixinMinecraft_MiningItemUsage",
 		"v1.general.server_features.MixinMinecraft_MissPenalty",
+		"v1.general.server_features.MixinMultiPlayerGameMode_StopBlockMining",
 		"v1.gui.MixinInGameHud",
+		"v1.gui.MixinMinecraft_DisconnectToTitleScreen",
 		"v1.gui.centered_widgets.MixinAbstractScrollArea",
 		"v1.gui.centered_widgets.MixinAbstractSelectionList",
 		"v1.gui.chat.MixinChatComponent_DontClearChat",
@@ -75,8 +80,6 @@
 		"v1.gui.toasts.MixinRecipeToast_DisableToast",
 		"v1.gui.toasts.MixinToastManager_DisableToastSounds",
 		"v1.gui.toasts.MixinTutorialToast_DisableToast",
-		"v1.network.MixinClientPacketListener_DontCloseChat",
-		"v1.network.MixinMultiPlayerGameMode",
 		"v1.rendering.MixinGameRenderer_OldDepthFar",
 		"v1.rendering.items.MixinItem",
 		"v1.rendering.items.MixinItemInHandLayer",
@@ -112,5 +115,8 @@
 	},
 	"mixinextras": {
 		"minVersion": "0.5.0"
-	}
+	},
+	"mixins": [
+		"v1.general.server_features.MixinEntity_PickInflation"
+	]
 }

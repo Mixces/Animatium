@@ -23,21 +23,21 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.projectile_age;
+package org.visuals.legacy.animatium.mixins.v1.entity.projectiles.age;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.world.entity.projectile.windcharge.WindCharge;
+import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(WindCharge.class)
-public abstract class MixinWindCharge {
-    @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/projectile/windcharge/WindCharge;tickCount:I"))
-    private int animatium$projectileAgeCheck(WindCharge instance, Operation<Integer> original) {
+@Mixin(ThrowableProjectile.class)
+public abstract class MixinThrowableProjectile {
+    @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/projectile/ThrowableProjectile;tickCount:I"))
+    private int animatium$projectileAgeCheck(ThrowableProjectile instance, Operation<Integer> original) {
         final int originalTick = original.call(instance);
         if (Animatium.ENABLED && !AnimatiumConfig.instance().other.projectileAgeCheck) {
             return originalTick + 2;

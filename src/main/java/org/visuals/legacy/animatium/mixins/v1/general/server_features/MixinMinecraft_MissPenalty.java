@@ -62,7 +62,7 @@ public abstract class MixinMinecraft_MissPenalty {
 
     @WrapOperation(method = "startAttack", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 0, opcode = Opcodes.GETFIELD))
     private int animatium$disableSwingMissPenalty(Minecraft instance, Operation<Integer> original) {
-        if (Animatium.ENABLED_SERVER_FEATURES.contains(ServerFeature.MISS_PENALTY) && (this.hitResult != null && this.hitResult.getType() != HitResult.Type.BLOCK)) {
+        if (Animatium.hasFeature(ServerFeature.MISS_PENALTY) && (this.hitResult != null && this.hitResult.getType() != HitResult.Type.BLOCK)) {
             return 0;
         } else {
             return original.call(instance);

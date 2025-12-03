@@ -23,20 +23,24 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering;
+package org.visuals.legacy.animatium.mixins.v1.gui;
 
-import lombok.Setter;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.Minecraft;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-// TODO/NOTE: To be removed in 1.21.11+
-public class LineState {
-    @Setter
-    private float width = -1.0F;
-
-    public float get(float defaultValue) {
-        if (width == -1.0F) {
-            return defaultValue;
+@Mixin(Minecraft.class)
+public abstract class MixinMinecraft_DisconnectToTitleScreen {
+    @WrapOperation(method = "disconnectFromWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;isLocalServer()Z"))
+    private boolean animatium$disconnectServerToTitleScreen(Minecraft instance, Operation<Boolean> original) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.disconnectServerToTitleScreen) {
+            return true;
         } else {
-            return width;
+            return original.call(instance);
         }
     }
 }

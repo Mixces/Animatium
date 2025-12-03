@@ -23,29 +23,27 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.general.server_features;
+package org.visuals.legacy.animatium.mixins.v1.entity.projectiles;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.FishingHookRenderer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.projectile.FishingHook;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.world.entity.projectile.ThrownEgg;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.util.enums.ServerFeature;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(FishingHookRenderer.class)
-public abstract class MixinFishingHookRenderer_HideFirstPersonBobber {
-    @ModifyReturnValue(method = "shouldRender(Lnet/minecraft/world/entity/projectile/FishingHook;Lnet/minecraft/client/renderer/culling/Frustum;DDD)Z", at = @At("RETURN"))
-    private boolean animatium$hideBobberAttachedToSelf(boolean original, @Local(argsOnly = true) FishingHook fishingHook) {
-        if (Animatium.hasFeature(ServerFeature.HIDE_FIRSTPERSON_ROD_BOBBER) &&
-                fishingHook.getHookedIn() instanceof Entity entity &&
-                entity.getId() == Minecraft.getInstance().player.getId()) {
-            return false;
+@Mixin(ThrownEgg.class)
+public abstract class MixinThrownEgg_SnowballParticles {
+    // TODO/NOTE: Should x/y/z speed be 0.0?
+    @WrapOperation(method = "handleEntityEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/ThrownEgg;getItem()Lnet/minecraft/world/item/ItemStack;"))
+    private ItemStack animatium$eggSnowballParticles(ThrownEgg instance, Operation<ItemStack> original) {
+        if (Animatium.ENABLED && AnimatiumConfig.instance().items.eggSnowballParticles) {
+            return new ItemStack(Items.SNOWBALL);
         } else {
-            return original;
+            return null;
         }
     }
 }

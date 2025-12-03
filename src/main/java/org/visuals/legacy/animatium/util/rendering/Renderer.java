@@ -37,10 +37,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuTextureView;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
-import com.mojang.blaze3d.vertex.MeshData;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
@@ -144,7 +141,7 @@ public class Renderer implements AutoCloseable {
         }
     }
 
-    public void setup(final Consumer<BufferBuilder> renderConsumer, final int vertexCount) {
+    public void setup(final Consumer<VertexConsumer> renderConsumer, final int vertexCount) {
         if (this.pipeline == null) {
             throw new RuntimeException("Cannot create mesh data without a pipeline bound!");
         } else {

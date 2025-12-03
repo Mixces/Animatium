@@ -25,10 +25,12 @@
 
 package org.visuals.legacy.animatium.util.rendering;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.phys.AABB;
 import org.joml.Matrix3x2fStack;
 
 @UtilityClass
@@ -69,5 +71,50 @@ public class RenderUtils {
         stack.setTranslation(originX, originY);
         guiGraphics.drawCenteredString(font, text, (int) (x / scale), (int) (y / scale), 0xFFFFFFFF);
         stack.popMatrix();
+    }
+
+    public void box(VertexConsumer vertexConsumer, AABB aabb) {
+        final float minX = (float) aabb.minX;
+        final float minY = (float) aabb.minY;
+        final float minZ = (float) aabb.minZ;
+        final float maxX = (float) aabb.maxX;
+        final float maxY = (float) aabb.maxY;
+        final float maxZ = (float) aabb.maxZ;
+
+        // (+y)
+        vertexConsumer.addVertex(minX, maxY, minZ);
+        vertexConsumer.addVertex(maxX, maxY, minZ);
+        vertexConsumer.addVertex(maxX, maxY, maxZ);
+        vertexConsumer.addVertex(minX, maxY, maxZ);
+
+        // (-y)
+        vertexConsumer.addVertex(minX, minY, minZ);
+        vertexConsumer.addVertex(minX, minY, maxZ);
+        vertexConsumer.addVertex(maxX, minY, maxZ);
+        vertexConsumer.addVertex(maxX, minY, minZ);
+
+        // (-z)
+        vertexConsumer.addVertex(minX, minY, minZ);
+        vertexConsumer.addVertex(maxX, minY, minZ);
+        vertexConsumer.addVertex(maxX, maxY, minZ);
+        vertexConsumer.addVertex(minX, maxY, minZ);
+
+        // (+z)
+        vertexConsumer.addVertex(minX, minY, maxZ);
+        vertexConsumer.addVertex(minX, maxY, maxZ);
+        vertexConsumer.addVertex(maxX, maxY, maxZ);
+        vertexConsumer.addVertex(maxX, minY, maxZ);
+
+        // (-x)
+        vertexConsumer.addVertex(minX, minY, minZ);
+        vertexConsumer.addVertex(minX, maxY, minZ);
+        vertexConsumer.addVertex(minX, maxY, maxZ);
+        vertexConsumer.addVertex(minX, minY, maxZ);
+
+        // (+x)
+        vertexConsumer.addVertex(maxX, minY, minZ);
+        vertexConsumer.addVertex(maxX, minY, maxZ);
+        vertexConsumer.addVertex(maxX, maxY, maxZ);
+        vertexConsumer.addVertex(maxX, maxY, minZ);
     }
 }

@@ -23,26 +23,22 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.projectile_age;
+package org.visuals.legacy.animatium.mixins.v1.general.network;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.world.entity.projectile.ThrowableProjectile;
-import org.objectweb.asm.Opcodes;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(ThrowableProjectile.class)
-public abstract class MixinThrowableProjectile {
-    @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/projectile/ThrowableProjectile;tickCount:I"))
-    private int animatium$projectileAgeCheck(ThrowableProjectile instance, Operation<Integer> original) {
-        final int originalTick = original.call(instance);
-        if (Animatium.ENABLED && !AnimatiumConfig.instance().other.projectileAgeCheck) {
-            return originalTick + 2;
-        } else {
-            return originalTick;
-        }
+@Mixin(ClientPacketListener.class)
+public abstract class MixinClientPacketListener_DontCloseChat {
+    @WrapWithCondition(method = "handleContainerClose", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;clientSideCloseContainer()V"))
+    private boolean animatium$dontCloseChat(LocalPlayer instance) {
+        return !Animatium.ENABLED || !AnimatiumConfig.instance().extras.dontCloseChat || !(Minecraft.getInstance().screen instanceof ChatScreen);
     }
 }

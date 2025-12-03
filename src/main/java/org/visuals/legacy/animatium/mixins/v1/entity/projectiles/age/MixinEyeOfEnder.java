@@ -23,20 +23,26 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering;
+package org.visuals.legacy.animatium.mixins.v1.entity.projectiles.age;
 
-import lombok.Setter;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.world.entity.projectile.EyeOfEnder;
+import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-// TODO/NOTE: To be removed in 1.21.11+
-public class LineState {
-    @Setter
-    private float width = -1.0F;
-
-    public float get(float defaultValue) {
-        if (width == -1.0F) {
-            return defaultValue;
+@Mixin(EyeOfEnder.class)
+public abstract class MixinEyeOfEnder {
+    @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/projectile/EyeOfEnder;tickCount:I"))
+    private int animatium$projectileAgeCheck(EyeOfEnder instance, Operation<Integer> original) {
+        final int originalTick = original.call(instance);
+        if (Animatium.ENABLED && !AnimatiumConfig.instance().other.projectileAgeCheck) {
+            return originalTick + 2;
         } else {
-            return width;
+            return originalTick;
         }
     }
 }

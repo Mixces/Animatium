@@ -92,6 +92,7 @@ public enum Version {
         items.heldItemVisibilityInBoat = true;
         items.itemPickupPosition = true;
         items.mobHeadIcons = true;
+        items.eggSnowballParticles = true;
 
         final ScreenConfigCategory screen = config.screen;
         screen.crosshairInThirdPerson = true;
@@ -112,6 +113,7 @@ public enum Version {
         screen.legacyLoadingScreen = true;
         screen.oldDepthFar = true;
         screen.oldChatPosition = true;
+        screen.disconnectServerToTitleScreen = true;
         screen.cameraVersion = CameraVersion.V1_8;
 
         final OtherConfigCategory other = config.other;
@@ -141,6 +143,9 @@ public enum Version {
         other.oldFastSmoothLighting = true;
         other.oldCloudRendering = true;
         other.oldWindowIcon = true;
+        other.voidParticles = true;
+        other.voidFog = true;
+        other.oldFallParticlePhysics = true;
         other.disableRandomBlockRotations = true;
     }),
 
@@ -197,6 +202,7 @@ public enum Version {
         items.heldItemVisibilityInBoat = true;
         items.itemPickupPosition = false;
         items.mobHeadIcons = false;
+        items.eggSnowballParticles = false;
 
         final ScreenConfigCategory screen = config.screen;
         screen.crosshairInThirdPerson = true;
@@ -217,6 +223,7 @@ public enum Version {
         screen.legacyLoadingScreen = true;
         screen.oldDepthFar = true;
         screen.oldChatPosition = true;
+        screen.disconnectServerToTitleScreen = false;
         screen.cameraVersion = CameraVersion.V1_8;
 
         final OtherConfigCategory other = config.other;
@@ -246,6 +253,9 @@ public enum Version {
         other.oldFastSmoothLighting = false;
         other.oldCloudRendering = true;
         other.oldWindowIcon = true;
+        other.voidParticles = false;
+        other.voidFog = false;
+        other.oldFallParticlePhysics = false;
         other.disableRandomBlockRotations = false;
     }),
 
@@ -316,6 +326,7 @@ public enum Version {
         items.heldItemVisibilityInBoat = false;
         items.itemPickupPosition = false;
         items.mobHeadIcons = false;
+        items.eggSnowballParticles = false;
 
         final ScreenConfigCategory screen = config.screen;
         screen.crosshairInThirdPerson = false;
@@ -336,6 +347,7 @@ public enum Version {
         screen.legacyLoadingScreen = false;
         screen.oldDepthFar = false;
         screen.oldChatPosition = false;
+        screen.disconnectServerToTitleScreen = false;
         screen.cameraVersion = CameraVersion.VANILLA;
 
         final OtherConfigCategory other = config.other;
@@ -365,6 +377,9 @@ public enum Version {
         other.oldFastSmoothLighting = false;
         other.oldCloudRendering = false;
         other.oldWindowIcon = false;
+        other.voidParticles = false;
+        other.voidFog = false;
+        other.oldFallParticlePhysics = false;
         other.disableRandomBlockRotations = false;
     });
 

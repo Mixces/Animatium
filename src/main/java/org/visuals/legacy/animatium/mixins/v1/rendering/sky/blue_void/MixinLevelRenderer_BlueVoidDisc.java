@@ -60,4 +60,9 @@ public abstract class MixinLevelRenderer_BlueVoidDisc {
             SkyRendererUtility.renderBlueVoid(skyColor, SkyRendererUtility.getHorizonEyeHeight(this.level, tickDelta));
         }
     }
+
+    @Inject(method = "close", at = @At("TAIL"))
+    private void animatium$closeSkyRenderUtility(CallbackInfo ci) {
+        SkyRendererUtility.close();
+    }
 }

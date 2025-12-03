@@ -79,8 +79,10 @@ public class SkyRendererUtility {
                     .withShaderDefine("PLANAR_FOG")
                     .build());
 
-    private Renderer renderer;
+    private Renderer blueVoidRenderer;
+    private Renderer voidBoxRenderer;
     private GpuBuffer vertexBuffer = null;
+    private int vertexCount = -1;
 
     static {
         IrisUtil.assignPipeline(IrisPipeline.SKY_BASIC, LEGACY_SKY_PIPELINE, LEGACY_SKY_PLANAR_FOG_PIPELINE);
@@ -103,15 +105,18 @@ public class SkyRendererUtility {
         modelViewStack.pushMatrix();
         modelViewStack.translate(0.0F, AnimatiumConfig.instance().extras.dontMoveBlueVoid ? 12.0F : -((float) (depth - 16.0)), 0.0F);
 
-        final RenderSystem.AutoStorageIndexBuffer quadsIndexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
-        if (renderer == null) {
-            renderer = Renderer.of("Blue void sky disc");
+        if (blueVoidRenderer == null) {
+            blueVoidRenderer = Renderer.of("Blue void sky disc");
         }
 
-        renderer.setPipeline(getLegacySkyPipeline(AnimatiumConfig.instance().other.planarSkyFog));
-        renderer.setup(getGpuBuffer(), quadsIndexBuffer.getBuffer(6), quadsIndexBuffer.type(), 1014);
-        renderer.setDynamicTransforms(renderer.getDynamicTransforms().withShaderColor(new Vector4f(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F, 1.0F)));
-        renderer.draw();
+        final RenderPipeline pipeline = getLegacySkyPipeline(AnimatiumConfig.instance().other.planarSkyFog);
+        blueVoidRenderer.setPipeline(pipeline);
+
+        final RenderSystem.AutoStorageIndexBuffer quadsIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.getVertexFormatMode());
+        blueVoidRenderer.setup(getGpuBuffer(), quadsIndexBuffer.getBuffer(vertexCount), quadsIndexBuffer.type(), vertexCount);
+
+        blueVoidRenderer.setDynamicTransforms(blueVoidRenderer.getDynamicTransforms().withShaderColor(new Vector4f(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F, 1.0F)));
+        blueVoidRenderer.draw();
 
         modelViewStack.popMatrix();
     }
@@ -139,9 +144,10 @@ public class SkyRendererUtility {
 
     public GpuBuffer initializeSky(Consumer<BufferBuilder> bufferBuilderConsumer) {
         try (ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(8112)) {
-            BufferBuilder builder = new BufferBuilder(byteBufferBuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+            final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
             bufferBuilderConsumer.accept(builder);
             try (MeshData meshData = builder.buildOrThrow()) {
+                vertexCount = meshData.drawState().vertexCount();
                 return RenderSystem.getDevice().createBuffer(() -> "Static sky vertex buffer", GpuBuffer.USAGE_VERTEX, meshData.vertexBuffer());
             } catch (Exception ignored) {
                 return null;
@@ -151,34 +157,41 @@ public class SkyRendererUtility {
 
     // TODO/NOTE: Figure out why its rendering differently than in 18w07a (last snapshot to have it)
     public void renderVoidBox(double depth) {
-        try (final Renderer renderer = Renderer.of("Player Void Box")) {
-            renderer.setPipeline(VOID_BOX_PIPELINE);
-            renderer.setup((builder) -> {
-                final float offset = -((float) (depth + 65.0));
-                builder.addVertex(-1.0F, offset, 1.0F);
-                builder.addVertex(1.0F, offset, 1.0F);
-                builder.addVertex(1.0F, -1.0F, 1.0F);
-                builder.addVertex(-1.0F, -1.0F, 1.0F);
-                builder.addVertex(-1.0F, -1.0F, -1.0F);
-                builder.addVertex(1.0F, -1.0F, -1.0F);
-                builder.addVertex(1.0F, offset, -1.0F);
-                builder.addVertex(-1.0F, offset, -1.0F);
-                builder.addVertex(1.0F, -1.0F, -1.0F);
-                builder.addVertex(1.0F, -1.0F, 1.0F);
-                builder.addVertex(1.0F, offset, 1.0F);
-                builder.addVertex(1.0F, offset, -1.0F);
-                builder.addVertex(-1.0F, offset, -1.0F);
-                builder.addVertex(-1.0F, offset, 1.0F);
-                builder.addVertex(-1.0F, -1.0F, 1.0F);
-                builder.addVertex(-1.0F, -1.0F, -1.0F);
-                builder.addVertex(-1.0F, -1.0F, -1.0F);
-                builder.addVertex(-1.0F, -1.0F, 1.0F);
-                builder.addVertex(1.0F, -1.0F, 1.0F);
-                builder.addVertex(1.0F, -1.0F, -1.0F);
-            }, 20);
-            renderer.setDynamicTransforms(renderer.getDynamicTransforms().withShaderColor(0xFF000000));
-            renderer.draw();
+        if (voidBoxRenderer == null) {
+            voidBoxRenderer = Renderer.of("Player Void Box");
+            voidBoxRenderer.setPipeline(VOID_BOX_PIPELINE);
+            voidBoxRenderer.setDynamicTransforms(voidBoxRenderer.getDynamicTransforms().withShaderColor(0xFF000000));
         }
+
+        final float offset = -((float) (depth + 65.0));
+        voidBoxRenderer.setup((vertexConsumer) -> {
+            vertexConsumer.addVertex(-1.0F, offset, 1.0F);
+            vertexConsumer.addVertex(1.0F, offset, 1.0F);
+            vertexConsumer.addVertex(1.0F, -1.0F, 1.0F);
+            vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F);
+
+            vertexConsumer.addVertex(-1.0F, -1.0F, -1.0F);
+            vertexConsumer.addVertex(1.0F, -1.0F, -1.0F);
+            vertexConsumer.addVertex(1.0F, offset, -1.0F);
+            vertexConsumer.addVertex(-1.0F, offset, -1.0F);
+
+            vertexConsumer.addVertex(1.0F, -1.0F, -1.0F);
+            vertexConsumer.addVertex(1.0F, -1.0F, 1.0F);
+            vertexConsumer.addVertex(1.0F, offset, 1.0F);
+            vertexConsumer.addVertex(1.0F, offset, -1.0F);
+
+            vertexConsumer.addVertex(-1.0F, offset, -1.0F);
+            vertexConsumer.addVertex(-1.0F, offset, 1.0F);
+            vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F);
+            vertexConsumer.addVertex(-1.0F, -1.0F, -1.0F);
+
+            vertexConsumer.addVertex(-1.0F, -1.0F, -1.0F);
+            vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F);
+            vertexConsumer.addVertex(1.0F, -1.0F, 1.0F);
+            vertexConsumer.addVertex(1.0F, -1.0F, -1.0F);
+        }, 20);
+
+        voidBoxRenderer.draw();
     }
 
     public double getHorizonEyeHeight(ClientLevel level, float tickDelta) {
@@ -190,6 +203,18 @@ public class SkyRendererUtility {
             return ((ClientLevelDataAccessor) level.getLevelData()).animatium$isFlatWorld() ? 0.0D : 63.0D;
         } else {
             return level.getLevelData().getHorizonHeight(level);
+        }
+    }
+
+    public void close() {
+        if (blueVoidRenderer != null) {
+            blueVoidRenderer.close();
+            blueVoidRenderer = null;
+        }
+
+        if (voidBoxRenderer != null) {
+            voidBoxRenderer.close();
+            voidBoxRenderer = null;
         }
     }
 }

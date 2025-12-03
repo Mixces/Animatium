@@ -139,12 +139,12 @@ public class PanoramaRendererUtility {
                     renderer.setDynamicTransforms(renderer.getDynamicTransforms().withModelViewMatrix(faceMatrix));
 
                     final int currentLayer = layer;
-                    renderer.setup((builder) -> {
+                    renderer.setup((vertexConsumer) -> {
                         final int color = ARGB.white(255.0F / (currentLayer + 1.0F));
-                        builder.addVertex(-1.0F, -1.0F, 1.0F).setUv(0.0F, 0.0F).setColor(color);
-                        builder.addVertex(1.0F, -1.0F, 1.0F).setUv(1.0F, 0.0F).setColor(color);
-                        builder.addVertex(1.0F, 1.0F, 1.0F).setUv(1.0F, 1.0F).setColor(color);
-                        builder.addVertex(-1.0F, 1.0F, 1.0F).setUv(0.0F, 1.0F).setColor(color);
+                        vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F).setUv(0.0F, 0.0F).setColor(color);
+                        vertexConsumer.addVertex(1.0F, -1.0F, 1.0F).setUv(1.0F, 0.0F).setColor(color);
+                        vertexConsumer.addVertex(1.0F, 1.0F, 1.0F).setUv(1.0F, 1.0F).setColor(color);
+                        vertexConsumer.addVertex(-1.0F, 1.0F, 1.0F).setUv(0.0F, 1.0F).setColor(color);
                     }, 4);
 
                     renderer.setTexture(0, getPanoramaTexture(panoramaIdx));
@@ -160,14 +160,14 @@ public class PanoramaRendererUtility {
             renderer.setPipeline(LEGACY_PANORAMA_BLUR);
             renderer.setViewport(VIEWPORT);
             renderer.setFramebuffer(panoramaTarget);
-            renderer.setup((builder) -> {
+            renderer.setup((vertexConsumer) -> {
                 for (int cycle = 0; cycle < 3; cycle++) {
                     final int color = ARGB.white(1.0F / (cycle + 1.0F));
                     final float growth = (cycle - 1.0F) / 256.0F;
-                    builder.addVertexWith2DPose(pose, width, height).setUv(0.0F + growth, 1.0F).setColor(color);
-                    builder.addVertexWith2DPose(pose, width, 0.0F).setUv(1.0F + growth, 1.0F).setColor(color);
-                    builder.addVertexWith2DPose(pose, 0.0F, 0.0F).setUv(1.0F + growth, 0.0F).setColor(color);
-                    builder.addVertexWith2DPose(pose, 0.0F, height).setUv(0.0F + growth, 0.0F).setColor(color);
+                    vertexConsumer.addVertexWith2DPose(pose, width, height).setUv(0.0F + growth, 1.0F).setColor(color);
+                    vertexConsumer.addVertexWith2DPose(pose, width, 0.0F).setUv(1.0F + growth, 1.0F).setColor(color);
+                    vertexConsumer.addVertexWith2DPose(pose, 0.0F, 0.0F).setUv(1.0F + growth, 0.0F).setColor(color);
+                    vertexConsumer.addVertexWith2DPose(pose, 0.0F, height).setUv(0.0F + growth, 0.0F).setColor(color);
                 }
             }, 12);
             renderer.setTexture(0, backgroundTextureView);
