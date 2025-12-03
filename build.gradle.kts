@@ -54,7 +54,7 @@ val mod = ModData()
 val deps = Dependencies()
 val loader = LoaderData()
 
-version = "${mod.version}+${mod.minecraftVersion}-${loader.name}"
+version = "${mod.version}+${mod.minecraftVersion}-${loader.name}" + (if (mod.development) "_development" else "")
 group = mod.group
 base { archivesName.set(mod.id) }
 

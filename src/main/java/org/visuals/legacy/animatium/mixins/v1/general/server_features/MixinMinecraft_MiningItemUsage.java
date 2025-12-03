@@ -39,7 +39,7 @@ import org.visuals.legacy.animatium.util.enums.ServerFeature;
 public abstract class MixinMinecraft_MiningItemUsage {
     @WrapOperation(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;isDestroying()Z"))
     private boolean animatium$miningItemUsage(MultiPlayerGameMode instance, Operation<Boolean> original) {
-        if (Animatium.hasFeature(ServerFeature.MINING_ITEM_USAGE)) {
+        if (Animatium.hasServerFeature(ServerFeature.MINING_ITEM_USAGE)) {
             return false;
         } else {
             return original.call(instance);
@@ -48,7 +48,7 @@ public abstract class MixinMinecraft_MiningItemUsage {
 
     @WrapOperation(method = "continueAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z"))
     private boolean animatium$miningItemUsage(LocalPlayer instance, Operation<Boolean> original) {
-        if (Animatium.hasFeature(ServerFeature.MINING_ITEM_USAGE)) {
+        if (Animatium.hasServerFeature(ServerFeature.MINING_ITEM_USAGE)) {
             return false;
         } else {
             return original.call(instance);
@@ -57,7 +57,7 @@ public abstract class MixinMinecraft_MiningItemUsage {
 
     @WrapOperation(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;isDestroying()Z"))
     private boolean animatium$leftClickItemUsage(MultiPlayerGameMode instance, Operation<Boolean> original) {
-        if (Animatium.hasFeature(ServerFeature.LEFT_CLICK_ITEM_USAGE)) {
+        if (Animatium.hasServerFeature(ServerFeature.LEFT_CLICK_ITEM_USAGE)) {
             return false;
         } else {
             return original.call(instance);

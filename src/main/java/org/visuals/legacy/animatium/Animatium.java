@@ -40,7 +40,7 @@ public final class Animatium {
     public static final EnumSet<ServerFeature> ENABLED_SERVER_FEATURES = EnumSet.noneOf(ServerFeature.class);
     public boolean ENABLED = true;
 
-    public boolean hasFeature(ServerFeature feature) {
+    public boolean hasServerFeature(ServerFeature feature) {
         return (AnimatiumConstants.IS_DEVELOPMENT && Minecraft.getInstance().isLocalServer()) || ENABLED_SERVER_FEATURES.contains(feature);
     }
 

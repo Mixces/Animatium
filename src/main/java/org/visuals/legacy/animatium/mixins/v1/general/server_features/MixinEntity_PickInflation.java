@@ -37,7 +37,7 @@ import org.visuals.legacy.animatium.util.enums.ServerFeature;
 public abstract class MixinEntity_PickInflation {
     @Inject(method = "getPickRadius", at = @At("HEAD"), cancellable = true)
     private void animatium$pickInflation(CallbackInfoReturnable<Float> cir) {
-        if (Animatium.hasFeature(ServerFeature.PICK_INFLATION)) {
+        if (Animatium.hasServerFeature(ServerFeature.PICK_INFLATION)) {
             cir.setReturnValue(0.1F);
         }
     }
