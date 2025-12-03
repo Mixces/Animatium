@@ -36,6 +36,6 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinNameTagFeatureRenderer {
     @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Font;drawInBatch(Lnet/minecraft/network/chat/Component;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)V"), index = 4)
     private boolean animatium$nameTagTextShadow(boolean shadow) {
-        return (Animatium.ENABLED && AnimatiumConfig.instance().extras.nameTagTextShadow) || shadow;
+        return (Animatium.isEnabled() && AnimatiumConfig.instance().extras.nameTagTextShadow) || shadow;
     }
 }

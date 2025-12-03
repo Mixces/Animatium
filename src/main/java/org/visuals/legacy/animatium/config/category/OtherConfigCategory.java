@@ -56,6 +56,7 @@ public class OtherConfigCategory extends Category {
     public boolean heldItemArmLogic = true;
     public boolean flameDimensions = true;
     public boolean flameOffset = true;
+    public boolean persistentBlockOutline = false;
     public boolean oldFastSmoothLighting = true;
     public boolean oldCloudRendering = true;
     public boolean oldWindowIcon = true;
@@ -97,6 +98,7 @@ public class OtherConfigCategory extends Category {
         // TODO: category.option(booleanOption("heldItemArmLogic", defaults, config));
         category.option(booleanOption("flameDimensions", defaults, config));
         category.option(booleanOption("flameOffset", defaults, config));
+        category.option(booleanOption("persistentBlockOutline", defaults, config));
         category.option(booleanOption("oldFastSmoothLighting", defaults, config));
         category.option(booleanOption("oldCloudRendering", defaults, config));
         category.option(booleanOption("oldWindowIcon", defaults, config));

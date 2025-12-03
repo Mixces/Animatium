@@ -56,7 +56,7 @@ public record SetServerFeaturesPayloadPacket(EnumSet<ServerFeature> features) im
 
     @Deprecated
     private static EnumSet<ServerFeature> readV0(final FriendlyByteBuf buffer) {
-        System.out.println("[ANIMATIUM] Server sent features using v0 api! This is deprecated and will be removed in the future!");
+        Animatium.getLogger().info("Server sent features using v0 api! This is deprecated and will be removed in the future!");
         final EnumSet<ServerFeature> enumSet = EnumSet.noneOf(ServerFeature.class);
 
         final int size = buffer.readVarInt();

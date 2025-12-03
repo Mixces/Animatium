@@ -39,7 +39,7 @@ public abstract class MixinModelBlockRenderer_FastSmoothLighting {
     // TODO: Figure out why expressions doesn't work for this
     @WrapOperation(method = "calculate", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/block/ModelBlockRenderer$AmbientOcclusionRenderStorage;facePartial:Z", opcode = Opcodes.GETFIELD))
     private boolean animatium$oldFastSmoothLighting(ModelBlockRenderer.AmbientOcclusionRenderStorage instance, Operation<Boolean> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().other.oldFastSmoothLighting) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldFastSmoothLighting) {
             return false;
         } else {
             return original.call(instance);

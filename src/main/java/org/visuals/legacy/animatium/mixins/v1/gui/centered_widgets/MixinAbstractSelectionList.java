@@ -41,14 +41,14 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinAbstractSelectionList {
     @Inject(method = "renderWidget", at = @At("HEAD"))
     private void animatium$updateScroll(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.centerScrollableListWidgets) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.centerScrollableListWidgets) {
             ((AbstractScrollArea) (Object) this).refreshScrollAmount();
         }
     }
 
     @WrapOperation(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/AbstractSelectionList;isFocused()Z"))
     private boolean animatium$listWidgetSelectedBorderColor(AbstractSelectionList<?> instance, Operation<Boolean> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.listWidgetSelectedBorderColor) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.listWidgetSelectedBorderColor) {
             return false;
         } else {
             return original.call(instance);

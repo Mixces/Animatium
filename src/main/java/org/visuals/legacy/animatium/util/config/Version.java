@@ -140,6 +140,7 @@ public enum Version {
         other.heldItemArmLogic = false;
         other.flameDimensions = true;
         other.flameOffset = true;
+        other.persistentBlockOutline = true;
         other.oldFastSmoothLighting = true;
         other.oldCloudRendering = true;
         other.oldWindowIcon = true;
@@ -250,6 +251,7 @@ public enum Version {
         other.heldItemArmLogic = true;
         other.flameDimensions = true;
         other.flameOffset = false;
+        other.persistentBlockOutline = false;
         other.oldFastSmoothLighting = false;
         other.oldCloudRendering = true;
         other.oldWindowIcon = true;
@@ -374,6 +376,7 @@ public enum Version {
         other.heldItemArmLogic = false;
         other.flameDimensions = false;
         other.flameOffset = false;
+        other.persistentBlockOutline = false;
         other.oldFastSmoothLighting = false;
         other.oldCloudRendering = false;
         other.oldWindowIcon = false;

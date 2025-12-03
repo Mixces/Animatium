@@ -36,7 +36,6 @@ public class ExtrasConfigCategory extends Category {
     public boolean hideNameTagBackground = false;
     public boolean nameTagTextShadow = false;
     public boolean debugHudTextColor = false;
-    public boolean persistentBlockOutline = false;
     public boolean offhandUsageSwinging = false;
     public boolean alwaysUsageSwing = false;
     public boolean alwaysSharpParticles = false;
@@ -64,7 +63,6 @@ public class ExtrasConfigCategory extends Category {
         category.option(booleanOption("hideNameTagBackground", defaults, config));
         category.option(booleanOption("nameTagTextShadow", defaults, config));
         category.option(booleanOption("debugHudTextColor", defaults, config));
-        category.option(booleanOption("persistentBlockOutline", defaults, config));
         category.option(booleanOption("offhandUsageSwinging", defaults, config));
         category.option(booleanOption("alwaysUsageSwing", defaults, config));
         category.option(booleanOption("alwaysSharpParticles", defaults, config));

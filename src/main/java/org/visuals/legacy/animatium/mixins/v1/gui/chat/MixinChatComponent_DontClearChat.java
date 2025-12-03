@@ -38,7 +38,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinChatComponent_DontClearChat {
     @WrapMethod(method = "clearMessages")
     private void animatium$dontClearChat(boolean clearSentMsgHistory, Operation<Void> original) {
-        if (!Animatium.ENABLED || !AnimatiumConfig.instance().extras.dontClearChat || GLFW.glfwGetKey(Minecraft.getInstance().getWindow().handle(), GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS) {
+        if (!Animatium.isEnabled() || !AnimatiumConfig.instance().extras.dontClearChat || GLFW.glfwGetKey(Minecraft.getInstance().getWindow().handle(), GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS) {
             original.call(clearSentMsgHistory);
         }
     }

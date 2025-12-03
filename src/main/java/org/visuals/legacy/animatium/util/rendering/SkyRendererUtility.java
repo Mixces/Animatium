@@ -165,26 +165,31 @@ public class SkyRendererUtility {
 
         final float offset = -((float) (depth + 65.0));
         voidBoxRenderer.setup((vertexConsumer) -> {
+            // Left
             vertexConsumer.addVertex(-1.0F, offset, 1.0F);
             vertexConsumer.addVertex(1.0F, offset, 1.0F);
             vertexConsumer.addVertex(1.0F, -1.0F, 1.0F);
             vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F);
 
+            // Right
             vertexConsumer.addVertex(-1.0F, -1.0F, -1.0F);
             vertexConsumer.addVertex(1.0F, -1.0F, -1.0F);
             vertexConsumer.addVertex(1.0F, offset, -1.0F);
             vertexConsumer.addVertex(-1.0F, offset, -1.0F);
 
+            // Back
             vertexConsumer.addVertex(1.0F, -1.0F, -1.0F);
             vertexConsumer.addVertex(1.0F, -1.0F, 1.0F);
             vertexConsumer.addVertex(1.0F, offset, 1.0F);
             vertexConsumer.addVertex(1.0F, offset, -1.0F);
 
+            // Front
             vertexConsumer.addVertex(-1.0F, offset, -1.0F);
             vertexConsumer.addVertex(-1.0F, offset, 1.0F);
             vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F);
             vertexConsumer.addVertex(-1.0F, -1.0F, -1.0F);
 
+            // Bottom
             vertexConsumer.addVertex(-1.0F, -1.0F, -1.0F);
             vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F);
             vertexConsumer.addVertex(1.0F, -1.0F, 1.0F);
@@ -199,10 +204,11 @@ public class SkyRendererUtility {
     }
 
     public double getHorizonDepth(ClientLevel level) {
+        final ClientLevel.ClientLevelData levelData = level.getLevelData();
         if (AnimatiumConfig.instance().other.skyHorizonHeight) {
-            return ((ClientLevelDataAccessor) level.getLevelData()).animatium$isFlatWorld() ? 0.0D : 63.0D;
+            return ((ClientLevelDataAccessor) levelData).animatium$isFlatWorld() ? 0.0D : 63.0D;
         } else {
-            return level.getLevelData().getHorizonHeight(level);
+            return levelData.getHorizonHeight(level);
         }
     }
 

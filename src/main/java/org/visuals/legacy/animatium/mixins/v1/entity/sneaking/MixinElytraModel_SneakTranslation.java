@@ -36,7 +36,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public class MixinElytraModel_SneakTranslation {
     @ModifyExpressionValue(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At(value = "CONSTANT", args = "floatValue=3.0"))
     private float animatium$fixSneakTranslationWhileGliding(float original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.sneakingFeetPosition) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.sneakingFeetPosition) {
             return 0.0F;
         } else {
             return original;

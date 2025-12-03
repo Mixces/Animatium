@@ -46,13 +46,13 @@ public abstract class MixinAbstractContainerScreen {
 
     @WrapWithCondition(method = "renderContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderSlotHighlightBack(Lnet/minecraft/client/gui/GuiGraphics;)V"))
     private boolean animatium$slotHoverStyleRendering$disableBack(AbstractContainerScreen<?> instance, GuiGraphics guiGraphics) {
-        return !Animatium.ENABLED || !AnimatiumConfig.instance().screen.slotHoverStyleRendering;
+        return !Animatium.isEnabled() || !AnimatiumConfig.instance().screen.slotHoverStyleRendering;
     }
 
     @WrapOperation(method = "renderContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderSlotHighlightFront(Lnet/minecraft/client/gui/GuiGraphics;)V"))
     private void animatium$slotHoverStyleRendering(AbstractContainerScreen<?> instance, GuiGraphics guiGraphics, Operation<Void> original) {
         final Slot slot = this.hoveredSlot;
-        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.slotHoverStyleRendering && slot != null && slot.isHighlightable()) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.slotHoverStyleRendering && slot != null && slot.isHighlightable()) {
             guiGraphics.fillGradient(slot.x, slot.y, slot.x + 16, slot.y + 16, -2130706433, -2130706433);
         } else {
             original.call(instance, guiGraphics);

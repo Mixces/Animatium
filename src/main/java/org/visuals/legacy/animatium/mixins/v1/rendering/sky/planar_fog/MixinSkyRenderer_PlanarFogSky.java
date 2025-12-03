@@ -59,7 +59,7 @@ public abstract class MixinSkyRenderer_PlanarFogSky {
     @WrapOperation(method = "renderSkyDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setPipeline(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V"))
     private void animatium$planarFogPipeline$skyDisc(RenderPass instance, RenderPipeline renderPipeline, Operation<Void> original) {
         RenderPipeline pipeline = renderPipeline;
-        if (Animatium.ENABLED && AnimatiumConfig.instance().other.planarSkyFog) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
             pipeline = SkyRendererUtility.LEGACY_SKY_PLANAR_FOG_PIPELINE;
         }
 
@@ -69,7 +69,7 @@ public abstract class MixinSkyRenderer_PlanarFogSky {
     @WrapOperation(method = "renderSkyDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setVertexBuffer(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V", ordinal = 0))
     private void animatium$planarFogPipeline$skyDisc$vertexBuffer(RenderPass instance, int index, GpuBuffer gpuBuffer, Operation<Void> original) {
         GpuBuffer buffer = gpuBuffer;
-        if (Animatium.ENABLED && AnimatiumConfig.instance().other.planarSkyFog) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
             buffer = animatium$topSkyBuffer;
             instance.setIndexBuffer(animatium$skyIndexBuffer.getBuffer(6), animatium$skyIndexBuffer.type());
         }
@@ -80,7 +80,7 @@ public abstract class MixinSkyRenderer_PlanarFogSky {
     @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setPipeline(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V"))
     private void animatium$planarFogPipeline$darkSkyDisc(RenderPass instance, RenderPipeline renderPipeline, Operation<Void> original) {
         RenderPipeline pipeline = renderPipeline;
-        if (Animatium.ENABLED && AnimatiumConfig.instance().other.planarSkyFog) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
             pipeline = SkyRendererUtility.LEGACY_SKY_PLANAR_FOG_PIPELINE;
         }
 
@@ -89,7 +89,7 @@ public abstract class MixinSkyRenderer_PlanarFogSky {
 
     @WrapOperation(method = "renderSkyDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;draw(II)V", ordinal = 0))
     private void animatium$planarFogPipeline$skyDisc$draw(RenderPass instance, int i, int j, Operation<Void> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().other.planarSkyFog) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
             instance.drawIndexed(i, 0, 1014, 1);
         } else {
             original.call(instance, i, j);
@@ -99,7 +99,7 @@ public abstract class MixinSkyRenderer_PlanarFogSky {
     @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setVertexBuffer(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V", ordinal = 0))
     private void animatium$planarFogPipeline$darkSkyDisc$vertexBuffer(RenderPass instance, int index, GpuBuffer gpuBuffer, Operation<Void> original) {
         GpuBuffer buffer = gpuBuffer;
-        if (Animatium.ENABLED && AnimatiumConfig.instance().other.planarSkyFog) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
             buffer = SkyRendererUtility.getGpuBuffer();
             instance.setIndexBuffer(animatium$skyIndexBuffer.getBuffer(6), animatium$skyIndexBuffer.type());
         }
@@ -109,7 +109,7 @@ public abstract class MixinSkyRenderer_PlanarFogSky {
 
     @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;draw(II)V", ordinal = 0))
     private void animatium$planarFogPipeline$darkSkyDisc$draw(RenderPass instance, int i, int j, Operation<Void> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().other.planarSkyFog) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
             instance.drawIndexed(i, 0, 1014, 1);
         } else {
             original.call(instance, i, j);

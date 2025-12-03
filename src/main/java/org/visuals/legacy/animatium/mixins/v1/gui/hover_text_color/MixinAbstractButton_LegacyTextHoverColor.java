@@ -42,7 +42,7 @@ public abstract class MixinAbstractButton_LegacyTextHoverColor extends AbstractW
 
     @ModifyConstant(method = "renderWidget", constant = @Constant(intValue = 0xFFFFFFFF))
     private int animatium$renderWidget$old$textColor(int constant) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.legacyButtonHoverTextColor) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.legacyButtonHoverTextColor) {
             return !active ? 0xFFE0E0E0 : (isHoveredOrFocused() ? 0xFFFFFFA0 : 0xFFE0E0E0);
         } else {
             return constant;

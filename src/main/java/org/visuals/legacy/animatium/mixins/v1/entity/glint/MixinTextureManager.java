@@ -38,7 +38,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinTextureManager {
     @ModifyVariable(method = "getTexture", at = @At("HEAD"), argsOnly = true)
     private ResourceLocation animatium$useItemGlint(ResourceLocation original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().other.itemGlintOnEntity && original == ItemRenderer.ENCHANTED_GLINT_ARMOR) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.itemGlintOnEntity && original == ItemRenderer.ENCHANTED_GLINT_ARMOR) {
             return ItemRenderer.ENCHANTED_GLINT_ITEM;
         } else {
             return original;

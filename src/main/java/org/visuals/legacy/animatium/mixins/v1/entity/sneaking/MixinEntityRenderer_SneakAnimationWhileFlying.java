@@ -41,7 +41,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinEntityRenderer_SneakAnimationWhileFlying {
     @WrapOperation(method = "submitNameTag", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;isDiscrete:Z", opcode = Opcodes.GETFIELD))
     private boolean animatium$sneakAnimationWhileFlying(EntityRenderState instance, Operation<Boolean> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.sneakAnimationWhileFlying && instance instanceof LivingEntityRenderState livingEntityRenderState) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.sneakAnimationWhileFlying && instance instanceof LivingEntityRenderState livingEntityRenderState) {
             return livingEntityRenderState.isDiscrete || livingEntityRenderState.hasPose(Pose.CROUCHING);
         } else {
             return original.call(instance);

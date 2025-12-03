@@ -40,7 +40,7 @@ import java.util.Optional;
 public abstract class MixinLevelRenderer_LegacyCloudHeight {
     @WrapOperation(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/dimension/DimensionType;cloudHeight()Ljava/util/Optional;"))
     private Optional<Integer> animatium$cloudHeight(DimensionType instance, Operation<Optional<Integer>> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().other.cloudHeight && instance.natural()) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.cloudHeight && instance.natural()) {
             return Optional.of(128);
         } else {
             return original.call(instance);

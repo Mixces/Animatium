@@ -41,7 +41,7 @@ import org.visuals.legacy.animatium.util.ItemUtils;
 public abstract class MixinIsUsingItem {
     @ModifyReturnValue(method = "get", at = @At(value = "RETURN"))
     private boolean animatium$getValue(boolean original, @Local(argsOnly = true) LivingEntity livingEntity, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) ItemDisplayContext displayContext) {
-        if (Animatium.ENABLED && !AnimatiumConfig.instance().items.itemUsingTextureInGui && ItemUtils.isRangedWeaponItem(stack) && displayContext == ItemDisplayContext.GUI) {
+        if (Animatium.isEnabled() && !AnimatiumConfig.instance().items.itemUsingTextureInGui && ItemUtils.isRangedWeaponItem(stack) && displayContext == ItemDisplayContext.GUI) {
             return false;
         } else {
             return original;

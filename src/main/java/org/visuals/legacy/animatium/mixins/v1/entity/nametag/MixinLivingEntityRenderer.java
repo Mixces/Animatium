@@ -39,7 +39,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinLivingEntityRenderer {
     @WrapOperation(method = "shouldShowName(Lnet/minecraft/world/entity/LivingEntity;D)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;getCameraEntity()Lnet/minecraft/world/entity/Entity;"))
     private Entity animatium$nameTagInThirdPerson(Minecraft instance, Operation<Entity> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().extras.showNameTagInThirdPerson) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.showNameTagInThirdPerson) {
             return null;
         } else {
             return original.call(instance);

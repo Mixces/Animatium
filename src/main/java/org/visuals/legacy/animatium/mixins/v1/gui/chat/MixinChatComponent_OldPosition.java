@@ -42,7 +42,7 @@ public abstract class MixinChatComponent_OldPosition {
     @Expression("40")
     @ModifyExpressionValue(method = "render", at = @At("MIXINEXTRAS:EXPRESSION"))
     private int animatium$oldChatPosition$render(int original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.oldChatPosition) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldChatPosition) {
             return animatium$oldChatY;
         } else {
             return original;
@@ -52,7 +52,7 @@ public abstract class MixinChatComponent_OldPosition {
     @Expression("40.0")
     @ModifyExpressionValue(method = "handleChatQueueClicked", at = @At("MIXINEXTRAS:EXPRESSION"))
     private double animatium$oldChatPosition$handleChatQueueClicked(double original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.oldChatPosition) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldChatPosition) {
             return animatium$oldChatY;
         } else {
             return original;
@@ -62,7 +62,7 @@ public abstract class MixinChatComponent_OldPosition {
     @Expression("40.0")
     @ModifyExpressionValue(method = "screenToChatY", at = @At("MIXINEXTRAS:EXPRESSION"))
     private double animatium$oldChatPosition$screenToChatY(double original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.oldChatPosition) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldChatPosition) {
             return animatium$oldChatY;
         } else {
             return original;

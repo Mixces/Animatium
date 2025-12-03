@@ -37,7 +37,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinTitleScreen_DisableFade {
     @ModifyExpressionValue(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/TitleScreen;fading:Z", opcode = Opcodes.GETFIELD))
     private boolean animatium$disableFade(boolean original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.legacyLoadingScreen) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.legacyLoadingScreen) {
             return false;
         } else {
             return original;

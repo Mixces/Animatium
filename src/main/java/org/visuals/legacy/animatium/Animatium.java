@@ -25,10 +25,14 @@
 
 package org.visuals.legacy.animatium;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.UtilityClass;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.config.ConfigUtil;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
@@ -38,7 +42,15 @@ import java.util.EnumSet;
 @UtilityClass
 public final class Animatium {
     public static final EnumSet<ServerFeature> ENABLED_SERVER_FEATURES = EnumSet.noneOf(ServerFeature.class);
-    public boolean ENABLED = true;
+    @Getter
+    private final Logger logger = LogManager.getLogger(Animatium.class);
+    @Getter
+    public boolean enabled = true;
+
+    public void setEnabled(boolean enabled) {
+        Animatium.enabled = enabled;
+        ConfigUtil.put("enabled", enabled);
+    }
 
     public boolean hasServerFeature(ServerFeature feature) {
         return (AnimatiumConstants.IS_DEVELOPMENT && Minecraft.getInstance().isLocalServer()) || ENABLED_SERVER_FEATURES.contains(feature);
@@ -58,7 +70,7 @@ public final class Animatium {
             ConfigUtil.load();
             System.err.println("Successfully loaded the animatium utility config!");
         } catch (Exception ignored) {
-            Animatium.ENABLED = ConfigUtil.bool("enabled");
+            enabled = ConfigUtil.bool("enabled");
             System.err.println("Failed to load animatium utility config, defaulting...");
         }
     }

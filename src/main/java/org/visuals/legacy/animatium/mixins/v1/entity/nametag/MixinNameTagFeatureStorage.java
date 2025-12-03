@@ -38,7 +38,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinNameTagFeatureStorage {
     @WrapOperation(method = "add", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Options;getBackgroundOpacity(F)F"))
     private float animatium$nameTagBackground(Options instance, float opacity, Operation<Float> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().extras.hideNameTagBackground) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.hideNameTagBackground) {
             return 0F;
         } else {
             return original.call(instance, opacity);

@@ -38,7 +38,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinAbstractRecipeBookScreen_ToggleRecipeBookWidget {
     @WrapOperation(method = "initButton", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractRecipeBookScreen;addRenderableWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;"))
     private GuiEventListener animatium$recipeBook$button(AbstractRecipeBookScreen<?> instance, GuiEventListener guiEventListener, Operation<GuiEventListener> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.hideRecipeBook) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.hideRecipeBook) {
             return null;
         } else {
             return original.call(instance, guiEventListener);
@@ -47,7 +47,7 @@ public abstract class MixinAbstractRecipeBookScreen_ToggleRecipeBookWidget {
 
     @WrapOperation(method = "initButton", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractRecipeBookScreen;addWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;"))
     private GuiEventListener animatium$recipeBook$widget(AbstractRecipeBookScreen<?> instance, GuiEventListener guiEventListener, Operation<GuiEventListener> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.hideRecipeBook) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.hideRecipeBook) {
             return null;
         } else {
             return original.call(instance, guiEventListener);

@@ -23,12 +23,11 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.rendering.sky.blue_void;
+package org.visuals.legacy.animatium.mixins.v1.rendering.sky.the_void;
 
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.state.SkyRenderState;
 import org.jetbrains.annotations.Nullable;
@@ -43,26 +42,20 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.rendering.SkyRendererUtility;
 
 @Mixin(LevelRenderer.class)
-public abstract class MixinLevelRenderer_BlueVoidDisc {
-    @Shadow
-    @Final
-    private Minecraft minecraft;
-
+public abstract class MixinLevelRenderer_VoidBox {
     @Shadow
     @Nullable
     private ClientLevel level;
 
-    @Inject(method = "method_62215", at = @At("TAIL"))
-    private void animatium$blueVoidSky(GpuBufferSlice gpuBufferSlice, SkyRenderState skyRenderState, CallbackInfo ci) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().other.blueVoidSky && skyRenderState.skyType != DimensionSpecialEffects.SkyType.END && this.level != null && this.minecraft.player != null) {
-            final float tickDelta = this.minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true);
-            final int skyColor = this.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), tickDelta);
-            SkyRendererUtility.renderBlueVoid(skyColor, SkyRendererUtility.getHorizonEyeHeight(this.level, tickDelta));
-        }
-    }
+    @Shadow
+    @Final
+    private Minecraft minecraft;
 
-    @Inject(method = "close", at = @At("TAIL"))
-    private void animatium$closeSkyRenderUtility(CallbackInfo ci) {
-        SkyRendererUtility.close();
+    @Inject(method = "method_62215", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SkyRenderer;renderDarkDisc()V", shift = At.Shift.AFTER))
+    private void animatium$renderVoidBox(GpuBufferSlice gpuBufferSlice, SkyRenderState skyRenderState, CallbackInfo ci) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.playerVoidBox) {
+            final float tickDelta = this.minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true);
+            SkyRendererUtility.renderVoidBox(SkyRendererUtility.getHorizonEyeHeight(this.level, tickDelta));
+        }
     }
 }

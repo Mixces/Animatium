@@ -29,9 +29,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.*;
+import org.jetbrains.annotations.Nullable;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 import java.util.List;
@@ -161,12 +164,34 @@ public class ItemUtils {
         }
     }
 
+    public static @Nullable ResourceLocation getMobHeadLocation(Item item) {
+        final Block block = Block.byItem(item);
+        if (block == Blocks.AIR || !(block instanceof SkullBlock skullBlock)) {
+            return null;
+        } else {
+            final SkullBlock.Type type = skullBlock.getType();
+            return switch (type) {
+                case SkullBlock.Types.CREEPER -> Animatium.location("creeper_skull");
+                case SkullBlock.Types.DRAGON -> Animatium.location("dragon_skull");
+                case SkullBlock.Types.PIGLIN -> Animatium.location("piglin_skull");
+                case SkullBlock.Types.PLAYER -> Animatium.location("player_skull");
+                case SkullBlock.Types.SKELETON -> Animatium.location("skeleton_skull");
+                case SkullBlock.Types.WITHER_SKELETON -> Animatium.location("wither_skeleton_skull");
+                case SkullBlock.Types.ZOMBIE -> Animatium.location("zombie_skull");
+                default -> {
+                    Animatium.getLogger().warn("Failed to get 2D mob head for {}. If you are using any mods that add custom skulls, this can be ignored or suggested to the mod creator.", type);
+                    yield null;
+                }
+            };
+        }
+    }
+
     // TODO/NOTE: Might need rework? as vanilla now has the fix as of 1.21.11+ but doesn't seem fully the same/accurate
     public boolean shouldInstantlyReplaceVisibleItem1_8(ItemStack prevStack, ItemStack currentStack) {
         // TODO/NOTE: Apparently 1.7 doesn't do any special checks inside the inventory
         final boolean itemsMatch = ItemStack.isSameItem(prevStack, currentStack);
-        final boolean durabilitiesMatch = prevStack.getDamageValue() == currentStack.getDamageValue();
+        final boolean durabilityMatch = prevStack.getDamageValue() == currentStack.getDamageValue();
         final boolean countMatch = prevStack.getCount() == currentStack.getCount();
-        return (itemsMatch && (!durabilitiesMatch || !countMatch));
+        return (itemsMatch && (!durabilityMatch || !countMatch));
     }
 }

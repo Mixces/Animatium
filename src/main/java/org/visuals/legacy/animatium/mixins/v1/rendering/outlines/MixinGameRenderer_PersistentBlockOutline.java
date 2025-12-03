@@ -37,7 +37,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinGameRenderer_PersistentBlockOutline {
     @WrapOperation(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GameRenderer;shouldRenderBlockOutline()Z"))
     private boolean animatium$persistentBlockOutline(GameRenderer instance, Operation<Boolean> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().extras.persistentBlockOutline) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.persistentBlockOutline) {
             return true;
         } else {
             return original.call(instance);

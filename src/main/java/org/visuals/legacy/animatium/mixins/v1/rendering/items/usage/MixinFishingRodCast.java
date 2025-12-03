@@ -38,10 +38,10 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinFishingRodCast {
     @ModifyReturnValue(method = "get", at = @At(value = "RETURN", ordinal = 0))
     private boolean animatium$getValue(boolean original, @Local(argsOnly = true) ItemDisplayContext displayContext) {
-        if (Animatium.ENABLED && !AnimatiumConfig.instance().items.itemUsingTextureInGui && displayContext == ItemDisplayContext.GUI) {
+        if (Animatium.isEnabled() && !AnimatiumConfig.instance().items.itemUsingTextureInGui && displayContext == ItemDisplayContext.GUI) {
             return false;
         } else {
-            return (Animatium.ENABLED && AnimatiumConfig.instance().items.fishingRodTextureStackCheck) || original;
+            return (Animatium.isEnabled() && AnimatiumConfig.instance().items.fishingRodTextureStackCheck) || original;
         }
     }
 }

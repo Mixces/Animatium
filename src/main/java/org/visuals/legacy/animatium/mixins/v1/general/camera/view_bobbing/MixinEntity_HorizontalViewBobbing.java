@@ -48,14 +48,14 @@ public abstract class MixinEntity_HorizontalViewBobbing implements ViewBobbingSt
 
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;handlePortal()V", shift = At.Shift.AFTER))
     private void animatium$storePreviousHorizontalSpeed(CallbackInfo ci) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.handViewBobbingMovement) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.handViewBobbingMovement) {
             this.animatium$previousHorizontalSpeed = this.animatium$horizontalSpeed;
         }
     }
 
     @Inject(method = "applyMovementEmissionAndPlaySound", at = @At("HEAD"))
     private void animatium$storeHorizontalSpeed(Entity.MovementEmission movementEmission, Vec3 vec3d, BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.handViewBobbingMovement) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.handViewBobbingMovement) {
             this.animatium$horizontalSpeed = this.animatium$horizontalSpeed + (float) vec3d.horizontalDistance() * 0.6F;
         }
     }

@@ -6,5 +6,10 @@
 	"pack.available.title": "Available Resource Packs",
 	"pack.selected.title": "Selected Resource Packs",
 	"pack.openFolder": "Open resource pack folder",
-	"resourcePack.vanilla.description": "The default look of Minecraft"
+	"resourcePack.vanilla.description": "The default look of Minecraft",
+	"block.minecraft.player_head": "Head",
+	"block.minecraft.player_wall_head": "Wall Head",
+	"item.minecraft.red_dye": "Rose Red",
+	"item.minecraft.green_dye": "Cactus Green",
+	"item.minecraft.yellow_dye": "Dandelion Yellow"
 }

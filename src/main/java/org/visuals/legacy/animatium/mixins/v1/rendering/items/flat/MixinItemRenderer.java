@@ -62,7 +62,7 @@ public abstract class MixinItemRenderer {
     // TODO: this is only half of the battle + framed item 2d colors are disabled
     @WrapOperation(method = "renderQuadList", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexConsumer;putBulkData(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;FFFFII)V"))
     private static void animatium$itemColors2D(VertexConsumer instance, PoseStack.Pose pose, BakedQuad bakedQuad, float f, float g, float h, float i, int j, int k, Operation<Void> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().items.itemColors2D && animatium$displayContext == ItemDisplayContext.GROUND /* && !blocksLight */) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemColors2D && animatium$displayContext == ItemDisplayContext.GROUND /* && !blocksLight */) {
             // TODO/Modify: bakedQuad.direction().getUnitVec3f();
             // return new Vector3f(vector3fc.x(), vector3fc.z(), vector3fc.y());
         }

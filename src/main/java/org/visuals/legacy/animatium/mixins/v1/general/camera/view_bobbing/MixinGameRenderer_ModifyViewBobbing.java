@@ -56,7 +56,7 @@ public abstract class MixinGameRenderer_ModifyViewBobbing {
 
     @WrapOperation(method = "bobHurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getHurtDir()F"))
     private float animatium$damageTilt(LivingEntity instance, Operation<Float> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.legacyDamageTilt) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.legacyDamageTilt) {
             return 0.0F;
         } else {
             return original.call(instance);
@@ -65,13 +65,13 @@ public abstract class MixinGameRenderer_ModifyViewBobbing {
 
     @WrapWithCondition(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GameRenderer;bobView(Lcom/mojang/blaze3d/vertex/PoseStack;F)V"))
     private boolean animatium$minimalViewBobbing(GameRenderer instance, PoseStack poseStack, float partialTicks) {
-        return !Animatium.ENABLED || !AnimatiumConfig.instance().extras.minimalViewBobbing;
+        return !Animatium.isEnabled() || !AnimatiumConfig.instance().extras.minimalViewBobbing;
     }
 
     @WrapOperation(method = "bobHurt", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/LivingEntity;hurtTime:I", opcode = Opcodes.GETFIELD))
     private int animatium$offsetHurtTime(LivingEntity instance, Operation<Integer> original) {
         final int hurtTime = original.call(instance);
-        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.offsetHurtTime) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.offsetHurtTime) {
             return Math.max(hurtTime - 1, 0);
         } else {
             return hurtTime;
@@ -89,7 +89,7 @@ public abstract class MixinGameRenderer_ModifyViewBobbing {
 
     @WrapOperation(method = "bobView", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/ClientAvatarState;getBackwardsInterpolatedWalkDistance(F)F"))
     private float animatium$viewBobbing$changeDistance(ClientAvatarState instance, float partialTicks, Operation<Float> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.handViewBobbingMovement && this.minecraft.getCameraEntity() instanceof AbstractClientPlayer abstractClientPlayer) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.handViewBobbingMovement && this.minecraft.getCameraEntity() instanceof AbstractClientPlayer abstractClientPlayer) {
             final float walkDist = ((ViewBobbingStorage) abstractClientPlayer).animatium$getHorizontalSpeed();
             final float walkDistO = ((ViewBobbingStorage) abstractClientPlayer).animatium$getPreviousHorizontalSpeed();
             return -(walkDist + (walkDist - walkDistO) * partialTicks);
@@ -101,7 +101,7 @@ public abstract class MixinGameRenderer_ModifyViewBobbing {
     // TODO/MOVE
     @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlobalSettingsUniform;update(IIDJLnet/minecraft/client/DeltaTracker;I)V"), index = 2)
     private double animatium$forceMaxGlintStrength(double original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().other.maxGlintProperties) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.maxGlintProperties) {
             // 100% glint strength
             return 1.0F;
         } else {

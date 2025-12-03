@@ -37,7 +37,7 @@ public abstract class MixinPlayer_AlwaysSharpParticles {
     // TODO: Improve parity/exactness
     @ModifyExpressionValue(method = "attack", at = @At(value = "CONSTANT", args = "floatValue=0.0", ordinal = 5))
     private float animatium$alwaysShowSharpParticles(float original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().extras.alwaysSharpParticles) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.alwaysSharpParticles) {
             return -1.0F;
         } else {
             return original;

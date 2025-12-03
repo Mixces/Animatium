@@ -25,12 +25,6 @@
 
 package org.visuals.legacy.animatium;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SkullBlock;
-import org.jetbrains.annotations.Nullable;
 import org.visuals.legacy.animatium.packet.AnimatiumInfoPayloadPacket;
 
 public class AnimatiumConstants {
@@ -38,24 +32,6 @@ public class AnimatiumConstants {
     public static final Double VERSION = Double.parseDouble("@VERSION@");
     public static final String DEVELOPMENT_VERSION = "@COMMIT@";
     public static final boolean IS_DEVELOPMENT = Boolean.parseBoolean("@DEVELOPMENT@");
-
-    public static @Nullable ResourceLocation getMobHeadLocation(Item item) {
-        final Block block = Block.byItem(item);
-        if (block == Blocks.AIR || !(block instanceof SkullBlock skullBlock)) {
-            return null;
-        } else {
-            return switch (skullBlock.getType()) {
-                case SkullBlock.Types.CREEPER -> Animatium.location("creeper_skull");
-                case SkullBlock.Types.DRAGON -> Animatium.location("dragon_skull");
-                case SkullBlock.Types.PIGLIN -> Animatium.location("piglin_skull");
-                case SkullBlock.Types.PLAYER -> Animatium.location("player_skull");
-                case SkullBlock.Types.SKELETON -> Animatium.location("skeleton_skull");
-                case SkullBlock.Types.WITHER_SKELETON -> Animatium.location("wither_skeleton_skull");
-                case SkullBlock.Types.ZOMBIE -> Animatium.location("zombie_skull");
-                default -> throw new IllegalStateException("Unexpected value: " + skullBlock.getType());
-            };
-        }
-    }
 
     public static AnimatiumInfoPayloadPacket getInfoPayload() {
         return new AnimatiumInfoPayloadPacket(VERSION, IS_DEVELOPMENT ? DEVELOPMENT_VERSION : null);

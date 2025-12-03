@@ -56,7 +56,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinEquipmentLayerRenderer {
     @WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/ResourceLocation;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;armorCutoutNoCull(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;"))
     private RenderType animatium$renderLayerArmorTint(ResourceLocation resourceLocation, Operation<RenderType> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().other.entityArmorHurtTint) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.entityArmorHurtTint) {
             return RenderType.entityCutoutNoCullZOffset(resourceLocation);
         } else {
             return original.call(resourceLocation);
@@ -65,7 +65,7 @@ public abstract class MixinEquipmentLayerRenderer {
 
     @WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/ResourceLocation;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/Sheets;armorTrimsSheet(Z)Lnet/minecraft/client/renderer/RenderType;"))
     private RenderType animatium$renderLayerArmorTrimTint(boolean bl, Operation<RenderType> original, @Local TextureAtlasSprite textureAtlasSprite) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().other.entityArmorHurtTint) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.entityArmorHurtTint) {
             return RenderType.entityCutoutNoCullZOffset(textureAtlasSprite.atlasLocation());
         } else {
             return original.call(bl);
@@ -85,7 +85,7 @@ public abstract class MixinEquipmentLayerRenderer {
     @WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/ResourceLocation;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/OrderedSubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/RenderType;IIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"))
     private <S> void animatium$armorHurtRendering(OrderedSubmitNodeCollector instance, Model<? super S> model, S renderState, PoseStack poseStack, RenderType renderType, int light, int overlay, int color, TextureAtlasSprite textureAtlasSprite, int i, ModelFeatureRenderer.CrumblingOverlay crumblingOverlay, Operation<Void> original) {
         original.call(instance, model, renderState, poseStack, renderType, light, overlay, color, textureAtlasSprite, i, crumblingOverlay);
-        if (Animatium.ENABLED &&
+        if (Animatium.isEnabled() &&
                 AnimatiumConfig.instance().other.entityArmorHurtTint &&
                 AnimatiumConfig.instance().other.armorHurtRendering &&
                 renderState instanceof LivingEntityRenderState livingEntityRenderState) {
@@ -108,7 +108,7 @@ public abstract class MixinEquipmentLayerRenderer {
 
     @Unique
     private int animatium$getPackUv(int original, EntityRenderState entityRenderState) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().other.entityArmorHurtTint && entityRenderState instanceof LivingEntityRenderState livingEntityRenderState) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.entityArmorHurtTint && entityRenderState instanceof LivingEntityRenderState livingEntityRenderState) {
             return OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(livingEntityRenderState.hasRedOverlay));
         } else {
             return original;

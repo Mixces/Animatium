@@ -40,7 +40,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinPlayer_HideModernCombatParticles {
     @WrapOperation(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"))
     private <T> int animatium$modernCombatParticles$damageIndicator(ServerLevel instance, ParticleOptions particleOptions, double posX, double posY, double posZ, int particleCount, double xOffset, double yOffset, double zOffset, double speed, Operation<Integer> original) {
-        if (Animatium.ENABLED && !AnimatiumConfig.instance().other.modernCombatParticles) {
+        if (Animatium.isEnabled() && !AnimatiumConfig.instance().other.modernCombatParticles) {
             return 0;
         } else {
             return original.call(instance, particleOptions, posX, posY, posZ, particleCount, xOffset, yOffset, zOffset, speed);
@@ -49,6 +49,6 @@ public abstract class MixinPlayer_HideModernCombatParticles {
 
     @WrapWithCondition(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;sweepAttack()V"))
     private boolean animatium$modernCombatParticles$sweep(Player instance) {
-        return !Animatium.ENABLED || AnimatiumConfig.instance().other.modernCombatParticles;
+        return !Animatium.isEnabled() || AnimatiumConfig.instance().other.modernCombatParticles;
     }
 }

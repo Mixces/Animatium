@@ -32,6 +32,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(ItemPickupParticle.class)
@@ -42,7 +43,8 @@ public abstract class MixinItemPickupParticle_LegacyPickupPosition {
 
     @ModifyExpressionValue(method = "updatePosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getEyeY()D"))
     private double animatium$itemPickupPosition(double original) {
-        if (AnimatiumConfig.instance().items.itemPickupPosition) {
+        // TODO: Check this setting, I think the description of it might of been wrong
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemPickupPosition) {
             return this.target.position().y;
         } else {
             return original;

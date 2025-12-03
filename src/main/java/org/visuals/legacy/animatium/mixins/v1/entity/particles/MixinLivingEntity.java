@@ -64,12 +64,12 @@ public abstract class MixinLivingEntity extends Entity {
     @WrapWithCondition(method = "tickEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))
     private boolean animatium$hideFirstPersonParticles(Level instance, ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
         final Minecraft client = Minecraft.getInstance();
-        return !Animatium.ENABLED || !AnimatiumConfig.instance().extras.disableFirstPersonParticles || this.getId() != client.player.getId() || !client.options.getCameraType().isFirstPerson();
+        return !Animatium.isEnabled() || !AnimatiumConfig.instance().extras.disableFirstPersonParticles || this.getId() != client.player.getId() || !client.options.getCameraType().isFirstPerson();
     }
 
     @WrapOperation(method = "tickEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))
     private void animatium$blendPotionParticleColors(Level instance, ParticleOptions particle, double x, double y, double z, double r, double g, double b, Operation<Void> original, @Local boolean hasAmbience) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().other.restoreParticleBlending) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.restoreParticleBlending) {
             // TODO/NOTE: come back and check if activeEffects is empty, return 0xFF385DC6 else return color.orElse(0), if color == 0, don't render
             //            ONLY if people notice the smallllll issue currently/care
             final int color = PotionContents.getColorOptional(this.activeEffects.values()).orElse(0xFF385DC6);

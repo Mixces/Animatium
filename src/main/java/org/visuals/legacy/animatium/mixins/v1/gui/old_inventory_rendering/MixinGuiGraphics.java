@@ -46,7 +46,7 @@ import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 public abstract class MixinGuiGraphics {
     @WrapOperation(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/tooltip/TooltipRenderUtil;renderTooltipBackground(Lnet/minecraft/client/gui/GuiGraphics;IIIILnet/minecraft/resources/ResourceLocation;)V"))
     private void animatium$tooltipStyleRendering(GuiGraphics guiGraphics, int x, int y, int width, int height, ResourceLocation sprite, Operation<Void> original) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().screen.tooltipStyleRendering) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.tooltipStyleRendering) {
             int n = x - 3;
             int o = y - 3;
             int p = width + 6;
@@ -66,7 +66,7 @@ public abstract class MixinGuiGraphics {
 
     @Inject(method = "renderItemBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(Lcom/mojang/blaze3d/pipeline/RenderPipeline;IIIII)V", ordinal = 0, shift = At.Shift.AFTER))
     private void animatium$oldDurabilityBar(ItemStack stack, int x, int y, CallbackInfo ci, @Local(ordinal = 2) int i, @Local(ordinal = 3) int j) {
-        if (Animatium.ENABLED && AnimatiumConfig.instance().items.durabilityBarColors && !(stack.getItem() instanceof BundleItem)) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.durabilityBarColors && !(stack.getItem() instanceof BundleItem)) {
             final int color = ARGB.opaque(ARGB.color((255 - ItemUtils.getLegacyDurabilityColorValue(stack)) / 4, 64, 0));
             RenderUtils.fillRectangle((GuiGraphics) (Object) this, i, j, 12, 1, color);
         }

@@ -39,7 +39,7 @@ public class MixinElytraAnimationState_SneakAnimationWhileGliding {
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isCrouching()Z"))
     private boolean animatium$sneakAnimationWhileGliding(LivingEntity livingEntity, Operation<Boolean> original) {
         final boolean isCrouching = original.call(livingEntity);
-        if (Animatium.ENABLED && AnimatiumConfig.instance().movement.sneakAnimationWhileFlying) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.sneakAnimationWhileFlying) {
             return isCrouching || livingEntity.isShiftKeyDown();
         } else {
             return isCrouching;

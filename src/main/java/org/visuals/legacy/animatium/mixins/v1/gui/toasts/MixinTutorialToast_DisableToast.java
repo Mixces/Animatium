@@ -41,14 +41,14 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinTutorialToast_DisableToast {
     @WrapMethod(method = "update")
     private void animatium$disableTutorialToast(ToastManager toastManager, long visibilityTime, Operation<Void> original) {
-        if (!Animatium.ENABLED || !AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts) {
+        if (!Animatium.isEnabled() || !AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts) {
             original.call(toastManager, visibilityTime);
         }
     }
 
     @WrapMethod(method = "render")
     private void animatium$disableTutorialToast(GuiGraphics guiGraphics, Font font, long visibilityTime, Operation<Void> original) {
-        if (!Animatium.ENABLED || !AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts) {
+        if (!Animatium.isEnabled() || !AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts) {
             original.call(guiGraphics, font, visibilityTime);
         }
     }
