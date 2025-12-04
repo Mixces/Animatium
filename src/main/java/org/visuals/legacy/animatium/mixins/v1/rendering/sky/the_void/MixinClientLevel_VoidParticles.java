@@ -45,7 +45,7 @@ public abstract class MixinClientLevel_VoidParticles {
     @WrapOperation(method = "doAnimateTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;animateTick(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/util/RandomSource;)V"))
     private void animatium$voidParticles(Block instance, BlockState blockState, Level level, BlockPos blockPos, RandomSource random, Operation<Void> original) {
         // TODO: Fix minY
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidParticles && blockState.isAir() && random.nextInt(8) > blockPos.getY() && !Utils.hasFog1_7((ClientLevel) level)) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidParticles && blockState.isAir() && random.nextInt(8) > blockPos.getY() && Utils.hasFog1_7((ClientLevel) level)) {
             // NOTE: Depth Suspend particle as a thing doesn't exist anymore
             // But its class still does as it's used by HappyVillager/Composter/Etc
             // And MYCELIUM is literally just Depth Suspend
