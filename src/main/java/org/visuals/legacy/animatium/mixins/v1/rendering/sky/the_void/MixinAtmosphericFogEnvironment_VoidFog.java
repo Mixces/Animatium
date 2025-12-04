@@ -48,7 +48,9 @@ import org.visuals.legacy.animatium.util.Utils;
 public abstract class MixinAtmosphericFogEnvironment_VoidFog {
     // TODO: Figure out if its supposed to be a instant void effect
     @Definition(id = "environmentalEnd", field = "Lnet/minecraft/client/renderer/fog/FogData;environmentalEnd:F")
-    @Expression("?.environmentalEnd = @(?)")
+    @Definition(id = "skyEnd", field = "Lnet/minecraft/client/renderer/fog/FogData;skyEnd:F")
+    @Definition(id = "cloudEnd", field = "Lnet/minecraft/client/renderer/fog/FogData;cloudEnd:F")
+    @Expression({"?.environmentalEnd = @(?)", "?.skyEnd = @(?)", "?.cloudEnd = @(?)"})
     @ModifyExpressionValue(method = "setupFog", at = @At("MIXINEXTRAS:EXPRESSION"))
     private float animatium$voidFog(float original, FogData fogData, Entity entity, BlockPos pos, ClientLevel clientLevel, float renderDistance, DeltaTracker deltaTracker) {
         final boolean isCreative = entity instanceof Player player && player.isCreative();
