@@ -27,18 +27,15 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.sky.the_void;
 
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.fog.FogData;
 import net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LightLayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -49,40 +46,25 @@ import org.visuals.legacy.animatium.util.Utils;
 
 @Mixin(AtmosphericFogEnvironment.class)
 public abstract class MixinAtmosphericFogEnvironment_VoidFog {
-    @Definition(id = "fogData", local = @Local(type = FogData.class, argsOnly = true))
+    // TODO: Figure out if its supposed to be a instant void effect
     @Definition(id = "environmentalEnd", field = "Lnet/minecraft/client/renderer/fog/FogData;environmentalEnd:F")
-    @Expression("fogData.environmentalEnd = ?")
-    @WrapOperation(method = "setupFog", at = @At(value = "MIXINEXTRAS:EXPRESSION"))
-    private void animatium$voidFog(
-            FogData instance,
-            float value,
-            Operation<Void> original,
-            @Local(argsOnly = true) Entity entity,
-            @Local(argsOnly = true) ClientLevel clientLevel,
-            @Local(argsOnly = true) float renderDistance,
-            @Local(argsOnly = true) DeltaTracker deltaTracker
-    ) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidFog && Utils.hasFog1_7(clientLevel)) {
-            final double light = ((animatium$getLightLevel(clientLevel, entity) & 15728640) >> 20) / 16.0 + (Mth.lerp(deltaTracker.getGameTimeDeltaTicks(), entity.yOld, entity.yo) + 4.0) / 32.0;
+    @Expression("?.environmentalEnd = @(?)")
+    @ModifyExpressionValue(method = "setupFog", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private float animatium$voidFog(float original, FogData fogData, Entity entity, BlockPos pos, ClientLevel clientLevel, float renderDistance, DeltaTracker deltaTracker) {
+        final boolean isCreative = entity instanceof Player player && player.isCreative();
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidFog && Utils.hasFog1_7(clientLevel) && !isCreative) {
+            final double light = animatium$getSkyLevel(clientLevel, entity) / 16.0 + (Mth.lerp(deltaTracker.getGameTimeDeltaTicks(), entity.yOld, entity.yo) + 4.0) / 32.0;
             if (light < 1.0) {
-                value = Math.min(renderDistance, Math.max(100.0F * (float) (Math.pow(Math.max(light, 0.0), 2)), 5.0F));
+                return Math.min(renderDistance, Math.max(100.0F * (float) (Math.pow(Math.max(light, 0.0), 2)), 5.0F));
             }
         }
 
-        original.call(instance, value);
+        return original;
     }
 
     @Unique
-    private int animatium$getLightLevel(ClientLevel clientLevel, Entity entity) {
+    private int animatium$getSkyLevel(ClientLevel clientLevel, Entity entity) {
         final BlockPos blockPos = BlockPos.containing(entity.getX(), entity.getY() + entity.getEyeHeight(), entity.getZ());
-        return clientLevel.isLoaded(blockPos) ? animatium$getLightColor(clientLevel, blockPos) : 0;
-    }
-
-    @Unique
-    private int animatium$getLightColor(BlockAndTintGetter blockAndTintGetter, BlockPos blockPos) {
-        // TODO: LevelRenderer.getLightColor(blockAndTintGetter, blockPos);
-        final int sky = blockAndTintGetter.getBrightness(LightLayer.SKY, blockPos);
-        final int block = Math.max(blockAndTintGetter.getBrightness(LightLayer.BLOCK, blockPos), 0);
-        return LightTexture.pack(block, sky);
+        return clientLevel.isLoaded(blockPos) ? clientLevel.getBrightness(LightLayer.SKY, blockPos) : 0;
     }
 }
