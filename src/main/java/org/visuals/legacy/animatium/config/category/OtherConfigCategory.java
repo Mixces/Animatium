@@ -63,6 +63,7 @@ public class OtherConfigCategory extends Category {
     public boolean voidParticles = true;
     public boolean voidFog = true;
     public boolean oldFallParticlePhysics = true;
+    public boolean alwaysSteveModel = true;
     public boolean disableRandomBlockRotations = true;
 
     public static ConfigCategory create(final OtherConfigCategory defaults, final OtherConfigCategory config) {
@@ -76,6 +77,7 @@ public class OtherConfigCategory extends Category {
             skyGroup.option(booleanOption("skyHorizonHeight", defaults, config));
             skyGroup.option(booleanOption("planarSkyFog", defaults, config));
             skyGroup.option(booleanOption("cloudHeight", defaults, config));
+            skyGroup.option(booleanOption("playerVoidBox", defaults, config));
             category.group(skyGroup.build());
         }
 
@@ -105,6 +107,7 @@ public class OtherConfigCategory extends Category {
         category.option(booleanOption("voidParticles", defaults, config));
         category.option(booleanOption("voidFog", defaults, config));
         category.option(booleanOption("oldFallParticlePhysics", defaults, config));
+        category.option(booleanOption("alwaysSteveModel", defaults, config));
         category.option(booleanOption("disableRandomBlockRotations", defaults, config));
         return category.build();
     }

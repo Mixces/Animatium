@@ -26,7 +26,6 @@
 package org.visuals.legacy.animatium;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.UtilityClass;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
@@ -45,7 +44,7 @@ public final class Animatium {
     @Getter
     private final Logger logger = LogManager.getLogger(Animatium.class);
     @Getter
-    public boolean enabled = true;
+    private boolean enabled = true;
 
     public void setEnabled(boolean enabled) {
         Animatium.enabled = enabled;

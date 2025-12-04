@@ -82,7 +82,7 @@ public class SkyRendererUtility {
     private Renderer blueVoidRenderer;
     private Renderer voidBoxRenderer;
     private GpuBuffer vertexBuffer = null;
-    private int vertexCount = -1;
+    private int indexCount = -1;
 
     static {
         IrisUtil.assignPipeline(IrisPipeline.SKY_BASIC, LEGACY_SKY_PIPELINE, LEGACY_SKY_PLANAR_FOG_PIPELINE);
@@ -113,7 +113,7 @@ public class SkyRendererUtility {
         blueVoidRenderer.setPipeline(pipeline);
 
         final RenderSystem.AutoStorageIndexBuffer quadsIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.getVertexFormatMode());
-        blueVoidRenderer.setup(getGpuBuffer(), quadsIndexBuffer.getBuffer(vertexCount), quadsIndexBuffer.type(), vertexCount);
+        blueVoidRenderer.setup(getGpuBuffer(), quadsIndexBuffer.getBuffer(indexCount), quadsIndexBuffer.type(), indexCount);
 
         blueVoidRenderer.setDynamicTransforms(blueVoidRenderer.getDynamicTransforms().withShaderColor(new Vector4f(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F, 1.0F)));
         blueVoidRenderer.draw();
@@ -147,7 +147,7 @@ public class SkyRendererUtility {
             final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
             bufferBuilderConsumer.accept(builder);
             try (MeshData meshData = builder.buildOrThrow()) {
-                vertexCount = meshData.drawState().vertexCount();
+                indexCount = meshData.drawState().indexCount();
                 return RenderSystem.getDevice().createBuffer(() -> "Static sky vertex buffer", GpuBuffer.USAGE_VERTEX, meshData.vertexBuffer());
             } catch (Exception ignored) {
                 return null;

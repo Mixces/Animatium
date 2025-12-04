@@ -147,6 +147,7 @@ public enum Version {
         other.voidParticles = true;
         other.voidFog = true;
         other.oldFallParticlePhysics = true;
+        other.alwaysSteveModel = true;
         other.disableRandomBlockRotations = true;
     }),
 
@@ -258,6 +259,7 @@ public enum Version {
         other.voidParticles = false;
         other.voidFog = false;
         other.oldFallParticlePhysics = false;
+        other.alwaysSteveModel = false;
         other.disableRandomBlockRotations = false;
     }),
 
@@ -383,6 +385,7 @@ public enum Version {
         other.voidParticles = false;
         other.voidFog = false;
         other.oldFallParticlePhysics = false;
+        other.alwaysSteveModel = false;
         other.disableRandomBlockRotations = false;
     });
 

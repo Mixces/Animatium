@@ -55,6 +55,7 @@ public abstract class MixinLevelRenderer_VoidBox {
     private void animatium$renderVoidBox(GpuBufferSlice gpuBufferSlice, SkyRenderState skyRenderState, CallbackInfo ci) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.playerVoidBox) {
             final float tickDelta = this.minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true);
+            assert this.level != null;
             SkyRendererUtility.renderVoidBox(SkyRendererUtility.getHorizonEyeHeight(this.level, tickDelta));
         }
     }

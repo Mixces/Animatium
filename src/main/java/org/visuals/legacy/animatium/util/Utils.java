@@ -49,6 +49,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.mixins.accessor.CameraAccessor;
+import org.visuals.legacy.animatium.mixins.accessor.ClientLevelDataAccessor;
 import org.visuals.legacy.animatium.mixins.accessor.LivingEntityAccessor;
 import org.visuals.legacy.animatium.util.states.CameraUtilityRenderState;
 
@@ -140,5 +141,10 @@ public class Utils {
 
             fakeHandSwing(player, hand);
         }
+    }
+
+    public boolean hasFog1_7(ClientLevel level) {
+        final ClientLevelDataAccessor levelDataAccessor = (ClientLevelDataAccessor) level.getLevelData();
+        return !levelDataAccessor.animatium$isFlatWorld() && !level.dimensionType().ultraWarm(); // NOTE: From checking, ultraWarm is the same/equivalent to "isDark" in 1.8.9/etc
     }
 }

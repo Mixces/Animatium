@@ -49,6 +49,7 @@ public class ExtrasConfigCategory extends Category {
     public boolean disableFirstPersonParticles = false;
     public boolean dontClearChat = false;
     public boolean dontCloseChat = false;
+    public boolean disableBiomeWaterColor = false;
     public float itemSwingSpeed = 0.0F;
     public float hasteSwingSpeed = 0.0F;
     public float miningFatigueSwingSpeed = 0.0F;
@@ -79,6 +80,7 @@ public class ExtrasConfigCategory extends Category {
         category.option(booleanOption("disableFirstPersonParticles", defaults, config));
         category.option(booleanOption("dontClearChat", defaults, config));
         category.option(booleanOption("dontCloseChat", defaults, config));
+        category.option(booleanOption("disableBiomeWaterColor", defaults, config));
 
         {
             final OptionGroup.Builder itemSwingCategory = OptionGroup.createBuilder();
