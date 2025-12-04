@@ -58,30 +58,14 @@ public abstract class MixinAtmosphericFogEnvironment_VoidFog {
             float value,
             Operation<Void> original,
             @Local(argsOnly = true) Entity entity,
-            @Local(argsOnly = true) BlockPos blockPos,
             @Local(argsOnly = true) ClientLevel clientLevel,
             @Local(argsOnly = true) float renderDistance,
             @Local(argsOnly = true) DeltaTracker deltaTracker
     ) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidFog && Utils.hasFog1_7(clientLevel)) {
-            float viewDistance = renderDistance;
-            double val = ((animatium$getLightLevel(clientLevel, entity) & 15728640) >> 20) / 16.0 + (Mth.lerp(deltaTracker.getGameTimeDeltaTicks(), entity.yOld, entity.yo) + 4.0) / 32.0;
-            if (val < 1.0) {
-                if (val < 0.0) {
-                    val = 0.0;
-                }
-
-                val *= val;
-                float scaledRenderDistance = 100.0F * (float) val;
-                if (scaledRenderDistance < 5.0F) {
-                    scaledRenderDistance = 5.0F;
-                }
-
-                if (viewDistance > scaledRenderDistance) {
-                    viewDistance = scaledRenderDistance;
-                }
-
-                value = viewDistance;
+            final double light = ((animatium$getLightLevel(clientLevel, entity) & 15728640) >> 20) / 16.0 + (Mth.lerp(deltaTracker.getGameTimeDeltaTicks(), entity.yOld, entity.yo) + 4.0) / 32.0;
+            if (light < 1.0) {
+                value = Math.min(renderDistance, Math.max(100.0F * (float) (Math.pow(Math.max(light, 0.0), 2)), 5.0F));
             }
         }
 
