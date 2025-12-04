@@ -41,4 +41,12 @@ public interface CameraUtilityRenderState {
     float animatium$getEyeHeight();
 
     void animatium$setEyeHeight(float eyeHeight);
+
+    float animatium$getYRot();
+
+    void animatium$setYRot(float yRot);
+
+    float animatium$getXRot();
+
+    void animatium$setXRot(float xRot);
 }

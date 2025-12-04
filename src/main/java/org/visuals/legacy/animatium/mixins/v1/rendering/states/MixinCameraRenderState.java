@@ -44,43 +44,69 @@ public abstract class MixinCameraRenderState implements CameraUtilityRenderState
     @Unique
     private float animatium$eyeHeight = 0.0F;
 
+    @Unique
+    private float animatium$yRot = 0.0F;
+
+    @Unique
+    private float animatium$xRot = 0.0F;
+
     @Override
     public int animatium$getId() {
-        return animatium$id;
+        return this.animatium$id;
     }
 
     @Override
     public void animatium$setId(int id) {
-        animatium$id = id;
+        this.animatium$id = id;
     }
 
     @Override
     public float animatium$getPartialTickTime() {
-        return animatium$partialTickTime;
+        return this.animatium$partialTickTime;
     }
 
     @Override
     public void animatium$setPartialTickTime(float partialTickTime) {
-        animatium$partialTickTime = partialTickTime;
+        this.animatium$partialTickTime = partialTickTime;
     }
 
     @Override
     public float animatium$getOldEyeHeight() {
-        return animatium$oldEyeHeight;
+        return this.animatium$oldEyeHeight;
     }
 
     @Override
     public void animatium$setOldEyeHeight(float oldEyeHeight) {
-        animatium$oldEyeHeight = oldEyeHeight;
+        this.animatium$oldEyeHeight = oldEyeHeight;
     }
 
     @Override
     public float animatium$getEyeHeight() {
-        return animatium$eyeHeight;
+        return this.animatium$eyeHeight;
     }
 
     @Override
     public void animatium$setEyeHeight(float eyeHeight) {
-        animatium$eyeHeight = eyeHeight;
+        this.animatium$eyeHeight = eyeHeight;
+    }
+
+    @Override
+    public float animatium$getYRot() {
+        return this.animatium$yRot;
+    }
+
+    @Override
+    public void animatium$setYRot(float yRot) {
+        this.animatium$yRot = yRot;
+    }
+
+    @Override
+    public float animatium$getXRot() {
+        return this.animatium$xRot;
+    }
+
+    @Override
+    public void animatium$setXRot(float xRot) {
+        this.animatium$xRot = xRot;
     }
 }
