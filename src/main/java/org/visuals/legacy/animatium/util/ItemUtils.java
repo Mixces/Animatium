@@ -166,22 +166,17 @@ public class ItemUtils {
 
     public static @Nullable ResourceLocation getMobHeadLocation(Item item) {
         final Block block = Block.byItem(item);
-        if (block == Blocks.AIR || !(block instanceof SkullBlock skullBlock)) {
+        if (block == Blocks.AIR || !(block instanceof SkullBlock skullBlock && skullBlock.getType() instanceof SkullBlock.Types types)) {
             return null;
         } else {
-            final SkullBlock.Type type = skullBlock.getType();
-            return switch (type) {
-                case SkullBlock.Types.CREEPER -> Animatium.location("creeper_skull");
-                case SkullBlock.Types.DRAGON -> Animatium.location("dragon_skull");
-                case SkullBlock.Types.PIGLIN -> Animatium.location("piglin_skull");
-                case SkullBlock.Types.PLAYER -> Animatium.location("player_skull");
-                case SkullBlock.Types.SKELETON -> Animatium.location("skeleton_skull");
-                case SkullBlock.Types.WITHER_SKELETON -> Animatium.location("wither_skeleton_skull");
-                case SkullBlock.Types.ZOMBIE -> Animatium.location("zombie_skull");
-                default -> {
-                    Animatium.getLogger().warn("Failed to get 2D mob head for {}. If you are using any mods that add custom skulls, this can be ignored or suggested to the mod creator.", type);
-                    yield null;
-                }
+            return switch (types) {
+                case CREEPER -> Animatium.location("creeper_skull");
+                case DRAGON -> Animatium.location("dragon_skull");
+                case PIGLIN -> Animatium.location("piglin_skull");
+                case PLAYER -> Animatium.location("player_skull");
+                case SKELETON -> Animatium.location("skeleton_skull");
+                case WITHER_SKELETON -> Animatium.location("wither_skeleton_skull");
+                case ZOMBIE -> Animatium.location("zombie_skull");
             };
         }
     }
