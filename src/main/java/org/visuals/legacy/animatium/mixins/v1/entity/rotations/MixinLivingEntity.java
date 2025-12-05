@@ -59,8 +59,9 @@ public abstract class MixinLivingEntity extends Entity {
         }
     }
 
+    // TODO/NOTE: Might can be improved/shortened
     @WrapOperation(method = "tickHeadTurn", at = @At(value = "INVOKE", target = "Ljava/lang/Math;abs(F)F"))
-    private float animatium$headRotationInterpolation(float value, Operation<Float> original) {
+    private float animatium$backwardsWalkingHeadRotation(float value, Operation<Float> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.rotateBackwardsWalking) {
             value = Mth.clamp(value, -75.0F, 75.0F);
             this.yBodyRot = this.getYRot() - value;
@@ -75,7 +76,7 @@ public abstract class MixinLivingEntity extends Entity {
     }
 
     @WrapOperation(method = "lerpHeadRotationStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;rotLerp(DDD)D"))
-    public double animatium$headRotationInterpolation(double delta, double start, double end, Operation<Double> original) {
+    public double animatium$disableHeadRotationInterpolation(double delta, double start, double end, Operation<Double> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.disableHeadRotationInterpolation) {
             return end;
         } else {

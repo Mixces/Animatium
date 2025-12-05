@@ -141,13 +141,14 @@ public enum Version {
         other.flameDimensions = true;
         other.flameOffset = true;
         other.persistentBlockOutline = true;
-        other.oldFastSmoothLighting = true;
+        other.oldMinimumSmoothLighting = true;
         other.oldCloudRendering = true;
         other.oldWindowIcon = true;
         other.voidParticles = true;
         other.voidFog = true;
         other.oldFallParticlePhysics = true;
         other.alwaysSteveModel = true;
+        other.fastGrass = true;
         other.disableRandomBlockRotations = true;
     }),
 
@@ -253,13 +254,14 @@ public enum Version {
         other.flameDimensions = true;
         other.flameOffset = false;
         other.persistentBlockOutline = false;
-        other.oldFastSmoothLighting = false;
+        other.oldMinimumSmoothLighting = false;
         other.oldCloudRendering = true;
         other.oldWindowIcon = true;
         other.voidParticles = false;
         other.voidFog = false;
         other.oldFallParticlePhysics = false;
         other.alwaysSteveModel = false;
+        other.fastGrass = false;
         other.disableRandomBlockRotations = false;
     }),
 
@@ -379,13 +381,14 @@ public enum Version {
         other.flameDimensions = false;
         other.flameOffset = false;
         other.persistentBlockOutline = false;
-        other.oldFastSmoothLighting = false;
+        other.oldMinimumSmoothLighting = false;
         other.oldCloudRendering = false;
         other.oldWindowIcon = false;
         other.voidParticles = false;
         other.voidFog = false;
         other.oldFallParticlePhysics = false;
         other.alwaysSteveModel = false;
+        other.fastGrass = false;
         other.disableRandomBlockRotations = false;
     });
 

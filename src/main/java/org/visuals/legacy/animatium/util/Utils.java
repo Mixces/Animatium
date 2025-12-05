@@ -145,6 +145,6 @@ public class Utils {
 
     public boolean hasFog1_7(ClientLevel level) {
         final ClientLevelDataAccessor levelDataAccessor = (ClientLevelDataAccessor) level.getLevelData();
-        return !levelDataAccessor.animatium$isFlatWorld() && !level.dimensionType().ultraWarm(); // NOTE: From checking, ultraWarm is the same/equivalent to "isDark" in 1.8.9/etc
+        return !levelDataAccessor.animatium$isFlatWorld() && !level.dimensionType().hasCeiling(); // "isDark" method from 1.7/1.8
     }
 }

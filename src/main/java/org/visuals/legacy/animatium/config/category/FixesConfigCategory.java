@@ -44,6 +44,7 @@ public class FixesConfigCategory extends Category {
     public boolean fixEquipAnimationOnItemUse = true;
     public boolean fixItemUsageVisualInGUI = true;
     public boolean fixDoubleUsageVisual = true;
+    public boolean oldSkyRenderingCheck = true;
 
     public static ConfigCategory create(final FixesConfigCategory defaults, final FixesConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
@@ -65,6 +66,7 @@ public class FixesConfigCategory extends Category {
         category.option(booleanOption("fixEquipAnimationOnItemUse", defaults, config));
         category.option(booleanOption("fixItemUsageVisualInGUI", defaults, config));
         category.option(booleanOption("fixDoubleUsageVisual", defaults, config));
+        category.option(booleanOption("oldSkyRenderingCheck", defaults, config));
         return category.build();
     }
 }

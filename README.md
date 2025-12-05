@@ -2,7 +2,7 @@
 
 Visual Tweaks/QOL Settings For Modern Minecraft Versions, Aimed At 1.7/1.8 players.
 
-Join our discord: https://discord.gg/zqnXSUqedW
+Join our discord: https://discord.gg/C8KKgbA8jy
 
 ## License
 
@@ -11,7 +11,7 @@ This project is licensed under the GPL-3.0 license w/ Minecraft Linking Exceptio
 ## Download
 
 You can download the latest releases from Modrinth [here](https://modrinth.com/mod/animatium) or from
-Curseforge [here](https://www.curseforge.com/minecraft/mc-mods/animatium).
+CurseForge [here](https://www.curseforge.com/minecraft/mc-mods/animatium).
 
 ## Dependencies
 
@@ -29,7 +29,7 @@ Do note that, Lunar does take priority in some places for enabled/disabled setti
 Have any issues or need support? Feel free to use
 our [issue tracker](https://github.com/Legacy-Visuals-Project/Animatium/issues) to address that. If you are reporting a
 crash, make sure you include information about the mods you are using and attach any relevant log files you have. If you
-want to suggest features, join our [discord](https://discord.gg/zqnXSUqedW)!
+want to suggest features, join our [discord](https://discord.gg/C8KKgbA8jy)!
 
 ## Enums
 

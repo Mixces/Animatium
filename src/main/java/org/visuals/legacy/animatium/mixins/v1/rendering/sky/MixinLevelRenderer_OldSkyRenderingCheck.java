@@ -23,26 +23,34 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.rendering.lighting;
+package org.visuals.legacy.animatium.mixins.v1.rendering.sky;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.renderer.block.ModelBlockRenderer;
-import org.objectweb.asm.Opcodes;
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(ModelBlockRenderer.AmbientOcclusionRenderStorage.class)
-public abstract class MixinModelBlockRenderer_FastSmoothLighting {
-    // TODO: Figure out why expressions doesn't work for this
-    @WrapOperation(method = "calculate", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/block/ModelBlockRenderer$AmbientOcclusionRenderStorage;facePartial:Z", opcode = Opcodes.GETFIELD))
-    private boolean animatium$oldFastSmoothLighting(ModelBlockRenderer.AmbientOcclusionRenderStorage instance, Operation<Boolean> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldMinimumSmoothLighting) {
-            return false;
-        } else {
-            return original.call(instance);
+@Mixin(LevelRenderer.class)
+public abstract class MixinLevelRenderer_OldSkyRenderingCheck {
+    @Shadow
+    @Final
+    private Minecraft minecraft;
+
+    @Definition(id = "renderSky", local = @Local(type = boolean.class, ordinal = 1, argsOnly = true))
+    @Expression("renderSky")
+    @ModifyExpressionValue(method = "renderLevel", at = @At(value = "MIXINEXTRAS:EXPRESSION"))
+    private boolean animatium$oldSkyRenderingCheck(boolean original) {
+        if (AnimatiumConfig.instance().fixes.oldSkyRenderingCheck) {
+            original = original && this.minecraft.options.getEffectiveRenderDistance() >= 4;
         }
+
+        return original;
     }
 }

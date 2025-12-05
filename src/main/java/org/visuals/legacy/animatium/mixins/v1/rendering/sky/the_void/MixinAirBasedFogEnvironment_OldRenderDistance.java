@@ -23,26 +23,23 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.rendering.lighting;
+package org.visuals.legacy.animatium.mixins.v1.rendering.sky.the_void;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.renderer.block.ModelBlockRenderer;
-import org.objectweb.asm.Opcodes;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import net.minecraft.client.renderer.fog.environment.AirBasedFogEnvironment;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(ModelBlockRenderer.AmbientOcclusionRenderStorage.class)
-public abstract class MixinModelBlockRenderer_FastSmoothLighting {
-    // TODO: Figure out why expressions doesn't work for this
-    @WrapOperation(method = "calculate", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/block/ModelBlockRenderer$AmbientOcclusionRenderStorage;facePartial:Z", opcode = Opcodes.GETFIELD))
-    private boolean animatium$oldFastSmoothLighting(ModelBlockRenderer.AmbientOcclusionRenderStorage instance, Operation<Boolean> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldMinimumSmoothLighting) {
-            return false;
+@Mixin(AirBasedFogEnvironment.class)
+public abstract class MixinAirBasedFogEnvironment_OldRenderDistance {
+    @ModifyExpressionValue(method = "getBaseColor", at = @At(value = "CONSTANT", args = "floatValue=32.0"))
+    private float animatium$voidFog$useOldRenderDistanceCalculation(float original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidFog) {
+            return 16.0F;
         } else {
-            return original.call(instance);
+            return original;
         }
     }
 }
