@@ -25,41 +25,38 @@
 
 package org.visuals.legacy.animatium.mixins.v1.rendering.sky.the_void;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.fog.FogRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LightLayer;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.Utils;
 
-@Mixin(GameRenderer.class)
+@Mixin(FogRenderer.class)
 public abstract class MixinFogRenderer_VoidFog {
-    @Shadow
-    @Final
-    private Minecraft minecraft;
-
-    // TODO: Should only affect DarknessFogFunction and SkyFog
-    @ModifyExpressionValue(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Options;getEffectiveRenderDistance()I", ordinal = 1))
-    private int animatium$voidFog(int original, DeltaTracker deltaTracker, @Local Entity entity) {
-        final ClientLevel clientLevel = this.minecraft.level;
-        assert clientLevel != null;
+    // TODO: Should only affect (DarknessFogFunction?) and Sky Fog
+    @Definition(id = "renderDistance", local = @Local(type = int.class, argsOnly = true))
+    @Expression("(float) (renderDistance * 16)")
+    @ModifyExpressionValue(method = "setupFog", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private float animatium$voidFog(float original, Camera camera, int renderDistance, boolean isFoggy, DeltaTracker deltaTracker, float darkenWorldAmount, ClientLevel clientLevel) {
+        final Entity entity = camera.getEntity();
         final boolean isVoidFogAllowed = entity instanceof Player player && !(player.isCreative() || player.isSpectator());
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidFog && Utils.hasFog1_7(clientLevel) && isVoidFogAllowed) {
             final double light = clientLevel.getLightEngine().getLayerListener(LightLayer.SKY).getLightValue(entity.blockPosition()) / 16.0;
             final double yOffset = (Mth.lerp(deltaTracker.getGameTimeDeltaTicks(), entity.yOld, entity.getY()) + 4.0) / 32.0;
             if (light + yOffset < 1.0) {
-                return (int) Math.min(original, Math.max(100.0F * (float) (Math.pow(Math.max(light, 0.0), 2)), 5.0F));
+                return Math.min(original, Math.max(100.0F * (float) Math.pow(Math.max(light, 0.0), 2), 5.0F));
             }
         }
 

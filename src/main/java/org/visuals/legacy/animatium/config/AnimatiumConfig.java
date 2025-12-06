@@ -41,18 +41,6 @@ public final class AnimatiumConfig {
                     .setPath(YACLPlatform.getConfigDir().resolve("animatium.json"))
                     .build()
             ).build();
-    @SerialEntry
-    public MovementConfigCategory movement = new MovementConfigCategory();
-    @SerialEntry
-    public ItemsConfigCategory items = new ItemsConfigCategory();
-    @SerialEntry
-    public ScreenConfigCategory screen = new ScreenConfigCategory();
-    @SerialEntry
-    public FixesConfigCategory fixes = new FixesConfigCategory();
-    @SerialEntry
-    public OtherConfigCategory other = new OtherConfigCategory();
-    @SerialEntry
-    public ExtrasConfigCategory extras = new ExtrasConfigCategory();
 
     public static Screen getConfigScreen(@Nullable Screen parent) {
         return YetAnotherConfigLib.create(CONFIG, (defaults, config, builder) -> {
@@ -78,4 +66,22 @@ public final class AnimatiumConfig {
     public static AnimatiumConfig instance() {
         return CONFIG.instance();
     }
+
+    @SerialEntry
+    public MovementConfigCategory movement = new MovementConfigCategory();
+
+    @SerialEntry
+    public ItemsConfigCategory items = new ItemsConfigCategory();
+
+    @SerialEntry
+    public ScreenConfigCategory screen = new ScreenConfigCategory();
+
+    @SerialEntry
+    public FixesConfigCategory fixes = new FixesConfigCategory();
+
+    @SerialEntry
+    public OtherConfigCategory other = new OtherConfigCategory();
+
+    @SerialEntry
+    public ExtrasConfigCategory extras = new ExtrasConfigCategory();
 }
