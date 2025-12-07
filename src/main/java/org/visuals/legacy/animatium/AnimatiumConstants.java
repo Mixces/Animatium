@@ -25,15 +25,29 @@
 
 package org.visuals.legacy.animatium;
 
+import lombok.experimental.UtilityClass;
+import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
+import net.minecraft.client.GraphicsStatus;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.resources.ResourceLocation;
 import org.visuals.legacy.animatium.packet.AnimatiumInfoPayloadPacket;
 
+@UtilityClass
 public class AnimatiumConstants {
-    public static final String MOD_ID = "@MODID@";
-    public static final Double VERSION = Double.parseDouble("@VERSION@");
-    public static final String DEVELOPMENT_VERSION = "@COMMIT@";
-    public static final boolean IS_DEVELOPMENT = Boolean.parseBoolean("@DEVELOPMENT@");
+    public final String MOD_ID = "@MODID@";
+    public final Double VERSION = Double.parseDouble("@VERSION@");
+    public final String DEVELOPMENT_VERSION = "@COMMIT@";
+    public final boolean IS_DEVELOPMENT = Boolean.parseBoolean("@DEVELOPMENT@");
 
-    public static AnimatiumInfoPayloadPacket getInfoPayload() {
+    public final ResourceLocation FAST_GRASS_MODEL_LOCATION = Animatium.location("block/fast_grass_block");
+    public final ExtraModelKey<BlockStateModel> FAST_GRASS_MODEL_KEY = ExtraModelKey.create(FAST_GRASS_MODEL_LOCATION::toString);
+
+    public AnimatiumInfoPayloadPacket getInfoPayload() {
         return new AnimatiumInfoPayloadPacket(VERSION, IS_DEVELOPMENT ? DEVELOPMENT_VERSION : null);
+    }
+
+    public boolean isFastGraphics() {
+        return GraphicsStatus.FAST.equals(Minecraft.getInstance().options.graphicsMode().get());
     }
 }

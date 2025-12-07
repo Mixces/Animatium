@@ -23,23 +23,25 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.rendering.sky.the_void;
+package org.visuals.legacy.animatium.mixins.v1.rendering.sky.fog;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.minecraft.client.renderer.fog.environment.AirBasedFogEnvironment;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.fog.FogRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(AirBasedFogEnvironment.class)
-public abstract class MixinAirBasedFogEnvironment_OldRenderDistance {
-    @ModifyExpressionValue(method = "getBaseColor", at = @At(value = "CONSTANT", args = "floatValue=32.0"))
-    private float animatium$voidFog$useOldRenderDistanceCalculation(float original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidFog) {
-            return 16.0F;
+@Mixin(FogRenderer.class)
+public abstract class MixinFogRenderer_OldMinY {
+    @WrapOperation(method = "computeFogColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;getMinY()I"))
+    private int animatium$oldMinY(ClientLevel instance, Operation<Integer> original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldY0Height) {
+            return 0;
         } else {
-            return original;
+            return original.call(instance);
         }
     }
 }

@@ -36,8 +36,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.AnimatiumConstants;
+import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AnimatiumDebugEntry implements DebugScreenEntry {
@@ -48,9 +50,13 @@ public class AnimatiumDebugEntry implements DebugScreenEntry {
     public void display(DebugScreenDisplayer debugScreenDisplayer, @Nullable Level level, @Nullable LevelChunk levelChunk, @Nullable LevelChunk levelChunk2) {
         final List<String> list = new ArrayList<>();
         list.add("Animatium " + AnimatiumConstants.VERSION + (AnimatiumConstants.IS_DEVELOPMENT ? " - Development Version (" + AnimatiumConstants.DEVELOPMENT_VERSION + ")" : ""));
-        if (!Animatium.ENABLED_SERVER_FEATURES.isEmpty()) {
+        if (!Animatium.ENABLED_SERVER_FEATURES.isEmpty() || AnimatiumConstants.IS_DEVELOPMENT) {
             list.add("Enabled Server Features:");
-            Animatium.ENABLED_SERVER_FEATURES.forEach((feature) -> list.add(" - " + feature.getId()));
+            if (Animatium.hasServerFeature(ServerFeature.ALL)) {
+                Arrays.stream(ServerFeature.VALUES).forEach((feature) -> list.add(" - " + feature.getId()));
+            } else {
+                Animatium.ENABLED_SERVER_FEATURES.forEach((feature) -> list.add(" - " + feature.getId()));
+            }
         }
 
         debugScreenDisplayer.addToGroup(GROUP, list);

@@ -38,7 +38,6 @@ import org.joml.Matrix4fStack;
 import org.joml.Vector4f;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.mixins.accessor.ClientLevelDataAccessor;
 import org.visuals.legacy.animatium.util.compatibility.IrisPipeline;
 import org.visuals.legacy.animatium.util.compatibility.IrisUtil;
 
@@ -200,16 +199,7 @@ public class SkyRendererUtility {
     }
 
     public double getHorizonEyeHeight(ClientLevel level, float tickDelta) {
-        return Minecraft.getInstance().player.getEyePosition(tickDelta).y - getHorizonDepth(level);
-    }
-
-    public double getHorizonDepth(ClientLevel level) {
-        final ClientLevel.ClientLevelData levelData = level.getLevelData();
-        if (AnimatiumConfig.instance().other.skyHorizonHeight) {
-            return ((ClientLevelDataAccessor) levelData).animatium$isFlatWorld() ? 0.0D : 63.0D;
-        } else {
-            return levelData.getHorizonHeight(level);
-        }
+        return Minecraft.getInstance().player.getEyePosition(tickDelta).y - level.getLevelData().getHorizonHeight(level);
     }
 
     public void close() {

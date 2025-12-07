@@ -27,24 +27,21 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.sky.horizon_height;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.SkyRenderer;
 import net.minecraft.world.level.LevelHeightAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.rendering.SkyRendererUtility;
 
-@Mixin(SkyRenderer.class)
-public abstract class MixinSkyRenderer_LegacyHorizonHeight {
-    @WrapOperation(method = "shouldRenderDarkDisc", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel$ClientLevelData;getHorizonHeight(Lnet/minecraft/world/level/LevelHeightAccessor;)D"))
-    private double animatium$skyHorizonHeight(ClientLevel.ClientLevelData instance, LevelHeightAccessor levelHeightAccessor, Operation<Double> original, @Local(argsOnly = true) ClientLevel level) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.skyHorizonHeight && level != null) {
-            return SkyRendererUtility.getHorizonDepth(level);
+@Mixin(ClientLevel.ClientLevelData.class)
+public abstract class MixinClientLevel_ClientLevelData_OldMinY {
+    @WrapOperation(method = "getHorizonHeight", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/LevelHeightAccessor;getMinY()I"))
+    private int animatium$skyHorizonHeight(LevelHeightAccessor instance, Operation<Integer> original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldY0Height) {
+            return 0;
         } else {
-            return original.call(instance, levelHeightAccessor);
+            return original.call(instance);
         }
     }
 }

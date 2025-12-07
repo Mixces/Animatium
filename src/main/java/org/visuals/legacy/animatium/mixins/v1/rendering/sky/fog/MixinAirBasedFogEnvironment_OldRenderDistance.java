@@ -23,24 +23,23 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.enums;
+package org.visuals.legacy.animatium.mixins.v1.rendering.sky.fog;
 
-import lombok.Getter;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import net.minecraft.client.renderer.fog.environment.AirBasedFogEnvironment;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Getter
-public enum ServerFeature {
-    ALL("all"),
-    MISS_PENALTY("miss_penalty"),
-    LEFT_CLICK_ITEM_USAGE("left_click_item_usage"),
-    MINING_ITEM_USAGE("mining_item_usage"),
-    HIDE_FIRSTPERSON_ROD_BOBBER("hide_rod_bobber"),
-    PICK_INFLATION("pick_inflation"),
-    CLIENTSIDE_ENTITIES("clientside_entities");
-
-    public static final ServerFeature[] VALUES = values();
-    private final String id;
-
-    ServerFeature(String id) {
-        this.id = id;
+@Mixin(AirBasedFogEnvironment.class)
+public abstract class MixinAirBasedFogEnvironment_OldRenderDistance {
+    @ModifyExpressionValue(method = "getBaseColor", at = @At(value = "CONSTANT", args = "floatValue=32.0"))
+    private float animatium$voidFog$useOldRenderDistanceCalculation(float original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidFog) {
+            return 16.0F;
+        } else {
+            return original;
+        }
     }
 }

@@ -114,11 +114,11 @@ public enum Version {
         screen.oldDepthFar = true;
         screen.oldChatPosition = true;
         screen.disconnectServerToTitleScreen = true;
+        screen.superSecretSettingsButton = true;
         screen.cameraVersion = CameraVersion.V1_8;
 
         final OtherConfigCategory other = config.other;
         other.blueVoidSky = true;
-        other.skyHorizonHeight = true;
         other.planarSkyFog = true;
         other.cloudHeight = true;
         other.thirdPersonSwordBlockingPosition = true;
@@ -150,6 +150,7 @@ public enum Version {
         other.alwaysSteveModel = true;
         other.fastGrass = true;
         other.disableRandomBlockRotations = true;
+        other.oldY0Height = true;
     }),
 
     V1_8((final AnimatiumConfig config) -> {
@@ -227,11 +228,11 @@ public enum Version {
         screen.oldDepthFar = true;
         screen.oldChatPosition = true;
         screen.disconnectServerToTitleScreen = false;
+        screen.superSecretSettingsButton = true;
         screen.cameraVersion = CameraVersion.V1_8;
 
         final OtherConfigCategory other = config.other;
         other.blueVoidSky = true;
-        other.skyHorizonHeight = true;
         other.planarSkyFog = true;
         other.cloudHeight = true;
         other.thirdPersonSwordBlockingPosition = false;
@@ -263,6 +264,7 @@ public enum Version {
         other.alwaysSteveModel = false;
         other.fastGrass = false;
         other.disableRandomBlockRotations = false;
+        other.oldY0Height = true;
     }),
 
     V1_12((final AnimatiumConfig config) -> {
@@ -354,11 +356,11 @@ public enum Version {
         screen.oldDepthFar = false;
         screen.oldChatPosition = false;
         screen.disconnectServerToTitleScreen = false;
+        screen.superSecretSettingsButton = false;
         screen.cameraVersion = CameraVersion.VANILLA;
 
         final OtherConfigCategory other = config.other;
         other.blueVoidSky = false;
-        other.skyHorizonHeight = false;
         other.planarSkyFog = false;
         other.cloudHeight = false;
         other.thirdPersonSwordBlockingPosition = false;
@@ -390,6 +392,7 @@ public enum Version {
         other.alwaysSteveModel = false;
         other.fastGrass = false;
         other.disableRandomBlockRotations = false;
+        other.oldY0Height = false;
     });
 
     private final Consumer<AnimatiumConfig> applier;

@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.rendering.sky.the_void;
+package org.visuals.legacy.animatium.mixins.v1.rendering.sky.fog;
 
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
@@ -54,7 +54,7 @@ public abstract class MixinFogRenderer_VoidFog {
         final boolean isVoidFogAllowed = entity instanceof Player player && !(player.isCreative() || player.isSpectator());
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidFog && Utils.hasFog1_7(clientLevel) && isVoidFogAllowed) {
             final double light = clientLevel.getLightEngine().getLayerListener(LightLayer.SKY).getLightValue(entity.blockPosition()) / 16.0;
-            final double yOffset = (Mth.lerp(deltaTracker.getGameTimeDeltaTicks(), entity.yOld, entity.getY()) + 4.0) / 32.0;
+            final double yOffset = (Mth.lerp(deltaTracker.getGameTimeDeltaPartialTick(true), entity.yo, entity.getY()) + 4.0) / 32.0;
             if (light + yOffset < 1.0) {
                 return Math.min(original, Math.max(100.0F * (float) Math.pow(Math.max(light, 0.0), 2), 5.0F));
             }

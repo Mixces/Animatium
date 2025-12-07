@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.rendering.sky.planar_fog;
+package org.visuals.legacy.animatium.mixins.v1.rendering.sky.fog;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

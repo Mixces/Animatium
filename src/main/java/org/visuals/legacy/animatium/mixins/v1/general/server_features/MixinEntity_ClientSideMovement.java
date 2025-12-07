@@ -23,24 +23,23 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.enums;
+package org.visuals.legacy.animatium.mixins.v1.general.server_features;
 
-import lombok.Getter;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
-@Getter
-public enum ServerFeature {
-    ALL("all"),
-    MISS_PENALTY("miss_penalty"),
-    LEFT_CLICK_ITEM_USAGE("left_click_item_usage"),
-    MINING_ITEM_USAGE("mining_item_usage"),
-    HIDE_FIRSTPERSON_ROD_BOBBER("hide_rod_bobber"),
-    PICK_INFLATION("pick_inflation"),
-    CLIENTSIDE_ENTITIES("clientside_entities");
-
-    public static final ServerFeature[] VALUES = values();
-    private final String id;
-
-    ServerFeature(String id) {
-        this.id = id;
+@Mixin(Entity.class)
+public abstract class MixinEntity_ClientSideMovement {
+    @Inject(method = "isLocalInstanceAuthoritative", at = @At("HEAD"), cancellable = true)
+    private void animatium$clientSideEntityMovement(CallbackInfoReturnable<Boolean> cir) {
+        if (Animatium.hasServerFeature(ServerFeature.CLIENTSIDE_ENTITIES) && !(((Entity) (Object) this) instanceof Player)) {
+            cir.setReturnValue(true);
+        }
     }
 }

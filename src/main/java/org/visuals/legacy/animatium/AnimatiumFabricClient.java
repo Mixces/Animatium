@@ -28,30 +28,29 @@ package org.visuals.legacy.animatium;
 import dev.kikugie.fletching_table.annotation.fabric.Entrypoint;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.fabricmc.fabric.api.client.model.loading.v1.SimpleUnbakedExtraModel;
 import net.fabricmc.fabric.api.client.networking.v1.*;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.client.gui.components.debug.DebugScreenEntries;
 import org.visuals.legacy.animatium.command.AnimatiumCommand;
 import org.visuals.legacy.animatium.packet.AnimatiumInfoPayloadPacket;
 import org.visuals.legacy.animatium.packet.RequestInfoPayloadPacket;
 import org.visuals.legacy.animatium.packet.SetServerFeaturesPayloadPacket;
-import org.visuals.legacy.animatium.util.AnimatiumDebugEntry;
 
 @Entrypoint
 public final class AnimatiumFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         Animatium.initialize();
-
         final ModContainer modContainer = FabricLoader.getInstance().getModContainer(AnimatiumConstants.MOD_ID).orElseThrow(() -> new RuntimeException("Mod container data could not be found for Animatium!"));
         ResourceManagerHelper.registerBuiltinResourcePack(Animatium.location("classic_textures"), modContainer, ResourcePackActivationType.DEFAULT_ENABLED);
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) -> dispatcher.register(AnimatiumCommand.create()));
-        DebugScreenEntries.register(AnimatiumDebugEntry.GROUP, new AnimatiumDebugEntry());
         registerPayloads();
+        ModelLoadingPlugin.register(context -> context.addModel(AnimatiumConstants.FAST_GRASS_MODEL_KEY, SimpleUnbakedExtraModel.blockStateModel(AnimatiumConstants.FAST_GRASS_MODEL_LOCATION)));
     }
 
     private void registerPayloads() {

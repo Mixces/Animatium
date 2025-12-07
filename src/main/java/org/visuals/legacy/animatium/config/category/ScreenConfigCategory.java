@@ -30,6 +30,7 @@ import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.util.enums.CameraVersion;
 
 public class ScreenConfigCategory extends Category {
+    public CameraVersion cameraVersion = CameraVersion.V1_8;
     public boolean crosshairInThirdPerson = true;
     public boolean heartFlash = true;
     public boolean centerScrollableListWidgets = true;
@@ -49,11 +50,12 @@ public class ScreenConfigCategory extends Category {
     public boolean oldDepthFar = true;
     public boolean oldChatPosition = true;
     public boolean disconnectServerToTitleScreen = true;
-    public CameraVersion cameraVersion = CameraVersion.V1_8;
+    public boolean superSecretSettingsButton = true;
 
     public static ConfigCategory create(final ScreenConfigCategory defaults, final ScreenConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.screen"));
+        category.option(enumOption("cameraVersion", defaults, config, CameraVersion.class));
         category.option(booleanOption("crosshairInThirdPerson", defaults, config));
         category.option(booleanOption("heartFlash", defaults, config));
         category.option(booleanOption("centerScrollableListWidgets", defaults, config));
@@ -73,7 +75,7 @@ public class ScreenConfigCategory extends Category {
         category.option(booleanOption("oldDepthFar", defaults, config));
         category.option(booleanOption("oldChatPosition", defaults, config));
         category.option(booleanOption("disconnectServerToTitleScreen", defaults, config));
-        category.option(enumOption("cameraVersion", defaults, config, CameraVersion.class));
+        category.option(booleanOption("superSecretSettingsButton", defaults, config));
         return category.build();
     }
 }

@@ -28,6 +28,7 @@
 		"v1.entity.nametag.MixinNameTagFeatureRenderer",
 		"v1.entity.nametag.MixinNameTagFeatureStorage",
 		"v1.entity.particles.MixinLivingEntity",
+		"v1.entity.particles.MixinLivingEntity_FallParticles",
 		"v1.entity.particles.MixinParticle",
 		"v1.entity.particles.MixinPlayer_AlwaysSharpParticles",
 		"v1.entity.projectiles.MixinThrownEgg_SnowballParticles",
@@ -51,6 +52,8 @@
 		"v1.general.network.MixinClientPacketListener_DontCloseChat",
 		"v1.general.network.MixinClientPacketListener_FallParticles",
 		"v1.general.network.MixinMultiPlayerGameMode",
+		"v1.general.server_features.MixinEntity_ClientSideMovement",
+		"v1.general.server_features.MixinEntity_PickInflation",
 		"v1.general.server_features.MixinFishingHookRenderer_HideFirstPersonBobber",
 		"v1.general.server_features.MixinMinecraft_MiningItemUsage",
 		"v1.general.server_features.MixinMinecraft_MissPenalty",
@@ -82,6 +85,7 @@
 		"v1.gui.toasts.MixinToastManager_DisableToastSounds",
 		"v1.gui.toasts.MixinTutorialToast_DisableToast",
 		"v1.rendering.MixinGameRenderer_OldDepthFar",
+		"v1.rendering.blocks.MixinBlockRenderDispatcher_FastGrassSide",
 		"v1.rendering.items.MixinItem",
 		"v1.rendering.items.MixinItemInHandLayer",
 		"v1.rendering.items.MixinItemInHandRenderer",
@@ -103,13 +107,14 @@
 		"v1.rendering.outlines.MixinLevelRenderer_EntityOutlines",
 		"v1.rendering.sky.MixinLevelRenderer_OldSkyRenderingCheck",
 		"v1.rendering.sky.cloud_height.MixinLevelRenderer_LegacyCloudHeight",
-		"v1.rendering.sky.horizon_height.MixinSkyRenderer_LegacyHorizonHeight",
-		"v1.rendering.sky.planar_fog.MixinSkyRenderer_PlanarFogSky",
-		"v1.rendering.sky.the_void.MixinAirBasedFogEnvironment_OldRenderDistance",
+		"v1.rendering.sky.fog.MixinAirBasedFogEnvironment_OldRenderDistance",
+		"v1.rendering.sky.fog.MixinFogRenderer_OldMinY",
+		"v1.rendering.sky.fog.MixinFogRenderer_VoidFog",
+		"v1.rendering.sky.fog.MixinSkyRenderer_PlanarFogSky",
+		"v1.rendering.sky.horizon_height.MixinClientLevel_ClientLevelData_OldMinY",
 		"v1.rendering.sky.the_void.MixinClientLevel_VoidParticles",
-		"v1.rendering.sky.the_void.MixinFogRenderer_VoidFog",
+		"v1.rendering.sky.the_void.MixinLevelRenderer_BlueVoidDisc",
 		"v1.rendering.sky.the_void.MixinLevelRenderer_VoidBox",
-		"v1.rendering.sky.the_void.blue_void.MixinLevelRenderer_BlueVoidDisc",
 		"v1.rendering.states.MixinArmedEntityRenderState",
 		"v1.rendering.states.MixinCameraRenderState",
 		"v1.rendering.states.MixinGameRenderer",
@@ -120,9 +125,5 @@
 	},
 	"mixinextras": {
 		"minVersion": "0.5.0"
-	},
-	"mixins": [
-		"v1.entity.particles.MixinLivingEntity_FallParticles",
-		"v1.general.server_features.MixinEntity_PickInflation"
-	]
+	}
 }

@@ -32,7 +32,6 @@ import net.minecraft.network.chat.Component;
 public class OtherConfigCategory extends Category {
     // Sky
     public boolean blueVoidSky = true;
-    public boolean skyHorizonHeight = true;
     public boolean planarSkyFog = true;
     public boolean cloudHeight = true;
     public boolean playerVoidBox = true;
@@ -65,6 +64,7 @@ public class OtherConfigCategory extends Category {
     public boolean oldFallParticlePhysics = true;
     public boolean alwaysSteveModel = true;
     public boolean fastGrass = true;
+    public boolean oldY0Height = true;
     public boolean disableRandomBlockRotations = true;
 
     public static ConfigCategory create(final OtherConfigCategory defaults, final OtherConfigCategory config) {
@@ -75,7 +75,6 @@ public class OtherConfigCategory extends Category {
             final OptionGroup.Builder skyGroup = OptionGroup.createBuilder();
             skyGroup.name(Component.translatable("animatium.category.other.group.sky"));
             skyGroup.option(booleanOption("blueVoidSky", defaults, config));
-            skyGroup.option(booleanOption("skyHorizonHeight", defaults, config));
             skyGroup.option(booleanOption("planarSkyFog", defaults, config));
             skyGroup.option(booleanOption("cloudHeight", defaults, config));
             skyGroup.option(booleanOption("playerVoidBox", defaults, config));
@@ -110,6 +109,7 @@ public class OtherConfigCategory extends Category {
         category.option(booleanOption("oldFallParticlePhysics", defaults, config));
         category.option(booleanOption("alwaysSteveModel", defaults, config));
         category.option(booleanOption("fastGrass", defaults, config));
+        category.option(booleanOption("oldY0Height", defaults, config));
         category.option(booleanOption("disableRandomBlockRotations", defaults, config));
         return category.build();
     }
