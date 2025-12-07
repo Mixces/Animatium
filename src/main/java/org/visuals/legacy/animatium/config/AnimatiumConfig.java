@@ -30,10 +30,13 @@ import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import dev.isxander.yacl3.platform.YACLPlatform;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 import org.visuals.legacy.animatium.config.category.*;
+import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 
 public final class AnimatiumConfig {
     private static final ConfigClassHandler<AnimatiumConfig> CONFIG = ConfigClassHandler.createBuilder(AnimatiumConfig.class)
@@ -41,6 +44,18 @@ public final class AnimatiumConfig {
                     .setPath(YACLPlatform.getConfigDir().resolve("animatium.json"))
                     .build()
             ).build();
+    @SerialEntry
+    public MovementConfigCategory movement = new MovementConfigCategory();
+    @SerialEntry
+    public ItemsConfigCategory items = new ItemsConfigCategory();
+    @SerialEntry
+    public ScreenConfigCategory screen = new ScreenConfigCategory();
+    @SerialEntry
+    public FixesConfigCategory fixes = new FixesConfigCategory();
+    @SerialEntry
+    public OtherConfigCategory other = new OtherConfigCategory();
+    @SerialEntry
+    public ExtrasConfigCategory extras = new ExtrasConfigCategory();
 
     public static Screen getConfigScreen(@Nullable Screen parent) {
         return YetAnotherConfigLib.create(CONFIG, (defaults, config, builder) -> {
@@ -51,6 +66,14 @@ public final class AnimatiumConfig {
             builder.category(FixesConfigCategory.create(defaults.fixes, config.fixes));
             builder.category(OtherConfigCategory.create(defaults.other, config.other));
             builder.category(ExtrasConfigCategory.create(defaults.extras, config.extras));
+            builder.save(() -> {
+                final Minecraft minecraft = Minecraft.getInstance();
+                ((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
+                minecraft.reloadResourcePacks();
+                if (minecraft.level != null) {
+                    minecraft.level.clearTintCaches();
+                }
+            });
             return builder;
         }).generateScreen(parent);
     }
@@ -66,22 +89,4 @@ public final class AnimatiumConfig {
     public static AnimatiumConfig instance() {
         return CONFIG.instance();
     }
-
-    @SerialEntry
-    public MovementConfigCategory movement = new MovementConfigCategory();
-
-    @SerialEntry
-    public ItemsConfigCategory items = new ItemsConfigCategory();
-
-    @SerialEntry
-    public ScreenConfigCategory screen = new ScreenConfigCategory();
-
-    @SerialEntry
-    public FixesConfigCategory fixes = new FixesConfigCategory();
-
-    @SerialEntry
-    public OtherConfigCategory other = new OtherConfigCategory();
-
-    @SerialEntry
-    public ExtrasConfigCategory extras = new ExtrasConfigCategory();
 }

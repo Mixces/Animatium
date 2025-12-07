@@ -23,21 +23,36 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.rendering.sky.fog;
+package org.visuals.legacy.animatium.mixins.v1.rendering.blocks;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.minecraft.client.renderer.fog.environment.AirBasedFogEnvironment;
+import net.minecraft.util.ARGB;
+import net.minecraft.world.level.biome.BiomeSpecialEffects;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(AirBasedFogEnvironment.class)
-public abstract class MixinAirBasedFogEnvironment_OldRenderDistance {
-    @ModifyExpressionValue(method = "getBaseColor", at = @At(value = "CONSTANT", args = "floatValue=32.0"))
-    private float animatium$voidFog$useOldRenderDistanceCalculation(float original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidFog.hasFog()) {
-            return 16.0F;
+@Mixin(BiomeSpecialEffects.class)
+public abstract class MixinBiomeSpecialEffects_DisableWaterBiomeTint {
+    @Shadow
+    @Final
+    private int waterColor;
+
+    @Definition(id = "waterColor", field = "Lnet/minecraft/world/level/biome/BiomeSpecialEffects;waterColor:I")
+    @Expression("this.waterColor")
+    @ModifyExpressionValue(method = "getWaterColor", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private int animatium$oldWaterColor(int original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.oldWaterColorEffects) {
+            if (this.waterColor == 6388580/*Swamp Water Color*/) {
+                return ARGB.color(224, 255, 174);
+            } else {
+                return ARGB.white(1.0F);
+            }
         } else {
             return original;
         }
