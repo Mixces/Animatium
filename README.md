@@ -1,5 +1,7 @@
 # Animatium
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C0C31INYGG)
+
 Visual Tweaks/QOL Settings For Modern Minecraft Versions, Aimed At 1.7/1.8 players.
 
 Join our discord: https://discord.gg/C8KKgbA8jy
