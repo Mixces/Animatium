@@ -31,14 +31,6 @@ import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
 
 public class ItemsConfigCategory extends Category {
-    // (Items) Fishing Rod
-    public boolean fishingRodTextureStackCheck = true;
-    public boolean fishingRodLineInterpolation = true;
-    public boolean noMoveFishingRodLine = false;
-    public boolean fishingRodLinePositionThirdPerson = true;
-    public boolean fishingRodLineThickness = true;
-    public boolean thinFishingRodLineThickness = false;
-    public boolean stickModelWhenCastInThirdperson = true;
     // (Items) Enchantment Glint
     public boolean legacyGlintSpeed = true;
     public boolean glintOnItemDrops2D = true;
@@ -56,6 +48,7 @@ public class ItemsConfigCategory extends Category {
     public boolean skullPosition = true;
     public FishingRodVersion fishingRodVersion = FishingRodVersion.V1_7;
     // (Items) Other
+    public boolean thinFishingRodLineThickness = false;
     public boolean itemUsageSwinging = true;
     public boolean swingOnUse = false;
     public boolean swingOnDrop = false;
@@ -71,20 +64,6 @@ public class ItemsConfigCategory extends Category {
     public static ConfigCategory create(final ItemsConfigCategory defaults, final ItemsConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.items"));
-
-        // Fishing Rod
-        {
-            final OptionGroup.Builder fishingRodGroup = OptionGroup.createBuilder();
-            fishingRodGroup.name(Component.translatable("animatium.category.items.group.fishing_rod"));
-            fishingRodGroup.option(booleanOption("fishingRodTextureStackCheck", defaults, config));
-            fishingRodGroup.option(booleanOption("fishingRodLineInterpolation", defaults, config));
-            fishingRodGroup.option(booleanOption("noMoveFishingRodLine", defaults, config));
-            fishingRodGroup.option(booleanOption("fishingRodLinePositionThirdPerson", defaults, config));
-            fishingRodGroup.option(booleanOption("fishingRodLineThickness", defaults, config));
-            fishingRodGroup.option(booleanOption("thinFishingRodLineThickness", defaults, config));
-            fishingRodGroup.option(booleanOption("stickModelWhenCastInThirdperson", defaults, config));
-            category.group(fishingRodGroup.build());
-        }
 
         // Glint
         {
@@ -102,7 +81,7 @@ public class ItemsConfigCategory extends Category {
             drops2dGroup.name(Component.translatable("animatium.category.items.group.2d_drops"));
             drops2dGroup.option(booleanOption("itemDropsFaceCamera", defaults, config));
             drops2dGroup.option(booleanOption("itemDropsFaceCameraRotationFix", defaults, config));
-            // TODO: drops2dGroup.option(booleanOption("itemDrops2D", defaults, config));
+            drops2dGroup.option(booleanOption("itemDrops2D", defaults, config));
             drops2dGroup.option(booleanOption("itemFramed2D", defaults, config));
             drops2dGroup.option(booleanOption("itemColors2D", defaults, config));
             category.group(drops2dGroup.build());
@@ -124,6 +103,7 @@ public class ItemsConfigCategory extends Category {
         {
             final OptionGroup.Builder otherGroup = OptionGroup.createBuilder();
             otherGroup.name(Component.translatable("animatium.category.items.group.other"));
+            otherGroup.option(booleanOption("thinFishingRodLineThickness", defaults, config));
             otherGroup.option(booleanOption("itemUsageSwinging", defaults, config));
             otherGroup.option(booleanOption("swingOnUse", defaults, config));
             otherGroup.option(booleanOption("swingOnDrop", defaults, config));

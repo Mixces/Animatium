@@ -48,6 +48,7 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.ItemUtils;
 import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
 import org.visuals.legacy.animatium.util.states.UtilityRenderState;
 
 @Mixin(ItemInHandLayer.class)
@@ -74,7 +75,7 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState> {
             ItemStack stack = utilityRenderState.animatium$getItemHeldByArm(humanoidArm);
             if (!stack.isEmpty() && !ItemUtils.isItemBlacklisted(stack)) {
                 final boolean isStickRod = Animatium.isEnabled() &&
-                        AnimatiumConfig.instance().items.stickModelWhenCastInThirdperson &&
+                        AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersion.V1_7 &&
                         stack.is(Items.FISHING_ROD) &&
                         (armedEntityRenderState instanceof AvatarRenderState && utilityRenderState.animatium$isFishing());
                 final boolean usesBlockLight = itemStackRenderState.usesBlockLight();

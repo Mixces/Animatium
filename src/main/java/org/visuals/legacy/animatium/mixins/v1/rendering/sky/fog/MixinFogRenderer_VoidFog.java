@@ -46,13 +46,14 @@ import org.visuals.legacy.animatium.util.Utils;
 @Mixin(FogRenderer.class)
 public abstract class MixinFogRenderer_VoidFog {
     // TODO: Should only affect (DarknessFogFunction?) and Sky Fog
+    // TODO: Fix minY / Under Trees issue
     @Definition(id = "renderDistance", local = @Local(type = int.class, argsOnly = true))
     @Expression("(float) (renderDistance * 16)")
     @ModifyExpressionValue(method = "setupFog", at = @At("MIXINEXTRAS:EXPRESSION"))
     private float animatium$voidFog(float original, Camera camera, int renderDistance, boolean isFoggy, DeltaTracker deltaTracker, float darkenWorldAmount, ClientLevel clientLevel) {
         final Entity entity = camera.getEntity();
         final boolean isVoidFogAllowed = entity instanceof Player player && !(player.isCreative() || player.isSpectator());
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidFog && Utils.hasFog1_7(clientLevel) && isVoidFogAllowed) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidFog.hasFog() && Utils.hasFog1_7(clientLevel) && isVoidFogAllowed) {
             final double light = clientLevel.getLightEngine().getLayerListener(LightLayer.SKY).getLightValue(entity.blockPosition()) / 16.0;
             final double yOffset = (Mth.lerp(deltaTracker.getGameTimeDeltaPartialTick(true), entity.yo, entity.getY()) + 4.0) / 32.0;
             if (light + yOffset < 1.0) {

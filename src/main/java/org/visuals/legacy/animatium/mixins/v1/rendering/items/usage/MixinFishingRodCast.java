@@ -33,6 +33,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
 
 @Mixin(FishingRodCast.class)
 public abstract class MixinFishingRodCast {
@@ -41,7 +42,7 @@ public abstract class MixinFishingRodCast {
         if (Animatium.isEnabled() && !AnimatiumConfig.instance().items.itemUsingTextureInGui && displayContext == ItemDisplayContext.GUI) {
             return false;
         } else {
-            return (Animatium.isEnabled() && AnimatiumConfig.instance().items.fishingRodTextureStackCheck) || original;
+            return (Animatium.isEnabled() && AnimatiumConfig.instance().items.fishingRodVersion.ordinal() <= FishingRodVersion.V1_8.ordinal()) || original;
         }
     }
 }

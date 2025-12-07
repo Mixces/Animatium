@@ -27,8 +27,6 @@ package org.visuals.legacy.animatium;
 
 import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
-import net.minecraft.client.GraphicsStatus;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.resources.ResourceLocation;
 import org.visuals.legacy.animatium.packet.AnimatiumInfoPayloadPacket;
@@ -45,9 +43,5 @@ public class AnimatiumConstants {
 
     public AnimatiumInfoPayloadPacket getInfoPayload() {
         return new AnimatiumInfoPayloadPacket(VERSION, IS_DEVELOPMENT ? DEVELOPMENT_VERSION : null);
-    }
-
-    public boolean isFastGraphics() {
-        return GraphicsStatus.FAST.equals(Minecraft.getInstance().options.graphicsMode().get());
     }
 }

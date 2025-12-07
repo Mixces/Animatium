@@ -25,9 +25,17 @@
 
 package org.visuals.legacy.animatium.util.enums;
 
-public enum FishingRodVersion {
-    V1_7,
-    V1_8,
-    V1_13,
-    VANILLA
+public enum VoidFogSetting {
+    BOTH,
+    PARTICLES,
+    FOG,
+    OFF;
+
+    public boolean hasFog() {
+        return this == BOTH || this == FOG;
+    }
+
+    public boolean hasParticles() {
+        return this == BOTH || this == PARTICLES;
+    }
 }

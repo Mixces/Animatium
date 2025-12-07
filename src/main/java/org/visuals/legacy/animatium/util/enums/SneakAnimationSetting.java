@@ -25,9 +25,13 @@
 
 package org.visuals.legacy.animatium.util.enums;
 
-public enum FishingRodVersion {
+public enum SneakAnimationSetting {
     V1_7,
     V1_8,
     V1_13,
-    VANILLA
+    VANILLA;
+
+    public boolean isSmooth() {
+        return this == V1_7 || this == V1_13 || this == VANILLA;
+    }
 }

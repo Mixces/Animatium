@@ -34,8 +34,7 @@ import org.visuals.legacy.animatium.Animatium;
 
 import java.util.Optional;
 
-public record AnimatiumInfoPayloadPacket(double version,
-                                         @Nullable String developmentVersion) implements CustomPacketPayload {
+public record AnimatiumInfoPayloadPacket(double version, @Nullable String developmentVersion) implements CustomPacketPayload {
     public static final StreamCodec<FriendlyByteBuf, AnimatiumInfoPayloadPacket> CODEC = CustomPacketPayload.codec(AnimatiumInfoPayloadPacket::write, null);
     public static final CustomPacketPayload.Type<AnimatiumInfoPayloadPacket> PAYLOAD_ID = new CustomPacketPayload.Type<>(Animatium.location("info"));
 

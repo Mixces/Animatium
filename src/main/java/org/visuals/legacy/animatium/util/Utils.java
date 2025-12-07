@@ -28,6 +28,7 @@ package org.visuals.legacy.animatium.util;
 import com.google.common.base.MoreObjects;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.Camera;
+import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -41,6 +42,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -143,8 +145,16 @@ public class Utils {
         }
     }
 
+    public int getMinY(Level level) {
+        return AnimatiumConfig.instance().other.oldY0Height ? 0 : level.getMinY();
+    }
+
     public boolean hasFog1_7(ClientLevel level) {
         final ClientLevelDataAccessor levelDataAccessor = (ClientLevelDataAccessor) level.getLevelData();
         return !levelDataAccessor.animatium$isFlatWorld() && !level.dimensionType().hasCeiling(); // "isDark" method from 1.7/1.8
+    }
+
+    public boolean isFastGraphics() {
+        return GraphicsStatus.FAST.equals(Minecraft.getInstance().options.graphicsMode().get());
     }
 }

@@ -46,6 +46,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 import org.visuals.legacy.animatium.util.states.CameraUtilityRenderState;
 import org.visuals.legacy.animatium.util.states.UtilityRenderState;
 
@@ -55,7 +56,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
     @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal = 1))
     private void animatium$syncPlayerModelWithEyeHeight(S livingEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
         final CameraUtilityRenderState cameraUtilityRenderState = (CameraUtilityRenderState) cameraRenderState;
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.syncPlayerModelWithEyeHeight && livingEntityRenderState instanceof AvatarRenderState avatarRenderState && cameraUtilityRenderState.animatium$getId() == avatarRenderState.id) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.sneakAnimation == SneakAnimationSetting.V1_7 && livingEntityRenderState instanceof AvatarRenderState avatarRenderState && cameraUtilityRenderState.animatium$getId() == avatarRenderState.id) {
             final float cameraLerpValue = Utils.lerpCameraPosition(cameraUtilityRenderState);
             poseStack.translate(0.0F, (livingEntityRenderState.eyeHeight * livingEntityRenderState.scale) - cameraLerpValue, 0.0F);
         }

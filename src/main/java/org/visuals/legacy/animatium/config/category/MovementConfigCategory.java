@@ -28,15 +28,9 @@ package org.visuals.legacy.animatium.config.category;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.OptionGroup;
 import net.minecraft.network.chat.Component;
+import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 
 public class MovementConfigCategory extends Category {
-    // (Movement) Sneaking
-    public boolean smoothSneaking = true;
-    public boolean sneakAnimationInterpolation = true;
-    public boolean fakeOldSneakEyeHeight = false;
-    public boolean sneakingFeetPosition = true;
-    public boolean syncPlayerModelWithEyeHeight = true;
-    public boolean sneakAnimationWhileFlying = true;
     // (Movement) Cape
     public boolean capeMovement = true;
     public boolean disableCapeLean = false;
@@ -44,6 +38,8 @@ public class MovementConfigCategory extends Category {
     public boolean capeChestplateTranslation = true;
     public boolean capeSneakPosition = true;
     // (Movement) Other
+    public SneakAnimationSetting sneakAnimation = SneakAnimationSetting.V1_7;
+    public boolean fakeOldSneakEyeHeight = false;
     public boolean rotateBackwardsWalking = true;
     public boolean uncapBlockingHeadRotation = true;
     public boolean disableHeadRotationInterpolation = true;
@@ -56,18 +52,6 @@ public class MovementConfigCategory extends Category {
     public static ConfigCategory create(final MovementConfigCategory defaults, final MovementConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
         category.name(Component.translatable("animatium.category.movement"));
-
-        {
-            final OptionGroup.Builder sneakingGroup = OptionGroup.createBuilder();
-            sneakingGroup.name(Component.translatable("animatium.category.movement.group.sneaking"));
-            sneakingGroup.option(booleanOption("smoothSneaking", defaults, config));
-            sneakingGroup.option(booleanOption("sneakAnimationInterpolation", defaults, config));
-            sneakingGroup.option(booleanOption("fakeOldSneakEyeHeight", defaults, config));
-            sneakingGroup.option(booleanOption("sneakingFeetPosition", defaults, config));
-            sneakingGroup.option(booleanOption("syncPlayerModelWithEyeHeight", defaults, config));
-            sneakingGroup.option(booleanOption("sneakAnimationWhileFlying", defaults, config));
-            category.group(sneakingGroup.build());
-        }
 
         {
             final OptionGroup.Builder capeGroup = OptionGroup.createBuilder();
@@ -83,6 +67,8 @@ public class MovementConfigCategory extends Category {
         {
             final OptionGroup.Builder otherGroup = OptionGroup.createBuilder();
             otherGroup.name(Component.translatable("animatium.category.movement.group.other"));
+            otherGroup.option(enumOption("sneakAnimation", defaults, config, SneakAnimationSetting.class));
+            otherGroup.option(booleanOption("fakeOldSneakEyeHeight", defaults, config));
             otherGroup.option(booleanOption("rotateBackwardsWalking", defaults, config));
             otherGroup.option(booleanOption("uncapBlockingHeadRotation", defaults, config));
             otherGroup.option(booleanOption("disableHeadRotationInterpolation", defaults, config));

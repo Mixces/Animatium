@@ -45,6 +45,7 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.mixins.accessor.PlayerAccessor;
 import org.visuals.legacy.animatium.util.enums.CameraVersion;
+import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 
 @Mixin(Camera.class)
 public abstract class MixinCamera {
@@ -62,8 +63,8 @@ public abstract class MixinCamera {
 
     @Inject(method = "setup", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setRotation(FF)V", shift = At.Shift.AFTER))
     private void animatium$removeSmoothSneaking(CallbackInfo ci) {
-        if (Animatium.isEnabled() && !AnimatiumConfig.instance().movement.smoothSneaking) {
-            this.eyeHeightOld = eyeHeight;
+        if (Animatium.isEnabled() && !AnimatiumConfig.instance().movement.sneakAnimation.isSmooth()) {
+            this.eyeHeightOld = this.eyeHeight;
             this.eyeHeight = this.animatium$getStandingEyeHeight();
         }
     }
@@ -79,7 +80,7 @@ public abstract class MixinCamera {
 
     @WrapOperation(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/Camera;eyeHeight:F"))
     private void animatium$oldSneakAnimationInterpolation(Camera instance, float value, Operation<Void> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.sneakAnimationInterpolation && AnimatiumConfig.instance().movement.smoothSneaking && this.entity.getEyeHeight() < eyeHeight) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.sneakAnimation == SneakAnimationSetting.V1_7 && this.entity.getEyeHeight() < eyeHeight) {
             this.eyeHeight = this.animatium$getStandingEyeHeight();
         } else {
             original.call(instance, value);

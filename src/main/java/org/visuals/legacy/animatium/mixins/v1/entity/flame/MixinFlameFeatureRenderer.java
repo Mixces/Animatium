@@ -39,6 +39,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 
 @Mixin(FlameFeatureRenderer.class)
 public abstract class MixinFlameFeatureRenderer {
@@ -64,7 +65,7 @@ public abstract class MixinFlameFeatureRenderer {
     private float animatium$flameOffset(float original, @Local(argsOnly = true) EntityRenderState entityRenderState) {
         final Camera camera = Minecraft.getInstance().getEntityRenderDispatcher().camera;
         if (Animatium.isEnabled() && entityRenderState instanceof AvatarRenderState avatarRenderState && camera != null && camera.getEntity().getId() == avatarRenderState.id) {
-            final boolean shouldSyncPlayerModelWithEyeHeight = AnimatiumConfig.instance().movement.syncPlayerModelWithEyeHeight;
+            final boolean shouldSyncPlayerModelWithEyeHeight = AnimatiumConfig.instance().movement.sneakAnimation == SneakAnimationSetting.V1_7;
             if (shouldSyncPlayerModelWithEyeHeight) {
                 final float cameraLerpValue = Utils.lerpCameraPosition(camera);
                 original = (avatarRenderState.eyeHeight * avatarRenderState.scale) - cameraLerpValue;

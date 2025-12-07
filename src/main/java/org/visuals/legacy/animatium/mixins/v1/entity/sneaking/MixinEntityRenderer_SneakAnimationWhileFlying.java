@@ -36,12 +36,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 
 @Mixin(EntityRenderer.class)
 public abstract class MixinEntityRenderer_SneakAnimationWhileFlying {
     @WrapOperation(method = "submitNameTag", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;isDiscrete:Z", opcode = Opcodes.GETFIELD))
     private boolean animatium$sneakAnimationWhileFlying(EntityRenderState instance, Operation<Boolean> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.sneakAnimationWhileFlying && instance instanceof LivingEntityRenderState livingEntityRenderState) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.sneakAnimation.ordinal() <= SneakAnimationSetting.V1_13.ordinal() && instance instanceof LivingEntityRenderState livingEntityRenderState) {
             return livingEntityRenderState.isDiscrete || livingEntityRenderState.hasPose(Pose.CROUCHING);
         } else {
             return original.call(instance);

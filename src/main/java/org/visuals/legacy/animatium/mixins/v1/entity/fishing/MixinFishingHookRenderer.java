@@ -81,11 +81,11 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
     @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/FishingHookRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V", ordinal = 0, shift = At.Shift.AFTER))
     private void animatium$fishingRodLineThickness(FishingHookRenderState fishingHookRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
         if (Animatium.isEnabled()) {
-            // TODO/NOTE: 1.21.11 removes setLineWidth, lineWidth is now part of the buffer
+            // TODO/NOTE: 1.21.11 removes setLineWidth, lineWidth is now part of the vertex consumer/buffer builder
             final LineState lineState = RenderUtils.getLineState();
             if (AnimatiumConfig.instance().items.thinFishingRodLineThickness) {
                 lineState.setWidth(1.0F);
-            } else if (AnimatiumConfig.instance().items.fishingRodLineThickness) {
+            } else if (AnimatiumConfig.instance().items.fishingRodVersion.ordinal() <= FishingRodVersion.V1_13.ordinal()) {
                 lineState.setWidth(2.0F);
             }
         }
@@ -97,7 +97,7 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
         if (Animatium.isEnabled()) {
             CameraAccessor cameraAccessor = (CameraAccessor) entityRenderDispatcher.camera;
             float eyeHeight;
-            if (AnimatiumConfig.instance().items.fishingRodLineInterpolation) {
+            if (AnimatiumConfig.instance().items.fishingRodVersion.ordinal() <= FishingRodVersion.V1_13.ordinal()) {
                 eyeHeight = Mth.lerp(tickDelta, cameraAccessor.animatium$getOldEyeHeight(), cameraAccessor.animatium$getEyeHeight());
             } else if (AnimatiumConfig.instance().movement.fakeOldSneakEyeHeight) {
                 // Non-lerped eyeheight trick
@@ -113,8 +113,8 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
     }
 
     @ModifyExpressionValue(method = "getPlayerHandPos", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isCrouching()Z"))
-    private boolean animatium$noMoveFishingRodLine(boolean original, @Local(argsOnly = true) Player player) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.noMoveFishingRodLine) {
+    private boolean animatium$noMoveFishingRodLine(boolean original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersion.V1_7) {
             return false;
         } else {
             return original;
@@ -123,7 +123,7 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
 
     @ModifyExpressionValue(method = "getPlayerHandPos", at = @At(value = "CONSTANT", args = "doubleValue=0.8"))
     private double animatium$fishingRodLinePositionThirdPerson(double original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.fishingRodLinePositionThirdPerson) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersion.V1_7) {
             return original + 0.05;
         } else {
             return original;

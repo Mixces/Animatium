@@ -48,6 +48,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 import org.visuals.legacy.animatium.util.states.UtilityRenderState;
 
 import java.util.function.Function;
@@ -85,7 +86,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
     // TODO/MOVE
     @WrapOperation(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;isCrouching:Z"))
     private boolean animatium$sneakingFeetPosition(HumanoidRenderState instance, Operation<Boolean> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.sneakingFeetPosition && instance.isCrouching) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.sneakAnimation == SneakAnimationSetting.V1_7 && instance.isCrouching) {
             // Values sourced from older versions
             body.xRot = 0.5F;
             rightArm.xRot += 0.4F;

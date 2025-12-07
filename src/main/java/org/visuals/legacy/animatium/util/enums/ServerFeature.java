@@ -35,6 +35,7 @@ public enum ServerFeature {
     MINING_ITEM_USAGE("mining_item_usage"),
     HIDE_FIRSTPERSON_ROD_BOBBER("hide_rod_bobber"),
     PICK_INFLATION("pick_inflation"),
+    OLD_SNEAK_HEIGHT("old_sneak_height"),
     CLIENTSIDE_ENTITIES("clientside_entities");
 
     public static final ServerFeature[] VALUES = values();

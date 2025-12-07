@@ -35,18 +35,15 @@ import org.visuals.legacy.animatium.config.category.ScreenConfigCategory;
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.util.enums.CameraVersion;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
+import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
+import org.visuals.legacy.animatium.util.enums.VoidFogSetting;
 
 import java.util.function.Consumer;
 
 public enum Version {
     V1_7((final AnimatiumConfig config) -> {
         final MovementConfigCategory movement = config.movement;
-        movement.smoothSneaking = true;
-        movement.sneakAnimationInterpolation = true;
-        movement.fakeOldSneakEyeHeight = true;
-        movement.sneakingFeetPosition = true;
-        movement.syncPlayerModelWithEyeHeight = true;
-        movement.sneakAnimationWhileFlying = true;
+        movement.sneakAnimation = SneakAnimationSetting.V1_7;
         movement.capeMovement = true;
         movement.disableCapeLean = false;
         movement.capeSwingRotation = false;
@@ -62,13 +59,7 @@ public enum Version {
         movement.offsetHurtTime = true;
 
         final ItemsConfigCategory items = config.items;
-        items.fishingRodTextureStackCheck = true;
-        items.fishingRodLineInterpolation = true;
-        items.noMoveFishingRodLine = true;
-        items.fishingRodLinePositionThirdPerson = true;
-        items.fishingRodLineThickness = true;
         items.thinFishingRodLineThickness = false;
-        items.stickModelWhenCastInThirdperson = true;
         items.legacyGlintSpeed = true;
         items.glintOnItemDrops2D = true;
         items.glintOnItemFramed2D = true;
@@ -144,8 +135,7 @@ public enum Version {
         other.oldMinimumSmoothLighting = true;
         other.oldCloudRendering = true;
         other.oldWindowIcon = true;
-        other.voidParticles = true;
-        other.voidFog = true;
+        other.voidFog = VoidFogSetting.BOTH;
         other.oldFallParticlePhysics = true;
         other.alwaysSteveModel = true;
         other.fastGrass = true;
@@ -155,12 +145,7 @@ public enum Version {
 
     V1_8((final AnimatiumConfig config) -> {
         final MovementConfigCategory movement = config.movement;
-        movement.smoothSneaking = false;
-        movement.sneakAnimationInterpolation = false;
-        movement.fakeOldSneakEyeHeight = true;
-        movement.sneakingFeetPosition = false;
-        movement.syncPlayerModelWithEyeHeight = false;
-        movement.sneakAnimationWhileFlying = true;
+        movement.sneakAnimation = SneakAnimationSetting.V1_8;
         movement.capeMovement = true;
         movement.disableCapeLean = false;
         movement.capeSwingRotation = false;
@@ -176,13 +161,7 @@ public enum Version {
         movement.offsetHurtTime = false;
 
         final ItemsConfigCategory items = config.items;
-        items.fishingRodTextureStackCheck = true;
-        items.fishingRodLineInterpolation = true;
-        items.noMoveFishingRodLine = false;
-        items.fishingRodLinePositionThirdPerson = false;
-        items.fishingRodLineThickness = true;
         items.thinFishingRodLineThickness = false;
-        items.stickModelWhenCastInThirdperson = false;
         items.legacyGlintSpeed = true;
         items.glintOnItemDrops2D = false;
         items.glintOnItemFramed2D = false;
@@ -258,8 +237,7 @@ public enum Version {
         other.oldMinimumSmoothLighting = false;
         other.oldCloudRendering = true;
         other.oldWindowIcon = true;
-        other.voidParticles = false;
-        other.voidFog = false;
+        other.voidFog = VoidFogSetting.OFF;
         other.oldFallParticlePhysics = false;
         other.alwaysSteveModel = false;
         other.fastGrass = false;
@@ -283,12 +261,7 @@ public enum Version {
 
     MODERN((final AnimatiumConfig config) -> {
         final MovementConfigCategory movement = config.movement;
-        movement.smoothSneaking = true;
-        movement.sneakAnimationInterpolation = false;
-        movement.fakeOldSneakEyeHeight = false;
-        movement.sneakingFeetPosition = false;
-        movement.syncPlayerModelWithEyeHeight = false;
-        movement.sneakAnimationWhileFlying = false;
+        movement.sneakAnimation = SneakAnimationSetting.VANILLA;
         movement.capeMovement = false;
         movement.disableCapeLean = false;
         movement.capeSwingRotation = true;
@@ -304,13 +277,7 @@ public enum Version {
         movement.offsetHurtTime = false;
 
         final ItemsConfigCategory items = config.items;
-        items.fishingRodTextureStackCheck = false;
-        items.fishingRodLineInterpolation = false;
-        items.noMoveFishingRodLine = false;
-        items.fishingRodLinePositionThirdPerson = false;
-        items.fishingRodLineThickness = false;
         items.thinFishingRodLineThickness = false;
-        items.stickModelWhenCastInThirdperson = false;
         items.legacyGlintSpeed = false;
         items.glintOnItemDrops2D = false;
         items.glintOnItemFramed2D = false;
@@ -386,8 +353,7 @@ public enum Version {
         other.oldMinimumSmoothLighting = false;
         other.oldCloudRendering = false;
         other.oldWindowIcon = false;
-        other.voidParticles = false;
-        other.voidFog = false;
+        other.voidFog = VoidFogSetting.OFF;
         other.oldFallParticlePhysics = false;
         other.alwaysSteveModel = false;
         other.fastGrass = false;

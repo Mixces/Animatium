@@ -23,24 +23,29 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.rendering.lighting;
+package org.visuals.legacy.animatium.mixins.v1.entity.sneaking;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.moulberry.mixinconstraints.annotations.IfModLoaded;
-import net.fabricmc.fabric.impl.client.indigo.Indigo;
+import net.minecraft.world.entity.Avatar;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.Pose;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
-import java.util.Properties;
-import java.util.function.Function;
+import java.util.Map;
 
-@IfModLoaded(value = "fabric-api")
-@Mixin(Indigo.class)
-public abstract class MixinIndigo {
-    // TODO/NOTE: Gross, but I don't have a choice (breaks fastSmoothLighting), sorry Fabric!
-    @WrapOperation(method = "<clinit>", at = @At(value = "INVOKE", target = "Ljava/util/Properties;computeIfAbsent(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;", ordinal = 0))
-    private static <T> T animatium$forceVanillaAO(Properties instance, Object key, Function<? super Object, ?> mappingFunction, Operation<Object> original) {
-        return (T) "vanilla";
+@Mixin(Avatar.class)
+public abstract class MixinAvatar_OldSneakHeight {
+    @WrapOperation(method = "getDefaultDimensions", at = @At(value = "INVOKE", target = "Ljava/util/Map;getOrDefault(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"))
+    private <V> V animatium$oldSneakHeight(Map<Pose, EntityDimensions> instance, Object pose, V defaultValue, Operation<EntityDimensions> original) {
+        final EntityDimensions entityDimensions = original.call(instance, pose, defaultValue);
+        if (Animatium.hasServerFeature(ServerFeature.OLD_SNEAK_HEIGHT) && pose == Pose.CROUCHING) {
+            return (V) new EntityDimensions(entityDimensions.width(), 1.65F, 1.54F, entityDimensions.attachments(), entityDimensions.fixed());
+        } else {
+            return (V) entityDimensions;
+        }
     }
 }

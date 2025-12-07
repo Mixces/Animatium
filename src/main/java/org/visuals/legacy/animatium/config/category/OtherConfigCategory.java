@@ -28,6 +28,7 @@ package org.visuals.legacy.animatium.config.category;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.OptionGroup;
 import net.minecraft.network.chat.Component;
+import org.visuals.legacy.animatium.util.enums.VoidFogSetting;
 
 public class OtherConfigCategory extends Category {
     // Sky
@@ -59,13 +60,12 @@ public class OtherConfigCategory extends Category {
     public boolean oldMinimumSmoothLighting = true;
     public boolean oldCloudRendering = true;
     public boolean oldWindowIcon = true;
-    public boolean voidParticles = true;
-    public boolean voidFog = true;
     public boolean oldFallParticlePhysics = true;
     public boolean alwaysSteveModel = true;
     public boolean fastGrass = true;
     public boolean oldY0Height = true;
     public boolean disableRandomBlockRotations = true;
+    public VoidFogSetting voidFog = VoidFogSetting.BOTH;
 
     public static ConfigCategory create(final OtherConfigCategory defaults, final OtherConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
@@ -104,13 +104,12 @@ public class OtherConfigCategory extends Category {
         category.option(booleanOption("oldMinimumSmoothLighting", defaults, config));
         category.option(booleanOption("oldCloudRendering", defaults, config));
         category.option(booleanOption("oldWindowIcon", defaults, config));
-        category.option(booleanOption("voidParticles", defaults, config));
-        category.option(booleanOption("voidFog", defaults, config));
         category.option(booleanOption("oldFallParticlePhysics", defaults, config));
         category.option(booleanOption("alwaysSteveModel", defaults, config));
         category.option(booleanOption("fastGrass", defaults, config));
         category.option(booleanOption("oldY0Height", defaults, config));
         category.option(booleanOption("disableRandomBlockRotations", defaults, config));
+        category.option(enumOption("voidFog", defaults, config, VoidFogSetting.class));
         return category.build();
     }
 }

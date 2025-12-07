@@ -23,11 +23,21 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.enums;
+package org.visuals.legacy.animatium.mixins.v1.rendering.lighting;
 
-public enum FishingRodVersion {
-    V1_7,
-    V1_8,
-    V1_13,
-    VANILLA
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.fabricmc.fabric.impl.client.indigo.renderer.aocalc.AoCalculator;
+import net.fabricmc.fabric.impl.client.indigo.renderer.aocalc.AoConfig;
+import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+
+@Mixin(AoCalculator.class)
+public abstract class MixinAoCalculator_FastSmoothLighting {
+    // TODO: Figure out how to do the proper modification in whatever part of this class
+    @WrapOperation(method = "compute", at = @At(value = "FIELD", target = "Lnet/fabricmc/fabric/impl/client/indigo/Indigo;AMBIENT_OCCLUSION_MODE:Lnet/fabricmc/fabric/impl/client/indigo/renderer/aocalc/AoConfig;", opcode = Opcodes.GETSTATIC), remap = false)
+    private AoConfig animatium$forceVanillaAO(Operation<Object> original) {
+        return AoConfig.VANILLA;
+    }
 }
