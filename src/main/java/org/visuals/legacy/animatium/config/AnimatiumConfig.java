@@ -37,56 +37,64 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 import org.visuals.legacy.animatium.config.category.*;
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
+import org.visuals.legacy.animatium.util.Utils;
 
 public final class AnimatiumConfig {
-    private static final ConfigClassHandler<AnimatiumConfig> CONFIG = ConfigClassHandler.createBuilder(AnimatiumConfig.class)
-            .serializer((config) -> GsonConfigSerializerBuilder.create(config)
-                    .setPath(YACLPlatform.getConfigDir().resolve("animatium.json"))
-                    .build()
-            ).build();
-    @SerialEntry
-    public MovementConfigCategory movement = new MovementConfigCategory();
-    @SerialEntry
-    public ItemsConfigCategory items = new ItemsConfigCategory();
-    @SerialEntry
-    public ScreenConfigCategory screen = new ScreenConfigCategory();
-    @SerialEntry
-    public FixesConfigCategory fixes = new FixesConfigCategory();
-    @SerialEntry
-    public OtherConfigCategory other = new OtherConfigCategory();
-    @SerialEntry
-    public ExtrasConfigCategory extras = new ExtrasConfigCategory();
+	private static final ConfigClassHandler<AnimatiumConfig> CONFIG = ConfigClassHandler.createBuilder(AnimatiumConfig.class)
+			.serializer((config) -> GsonConfigSerializerBuilder.create(config)
+					.setPath(YACLPlatform.getConfigDir().resolve("animatium.json"))
+					.build()
+			).build();
 
-    public static Screen getConfigScreen(@Nullable Screen parent) {
-        return YetAnotherConfigLib.create(CONFIG, (defaults, config, builder) -> {
-            builder.title(Component.translatable("animatium.title"));
-            builder.category(MovementConfigCategory.create(defaults.movement, config.movement));
-            builder.category(ScreenConfigCategory.create(defaults.screen, config.screen));
-            builder.category(ItemsConfigCategory.create(defaults.items, config.items));
-            builder.category(FixesConfigCategory.create(defaults.fixes, config.fixes));
-            builder.category(OtherConfigCategory.create(defaults.other, config.other));
-            builder.category(ExtrasConfigCategory.create(defaults.extras, config.extras));
-            builder.save(() -> {
-                final Minecraft minecraft = Minecraft.getInstance();
-                ((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
-                minecraft.reloadResourcePacks();
-                if (minecraft.level != null) {
-                    minecraft.level.clearTintCaches();
-                }
-            });
-            return builder;
-        }).generateScreen(parent);
-    }
+	public static Screen getConfigScreen(@Nullable Screen parent) {
+		return YetAnotherConfigLib.create(CONFIG, (defaults, config, builder) -> {
+			builder.title(Component.translatable("animatium.title"));
+			builder.category(MovementConfigCategory.create(defaults.movement, config.movement));
+			builder.category(ScreenConfigCategory.create(defaults.screen, config.screen));
+			builder.category(ItemsConfigCategory.create(defaults.items, config.items));
+			builder.category(FixesConfigCategory.create(defaults.fixes, config.fixes));
+			builder.category(OtherConfigCategory.create(defaults.other, config.other));
+			builder.category(ExtrasConfigCategory.create(defaults.extras, config.extras));
+			builder.save(() -> {
+				final Minecraft minecraft = Minecraft.getInstance();
+				((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
+				minecraft.reloadResourcePacks();
+				if (minecraft.level != null) {
+					minecraft.level.clearTintCaches();
+				}
+				CONFIG.save();
+			});
+			return builder;
+		}).generateScreen(parent);
+	}
 
-    public static void load() {
-        CONFIG.load();
-    }
+	public static void load() {
+		CONFIG.load();
+	}
 
-    public static void save() {
-        CONFIG.save();
-    }
+	public static void save() {
+		CONFIG.save();
+	}
 
-    public static AnimatiumConfig instance() {
-        return CONFIG.instance();
-    }
+	public static AnimatiumConfig instance() {
+		return CONFIG.instance();
+	}
+
+	@SerialEntry
+	public MovementConfigCategory movement = new MovementConfigCategory();
+
+	@SerialEntry
+	public ItemsConfigCategory items = new ItemsConfigCategory();
+
+	@SerialEntry
+	public ScreenConfigCategory screen = new ScreenConfigCategory();
+
+	@SerialEntry
+	public FixesConfigCategory fixes = new FixesConfigCategory();
+
+	@SerialEntry
+	public OtherConfigCategory other = new OtherConfigCategory();
+
+	@SerialEntry
+	public ExtrasConfigCategory extras = new ExtrasConfigCategory();
 }

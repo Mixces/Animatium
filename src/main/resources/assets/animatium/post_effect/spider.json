@@ -1,0 +1,372 @@
+{
+	"targets": {
+		"large_blur": {},
+		"small_blur": {},
+		"temp": {},
+		"swap": {}
+	},
+	"passes": [
+		{
+			"uniforms": [
+				{
+					"name": "BlurDir",
+					"values": [
+						1.0,
+						0.0
+					]
+				},
+				{
+					"name": "Radius",
+					"values": [
+						15.0
+					]
+				}
+			],
+			"fragment_shader": "minecraft:post/blur",
+			"inputs": [
+				{
+					"sampler_name": "In",
+					"target": "minecraft:main"
+				}
+			],
+			"output": "temp"
+		},
+		{
+			"uniforms": [
+				{
+					"name": "BlurDir",
+					"values": [
+						0.0,
+						1.0
+					]
+				},
+				{
+					"name": "Radius",
+					"values": [
+						15.0
+					]
+				}
+			],
+			"fragment_shader": "minecraft:post/blur",
+			"inputs": [
+				{
+					"sampler_name": "In",
+					"target": "minecraft:temp"
+				}
+			],
+			"output": "large_blur"
+		},
+		{
+			"uniforms": [
+				{
+					"name": "BlurDir",
+					"values": [
+						1.0,
+						0.0
+					]
+				},
+				{
+					"name": "Radius",
+					"values": [
+						7.0
+					]
+				}
+			],
+			"fragment_shader": "minecraft:post/blur",
+			"inputs": [
+				{
+					"sampler_name": "In",
+					"target": "minecraft:main"
+				}
+			],
+			"output": "temp"
+		},
+		{
+			"uniforms": [
+				{
+					"name": "BlurDir",
+					"values": [
+						0.0,
+						1.0
+					]
+				},
+				{
+					"name": "Radius",
+					"values": [
+						7.0
+					]
+				}
+			],
+			"fragment_shader": "minecraft:post/blur",
+			"inputs": [
+				{
+					"sampler_name": "In",
+					"target": "minecraft:temp"
+				}
+			],
+			"output": "small_blur"
+		},
+		{
+			"uniforms": [
+				{
+					"name": "InScale",
+					"values": [
+						1.25,
+						2.0
+					]
+				},
+				{
+					"name": "InOffset",
+					"values": [
+						-0.125,
+						-0.1
+					]
+				},
+				{
+					"name": "Scissor",
+					"values": [
+						0.0,
+						0.0,
+						1.0,
+						1.0
+					]
+				},
+				{
+					"name": "Vignette",
+					"values": [
+						0.1,
+						0.1,
+						0.9,
+						0.9
+					]
+				}
+			],
+			"fragment_shader": "minecraft:post/spider",
+			"inputs": [
+				{
+					"sampler_name": "In",
+					"target": "minecraft:main"
+				},
+				{
+					"sampler_name": "BlurSampler",
+					"target": "minecraft:large_blur"
+				}
+			],
+			"output": "temp"
+		},
+		{
+			"uniforms": [
+				{
+					"name": "InScale",
+					"values": [
+						2.35,
+						4.2
+					]
+				},
+				{
+					"name": "InOffset",
+					"values": [
+						-1.1,
+						-1.5
+					]
+				},
+				{
+					"name": "InRotation",
+					"values": [
+						-45.0
+					]
+				},
+				{
+					"name": "Scissor",
+					"values": [
+						0.21,
+						0.0,
+						0.79,
+						1.0
+					]
+				},
+				{
+					"name": "Vignette",
+					"values": [
+						0.31,
+						0.1,
+						0.69,
+						0.9
+					]
+				}
+			],
+			"fragment_shader": "minecraft:post/spider",
+			"inputs": [
+				{
+					"sampler_name": "In",
+					"target": "minecraft:small_blur"
+				},
+				{
+					"sampler_name": "BlurSampler",
+					"target": "minecraft:temp"
+				}
+			],
+			"output": "swap"
+		},
+		{
+			"uniforms": [
+				{
+					"name": "InScale",
+					"values": [
+						2.35,
+						4.2
+					]
+				},
+				{
+					"name": "InOffset",
+					"values": [
+						0.45,
+						-4.45
+					]
+				},
+				{
+					"name": "InRotation",
+					"values": [
+						45.0
+					]
+				},
+				{
+					"name": "Scissor",
+					"values": [
+						0.21,
+						0.0,
+						0.79,
+						1.0
+					]
+				},
+				{
+					"name": "Vignette",
+					"values": [
+						0.31,
+						0.1,
+						0.69,
+						0.9
+					]
+				}
+			],
+			"fragment_shader": "minecraft:post/spider",
+			"inputs": [
+				{
+					"sampler_name": "In",
+					"target": "minecraft:small_blur"
+				},
+				{
+					"sampler_name": "BlurSampler",
+					"target": "minecraft:swap"
+				}
+			],
+			"output": "temp"
+		},
+		{
+			"uniforms": [
+				{
+					"name": "InScale",
+					"values": [
+						2.35,
+						2.35
+					]
+				},
+				{
+					"name": "InOffset",
+					"values": [
+						-0.385,
+						-1.29
+					]
+				},
+				{
+					"name": "InRotation",
+					"values": [
+						0.0
+					]
+				},
+				{
+					"name": "Vignette",
+					"values": [
+						0.31,
+						0.1,
+						0.69,
+						0.9
+					]
+				}
+			],
+			"fragment_shader": "minecraft:post/spider",
+			"inputs": [
+				{
+					"sampler_name": "In",
+					"target": "minecraft:small_blur"
+				},
+				{
+					"sampler_name": "BlurSampler",
+					"target": "minecraft:temp"
+				}
+			],
+			"output": "swap"
+		},
+		{
+			"uniforms": [
+				{
+					"name": "InScale",
+					"values": [
+						2.35,
+						2.35
+					]
+				},
+				{
+					"name": "InOffset",
+					"values": [
+						-0.965,
+						-1.29
+					]
+				},
+				{
+					"name": "Vignette",
+					"values": [
+						0.31,
+						0.1,
+						0.69,
+						0.9
+					]
+				}
+			],
+			"fragment_shader": "minecraft:post/spider",
+			"inputs": [
+				{
+					"sampler_name": "In",
+					"target": "minecraft:small_blur"
+				},
+				{
+					"sampler_name": "BlurSampler",
+					"target": "minecraft:swap"
+				}
+			],
+			"output": "temp"
+		},
+		{
+			"uniforms": [
+				{
+					"name": "ColorModulate",
+					"values": [
+						1.0,
+						0.8,
+						0.8,
+						1.0
+					]
+				}
+			],
+			"vertex_shader": "minecraft:core/screenquad",
+			"fragment_shader": "minecraft:post/blit",
+			"inputs": [
+				{
+					"sampler_name": "In",
+					"target": "minecraft:temp"
+				}
+			],
+			"output": "minecraft:main"
+		}
+	]
+}

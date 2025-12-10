@@ -25,15 +25,28 @@
 
 package org.visuals.legacy.animatium.mixins.v1.gui.screen_tweaks;
 
-import net.minecraft.client.gui.components.AbstractSliderButton;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.network.chat.Component;
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiGraphics;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-// TODO/WIP: OptionInstanceSliderButton
-@Mixin(AbstractSliderButton.class)
-public abstract class MixinAbstractSliderButton extends AbstractWidget {
-    public MixinAbstractSliderButton(int x, int y, int width, int height, Component message) {
-        super(x, y, width, height, message);
-    }
+@Mixin(Gui.class)
+public abstract class MixinGui_OldCrosshairPosition {
+	@Definition(id = "guiGraphics", local = @Local(type = GuiGraphics.class, argsOnly = true))
+	@Definition(id = "guiWidth", method = "Lnet/minecraft/client/gui/GuiGraphics;guiWidth()I")
+	@Expression("(guiGraphics.guiWidth() - 15) / 2")
+	@ModifyExpressionValue(method = "renderCrosshair", at = @At("MIXINEXTRAS:EXPRESSION"))
+	private int animatium$oldCrosshairPosition(int original) {
+		if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldCrosshairPosition) {
+			original++; // like seriously, this is all it takes LMAO
+		}
+
+		return original;
+	}
 }

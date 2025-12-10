@@ -11,6 +11,7 @@
 		"accessor.GuiRendererAccessor",
 		"accessor.LivingEntityAccessor",
 		"accessor.PlayerAccessor",
+		"v1.entity.MixinEntityRenderDispatcher_ForceSteveModel",
 		"v1.entity.MixinHumanoidMobRenderer_FixDoubleUsage",
 		"v1.entity.MixinHumanoidModel",
 		"v1.entity.MixinItemPickupParticle_LegacyPickupPosition",
@@ -78,9 +79,11 @@
 		"v1.gui.remove_recipe_book.MixinAbstractRecipeBookScreen_ToggleRecipeBookWidget",
 		"v1.gui.remove_recipe_book.MixinRecipeBookComponent_HideRecipeBookUI",
 		"v1.gui.screen_tweaks.MixinAbstractSelectionList_ListGradientBackground",
-		"v1.gui.screen_tweaks.MixinAbstractSliderButton",
+		"v1.gui.screen_tweaks.MixinAbstractSliderButton_SnappySliderMovement",
 		"v1.gui.screen_tweaks.MixinFontPreparedTextBuilder_FixStrikethroughStyle",
+		"v1.gui.screen_tweaks.MixinGui_OldCrosshairPosition",
 		"v1.gui.screen_tweaks.MixinMinecraft_OnboardingScreen",
+		"v1.gui.screen_tweaks.MixinOptionsScreen_SuperSecretSettings",
 		"v1.gui.screen_tweaks.MixinPanoramaRenderer_LegacyRendering",
 		"v1.gui.toasts.MixinRecipeToast_DisableToast",
 		"v1.gui.toasts.MixinToastManager_DisableToastSounds",
@@ -89,6 +92,7 @@
 		"v1.rendering.blocks.MixinBiomeSpecialEffects_DisableWaterBiomeTint",
 		"v1.rendering.blocks.MixinBlockRenderDispatcher_FastGrassSide",
 		"v1.rendering.fog.MixinAirBasedFogEnvironment_OldRenderDistance",
+		"v1.rendering.fog.MixinAtmosphericFogEnvironment_OldCloudRendering",
 		"v1.rendering.fog.MixinFogRenderer_OldMinY",
 		"v1.rendering.fog.MixinFogRenderer_VoidFog",
 		"v1.rendering.fog.MixinSkyRenderer_PlanarFogSky",
@@ -112,6 +116,7 @@
 		"v1.rendering.outlines.MixinGameRenderer_PersistentBlockOutline",
 		"v1.rendering.outlines.MixinLevelRenderer_BlockOutlines",
 		"v1.rendering.outlines.MixinLevelRenderer_EntityOutlines",
+		"v1.rendering.sky.MixinLevelRenderer_OldCloudRendering",
 		"v1.rendering.sky.MixinLevelRenderer_OldSkyRenderingCheck",
 		"v1.rendering.sky.cloud_height.MixinLevelRenderer_LegacyCloudHeight",
 		"v1.rendering.sky.horizon_height.MixinClientLevel_ClientLevelData_OldMinY",
@@ -128,5 +133,8 @@
 	},
 	"mixinextras": {
 		"minVersion": "0.5.0"
-	}
+	},
+	"mixins": [
+		"v1.rendering.sky.MixinMinecraft_LoadLegacyClouds"
+	]
 }

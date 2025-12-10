@@ -42,40 +42,40 @@ import java.util.EnumSet;
 
 @UtilityClass
 public final class Animatium {
-    public static final EnumSet<ServerFeature> ENABLED_SERVER_FEATURES = EnumSet.noneOf(ServerFeature.class);
-    @Getter
-    private final Logger logger = LogManager.getLogger(Animatium.class);
-    @Getter
-    private boolean enabled = true;
+	public static final EnumSet<ServerFeature> ENABLED_SERVER_FEATURES = EnumSet.noneOf(ServerFeature.class);
+	@Getter
+	private final Logger logger = LogManager.getLogger(Animatium.class);
+	@Getter
+	private boolean enabled = true;
 
-    public void setEnabled(boolean enabled) {
-        Animatium.enabled = enabled;
-        ConfigUtil.put("enabled", enabled);
-    }
+	public void setEnabled(boolean enabled) {
+		Animatium.enabled = enabled;
+		ConfigUtil.put("enabled", enabled);
+	}
 
-    public boolean hasServerFeature(ServerFeature feature) {
-        final boolean hasAll = ENABLED_SERVER_FEATURES.contains(ServerFeature.ALL) || (AnimatiumConstants.IS_DEVELOPMENT && Minecraft.getInstance().isLocalServer());
-        return hasAll || ENABLED_SERVER_FEATURES.contains(feature);
-    }
+	public boolean hasServerFeature(ServerFeature feature) {
+		final boolean hasAll = ENABLED_SERVER_FEATURES.contains(ServerFeature.ALL) || (AnimatiumConstants.IS_DEVELOPMENT && Minecraft.getInstance().isLocalServer());
+		return hasAll || ENABLED_SERVER_FEATURES.contains(feature);
+	}
 
-    public ResourceLocation location(String path) {
-        return ResourceLocation.fromNamespaceAndPath(AnimatiumConstants.MOD_ID, path);
-    }
+	public ResourceLocation location(String path) {
+		return ResourceLocation.fromNamespaceAndPath(AnimatiumConstants.MOD_ID, path);
+	}
 
-    public void initialize() {
-        if (AnimatiumConstants.IS_DEVELOPMENT) {
-            SharedConstants.IS_RUNNING_IN_IDE = true;
-        }
+	public void initialize() {
+		if (AnimatiumConstants.IS_DEVELOPMENT) {
+			SharedConstants.IS_RUNNING_IN_IDE = true;
+		}
 
-        AnimatiumConfig.load();
-        try {
-            ConfigUtil.load();
-            System.err.println("Successfully loaded the animatium utility config!");
-        } catch (Exception ignored) {
-            enabled = ConfigUtil.bool("enabled");
-            System.err.println("Failed to load animatium utility config, defaulting...");
-        }
+		AnimatiumConfig.load();
+		try {
+			ConfigUtil.load();
+			System.err.println("Successfully loaded the animatium utility config!");
+		} catch (Exception ignored) {
+			enabled = ConfigUtil.bool("enabled");
+			System.err.println("Failed to load animatium utility config, defaulting...");
+		}
 
-        DebugScreenEntries.register(AnimatiumDebugEntry.GROUP, new AnimatiumDebugEntry());
-    }
+		DebugScreenEntries.register(AnimatiumDebugEntry.GROUP, new AnimatiumDebugEntry());
+	}
 }

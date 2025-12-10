@@ -1,0 +1,79 @@
+{
+	"targets": {
+		"swap": {},
+		"final": {}
+	},
+	"passes": [
+		{
+			"fragment_shader": "minecraft:post/entity_outline",
+			"inputs": [
+				{
+					"sampler_name": "In",
+					"target": "minecraft:final"
+				}
+			],
+			"output": "swap"
+		},
+		{
+			"uniforms": [
+				{
+					"name": "BlurDir",
+					"values": [
+						1.0,
+						0.0
+					]
+				},
+				{
+					"name": "Radius",
+					"values": [
+						2.0
+					]
+				}
+			],
+			"fragment_shader": "minecraft:post/blur",
+			"inputs": [
+				{
+					"sampler_name": "In",
+					"target": "minecraft:swap"
+				}
+			],
+			"output": "final"
+		},
+		{
+			"uniforms": [
+				{
+					"name": "BlurDir",
+					"values": [
+						0.0,
+						1.0
+					]
+				},
+				{
+					"name": "Radius",
+					"values": [
+						2.0
+					]
+				}
+			],
+			"fragment_shader": "minecraft:post/blur",
+			"inputs": [
+				{
+					"sampler_name": "In",
+					"target": "minecraft:final"
+				}
+			],
+			"output": "swap"
+		},
+		{
+			"vertex_shader": "minecraft:core/screenquad",
+			"fragment_shader": "minecraft:post/blit",
+			"inputs": [
+				{
+					"sampler_name": "In",
+					"target": "minecraft:swap"
+				}
+			],
+			"output": "final"
+		}
+	]
+}

@@ -1,6 +1,6 @@
 [versions]
 kotlin-jvm = "2.2.0"
-loom = "1.11-SNAPSHOT"
+loom = "1.13-SNAPSHOT"
 publishing = "0.8.4"
 blossom = "1.3.2"
 ksp = "2.2.0-2.0.2"

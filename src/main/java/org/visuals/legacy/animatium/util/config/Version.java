@@ -104,6 +104,7 @@ public enum Version {
         screen.legacyLoadingScreen = true;
         screen.oldDepthFar = true;
         screen.oldChatPosition = true;
+        screen.oldCrosshairPosition = true;
         screen.disconnectServerToTitleScreen = true;
         screen.superSecretSettingsButton = true;
         screen.cameraVersion = CameraVersion.V1_8;
@@ -134,7 +135,6 @@ public enum Version {
         other.persistentBlockOutline = true;
         other.oldMinimumSmoothLighting = true;
         other.oldCloudRendering = true;
-        other.oldWindowIcon = true;
         other.voidFog = VoidFogSetting.BOTH;
         other.oldFallParticlePhysics = true;
         other.alwaysSteveModel = true;
@@ -206,6 +206,7 @@ public enum Version {
         screen.legacyLoadingScreen = true;
         screen.oldDepthFar = true;
         screen.oldChatPosition = true;
+        screen.oldCrosshairPosition = true;
         screen.disconnectServerToTitleScreen = false;
         screen.superSecretSettingsButton = true;
         screen.cameraVersion = CameraVersion.V1_8;
@@ -236,7 +237,6 @@ public enum Version {
         other.persistentBlockOutline = false;
         other.oldMinimumSmoothLighting = false;
         other.oldCloudRendering = true;
-        other.oldWindowIcon = true;
         other.voidFog = VoidFogSetting.OFF;
         other.oldFallParticlePhysics = false;
         other.alwaysSteveModel = false;
@@ -322,6 +322,7 @@ public enum Version {
         screen.legacyLoadingScreen = false;
         screen.oldDepthFar = false;
         screen.oldChatPosition = false;
+        screen.oldCrosshairPosition = false;
         screen.disconnectServerToTitleScreen = false;
         screen.superSecretSettingsButton = false;
         screen.cameraVersion = CameraVersion.VANILLA;
@@ -352,7 +353,6 @@ public enum Version {
         other.persistentBlockOutline = false;
         other.oldMinimumSmoothLighting = false;
         other.oldCloudRendering = false;
-        other.oldWindowIcon = false;
         other.voidFog = VoidFogSetting.OFF;
         other.oldFallParticlePhysics = false;
         other.alwaysSteveModel = false;

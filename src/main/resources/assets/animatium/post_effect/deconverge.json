@@ -1,0 +1,28 @@
+{
+	"targets": {
+		"swap": {}
+	},
+	"passes": [
+		{
+			"fragment_shader": "minecraft:post/deconverge",
+			"inputs": [
+				{
+					"sampler_name": "In",
+					"target": "minecraft:main"
+				}
+			],
+			"output": "swap"
+		},
+		{
+			"vertex_shader": "minecraft:core/screenquad",
+			"fragment_shader": "minecraft:post/blit",
+			"inputs": [
+				{
+					"sampler_name": "In",
+					"target": "minecraft:swap"
+				}
+			],
+			"output": "minecraft:main"
+		}
+	]
+}
