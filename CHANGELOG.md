@@ -1,7 +1,7 @@
 ## NOTICE: This update will reset your settings!
 
 ### Changed:
-- Simplified a ton of settings
+- Simplified a ton of settings (Combined stuff like Sneaking Settings)
 
 ### Added
 - Onboarding Screen

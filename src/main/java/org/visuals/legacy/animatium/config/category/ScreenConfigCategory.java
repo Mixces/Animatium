@@ -51,7 +51,7 @@ public class ScreenConfigCategory extends Category {
 	public boolean oldChatPosition = true;
 	public boolean oldCrosshairPosition = true;
 	public boolean disconnectServerToTitleScreen = true;
-	public boolean superSecretSettingsButton = true; // TODO: 3.1
+	// public boolean superSecretSettingsButton = true; // TODO: 3.1
 
 	public static ConfigCategory create(final ScreenConfigCategory defaults, final ScreenConfigCategory config) {
 		final ConfigCategory.Builder category = ConfigCategory.createBuilder();

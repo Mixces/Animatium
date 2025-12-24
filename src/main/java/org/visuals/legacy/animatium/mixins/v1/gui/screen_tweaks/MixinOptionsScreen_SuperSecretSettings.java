@@ -25,17 +25,10 @@
 
 package org.visuals.legacy.animatium.mixins.v1.gui.screen_tweaks;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.layouts.GridLayout;
-import net.minecraft.client.gui.layouts.SpacerElement;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.OptionsScreen;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.util.PostEffectShaderUtil;
-import org.visuals.legacy.animatium.util.SuperSecretButton;
 
 @Mixin(OptionsScreen.class)
 public abstract class MixinOptionsScreen_SuperSecretSettings extends Screen {
@@ -43,12 +36,15 @@ public abstract class MixinOptionsScreen_SuperSecretSettings extends Screen {
 		super(title);
 	}
 
-	@ModifyExpressionValue(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/layouts/GridLayout;createRowHelper(I)Lnet/minecraft/client/gui/layouts/GridLayout$RowHelper;"))
+	/*@ModifyExpressionValue(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/layouts/GridLayout;createRowHelper(I)Lnet/minecraft/client/gui/layouts/GridLayout$RowHelper;"))
 	private GridLayout.RowHelper animatium$superSecretSettingsButton(GridLayout.RowHelper original) {
-		original.addChild(SpacerElement.width(Button.DEFAULT_WIDTH));
-		original.addChild(new SuperSecretButton(Component.literal("Super Secret Settings..."), button -> {
-			PostEffectShaderUtil.nextShader();
-		}, (this.width / 2) + Button.DEFAULT_WIDTH, (this.height / 6) + 12));
+		if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.superSecretSettingsButton) {
+			original.addChild(SpacerElement.width(Button.DEFAULT_WIDTH));
+			original.addChild(new SuperSecretButton(Component.literal("Super Secret Settings..."), button -> {
+				PostEffectShaderUtil.nextShader();
+			}, (this.width / 2) + Button.DEFAULT_WIDTH, (this.height / 6) + 12));
+		}
+
 		return original;
-	}
+	}*/
 }

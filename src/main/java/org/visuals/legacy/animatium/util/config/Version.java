@@ -106,7 +106,7 @@ public enum Version {
         screen.oldChatPosition = true;
         screen.oldCrosshairPosition = true;
         screen.disconnectServerToTitleScreen = true;
-        screen.superSecretSettingsButton = true;
+        // screen.superSecretSettingsButton = true;
         screen.cameraVersion = CameraVersion.V1_8;
 
         final OtherConfigCategory other = config.other;
@@ -209,7 +209,7 @@ public enum Version {
         screen.oldChatPosition = true;
         screen.oldCrosshairPosition = true;
         screen.disconnectServerToTitleScreen = false;
-        screen.superSecretSettingsButton = true;
+        // screen.superSecretSettingsButton = true;
         screen.cameraVersion = CameraVersion.V1_8;
 
         final OtherConfigCategory other = config.other;
@@ -326,7 +326,7 @@ public enum Version {
         screen.oldChatPosition = false;
         screen.oldCrosshairPosition = false;
         screen.disconnectServerToTitleScreen = false;
-        screen.superSecretSettingsButton = false;
+        // screen.superSecretSettingsButton = false;
         screen.cameraVersion = CameraVersion.VANILLA;
 
         final OtherConfigCategory other = config.other;
