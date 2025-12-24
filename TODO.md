@@ -5,17 +5,15 @@
 
 3.0 TODO:
 
-- old clouds from <1.21.5 (or was it 1.21.6 i forgor)
-- 
 - fix 2d item drops
 - fix 1.8 held item arm logic thingy whatever idk
-- fix old fall particle physics
 - finish description/names for new config fields in lang file
-- disable random block rotations
-- finish post effect shaders
 
 3.1 TODO:
 
+- fix old fall particle physics
+- finish post effect shaders
+- disable random block rotations
 - accurate sharpness particles or whatever (jt mentioned)
 - item swing stuff
 - old bed model
