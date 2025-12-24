@@ -25,6 +25,7 @@
 
 package org.visuals.legacy.animatium.util.states;
 
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
 
@@ -42,4 +43,8 @@ public interface UtilityRenderState {
     boolean animatium$isSleeping();
 
     void animatium$setSleeping();
+	
+	EntityDimensions animatium$getStandingDimensions();
+
+	void animatium$setStandingDimensions(EntityDimensions entityDimensions);
 }

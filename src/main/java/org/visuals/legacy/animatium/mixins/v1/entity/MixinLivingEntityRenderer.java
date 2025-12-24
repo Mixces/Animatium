@@ -58,7 +58,8 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
         final CameraUtilityRenderState cameraUtilityRenderState = (CameraUtilityRenderState) cameraRenderState;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.sneakAnimation == SneakAnimationSetting.V1_7 && livingEntityRenderState instanceof AvatarRenderState avatarRenderState && cameraUtilityRenderState.animatium$getId() == avatarRenderState.id) {
             final float cameraLerpValue = Utils.lerpCameraPosition(cameraUtilityRenderState);
-            poseStack.translate(0.0F, (livingEntityRenderState.eyeHeight * livingEntityRenderState.scale) - cameraLerpValue, 0.0F);
+			final UtilityRenderState utilityRenderState = (UtilityRenderState) avatarRenderState;
+            poseStack.translate(0.0F, (utilityRenderState.animatium$getStandingDimensions().eyeHeight() * avatarRenderState.scale) - cameraLerpValue, 0.0F);
         }
     }
 

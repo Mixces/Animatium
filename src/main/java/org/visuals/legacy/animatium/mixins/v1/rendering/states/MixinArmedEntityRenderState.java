@@ -27,8 +27,7 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.states;
 
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
 import net.minecraft.client.renderer.item.ItemModelResolver;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -53,8 +52,11 @@ public abstract class MixinArmedEntityRenderState implements UtilityRenderState 
     @Unique
     private boolean animatium$isSleeping = false;
 
+	@Unique
+	private EntityDimensions animatium$standingDimensions = null;
+
     @Inject(method = "extractArmedEntityRenderState", at = @At("TAIL"))
-    private static void animatium$storeStacks(LivingEntity livingEntity, ArmedEntityRenderState armedEntityRenderState, ItemModelResolver itemModelResolver, CallbackInfo ci) {
+    private static void animatium$storeData(LivingEntity livingEntity, ArmedEntityRenderState armedEntityRenderState, ItemModelResolver itemModelResolver, CallbackInfo ci) {
         UtilityRenderState utilityRenderState = (UtilityRenderState) armedEntityRenderState;
         utilityRenderState.animatium$setItemHeldByArm(HumanoidArm.LEFT, livingEntity.getItemHeldByArm(HumanoidArm.LEFT));
         utilityRenderState.animatium$setItemHeldByArm(HumanoidArm.RIGHT, livingEntity.getItemHeldByArm(HumanoidArm.RIGHT));
@@ -65,6 +67,10 @@ public abstract class MixinArmedEntityRenderState implements UtilityRenderState 
         if (livingEntity.isSleeping()) {
             utilityRenderState.animatium$setSleeping();
         }
+
+		if (livingEntity instanceof Avatar avatar) {
+			utilityRenderState.animatium$setStandingDimensions(avatar.getDefaultDimensions(Pose.STANDING));
+		}
     }
 
     @Override
@@ -108,4 +114,14 @@ public abstract class MixinArmedEntityRenderState implements UtilityRenderState 
     public void animatium$setSleeping() {
         animatium$isSleeping = true;
     }
+
+	@Override
+	public EntityDimensions animatium$getStandingDimensions() {
+		return animatium$standingDimensions;
+	}
+
+	@Override
+	public void animatium$setStandingDimensions(EntityDimensions entityDimensions) {
+		animatium$standingDimensions = entityDimensions;
+	}
 }
