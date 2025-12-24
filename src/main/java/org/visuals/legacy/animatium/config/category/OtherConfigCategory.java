@@ -31,83 +31,83 @@ import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.util.enums.VoidFogSetting;
 
 public class OtherConfigCategory extends Category {
-    // Sky
-    public boolean blueVoidSky = true;
-    public boolean planarSkyFog = true;
-    public boolean cloudHeight = true;
-    public boolean playerVoidBox = true;
-    // Other
-    public boolean thirdPersonSwordBlockingPosition = true;
-    public boolean lockBlockingArmRotation = true;
-    public boolean projectileAgeCheck = false;
-    public boolean blockMiningProgress = true;
-    public boolean disableInventoryEntityScissor = false;
-    public boolean blockOutlineRendering = true;
-    public boolean modelWhilstSleeping = false;
-    public boolean entityArmorHurtTint = true;
-    public boolean itemGlintOnEntity = true;
-    public boolean maxGlintProperties = true;
-    public boolean armorHurtRendering = false;
-    public boolean highAttackSpeedVisual = false;
-    public boolean disableEntityGlowOutline = false;
-    public boolean modernCombatSounds = true;
-    public boolean modernCombatParticles = true; // TODO/NOTE: Fix, it's broken on servers
-    public boolean restoreParticleBlending = true;
-    public boolean heldItemArmLogic = true;
-    public boolean flameDimensions = true;
-    public boolean flameOffset = true;
-    public boolean persistentBlockOutline = false;
-    public boolean oldMinimumSmoothLighting = true;
-    public boolean oldCloudRendering = true;
-    public boolean oldFallParticlePhysics = true;
-    public boolean alwaysSteveModel = true;
-    public boolean fastGrass = true;
-    public boolean oldY0Height = true;
-    public boolean disableRandomBlockRotations = true;
-    public VoidFogSetting voidFog = VoidFogSetting.BOTH;
+	// Sky
+	public boolean blueVoidSky = true;
+	public boolean planarSkyFog = true;
+	public boolean cloudHeight = true;
+	// public boolean playerVoidBox = true; // TODO: 3.1
+	// Other
+	public boolean thirdPersonSwordBlockingPosition = true;
+	public boolean lockBlockingArmRotation = true;
+	public boolean projectileAgeCheck = false;
+	public boolean blockMiningProgress = true;
+	public boolean disableInventoryEntityScissor = false;
+	public boolean blockOutlineRendering = true;
+	public boolean modelWhilstSleeping = false;
+	public boolean entityArmorHurtTint = true;
+	public boolean itemGlintOnEntity = true;
+	public boolean maxGlintProperties = true;
+	public boolean armorHurtRendering = false;
+	public boolean highAttackSpeedVisual = false;
+	public boolean disableEntityGlowOutline = false;
+	public boolean modernCombatSounds = true;
+	public boolean modernCombatParticles = true; // TODO/NOTE: Fix, it's broken on servers
+	public boolean restoreParticleBlending = true;
+	public boolean heldItemArmLogic = true;
+	public boolean flameDimensions = true;
+	public boolean flameOffset = true;
+	public boolean persistentBlockOutline = false;
+	public boolean oldMinimumSmoothLighting = true;
+	public boolean oldCloudRendering = true;
+	// public boolean oldFallParticlePhysics = true; // TODO: 3.1
+	public boolean alwaysSteveModel = true;
+	public boolean fastGrass = true;
+	public boolean oldY0Height = true;
+	// public boolean disableRandomBlockRotations = true; // TODO: 3.1
+	public VoidFogSetting voidFog = VoidFogSetting.BOTH;
 
-    public static ConfigCategory create(final OtherConfigCategory defaults, final OtherConfigCategory config) {
-        final ConfigCategory.Builder category = ConfigCategory.createBuilder();
-        category.name(Component.translatable("animatium.category.other"));
+	public static ConfigCategory create(final OtherConfigCategory defaults, final OtherConfigCategory config) {
+		final ConfigCategory.Builder category = ConfigCategory.createBuilder();
+		category.name(Component.translatable("animatium.category.other"));
 
-        {
-            final OptionGroup.Builder skyGroup = OptionGroup.createBuilder();
-            skyGroup.name(Component.translatable("animatium.category.other.group.sky"));
-            skyGroup.option(booleanOption("blueVoidSky", defaults, config));
-            skyGroup.option(booleanOption("planarSkyFog", defaults, config));
-            skyGroup.option(booleanOption("cloudHeight", defaults, config));
-            skyGroup.option(booleanOption("playerVoidBox", defaults, config));
-            category.group(skyGroup.build());
-        }
+		{
+			final OptionGroup.Builder skyGroup = OptionGroup.createBuilder();
+			skyGroup.name(Component.translatable("animatium.category.other.group.sky"));
+			skyGroup.option(booleanOption("blueVoidSky", defaults, config));
+			skyGroup.option(booleanOption("planarSkyFog", defaults, config));
+			skyGroup.option(booleanOption("cloudHeight", defaults, config));
+			// skyGroup.option(booleanOption("playerVoidBox", defaults, config));
+			category.group(skyGroup.build());
+		}
 
-        category.option(booleanOption("thirdPersonSwordBlockingPosition", defaults, config));
-        category.option(booleanOption("lockBlockingArmRotation", defaults, config));
-        category.option(booleanOption("projectileAgeCheck", defaults, config));
-        category.option(booleanOption("blockMiningProgress", defaults, config));
-        category.option(booleanOption("disableInventoryEntityScissor", defaults, config));
-        category.option(booleanOption("blockOutlineRendering", defaults, config));
-        category.option(booleanOption("modelWhilstSleeping", defaults, config));
-        category.option(booleanOption("entityArmorHurtTint", defaults, config));
-        category.option(booleanOption("itemGlintOnEntity", defaults, config));
-        category.option(booleanOption("maxGlintProperties", defaults, config));
-        category.option(booleanOption("armorHurtRendering", defaults, config));
-        category.option(booleanOption("highAttackSpeedVisual", defaults, config));
-        category.option(booleanOption("disableEntityGlowOutline", defaults, config));
-        category.option(booleanOption("modernCombatSounds", defaults, config));
-        category.option(booleanOption("modernCombatParticles", defaults, config));
-        category.option(booleanOption("restoreParticleBlending", defaults, config));
-        // TODO: category.option(booleanOption("heldItemArmLogic", defaults, config));
-        category.option(booleanOption("flameDimensions", defaults, config));
-        category.option(booleanOption("flameOffset", defaults, config));
-        category.option(booleanOption("persistentBlockOutline", defaults, config));
-        category.option(booleanOption("oldMinimumSmoothLighting", defaults, config));
-        category.option(booleanOption("oldCloudRendering", defaults, config));
-        category.option(booleanOption("oldFallParticlePhysics", defaults, config));
-        category.option(booleanOption("alwaysSteveModel", defaults, config));
-        category.option(booleanOption("fastGrass", defaults, config));
-        category.option(booleanOption("oldY0Height", defaults, config));
-        category.option(booleanOption("disableRandomBlockRotations", defaults, config));
-        category.option(enumOption("voidFog", defaults, config, VoidFogSetting.class));
-        return category.build();
-    }
+		category.option(booleanOption("thirdPersonSwordBlockingPosition", defaults, config));
+		category.option(booleanOption("lockBlockingArmRotation", defaults, config));
+		category.option(booleanOption("projectileAgeCheck", defaults, config));
+		category.option(booleanOption("blockMiningProgress", defaults, config));
+		category.option(booleanOption("disableInventoryEntityScissor", defaults, config));
+		category.option(booleanOption("blockOutlineRendering", defaults, config));
+		category.option(booleanOption("modelWhilstSleeping", defaults, config));
+		category.option(booleanOption("entityArmorHurtTint", defaults, config));
+		category.option(booleanOption("itemGlintOnEntity", defaults, config));
+		category.option(booleanOption("maxGlintProperties", defaults, config));
+		category.option(booleanOption("armorHurtRendering", defaults, config));
+		category.option(booleanOption("highAttackSpeedVisual", defaults, config));
+		category.option(booleanOption("disableEntityGlowOutline", defaults, config));
+		category.option(booleanOption("modernCombatSounds", defaults, config));
+		category.option(booleanOption("modernCombatParticles", defaults, config));
+		category.option(booleanOption("restoreParticleBlending", defaults, config));
+		// TODO: category.option(booleanOption("heldItemArmLogic", defaults, config));
+		category.option(booleanOption("flameDimensions", defaults, config));
+		category.option(booleanOption("flameOffset", defaults, config));
+		category.option(booleanOption("persistentBlockOutline", defaults, config));
+		category.option(booleanOption("oldMinimumSmoothLighting", defaults, config));
+		category.option(booleanOption("oldCloudRendering", defaults, config));
+		// category.option(booleanOption("oldFallParticlePhysics", defaults, config));
+		category.option(booleanOption("alwaysSteveModel", defaults, config));
+		category.option(booleanOption("fastGrass", defaults, config));
+		category.option(booleanOption("oldY0Height", defaults, config));
+		// category.option(booleanOption("disableRandomBlockRotations", defaults, config));
+		category.option(enumOption("voidFog", defaults, config, VoidFogSetting.class));
+		return category.build();
+	}
 }

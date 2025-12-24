@@ -100,7 +100,7 @@ public enum Version {
         screen.effectsInventoryPosition = true;
         screen.snappySliderMovement = true;
         screen.hideRecipeBook = true;
-        screen.panoramaRendering = true;
+        // screen.panoramaRendering = true;
         screen.legacyLoadingScreen = true;
         screen.oldDepthFar = true;
         screen.oldChatPosition = true;
@@ -113,6 +113,7 @@ public enum Version {
         other.blueVoidSky = true;
         other.planarSkyFog = true;
         other.cloudHeight = true;
+        // other.playerVoidBox = true;
         other.thirdPersonSwordBlockingPosition = true;
         other.lockBlockingArmRotation = true;
         other.projectileAgeCheck = true; // TODO/CHECK
@@ -136,10 +137,10 @@ public enum Version {
         other.oldMinimumSmoothLighting = true;
         other.oldCloudRendering = true;
         other.voidFog = VoidFogSetting.BOTH;
-        other.oldFallParticlePhysics = true;
+        // other.oldFallParticlePhysics = true;
         other.alwaysSteveModel = true;
         other.fastGrass = true;
-        other.disableRandomBlockRotations = true;
+        // other.disableRandomBlockRotations = true;
         other.oldY0Height = true;
     }),
 
@@ -202,7 +203,7 @@ public enum Version {
         screen.effectsInventoryPosition = true;
         screen.snappySliderMovement = true;
         screen.hideRecipeBook = true;
-        screen.panoramaRendering = true;
+        // screen.panoramaRendering = true;
         screen.legacyLoadingScreen = true;
         screen.oldDepthFar = true;
         screen.oldChatPosition = true;
@@ -215,6 +216,7 @@ public enum Version {
         other.blueVoidSky = true;
         other.planarSkyFog = true;
         other.cloudHeight = true;
+        // other.playerVoidBox = true;
         other.thirdPersonSwordBlockingPosition = false;
         other.lockBlockingArmRotation = true;
         other.projectileAgeCheck = true; // TODO/CHECK
@@ -238,10 +240,10 @@ public enum Version {
         other.oldMinimumSmoothLighting = false;
         other.oldCloudRendering = true;
         other.voidFog = VoidFogSetting.OFF;
-        other.oldFallParticlePhysics = false;
+        // other.oldFallParticlePhysics = false;
         other.alwaysSteveModel = false;
         other.fastGrass = false;
-        other.disableRandomBlockRotations = false;
+        // other.disableRandomBlockRotations = false;
         other.oldY0Height = true;
     }),
 
@@ -318,7 +320,7 @@ public enum Version {
         screen.effectsInventoryPosition = false;
         screen.snappySliderMovement = false;
         screen.hideRecipeBook = false;
-        screen.panoramaRendering = false;
+        // screen.panoramaRendering = false;
         screen.legacyLoadingScreen = false;
         screen.oldDepthFar = false;
         screen.oldChatPosition = false;
@@ -331,6 +333,7 @@ public enum Version {
         other.blueVoidSky = false;
         other.planarSkyFog = false;
         other.cloudHeight = false;
+        // other.playerVoidBox = false;
         other.thirdPersonSwordBlockingPosition = false;
         other.lockBlockingArmRotation = false;
         other.projectileAgeCheck = false; // TODO/CHECK
@@ -354,10 +357,10 @@ public enum Version {
         other.oldMinimumSmoothLighting = false;
         other.oldCloudRendering = false;
         other.voidFog = VoidFogSetting.OFF;
-        other.oldFallParticlePhysics = false;
+        // other.oldFallParticlePhysics = false;
         other.alwaysSteveModel = false;
         other.fastGrass = false;
-        other.disableRandomBlockRotations = false;
+        // other.disableRandomBlockRotations = false;
         other.oldY0Height = false;
     });
 
