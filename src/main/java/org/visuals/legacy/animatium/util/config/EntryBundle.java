@@ -84,7 +84,9 @@ public class EntryBundle extends Bundle {
 
 		@Override
 		public void install(final ConfigCategory.Builder builder, final Category defaults, final Category config) {
-			throw new UnsupportedOperationException();
+			for (final Entry<?> entry : this.entries) {
+				builder.option(entry.createOption(defaults, config));
+			}
 		}
 
 		public void install(final OptionGroup.Builder builder, final Category defaults, final Category config) {

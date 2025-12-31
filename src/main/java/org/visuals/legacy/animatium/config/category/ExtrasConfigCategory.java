@@ -92,16 +92,12 @@ public class ExtrasConfigCategory extends Category {
 		bundle.booleanEntry("oldWaterColorEffects");
 
 		// TODO: For 3.1
-		// {
-		//     final OptionGroup.Builder itemSwingCategory = OptionGroup.createBuilder();
-		//     itemSwingCategory.name(Component.translatable("animatium.category.extras.item_swing"));
-		//     itemSwingCategory.option(floatSliderOption("itemSwingSpeed", defaults, config, -1.0F, 1.0F, 0.1F));
-		//     itemSwingCategory.option(floatSliderOption("hasteSwingSpeed", defaults, config, -1.0F, 1.0F, 0.1F));
-		//     itemSwingCategory.option(floatSliderOption("miningFatigueSwingSpeed", defaults, config, -1.0F, 1.0F, 0.1F));
-		//     itemSwingCategory.option(booleanOption("ignoreHasteSpeed", defaults, config));
-		//     itemSwingCategory.option(booleanOption("ignoreMiningFatigueSpeed", defaults, config));
-		//     category.group(itemSwingCategory.build());
-		// }
+		/*bundle.group((EntryBundle.Group) new EntryBundle.Group("item_swing")
+				.floatEntry("itemSwingSpeed", -1.0F, 1.0F, 0.1F)
+				.floatEntry("hasteSwingSpeed", -1.0F, 1.0F, 0.1F)
+				.floatEntry("miningFatigueSwingSpeed", -1.0F, 1.0F, 0.1F)
+				.booleanEntry("ignoreHasteSpeed")
+				.booleanEntry("ignoreMiningFatigueSpeed"));*/
 
 		return bundle;
 	}
