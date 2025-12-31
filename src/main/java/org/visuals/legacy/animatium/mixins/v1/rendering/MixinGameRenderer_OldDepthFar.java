@@ -43,6 +43,7 @@ public abstract class MixinGameRenderer_OldDepthFar {
     @WrapOperation(method = "getDepthFar", at = @At(value = "INVOKE", target = "Ljava/lang/Math;max(FF)F"))
     private float animatium$oldDepthFar(float a, float b, Operation<Float> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldDepthFar) {
+			// TOD: Sky uses RD*2.0F, Clouds uses RD*4.0F
             return this.renderDistance * Mth.SQRT_OF_TWO;
         } else {
             return original.call(a, b);

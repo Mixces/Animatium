@@ -25,19 +25,25 @@
 
 package org.visuals.legacy.animatium.mixins.v1.rendering.lighting;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.fabricmc.fabric.impl.client.indigo.renderer.aocalc.AoCalculator;
-import net.fabricmc.fabric.impl.client.indigo.renderer.aocalc.AoConfig;
-import org.objectweb.asm.Opcodes;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadView;
+import net.fabricmc.fabric.impl.client.indigo.renderer.helper.GeometryHelper;
+import net.minecraft.core.Direction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(AoCalculator.class)
+// Indigo Renderer Support
+@Mixin(value = GeometryHelper.class, remap = false)
 public abstract class MixinAoCalculator_FastSmoothLighting {
-    // TODO: Figure out how to do the proper modification in whatever part of this class
-    @WrapOperation(method = "compute", at = @At(value = "FIELD", target = "Lnet/fabricmc/fabric/impl/client/indigo/Indigo;AMBIENT_OCCLUSION_MODE:Lnet/fabricmc/fabric/impl/client/indigo/renderer/aocalc/AoConfig;", opcode = Opcodes.GETSTATIC), remap = false)
-    private AoConfig animatium$forceVanillaAO(Operation<Object> original) {
-        return AoConfig.VANILLA;
-    }
+
+	@Inject(method = "isQuadCubic", at = @At("HEAD"), cancellable = true)
+	private static void animatium$oldFastSmoothLighting(Direction lightFace, QuadView quad, CallbackInfoReturnable<Boolean> cir) {
+		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldMinimumSmoothLighting) {
+			cir.setReturnValue(true);
+		}
+	}
+
 }

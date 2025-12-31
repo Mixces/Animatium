@@ -1,4 +1,4 @@
-## NOTICE: This update will reset your settings!
+## NOTICE: This update will reset your settings! I'm sorry.
 
 ### Changed:
 - Simplified a ton of settings (Combined stuff like Sneaking Settings)

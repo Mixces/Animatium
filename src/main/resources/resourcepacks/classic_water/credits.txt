@@ -1,0 +1,4 @@
+Textures sourced from original 1.8/1.7 jars.
+Textures belong to the programmers/Notch/Mojang, we do not claim them/own them.
+
+Will remove if requested by them.
