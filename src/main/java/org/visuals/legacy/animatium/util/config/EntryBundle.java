@@ -133,7 +133,7 @@ public class EntryBundle extends Bundle {
 		private final float step;
 
 		public FloatEntry(final String name, final float min, final float max, final float step) {
-			super(name, Type.BOOLEAN);
+			super(name, Type.FLOAT);
 			this.min = min;
 			this.max = max;
 			this.step = step;
