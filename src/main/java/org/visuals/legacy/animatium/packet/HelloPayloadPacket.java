@@ -62,7 +62,7 @@ public record HelloPayloadPacket(double version, @Nullable String developmentVer
 	private void writeBundle(final FriendlyByteBuf buffer, final EntryBundle bundle) {
 		for (var entry : bundle.entries()) {
 			buffer.writeUtf(entry.name);
-			buffer.writeUtf(entry.type.name().toLowerCase());
+			buffer.writeEnum(entry.type);
 			final Object value = entry.value();
 			switch (entry.type) {
 				case BOOLEAN -> buffer.writeBoolean((boolean) value);
