@@ -33,73 +33,76 @@ import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.AnimatiumConstants;
+import org.visuals.legacy.animatium.util.config.EntryBundle;
 
 import java.lang.reflect.Field;
 import java.util.function.Function;
 
 public abstract class Category {
-    public static <T extends Category> Option<Boolean> booleanOption(String fieldName, T defaults, T current) {
-        return option(fieldName, defaults, current, TickBoxControllerBuilder::create);
-    }
+	public static <T extends Category> Option<Boolean> booleanOption(String fieldName, T defaults, T current) {
+		return option(fieldName, defaults, current, TickBoxControllerBuilder::create);
+	}
 
-    public static <T extends Category, S extends Enum<S>> Option<S> enumOption(String fieldName, T defaults, T current, Class<S> enumClazz) {
-        return option(fieldName, defaults, current, (opt) -> EnumControllerBuilder.create(opt).enumClass(enumClazz).formatValue(it -> Component.translatable(AnimatiumConstants.MOD_ID + ".enum." + enumClazz.getSimpleName() + "." + it.name())));
-    }
+	public static <T extends Category, S extends Enum<S>> Option<S> enumOption(String fieldName, T defaults, T current, Class<S> enumClazz) {
+		return option(fieldName, defaults, current, (opt) -> EnumControllerBuilder.create(opt).enumClass(enumClazz).formatValue(it -> Component.translatable(AnimatiumConstants.MOD_ID + ".enum." + enumClazz.getSimpleName() + "." + it.name())));
+	}
 
-    public static <T extends Category> Option<Float> floatSliderOption(String fieldName, T defaults, T current, float min, float max, float step) {
-        return option(fieldName, defaults, current, (opt) -> FloatSliderControllerBuilder.create(opt).range(min, max).step(step));
-    }
+	public static <T extends Category> Option<Float> floatSliderOption(String fieldName, T defaults, T current, float min, float max, float step) {
+		return option(fieldName, defaults, current, (opt) -> FloatSliderControllerBuilder.create(opt).range(min, max).step(step));
+	}
 
-    public static <T extends Category, S> Option<S> option(String fieldName, T defaults, T current, Function<Option<S>, ControllerBuilder<S>> controllerBuilder) {
-        final Reference<S> reference = Reference.get(fieldName, defaults, current);
-        final String id = AnimatiumConstants.MOD_ID + "." + fieldName;
-        return Option.<S>createBuilder()
-                .name(Component.translatable(id))
-                .description(OptionDescription.of(Component.translatable(id + ".description")))
-                .binding(reference.defaultValue,
-                        () -> {
-                            try {
-                                return (S) reference.currentField.get(current);
-                            } catch (IllegalAccessException exception) {
-                                exception.printStackTrace();
-                                return reference.defaultValue;
-                            }
-                        },
-                        (newVal) -> {
-                            try {
-                                reference.currentField.set(current, newVal);
-                            } catch (IllegalAccessException exception) {
-                                exception.printStackTrace();
-                            }
-                        })
-                .controller(controllerBuilder)
-                .build();
-    }
+	public static <T extends Category, S> Option<S> option(String fieldName, T defaults, T current, Function<Option<S>, ControllerBuilder<S>> controllerBuilder) {
+		final Reference<S> reference = Reference.get(fieldName, defaults, current);
+		final String id = AnimatiumConstants.MOD_ID + "." + fieldName;
+		return Option.<S>createBuilder()
+				.name(Component.translatable(id))
+				.description(OptionDescription.of(Component.translatable(id + ".description")))
+				.binding(reference.defaultValue,
+						() -> {
+							try {
+								return (S) reference.currentField.get(current);
+							} catch (IllegalAccessException exception) {
+								exception.printStackTrace();
+								return reference.defaultValue;
+							}
+						},
+						(newVal) -> {
+							try {
+								reference.currentField.set(current, newVal);
+							} catch (IllegalAccessException exception) {
+								exception.printStackTrace();
+							}
+						})
+				.controller(controllerBuilder)
+				.build();
+	}
 
-    private static class Reference<S> {
-        public Field defaultField;
-        public Field currentField;
-        public S defaultValue;
+	public abstract EntryBundle bundle();
 
-        public static <T extends Category, S> Reference<S> get(String fieldName, T defaults, T current) {
-            final Reference<S> reference = new Reference<>();
+	private static class Reference<S> {
+		public Field defaultField;
+		public Field currentField;
+		public S defaultValue;
 
-            final Class<?> defaultsClazz = defaults.getClass();
-            try {
-                reference.defaultField = defaultsClazz.getField(fieldName);
-                reference.defaultValue = (S) reference.defaultField.get(defaults);
-            } catch (NoSuchFieldException | IllegalAccessException exception) {
-                exception.printStackTrace();
-            }
+		public static <T extends Category, S> Reference<S> get(String fieldName, T defaults, T current) {
+			final Reference<S> reference = new Reference<>();
 
-            final Class<?> currentClazz = current.getClass();
-            try {
-                reference.currentField = currentClazz.getField(fieldName);
-            } catch (NoSuchFieldException exception) {
-                exception.printStackTrace();
-            }
+			final Class<?> defaultsClazz = defaults.getClass();
+			try {
+				reference.defaultField = defaultsClazz.getField(fieldName);
+				reference.defaultValue = (S) reference.defaultField.get(defaults);
+			} catch (NoSuchFieldException | IllegalAccessException exception) {
+				exception.printStackTrace();
+			}
 
-            return reference;
-        }
-    }
+			final Class<?> currentClazz = current.getClass();
+			try {
+				reference.currentField = currentClazz.getField(fieldName);
+			} catch (NoSuchFieldException exception) {
+				exception.printStackTrace();
+			}
+
+			return reference;
+		}
+	}
 }

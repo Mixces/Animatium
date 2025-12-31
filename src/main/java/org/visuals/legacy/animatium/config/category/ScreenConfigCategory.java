@@ -27,6 +27,7 @@ package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.network.chat.Component;
+import org.visuals.legacy.animatium.util.config.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.CameraVersion;
 
 public class ScreenConfigCategory extends Category {
@@ -56,28 +57,37 @@ public class ScreenConfigCategory extends Category {
 	public static ConfigCategory create(final ScreenConfigCategory defaults, final ScreenConfigCategory config) {
 		final ConfigCategory.Builder category = ConfigCategory.createBuilder();
 		category.name(Component.translatable("animatium.category.screen"));
-		category.option(enumOption("cameraVersion", defaults, config, CameraVersion.class));
-		category.option(booleanOption("crosshairInThirdPerson", defaults, config));
-		category.option(booleanOption("heartFlash", defaults, config));
-		category.option(booleanOption("centerScrollableListWidgets", defaults, config));
-		category.option(booleanOption("listWidgetSelectedBorderColor", defaults, config));
-		category.option(booleanOption("legacyButtonHoverTextColor", defaults, config));
-		category.option(booleanOption("disableDebugHudBackground", defaults, config));
-		category.option(booleanOption("debugHudTextShadow", defaults, config));
-		category.option(booleanOption("cameraTransparentPassthrough", defaults, config));
-		category.option(booleanOption("tooltipStyleRendering", defaults, config));
-		category.option(booleanOption("slotHoverStyleRendering", defaults, config));
-		category.option(booleanOption("listBackgroundGradient", defaults, config));
-		category.option(booleanOption("effectsInventoryPosition", defaults, config));
-		// TODO: category.option(booleanOption("snappySliderMovement", defaults, config));
-		category.option(booleanOption("hideRecipeBook", defaults, config));
-		// category.option(booleanOption("panoramaRendering", defaults, config));
-		category.option(booleanOption("legacyLoadingScreen", defaults, config));
-		category.option(booleanOption("oldDepthFar", defaults, config));
-		category.option(booleanOption("oldChatPosition", defaults, config));
-		category.option(booleanOption("oldCrosshairPosition", defaults, config));
-		category.option(booleanOption("disconnectServerToTitleScreen", defaults, config));
-		// category.option(booleanOption("superSecretSettingsButton", defaults, config));
+		config.bundle().install(category, defaults, config);
 		return category.build();
+	}
+
+	@Override
+	public EntryBundle bundle() {
+		final EntryBundle bundle = new EntryBundle(this, "screen");
+
+		bundle.enumEntry("cameraVersion", CameraVersion.class);
+		bundle.booleanEntry("crosshairInThirdPerson");
+		bundle.booleanEntry("heartFlash");
+		bundle.booleanEntry("centerScrollableListWidgets");
+		bundle.booleanEntry("listWidgetSelectedBorderColor");
+		bundle.booleanEntry("legacyButtonHoverTextColor");
+		bundle.booleanEntry("disableDebugHudBackground");
+		bundle.booleanEntry("debugHudTextShadow");
+		bundle.booleanEntry("cameraTransparentPassthrough");
+		bundle.booleanEntry("tooltipStyleRendering");
+		bundle.booleanEntry("slotHoverStyleRendering");
+		bundle.booleanEntry("listBackgroundGradient");
+		bundle.booleanEntry("effectsInventoryPosition");
+		// TODO: bundle.booleanEntry("snappySliderMovement");
+		bundle.booleanEntry("hideRecipeBook");
+		// bundle.booleanEntry("panoramaRendering");
+		bundle.booleanEntry("legacyLoadingScreen");
+		bundle.booleanEntry("oldDepthFar");
+		bundle.booleanEntry("oldChatPosition");
+		bundle.booleanEntry("oldCrosshairPosition");
+		bundle.booleanEntry("disconnectServerToTitleScreen");
+		// bundle.booleanEntry("superSecretSettingsButton");
+
+		return bundle;
 	}
 }

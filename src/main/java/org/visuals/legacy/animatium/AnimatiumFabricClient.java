@@ -37,42 +37,45 @@ import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import org.visuals.legacy.animatium.command.AnimatiumCommand;
-import org.visuals.legacy.animatium.packet.AnimatiumInfoPayloadPacket;
-import org.visuals.legacy.animatium.packet.RequestInfoPayloadPacket;
+import org.visuals.legacy.animatium.packet.HelloPayloadPacket;
 import org.visuals.legacy.animatium.packet.SetServerFeaturesPayloadPacket;
 
 @Entrypoint
 public final class AnimatiumFabricClient implements ClientModInitializer {
-    @Override
-    public void onInitializeClient() {
-        Animatium.initialize();
-        final ModContainer modContainer = FabricLoader.getInstance().getModContainer(AnimatiumConstants.MOD_ID).orElseThrow(() -> new RuntimeException("Mod container data could not be found for Animatium!"));
-        ResourceManagerHelper.registerBuiltinResourcePack(Animatium.location("classic_textures"), modContainer, ResourcePackActivationType.DEFAULT_ENABLED);
-        ResourceManagerHelper.registerBuiltinResourcePack(Animatium.location("classic_water"), modContainer, ResourcePackActivationType.NORMAL);
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) -> dispatcher.register(AnimatiumCommand.create()));
-        registerPayloads();
-        ModelLoadingPlugin.register(context -> context.addModel(AnimatiumConstants.FAST_GRASS_MODEL_KEY, SimpleUnbakedExtraModel.blockStateModel(AnimatiumConstants.FAST_GRASS_MODEL_LOCATION)));
-    }
+	@Override
+	public void onInitializeClient() {
+		Animatium.initialize();
+		final ModContainer modContainer = FabricLoader.getInstance().getModContainer(AnimatiumConstants.MOD_ID).orElseThrow(() -> new RuntimeException("Mod container data could not be found for Animatium!"));
+		ResourceManagerHelper.registerBuiltinResourcePack(Animatium.location("classic_textures"), modContainer, ResourcePackActivationType.DEFAULT_ENABLED);
+		ResourceManagerHelper.registerBuiltinResourcePack(Animatium.location("classic_water"), modContainer, ResourcePackActivationType.NORMAL);
+		ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) -> dispatcher.register(AnimatiumCommand.create()));
+		registerPayloads();
+		ModelLoadingPlugin.register(context -> context.addModel(AnimatiumConstants.FAST_GRASS_MODEL_KEY, SimpleUnbakedExtraModel.blockStateModel(AnimatiumConstants.FAST_GRASS_MODEL_LOCATION)));
+	}
 
-    private void registerPayloads() {
-        ClientLoginConnectionEvents.DISCONNECT.register((packet, client) -> Animatium.ENABLED_SERVER_FEATURES.clear());
-        ClientConfigurationConnectionEvents.DISCONNECT.register((packet, client) -> Animatium.ENABLED_SERVER_FEATURES.clear());
-        ClientPlayConnectionEvents.DISCONNECT.register((packet, client) -> Animatium.ENABLED_SERVER_FEATURES.clear());
+	private void registerPayloads() {
+		ClientLoginConnectionEvents.DISCONNECT.register((listener, client) -> Animatium.ENABLED_SERVER_FEATURES.clear());
+		ClientConfigurationConnectionEvents.DISCONNECT.register((listener, client) -> Animatium.ENABLED_SERVER_FEATURES.clear());
+		ClientPlayConnectionEvents.DISCONNECT.register((listener, client) -> Animatium.ENABLED_SERVER_FEATURES.clear());
 
-        PayloadTypeRegistry.configurationS2C().register(SetServerFeaturesPayloadPacket.PAYLOAD_ID, SetServerFeaturesPayloadPacket.CODEC);
-        ClientConfigurationNetworking.registerGlobalReceiver(SetServerFeaturesPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> {
-            Animatium.ENABLED_SERVER_FEATURES.clear();
-            Animatium.ENABLED_SERVER_FEATURES.addAll(payload.features());
-        }));
+		ClientPlayConnectionEvents.JOIN.register((listener, sender, client) -> {
+			if (!client.isLocalServer()) {
+				sender.sendPacket(AnimatiumConstants.getHelloPayload());
+			}
+		});
 
-        PayloadTypeRegistry.playS2C().register(SetServerFeaturesPayloadPacket.PAYLOAD_ID, SetServerFeaturesPayloadPacket.CODEC);
-        ClientPlayNetworking.registerGlobalReceiver(SetServerFeaturesPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> {
-            Animatium.ENABLED_SERVER_FEATURES.clear();
-            Animatium.ENABLED_SERVER_FEATURES.addAll(payload.features());
-        }));
+		PayloadTypeRegistry.configurationS2C().register(SetServerFeaturesPayloadPacket.PAYLOAD_ID, SetServerFeaturesPayloadPacket.CODEC);
+		ClientConfigurationNetworking.registerGlobalReceiver(SetServerFeaturesPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> {
+			Animatium.ENABLED_SERVER_FEATURES.clear();
+			Animatium.ENABLED_SERVER_FEATURES.addAll(payload.features());
+		}));
 
-        PayloadTypeRegistry.playC2S().register(AnimatiumInfoPayloadPacket.PAYLOAD_ID, AnimatiumInfoPayloadPacket.CODEC);
-        PayloadTypeRegistry.playS2C().register(RequestInfoPayloadPacket.PAYLOAD_ID, RequestInfoPayloadPacket.CODEC);
-        ClientPlayNetworking.registerGlobalReceiver(RequestInfoPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> ClientPlayNetworking.send(AnimatiumConstants.getInfoPayload())));
-    }
+		PayloadTypeRegistry.playS2C().register(SetServerFeaturesPayloadPacket.PAYLOAD_ID, SetServerFeaturesPayloadPacket.CODEC);
+		ClientPlayNetworking.registerGlobalReceiver(SetServerFeaturesPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> {
+			Animatium.ENABLED_SERVER_FEATURES.clear();
+			Animatium.ENABLED_SERVER_FEATURES.addAll(payload.features());
+		}));
+
+		PayloadTypeRegistry.playC2S().register(HelloPayloadPacket.PAYLOAD_ID, HelloPayloadPacket.CODEC);
+	}
 }

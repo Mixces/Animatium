@@ -26,60 +26,59 @@
 package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
-import dev.isxander.yacl3.api.OptionGroup;
 import net.minecraft.network.chat.Component;
+import org.visuals.legacy.animatium.util.config.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 
 public class MovementConfigCategory extends Category {
-    // (Movement) Cape
-    public boolean capeMovement = true;
-    public boolean disableCapeLean = false;
-    public boolean capeSwingRotation = true;
-    public boolean capeChestplateTranslation = true;
-    public boolean capeSneakPosition = true;
-    // (Movement) Other
-    public SneakAnimationSetting sneakAnimation = SneakAnimationSetting.V1_7;
-    public boolean fakeOldSneakEyeHeight = false;
-    public boolean rotateBackwardsWalking = true;
-    public boolean uncapBlockingHeadRotation = true;
-    public boolean disableHeadRotationInterpolation = true;
-    public boolean handViewBobbingMovement = true;
-    public boolean deathLimbs = true;
-    public boolean bowArmMovement = true;
-    public boolean legacyDamageTilt = true;
-    public boolean offsetHurtTime = true;
+	// (Movement) Cape
+	public boolean capeMovement = true;
+	public boolean disableCapeLean = false;
+	public boolean capeSwingRotation = true;
+	public boolean capeChestplateTranslation = true;
+	public boolean capeSneakPosition = true;
+	// (Movement) Other
+	public SneakAnimationSetting sneakAnimation = SneakAnimationSetting.V1_7;
+	public boolean fakeOldSneakEyeHeight = false;
+	public boolean rotateBackwardsWalking = true;
+	public boolean uncapBlockingHeadRotation = true;
+	public boolean disableHeadRotationInterpolation = true;
+	public boolean handViewBobbingMovement = true;
+	public boolean deathLimbs = true;
+	public boolean bowArmMovement = true;
+	public boolean legacyDamageTilt = true;
+	public boolean offsetHurtTime = true;
 
-    public static ConfigCategory create(final MovementConfigCategory defaults, final MovementConfigCategory config) {
-        final ConfigCategory.Builder category = ConfigCategory.createBuilder();
-        category.name(Component.translatable("animatium.category.movement"));
+	public static ConfigCategory create(final MovementConfigCategory defaults, final MovementConfigCategory config) {
+		final ConfigCategory.Builder category = ConfigCategory.createBuilder();
+		category.name(Component.translatable("animatium.category.movement"));
+		config.bundle().install(category, defaults, config);
+		return category.build();
+	}
 
-        {
-            final OptionGroup.Builder capeGroup = OptionGroup.createBuilder();
-            capeGroup.name(Component.translatable("animatium.category.movement.group.cape"));
-            capeGroup.option(booleanOption("capeMovement", defaults, config));
-            capeGroup.option(booleanOption("disableCapeLean", defaults, config));
-            capeGroup.option(booleanOption("capeSwingRotation", defaults, config));
-            capeGroup.option(booleanOption("capeChestplateTranslation", defaults, config));
-            capeGroup.option(booleanOption("capeSneakPosition", defaults, config));
-            category.group(capeGroup.build());
-        }
+	@Override
+	public EntryBundle bundle() {
+		final EntryBundle bundle = new EntryBundle(this, "movement");
 
-        {
-            final OptionGroup.Builder otherGroup = OptionGroup.createBuilder();
-            otherGroup.name(Component.translatable("animatium.category.movement.group.other"));
-            otherGroup.option(enumOption("sneakAnimation", defaults, config, SneakAnimationSetting.class));
-            otherGroup.option(booleanOption("fakeOldSneakEyeHeight", defaults, config));
-            otherGroup.option(booleanOption("rotateBackwardsWalking", defaults, config));
-            otherGroup.option(booleanOption("uncapBlockingHeadRotation", defaults, config));
-            otherGroup.option(booleanOption("disableHeadRotationInterpolation", defaults, config));
-            otherGroup.option(booleanOption("handViewBobbingMovement", defaults, config));
-            otherGroup.option(booleanOption("deathLimbs", defaults, config));
-            otherGroup.option(booleanOption("bowArmMovement", defaults, config));
-            otherGroup.option(booleanOption("legacyDamageTilt", defaults, config));
-            otherGroup.option(booleanOption("offsetHurtTime", defaults, config));
-            category.group(otherGroup.build());
-        }
+		bundle.group((EntryBundle.Group) new EntryBundle.Group("cape")
+				.booleanEntry("capeMovement")
+				.booleanEntry("disableCapeLean")
+				.booleanEntry("capeSwingRotation")
+				.booleanEntry("capeChestplateTranslation")
+				.booleanEntry("capeSneakPosition"));
 
-        return category.build();
-    }
+		bundle.group((EntryBundle.Group) new EntryBundle.Group("other")
+				.enumEntry("sneakAnimation", SneakAnimationSetting.class)
+				.booleanEntry("fakeOldSneakEyeHeight")
+				.booleanEntry("rotateBackwardsWalking")
+				.booleanEntry("uncapBlockingHeadRotation")
+				.booleanEntry("disableHeadRotationInterpolation")
+				.booleanEntry("handViewBobbingMovement")
+				.booleanEntry("deathLimbs")
+				.booleanEntry("bowArmMovement")
+				.booleanEntry("legacyDamageTilt")
+				.booleanEntry("offsetHurtTime"));
+
+		return bundle;
+	}
 }

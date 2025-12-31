@@ -28,6 +28,7 @@ package org.visuals.legacy.animatium.config.category;
 import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.util.compatibility.Mods;
+import org.visuals.legacy.animatium.util.config.EntryBundle;
 
 public class ExtrasConfigCategory extends Category {
 	public boolean minimalViewBobbing = false;
@@ -59,28 +60,36 @@ public class ExtrasConfigCategory extends Category {
 	public static ConfigCategory create(final ExtrasConfigCategory defaults, final ExtrasConfigCategory config) {
 		final ConfigCategory.Builder category = ConfigCategory.createBuilder();
 		category.name(Component.translatable("animatium.category.extras"));
-		category.option(booleanOption("minimalViewBobbing", defaults, config));
-		category.option(booleanOption("showNameTagInThirdPerson", defaults, config));
-		category.option(booleanOption("hideNameTagBackground", defaults, config));
-		category.option(booleanOption("nameTagTextShadow", defaults, config));
-		category.option(booleanOption("debugHudTextColor", defaults, config));
-		category.option(booleanOption("offhandUsageSwinging", defaults, config));
-		category.option(booleanOption("alwaysUsageSwing", defaults, config));
-		category.option(booleanOption("alwaysSharpParticles", defaults, config));
+		config.bundle().install(category, defaults, config);
+		return category.build();
+	}
+
+	@Override
+	public EntryBundle bundle() {
+		final EntryBundle bundle = new EntryBundle(this, "extras");
+
+		bundle.booleanEntry("minimalViewBobbing");
+		bundle.booleanEntry("showNameTagInThirdPerson");
+		bundle.booleanEntry("hideNameTagBackground");
+		bundle.booleanEntry("nameTagTextShadow");
+		bundle.booleanEntry("debugHudTextColor");
+		bundle.booleanEntry("offhandUsageSwinging");
+		bundle.booleanEntry("alwaysUsageSwing");
+		bundle.booleanEntry("alwaysSharpParticles");
 		if (!Mods.HAS_SODIUM_EXTRAS) {
-			category.option(booleanOption("disableRecipeAndTutorialToasts", defaults, config));
+			bundle.booleanEntry("disableRecipeAndTutorialToasts");
 		}
 
-		category.option(booleanOption("showArmWhileInvisible", defaults, config));
-		category.option(booleanOption("fakeMissPenaltySwing", defaults, config));
-		category.option(booleanOption("dontMoveBlueVoid", defaults, config));
-		category.option(booleanOption("disableEntityDeathTopple", defaults, config));
-		category.option(booleanOption("deepRedHurtTint", defaults, config));
-		category.option(booleanOption("disableParticlePhysics", defaults, config));
-		category.option(booleanOption("disableFirstPersonParticles", defaults, config));
-		category.option(booleanOption("dontClearChat", defaults, config));
-		category.option(booleanOption("dontCloseChat", defaults, config));
-		category.option(booleanOption("oldWaterColorEffects", defaults, config));
+		bundle.booleanEntry("showArmWhileInvisible");
+		bundle.booleanEntry("fakeMissPenaltySwing");
+		bundle.booleanEntry("dontMoveBlueVoid");
+		bundle.booleanEntry("disableEntityDeathTopple");
+		bundle.booleanEntry("deepRedHurtTint");
+		bundle.booleanEntry("disableParticlePhysics");
+		bundle.booleanEntry("disableFirstPersonParticles");
+		bundle.booleanEntry("dontClearChat");
+		bundle.booleanEntry("dontCloseChat");
+		bundle.booleanEntry("oldWaterColorEffects");
 
 		// TODO: For 3.1
 		// {
@@ -94,6 +103,6 @@ public class ExtrasConfigCategory extends Category {
 		//     category.group(itemSwingCategory.build());
 		// }
 
-		return category.build();
+		return bundle;
 	}
 }
