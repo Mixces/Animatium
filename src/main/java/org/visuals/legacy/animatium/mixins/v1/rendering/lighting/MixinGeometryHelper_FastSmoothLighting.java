@@ -37,7 +37,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 // Indigo Renderer Support
 @Mixin(value = GeometryHelper.class, remap = false)
-public abstract class MixinAoCalculator_FastSmoothLighting {
+public abstract class MixinGeometryHelper_FastSmoothLighting {
 
 	@Inject(method = "isQuadCubic", at = @At("HEAD"), cancellable = true)
 	private static void animatium$oldFastSmoothLighting(Direction lightFace, QuadView quad, CallbackInfoReturnable<Boolean> cir) {

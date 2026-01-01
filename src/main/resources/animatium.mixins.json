@@ -109,7 +109,7 @@
 		"v1.rendering.items.usage.MixinFishingRodCast",
 		"v1.rendering.items.usage.MixinIsUsingItem",
 		"v1.rendering.items.usage.MixinMinecraft",
-		"v1.rendering.lighting.MixinAoCalculator_FastSmoothLighting",
+		"v1.rendering.lighting.MixinGeometryHelper_FastSmoothLighting",
 		"v1.rendering.lighting.MixinModelBlockRenderer_FastSmoothLighting",
 		"v1.rendering.min_transparency.MixinSpriteContents_FixTransparencyLimit",
 		"v1.rendering.outlines.MixinCompositeRenderType_BlockOutlineLineWidth",
