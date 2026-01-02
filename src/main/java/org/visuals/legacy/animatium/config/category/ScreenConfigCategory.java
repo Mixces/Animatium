@@ -36,10 +36,10 @@ public class ScreenConfigCategory extends Category {
 	public boolean disableHeartFlash = true;
 	public boolean centerScrollableListWidgets = true;
 	public boolean listWidgetSelectedBorderColor = true;
-	public boolean legacyButtonHoverTextColor = true;
+	public boolean legacyWidgetHoverTextColor = true;
 	public boolean disableDebugHudBackground = true;
 	public boolean debugHudTextShadow = true;
-	public boolean cameraTransparentPassthrough = true;
+	public boolean disableCameraTransparentPassthrough = true;
 	public boolean tooltipStyleRendering = true;
 	public boolean slotHoverStyleRendering = true;
 	public boolean listBackgroundGradient = true;
@@ -70,10 +70,10 @@ public class ScreenConfigCategory extends Category {
 		bundle.booleanEntry("disableHeartFlash");
 		bundle.booleanEntry("centerScrollableListWidgets");
 		bundle.booleanEntry("listWidgetSelectedBorderColor");
-		bundle.booleanEntry("legacyButtonHoverTextColor");
+		bundle.booleanEntry("legacyWidgetHoverTextColor");
 		bundle.booleanEntry("disableDebugHudBackground");
 		bundle.booleanEntry("debugHudTextShadow");
-		bundle.booleanEntry("cameraTransparentPassthrough");
+		bundle.booleanEntry("disableCameraTransparentPassthrough");
 		bundle.booleanEntry("tooltipStyleRendering");
 		bundle.booleanEntry("slotHoverStyleRendering");
 		bundle.booleanEntry("listBackgroundGradient");
