@@ -43,20 +43,20 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(WaterFogEnvironment.class)
 public abstract class MixinWaterFogEnvironment_OldWaterColor {
-    @WrapOperation(method = "getBaseColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/Biome;getWaterFogColor()I"))
-    private int animatium$oldWaterFogColor(Biome instance, Operation<Integer> original, ClientLevel level, Camera camera, int renderDistance, float partialTick) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.oldWaterColorEffects) {
-            float value = 0.0F;
-            if (camera.getEntity() instanceof LivingEntity livingEntity) {
-                value = EnchantmentHelper.getEnchantmentLevel(level.registryAccess().getOrThrow(Enchantments.RESPIRATION), livingEntity) * 0.2F;
-                if (livingEntity.hasEffect(MobEffects.WATER_BREATHING)) {
-                    value *= 0.9F;
-                }
-            }
+	@WrapOperation(method = "getBaseColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/Biome;getWaterFogColor()I"))
+	private int animatium$oldWaterFogColor(Biome instance, Operation<Integer> original, ClientLevel level, Camera camera, int renderDistance, float partialTick) {
+		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldWaterColorFog) {
+			float value = 0.0F;
+			if (camera.getEntity() instanceof LivingEntity livingEntity) {
+				value = EnchantmentHelper.getEnchantmentLevel(level.registryAccess().getOrThrow(Enchantments.RESPIRATION), livingEntity) * 0.2F;
+				if (livingEntity.hasEffect(MobEffects.WATER_BREATHING)) {
+					value *= 0.9F;
+				}
+			}
 
-            return ARGB.colorFromFloat(1.0F, 0.02F + value, 0.02F + value, 0.2F + value);
-        } else {
-            return original.call(instance);
-        }
-    }
+			return ARGB.colorFromFloat(1.0F, 0.02F + value, 0.02F + value, 0.2F + value);
+		} else {
+			return original.call(instance);
+		}
+	}
 }

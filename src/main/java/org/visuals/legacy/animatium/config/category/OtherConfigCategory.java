@@ -64,6 +64,7 @@ public class OtherConfigCategory extends Category {
 	public boolean fastGrass = true;
 	public boolean oldY0Height = true;
 	public boolean oldWaterOverlayOpacity = true;
+	public boolean oldWaterColorFog = true;
 	// public boolean disableRandomBlockRotations = true; // TODO: 3.1
 	public VoidFogSetting voidFog = VoidFogSetting.BOTH;
 
@@ -110,6 +111,7 @@ public class OtherConfigCategory extends Category {
 		bundle.booleanEntry("fastGrass");
 		bundle.booleanEntry("oldY0Height");
 		bundle.booleanEntry("oldWaterOverlayOpacity");
+		bundle.booleanEntry("oldWaterColorFog");
 		// bundle.booleanEntry("disableRandomBlockRotations");
 		bundle.enumEntry("voidFog", VoidFogSetting.class);
 
