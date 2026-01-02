@@ -20,6 +20,7 @@
 		"v1.entity.armor_hurt.MixinOverlayTexture",
 		"v1.entity.cape_movement.MixinAvatarRenderer",
 		"v1.entity.cape_movement.MixinCapeLayer",
+		"v1.entity.cape_movement.MixinModelFeatureRenderer_CapeSwinging",
 		"v1.entity.fishing.MixinFishingHookRenderer",
 		"v1.entity.fishing.MixinItemModelResolver",
 		"v1.entity.flame.MixinFlameFeatureRenderer",
