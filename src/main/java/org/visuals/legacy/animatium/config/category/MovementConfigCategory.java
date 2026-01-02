@@ -32,7 +32,7 @@ import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 
 public class MovementConfigCategory extends Category {
 	// (Movement) Cape
-	public boolean capeMovement = true;
+	public boolean oldCapeMovement = true;
 	public boolean disableCapeLean = false;
 	public boolean disableCapeSwingRotation = true;
 	public boolean capeChestplateTranslation = true;
@@ -61,7 +61,7 @@ public class MovementConfigCategory extends Category {
 		final EntryBundle bundle = new EntryBundle(this, "movement");
 
 		bundle.group((EntryBundle.Group) new EntryBundle.Group("cape")
-				.booleanEntry("capeMovement")
+				.booleanEntry("oldCapeMovement")
 				.booleanEntry("disableCapeLean")
 				.booleanEntry("disableCapeSwingRotation")
 				.booleanEntry("capeChestplateTranslation")

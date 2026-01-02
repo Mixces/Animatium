@@ -44,7 +44,7 @@ public enum Version {
     V1_7((final AnimatiumConfig config) -> {
         final MovementConfigCategory movement = config.movement;
         movement.sneakAnimation = SneakAnimationSetting.V1_7;
-        movement.capeMovement = true;
+        movement.oldCapeMovement = true;
         movement.disableCapeLean = false;
         movement.disableCapeSwingRotation = true;
         movement.capeChestplateTranslation = true;
@@ -148,7 +148,7 @@ public enum Version {
     V1_8((final AnimatiumConfig config) -> {
         final MovementConfigCategory movement = config.movement;
         movement.sneakAnimation = SneakAnimationSetting.V1_8;
-        movement.capeMovement = true;
+        movement.oldCapeMovement = true;
         movement.disableCapeLean = false;
         movement.disableCapeSwingRotation = true;
         movement.capeChestplateTranslation = false;
@@ -266,7 +266,7 @@ public enum Version {
     MODERN((final AnimatiumConfig config) -> {
         final MovementConfigCategory movement = config.movement;
         movement.sneakAnimation = SneakAnimationSetting.VANILLA;
-        movement.capeMovement = false;
+        movement.oldCapeMovement = false;
         movement.disableCapeLean = false;
         movement.disableCapeSwingRotation = false;
         movement.capeChestplateTranslation = false;

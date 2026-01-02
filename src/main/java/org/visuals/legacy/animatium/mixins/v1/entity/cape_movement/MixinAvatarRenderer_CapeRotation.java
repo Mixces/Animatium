@@ -52,7 +52,7 @@ public abstract class MixinAvatarRenderer_CapeRotation<AvatarLikeEntity extends 
 
 	@WrapOperation(method = "extractCapeState", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;rotLerp(FFF)F"))
 	private static float animatium$changeLerpMethod(float delta, float start, float end, Operation<Float> original) {
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.capeMovement) {
+		if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.oldCapeMovement) {
 			return Mth.lerp(delta, start, end);
 		} else {
 			return original.call(delta, start, end);
@@ -70,11 +70,11 @@ public abstract class MixinAvatarRenderer_CapeRotation<AvatarLikeEntity extends 
 
 	@WrapWithCondition(method = "extractCapeState", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;capeLean:F", ordinal = 1, opcode = Opcodes.PUTFIELD))
 	private static boolean animatium$dontAssignLeanField(AvatarRenderState instance, float value) {
-		return !Animatium.isEnabled() || !AnimatiumConfig.instance().movement.capeMovement;
+		return !Animatium.isEnabled() || !AnimatiumConfig.instance().movement.oldCapeMovement;
 	}
 
 	@WrapWithCondition(method = "extractCapeState", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;capeLean2:F", ordinal = 1, opcode = Opcodes.PUTFIELD))
 	private static boolean animatium$dontAssignLean2Field(AvatarRenderState instance, float value) {
-		return !Animatium.isEnabled() || !AnimatiumConfig.instance().movement.capeMovement;
+		return !Animatium.isEnabled() || !AnimatiumConfig.instance().movement.oldCapeMovement;
 	}
 }
