@@ -55,6 +55,8 @@
 
 #### General
 
+- Refactored a lot of settings to be reversed of what they were before
+    - If all settings are disabled should now result in vanilla behaviour
 - Simplified a ton of settings (Combined stuff like Sneaking Settings/Fishing Rod Version)
 
 ### Server
@@ -62,4 +64,4 @@
 - Current config info is now sent inside the "info" payload (README for documentation)
 - Info payload now sends on server join instead of having to be requested, similar to how it originally was but better
   now
-    - During PLAY JOIN
+    - During PLAY (JOIN) state

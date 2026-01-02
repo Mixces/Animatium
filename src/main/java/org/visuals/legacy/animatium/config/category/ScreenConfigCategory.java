@@ -33,7 +33,7 @@ import org.visuals.legacy.animatium.util.enums.CameraVersion;
 public class ScreenConfigCategory extends Category {
 	public CameraVersion cameraVersion = CameraVersion.V1_8;
 	public boolean crosshairInThirdPerson = true;
-	public boolean heartFlash = true;
+	public boolean disableHeartFlash = true;
 	public boolean centerScrollableListWidgets = true;
 	public boolean listWidgetSelectedBorderColor = true;
 	public boolean legacyButtonHoverTextColor = true;
@@ -67,7 +67,7 @@ public class ScreenConfigCategory extends Category {
 
 		bundle.enumEntry("cameraVersion", CameraVersion.class);
 		bundle.booleanEntry("crosshairInThirdPerson");
-		bundle.booleanEntry("heartFlash");
+		bundle.booleanEntry("disableHeartFlash");
 		bundle.booleanEntry("centerScrollableListWidgets");
 		bundle.booleanEntry("listWidgetSelectedBorderColor");
 		bundle.booleanEntry("legacyButtonHoverTextColor");

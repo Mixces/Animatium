@@ -41,26 +41,26 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(Gui.class)
 public abstract class MixinInGameHud {
-    @WrapOperation(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/CameraType;isFirstPerson()Z"))
-    private boolean animatium$crosshairInThirdPerson(CameraType instance, Operation<Boolean> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.crosshairInThirdPerson) {
-            return true;
-        } else {
-            return original.call(instance);
-        }
-    }
+	@WrapOperation(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/CameraType;isFirstPerson()Z"))
+	private boolean animatium$crosshairInThirdPerson(CameraType instance, Operation<Boolean> original) {
+		if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.crosshairInThirdPerson) {
+			return true;
+		} else {
+			return original.call(instance);
+		}
+	}
 
-    @WrapWithCondition(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/ResourceLocation;IIII)V", ordinal = 2))
-    private boolean animatium$fixHighAttackSpeedIndicator(GuiGraphics instance, RenderPipeline renderPipeline, ResourceLocation resourceLocation, int i, int j, int k, int l, @Local float f) {
-        if (AnimatiumConfig.instance().fixes.fixHighAttackSpeedIndicator) {
-            return (int) (f * 17.0F) != 0;
-        } else {
-            return true;
-        }
-    }
+	@WrapWithCondition(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/ResourceLocation;IIII)V", ordinal = 2))
+	private boolean animatium$fixHighAttackSpeedIndicator(GuiGraphics instance, RenderPipeline renderPipeline, ResourceLocation resourceLocation, int i, int j, int k, int l, @Local float f) {
+		if (AnimatiumConfig.instance().fixes.fixHighAttackSpeedIndicator) {
+			return (int) (f * 17.0F) != 0;
+		} else {
+			return true;
+		}
+	}
 
-    @WrapWithCondition(method = "renderHearts", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderHeart(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Gui$HeartType;IIZZZ)V"))
-    private boolean animatium$heartFlash(Gui instance, GuiGraphics guiGraphics, Gui.HeartType type, int x, int y, boolean hardcore, boolean blinking, boolean half) {
-        return !Animatium.isEnabled() || AnimatiumConfig.instance().screen.heartFlash || !blinking || type == Gui.HeartType.CONTAINER;
-    }
+	@WrapWithCondition(method = "renderHearts", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderHeart(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Gui$HeartType;IIZZZ)V"))
+	private boolean animatium$heartFlash(Gui instance, GuiGraphics guiGraphics, Gui.HeartType type, int x, int y, boolean hardcore, boolean blinking, boolean half) {
+		return !Animatium.isEnabled() || !AnimatiumConfig.instance().screen.disableHeartFlash || !blinking || type == Gui.HeartType.CONTAINER;
+	}
 }

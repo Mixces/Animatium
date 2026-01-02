@@ -87,7 +87,7 @@ public enum Version {
 
         final ScreenConfigCategory screen = config.screen;
         screen.crosshairInThirdPerson = true;
-        screen.heartFlash = true;
+        screen.disableHeartFlash = true;
         screen.centerScrollableListWidgets = true;
         screen.listWidgetSelectedBorderColor = true;
         screen.legacyButtonHoverTextColor = true;
@@ -192,7 +192,7 @@ public enum Version {
 
         final ScreenConfigCategory screen = config.screen;
         screen.crosshairInThirdPerson = true;
-        screen.heartFlash = false;
+        screen.disableHeartFlash = false;
         screen.centerScrollableListWidgets = false;
         screen.listWidgetSelectedBorderColor = true;
         screen.legacyButtonHoverTextColor = true;
@@ -311,7 +311,7 @@ public enum Version {
 
         final ScreenConfigCategory screen = config.screen;
         screen.crosshairInThirdPerson = false;
-        screen.heartFlash = false;
+        screen.disableHeartFlash = false;
         screen.centerScrollableListWidgets = false;
         screen.listWidgetSelectedBorderColor = false;
         screen.legacyButtonHoverTextColor = false;
