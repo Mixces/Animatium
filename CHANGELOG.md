@@ -25,7 +25,7 @@
 - Always steve player model (not skin)
 - Center Crosshair (like it was in older versions around <=1.12.2)
 - Old Cloud Rendering (<=1.21.5)
-- Old Water Overlay (the texture when you are submerged) (<=1.12.2)
+- Old Water Overlay Opacity (the texture when you are submerged) (<=1.12.2)
 
 ## Changed:
 #### General

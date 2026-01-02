@@ -37,52 +37,52 @@ import java.nio.file.Files;
 
 @UtilityClass
 public class ConfigUtil {
-    private final Gson GSON = new GsonBuilder().setStrictness(Strictness.LENIENT).create();
-    private final File CONFIG_FILE = new File(FabricLoader.getInstance().getGameDir().toFile(), "animatium_utility.json");
-    private JsonObject data = new JsonObject();
+	private final Gson GSON = new GsonBuilder().setStrictness(Strictness.LENIENT).create();
+	private final File CONFIG_FILE = new File(FabricLoader.getInstance().getGameDir().toFile(), "animatium_utility.json");
+	private JsonObject data = new JsonObject();
 
-    static {
-        // Defaults
-        data.addProperty("enabled", true);
-        data.addProperty("onboarding", true);
-    }
+	static {
+		// Defaults
+		data.addProperty("enabled", true);
+		data.addProperty("onboarding", true);
+	}
 
-    public void load() throws Exception {
-        if (CONFIG_FILE.exists()) {
-            data = GSON.fromJson(Files.readString(CONFIG_FILE.toPath()), JsonObject.class);
-        } else if (!save()) {
-            throw new Exception("Failed to save animatium utility config...");
-        }
-    }
+	public void load() throws Exception {
+		if (CONFIG_FILE.exists()) {
+			data = GSON.fromJson(Files.readString(CONFIG_FILE.toPath()), JsonObject.class);
+		} else if (!save()) {
+			throw new Exception("Failed to save animatium utility config...");
+		}
+	}
 
-    public boolean bool(String name) {
-        if (data.has(name)) {
-            return data.get(name).getAsBoolean();
-        } else {
-            put(name, false);
-            return false;
-        }
-    }
+	public boolean bool(String name) {
+		if (data.has(name)) {
+			return data.get(name).getAsBoolean();
+		} else {
+			put(name, false);
+			return false;
+		}
+	}
 
-    public void put(String name, boolean value) {
-        data.addProperty(name, value);
-        save();
-    }
+	public void put(String name, boolean value) {
+		data.addProperty(name, value);
+		save();
+	}
 
-    public boolean save() {
-        boolean success = true;
-        try {
-            if (!CONFIG_FILE.exists()) {
-                success = CONFIG_FILE.createNewFile();
-            }
+	public boolean save() {
+		boolean success = true;
+		try {
+			if (!CONFIG_FILE.exists()) {
+				success = CONFIG_FILE.createNewFile();
+			}
 
-            if (success) {
-                Files.writeString(CONFIG_FILE.toPath(), GSON.toJson(data));
-            }
-        } catch (Exception exception) {
-            success = false;
-        }
+			if (success) {
+				Files.writeString(CONFIG_FILE.toPath(), GSON.toJson(data));
+			}
+		} catch (Exception exception) {
+			success = false;
+		}
 
-        return success;
-    }
+		return success;
+	}
 }

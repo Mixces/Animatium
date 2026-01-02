@@ -140,8 +140,9 @@ public enum Version {
         // other.oldFallParticlePhysics = true;
         other.alwaysSteveModel = true;
         other.fastGrass = true;
-        // other.disableRandomBlockRotations = true;
         other.oldY0Height = true;
+        other.oldWaterOverlayOpacity = true;
+		// other.disableRandomBlockRotations = true;
     }),
 
     V1_8((final AnimatiumConfig config) -> {
@@ -243,8 +244,9 @@ public enum Version {
         // other.oldFallParticlePhysics = false;
         other.alwaysSteveModel = false;
         other.fastGrass = false;
-        // other.disableRandomBlockRotations = false;
         other.oldY0Height = true;
+        other.oldWaterOverlayOpacity = true;
+		// other.disableRandomBlockRotations = false;
     }),
 
     V1_12((final AnimatiumConfig config) -> {
@@ -360,8 +362,9 @@ public enum Version {
         // other.oldFallParticlePhysics = false;
         other.alwaysSteveModel = false;
         other.fastGrass = false;
-        // other.disableRandomBlockRotations = false;
         other.oldY0Height = false;
+        other.oldWaterOverlayOpacity = false;
+		// other.disableRandomBlockRotations = false;
     });
 
     private final Consumer<AnimatiumConfig> applier;

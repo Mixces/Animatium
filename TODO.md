@@ -8,7 +8,6 @@
 - fix 2d item drops
 - fix 1.8 held item arm logic thingy whatever idk
 - accurate sharpness particles or whatever (jt mentioned)
-- hide new bubble icon from 1.21.2
 
 3.1 TODO:
 
@@ -20,3 +19,4 @@
 - old bed model
 - old head rotation
 - old window icon
+- hide new bubble icon from 1.21.2
