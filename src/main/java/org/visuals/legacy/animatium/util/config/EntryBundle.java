@@ -93,7 +93,13 @@ public class EntryBundle extends Bundle {
 	}
 
 	public Iterable<Entry<?>> entries() {
-		return this.entries;
+		final ArrayList<Entry<?>> entries = new ArrayList<>(this.entries);
+		for (final Group group : this.groups) {
+			// TODO: Find a better way to do this without losing information
+			entries.addAll(group.entries);
+		}
+
+		return entries;
 	}
 
 	public enum Type {

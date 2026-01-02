@@ -45,15 +45,30 @@ want to suggest features, join our [discord](https://discord.gg/C8KKgbA8jy)!
 | Mining Item Usage                | mining_item_usage     | Turn on/off the ability to start mining/break blocks whilst using a item like in 1.7.                             |
 | Hide Attached Fishing Rod Bobber | hide_rod_bobber       | Turn on/off the rendering of the fishing rod bobber when attached to you in first-person.                         |
 | Pick Inflation                   | pick_inflation        | Turn on/off the 0.1 pick (hitbox) inflation when attacking an entity.                                             |
-| Client-sided Entity Movement     | clientside_entities   | Turn on/off the entity movement calculations from the client. (In 1.7, entity movement was handled by the client) |
+| Client-Sided Entity Movement     | clientside_entities   | Turn on/off the entity movement calculations from the client. (In 1.7, entity movement was handled by the client) |
 
 ## Payloads
 
 Allows the server to enable/disable server-only features that enhance gameplay.
 
-| Identifier             | Direction | Field Name          | Field Type      | Description                                                                                  |
-|------------------------|-----------|:--------------------|:----------------|:---------------------------------------------------------------------------------------------|
-| animatium:info         | Server    | Version             | Double          | Current release version of the mod.                                                          |
-|                        |           | Development Version | String?         | Current dev build commit of the mod. Only provided when mod is a development build.          |
-| animatium:request_info | Client    |                     |                 | Sends the animatium:info payload back containing information about the mod version.          |
-| animatium:set_features | Client    | Features List       | List\<Feature\> | List of features the client should use currently, maps to Feature above or skips if unknown. |
+| Identifier             | Direction | Field Name            | Field Type            | Description                                                                                  |
+|------------------------|-----------|:----------------------|:----------------------|:---------------------------------------------------------------------------------------------|
+| animatium:info         | Server    | Version               | Double                | Current release version of the mod.                                                          |
+|                        |           | Development Version   | Optional<String>      | Current dev build commit of the mod. Only provided when mod is a development build.          |
+|                        |           | Config Category Count | Var Int               |                                                                                              |
+|                        |           | Config Entry*         | Config Category (x)^* |                                                                                              |
+| animatium:set_features | Client    | Features List         | List\<Feature\>       | List of features the client should use currently, maps to Feature above or skips if unknown. |
+
+### Config Category
+
+| Identifier | Field Name | Field Type        | Description                       |
+|------------|------------|-------------------|-----------------------------------|
+| Entries    | Entry      | Config Entry (x)* | Each entry of the config category |
+
+### Config Entry
+
+| Identifier | Field Name      | Field Type                                                 |
+|------------|-----------------|------------------------------------------------------------|
+| Name       | String          | The id of the config field                                 |
+| Type       | Enum<EntryType> | The type used to determind the type of the value provided. |
+| Value      | T               | Value based on type. (Boolean, Float, Enum)                |
