@@ -53,7 +53,7 @@ public class OtherConfigCategory extends Category {
 	public boolean modernCombatSounds = true;
 	public boolean modernCombatParticles = true; // TODO/NOTE: Fix, it's broken on servers
 	public boolean restoreParticleBlending = true;
-	public boolean heldItemArmLogic = true;
+	// public boolean heldItemArmLogic = true;
 	public boolean flameDimensions = true;
 	public boolean flameOffset = true;
 	public boolean persistentBlockOutline = false;

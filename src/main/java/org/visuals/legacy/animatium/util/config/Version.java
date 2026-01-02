@@ -130,7 +130,7 @@ public enum Version {
         other.modernCombatSounds = false;
         other.modernCombatParticles = false;
         other.restoreParticleBlending = true;
-        other.heldItemArmLogic = false;
+        // other.heldItemArmLogic = false;
         other.flameDimensions = true;
         other.flameOffset = true;
         other.persistentBlockOutline = true;
@@ -234,7 +234,7 @@ public enum Version {
         other.modernCombatSounds = false;
         other.modernCombatParticles = false;
         other.restoreParticleBlending = true;
-        other.heldItemArmLogic = true;
+        // other.heldItemArmLogic = true;
         other.flameDimensions = true;
         other.flameOffset = false;
         other.persistentBlockOutline = false;
@@ -352,7 +352,7 @@ public enum Version {
         other.modernCombatSounds = true;
         other.modernCombatParticles = true;
         other.restoreParticleBlending = false;
-        other.heldItemArmLogic = false;
+        // other.heldItemArmLogic = false;
         other.flameDimensions = false;
         other.flameOffset = false;
         other.persistentBlockOutline = false;
