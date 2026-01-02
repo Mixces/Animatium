@@ -34,7 +34,7 @@ public class MovementConfigCategory extends Category {
 	// (Movement) Cape
 	public boolean capeMovement = true;
 	public boolean disableCapeLean = false;
-	public boolean capeSwingRotation = true;
+	public boolean disableCapeSwingRotation = true;
 	public boolean capeChestplateTranslation = true;
 	public boolean capeSneakPosition = true;
 	// (Movement) Other
@@ -63,7 +63,7 @@ public class MovementConfigCategory extends Category {
 		bundle.group((EntryBundle.Group) new EntryBundle.Group("cape")
 				.booleanEntry("capeMovement")
 				.booleanEntry("disableCapeLean")
-				.booleanEntry("capeSwingRotation")
+				.booleanEntry("disableCapeSwingRotation")
 				.booleanEntry("capeChestplateTranslation")
 				.booleanEntry("capeSneakPosition"));
 
