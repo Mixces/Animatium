@@ -43,8 +43,8 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(AvatarRenderer.class)
-public abstract class MixinAvatarRenderer<AvatarLikeEntity extends Avatar & ClientAvatarEntity> extends LivingEntityRenderer<AvatarLikeEntity, AvatarRenderState, PlayerModel> {
-	public MixinAvatarRenderer(EntityRendererProvider.Context context, boolean slim) {
+public abstract class MixinAvatarRenderer_CapeRotation<AvatarLikeEntity extends Avatar & ClientAvatarEntity> extends LivingEntityRenderer<AvatarLikeEntity, AvatarRenderState, PlayerModel> {
+	public MixinAvatarRenderer_CapeRotation(EntityRendererProvider.Context context, boolean slim) {
 		super(context, new PlayerModel(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER), slim), 0.5F);
 	}
 
