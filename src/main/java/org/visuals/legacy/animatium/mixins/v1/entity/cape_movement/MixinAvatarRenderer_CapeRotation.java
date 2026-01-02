@@ -25,6 +25,7 @@
 
 package org.visuals.legacy.animatium.mixins.v1.entity.cape_movement;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.entity.ClientAvatarEntity;
@@ -36,6 +37,7 @@ import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Avatar;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -66,21 +68,13 @@ public abstract class MixinAvatarRenderer_CapeRotation<AvatarLikeEntity extends 
 		}
 	}
 
-	@WrapOperation(method = "extractCapeState", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F", ordinal = 1))
-	private static float animatium$dontAssignLeanField(final float value, final float min, final float max, final Operation<Float> original) {
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.capeMovement) {
-			return value;
-		} else {
-			return original.call(value, min, max);
-		}
+	@WrapWithCondition(method = "extractCapeState", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;capeLean:F", ordinal = 1, opcode = Opcodes.PUTFIELD))
+	private static boolean animatium$dontAssignLeanField(AvatarRenderState instance, float value) {
+		return !Animatium.isEnabled() || !AnimatiumConfig.instance().movement.capeMovement;
 	}
 
-	@WrapOperation(method = "extractCapeState", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F", ordinal = 2))
-	private static float animatium$dontAssignLean2Field(final float value, final float min, final float max, final Operation<Float> original) {
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.capeMovement) {
-			return value;
-		} else {
-			return original.call(value, min, max);
-		}
+	@WrapWithCondition(method = "extractCapeState", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;capeLean2:F", ordinal = 1, opcode = Opcodes.PUTFIELD))
+	private static boolean animatium$dontAssignLean2Field(AvatarRenderState instance, float value) {
+		return !Animatium.isEnabled() || !AnimatiumConfig.instance().movement.capeMovement;
 	}
 }
