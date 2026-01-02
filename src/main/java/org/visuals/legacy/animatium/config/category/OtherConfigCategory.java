@@ -53,7 +53,7 @@ public class OtherConfigCategory extends Category {
 	public boolean modernCombatSounds = true;
 	public boolean modernCombatParticles = true; // TODO/NOTE: Fix, it's broken on servers
 	public boolean restoreParticleBlending = true;
-	// public boolean heldItemArmLogic = true;
+	// public boolean heldItemArmLogic = true; // TODO: Fix in 3.1
 	public boolean flameDimensions = true;
 	public boolean flameOffset = true;
 	public boolean persistentBlockOutline = false;
@@ -64,6 +64,7 @@ public class OtherConfigCategory extends Category {
 	public boolean fastGrass = true;
 	public boolean oldY0Height = true;
 	public boolean oldWaterOverlayOpacity = true;
+	public boolean oldBlockOverlayOpacity = true;
 	// public boolean disableRandomBlockRotations = true; // TODO: 3.1
 	public VoidFogSetting voidFog = VoidFogSetting.BOTH;
 
@@ -110,6 +111,7 @@ public class OtherConfigCategory extends Category {
 		bundle.booleanEntry("fastGrass");
 		bundle.booleanEntry("oldY0Height");
 		bundle.booleanEntry("oldWaterOverlayOpacity");
+		bundle.booleanEntry("oldBlockOverlayOpacity");
 		// bundle.booleanEntry("disableRandomBlockRotations");
 		bundle.enumEntry("voidFog", VoidFogSetting.class);
 

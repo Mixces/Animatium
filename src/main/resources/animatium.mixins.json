@@ -89,7 +89,7 @@
 		"v1.gui.toasts.MixinToastManager_DisableToastSounds",
 		"v1.gui.toasts.MixinTutorialToast_DisableToast",
 		"v1.rendering.MixinGameRenderer_OldDepthFar",
-		"v1.rendering.MixinScreenEffectRenderer_WaterOverlay",
+		"v1.rendering.MixinScreenEffectRenderer_TextureOverlays",
 		"v1.rendering.blocks.MixinBiomeSpecialEffects_DisableWaterBiomeTint",
 		"v1.rendering.blocks.MixinBlockRenderDispatcher_FastGrassSide",
 		"v1.rendering.fog.MixinAirBasedFogEnvironment_OldRenderDistance",

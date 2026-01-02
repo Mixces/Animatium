@@ -3,9 +3,13 @@
 - Random model offset? (i alr forgor what this is)
 - Potion model offset? // TODO: mixces what was this again rahhh
 
+3.0 TODO:
+
+- check cape swing setting not working
+
 3.1 TODO:
 
-- fix 1.8 held item arm logic thingy whatever idk
+- fix 1.8 held item arm logic thingy whatever idk (heldItemArmLogic)
 - fix 2d item drops
 - old villager outfits
 - fix old fall particle physics
