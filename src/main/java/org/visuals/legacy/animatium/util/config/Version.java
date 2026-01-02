@@ -46,7 +46,7 @@ public enum Version {
         movement.sneakAnimation = SneakAnimationSetting.V1_7;
         movement.capeMovement = true;
         movement.disableCapeLean = false;
-        movement.disableCapeSwingRotation = false;
+        movement.disableCapeSwingRotation = true;
         movement.capeChestplateTranslation = true;
         movement.capeSneakPosition = true;
         movement.rotateBackwardsWalking = true;
@@ -150,7 +150,7 @@ public enum Version {
         movement.sneakAnimation = SneakAnimationSetting.V1_8;
         movement.capeMovement = true;
         movement.disableCapeLean = false;
-        movement.disableCapeSwingRotation = false;
+        movement.disableCapeSwingRotation = true;
         movement.capeChestplateTranslation = false;
         movement.capeSneakPosition = false;
         movement.rotateBackwardsWalking = true;
@@ -268,7 +268,7 @@ public enum Version {
         movement.sneakAnimation = SneakAnimationSetting.VANILLA;
         movement.capeMovement = false;
         movement.disableCapeLean = false;
-        movement.disableCapeSwingRotation = true;
+        movement.disableCapeSwingRotation = false;
         movement.capeChestplateTranslation = false;
         movement.capeSneakPosition = false;
         movement.rotateBackwardsWalking = false;
