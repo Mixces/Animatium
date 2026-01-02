@@ -23,26 +23,24 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.projectiles.age;
+package org.visuals.legacy.animatium.mixins.v1.rendering.lighting;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.world.entity.projectile.EyeOfEnder;
-import org.objectweb.asm.Opcodes;
+import com.moulberry.mixinconstraints.annotations.IfModLoaded;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(EyeOfEnder.class)
-public abstract class MixinEyeOfEnder {
-    @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/projectile/EyeOfEnder;tickCount:I", opcode = Opcodes.GETFIELD))
-    private int animatium$projectileAgeCheck(EyeOfEnder instance, Operation<Integer> original) {
-        final int originalTick = original.call(instance);
-        if (Animatium.isEnabled() && !AnimatiumConfig.instance().other.projectileAgeCheck) {
-            return originalTick + 2;
-        } else {
-            return originalTick;
-        }
-    }
+// TODO/FIX
+// Sodium Support
+@IfModLoaded("sodium")
+@Mixin(targets = "net.caffeinemc.mods.sodium.client.model.light.smooth.SmoothLightPipeline", remap = false)
+public abstract class MixinSmoothLightPipeline {
+	/*@Definition(id = "flags", local = @Local(type = int.class, name = "flags"))
+	@Expression("(flags & 1) == 0")
+	@ModifyExpressionValue(method = "calculate", at = @At("MIXINEXTRAS:EXPRESSION"), remap = false)
+	private boolean animatium$oldFastSmoothLighting(final boolean original) {
+		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldMinimumSmoothLighting) {
+			return true;
+		} else {
+			return original;
+		}
+	}*/
 }

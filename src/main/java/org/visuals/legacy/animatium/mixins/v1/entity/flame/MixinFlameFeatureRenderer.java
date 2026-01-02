@@ -43,7 +43,7 @@ import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 
 @Mixin(FlameFeatureRenderer.class)
 public abstract class MixinFlameFeatureRenderer {
-    @ModifyExpressionValue(method = "renderFlame", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;boundingBoxWidth:F"))
+    @ModifyExpressionValue(method = "renderFlame", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;boundingBoxWidth:F", opcode = Opcodes.GETFIELD))
     private float animatium$flameWidth(float original, @Local(argsOnly = true) EntityRenderState entityRenderState) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.flameDimensions && entityRenderState instanceof AvatarRenderState) {
             return 0.6F;
@@ -52,7 +52,7 @@ public abstract class MixinFlameFeatureRenderer {
         }
     }
 
-    @ModifyExpressionValue(method = "renderFlame", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;boundingBoxHeight:F"))
+    @ModifyExpressionValue(method = "renderFlame", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;boundingBoxHeight:F", opcode = Opcodes.GETFIELD))
     private float animatium$flameHeight(float original, @Local(argsOnly = true) EntityRenderState entityRenderState) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.flameDimensions && entityRenderState instanceof AvatarRenderState) {
             return 1.8F;
