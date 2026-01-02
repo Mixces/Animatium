@@ -142,7 +142,6 @@ public enum Version {
         other.fastGrass = true;
         other.oldY0Height = true;
         other.oldWaterOverlayOpacity = true;
-        other.oldBlockOverlayOpacity = true;
 		// other.disableRandomBlockRotations = true;
     }),
 
@@ -247,7 +246,6 @@ public enum Version {
         other.fastGrass = false;
         other.oldY0Height = true;
         other.oldWaterOverlayOpacity = true;
-        other.oldBlockOverlayOpacity = true;
 		// other.disableRandomBlockRotations = false;
     }),
 
@@ -366,7 +364,6 @@ public enum Version {
         other.fastGrass = false;
         other.oldY0Height = false;
         other.oldWaterOverlayOpacity = false;
-        other.oldBlockOverlayOpacity = false;
 		// other.disableRandomBlockRotations = false;
     });
 

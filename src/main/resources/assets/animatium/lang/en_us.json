@@ -247,8 +247,6 @@
 	"animatium.oldY0Height.description": "Changes the minY of the world back to 0 like it was in <=1.16.5.",
 	"animatium.oldWaterOverlayOpacity": "[1.12] Old Water Overlay Opacity",
 	"animatium.oldWaterOverlayOpacity.description": "Changes the water texture overlay opacity to 0.5 like it was in <=1.12.2.\n\nThis is when you are submerged in water.",
-	"animatium.oldBlockOverlayOpacity": "[1.12] Old Block Overlay Opacity",
-	"animatium.oldBlockOverlayOpacity.description": "Changes the block texture overlay opacity to 0.5 like it was in <=1.12.2.\n\nThis is when you are inside a block.",
 	"animatium.voidFog": "[1.7] Void Fog/Particles Preset",
 	"animatium.voidFog.description": "Reintroduces void fog & void particles from <=1.7.x",
 	"animatium.enum.VoidFogSetting.BOTH": "Both",
