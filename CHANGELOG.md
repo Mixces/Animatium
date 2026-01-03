@@ -65,3 +65,4 @@
 - Info payload now sends on server join instead of having to be requested, similar to how it originally was but better
   now
     - During PLAY (JOIN) state
+- Server Features is now read as a EnumSet<Feature>. Old functionality still works for now.
