@@ -68,8 +68,8 @@ Allows the server to enable/disable server-only features that enhance gameplay.
 
 ### Config Entry
 
-| Field Name | Field Type      | Description                                                |
-|------------|-----------------|------------------------------------------------------------|
-| Name       | String          | The id of the config field                                 |
+| Field Name | Field Type      | Description                                                 |
+|------------|-----------------|-------------------------------------------------------------|
+| Name       | String          | The id of the config field                                  |
 | Type       | Enum<EntryType> | The type used to determined the type of the value provided. |
-| Value      | T               | Value based on type. (Boolean, Float, Enum)                |
+| Value      | T               | Value based on type. (Boolean, Float, Enum)                 |
