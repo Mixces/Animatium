@@ -8,8 +8,8 @@
     - "all" - enables everything
     - "mining_item_usage" - Allows mining blocks whilst using an item like in <=1.7
     - "pick_inflation" - inflates the pick radius to 0.1 like in <=1.8
-    - "clientside_entities" - makes entity movement client-sided like in <=1.7
     - "old_sneak_height" - Makes the sneaking bounding box/eye height as it was in <=1.8
+    - "clientside_entities" - makes entity movement client-sided like in <=1.7
 
 #### General
 

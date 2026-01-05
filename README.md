@@ -46,6 +46,7 @@ want to suggest features, join our [discord](https://discord.gg/C8KKgbA8jy)!
 | Mining Item Usage                | mining_item_usage     | Turn on/off the ability to start mining/break blocks whilst using a item like in 1.7.                             |
 | Hide Attached Fishing Rod Bobber | hide_rod_bobber       | Turn on/off the rendering of the fishing rod bobber when attached to you in first-person.                         |
 | Pick Inflation                   | pick_inflation        | Turn on/off the 0.1 pick (hitbox) inflation when attacking an entity.                                             |
+| Old Sneak Height                 | old_sneak_height      | Turn on/off the old hitbox/eye height size when sneaking like it was in <=1.8.                                    |
 | Client-Sided Entity Movement     | clientside_entities   | Turn on/off the entity movement calculations from the client. (In 1.7, entity movement was handled by the client) |
 
 ## Payloads
