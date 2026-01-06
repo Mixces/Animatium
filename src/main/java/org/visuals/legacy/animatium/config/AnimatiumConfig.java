@@ -42,7 +42,7 @@ import org.visuals.legacy.animatium.util.Utils;
 public final class AnimatiumConfig {
 	private static final ConfigClassHandler<AnimatiumConfig> CONFIG = ConfigClassHandler.createBuilder(AnimatiumConfig.class)
 			.serializer((config) -> GsonConfigSerializerBuilder.create(config)
-					.setPath(YACLPlatform.getConfigDir().resolve("animatium.json"))
+					.setPath(YACLPlatform.getConfigDir().resolve("animatium3.json"))
 					.build()
 			).build();
 
