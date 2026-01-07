@@ -52,6 +52,7 @@ public class ScreenConfigCategory extends Category {
 	public boolean oldChatPosition = true;
 	public boolean oldCrosshairPosition = true;
 	public boolean disconnectServerToTitleScreen = true;
+	public boolean oldCraftingSlotsPosition = false;
 	// public boolean superSecretSettingsButton = true; // TODO: 3.1
 
 	public static ConfigCategory create(final ScreenConfigCategory defaults, final ScreenConfigCategory config) {
@@ -86,6 +87,7 @@ public class ScreenConfigCategory extends Category {
 		bundle.booleanEntry("oldChatPosition");
 		bundle.booleanEntry("oldCrosshairPosition");
 		bundle.booleanEntry("disconnectServerToTitleScreen");
+		bundle.booleanEntry("oldCraftingSlotsPosition");
 		// bundle.booleanEntry("superSecretSettingsButton");
 
 		return bundle;
