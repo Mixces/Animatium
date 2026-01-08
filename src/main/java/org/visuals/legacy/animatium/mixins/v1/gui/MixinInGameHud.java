@@ -51,9 +51,9 @@ public abstract class MixinInGameHud {
 	}
 
 	@WrapWithCondition(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/ResourceLocation;IIII)V", ordinal = 2))
-	private boolean animatium$fixHighAttackSpeedIndicator(GuiGraphics instance, RenderPipeline renderPipeline, ResourceLocation resourceLocation, int i, int j, int k, int l, @Local float f) {
+	private boolean animatium$fixHighAttackSpeedIndicator(final GuiGraphics instance, final RenderPipeline pipeline, final ResourceLocation sprite, final int x, final int y, final int width, final int height, @Local float attackStrengthScale) {
 		if (AnimatiumConfig.instance().fixes.fixHighAttackSpeedIndicator) {
-			return (int) (f * 17.0F) != 0;
+			return (int) (attackStrengthScale * 17.0F) != 0;
 		} else {
 			return true;
 		}
