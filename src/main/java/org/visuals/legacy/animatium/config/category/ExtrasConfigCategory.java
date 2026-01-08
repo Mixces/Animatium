@@ -31,6 +31,8 @@ import org.visuals.legacy.animatium.util.compatibility.Mods;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
+import java.util.Arrays;
+
 public class ExtrasConfigCategory extends Category {
 	public boolean minimalViewBobbing = false;
 	public boolean showNameTagInThirdPerson = false;
@@ -51,11 +53,13 @@ public class ExtrasConfigCategory extends Category {
 	public boolean dontClearChat = false;
 	public boolean dontCloseChat = false;
 	public boolean oldWaterColorEffects = false;
+	// Item Swing
 	public float itemSwingSpeed = 0.0F;
 	public float hasteSwingSpeed = 0.0F;
 	public float miningFatigueSwingSpeed = 0.0F;
 	public boolean ignoreHasteSpeed = false;
 	public boolean ignoreMiningFatigueSpeed = false;
+	// Server Features (Singleplayer Only)
 	public boolean miss_penalty = false;
 	public boolean left_click_item_usage = false;
 	public boolean mining_item_usage = false;
@@ -109,12 +113,9 @@ public class ExtrasConfigCategory extends Category {
 
 		{
 			final EntryBundle.Group serverFeatureGroup = new EntryBundle.Group("server_features");
-			for (final ServerFeature serverFeature : ServerFeature.VALUES) {
-				if (serverFeature != ServerFeature.ALL) {
-					serverFeatureGroup.booleanEntry(serverFeature.getId());
-				}
-			}
-
+			Arrays.stream(ServerFeature.VALUES)
+					.filter(it -> it != ServerFeature.ALL)
+					.forEach(it -> serverFeatureGroup.booleanEntry(it.getId()));
 			bundle.group(serverFeatureGroup);
 		}
 
