@@ -38,7 +38,7 @@ public record ConfigDataPayloadPacket() implements CustomPacketPayload {
 	public static final CustomPacketPayload.Type<ConfigDataPayloadPacket> PAYLOAD_ID = new CustomPacketPayload.Type<>(Animatium.location("config_data"));
 
 	private void write(FriendlyByteBuf buffer) {
-		buffer.writeVarInt(ConfigBundles.BUNDLES.length);
+		buffer.writeByte(ConfigBundles.BUNDLES.length);
 		for (final EntryBundle bundle : ConfigBundles.BUNDLES) {
 			writeBundle(buffer, bundle);
 		}
