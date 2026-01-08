@@ -39,7 +39,7 @@ import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
 public abstract class MixinFishingRodCast {
     @ModifyReturnValue(method = "get", at = @At(value = "RETURN", ordinal = 0))
     private boolean animatium$getValue(boolean original, @Local(argsOnly = true) ItemDisplayContext displayContext) {
-        if (Animatium.isEnabled() && !AnimatiumConfig.instance().items.itemUsingTextureInGui && displayContext == ItemDisplayContext.GUI) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.disableItemUsingTextureInGUI && displayContext == ItemDisplayContext.GUI) {
             return false;
         } else {
             return (Animatium.isEnabled() && AnimatiumConfig.instance().items.fishingRodVersion.ordinal() <= FishingRodVersion.V1_8.ordinal()) || original;

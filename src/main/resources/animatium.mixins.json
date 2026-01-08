@@ -61,6 +61,7 @@
 		"v1.general.server_features.MixinEntity_ClientSideMovement",
 		"v1.general.server_features.MixinEntity_PickInflation",
 		"v1.general.server_features.MixinFishingHookRenderer_HideFirstPersonBobber",
+		"v1.general.server_features.MixinLocalPlayer_FixSprinting",
 		"v1.general.server_features.MixinMinecraft_MiningItemUsage",
 		"v1.general.server_features.MixinMinecraft_MissPenalty",
 		"v1.general.server_features.MixinMultiPlayerGameMode_StopBlockMining",

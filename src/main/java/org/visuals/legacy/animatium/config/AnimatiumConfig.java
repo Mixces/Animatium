@@ -30,6 +30,7 @@ import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import dev.isxander.yacl3.platform.YACLPlatform;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -37,7 +38,7 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 import org.visuals.legacy.animatium.config.category.*;
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
-import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.packet.ConfigDataPayloadPacket;
 
 public final class AnimatiumConfig {
 	private static final ConfigClassHandler<AnimatiumConfig> CONFIG = ConfigClassHandler.createBuilder(AnimatiumConfig.class)
@@ -57,12 +58,16 @@ public final class AnimatiumConfig {
 			builder.category(ExtrasConfigCategory.create(defaults.extras, config.extras));
 			builder.save(() -> {
 				final Minecraft minecraft = Minecraft.getInstance();
-				((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
-				minecraft.reloadResourcePacks();
+				((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture()); // Reset Hit Color
+				minecraft.reloadResourcePacks(); // Load Updated Block/Item Models
 				if (minecraft.level != null) {
-					minecraft.level.clearTintCaches();
+					minecraft.level.clearTintCaches(); // Clear Water Color
 				}
+
 				CONFIG.save();
+				if (!minecraft.isLocalServer()) {
+					ClientPlayNetworking.send(new ConfigDataPayloadPacket());
+				}
 			});
 			return builder;
 		}).generateScreen(parent);

@@ -43,32 +43,32 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AnimatiumDebugEntry implements DebugScreenEntry {
-    public static final DebugEntryCategory CATEGORY = new DebugEntryCategory(Component.translatable("animatium.category.debug"), 9999.0F);
-    public static final ResourceLocation GROUP = Animatium.location("debug");
+	public static final DebugEntryCategory CATEGORY = new DebugEntryCategory(Component.translatable("animatium.category.debug"), 9999.0F);
+	public static final ResourceLocation GROUP = Animatium.location("debug");
 
-    @Override
-    public void display(DebugScreenDisplayer debugScreenDisplayer, @Nullable Level level, @Nullable LevelChunk levelChunk, @Nullable LevelChunk levelChunk2) {
-        final List<String> list = new ArrayList<>();
-        list.add("Animatium " + AnimatiumConstants.VERSION + (AnimatiumConstants.IS_DEVELOPMENT ? " - Development Version (" + AnimatiumConstants.DEVELOPMENT_VERSION + ")" : ""));
-        if (!Animatium.ENABLED_SERVER_FEATURES.isEmpty() || AnimatiumConstants.IS_DEVELOPMENT) {
-            list.add("Enabled Server Features:");
-            if (Animatium.hasServerFeature(ServerFeature.ALL)) {
-                Arrays.stream(ServerFeature.VALUES).forEach((feature) -> list.add(" - " + feature.getId()));
-            } else {
-                Animatium.ENABLED_SERVER_FEATURES.forEach((feature) -> list.add(" - " + feature.getId()));
-            }
-        }
+	@Override
+	public void display(DebugScreenDisplayer debugScreenDisplayer, @Nullable Level level, @Nullable LevelChunk levelChunk, @Nullable LevelChunk levelChunk2) {
+		final List<String> list = new ArrayList<>();
+		list.add("Animatium " + AnimatiumConstants.VERSION + (AnimatiumConstants.IS_DEVELOPMENT ? " - Development Version (" + AnimatiumConstants.DEVELOPMENT_VERSION + ")" : ""));
+		if (!Animatium.ENABLED_SERVER_FEATURES.isEmpty()) {
+			list.add("Enabled Server Features:");
+			if (Animatium.hasServerFeature(ServerFeature.ALL)) {
+				Arrays.stream(ServerFeature.VALUES).forEach((feature) -> list.add(" - " + feature.getId()));
+			} else {
+				Animatium.ENABLED_SERVER_FEATURES.forEach((feature) -> list.add(" - " + feature.getId()));
+			}
+		}
 
-        debugScreenDisplayer.addToGroup(GROUP, list);
-    }
+		debugScreenDisplayer.addToGroup(GROUP, list);
+	}
 
-    @Override
-    public boolean isAllowed(boolean bl) {
-        return true;
-    }
+	@Override
+	public boolean isAllowed(boolean bl) {
+		return true;
+	}
 
-    @Override
-    public @NotNull DebugEntryCategory category() {
-        return CATEGORY;
-    }
+	@Override
+	public @NotNull DebugEntryCategory category() {
+		return CATEGORY;
+	}
 }

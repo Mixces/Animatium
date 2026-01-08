@@ -100,7 +100,7 @@ public class Utils {
 	}
 
 	public void fakeHandSwing(Player player, InteractionHand hand) {
-		// Clientside NOTE: fake swinging, doesn't send a packet
+		// Fake Swinging, Doesn't Send A Packet
 		if (isNotSwinging(player)) {
 			player.swingTime = -1;
 			player.swinging = true;

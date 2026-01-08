@@ -25,52 +25,70 @@
 
 package org.visuals.legacy.animatium.mixins.v1.entity.particles;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-// TODO: 3.1
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity_FallParticles extends Entity {
 	public MixinLivingEntity_FallParticles(EntityType<?> entityType, Level level) {
 		super(entityType, level);
 	}
 
-	/*@Shadow
+	@Shadow
 	public abstract double getAttributeValue(Holder<Attribute> attribute);
 
-    @Definition(id = "ServerLevel", type = ServerLevel.class)
-    @Expression("? instanceof ServerLevel")
-    @ModifyExpressionValue(method = "checkFallDamage", at = @At(value = "MIXINEXTRAS:EXPRESSION"))
-    private <T extends ParticleOptions> boolean animatium$oldFallParticlePhysics$disableServer(boolean original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldFallParticlePhysics) {
-            return false;
-        } else {
-            return original;
-        }
-    }
+	@Definition(id = "ServerLevel", type = ServerLevel.class)
+	@Expression("? instanceof ServerLevel")
+	@ModifyExpressionValue(method = "checkFallDamage", at = @At(value = "MIXINEXTRAS:EXPRESSION"))
+	private <T extends ParticleOptions> boolean animatium$oldFallParticlePhysics$disableServer(final boolean original) {
+		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldFallParticlePhysics) {
+			return false;
+		} else {
+			return original;
+		}
+	}
 
-    // Code sourced from 14w26a and modified/shortened
-    @Inject(method = "checkFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;checkFallDamage(DZLnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)V", shift = At.Shift.BEFORE))
-    private void animatium$oldFallParticlePhysics(double y, boolean onGround, BlockState state, BlockPos pos, CallbackInfo ci) {
-        final double safeFallDist = this.getAttributeValue(Attributes.SAFE_FALL_DISTANCE);
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldFallParticlePhysics && this.fallDistance > safeFallDist && onGround && !state.isAir()) {
-            final double scale = Math.min(Math.min(0.2F + Mth.ceil(this.fallDistance - safeFallDist) / 15.0F, 10.0F), 2.5);
-            for (int particle = 0; particle < (int) (150.0 * scale); particle++) {
-                final float angle = Mth.nextFloat(this.random, 0.0F, (float) (Math.PI * 2));
-                final double variance = Mth.nextFloat(this.random, 0.75F, 1.0F);
-                this.level().addParticle(
-                        new BlockParticleOption(ParticleTypes.BLOCK, state),
-                        pos.getX() + 0.5F,
-                        pos.getY() + 1.0F,
-                        pos.getZ() + 0.5F,
-                        Mth.cos(angle) * 0.2F * variance * variance * (scale + 0.2),
-                        0.2F + scale / 100.0,
-                        Mth.sin(angle) * 0.2F * variance * variance * (scale + 0.2)
-                );
-            }
-        }
-    }*/
+	// Code sourced from 14w26a and modified/shortened
+	@Inject(method = "checkFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;checkFallDamage(DZLnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)V", shift = At.Shift.BEFORE))
+	private void animatium$oldFallParticlePhysics(final double y, final boolean onGround, final BlockState state, final BlockPos pos, final CallbackInfo ci) {
+		final double safeFallDist = this.getAttributeValue(Attributes.SAFE_FALL_DISTANCE);
+		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldFallParticlePhysics && this.fallDistance > safeFallDist && onGround && !state.isAir()) {
+			final double scale = Math.min(Math.min(0.2F + Mth.ceil(this.fallDistance - safeFallDist) / 15.0F, 10.0F), 2.5);
+			for (int particle = 0; particle < (int) (150.0 * scale); particle++) {
+				final float angle = Mth.nextFloat(this.random, 0.0F, (float) (Math.PI * 2));
+				final double variance = Mth.nextFloat(this.random, 0.75F, 1.0F);
+				this.level().addParticle(
+						new BlockParticleOption(ParticleTypes.BLOCK, state),
+						pos.getX() + 0.5F,
+						pos.getY() + 1.0F,
+						pos.getZ() + 0.5F,
+						Mth.cos(angle) * 0.2F * variance * variance * (scale + 0.2),
+						0.2F + scale / 100.0,
+						Mth.sin(angle) * 0.2F * variance * variance * (scale + 0.2)
+				);
+			}
+		}
+	}
 }

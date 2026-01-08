@@ -82,9 +82,9 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
     }
 
     @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At("HEAD"), cancellable = true)
-    private void animatium$modelWhilstSleeping(S livingEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
+    private void animatium$disableModelWhilstSleeping(S livingEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
         final Player player = Minecraft.getInstance().player;
-        if (Animatium.isEnabled() && !AnimatiumConfig.instance().other.modelWhilstSleeping &&
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.disableModelWhilstSleeping &&
                 livingEntityRenderState instanceof AvatarRenderState avatarRenderState &&
                 player != null &&
                 avatarRenderState.id == player.getId() &&

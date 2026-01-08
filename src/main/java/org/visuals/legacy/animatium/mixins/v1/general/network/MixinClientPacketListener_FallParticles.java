@@ -26,16 +26,22 @@
 package org.visuals.legacy.animatium.mixins.v1.general.network;
 
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-// TODO: 3.1
 @Mixin(ClientPacketListener.class)
 public abstract class MixinClientPacketListener_FallParticles {
-    /*@Inject(method = "handleParticleEvent", at = @At("HEAD"), cancellable = true)
-    private void animatium$disableServerFallParticles(ClientboundLevelParticlesPacket packet, CallbackInfo ci) {
-        // TODO: Fine tune more to only affect fall particles
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldFallParticlePhysics && packet.getParticle().getType() == ParticleTypes.BLOCK) {
-            ci.cancel();
-        }
-    }*/
+	@Inject(method = "handleParticleEvent", at = @At("HEAD"), cancellable = true)
+	private void animatium$disableServerFallParticles(ClientboundLevelParticlesPacket packet, CallbackInfo ci) {
+		// TODO: Fine tune more to only affect fall particles
+		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldFallParticlePhysics && packet.getParticle().getType() == ParticleTypes.BLOCK) {
+			ci.cancel();
+		}
+	}
 }

@@ -29,6 +29,7 @@ import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.util.compatibility.Mods;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
+import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
 public class ExtrasConfigCategory extends Category {
 	public boolean minimalViewBobbing = false;
@@ -50,12 +51,20 @@ public class ExtrasConfigCategory extends Category {
 	public boolean dontClearChat = false;
 	public boolean dontCloseChat = false;
 	public boolean oldWaterColorEffects = false;
-	// TODO: For 3.1
-	// public float itemSwingSpeed = 0.0F;
-	// public float hasteSwingSpeed = 0.0F;
-	// public float miningFatigueSwingSpeed = 0.0F;
-	// public boolean ignoreHasteSpeed = false;
-	// public boolean ignoreMiningFatigueSpeed = false;
+	public float itemSwingSpeed = 0.0F;
+	public float hasteSwingSpeed = 0.0F;
+	public float miningFatigueSwingSpeed = 0.0F;
+	public boolean ignoreHasteSpeed = false;
+	public boolean ignoreMiningFatigueSpeed = false;
+	public boolean miss_penalty = false;
+	public boolean left_click_item_usage = false;
+	public boolean mining_item_usage = false;
+	public boolean hide_rod_bobber = false;
+	public boolean pick_inflation = false;
+	public boolean old_sneak_height = false;
+	public boolean clientside_entities = false;
+	public boolean disable_sprint_item_use = false;
+	public boolean disable_sprint_sneaking = false;
 
 	public static ConfigCategory create(final ExtrasConfigCategory defaults, final ExtrasConfigCategory config) {
 		final ConfigCategory.Builder category = ConfigCategory.createBuilder();
@@ -91,13 +100,23 @@ public class ExtrasConfigCategory extends Category {
 		bundle.booleanEntry("dontCloseChat");
 		bundle.booleanEntry("oldWaterColorEffects");
 
-		// TODO: For 3.1
-		/*bundle.group((EntryBundle.Group) new EntryBundle.Group("item_swing")
+		bundle.group((EntryBundle.Group) new EntryBundle.Group("item_swing")
 				.floatEntry("itemSwingSpeed", -1.0F, 1.0F, 0.1F)
 				.floatEntry("hasteSwingSpeed", -1.0F, 1.0F, 0.1F)
 				.floatEntry("miningFatigueSwingSpeed", -1.0F, 1.0F, 0.1F)
 				.booleanEntry("ignoreHasteSpeed")
-				.booleanEntry("ignoreMiningFatigueSpeed"));*/
+				.booleanEntry("ignoreMiningFatigueSpeed"));
+
+		{
+			final EntryBundle.Group serverFeatureGroup = new EntryBundle.Group("server_features");
+			for (final ServerFeature serverFeature : ServerFeature.VALUES) {
+				if (serverFeature != ServerFeature.ALL) {
+					serverFeatureGroup.booleanEntry(serverFeature.getId());
+				}
+			}
+
+			bundle.group(serverFeatureGroup);
+		}
 
 		return bundle;
 	}

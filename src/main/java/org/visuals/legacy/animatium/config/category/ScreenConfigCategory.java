@@ -46,14 +46,14 @@ public class ScreenConfigCategory extends Category {
 	public boolean effectsInventoryPosition = true;
 	public boolean snappySliderMovement = true;
 	public boolean hideRecipeBook = true;
-	// public boolean panoramaRendering = false; // TODO: 3.1
+	public boolean panoramaRendering = false;
 	public boolean legacyLoadingScreen = true;
 	public boolean oldDepthFar = true;
 	public boolean oldChatPosition = true;
 	public boolean oldCrosshairPosition = true;
 	public boolean disconnectServerToTitleScreen = true;
 	public boolean oldCraftingSlotsPosition = false;
-	// public boolean superSecretSettingsButton = true; // TODO: 3.1
+	public boolean superSecretSettingsButton = true;
 
 	public static ConfigCategory create(final ScreenConfigCategory defaults, final ScreenConfigCategory config) {
 		final ConfigCategory.Builder category = ConfigCategory.createBuilder();
@@ -79,16 +79,16 @@ public class ScreenConfigCategory extends Category {
 		bundle.booleanEntry("slotHoverStyleRendering");
 		bundle.booleanEntry("listBackgroundGradient");
 		bundle.booleanEntry("effectsInventoryPosition");
-		// TODO: bundle.booleanEntry("snappySliderMovement");
+		bundle.booleanEntry("snappySliderMovement");
 		bundle.booleanEntry("hideRecipeBook");
-		// bundle.booleanEntry("panoramaRendering");
+		bundle.booleanEntry("panoramaRendering");
 		bundle.booleanEntry("legacyLoadingScreen");
 		bundle.booleanEntry("oldDepthFar");
 		bundle.booleanEntry("oldChatPosition");
 		bundle.booleanEntry("oldCrosshairPosition");
 		bundle.booleanEntry("disconnectServerToTitleScreen");
 		bundle.booleanEntry("oldCraftingSlotsPosition");
-		// bundle.booleanEntry("superSecretSettingsButton");
+		bundle.booleanEntry("superSecretSettingsButton");
 
 		return bundle;
 	}

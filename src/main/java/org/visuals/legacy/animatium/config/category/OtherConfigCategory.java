@@ -35,7 +35,7 @@ public class OtherConfigCategory extends Category {
 	public boolean blueVoidSky = true;
 	public boolean planarSkyFog = true;
 	public boolean cloudHeight = true;
-	// public boolean playerVoidBox = true; // TODO: 3.1
+	public boolean playerVoidBox = true;
 	// Other
 	public boolean thirdPersonSwordBlockingPosition = true;
 	public boolean lockBlockingArmRotation = true;
@@ -43,29 +43,29 @@ public class OtherConfigCategory extends Category {
 	public boolean blockMiningProgress = true;
 	public boolean disableInventoryEntityScissor = false;
 	public boolean blockOutlineRendering = true;
-	public boolean modelWhilstSleeping = false;
+	public boolean disableModelWhilstSleeping = false;
 	public boolean entityArmorHurtTint = true;
 	public boolean itemGlintOnEntity = true;
 	public boolean maxGlintProperties = true;
 	public boolean armorHurtRendering = false;
 	public boolean highAttackSpeedVisual = false;
 	public boolean disableEntityGlowOutline = false;
-	public boolean modernCombatSounds = true;
-	public boolean modernCombatParticles = true; // TODO/NOTE: Fix, it's broken on servers
+	public boolean disableModernCombatSounds = true;
+	public boolean disableModernCombatParticles = true;
 	public boolean restoreParticleBlending = true;
-	// public boolean heldItemArmLogic = true; // TODO: Fix in 3.1
+	public boolean heldItemArmLogic = true;
 	public boolean flameDimensions = true;
 	public boolean flameOffset = true;
 	public boolean persistentBlockOutline = false;
 	public boolean oldMinimumSmoothLighting = true;
 	public boolean oldCloudRendering = true;
-	// public boolean oldFallParticlePhysics = true; // TODO: 3.1
+	public boolean oldFallParticlePhysics = true;
 	public boolean alwaysSteveModel = true;
 	public boolean fastGrass = true;
 	public boolean oldY0Height = true;
 	public boolean oldWaterOverlayOpacity = true;
 	public boolean oldWaterColorFog = true;
-	// public boolean disableRandomBlockRotations = true; // TODO: 3.1
+	public boolean disableRandomBlockRotations = true;
 	public VoidFogSetting voidFog = VoidFogSetting.BOTH;
 
 	public static ConfigCategory create(final OtherConfigCategory defaults, final OtherConfigCategory config) {
@@ -90,29 +90,29 @@ public class OtherConfigCategory extends Category {
 		bundle.booleanEntry("blockMiningProgress");
 		bundle.booleanEntry("disableInventoryEntityScissor");
 		bundle.booleanEntry("blockOutlineRendering");
-		bundle.booleanEntry("modelWhilstSleeping");
+		bundle.booleanEntry("disableModelWhilstSleeping");
 		bundle.booleanEntry("entityArmorHurtTint");
 		bundle.booleanEntry("itemGlintOnEntity");
 		bundle.booleanEntry("maxGlintProperties");
 		bundle.booleanEntry("armorHurtRendering");
 		bundle.booleanEntry("highAttackSpeedVisual");
 		bundle.booleanEntry("disableEntityGlowOutline");
-		bundle.booleanEntry("modernCombatSounds");
-		bundle.booleanEntry("modernCombatParticles");
+		bundle.booleanEntry("disableModernCombatSounds");
+		bundle.booleanEntry("disableModernCombatParticles");
 		bundle.booleanEntry("restoreParticleBlending");
-		// TODO: bundle.booleanEntry("heldItemArmLogic");
+		bundle.booleanEntry("heldItemArmLogic");
 		bundle.booleanEntry("flameDimensions");
 		bundle.booleanEntry("flameOffset");
 		bundle.booleanEntry("persistentBlockOutline");
 		bundle.booleanEntry("oldMinimumSmoothLighting");
 		bundle.booleanEntry("oldCloudRendering");
-		// bundle.booleanEntry("oldFallParticlePhysics");
+		bundle.booleanEntry("oldFallParticlePhysics");
 		bundle.booleanEntry("alwaysSteveModel");
 		bundle.booleanEntry("fastGrass");
 		bundle.booleanEntry("oldY0Height");
 		bundle.booleanEntry("oldWaterOverlayOpacity");
 		bundle.booleanEntry("oldWaterColorFog");
-		// bundle.booleanEntry("disableRandomBlockRotations");
+		bundle.booleanEntry("disableRandomBlockRotations");
 		bundle.enumEntry("voidFog", VoidFogSetting.class);
 
 		return bundle;

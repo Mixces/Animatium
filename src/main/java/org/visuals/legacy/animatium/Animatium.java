@@ -34,8 +34,10 @@ import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.config.ConfigBundles;
 import org.visuals.legacy.animatium.util.AnimatiumDebugEntry;
 import org.visuals.legacy.animatium.util.config.ConfigUtil;
+import org.visuals.legacy.animatium.util.config.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
 import java.util.EnumSet;
@@ -54,8 +56,18 @@ public final class Animatium {
 	}
 
 	public boolean hasServerFeature(ServerFeature feature) {
-		final boolean hasAll = ENABLED_SERVER_FEATURES.contains(ServerFeature.ALL) || (AnimatiumConstants.IS_DEVELOPMENT && Minecraft.getInstance().isLocalServer());
-		return hasAll || ENABLED_SERVER_FEATURES.contains(feature);
+		final boolean localServer = Minecraft.getInstance().isLocalServer();
+		if (localServer) {
+			for (final EntryBundle.Entry<?> entry : ConfigBundles.EXTRAS.entries()) {
+				if (entry.name.equals(feature.getId())) {
+					return (boolean) entry.value();
+				}
+			}
+
+			return false;
+		} else {
+			return ENABLED_SERVER_FEATURES.contains(ServerFeature.ALL) || ENABLED_SERVER_FEATURES.contains(feature);
+		}
 	}
 
 	public ResourceLocation location(String path) {

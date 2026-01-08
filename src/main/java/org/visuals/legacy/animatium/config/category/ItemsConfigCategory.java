@@ -50,10 +50,10 @@ public class ItemsConfigCategory extends Category {
 	// (Items) Other
 	public boolean thinFishingRodLineThickness = false;
 	public boolean itemUsageSwinging = true;
-	public boolean swingOnUse = false;
-	public boolean swingOnDrop = false;
-	public boolean swingOnEntityInteract = false;
-	public boolean itemUsingTextureInGui = true;
+	public boolean disableSwingOnUse = false;
+	public boolean disableSwingOnDrop = false;
+	public boolean disableSwingOnEntityInteract = false;
+	public boolean disableItemUsingTextureInGUI = true;
 	public boolean durabilityBarColors = true;
 	public boolean legacyItemRarities = true;
 	public boolean heldItemVisibilityInBoat = true;
@@ -94,10 +94,10 @@ public class ItemsConfigCategory extends Category {
 		bundle.group((EntryBundle.Group) new EntryBundle.Group("other")
 				.booleanEntry("thinFishingRodLineThickness")
 				.booleanEntry("itemUsageSwinging")
-				.booleanEntry("swingOnUse")
-				.booleanEntry("swingOnDrop")
-				.booleanEntry("swingOnEntityInteract")
-				.booleanEntry("itemUsingTextureInGui")
+				.booleanEntry("disableSwingOnUse")
+				.booleanEntry("disableSwingOnDrop")
+				.booleanEntry("disableSwingOnEntityInteract")
+				.booleanEntry("disableItemUsingTextureInGUI")
 				.booleanEntry("durabilityBarColors")
 				.booleanEntry("legacyItemRarities")
 				.booleanEntry("heldItemVisibilityInBoat")

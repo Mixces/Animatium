@@ -37,6 +37,7 @@ import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import org.visuals.legacy.animatium.command.AnimatiumCommand;
+import org.visuals.legacy.animatium.packet.ConfigDataPayloadPacket;
 import org.visuals.legacy.animatium.packet.HelloPayloadPacket;
 import org.visuals.legacy.animatium.packet.SetServerFeaturesPayloadPacket;
 
@@ -48,9 +49,9 @@ public final class AnimatiumFabricClient implements ClientModInitializer {
 		final ModContainer modContainer = FabricLoader.getInstance().getModContainer(AnimatiumConstants.MOD_ID).orElseThrow(() -> new RuntimeException("Mod container data could not be found for Animatium!"));
 		ResourceManagerHelper.registerBuiltinResourcePack(Animatium.location("classic_textures"), modContainer, ResourcePackActivationType.NORMAL);
 		ResourceManagerHelper.registerBuiltinResourcePack(Animatium.location("classic_water"), modContainer, ResourcePackActivationType.NORMAL);
-		ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) -> dispatcher.register(AnimatiumCommand.create()));
-		registerPayloads();
 		ModelLoadingPlugin.register(context -> context.addModel(AnimatiumConstants.FAST_GRASS_MODEL_KEY, SimpleUnbakedExtraModel.blockStateModel(AnimatiumConstants.FAST_GRASS_MODEL_LOCATION)));
+		ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) -> dispatcher.register(AnimatiumCommand.create()));
+		this.registerPayloads();
 	}
 
 	private void registerPayloads() {
@@ -61,6 +62,7 @@ public final class AnimatiumFabricClient implements ClientModInitializer {
 		ClientPlayConnectionEvents.JOIN.register((listener, sender, client) -> {
 			if (!client.isLocalServer()) {
 				sender.sendPacket(AnimatiumConstants.getHelloPayload());
+				sender.sendPacket(new ConfigDataPayloadPacket());
 			}
 		});
 
@@ -77,5 +79,6 @@ public final class AnimatiumFabricClient implements ClientModInitializer {
 		}));
 
 		PayloadTypeRegistry.playC2S().register(HelloPayloadPacket.PAYLOAD_ID, HelloPayloadPacket.CODEC);
+		PayloadTypeRegistry.playC2S().register(ConfigDataPayloadPacket.PAYLOAD_ID, ConfigDataPayloadPacket.CODEC);
 	}
 }

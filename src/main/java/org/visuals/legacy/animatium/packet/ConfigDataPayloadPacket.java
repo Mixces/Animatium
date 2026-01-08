@@ -29,22 +29,37 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.config.ConfigBundles;
+import org.visuals.legacy.animatium.util.config.EntryBundle;
 
-import java.util.Optional;
-
-public record HelloPayloadPacket(double version, @Nullable String developmentVersion) implements CustomPacketPayload {
-	public static final StreamCodec<FriendlyByteBuf, HelloPayloadPacket> CODEC = CustomPacketPayload.codec(HelloPayloadPacket::write, null);
-	public static final CustomPacketPayload.Type<HelloPayloadPacket> PAYLOAD_ID = new CustomPacketPayload.Type<>(Animatium.location("info"));
+public record ConfigDataPayloadPacket() implements CustomPacketPayload {
+	public static final StreamCodec<FriendlyByteBuf, ConfigDataPayloadPacket> CODEC = CustomPacketPayload.codec(ConfigDataPayloadPacket::write, null);
+	public static final CustomPacketPayload.Type<ConfigDataPayloadPacket> PAYLOAD_ID = new CustomPacketPayload.Type<>(Animatium.location("config_data"));
 
 	private void write(FriendlyByteBuf buffer) {
-		buffer.writeDouble(version);
-		buffer.writeOptional(Optional.ofNullable(developmentVersion), FriendlyByteBuf::writeUtf);
+		buffer.writeVarInt(ConfigBundles.BUNDLES.length);
+		for (final EntryBundle bundle : ConfigBundles.BUNDLES) {
+			writeBundle(buffer, bundle);
+		}
 	}
 
 	@Override
 	public @NotNull Type<? extends CustomPacketPayload> type() {
 		return PAYLOAD_ID;
+	}
+
+	private void writeBundle(final FriendlyByteBuf buffer, final EntryBundle bundle) {
+		for (var entry : bundle.entries()) {
+			buffer.writeUtf(entry.name);
+			buffer.writeEnum(entry.type);
+			final Object value = entry.value();
+			switch (entry.type) {
+				case BOOLEAN -> buffer.writeBoolean((boolean) value);
+				case FLOAT -> buffer.writeFloat((float) value);
+				case ENUM -> buffer.writeEnum((Enum<?>) value);
+				default -> throw new RuntimeException("Missing entry for type " + entry.type);
+			}
+		}
 	}
 }

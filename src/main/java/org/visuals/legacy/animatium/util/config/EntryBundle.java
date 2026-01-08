@@ -110,7 +110,7 @@ public class EntryBundle extends Bundle {
 
 	public static class Group extends EntryBundle {
 		public Group(final String name) {
-			super(null, name); // TODO: Fix
+			super(null, name);
 		}
 
 		@Override

@@ -23,27 +23,17 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.enums;
+package org.visuals.legacy.animatium.config;
 
-import lombok.Getter;
+import org.visuals.legacy.animatium.util.config.EntryBundle;
 
-@Getter
-public enum ServerFeature {
-    ALL("all"),
-    MISS_PENALTY("miss_penalty"),
-    LEFT_CLICK_ITEM_USAGE("left_click_item_usage"),
-    MINING_ITEM_USAGE("mining_item_usage"),
-    HIDE_FIRSTPERSON_ROD_BOBBER("hide_rod_bobber"),
-    PICK_INFLATION("pick_inflation"),
-    OLD_SNEAK_HEIGHT("old_sneak_height"),
-    CLIENTSIDE_ENTITIES("clientside_entities"),
-	FIX_SPRINT_ITEM_USE("disable_sprint_item_use"),
-	FIX_SPRINT_SNEAKING("disable_sprint_sneaking");
+public final class ConfigBundles {
+	public static final EntryBundle MOVEMENT = AnimatiumConfig.instance().movement.bundle();
+	public static final EntryBundle ITEMS = AnimatiumConfig.instance().items.bundle();
+	public static final EntryBundle SCREEN = AnimatiumConfig.instance().screen.bundle();
+	public static final EntryBundle FIXES = AnimatiumConfig.instance().fixes.bundle();
+	public static final EntryBundle OTHER = AnimatiumConfig.instance().other.bundle();
+	public static final EntryBundle EXTRAS = AnimatiumConfig.instance().extras.bundle();
 
-    public static final ServerFeature[] VALUES = values();
-    private final String id;
-
-    ServerFeature(String id) {
-        this.id = id;
-    }
+	public static final EntryBundle[] BUNDLES = new EntryBundle[]{MOVEMENT, ITEMS, SCREEN, FIXES, OTHER, EXTRAS};
 }
