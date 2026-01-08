@@ -50,14 +50,13 @@ public final class Animatium {
 	@Getter
 	private boolean enabled = true;
 
-	public void setEnabled(boolean enabled) {
+	public void setEnabled(final boolean enabled) {
 		Animatium.enabled = enabled;
 		ConfigUtil.put("enabled", enabled);
 	}
 
-	public boolean hasServerFeature(ServerFeature feature) {
-		final boolean localServer = Minecraft.getInstance().isLocalServer();
-		if (localServer) {
+	public boolean hasServerFeature(final ServerFeature feature) {
+		if (Minecraft.getInstance().isLocalServer()) {
 			for (final EntryBundle.Entry<?> entry : ConfigBundles.EXTRAS.entries()) {
 				if (entry.name.equals(feature.getId())) {
 					return (boolean) entry.value();
@@ -70,7 +69,7 @@ public final class Animatium {
 		}
 	}
 
-	public ResourceLocation location(String path) {
+	public ResourceLocation location(final String path) {
 		return ResourceLocation.fromNamespaceAndPath(AnimatiumConstants.MOD_ID, path);
 	}
 
