@@ -43,21 +43,9 @@ public abstract class MixinLocalPlayer_FixSprinting extends AbstractClientPlayer
 
 	@ModifyReturnValue(method = "isSprintingPossible", at = @At("RETURN"))
 	private boolean animatium$fixItemUseSprinting(final boolean original) {
-		if (Animatium.hasServerFeature(ServerFeature.FIX_SPRINT_ITEM_USE) && this.isUsingItem()) {
+		if ((Animatium.hasServerFeature(ServerFeature.FIX_SPRINT_ITEM_USE) && this.isUsingItem())
+				|| (Animatium.hasServerFeature(ServerFeature.FIX_SPRINT_SNEAKING) && this.isCrouching())) {
 			return false;
-		} else if (Animatium.hasServerFeature(ServerFeature.FIX_SPRINT_SNEAKING) && this.isCrouching()) {
-			return false;
-		} else {
-			return original;
-		}
-	}
-
-	@ModifyReturnValue(method = "shouldStopRunSprinting", at = @At("RETURN"))
-	private boolean animatium$fixSneakSprinting(final boolean original) {
-		if (Animatium.hasServerFeature(ServerFeature.FIX_SPRINT_ITEM_USE) && this.isUsingItem()) {
-			return true;
-		} else if (Animatium.hasServerFeature(ServerFeature.FIX_SPRINT_SNEAKING) && this.isCrouching()) {
-			return true;
 		} else {
 			return original;
 		}
