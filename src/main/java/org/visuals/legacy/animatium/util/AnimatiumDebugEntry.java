@@ -53,9 +53,9 @@ public class AnimatiumDebugEntry implements DebugScreenEntry {
 		if (!Animatium.ENABLED_SERVER_FEATURES.isEmpty()) {
 			list.add("Enabled Server Features:");
 			if (Animatium.hasServerFeature(ServerFeature.ALL)) {
-				Arrays.stream(ServerFeature.VALUES).forEach((feature) -> list.add(" - " + feature.getId()));
+				Arrays.stream(ServerFeature.VALUES).forEach((feature) -> list.add(" - " + feature.getName()));
 			} else {
-				Animatium.ENABLED_SERVER_FEATURES.forEach((feature) -> list.add(" - " + feature.getId()));
+				Animatium.ENABLED_SERVER_FEATURES.forEach((feature) -> list.add(" - " + feature.getName()));
 			}
 		}
 

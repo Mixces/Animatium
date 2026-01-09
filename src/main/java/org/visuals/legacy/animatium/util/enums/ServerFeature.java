@@ -27,23 +27,31 @@ package org.visuals.legacy.animatium.util.enums;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 public enum ServerFeature {
-	ALL("all"),
-	MISS_PENALTY("miss_penalty"),
-	LEFT_CLICK_ITEM_USAGE("left_click_item_usage"),
-	MINING_ITEM_USAGE("mining_item_usage"),
-	HIDE_FIRSTPERSON_ROD_BOBBER("hide_rod_bobber"),
-	PICK_INFLATION("pick_inflation"),
-	OLD_SNEAK_HEIGHT("old_sneak_height"),
-	CLIENTSIDE_ENTITIES("clientside_entities"),
-	FIX_SPRINT_ITEM_USE("disable_sprint_item_use"),
-	FIX_SPRINT_SNEAKING("disable_sprint_sneaking");
+	ALL("all", 0),
+	MISS_PENALTY("miss_penalty", 1),
+	LEFT_CLICK_ITEM_USAGE("left_click_item_usage", 2),
+	MINING_ITEM_USAGE("mining_item_usage", 3),
+	HIDE_FIRSTPERSON_ROD_BOBBER("hide_rod_bobber", 4),
+	PICK_INFLATION("pick_inflation", 5),
+	OLD_SNEAK_HEIGHT("old_sneak_height", 6),
+	CLIENTSIDE_ENTITIES("clientside_entities", 7),
+	FIX_SPRINT_ITEM_USE("disable_sprint_item_use", 8),
+	FIX_SPRINT_SNEAKING("disable_sprint_sneaking", 9);
 
 	public static final ServerFeature[] VALUES = values();
-	private final String id;
+	private final String name;
+	private final int id;
 
-	ServerFeature(final String id) {
+	ServerFeature(final String name, final int id) {
+		this.name = name;
 		this.id = id;
+	}
+
+	public static ServerFeature byId(final int id) {
+		return Arrays.stream(VALUES).filter(it -> it.id == id).findFirst().orElse(null);
 	}
 }

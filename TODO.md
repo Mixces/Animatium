@@ -10,8 +10,12 @@
 - old window icon
 - disable entity variants
 - item swing stuff
-- fix old fall particle physics
 - fix 2d item drops
-- finish post effect shaders
 - old head rotation
 - fix lang inaccuracies
+
+- fix panorama
+- fix old crafting slots not reverting on setting change
+- fix old fall particle physics
+- finish post effect shaders
+- fix super secret settings button not making sound on fresh launch
