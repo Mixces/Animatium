@@ -25,10 +25,12 @@
 
 package org.visuals.legacy.animatium.mixins.v1.general.server_features;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,30 +39,24 @@ import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft_MiningItemUsage {
-    @WrapOperation(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;isDestroying()Z"))
-    private boolean animatium$miningItemUsage(MultiPlayerGameMode instance, Operation<Boolean> original) {
-        if (Animatium.hasServerFeature(ServerFeature.MINING_ITEM_USAGE)) {
-            return false;
-        } else {
-            return original.call(instance);
-        }
-    }
+	@Definition(id = "gameMode", field = "Lnet/minecraft/client/Minecraft;gameMode:Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;")
+	@Definition(id = "isDestroying", method = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;isDestroying()Z")
+	@Expression("this.gameMode.isDestroying()")
+	@ModifyExpressionValue(method = "startUseItem", at = @At("MIXINEXTRAS:EXPRESSION"))
+	private boolean animatium$leftClickItemUsage$miningItemUsage(final boolean original) {
+		if (Animatium.hasServerFeature(ServerFeature.MINING_ITEM_USAGE) || Animatium.hasServerFeature(ServerFeature.LEFT_CLICK_ITEM_USAGE)) {
+			return false;
+		} else {
+			return original;
+		}
+	}
 
-    @WrapOperation(method = "continueAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z"))
-    private boolean animatium$miningItemUsage(LocalPlayer instance, Operation<Boolean> original) {
-        if (Animatium.hasServerFeature(ServerFeature.MINING_ITEM_USAGE)) {
-            return false;
-        } else {
-            return original.call(instance);
-        }
-    }
-
-    @WrapOperation(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;isDestroying()Z"))
-    private boolean animatium$leftClickItemUsage(MultiPlayerGameMode instance, Operation<Boolean> original) {
-        if (Animatium.hasServerFeature(ServerFeature.LEFT_CLICK_ITEM_USAGE)) {
-            return false;
-        } else {
-            return original.call(instance);
-        }
-    }
+	@WrapOperation(method = "continueAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z"))
+	private boolean animatium$miningItemUsage(LocalPlayer instance, Operation<Boolean> original) {
+		if (Animatium.hasServerFeature(ServerFeature.MINING_ITEM_USAGE)) {
+			return false;
+		} else {
+			return original.call(instance);
+		}
+	}
 }

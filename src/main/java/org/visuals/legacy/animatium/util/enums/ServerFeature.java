@@ -29,21 +29,21 @@ import lombok.Getter;
 
 @Getter
 public enum ServerFeature {
-    ALL("all"),
-    MISS_PENALTY("miss_penalty"),
-    LEFT_CLICK_ITEM_USAGE("left_click_item_usage"),
-    MINING_ITEM_USAGE("mining_item_usage"),
-    HIDE_FIRSTPERSON_ROD_BOBBER("hide_rod_bobber"),
-    PICK_INFLATION("pick_inflation"),
-    OLD_SNEAK_HEIGHT("old_sneak_height"),
-    CLIENTSIDE_ENTITIES("clientside_entities"),
+	ALL("all"),
+	MISS_PENALTY("miss_penalty"),
+	LEFT_CLICK_ITEM_USAGE("left_click_item_usage"),
+	MINING_ITEM_USAGE("mining_item_usage"),
+	HIDE_FIRSTPERSON_ROD_BOBBER("hide_rod_bobber"),
+	PICK_INFLATION("pick_inflation"),
+	OLD_SNEAK_HEIGHT("old_sneak_height"),
+	CLIENTSIDE_ENTITIES("clientside_entities"),
 	FIX_SPRINT_ITEM_USE("disable_sprint_item_use"),
 	FIX_SPRINT_SNEAKING("disable_sprint_sneaking");
 
-    public static final ServerFeature[] VALUES = values();
-    private final String id;
+	public static final ServerFeature[] VALUES = values();
+	private final String id;
 
-    ServerFeature(String id) {
-        this.id = id;
-    }
+	ServerFeature(final String id) {
+		this.id = id;
+	}
 }

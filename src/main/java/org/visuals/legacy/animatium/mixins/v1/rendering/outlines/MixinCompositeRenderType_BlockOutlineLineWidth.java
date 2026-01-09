@@ -25,16 +25,17 @@
 
 package org.visuals.legacy.animatium.mixins.v1.rendering.outlines;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.renderer.RenderType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
 @Mixin(RenderType.CompositeRenderType.class)
 public abstract class MixinCompositeRenderType_BlockOutlineLineWidth {
-    @ModifyArg(method = "draw", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/DynamicUniforms;writeTransform(Lorg/joml/Matrix4fc;Lorg/joml/Vector4fc;Lorg/joml/Vector3fc;Lorg/joml/Matrix4fc;F)Lcom/mojang/blaze3d/buffers/GpuBufferSlice;"), index = 4)
-    private float animatium$blockOutlineRendering$lineWidth(float original) {
-        return RenderUtils.getLineState().get(original);
-    }
+	@WrapOperation(method = "draw", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;getShaderLineWidth()F"))
+	private float animatium$blockOutlineRendering$lineWidth(final Operation<Float> original) {
+		return RenderUtils.getLineState().get(original.call());
+	}
 }
