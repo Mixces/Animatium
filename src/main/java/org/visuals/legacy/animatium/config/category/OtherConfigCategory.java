@@ -27,6 +27,7 @@ package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.network.chat.Component;
+import org.visuals.legacy.animatium.util.compatibility.Mods;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.VoidFogSetting;
 
@@ -91,7 +92,10 @@ public class OtherConfigCategory extends Category {
 		bundle.booleanEntry("disableInventoryEntityScissor");
 		bundle.booleanEntry("blockOutlineRendering");
 		bundle.booleanEntry("disableModelWhilstSleeping");
-		bundle.booleanEntry("entityArmorHurtTint");
+		if (!Mods.HAS_LUNAR_CLIENT) {
+			bundle.booleanEntry("entityArmorHurtTint");
+		}
+
 		bundle.booleanEntry("itemGlintOnEntity");
 		bundle.booleanEntry("maxGlintProperties");
 		bundle.booleanEntry("armorHurtRendering");

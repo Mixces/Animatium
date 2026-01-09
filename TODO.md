@@ -5,15 +5,13 @@
 
 3.1 TODO:
 
-- hide hit armor tint when lunar is detected
 - disable random block rotations
-- item swing stuff
 - fix fast grass w/ sodium
-- old villager outfits
 - old window icon
 - disable entity variants
-- old head rotation
+- item swing stuff
 - fix old fall particle physics
 - fix 2d item drops
 - finish post effect shaders
+- old head rotation
 - fix lang inaccuracies

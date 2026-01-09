@@ -33,6 +33,7 @@ import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
 import net.minecraft.client.renderer.RenderType;
@@ -50,6 +51,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
+@IfModAbsent("ichor")
 @Mixin(EquipmentLayerRenderer.class)
 public abstract class MixinEquipmentLayerRenderer {
 	@WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/ResourceLocation;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;armorCutoutNoCull(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;"))
@@ -87,7 +89,7 @@ public abstract class MixinEquipmentLayerRenderer {
 				AnimatiumConfig.instance().other.entityArmorHurtTint &&
 				AnimatiumConfig.instance().other.armorHurtRendering &&
 				renderState instanceof LivingEntityRenderState livingEntityRenderState) {
-			boolean isHurt = livingEntityRenderState.hasRedOverlay;
+			final boolean isHurt = livingEntityRenderState.hasRedOverlay;
 			if (isHurt) {
 				// TODO: Check if this code even does anything at all
 				// TODO: Too strong? & glint needs to be tinted hurt color
