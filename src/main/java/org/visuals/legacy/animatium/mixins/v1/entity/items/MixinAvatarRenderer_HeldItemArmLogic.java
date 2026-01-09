@@ -25,19 +25,26 @@
 
 package org.visuals.legacy.animatium.mixins.v1.entity.items;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.ClientAvatarEntity;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -73,5 +80,19 @@ public abstract class MixinAvatarRenderer_HeldItemArmLogic<AvatarLikeEntity exte
 				modelPart.yRot = 0.0F;
 			}
 		}
+	}
+
+	@WrapOperation(method = "renderHand", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModelPart(Lnet/minecraft/client/model/geom/ModelPart;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/RenderType;IILnet/minecraft/client/renderer/texture/TextureAtlasSprite;)V"))
+	private void animatium$partialVisibleArmWhileInvisible(final SubmitNodeCollector instance, final ModelPart modelPart, final PoseStack poseStack, final RenderType renderType, final int packedLight, final int packedOverlay, final TextureAtlasSprite textureAtlasSprite, final Operation<Void> original) {
+		if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.showArmWhileInvisible) {
+			final Player player = Minecraft.getInstance().player;
+			if (player != null && player.isInvisible()) {
+				final int color = ARGB.multiply(654311423, this.getModelTint(animatium$renderState.get()));
+				instance.submitModelPart(modelPart, poseStack, renderType, packedLight, packedOverlay, textureAtlasSprite, color, null);
+				return;
+			}
+		}
+
+		original.call(instance, modelPart, poseStack, renderType, packedLight, packedOverlay, textureAtlasSprite);
 	}
 }

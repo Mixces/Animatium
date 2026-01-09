@@ -5,18 +5,15 @@
 
 3.1 TODO:
 
-- fix 1.8 held item arm logic thingy whatever idk (heldItemArmLogic)
-- fix 2d item drops
-- old villager outfits
-- fix old fall particle physics
-- finish post effect shaders
+- hide hit armor tint when lunar is detected
 - disable random block rotations
 - item swing stuff
-- old bed model
-- old head rotation
+- fix fast grass w/ sodium
+- old villager outfits
 - old window icon
-- hide new bubble icon from 1.21.2
 - disable entity variants
-- fix invisible arm opacity
-- hide hit armor tint when lunar is detected
+- old head rotation
+- fix old fall particle physics
+- fix 2d item drops
+- finish post effect shaders
 - fix lang inaccuracies

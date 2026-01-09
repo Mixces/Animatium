@@ -138,7 +138,6 @@ public enum Version {
 		other.oldCloudRendering = true;
 		other.voidFog = VoidFogSetting.BOTH;
 		other.oldFallParticlePhysics = true;
-		other.alwaysSteveModel = true;
 		other.fastGrass = true;
 		other.oldY0Height = true;
 		other.oldWaterOverlayOpacity = true;
@@ -243,7 +242,6 @@ public enum Version {
 		other.oldCloudRendering = true;
 		other.voidFog = VoidFogSetting.OFF;
 		other.oldFallParticlePhysics = false;
-		other.alwaysSteveModel = false;
 		other.fastGrass = false;
 		other.oldY0Height = true;
 		other.oldWaterOverlayOpacity = true;
@@ -362,7 +360,6 @@ public enum Version {
 		other.oldCloudRendering = false;
 		other.voidFog = VoidFogSetting.OFF;
 		other.oldFallParticlePhysics = false;
-		other.alwaysSteveModel = false;
 		other.fastGrass = false;
 		other.oldY0Height = false;
 		other.oldWaterOverlayOpacity = false;
