@@ -40,12 +40,34 @@ import org.visuals.legacy.animatium.config.category.*;
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.packet.ConfigDataPayloadPacket;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public final class AnimatiumConfig {
 	private static final ConfigClassHandler<AnimatiumConfig> CONFIG = ConfigClassHandler.createBuilder(AnimatiumConfig.class)
 			.serializer((config) -> GsonConfigSerializerBuilder.create(config)
 					.setPath(YACLPlatform.getConfigDir().resolve("animatium3.json"))
 					.build()
 			).build();
+
+	@SerialEntry
+	public MovementConfigCategory movement = new MovementConfigCategory();
+
+	@SerialEntry
+	public ItemsConfigCategory items = new ItemsConfigCategory();
+
+	@SerialEntry
+	public ScreenConfigCategory screen = new ScreenConfigCategory();
+
+	@SerialEntry
+	public FixesConfigCategory fixes = new FixesConfigCategory();
+
+	@SerialEntry
+	public OtherConfigCategory other = new OtherConfigCategory();
+
+	@SerialEntry
+	public ExtrasConfigCategory extras = new ExtrasConfigCategory();
 
 	public static Screen getConfigScreen(@Nullable Screen parent) {
 		return YetAnotherConfigLib.create(CONFIG, (defaults, config, builder) -> {
@@ -65,7 +87,7 @@ public final class AnimatiumConfig {
 				}
 
 				CONFIG.save();
-				if (!minecraft.isLocalServer()) {
+				if (minecraft.getConnection() != null && !minecraft.isLocalServer()) {
 					ClientPlayNetworking.send(new ConfigDataPayloadPacket());
 				}
 			});
@@ -74,6 +96,26 @@ public final class AnimatiumConfig {
 	}
 
 	public static void load() {
+		final Path oldFilePath = YACLPlatform.getConfigDir().resolve("animatium.json");
+		final File oldFile = oldFilePath.toFile();
+
+		final Path newFilePath = YACLPlatform.getConfigDir().resolve("animatium3.json");
+		final File newFile = newFilePath.toFile();
+
+		if (oldFile.exists()) {
+			if (newFile.exists()) {
+				newFile.delete();
+			}
+
+			try {
+				Files.move(oldFilePath, newFilePath);
+				System.out.println("Detected old animatium 3.0 config file, moved to new location!");
+			} catch (Exception exception) {
+				System.err.println("Failed to move old animatium config to new location!");
+				exception.printStackTrace();
+			}
+		}
+
 		CONFIG.load();
 	}
 
@@ -84,22 +126,4 @@ public final class AnimatiumConfig {
 	public static AnimatiumConfig instance() {
 		return CONFIG.instance();
 	}
-
-	@SerialEntry
-	public MovementConfigCategory movement = new MovementConfigCategory();
-
-	@SerialEntry
-	public ItemsConfigCategory items = new ItemsConfigCategory();
-
-	@SerialEntry
-	public ScreenConfigCategory screen = new ScreenConfigCategory();
-
-	@SerialEntry
-	public FixesConfigCategory fixes = new FixesConfigCategory();
-
-	@SerialEntry
-	public OtherConfigCategory other = new OtherConfigCategory();
-
-	@SerialEntry
-	public ExtrasConfigCategory extras = new ExtrasConfigCategory();
 }

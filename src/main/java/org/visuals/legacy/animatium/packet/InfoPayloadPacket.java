@@ -34,9 +34,9 @@ import org.visuals.legacy.animatium.Animatium;
 
 import java.util.Optional;
 
-public record HelloPayloadPacket(double version, @Nullable String developmentVersion) implements CustomPacketPayload {
-	public static final StreamCodec<FriendlyByteBuf, HelloPayloadPacket> CODEC = CustomPacketPayload.codec(HelloPayloadPacket::write, null);
-	public static final CustomPacketPayload.Type<HelloPayloadPacket> PAYLOAD_ID = new CustomPacketPayload.Type<>(Animatium.location("info"));
+public record InfoPayloadPacket(double version, @Nullable String developmentVersion) implements CustomPacketPayload {
+	public static final StreamCodec<FriendlyByteBuf, InfoPayloadPacket> CODEC = CustomPacketPayload.codec(InfoPayloadPacket::write, null);
+	public static final CustomPacketPayload.Type<InfoPayloadPacket> PAYLOAD_ID = new CustomPacketPayload.Type<>(Animatium.location("info"));
 
 	private void write(FriendlyByteBuf buffer) {
 		buffer.writeDouble(version);

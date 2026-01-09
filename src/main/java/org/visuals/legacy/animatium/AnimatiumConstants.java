@@ -29,19 +29,19 @@ import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.resources.ResourceLocation;
-import org.visuals.legacy.animatium.packet.HelloPayloadPacket;
+import org.visuals.legacy.animatium.packet.InfoPayloadPacket;
 
 @UtilityClass
 public class AnimatiumConstants {
-    public final String MOD_ID = "@MODID@";
-    public final Double VERSION = Double.parseDouble("@VERSION@");
-    public final String DEVELOPMENT_VERSION = "@COMMIT@";
-    public final boolean IS_DEVELOPMENT = Boolean.parseBoolean("@DEVELOPMENT@");
+	public final String MOD_ID = "@MODID@";
+	public final Double VERSION = Double.parseDouble("@VERSION@");
+	public final String DEVELOPMENT_VERSION = "@COMMIT@";
+	public final boolean IS_DEVELOPMENT = Boolean.parseBoolean("@DEVELOPMENT@");
 
-    public final ResourceLocation FAST_GRASS_MODEL_LOCATION = Animatium.location("block/fast_grass_block");
-    public final ExtraModelKey<BlockStateModel> FAST_GRASS_MODEL_KEY = ExtraModelKey.create(FAST_GRASS_MODEL_LOCATION::toString);
+	public final ResourceLocation FAST_GRASS_MODEL_LOCATION = Animatium.location("block/fast_grass_block");
+	public final ExtraModelKey<BlockStateModel> FAST_GRASS_MODEL_KEY = ExtraModelKey.create(FAST_GRASS_MODEL_LOCATION::toString);
 
-    public HelloPayloadPacket getHelloPayload() {
-        return new HelloPayloadPacket(VERSION, IS_DEVELOPMENT ? DEVELOPMENT_VERSION : null);
-    }
+	public InfoPayloadPacket getInfoPayload() {
+		return new InfoPayloadPacket(VERSION, IS_DEVELOPMENT ? DEVELOPMENT_VERSION : null);
+	}
 }

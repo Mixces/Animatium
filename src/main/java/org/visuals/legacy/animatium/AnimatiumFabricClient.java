@@ -38,7 +38,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import org.visuals.legacy.animatium.command.AnimatiumCommand;
 import org.visuals.legacy.animatium.packet.ConfigDataPayloadPacket;
-import org.visuals.legacy.animatium.packet.HelloPayloadPacket;
+import org.visuals.legacy.animatium.packet.InfoPayloadPacket;
 import org.visuals.legacy.animatium.packet.SetServerFeaturesPayloadPacket;
 
 @Entrypoint
@@ -61,7 +61,7 @@ public final class AnimatiumFabricClient implements ClientModInitializer {
 
 		ClientPlayConnectionEvents.JOIN.register((listener, sender, client) -> {
 			if (!client.isLocalServer()) {
-				sender.sendPacket(AnimatiumConstants.getHelloPayload());
+				sender.sendPacket(AnimatiumConstants.getInfoPayload());
 				sender.sendPacket(new ConfigDataPayloadPacket());
 			}
 		});
@@ -78,7 +78,7 @@ public final class AnimatiumFabricClient implements ClientModInitializer {
 			Animatium.ENABLED_SERVER_FEATURES.addAll(payload.features());
 		}));
 
-		PayloadTypeRegistry.playC2S().register(HelloPayloadPacket.PAYLOAD_ID, HelloPayloadPacket.CODEC);
+		PayloadTypeRegistry.playC2S().register(InfoPayloadPacket.PAYLOAD_ID, InfoPayloadPacket.CODEC);
 		PayloadTypeRegistry.playC2S().register(ConfigDataPayloadPacket.PAYLOAD_ID, ConfigDataPayloadPacket.CODEC);
 	}
 }
