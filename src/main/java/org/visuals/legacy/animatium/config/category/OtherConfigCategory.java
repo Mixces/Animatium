@@ -83,7 +83,8 @@ public class OtherConfigCategory extends Category {
 		bundle.group((EntryBundle.Group) new EntryBundle.Group("sky")
 				.booleanEntry("blueVoidSky")
 				.booleanEntry("planarSkyFog")
-				.booleanEntry("cloudHeight"));
+				.booleanEntry("cloudHeight")
+				.booleanEntry("playerVoidBox"));
 
 		bundle.booleanEntry("thirdPersonSwordBlockingPosition");
 		bundle.booleanEntry("lockBlockingArmRotation");
