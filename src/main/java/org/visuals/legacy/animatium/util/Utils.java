@@ -45,6 +45,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -55,6 +57,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.mixins.accessor.CameraAccessor;
 import org.visuals.legacy.animatium.mixins.accessor.ClientLevelDataAccessor;
 import org.visuals.legacy.animatium.mixins.accessor.LivingEntityAccessor;
+import org.visuals.legacy.animatium.mixins.accessor.PlayerAccessor;
 import org.visuals.legacy.animatium.util.states.CameraUtilityRenderState;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -169,5 +172,13 @@ public class Utils {
 	public boolean isSelf(final Entity entity) {
 		final Player player = Minecraft.getInstance().player;
 		return player != null && entity != null && entity.getId() == player.getId();
+	}
+
+	public void restoreInventorySlots() {
+		final Player player = Minecraft.getInstance().player;
+		if (player != null && !GameType.CREATIVE.equals(player.gameMode())) {
+			// Re-initialize the inventory, to reset the slot positions modified by "Old Crafting Slots Position"
+			((PlayerAccessor) player).animatium$setInventoryMenu(new InventoryMenu(player.getInventory(), !player.level().isClientSide(), player));
+		}
 	}
 }

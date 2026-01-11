@@ -32,11 +32,9 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.screens.OnboardingScreen;
 import org.visuals.legacy.animatium.util.config.ConfigUtil;
 
@@ -53,14 +51,7 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
 			} else {
 				source.sendFeedback(Component.literal("Mod enabled.").withStyle(ChatFormatting.GREEN));
 				Animatium.setEnabled(true);
-
-				final Minecraft minecraft = source.getClient();
-				((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
-				minecraft.reloadResourcePacks();
-
-				if (!ConfigUtil.save()) {
-					System.err.println("Failed to save animatium utility config...");
-				}
+				Animatium.reload();
 			}
 
 			return Command.SINGLE_SUCCESS;
@@ -73,12 +64,7 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
 			} else {
 				source.sendFeedback(Component.literal("Mod disabled.").withStyle(ChatFormatting.RED));
 				Animatium.setEnabled(false);
-
-				final Minecraft minecraft = source.getClient();
-				((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
-				minecraft.reloadResourcePacks();
-
-				ConfigUtil.save();
+				Animatium.reload();
 			}
 
 			return Command.SINGLE_SUCCESS;

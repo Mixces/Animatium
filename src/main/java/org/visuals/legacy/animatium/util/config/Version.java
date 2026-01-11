@@ -25,14 +25,12 @@
 
 package org.visuals.legacy.animatium.util.config;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.OverlayTexture;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.config.category.ItemsConfigCategory;
 import org.visuals.legacy.animatium.config.category.MovementConfigCategory;
 import org.visuals.legacy.animatium.config.category.OtherConfigCategory;
 import org.visuals.legacy.animatium.config.category.ScreenConfigCategory;
-import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.util.enums.CameraVersion;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
 import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
@@ -375,9 +373,6 @@ public enum Version {
 
 	public void apply(final AnimatiumConfig config) {
 		this.applier.accept(config);
-
-		final Minecraft minecraft = Minecraft.getInstance();
-		((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
-		minecraft.reloadResourcePacks();
+		Animatium.reload();
 	}
 }
