@@ -30,6 +30,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
@@ -56,7 +57,8 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
 		if (Animatium.isEnabled()
 				&& AnimatiumConfig.instance().movement.sneakAnimation == SneakAnimationSetting.V1_7
 				&& Utils.isSelf(livingEntityRenderState)
-				&& !livingEntityRenderState.hasPose(Pose.SWIMMING) /* Disable Crawling/Swimming as it's wrong */) {
+				&& !livingEntityRenderState.hasPose(Pose.SWIMMING) /* Disable Crawling/Swimming as it's wrong */
+				&& (Minecraft.getInstance().screen == null /* Disable when in inventory/not in-game */)) {
 			final float cameraLerpValue = Utils.lerpCameraPosition((CameraUtilityRenderState) cameraRenderState);
 			final UtilityRenderState utilityRenderState = (UtilityRenderState) livingEntityRenderState;
 			poseStack.translate(0.0F, (utilityRenderState.animatium$getStandingDimensions().eyeHeight() * livingEntityRenderState.scale) - cameraLerpValue, 0.0F);
