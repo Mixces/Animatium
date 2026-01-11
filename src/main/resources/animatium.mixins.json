@@ -49,6 +49,7 @@
 		"v1.entity.sneaking.MixinElytraModel_SneakTranslation",
 		"v1.entity.sneaking.MixinEntityRenderer_SneakAnimationWhileFlying",
 		"v1.entity.sneaking.MixinHumanoidMobRenderer_ModifySneakStateWhileFlying",
+		"v1.entity.sneaking.MixinHumanoidMobRenderer_InstantSneakResponse",
 		"v1.general.camera.MixinCamera",
 		"v1.general.camera.view_bobbing.MixinEntity_HorizontalViewBobbing",
 		"v1.general.camera.view_bobbing.MixinGameRenderer_ModifyViewBobbing",

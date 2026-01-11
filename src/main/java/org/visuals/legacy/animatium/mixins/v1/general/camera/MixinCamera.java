@@ -62,7 +62,7 @@ public abstract class MixinCamera {
 	protected abstract void move(float zoom, float dy, float dx);
 
 	@Inject(method = "setup", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setRotation(FF)V", shift = At.Shift.AFTER))
-	private void animatium$removeSmoothSneaking(CallbackInfo ci) {
+	private void animatium$removeSmoothSneaking(final CallbackInfo ci) {
 		if (Animatium.isEnabled() && !AnimatiumConfig.instance().movement.sneakAnimation.isSmooth()) {
 			this.eyeHeightOld = this.eyeHeight;
 			this.eyeHeight = this.animatium$getStandingEyeHeight();
@@ -70,7 +70,7 @@ public abstract class MixinCamera {
 	}
 
 	@WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getEyeHeight()F"))
-	private float animatium$useOldEyeHeight(Entity instance, Operation<Float> original) {
+	private float animatium$useOldEyeHeight(final Entity instance, final Operation<Float> original) {
 		if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.fakeOldSneakEyeHeight) {
 			return this.animatium$getStandingEyeHeight();
 		} else {
@@ -79,7 +79,7 @@ public abstract class MixinCamera {
 	}
 
 	@WrapOperation(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/Camera;eyeHeight:F"))
-	private void animatium$oldSneakAnimationInterpolation(Camera instance, float value, Operation<Void> original) {
+	private void animatium$oldSneakAnimationInterpolation(final Camera instance, final float value, final Operation<Void> original) {
 		if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.sneakAnimation == SneakAnimationSetting.V1_7 && this.entity.getEyeHeight() < eyeHeight) {
 			this.eyeHeight = this.animatium$getStandingEyeHeight();
 		} else {
@@ -88,7 +88,7 @@ public abstract class MixinCamera {
 	}
 
 	@WrapOperation(method = "getMaxZoom", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/ClipContext$Block;VISUAL:Lnet/minecraft/world/level/ClipContext$Block;", opcode = Opcodes.GETSTATIC))
-	private ClipContext.Block animatium$cameraTransparentPassthrough(Operation<ClipContext.Block> original) {
+	private ClipContext.Block animatium$cameraTransparentPassthrough(final Operation<ClipContext.Block> original) {
 		if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.disableCameraTransparentPassthrough) {
 			return ClipContext.Block.OUTLINE;
 		} else {
@@ -97,9 +97,9 @@ public abstract class MixinCamera {
 	}
 
 	@Inject(method = "setup", at = @At(value = "TAIL"))
-	private void animatium$oldCameraVersion(BlockGetter area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
+	private void animatium$oldCameraVersion(final BlockGetter level, final Entity entity, final boolean detached, final boolean thirdPersonReverse, final float partialTick, final CallbackInfo ci) {
 		// TODO: Fix bed/sleeping position
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.cameraVersion != CameraVersion.VANILLA && !thirdPerson && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
+		if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.cameraVersion != CameraVersion.VANILLA && !detached && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
 			final int ordinal = AnimatiumConfig.instance().screen.cameraVersion.ordinal();
 			if (ordinal <= CameraVersion.V1_14_V1_14_3.ordinal()) {
 				// <= 1.14.3

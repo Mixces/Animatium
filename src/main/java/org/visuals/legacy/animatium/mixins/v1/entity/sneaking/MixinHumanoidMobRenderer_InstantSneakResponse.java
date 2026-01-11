@@ -27,24 +27,25 @@ package org.visuals.legacy.animatium.mixins.v1.entity.sneaking;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
+import org.visuals.legacy.animatium.mixins.accessor.PlayerAccessor;
 
 @Mixin(HumanoidMobRenderer.class)
-public abstract class MixinHumanoidMobRenderer_ModifySneakStateWhileFlying {
-    // TODO: Improve sneaking animation when spamming for parity for older mc versions
-    @WrapOperation(method = "extractHumanoidRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isCrouching()Z"))
-    private static boolean animatium$sneakAnimationWhileFlying(LivingEntity livingEntity, Operation<Boolean> original) {
-        final boolean isCrouching = original.call(livingEntity);
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.sneakAnimation.ordinal() <= SneakAnimationSetting.V1_13.ordinal()) {
-            return isCrouching || livingEntity.isShiftKeyDown();
-        } else {
-            return isCrouching;
-        }
-    }
+public abstract class MixinHumanoidMobRenderer_InstantSneakResponse {
+	@WrapOperation(method = "extractHumanoidRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isCrouching()Z"))
+	private static boolean animatium$instantSneakResponse(final LivingEntity instance, final Operation<Boolean> original) {
+		if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.sneakAnimation.isInstantResponse() && !instance.isSwimming()) {
+			return Minecraft.getInstance().options.keyShift.isDown() || (instance instanceof Player player && !((PlayerAccessor) player).animatium$canChangeIntoPose(Pose.STANDING));
+		} else {
+			return original.call(instance);
+		}
+	}
 }

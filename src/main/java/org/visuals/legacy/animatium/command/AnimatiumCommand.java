@@ -43,54 +43,67 @@ import org.visuals.legacy.animatium.util.config.ConfigUtil;
 import java.util.Random;
 
 public class AnimatiumCommand implements Command<FabricClientCommandSource> {
-    public static LiteralArgumentBuilder<FabricClientCommandSource> create() {
-        LiteralArgumentBuilder<FabricClientCommandSource> command = ClientCommandManager.literal("animatium").executes(new AnimatiumCommand());
+	public static LiteralArgumentBuilder<FabricClientCommandSource> create() {
+		final LiteralArgumentBuilder<FabricClientCommandSource> command = ClientCommandManager.literal("animatium").executes(new AnimatiumCommand());
 
-        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("on").executes((context) -> {
-            if (Animatium.isEnabled()) {
-                context.getSource().sendFeedback(Component.literal("Mod is already enabled!").withStyle(ChatFormatting.YELLOW));
-            } else {
-                context.getSource().sendFeedback(Component.literal("Mod enabled.").withStyle(ChatFormatting.GREEN));
-                Animatium.setEnabled(true);
-                ((GameRendererAccessor) context.getSource().getClient().gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
-                Minecraft.getInstance().reloadResourcePacks();
-                if (!ConfigUtil.save()) {
-                    System.err.println("Failed to save animatium utility config...");
-                }
-            }
+		command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("on").executes((context) -> {
+			final FabricClientCommandSource source = context.getSource();
+			if (Animatium.isEnabled()) {
+				source.sendFeedback(Component.literal("Mod is already enabled!").withStyle(ChatFormatting.YELLOW));
+			} else {
+				source.sendFeedback(Component.literal("Mod enabled.").withStyle(ChatFormatting.GREEN));
+				Animatium.setEnabled(true);
 
-            return Command.SINGLE_SUCCESS;
-        }));
+				final Minecraft minecraft = source.getClient();
+				((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
+				minecraft.reloadResourcePacks();
 
-        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("off").executes((context) -> {
-            if (!Animatium.isEnabled()) {
-                context.getSource().sendFeedback(Component.literal("Mod is already disabled!").withStyle(ChatFormatting.YELLOW));
-            } else {
-                context.getSource().sendFeedback(Component.literal("Mod disabled.").withStyle(ChatFormatting.RED));
-                Animatium.setEnabled(false);
-                ((GameRendererAccessor) context.getSource().getClient().gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
-                Minecraft.getInstance().reloadResourcePacks();
-                ConfigUtil.save();
-            }
+				if (!ConfigUtil.save()) {
+					System.err.println("Failed to save animatium utility config...");
+				}
+			}
 
-            return Command.SINGLE_SUCCESS;
-        }));
+			return Command.SINGLE_SUCCESS;
+		}));
 
-        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("onboarding").executes((context) -> {
-            ConfigUtil.put("onboarding", true);
-            final Minecraft minecraft = context.getSource().getClient();
-            minecraft.schedule(() -> minecraft.setScreen(new OnboardingScreen(minecraft.screen)));
-            return Command.SINGLE_SUCCESS;
-        }));
+		command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("off").executes((context) -> {
+			final FabricClientCommandSource source = context.getSource();
+			if (!Animatium.isEnabled()) {
+				source.sendFeedback(Component.literal("Mod is already disabled!").withStyle(ChatFormatting.YELLOW));
+			} else {
+				source.sendFeedback(Component.literal("Mod disabled.").withStyle(ChatFormatting.RED));
+				Animatium.setEnabled(false);
 
-        return command;
-    }
+				final Minecraft minecraft = source.getClient();
+				((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
+				minecraft.reloadResourcePacks();
 
-    @Override
-    public int run(CommandContext<FabricClientCommandSource> context) {
-        context.getSource().sendFeedback(Component.literal("Opening config menu...").withColor(new Random().nextInt(0xFFFFFF)));
-        final Minecraft minecraft = context.getSource().getClient();
-        minecraft.schedule(() -> minecraft.setScreen(AnimatiumConfig.getConfigScreen(null)));
-        return Command.SINGLE_SUCCESS;
-    }
+				ConfigUtil.save();
+			}
+
+			return Command.SINGLE_SUCCESS;
+		}));
+
+		command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("onboarding").executes((context) -> {
+			ConfigUtil.put("onboarding", true);
+
+			final Minecraft minecraft = context.getSource().getClient();
+			minecraft.schedule(() -> minecraft.setScreen(new OnboardingScreen(minecraft.screen)));
+
+			return Command.SINGLE_SUCCESS;
+		}));
+
+		return command;
+	}
+
+	@Override
+	public int run(CommandContext<FabricClientCommandSource> context) {
+		final FabricClientCommandSource source = context.getSource();
+		source.sendFeedback(Component.literal("Opening config menu...").withColor(new Random().nextInt(0xFFFFFF)));
+
+		final Minecraft minecraft = source.getClient();
+		minecraft.schedule(() -> minecraft.setScreen(AnimatiumConfig.getConfigScreen(minecraft.screen)));
+
+		return Command.SINGLE_SUCCESS;
+	}
 }

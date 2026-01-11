@@ -57,7 +57,7 @@ public abstract class MixinItemStackRenderLayerState {
 	ItemStackRenderState itemStackRenderState;
 
 	@ModifyArg(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemDisplayContext;III[ILjava/util/List;Lnet/minecraft/client/renderer/RenderType;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"), index = 8)
-	private ItemStackRenderState.FoilType animatium$disableGlintOn2DItems(ItemStackRenderState.FoilType glint) {
+	private ItemStackRenderState.FoilType animatium$disableGlintOn2DItems(final ItemStackRenderState.FoilType foilType) {
 		final boolean glintDropped = !AnimatiumConfig.instance().items.glintOnItemDrops2D;
 		final boolean glintFramed = !AnimatiumConfig.instance().items.glintOnItemFramed2D;
 		if (Animatium.isEnabled() &&
@@ -65,13 +65,13 @@ public abstract class MixinItemStackRenderLayerState {
 				(glintFramed && itemStackRenderState.displayContext == ItemDisplayContext.FIXED)) {
 			return ItemStackRenderState.FoilType.NONE;
 		} else {
-			return glint;
+			return foilType;
 		}
 	}
 
 	// TODO/MOVE
 	@Inject(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack$Pose;)V"))
-	private void animatium$itemPositions(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int light, int overlay, int k, CallbackInfo ci) {
+	private void animatium$itemPositions(final PoseStack poseStack, final SubmitNodeCollector nodeCollector, final int packedLight, final int packedOverlay, final int outlineColor, final CallbackInfo ci) {
 		if (Animatium.isEnabled()) {
 			final ItemStack stack = ((ItemUtilityRenderState) itemStackRenderState).animatium$getItemStack();
 			if (!stack.isEmpty()) {

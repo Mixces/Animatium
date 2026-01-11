@@ -34,6 +34,8 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
 import net.minecraft.network.protocol.game.ServerboundSwingPacket;
@@ -151,5 +153,15 @@ public class Utils {
 
 	public boolean isFastGraphics() {
 		return GraphicsStatus.FAST.equals(Minecraft.getInstance().options.graphicsMode().get());
+	}
+
+	/**
+	 * Can always safely assume that if this returns true, the provided render-state is AvatarRenderState
+	 *
+	 * @return Entity id matches the client player id
+	 */
+	public boolean isSelf(final LivingEntityRenderState livingEntityRenderState) {
+		final Player player = Minecraft.getInstance().player;
+		return player != null && livingEntityRenderState instanceof AvatarRenderState avatarRenderState && avatarRenderState.id == player.getId();
 	}
 }

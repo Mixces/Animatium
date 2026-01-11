@@ -107,7 +107,10 @@ public class OnboardingScreen extends Screen {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (this.v1_7Button.mouseClicked(event, isDoubleClick) || this.v1_8Button.mouseClicked(event, isDoubleClick) || this.modernButton.mouseClicked(event, isDoubleClick)) {
+        if (this.v1_7Button.mouseClicked(event, isDoubleClick) ||
+				this.v1_8Button.mouseClicked(event, isDoubleClick) ||
+				this.v1_12Button.mouseClicked(event, isDoubleClick) ||
+				this.modernButton.mouseClicked(event, isDoubleClick)) {
             updateVersionButtonState();
             return true;
         } else {

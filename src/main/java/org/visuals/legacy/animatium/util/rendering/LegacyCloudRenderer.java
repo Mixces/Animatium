@@ -179,10 +179,12 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
 								builder.addVertex(f2, 4.0F, f6).setColor(topColor);
 								builder.addVertex(f, 4.0F, f6).setColor(topColor);
 								builder.addVertex(f, 4.0F, f5).setColor(topColor);
+
 								builder.addVertex(f, 0.0F, f5).setColor(bottomColor);
 								builder.addVertex(f, 0.0F, f6).setColor(bottomColor);
 								builder.addVertex(f2, 0.0F, f6).setColor(bottomColor);
 								builder.addVertex(f2, 0.0F, f5).setColor(bottomColor);
+
 								builder.addVertex(f2, 0.0F, f5).setColor(frontColor);
 								builder.addVertex(f2, 4.0F, f5).setColor(frontColor);
 								builder.addVertex(f, 4.0F, f5).setColor(frontColor);
@@ -191,6 +193,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
 								builder.addVertex(f, 4.0F, f6).setColor(frontColor);
 								builder.addVertex(f2, 4.0F, f6).setColor(frontColor);
 								builder.addVertex(f2, 0.0F, f6).setColor(frontColor);
+
 								builder.addVertex(f, 0.0F, f5).setColor(sideColor);
 								builder.addVertex(f, 4.0F, f5).setColor(sideColor);
 								builder.addVertex(f, 4.0F, f6).setColor(sideColor);
