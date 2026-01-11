@@ -19,7 +19,7 @@ public abstract class MixinWeightedVariantsUnbaked_DisableRandomBlockRotations {
 	private WeightedVariants animatium$disableRandomBlockRotations(final WeightedList<?> list, final Operation<WeightedVariants> original) {
 		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.disableRandomBlockRotations) {
 			final List<? extends Weighted<?>> items = list.unwrap();
-			return new WeightedVariants(WeightedList.of((List<Weighted<BlockStateModel>>) List.of(items.getFirst())));
+			return new WeightedVariants(WeightedList.of(List.of((Weighted<BlockStateModel>) items.getFirst())));
 		} else {
 			return original.call(list);
 		}

@@ -42,6 +42,7 @@ import net.minecraft.network.protocol.game.ServerboundSwingPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
@@ -163,5 +164,10 @@ public class Utils {
 	public boolean isSelf(final LivingEntityRenderState livingEntityRenderState) {
 		final Player player = Minecraft.getInstance().player;
 		return player != null && livingEntityRenderState instanceof AvatarRenderState avatarRenderState && avatarRenderState.id == player.getId();
+	}
+
+	public boolean isSelf(final Entity entity) {
+		final Player player = Minecraft.getInstance().player;
+		return player != null && entity != null && entity.getId() == player.getId();
 	}
 }
