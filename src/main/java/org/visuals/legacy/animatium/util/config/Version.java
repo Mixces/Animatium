@@ -123,7 +123,6 @@ public enum Version {
 		other.itemGlintOnEntity = true;
 		other.maxGlintProperties = true;
 		other.armorHurtRendering = false;
-		other.highAttackSpeedVisual = true;
 		other.disableEntityGlowOutline = true;
 		other.disableModernCombatSounds = true;
 		other.disableModernCombatParticles = true;
@@ -227,7 +226,6 @@ public enum Version {
 		other.itemGlintOnEntity = true;
 		other.maxGlintProperties = true;
 		other.armorHurtRendering = true;
-		other.highAttackSpeedVisual = true;
 		other.disableEntityGlowOutline = true;
 		other.disableModernCombatSounds = true;
 		other.disableModernCombatParticles = true;
@@ -345,7 +343,6 @@ public enum Version {
 		other.itemGlintOnEntity = false;
 		other.maxGlintProperties = false;
 		other.armorHurtRendering = false;
-		other.highAttackSpeedVisual = false;
 		other.disableEntityGlowOutline = false;
 		other.disableModernCombatSounds = false;
 		other.disableModernCombatParticles = false;
