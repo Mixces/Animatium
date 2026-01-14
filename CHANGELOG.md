@@ -8,7 +8,7 @@
   
 #### General
 
-- TODO
+- Fix thrown egg kicking you
 
 ## Changed:
 

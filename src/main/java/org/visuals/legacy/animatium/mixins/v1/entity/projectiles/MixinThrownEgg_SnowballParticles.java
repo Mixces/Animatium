@@ -43,7 +43,7 @@ public abstract class MixinThrownEgg_SnowballParticles {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.eggSnowballParticles) {
             return new ItemStack(Items.SNOWBALL);
         } else {
-            return null;
+            return original.call(instance);
         }
     }
 }
