@@ -32,7 +32,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
-@Mixin(RenderType.CompositeRenderType.class)
+/* Set higher priority to fix crash w/ VulkanMod */
+@Mixin(value = RenderType.CompositeRenderType.class, priority = 1001)
 public abstract class MixinCompositeRenderType_BlockOutlineLineWidth {
 	@WrapOperation(method = "draw", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;getShaderLineWidth()F"))
 	private float animatium$blockOutlineRendering$lineWidth(final Operation<Float> original) {
