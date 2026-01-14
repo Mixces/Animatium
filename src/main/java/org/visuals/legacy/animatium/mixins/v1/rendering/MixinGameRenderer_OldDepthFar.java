@@ -28,7 +28,6 @@ package org.visuals.legacy.animatium.mixins.v1.rendering;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.util.Mth;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,16 +36,16 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(GameRenderer.class)
 public abstract class MixinGameRenderer_OldDepthFar {
-    @Shadow
-    private float renderDistance;
+	@Shadow
+	private float renderDistance;
 
-    @WrapOperation(method = "getDepthFar", at = @At(value = "INVOKE", target = "Ljava/lang/Math;max(FF)F"))
-    private float animatium$oldDepthFar(float a, float b, Operation<Float> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldDepthFar) {
-			// TOD: Sky uses RD*2.0F, Clouds uses RD*4.0F
-            return this.renderDistance * 2.0F;
-        } else {
-            return original.call(a, b);
-        }
-    }
+	@WrapOperation(method = "getDepthFar", at = @At(value = "INVOKE", target = "Ljava/lang/Math;max(FF)F"))
+	private float animatium$oldDepthFar(final float a, final float b, final Operation<Float> original) {
+		if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldDepthFar) {
+			// TODO: Sky uses RD*2.0F, Clouds uses RD*4.0F
+			return this.renderDistance * 2.0F;
+		} else {
+			return original.call(a, b);
+		}
+	}
 }
