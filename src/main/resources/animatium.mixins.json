@@ -12,7 +12,6 @@
 		"accessor.LivingEntityAccessor",
 		"accessor.PlayerAccessor",
 		"accessor.SlotAccessor",
-		"v1.entity.MixinEntityRenderDispatcher_ForceSteveModel",
 		"v1.entity.MixinHumanoidModel",
 		"v1.entity.MixinLivingEntityRenderer",
 		"v1.entity.armor_hurt.MixinEquipmentLayerRenderer",

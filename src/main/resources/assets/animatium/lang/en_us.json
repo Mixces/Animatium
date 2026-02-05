@@ -241,8 +241,6 @@
 	"animatium.oldMinimumSmoothLighting.description": "Brings back the old weird ambient occlusion when fast smooth lighting is enabled like in <=1.7.x.",
 	"animatium.oldCloudRendering": "[1.21.5] Old Cloud Rendering",
 	"animatium.oldCloudRendering.description": "Brings back the recently-old cloud rendering from <=1.21.5.",
-	"animatium.alwaysSteveModel": "[1.7] Always Steve Model",
-	"animatium.alwaysSteveModel.description": "Forces all player models to be the steve type like in <=1.7.x.",
 	"animatium.fastGrass": "[1.7-fast] Fast Grass",
 	"animatium.fastGrass.description": "Brings back the non-biome-tinted grass side texture from <=1.7.x.",
 	"animatium.oldY0Height": "[1.16] Old Y0 Height",

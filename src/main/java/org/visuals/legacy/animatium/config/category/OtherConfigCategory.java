@@ -61,7 +61,6 @@ public class OtherConfigCategory extends Category {
 	public boolean oldMinimumSmoothLighting = true;
 	public boolean oldCloudRendering = true;
 	public boolean oldFallParticlePhysics = true;
-	public boolean alwaysSteveModel = false;
 	public boolean fastGrass = true;
 	public boolean oldY0Height = true;
 	public boolean oldWaterOverlayOpacity = true;
@@ -112,7 +111,6 @@ public class OtherConfigCategory extends Category {
 		bundle.booleanEntry("oldMinimumSmoothLighting");
 		bundle.booleanEntry("oldCloudRendering");
 		bundle.booleanEntry("oldFallParticlePhysics");
-		bundle.booleanEntry("alwaysSteveModel");
 		bundle.booleanEntry("fastGrass");
 		bundle.booleanEntry("oldY0Height");
 		bundle.booleanEntry("oldWaterOverlayOpacity");
