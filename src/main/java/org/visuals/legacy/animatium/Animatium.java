@@ -73,7 +73,7 @@ public final class Animatium {
 	}
 
 	public boolean hasServerFeature(final ServerFeature feature) {
-		if (Minecraft.getInstance().isLocalServer()) {
+		if (Minecraft.getInstance().isSingleplayer()) {
 			for (final EntryBundle.Entry<?> entry : ConfigBundles.EXTRAS.entries()) {
 				if (entry.name.equals(feature.getName())) {
 					return (boolean) entry.value();
