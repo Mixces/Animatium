@@ -78,8 +78,6 @@
 	"animatium.panoramaRendering.description": "Restores the legacy way of rendering the panorama in the main menu like in 1.12.2 and below.\n\nNOTE: This replaces the panorama rendering including the resource pack overlay texture!",
 	"animatium.legacyLoadingScreen": "[1.13] Legacy Loading Screen",
 	"animatium.legacyLoadingScreen.description": "Restores the classic legacy reloading/loading screen from <=1.13.",
-	"animatium.oldDepthFar": "[1.7] Old Depth Far",
-	"animatium.oldDepthFar.description": "Restores the old depth far calculation from <=1.7.x.",
 	"animatium.oldChatPosition": "[1.11] Old Chat Position",
 	"animatium.oldChatPosition.description": "Restores the old chat position from <=1.11.",
 	"animatium.oldCrosshairPosition": "[1.13] Old Crosshair Position",
@@ -88,8 +86,6 @@
 	"animatium.disconnectServerToTitleScreen.description": "Reintroduces a bug from <=1.7.x where it would send you to the title screen when you disconnect from a server.",
 	"animatium.oldCraftingSlotsPosition": "[1.8] Old Crafting Slots Position",
 	"animatium.oldCraftingSlotsPosition.description": "Moves the craft slots down and to the left to match how it was in <=1.8.x. Also puts the offhand slot in a better position to accommodate this change.",
-	"animatium.superSecretSettingsButton": "[1.8] Super Secret Settings",
-	"animatium.superSecretSettingsButton.description": "Restores the super secret settings feature from <=1.8.",
 
 	"animatium.category.items": "Items",
 	"animatium.category.items.group.fishing_rod": "Fishing Rod",
