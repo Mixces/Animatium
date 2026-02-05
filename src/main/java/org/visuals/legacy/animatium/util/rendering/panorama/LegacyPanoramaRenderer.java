@@ -23,67 +23,28 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering;
+package org.visuals.legacy.animatium.util.rendering.panorama;
 
 import com.mojang.blaze3d.ProjectionType;
-import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.MainTarget;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.DestFactor;
-import com.mojang.blaze3d.platform.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.FilterMode;
-import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.textures.GpuTextureView;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.navigation.ScreenRectangle;
-import net.minecraft.client.gui.render.TextureSetup;
-import net.minecraft.client.gui.render.state.GuiElementRenderState;
 import net.minecraft.client.renderer.CachedPerspectiveProjectionMatrixBuffer;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix3x2f;
 import org.joml.Matrix4f;
 import org.joml.Vector4i;
-import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.rendering.Renderer;
 
 @UtilityClass
 // Ported code of the old <=1.12.2 panorama renderer (w/ blur)
 public class LegacyPanoramaRenderer {
-	private final BlendFunction PANORAMA_BLEND = new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
-
-	private final RenderPipeline LEGACY_PANORAMA =
-			RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
-					.withLocation(Animatium.location("pipeline/legacy_panorama"))
-					.withVertexShader(Animatium.location("core/legacy_panorama"))
-					.withFragmentShader(Animatium.location("core/legacy_panorama"))
-					.withCull(false)
-					.withDepthWrite(false)
-					.withBlend(PANORAMA_BLEND)
-					// .withColorWrite(true, false) // TODO/NOTE: Causes it to not render (alpha becomes 0.0?!??!?!)
-					.withSampler("Sampler0")
-					.withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
-					.build();
-
-	private final RenderPipeline LEGACY_PANORAMA_BLUR =
-			RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
-					.withLocation(Animatium.location("pipeline/legacy_panorama_blur"))
-					.withVertexShader(Animatium.location("core/legacy_panorama_blur"))
-					.withFragmentShader(Animatium.location("core/legacy_panorama_blur"))
-					.withBlend(PANORAMA_BLEND)
-					.withColorWrite(true, false)
-					.build();
-
 	private final Vector4i VIEWPORT = new Vector4i(0, 0, 256, 256);
 
 	private final CachedPerspectiveProjectionMatrixBuffer projectionMatrixBuffer = new CachedPerspectiveProjectionMatrixBuffer("panorama", 0.05F, 10.0F);
@@ -92,15 +53,20 @@ public class LegacyPanoramaRenderer {
 	private float spin = 0.0F;
 
 	static {
-		final DynamicTexture dynamicTexture = new DynamicTexture(() -> "background", 256, 256, true);
+		final DynamicTexture dynamicTexture = new DynamicTexture(() -> "background", 512, 512, false);
 		backgroundTextureView = dynamicTexture.getTextureView();
+		backgroundTextureView.texture().setTextureFilter(FilterMode.LINEAR, FilterMode.LINEAR, true);
 		RenderSystem.getDevice().createCommandEncoder().clearDepthTexture(panoramaTarget.getDepthTexture(), 1.0F);
 	}
 
 	public void render(final GuiGraphics guiGraphics, final int width, final int height) {
 		renderPanorama(width, height);
 		for (int pass = 0; pass < 7; ++pass) {
-			panoramaBlurPass(guiGraphics.pose(), width, height);
+			new BlurPassTexture(
+					panoramaTarget,
+					panoramaTarget.getColorTexture(),
+					backgroundTextureView
+			).render(guiGraphics.pose(), width, height, VIEWPORT);
 		}
 
 		guiGraphics.guiRenderState.submitGuiElement(new BlitFinalTexture(guiGraphics.pose(), backgroundTextureView, width, height, ARGB.white(1.0F)));
@@ -128,7 +94,7 @@ public class LegacyPanoramaRenderer {
 				}
 
 				try (final Renderer renderer = Renderer.of("Panorama")) {
-					renderer.setPipeline(LEGACY_PANORAMA);
+					renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA);
 					renderer.setViewport(VIEWPORT);
 					renderer.setFramebuffer(panoramaTarget);
 					renderer.setDynamicTransforms(renderer.getDynamicTransforms().withModelViewMatrix(faceMatrix));
@@ -149,39 +115,6 @@ public class LegacyPanoramaRenderer {
 		}
 	}
 
-	private void panoramaBlurPass(final Matrix3x2f pose, final int width, final int height) {
-		final GpuTexture texture = backgroundTextureView.texture();
-		texture.setTextureFilter(FilterMode.LINEAR, FilterMode.LINEAR, false);
-		RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(
-				panoramaTarget.getColorTexture(), // source
-				texture, // destination
-				0, // mipLevel
-				0, // destX
-				0, // destY
-				0, // srcX
-				0, // srcY
-				256, // width
-				256 // height
-		);
-		try (final Renderer renderer = Renderer.of("Panorama Blur Pass")) {
-			renderer.setPipeline(LEGACY_PANORAMA_BLUR);
-			renderer.setViewport(VIEWPORT);
-			renderer.setFramebuffer(panoramaTarget);
-			renderer.setup((vertexConsumer) -> {
-				for (int cycle = 0; cycle < 3; cycle++) {
-					final int color = ARGB.white(1.0F / (cycle + 1.0F));
-					final float growth = (cycle - 1.0F) / 256.0F;
-					vertexConsumer.addVertexWith2DPose(pose, width, height).setUv(0.0F + growth, 1.0F).setColor(color);
-					vertexConsumer.addVertexWith2DPose(pose, width, 0.0F).setUv(1.0F + growth, 1.0F).setColor(color);
-					vertexConsumer.addVertexWith2DPose(pose, 0.0F, 0.0F).setUv(1.0F + growth, 0.0F).setColor(color);
-					vertexConsumer.addVertexWith2DPose(pose, 0.0F, height).setUv(0.0F + growth, 0.0F).setColor(color);
-				}
-			}, 12);
-			renderer.setTexture(0, backgroundTextureView);
-			renderer.drawInGui();
-		}
-	}
-
 	public void update(float tickDelta) {
 		spin += tickDelta;
 	}
@@ -196,43 +129,5 @@ public class LegacyPanoramaRenderer {
 
 	public ResourceLocation getPanoramaTexture(int side) {
 		return ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_" + side + ".png");
-	}
-
-	private record BlitFinalTexture(
-			Matrix3x2f pose,
-			GpuTextureView texture,
-			int width, int height,
-			int color
-	) implements GuiElementRenderState {
-		@Override
-		public void buildVertices(VertexConsumer consumer) {
-			final float aspect = 120.0F / Math.max(this.width, this.height);
-			final float sw = this.width * aspect / 256.0F;
-			final float sh = this.height * aspect / 256.0F;
-			consumer.addVertexWith2DPose(this.pose, 0.0F, this.height).setUv(0.5F - sh, 0.5F + sw).setColor(this.color);
-			consumer.addVertexWith2DPose(this.pose, this.width, this.height).setUv(0.5F - sh, 0.5F - sw).setColor(this.color);
-			consumer.addVertexWith2DPose(this.pose, this.width, 0.0F).setUv(0.5F + sh, 0.5F - sw).setColor(this.color);
-			consumer.addVertexWith2DPose(this.pose, 0.0F, 0.0F).setUv(0.5F + sh, 0.5F + sw).setColor(this.color);
-		}
-
-		@Override
-		public @NotNull RenderPipeline pipeline() {
-			return RenderPipelines.GUI_TEXTURED;
-		}
-
-		@Override
-		public @NotNull TextureSetup textureSetup() {
-			return TextureSetup.singleTexture(this.texture);
-		}
-
-		@Override
-		public @Nullable ScreenRectangle scissorArea() {
-			return null;
-		}
-
-		@Override
-		public @NotNull ScreenRectangle bounds() {
-			return new ScreenRectangle(0, 0, this.width, this.height).transformMaxBounds(this.pose);
-		}
 	}
 }
