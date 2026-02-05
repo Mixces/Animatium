@@ -53,7 +53,7 @@ public class LegacyPanoramaRenderer {
 	private float spin = 0.0F;
 
 	static {
-		final DynamicTexture dynamicTexture = new DynamicTexture(() -> "background", 512, 512, false);
+		final DynamicTexture dynamicTexture = new DynamicTexture(() -> "background", 256, 256, false);
 		backgroundTextureView = dynamicTexture.getTextureView();
 		backgroundTextureView.texture().setTextureFilter(FilterMode.LINEAR, FilterMode.LINEAR, true);
 		RenderSystem.getDevice().createCommandEncoder().clearDepthTexture(panoramaTarget.getDepthTexture(), 1.0F);
