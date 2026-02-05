@@ -133,7 +133,6 @@ public enum Version {
 		other.voidFog = VoidFogSetting.BOTH;
 		other.oldFallParticlePhysics = true;
 		other.fastGrass = true;
-		other.oldY0Height = true;
 		other.oldWaterOverlayOpacity = true;
 		other.oldWaterColorFog = true;
 		other.disableRandomBlockRotations = true;
@@ -233,7 +232,6 @@ public enum Version {
 		other.voidFog = VoidFogSetting.OFF;
 		other.oldFallParticlePhysics = false;
 		other.fastGrass = false;
-		other.oldY0Height = true;
 		other.oldWaterOverlayOpacity = true;
 		other.oldWaterColorFog = true;
 		other.disableRandomBlockRotations = false;
@@ -347,7 +345,6 @@ public enum Version {
 		other.voidFog = VoidFogSetting.OFF;
 		other.oldFallParticlePhysics = false;
 		other.fastGrass = false;
-		other.oldY0Height = false;
 		other.oldWaterOverlayOpacity = false;
 		other.oldWaterColorFog = false;
 		other.disableRandomBlockRotations = false;

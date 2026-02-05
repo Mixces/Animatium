@@ -61,7 +61,7 @@ public class OtherConfigCategory extends Category {
 	public boolean oldCloudRendering = true;
 	public boolean oldFallParticlePhysics = true;
 	public boolean fastGrass = true;
-	public boolean oldY0Height = true;
+	public boolean oldY0Height = false;
 	public boolean oldWaterOverlayOpacity = true;
 	public boolean oldWaterColorFog = true;
 	public boolean disableRandomBlockRotations = true;
