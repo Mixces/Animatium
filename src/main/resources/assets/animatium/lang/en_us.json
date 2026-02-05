@@ -233,8 +233,6 @@
 	"animatium.flameOffset.description": "Brings back the third person flame offset from <=1.7.x.",
 	"animatium.persistentBlockOutline": "[1.7] Always Show Block Outline",
 	"animatium.persistentBlockOutline.description": "Enable/disable showing the block outline in all gamemodes, like it was in <=1.7.x.",
-	"animatium.oldMinimumSmoothLighting": "[1.7] Old Fast Smooth Lighting",
-	"animatium.oldMinimumSmoothLighting.description": "Brings back the old weird ambient occlusion when fast smooth lighting is enabled like in <=1.7.x.",
 	"animatium.oldCloudRendering": "[1.21.5] Old Cloud Rendering",
 	"animatium.oldCloudRendering.description": "Brings back the recently-old cloud rendering from <=1.21.5.",
 	"animatium.fastGrass": "[1.7-fast] Fast Grass",

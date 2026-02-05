@@ -129,7 +129,6 @@ public enum Version {
 		other.flameDimensions = true;
 		other.flameOffset = true;
 		other.persistentBlockOutline = true;
-		other.oldMinimumSmoothLighting = true;
 		other.oldCloudRendering = true;
 		other.voidFog = VoidFogSetting.BOTH;
 		other.oldFallParticlePhysics = true;
@@ -230,7 +229,6 @@ public enum Version {
 		other.flameDimensions = true;
 		other.flameOffset = false;
 		other.persistentBlockOutline = false;
-		other.oldMinimumSmoothLighting = false;
 		other.oldCloudRendering = true;
 		other.voidFog = VoidFogSetting.OFF;
 		other.oldFallParticlePhysics = false;
@@ -345,7 +343,6 @@ public enum Version {
 		other.flameDimensions = false;
 		other.flameOffset = false;
 		other.persistentBlockOutline = false;
-		other.oldMinimumSmoothLighting = false;
 		other.oldCloudRendering = false;
 		other.voidFog = VoidFogSetting.OFF;
 		other.oldFallParticlePhysics = false;
