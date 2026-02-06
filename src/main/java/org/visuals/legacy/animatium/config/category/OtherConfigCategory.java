@@ -59,7 +59,6 @@ public class OtherConfigCategory extends Category {
 	public boolean flameOffset = true;
 	public boolean persistentBlockOutline = false;
 	public boolean oldCloudRendering = true;
-	public boolean oldFallParticlePhysics = true;
 	public boolean fastGrass = true;
 	public boolean oldY0Height = false;
 	public boolean oldWaterOverlayOpacity = true;
@@ -108,7 +107,6 @@ public class OtherConfigCategory extends Category {
 		bundle.booleanEntry("flameOffset");
 		bundle.booleanEntry("persistentBlockOutline");
 		bundle.booleanEntry("oldCloudRendering");
-		bundle.booleanEntry("oldFallParticlePhysics");
 		bundle.booleanEntry("fastGrass");
 		bundle.booleanEntry("oldY0Height");
 		bundle.booleanEntry("oldWaterOverlayOpacity");

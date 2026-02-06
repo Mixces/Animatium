@@ -121,7 +121,6 @@ public enum Version {
 		other.itemGlintOnEntity = true;
 		other.maxGlintProperties = true;
 		other.armorHurtRendering = false;
-		other.disableEntityGlowOutline = true;
 		other.disableModernCombatSounds = true;
 		other.disableModernCombatParticles = true;
 		other.restoreParticleBlending = true;
@@ -130,7 +129,6 @@ public enum Version {
 		other.flameOffset = true;
 		other.persistentBlockOutline = true;
 		other.oldCloudRendering = true;
-		other.oldFallParticlePhysics = true;
 		other.fastGrass = true;
 		other.oldWaterOverlayOpacity = true;
 		other.oldWaterColorFog = true;
@@ -219,7 +217,6 @@ public enum Version {
 		other.itemGlintOnEntity = true;
 		other.maxGlintProperties = true;
 		other.armorHurtRendering = true;
-		other.disableEntityGlowOutline = true;
 		other.disableModernCombatSounds = true;
 		other.disableModernCombatParticles = true;
 		other.restoreParticleBlending = true;
@@ -229,7 +226,6 @@ public enum Version {
 		other.persistentBlockOutline = false;
 		other.oldCloudRendering = true;
 		other.voidFog = VoidFogSetting.OFF;
-		other.oldFallParticlePhysics = false;
 		other.fastGrass = false;
 		other.oldWaterOverlayOpacity = true;
 		other.oldWaterColorFog = true;
@@ -332,7 +328,6 @@ public enum Version {
 		other.itemGlintOnEntity = false;
 		other.maxGlintProperties = false;
 		other.armorHurtRendering = false;
-		other.disableEntityGlowOutline = false;
 		other.disableModernCombatSounds = false;
 		other.disableModernCombatParticles = false;
 		other.restoreParticleBlending = false;
@@ -342,7 +337,6 @@ public enum Version {
 		other.persistentBlockOutline = false;
 		other.oldCloudRendering = false;
 		other.voidFog = VoidFogSetting.OFF;
-		other.oldFallParticlePhysics = false;
 		other.fastGrass = false;
 		other.oldWaterOverlayOpacity = false;
 		other.oldWaterColorFog = false;
