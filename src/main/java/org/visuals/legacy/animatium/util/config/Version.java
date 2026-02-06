@@ -130,7 +130,6 @@ public enum Version {
 		other.flameOffset = true;
 		other.persistentBlockOutline = true;
 		other.oldCloudRendering = true;
-		other.voidFog = VoidFogSetting.BOTH;
 		other.oldFallParticlePhysics = true;
 		other.fastGrass = true;
 		other.oldWaterOverlayOpacity = true;

@@ -65,7 +65,7 @@ public class OtherConfigCategory extends Category {
 	public boolean oldWaterOverlayOpacity = true;
 	public boolean oldWaterColorFog = true;
 	public boolean disableRandomBlockRotations = true;
-	public VoidFogSetting voidFog = VoidFogSetting.BOTH;
+	public VoidFogSetting voidFog = VoidFogSetting.PARTICLES;
 
 	public static ConfigCategory create(final OtherConfigCategory defaults, final OtherConfigCategory config) {
 		final ConfigCategory.Builder category = ConfigCategory.createBuilder();
