@@ -42,12 +42,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AnimatiumDebugEntry implements DebugScreenEntry {
+public final class AnimatiumDebugEntry implements DebugScreenEntry {
 	public static final DebugEntryCategory CATEGORY = new DebugEntryCategory(Component.translatable("animatium.category.debug"), 9999.0F);
 	public static final ResourceLocation GROUP = Animatium.location("debug");
 
 	@Override
-	public void display(DebugScreenDisplayer debugScreenDisplayer, @Nullable Level level, @Nullable LevelChunk levelChunk, @Nullable LevelChunk levelChunk2) {
+	public void display(final DebugScreenDisplayer debugScreenDisplayer, final @Nullable Level level, final @Nullable LevelChunk levelChunk, final @Nullable LevelChunk levelChunk2) {
 		final List<String> list = new ArrayList<>();
 		list.add("Animatium " + AnimatiumConstants.VERSION + (AnimatiumConstants.IS_DEVELOPMENT ? " - Development Version (" + AnimatiumConstants.DEVELOPMENT_VERSION + ")" : ""));
 		if (!Animatium.ENABLED_SERVER_FEATURES.isEmpty()) {
@@ -63,7 +63,7 @@ public class AnimatiumDebugEntry implements DebugScreenEntry {
 	}
 
 	@Override
-	public boolean isAllowed(boolean bl) {
+	public boolean isAllowed(final boolean allowed) {
 		return true;
 	}
 

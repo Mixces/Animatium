@@ -33,6 +33,7 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.ConfigBundles;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
 
+// TODO: Rewrite/ass
 public record ConfigDataPayloadPacket() implements CustomPacketPayload {
 	public static final StreamCodec<FriendlyByteBuf, ConfigDataPayloadPacket> CODEC = CustomPacketPayload.codec(ConfigDataPayloadPacket::write, null);
 	public static final CustomPacketPayload.Type<ConfigDataPayloadPacket> PAYLOAD_ID = new CustomPacketPayload.Type<>(Animatium.location("config_data"));
@@ -50,7 +51,8 @@ public record ConfigDataPayloadPacket() implements CustomPacketPayload {
 	}
 
 	private void writeBundle(final FriendlyByteBuf buffer, final EntryBundle bundle) {
-		for (var entry : bundle.entries()) {
+		buffer.writeVarInt(bundle.entries().size());
+		for (final var entry : bundle.entries()) {
 			buffer.writeUtf(entry.name);
 			buffer.writeEnum(entry.type);
 			final Object value = entry.value();

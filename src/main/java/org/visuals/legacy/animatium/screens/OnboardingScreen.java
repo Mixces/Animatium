@@ -40,108 +40,108 @@ import org.visuals.legacy.animatium.util.config.Version;
 import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
 public class OnboardingScreen extends Screen {
-    private final Screen original;
-    private Version version = Version.MODERN;
+	private final Screen original;
+	private Version version = Version.MODERN;
 
-    private Button v1_7Button = null;
-    private Button v1_8Button = null;
-    private Button v1_12Button = null;
-    private Button modernButton = null;
+	private Button v1_7Button = null;
+	private Button v1_8Button = null;
+	private Button v1_12Button = null;
+	private Button modernButton = null;
 
-    public OnboardingScreen(Screen original) {
-        super(Component.literal("Onboarding"));
-        this.original = original;
-    }
+	public OnboardingScreen(Screen original) {
+		super(Component.literal("Onboarding"));
+		this.original = original;
+	}
 
-    @Override
-    @SuppressWarnings({"DataFlowIssue"})
-    protected void init() {
-        if (!ConfigUtil.bool("onboarding")) {
-            this.minecraft.setScreen(this.original);
-            return;
-        }
+	@Override
+	@SuppressWarnings({"DataFlowIssue"})
+	protected void init() {
+		if (!ConfigUtil.bool("onboarding")) {
+			this.minecraft.setScreen(this.original);
+			return;
+		}
 
-        if (this.original != null) {
-            this.original.init(this.minecraft, this.width, this.height);
-        }
+		if (this.original != null) {
+			this.original.init(this.minecraft, this.width, this.height);
+		}
 
-        final int buttonWidth = 100;
-        this.v1_7Button = this.addRenderableWidget(Button.builder(Component.literal("1.7"), button -> this.version = Version.V1_7)
-                .bounds(((this.width / 2) - (buttonWidth / 2) - (buttonWidth + Button.DEFAULT_SPACING)), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
-                .build());
-        this.v1_8Button = this.addRenderableWidget(Button.builder(Component.literal("1.8"), button -> this.version = Version.V1_8)
-                .bounds((this.width / 2) - (buttonWidth / 2), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
-                .build());
-        this.v1_12Button = Button.builder(Component.literal("1.12"), button -> this.version = Version.V1_12)
-                .bounds((this.width / 2) - (buttonWidth / 2), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
-                .build();
-        this.modernButton = this.addRenderableWidget(Button.builder(Component.literal("Modern"), button -> this.version = Version.MODERN)
-                .bounds(((this.width / 2) - (buttonWidth / 2) + (buttonWidth + Button.DEFAULT_SPACING)), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
-                .build());
-        updateVersionButtonState();
+		final int buttonWidth = 100;
+		this.v1_7Button = this.addRenderableWidget(Button.builder(Component.literal("1.7"), button -> this.version = Version.V1_7)
+				.bounds(((this.width / 2) - (buttonWidth / 2) - (buttonWidth + Button.DEFAULT_SPACING)), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
+				.build());
+		this.v1_8Button = this.addRenderableWidget(Button.builder(Component.literal("1.8"), button -> this.version = Version.V1_8)
+				.bounds((this.width / 2) - (buttonWidth / 2), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
+				.build());
+		this.v1_12Button = Button.builder(Component.literal("1.12"), button -> this.version = Version.V1_12)
+				.bounds((this.width / 2) - (buttonWidth / 2), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
+				.build();
+		this.modernButton = this.addRenderableWidget(Button.builder(Component.literal("Modern"), button -> this.version = Version.MODERN)
+				.bounds(((this.width / 2) - (buttonWidth / 2) + (buttonWidth + Button.DEFAULT_SPACING)), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
+				.build());
+		this.updateVersionButtonState();
 
-        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> {
-            ConfigUtil.put("onboarding", false);
-            this.version.apply(AnimatiumConfig.instance());
-            AnimatiumConfig.save();
-            this.minecraft.setScreen(this.original);
-        }).pos((this.width / 2) - (Button.DEFAULT_WIDTH / 2), (int) (this.height / 1.2F)).tooltip(Tooltip.create(Component.literal("WARNING! THIS WILL RESET ALL YOUR SETTINGS").withStyle(ChatFormatting.RED))).build());
-    }
+		this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> {
+			ConfigUtil.put("onboarding", false);
+			this.version.apply(AnimatiumConfig.instance());
+			AnimatiumConfig.save();
+			this.minecraft.setScreen(this.original);
+		}).pos((this.width / 2) - (Button.DEFAULT_WIDTH / 2), (int) (this.height / 1.2F)).tooltip(Tooltip.create(Component.literal("WARNING! THIS WILL RESET ALL YOUR SETTINGS").withStyle(ChatFormatting.RED))).build());
+	}
 
-    @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (this.original != null) {
-            this.original.render(guiGraphics, -999, -999, partialTick);
-        }
+	@Override
+	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+		if (this.original != null) {
+			this.original.render(guiGraphics, -999, -999, partialTick);
+		}
 
-        guiGraphics.fill(0, 0, this.width, this.height, ARGB.color(0.72F, 0x000000));
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+		guiGraphics.fill(0, 0, this.width, this.height, ARGB.color(0.72F, 0x000000));
+		super.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderUtils.drawScaledText(guiGraphics, this.font, "Welcome to Animatium Onboarding!", this.width / 2, this.height / 4, 2.0F);
-        guiGraphics.drawCenteredString(this.font, "Hello! Thank you for downloading Animatium!", this.width / 2, (int) (this.height / 2.8), 0xFFD6D6D6);
-        guiGraphics.drawCenteredString(this.font, "Please select the version of visuals you would like to use!", this.width / 2, (int) (this.height / 2.4), 0xFFD6D6D6);
+		RenderUtils.drawScaledText(guiGraphics, this.font, "Welcome to Animatium Onboarding!", this.width / 2, this.height / 4, 2.0F);
+		guiGraphics.drawCenteredString(this.font, "Hello! Thank you for downloading Animatium!", this.width / 2, (int) (this.height / 2.8), 0xFFD6D6D6);
+		guiGraphics.drawCenteredString(this.font, "Please select the version of visuals you would like to use!", this.width / 2, (int) (this.height / 2.4), 0xFFD6D6D6);
 
-        guiGraphics.drawCenteredString(this.font, "NOTE: If you have already went through this,", this.width / 2, (int) (this.height / 1.4F), 0xFFFFA600);
-        guiGraphics.drawCenteredString(this.font, "ask for help in the discord before continuing!", this.width / 2, (int) (this.height / 1.3F), 0xFFFFA600);
-    }
+		guiGraphics.drawCenteredString(this.font, "NOTE: If you have already went through this,", this.width / 2, (int) (this.height / 1.4F), 0xFFFFA600);
+		guiGraphics.drawCenteredString(this.font, "ask for help in the discord before continuing!", this.width / 2, (int) (this.height / 1.3F), 0xFFFFA600);
+	}
 
-    @Override
-    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (this.v1_7Button.mouseClicked(event, isDoubleClick) ||
+	@Override
+	public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+		if (this.v1_7Button.mouseClicked(event, isDoubleClick) ||
 				this.v1_8Button.mouseClicked(event, isDoubleClick) ||
 				this.v1_12Button.mouseClicked(event, isDoubleClick) ||
 				this.modernButton.mouseClicked(event, isDoubleClick)) {
-            updateVersionButtonState();
-            return true;
-        } else {
-            return super.mouseClicked(event, isDoubleClick);
-        }
-    }
+			this.updateVersionButtonState();
+			return true;
+		} else {
+			return super.mouseClicked(event, isDoubleClick);
+		}
+	}
 
-    @Override
-    public void onClose() {
-        // NOTE: Only allow escaping if you used the ``/animatium onboarding`` command
-        if (this.original == null) {
-            ConfigUtil.put("onboarding", false);
-            super.onClose();
-        }
-    }
+	@Override
+	public void onClose() {
+		// NOTE: Only allow escaping if you used the ``/animatium onboarding`` command
+		if (this.original == null) {
+			ConfigUtil.put("onboarding", false);
+			super.onClose();
+		}
+	}
 
-    private void updateVersionButtonMessage(Button button) {
-        button.setMessage(button.getMessage().copy().withColor(button.isActive() ? ARGB.white(1.0F) : 0xFFFFFFA0));
-    }
+	private void updateVersionButtonMessage(final Button button) {
+		button.setMessage(button.getMessage().copy().withColor(button.isActive() ? ARGB.white(1.0F) : 0xFFFFFFA0));
+	}
 
-    private void updateVersionButtonState() {
-        this.v1_7Button.active = this.version != Version.V1_7;
-        updateVersionButtonMessage(this.v1_7Button);
+	private void updateVersionButtonState() {
+		this.v1_7Button.active = this.version != Version.V1_7;
+		this.updateVersionButtonMessage(this.v1_7Button);
 
-        this.v1_8Button.active = this.version != Version.V1_8;
-        updateVersionButtonMessage(this.v1_8Button);
+		this.v1_8Button.active = this.version != Version.V1_8;
+		this.updateVersionButtonMessage(this.v1_8Button);
 
-        this.v1_12Button.active = this.version != Version.V1_12;
-        updateVersionButtonMessage(this.v1_12Button);
+		this.v1_12Button.active = this.version != Version.V1_12;
+		this.updateVersionButtonMessage(this.v1_12Button);
 
-        this.modernButton.active = this.version != Version.MODERN;
-        updateVersionButtonMessage(this.modernButton);
-    }
+		this.modernButton.active = this.version != Version.MODERN;
+		this.updateVersionButtonMessage(this.modernButton);
+	}
 }

@@ -34,6 +34,7 @@ import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.config.category.Category;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class EntryBundle extends Bundle {
@@ -92,7 +93,7 @@ public class EntryBundle extends Bundle {
 		return this;
 	}
 
-	public Iterable<Entry<?>> entries() {
+	public Collection<Entry<?>> entries() {
 		final ArrayList<Entry<?>> entries = new ArrayList<>(this.entries);
 		for (final Group group : this.groups) {
 			// TODO: Find a better way to do this without losing information

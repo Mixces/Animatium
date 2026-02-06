@@ -64,48 +64,48 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @UtilityClass
 public class Utils {
-	public float toRadians(float angle) {
+	public float toRadians(final float angle) {
 		return angle * (float) Math.PI / 180F;
 	}
 
-	public VoxelShape expandVoxelShape(VoxelShape shape, float value) {
+	public VoxelShape expandVoxelShape(final VoxelShape shape, final float value) {
 		AtomicReference<VoxelShape> voxelShape = new AtomicReference<>(Shapes.empty());
 		shape.toAabbs().forEach((aabb) -> voxelShape.set(Shapes.join(voxelShape.get(), Shapes.create(aabb.inflate(value)), BooleanOp.OR)));
 		return voxelShape.get();
 	}
 
-	public float lerpCameraPosition(Camera camera) {
+	public float lerpCameraPosition(final Camera camera) {
 		final CameraAccessor cameraAccessor = (CameraAccessor) camera;
 		return Mth.lerp(camera.getPartialTickTime(), cameraAccessor.animatium$getOldEyeHeight(), cameraAccessor.animatium$getEyeHeight());
 	}
 
-	public float lerpCameraPosition(CameraUtilityRenderState cameraUtilityRenderState) {
+	public float lerpCameraPosition(final CameraUtilityRenderState cameraUtilityRenderState) {
 		return Mth.lerp(cameraUtilityRenderState.animatium$getPartialTickTime(), cameraUtilityRenderState.animatium$getOldEyeHeight(), cameraUtilityRenderState.animatium$getEyeHeight());
 	}
 
-	public int getHandMultiplier(Player player) {
+	public int getHandMultiplier(final Player player) {
 		final InteractionHand hand = MoreObjects.firstNonNull(player.swingingArm, InteractionHand.MAIN_HAND);
 		return (Minecraft.getInstance().options.getCameraType().isFirstPerson() ? 1 : -1) * getHandMultiplier(player, hand);
 	}
 
-	public int getHandMultiplier(Player player, InteractionHand hand) {
+	public int getHandMultiplier(final Player player, final InteractionHand hand) {
 		return getArmMultiplier(hand == InteractionHand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite());
 	}
 
-	public int getArmMultiplier(HumanoidArm arm) {
+	public int getArmMultiplier(final HumanoidArm arm) {
 		return arm == HumanoidArm.RIGHT ? 1 : -1;
 	}
 
-	public Vec3 getPosWithEyeHeight(Player entity, float tickDelta, double eyeHeight) {
-		return entity.getPosition(tickDelta).add(0.0, eyeHeight, 0.0);
+	public Vec3 getPosWithEyeHeight(final Player player, final float tickDelta, final double eyeHeight) {
+		return player.getPosition(tickDelta).add(0.0, eyeHeight, 0.0);
 	}
 
-	public boolean isBlockingArm(HumanoidArm arm, ArmedEntityRenderState armedEntityState) {
+	public boolean isBlockingArm(final HumanoidArm arm, final ArmedEntityRenderState armedEntityState) {
 		return (arm == HumanoidArm.LEFT && armedEntityState.leftArmPose == HumanoidModel.ArmPose.BLOCK) ||
 				(arm == HumanoidArm.RIGHT && armedEntityState.rightArmPose == HumanoidModel.ArmPose.BLOCK);
 	}
 
-	public void fakeHandSwing(Player player, InteractionHand hand) {
+	public void fakeHandSwing(final Player player, final InteractionHand hand) {
 		// Fake Swinging, Doesn't Send A Packet
 		if (isNotSwinging(player)) {
 			player.swingTime = -1;
@@ -115,7 +115,7 @@ public class Utils {
 	}
 
 	// Sends necessary swing packets, without playing the player hand swing animation
-	public void sendSwingPacket(LocalPlayer player, InteractionHand hand) {
+	public void sendSwingPacket(final Player player, final InteractionHand hand) {
 		if (isNotSwinging(player) && player.level() instanceof ServerLevel serverLevel) {
 			int swingHand = ClientboundAnimatePacket.SWING_MAIN_HAND;
 			if (hand == InteractionHand.OFF_HAND) {
@@ -125,14 +125,16 @@ public class Utils {
 			serverLevel.getChunkSource().sendToTrackingPlayers(player, new ClientboundAnimatePacket(player, swingHand));
 		}
 
-		player.connection.send(new ServerboundSwingPacket(hand));
+		if (player instanceof LocalPlayer localPlayer) {
+			localPlayer.connection.send(new ServerboundSwingPacket(hand));
+		}
 	}
 
-	public boolean isNotSwinging(Player player) {
+	public boolean isNotSwinging(final Player player) {
 		return !player.swinging || player.swingTime >= ((LivingEntityAccessor) player).animatium$getSwingDuration() / 2 || player.swingTime < 0;
 	}
 
-	public void applySwingWhilstMining(ClientLevel level, Player player, HitResult hitResult) {
+	public void applySwingWhilstMining(final ClientLevel level, final Player player, final HitResult hitResult) {
 		final InteractionHand activeHand = player.getUsedItemHand();
 		final InteractionHand hand = AnimatiumConfig.instance().extras.offhandUsageSwinging ? activeHand : InteractionHand.MAIN_HAND;
 		if (activeHand.equals(hand)) {
@@ -150,7 +152,7 @@ public class Utils {
 		}
 	}
 
-	public boolean hasFog1_7(ClientLevel level) {
+	public boolean hasFog1_7(final ClientLevel level) {
 		final ClientLevelDataAccessor levelDataAccessor = (ClientLevelDataAccessor) level.getLevelData();
 		return !levelDataAccessor.animatium$isFlatWorld() && !level.dimensionType().hasCeiling(); // "isDark" method from 1.7/1.8
 	}

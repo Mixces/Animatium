@@ -41,51 +41,51 @@ import java.util.List;
 
 @UtilityClass
 public class ItemUtils {
-	public boolean isSwordItem(ItemStack stack) {
+	public boolean isSwordItem(final ItemStack stack) {
 		return stack.is(ItemTags.SWORDS);
 	}
 
-	public boolean isAxeItem(ItemStack stack) {
+	public boolean isAxeItem(final ItemStack stack) {
 		return stack.getItem() instanceof AxeItem || stack.is(ItemTags.AXES);
 	}
 
-	public boolean isPickaxeItem(ItemStack stack) {
+	public boolean isPickaxeItem(final ItemStack stack) {
 		return stack.is(ItemTags.PICKAXES);
 	}
 
-	public boolean isShovelItem(ItemStack stack) {
+	public boolean isShovelItem(final ItemStack stack) {
 		return stack.getItem() instanceof ShovelItem || stack.is(ItemTags.SHOVELS);
 	}
 
-	public boolean isHoeItem(ItemStack stack) {
+	public boolean isHoeItem(final ItemStack stack) {
 		return stack.getItem() instanceof HoeItem || stack.is(ItemTags.HOES);
 	}
 
-	public boolean isDiggerItem(ItemStack stack) {
+	public boolean isDiggerItem(final ItemStack stack) {
 		return isAxeItem(stack) || isPickaxeItem(stack) || isShovelItem(stack) || isHoeItem(stack);
 	}
 
-	public boolean isShieldItem(ItemStack stack) {
+	public boolean isShieldItem(final ItemStack stack) {
 		return stack.getItem() instanceof ShieldItem || stack.is(Items.SHIELD);
 	}
 
-	public boolean isFishingRodItem(ItemStack stack) {
+	public boolean isFishingRodItem(final ItemStack stack) {
 		final Item item = stack.getItem();
 		return item instanceof FishingRodItem || item instanceof FoodOnAStickItem<?>;
 	}
 
-	public boolean isRangedWeaponItem(ItemStack stack) {
+	public boolean isRangedWeaponItem(final ItemStack stack) {
 		return stack.getItem() instanceof ProjectileWeaponItem;
 	}
 
-	public boolean isHandheldItem(ItemStack stack) {
+	public boolean isHandheldItem(final ItemStack stack) {
 		return isDiggerItem(stack) ||
 				isSwordItem(stack) ||
 				isFishingRodItem(stack) ||
 				List.of(Items.MACE, Items.TRIDENT, Items.STICK, Items.BREEZE_ROD, Items.BLAZE_ROD).contains(stack.getItem());
 	}
 
-	public boolean isThinBlockItem(ItemStack stack) {
+	public boolean isThinBlockItem(final ItemStack stack) {
 		final Block block = Block.byItem(stack.getItem());
 		return block instanceof CarpetBlock ||
 				block instanceof TrapDoorBlock ||
@@ -94,11 +94,11 @@ public class ItemUtils {
 				block instanceof DaylightDetectorBlock;
 	}
 
-	public boolean isSkullBlock(ItemStack stack) {
+	public boolean isSkullBlock(final ItemStack stack) {
 		return Block.byItem(stack.getItem()) instanceof SkullBlock;
 	}
 
-	public boolean isBlockItemBlacklisted(ItemStack stack) {
+	public boolean isBlockItemBlacklisted(final ItemStack stack) {
 		final Block block = Block.byItem(stack.getItem());
 		return block instanceof BannerBlock ||
 				block instanceof RodBlock ||
@@ -106,13 +106,13 @@ public class ItemUtils {
 				(isSkullBlock(stack) && !AnimatiumConfig.instance().items.mobHeadIcons);
 	}
 
-	public boolean isItemBlacklisted(ItemStack stack) {
+	public boolean isItemBlacklisted(final ItemStack stack) {
 		return isShieldItem(stack) ||
 				isBlockItemBlacklisted(stack) ||
 				stack.is(Items.CROSSBOW);
 	}
 
-	public boolean isSwingItemBlacklisted(ItemStack stack) {
+	public boolean isSwingItemBlacklisted(final ItemStack stack) {
 		final Item item = stack.getItem();
 		return item instanceof ProjectileItem ||
 				item instanceof BucketItem ||
@@ -120,11 +120,11 @@ public class ItemUtils {
 				item instanceof EnderpearlItem;
 	}
 
-	public boolean isBlock3d(ItemStack stack, boolean usesBlockLight) {
+	public boolean isBlock3d(final ItemStack stack, final boolean usesBlockLight) {
 		return stack.getItem() instanceof BlockItem && usesBlockLight;
 	}
 
-	public void applyLegacyFirstPersonTransforms(PoseStack poseStack, int direction, Runnable runnable) {
+	public void applyLegacyFirstPersonTransforms(final PoseStack poseStack, final int direction, final Runnable runnable) {
 		poseStack.mulPose(Axis.YP.rotationDegrees(direction * 45.0F));
 		poseStack.scale(0.4F, 0.4F, 0.4F);
 		runnable.run();
@@ -132,7 +132,7 @@ public class ItemUtils {
 		poseStack.mulPose(Axis.YP.rotationDegrees(direction * -45.0F));
 	}
 
-	public boolean shouldApplyItemPositionsInThirdPerson(ArmedEntityRenderState armedEntityRenderState) {
+	public boolean shouldApplyItemPositionsInThirdPerson(final ArmedEntityRenderState armedEntityRenderState) {
 		if (AnimatiumConfig.instance().items.itemPositionsInThirdPerson) {
 			return true;
 		} else {
@@ -140,7 +140,7 @@ public class ItemUtils {
 		}
 	}
 
-	public int getLegacyDurabilityColorValue(ItemStack stack) {
+	public int getLegacyDurabilityColorValue(final ItemStack stack) {
 		final double value = (255.0 - (double) stack.getDamageValue() * 255.0 / (double) stack.getMaxDamage());
 		if (!Double.isNaN(value)) {
 			return (int) Math.round(value);
@@ -149,7 +149,7 @@ public class ItemUtils {
 		}
 	}
 
-	public Rarity getLegacyItemRarity(ItemStack stack) {
+	public Rarity getLegacyItemRarity(final ItemStack stack) {
 		final Item item = stack.getItem();
 		if (List.of(Items.GOLDEN_APPLE, Items.END_CRYSTAL).contains(item)) {
 			return Rarity.RARE;
@@ -164,7 +164,7 @@ public class ItemUtils {
 		}
 	}
 
-	public static @Nullable ResourceLocation getMobHeadLocation(Item item) {
+	public static @Nullable ResourceLocation getMobHeadLocation(final Item item) {
 		final Block block = Block.byItem(item);
 		if (block == Blocks.AIR || !(block instanceof SkullBlock skullBlock && skullBlock.getType() instanceof SkullBlock.Types types)) {
 			return null;
@@ -182,7 +182,7 @@ public class ItemUtils {
 	}
 
 	// TODO/NOTE: Might need rework? as vanilla now has the fix as of 1.21.11+ but doesn't seem fully the same/accurate
-	public boolean shouldInstantlyReplaceVisibleItem1_8(ItemStack prevStack, ItemStack currentStack) {
+	public boolean shouldInstantlyReplaceVisibleItem1_8(final ItemStack prevStack, final ItemStack currentStack) {
 		// TODO/NOTE: Apparently 1.7 doesn't do any special checks inside the inventory
 		final boolean itemsMatch = ItemStack.isSameItem(prevStack, currentStack);
 		final boolean durabilityMatch = prevStack.getDamageValue() == currentStack.getDamageValue();
