@@ -207,7 +207,7 @@ public abstract class MixinItemInHandRenderer {
 	}
 
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getOffhandItem()Lnet/minecraft/world/item/ItemStack;"))
-	private void animatium$createCopyStack(final CallbackInfo ci, @Local(name = "localPlayer") LocalPlayer localPlayer, @Local(name = "itemStack") ItemStack itemStack, @Share("copyStack") LocalRef<ItemStack> copyStack) {
+	private void animatium$createCopyStack(final CallbackInfo ci, @Local LocalPlayer localPlayer, @Local ItemStack itemStack, @Share("copyStack") LocalRef<ItemStack> copyStack) {
 		if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
 			// Initialize our copied stack
 			copyStack.set(itemStack.copy());
