@@ -103,7 +103,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
 	}
 
 	@WrapOperation(method = "setupAttackAnimation", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/model/geom/ModelPart;xRot:F", ordinal = 0))
-	public void animatium$fixMirrorArmSwing$field(final ModelPart instance, final float value, final Operation<Void> original, @Local(name = "humanoidArm") HumanoidArm arm) {
+	public void animatium$fixMirrorArmSwing$field(final ModelPart instance, final float value, final Operation<Void> original, @Local HumanoidArm arm) {
 		if (AnimatiumConfig.instance().fixes.fixMirrorArmSwing && arm == HumanoidArm.LEFT) {
 			this.rightArm.xRot -= this.body.yRot;
 		} else {
@@ -112,7 +112,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
 	}
 
 	@ModifyExpressionValue(method = "setupAttackAnimation", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;sin(F)F", ordinal = 5))
-	public float animatium$fixMirrorArmSwing$sin(final float original, @Local(name = "humanoidArm") HumanoidArm arm) {
+	public float animatium$fixMirrorArmSwing$sin(final float original, @Local HumanoidArm arm) {
 		float newValue = original;
 		if (AnimatiumConfig.instance().fixes.fixMirrorArmSwing) {
 			newValue *= Utils.getArmMultiplier(arm);

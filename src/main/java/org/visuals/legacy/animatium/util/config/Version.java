@@ -25,7 +25,8 @@
 
 package org.visuals.legacy.animatium.util.config;
 
-import org.visuals.legacy.animatium.Animatium;
+import net.minecraft.client.GraphicsStatus;
+import net.minecraft.client.Minecraft;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.config.category.ItemsConfigCategory;
 import org.visuals.legacy.animatium.config.category.MovementConfigCategory;
@@ -42,6 +43,7 @@ public enum Version {
 	V1_7((final AnimatiumConfig config) -> {
 		final MovementConfigCategory movement = config.movement;
 		movement.sneakAnimation = SneakAnimationSetting.V1_7;
+		movement.longUnsneak = true;
 		movement.oldCapeMovement = true;
 		movement.disableCapeLean = false;
 		movement.disableCapeSwingRotation = true;
@@ -129,7 +131,7 @@ public enum Version {
 		other.flameOffset = true;
 		other.persistentBlockOutline = true;
 		other.oldCloudRendering = true;
-		other.fastGrass = true;
+		other.fastGrass = GraphicsStatus.FAST.equals(Minecraft.getInstance().options.graphicsMode().get());
 		other.oldWaterOverlayOpacity = true;
 		other.oldWaterColorFog = true;
 		other.disableRandomBlockRotations = true;
@@ -138,6 +140,7 @@ public enum Version {
 	V1_8((final AnimatiumConfig config) -> {
 		final MovementConfigCategory movement = config.movement;
 		movement.sneakAnimation = SneakAnimationSetting.V1_8;
+		movement.longUnsneak = false; // I think it's false?
 		movement.oldCapeMovement = true;
 		movement.disableCapeLean = false;
 		movement.disableCapeSwingRotation = true;
@@ -225,8 +228,8 @@ public enum Version {
 		other.flameOffset = false;
 		other.persistentBlockOutline = false;
 		other.oldCloudRendering = true;
-		other.voidFog = VoidFogSetting.OFF;
 		other.fastGrass = false;
+		other.voidFog = VoidFogSetting.OFF;
 		other.oldWaterOverlayOpacity = true;
 		other.oldWaterColorFog = true;
 		other.disableRandomBlockRotations = false;
@@ -249,6 +252,7 @@ public enum Version {
 	MODERN((final AnimatiumConfig config) -> {
 		final MovementConfigCategory movement = config.movement;
 		movement.sneakAnimation = SneakAnimationSetting.VANILLA;
+		movement.longUnsneak = true;
 		movement.oldCapeMovement = false;
 		movement.disableCapeLean = false;
 		movement.disableCapeSwingRotation = false;
@@ -336,8 +340,8 @@ public enum Version {
 		other.flameOffset = false;
 		other.persistentBlockOutline = false;
 		other.oldCloudRendering = false;
-		other.voidFog = VoidFogSetting.OFF;
 		other.fastGrass = false;
+		other.voidFog = VoidFogSetting.OFF;
 		other.oldWaterOverlayOpacity = false;
 		other.oldWaterColorFog = false;
 		other.disableRandomBlockRotations = false;
@@ -351,6 +355,6 @@ public enum Version {
 
 	public void apply(final AnimatiumConfig config) {
 		this.applier.accept(config);
-		Animatium.reload();
+		// Minecraft.getInstance().reloadResourcePacks();
 	}
 }

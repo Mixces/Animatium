@@ -32,10 +32,13 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.screens.OnboardingScreen;
+import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.config.ConfigUtil;
 
 import java.util.Random;
@@ -51,7 +54,7 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
 			} else {
 				source.sendFeedback(Component.literal("Mod enabled.").withStyle(ChatFormatting.GREEN));
 				Animatium.setEnabled(true);
-				Animatium.reload();
+				reload();
 			}
 
 			return Command.SINGLE_SUCCESS;
@@ -64,7 +67,7 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
 			} else {
 				source.sendFeedback(Component.literal("Mod disabled.").withStyle(ChatFormatting.RED));
 				Animatium.setEnabled(false);
-				Animatium.reload();
+				reload();
 			}
 
 			return Command.SINGLE_SUCCESS;
@@ -83,7 +86,7 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
 	}
 
 	@Override
-	public int run(CommandContext<FabricClientCommandSource> context) {
+	public int run(final CommandContext<FabricClientCommandSource> context) {
 		final FabricClientCommandSource source = context.getSource();
 		source.sendFeedback(Component.literal("Opening config menu...").withColor(new Random().nextInt(0xFFFFFF)));
 
@@ -91,5 +94,12 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
 		minecraft.schedule(() -> minecraft.setScreen(AnimatiumConfig.getConfigScreen(minecraft.screen)));
 
 		return Command.SINGLE_SUCCESS;
+	}
+
+	private static void reload() {
+		final Minecraft minecraft = Minecraft.getInstance();
+		((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture()); // deepRedHurtTint
+		Utils.reinitializeInventorySlots(); // oldCraftingSlotsPosition
+		// minecraft.reloadResourcePacks(); // ?
 	}
 }

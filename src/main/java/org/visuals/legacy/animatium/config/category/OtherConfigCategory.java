@@ -49,7 +49,6 @@ public class OtherConfigCategory extends Category {
 	public boolean itemGlintOnEntity = true;
 	public boolean maxGlintProperties = true;
 	public boolean armorHurtRendering = false;
-	public boolean highAttackSpeedVisual = false;
 	public boolean disableEntityGlowOutline = false;
 	public boolean disableModernCombatSounds = true;
 	public boolean disableModernCombatParticles = true;
@@ -97,7 +96,6 @@ public class OtherConfigCategory extends Category {
 		bundle.booleanEntry("itemGlintOnEntity");
 		bundle.booleanEntry("maxGlintProperties");
 		bundle.booleanEntry("armorHurtRendering");
-		bundle.booleanEntry("highAttackSpeedVisual");
 		bundle.booleanEntry("disableEntityGlowOutline");
 		bundle.booleanEntry("disableModernCombatSounds");
 		bundle.booleanEntry("disableModernCombatParticles");

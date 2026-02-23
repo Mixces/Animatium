@@ -27,6 +27,7 @@ package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.network.chat.Component;
+import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.CameraVersion;
 
@@ -84,7 +85,7 @@ public class ScreenConfigCategory extends Category {
 		bundle.booleanEntry("oldChatPosition");
 		bundle.booleanEntry("oldCrosshairPosition");
 		bundle.booleanEntry("disconnectServerToTitleScreen");
-		bundle.booleanEntry("oldCraftingSlotsPosition");
+		bundle.booleanEntry("oldCraftingSlotsPosition", (option, event) -> Utils.reinitializeInventorySlots());
 
 		return bundle;
 	}

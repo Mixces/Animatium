@@ -79,7 +79,7 @@ public final class AnimatiumConfig {
 			builder.category(ExtrasConfigCategory.create(defaults.extras, config.extras));
 			builder.save(() -> {
 				CONFIG.save();
-				Animatium.reload();
+
 				final Minecraft minecraft = Minecraft.getInstance();
 				if (minecraft.getConnection() != null && !minecraft.isLocalServer()) {
 					ClientPlayNetworking.send(new ConfigDataPayloadPacket());

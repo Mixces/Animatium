@@ -25,8 +25,7 @@
 
 package org.visuals.legacy.animatium.config.category;
 
-import dev.isxander.yacl3.api.Option;
-import dev.isxander.yacl3.api.OptionDescription;
+import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.ControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
@@ -39,42 +38,131 @@ import java.lang.reflect.Field;
 import java.util.function.Function;
 
 public abstract class Category {
-	public static <T extends Category> Option<Boolean> booleanOption(String fieldName, T defaults, T current) {
-		return option(fieldName, defaults, current, TickBoxControllerBuilder::create);
+	public enum OptionType {
+		BOOLEAN(false),
+		FLOAT(true),
+		ENUM(false);
+
+		private final boolean sliderCapable;
+
+		OptionType(final boolean sliderCapable) {
+			this.sliderCapable = sliderCapable;
+		}
+
+		public boolean isSliderCapable() {
+			return this.sliderCapable;
+		}
 	}
 
-	public static <T extends Category, S extends Enum<S>> Option<S> enumOption(String fieldName, T defaults, T current, Class<S> enumClazz) {
-		return option(fieldName, defaults, current, (opt) -> EnumControllerBuilder.create(opt).enumClass(enumClazz).formatValue(it -> Component.translatable(AnimatiumConstants.MOD_ID + ".enum." + enumClazz.getSimpleName() + "." + it.name())));
-	}
+	public static class OptionBuilder<T> {
+		private final String name;
+		private OptionType type = null;
+		private boolean instant = false;
 
-	public static <T extends Category> Option<Float> floatSliderOption(String fieldName, T defaults, T current, float min, float max, float step) {
-		return option(fieldName, defaults, current, (opt) -> FloatSliderControllerBuilder.create(opt).range(min, max).step(step));
-	}
+		private OptionEventListener<T> listener = null;
 
-	public static <T extends Category, S> Option<S> option(String fieldName, T defaults, T current, Function<Option<S>, ControllerBuilder<S>> controllerBuilder) {
-		final Reference<S> reference = Reference.get(fieldName, defaults, current);
-		final String id = AnimatiumConstants.MOD_ID + "." + fieldName;
-		return Option.<S>createBuilder()
-				.name(Component.translatable(id))
-				.description(OptionDescription.of(Component.translatable(id + ".description")))
-				.binding(reference.defaultValue,
-						() -> {
-							try {
-								return (S) reference.currentField.get(current);
-							} catch (IllegalAccessException exception) {
-								exception.printStackTrace();
-								return reference.defaultValue;
-							}
-						},
-						(newVal) -> {
-							try {
-								reference.currentField.set(current, newVal);
-							} catch (IllegalAccessException exception) {
-								exception.printStackTrace();
-							}
-						})
-				.controller(controllerBuilder)
-				.build();
+		private boolean slider = false;
+		private Object min = null;
+		private Object max = null;
+		private Object step = null;
+
+		private Class<?> enumClazz;
+
+		OptionBuilder(final String name) {
+			this.name = name;
+		}
+
+		public static <T> OptionBuilder<T> of(final String name) {
+			return new OptionBuilder<>(name);
+		}
+
+		public static <S extends Enum<S>> OptionBuilder<Enum<S>> ofEnum(final String name, final Class<S> enumClazz) {
+			final OptionBuilder<Enum<S>> builder = new OptionBuilder<>(name);
+			builder.type = OptionType.ENUM;
+			builder.enumClazz = enumClazz;
+			return builder;
+		}
+
+		public OptionBuilder<T> type(final OptionType type) {
+			this.type = type;
+			return this;
+		}
+
+		public <S> OptionBuilder<T> slider(final S min, final S max, final S step) {
+			if (this.type == null || !this.type.isSliderCapable()) {
+				throw new RuntimeException("Option doesn't allow slider.");
+			} else {
+				this.slider = true;
+				this.min = min;
+				this.max = max;
+				this.step = step;
+				return this;
+			}
+		}
+
+		public OptionBuilder<T> listener(final OptionEventListener<T> listener) {
+			this.listener = listener;
+			return this;
+		}
+
+		public OptionBuilder<T> instant() {
+			this.instant = true;
+			return this;
+		}
+
+		public <CategoryLike extends Category, K> Option<K> build(final CategoryLike defaults, final CategoryLike current) {
+			final Function<Option<K>, ControllerBuilder<K>> controllerBuilder = switch (this.type) {
+				case BOOLEAN -> (opt) ->
+						(ControllerBuilder<K>) TickBoxControllerBuilder
+								.create((Option<Boolean>) opt);
+
+				case FLOAT -> (opt) -> {
+					if (this.slider) {
+						return (ControllerBuilder<K>) FloatSliderControllerBuilder
+								.create((Option<Float>) opt)
+								.range((float) this.min, (float) this.max)
+								.step((float) this.step);
+					} else {
+						throw new RuntimeException("TODO: Float non-slider");
+					}
+				};
+
+				case ENUM -> (opt) ->
+						EnumControllerBuilder
+								.create((Option<? extends Enum>) opt)
+								.enumClass(enumClazz)
+								.formatValue(it -> Component.translatable(AnimatiumConstants.MOD_ID + ".enum." + enumClazz.getSimpleName() + "." + ((Enum<?>) it).name()));
+			};
+
+			final Reference<K> reference = Reference.get(this.name, defaults, current);
+			final Binding<K> binding = Binding.generic(reference.defaultValue, () -> {
+				try {
+					return (K) reference.currentField.get(current);
+				} catch (IllegalAccessException exception) {
+					exception.printStackTrace();
+					return reference.defaultValue;
+				}
+			}, (newVal) -> {
+				try {
+					reference.currentField.set(current, newVal);
+				} catch (IllegalAccessException exception) {
+					exception.printStackTrace();
+				}
+			});
+
+			final Option.Builder<K> builder = Option.createBuilder();
+			final String id = AnimatiumConstants.MOD_ID + "." + this.name;
+			builder.name(Component.translatable(id));
+			builder.description(OptionDescription.of(Component.translatable(id + ".description")));
+			builder.controller(controllerBuilder);
+			if (this.instant) {
+				builder.stateManager(StateManager.createInstant(binding));
+			} else {
+				builder.binding(binding);
+			}
+
+			return builder.build();
+		}
 	}
 
 	public abstract EntryBundle bundle();

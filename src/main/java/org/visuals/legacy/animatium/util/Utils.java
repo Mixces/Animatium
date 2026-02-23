@@ -28,7 +28,6 @@ package org.visuals.legacy.animatium.util;
 import com.google.common.base.MoreObjects;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.Camera;
-import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -157,10 +156,6 @@ public class Utils {
 		return !levelDataAccessor.animatium$isFlatWorld() && !level.dimensionType().hasCeiling(); // "isDark" method from 1.7/1.8
 	}
 
-	public boolean isFastGraphics() {
-		return GraphicsStatus.FAST.equals(Minecraft.getInstance().options.graphicsMode().get());
-	}
-
 	/**
 	 * Can always safely assume that if this returns true, the provided render-state is AvatarRenderState
 	 *
@@ -176,7 +171,7 @@ public class Utils {
 		return player != null && entity != null && entity.getId() == player.getId();
 	}
 
-	public void restoreInventorySlots() {
+	public void reinitializeInventorySlots() {
 		final Player player = Minecraft.getInstance().player;
 		if (player != null && !GameType.CREATIVE.equals(player.gameMode())) {
 			// Re-initialize the inventory, to reset the slot positions modified by "Old Crafting Slots Position"

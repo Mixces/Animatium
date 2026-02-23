@@ -80,7 +80,7 @@ public abstract class MixinCamera {
 
 	@WrapOperation(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/Camera;eyeHeight:F"))
 	private void animatium$oldSneakAnimationInterpolation(final Camera instance, final float value, final Operation<Void> original) {
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.sneakAnimation == SneakAnimationSetting.V1_7 && this.entity.getEyeHeight() < eyeHeight) {
+		if (Animatium.isEnabled() && !AnimatiumConfig.instance().movement.longUnsneak && this.entity.getEyeHeight() < this.eyeHeight) {
 			this.eyeHeight = this.animatium$getStandingEyeHeight();
 		} else {
 			original.call(instance, value);

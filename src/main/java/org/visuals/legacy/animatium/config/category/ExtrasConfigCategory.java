@@ -26,7 +26,10 @@
 package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
+import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.util.compatibility.Mods;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
@@ -57,6 +60,7 @@ public class ExtrasConfigCategory extends Category {
 	public float itemSwingSpeed = 0.0F;
 	public float hasteSwingSpeed = 0.0F;
 	public float miningFatigueSwingSpeed = 0.0F;
+	public boolean highAttackSpeedVisual = false;
 	public boolean ignoreHasteSpeed = false;
 	public boolean ignoreMiningFatigueSpeed = false;
 	// Server Features (Singleplayer Only)
@@ -93,21 +97,23 @@ public class ExtrasConfigCategory extends Category {
 			bundle.booleanEntry("disableRecipeAndTutorialToasts");
 		}
 
+		final Minecraft minecraft = Minecraft.getInstance();
 		bundle.booleanEntry("showArmWhileInvisible");
 		bundle.booleanEntry("fakeMissPenaltySwing");
 		bundle.booleanEntry("dontMoveBlueVoid");
 		bundle.booleanEntry("disableEntityDeathTopple");
-		bundle.booleanEntry("deepRedHurtTint");
+		bundle.booleanEntry("deepRedHurtTint", (option, event) -> ((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture()));
 		bundle.booleanEntry("disableParticlePhysics");
 		bundle.booleanEntry("disableFirstPersonParticles");
 		bundle.booleanEntry("dontClearChat");
 		bundle.booleanEntry("dontCloseChat");
-		bundle.booleanEntry("oldWaterColorEffects");
+		bundle.booleanEntry("oldWaterColorEffects", (option, event) -> minecraft.levelRenderer.allChanged());
 
 		bundle.group((EntryBundle.Group) new EntryBundle.Group("item_swing")
 				.floatEntry("itemSwingSpeed", -1.0F, 1.0F, 0.1F)
 				.floatEntry("hasteSwingSpeed", -1.0F, 1.0F, 0.1F)
 				.floatEntry("miningFatigueSwingSpeed", -1.0F, 1.0F, 0.1F)
+				.booleanEntry("highAttackSpeedVisual")
 				.booleanEntry("ignoreHasteSpeed")
 				.booleanEntry("ignoreMiningFatigueSpeed"));
 

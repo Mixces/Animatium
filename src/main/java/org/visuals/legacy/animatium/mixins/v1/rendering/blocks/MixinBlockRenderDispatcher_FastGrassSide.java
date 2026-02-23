@@ -50,7 +50,7 @@ public abstract class MixinBlockRenderDispatcher_FastGrassSide {
 
     @WrapOperation(method = "getBlockModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/BlockModelShaper;getBlockModel(Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/client/renderer/block/model/BlockStateModel;"))
     private BlockStateModel animatium$fastGrass(BlockModelShaper instance, BlockState state, Operation<BlockStateModel> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.fastGrass && (state.is(Blocks.GRASS_BLOCK) && !state.getValue(GrassBlock.SNOWY)) && Utils.isFastGraphics()) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.fastGrass && (state.is(Blocks.GRASS_BLOCK) && !state.getValue(GrassBlock.SNOWY))) {
             return this.blockModelShaper.getModelManager().getModel(AnimatiumConstants.FAST_GRASS_MODEL_KEY);
         } else {
             return original.call(instance, state);

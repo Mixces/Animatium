@@ -27,6 +27,7 @@ package org.visuals.legacy.animatium.util.config;
 
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
+import dev.isxander.yacl3.api.OptionEventListener;
 import dev.isxander.yacl3.api.OptionGroup;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -71,6 +72,12 @@ public class EntryBundle extends Bundle {
 	@Override
 	public EntryBundle booleanEntry(final String name) {
 		this.entries.add(new BooleanEntry(name));
+		return this;
+	}
+
+	@Override
+	public EntryBundle booleanEntry(final String name, final OptionEventListener<?> listener) {
+		this.entries.add(new BooleanEntry(name, listener));
 		return this;
 	}
 
@@ -137,6 +144,7 @@ public class EntryBundle extends Bundle {
 	public abstract class Entry<T> {
 		public final String name;
 		public final Type type;
+		public final OptionEventListener<?> listener;
 
 		public abstract Option<T> createOption(final Category defaults, final Category config);
 
@@ -151,12 +159,22 @@ public class EntryBundle extends Bundle {
 
 	private class BooleanEntry extends Entry<Boolean> {
 		public BooleanEntry(final String name) {
-			super(name, Type.BOOLEAN);
+			super(name, Type.BOOLEAN, null);
+		}
+
+		public BooleanEntry(final String name, final OptionEventListener<?> listener) {
+			super(name, Type.BOOLEAN, listener);
 		}
 
 		@Override
-		public Option<Boolean> createOption(Category defaults, Category config) {
-			return Category.booleanOption(this.name, defaults, config);
+		public Option<Boolean> createOption(final Category defaults, final Category config) {
+			final Category.OptionBuilder<Boolean> option = Category.OptionBuilder.of(this.name);
+			option.type(Category.OptionType.BOOLEAN);
+			if (this.listener != null) {
+				option.instant().listener((OptionEventListener<Boolean>) this.listener);
+			}
+
+			return option.build(defaults, config);
 		}
 	}
 
@@ -167,15 +185,22 @@ public class EntryBundle extends Bundle {
 		private final float step;
 
 		public FloatEntry(final String name, final float min, final float max, final float step) {
-			super(name, Type.FLOAT);
+			super(name, Type.FLOAT, null);
 			this.min = min;
 			this.max = max;
 			this.step = step;
 		}
 
 		@Override
-		public Option<Float> createOption(Category defaults, Category config) {
-			return Category.floatSliderOption(this.name, defaults, config, this.min, this.max, this.step);
+		public Option<Float> createOption(final Category defaults, final Category config) {
+			final Category.OptionBuilder<Float> option = Category.OptionBuilder.of(this.name);
+			option.type(Category.OptionType.FLOAT);
+			option.slider(this.min, this.max, this.step);
+			if (this.listener != null) {
+				option.instant().listener((OptionEventListener<Float>) this.listener);
+			}
+
+			return option.build(defaults, config);
 		}
 	}
 
@@ -184,13 +209,18 @@ public class EntryBundle extends Bundle {
 		private final Class<?> enumClass;
 
 		public EnumEntry(final String name, final Class<S> enumClass) {
-			super(name, Type.ENUM);
+			super(name, Type.ENUM, null);
 			this.enumClass = enumClass;
 		}
 
 		@Override
-		public Option<Enum<S>> createOption(Category defaults, Category config) {
-			return Category.enumOption(this.name, defaults, config, (Class<? extends Enum>) this.enumClass);
+		public Option<Enum<S>> createOption(final Category defaults, final Category config) {
+			final Category.OptionBuilder<Enum<S>> option = Category.OptionBuilder.ofEnum(this.name, (Class<S>) this.enumClass);
+			if (this.listener != null) {
+				option.instant().listener((OptionEventListener<Enum<S>>) this.listener);
+			}
+
+			return option.build(defaults, config);
 		}
 	}
 }

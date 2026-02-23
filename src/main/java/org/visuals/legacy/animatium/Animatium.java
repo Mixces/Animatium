@@ -30,15 +30,12 @@ import lombok.experimental.UtilityClass;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenEntries;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.config.ConfigBundles;
-import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.util.AnimatiumDebugEntry;
-import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.config.ConfigUtil;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
@@ -56,17 +53,6 @@ public final class Animatium {
 	public void setEnabled(final boolean enabled) {
 		Animatium.enabled = enabled;
 		ConfigUtil.put("enabled", enabled);
-	}
-
-	public void reload() {
-		final Minecraft minecraft = Minecraft.getInstance();
-		((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
-		minecraft.reloadResourcePacks();
-		Utils.restoreInventorySlots();
-		if (minecraft.level != null) {
-			minecraft.level.clearTintCaches(); // Clear Water Color
-		}
-
 		if (!ConfigUtil.save()) {
 			System.err.println("Failed to save animatium utility config...");
 		}

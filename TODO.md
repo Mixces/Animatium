@@ -2,7 +2,7 @@
 
 #### HIGH PRIORITY
 
-- fix panorama
+- fix old crafting slots updating
 - fix fast grass w/ sodium
 - fix lang inaccuracies
 
@@ -17,6 +17,7 @@
 
 #### LOW PRIORITY
 
+- fix panorama pixelness
 - old head rotation (1.1/1.7)
 
 #### ???

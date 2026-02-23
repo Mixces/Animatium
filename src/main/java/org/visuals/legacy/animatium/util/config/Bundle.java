@@ -26,12 +26,15 @@
 package org.visuals.legacy.animatium.util.config;
 
 import dev.isxander.yacl3.api.ConfigCategory;
+import dev.isxander.yacl3.api.OptionEventListener;
 import org.visuals.legacy.animatium.config.category.Category;
 
 public abstract class Bundle {
 	public abstract void install(final ConfigCategory.Builder builder, final Category defaults, final Category config);
 
 	public abstract Bundle booleanEntry(final String name);
+
+	public abstract Bundle booleanEntry(final String name, final OptionEventListener<?> listener);
 
 	public abstract Bundle floatEntry(final String name, final float min, final float max, final float step);
 
