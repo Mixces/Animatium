@@ -227,7 +227,7 @@ public abstract class MixinItemInHandRenderer {
 	}
 
 	@WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;shouldInstantlyReplaceVisibleItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z", ordinal = 0))
-	private boolean animatium$fixEquipAnimationItemCheck2(final ItemInHandRenderer instance, final ItemStack itemStack, final ItemStack itemStack2, final Operation<Boolean> original, @Local(name = "localPlayer") LocalPlayer localPlayer) {
+	private boolean animatium$fixEquipAnimationItemCheck2(final ItemInHandRenderer instance, final ItemStack itemStack, final ItemStack itemStack2, final Operation<Boolean> original, @Local LocalPlayer localPlayer) {
 		final boolean value = original.call(instance, itemStack, itemStack2);
 		if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
 			// Apply our equip logic fix to offhand items
