@@ -78,8 +78,8 @@ public class SkyRendererUtility {
                     .withShaderDefine("PLANAR_FOG")
                     .build());
 
-    private Renderer blueVoidRenderer;
-    private Renderer voidBoxRenderer;
+    private ImmediateRenderer blueVoidRenderer;
+    private ImmediateRenderer voidBoxRenderer;
     private GpuBuffer vertexBuffer = null;
     private int indexCount = -1;
 
@@ -105,7 +105,7 @@ public class SkyRendererUtility {
         modelViewStack.translate(0.0F, AnimatiumConfig.instance().extras.dontMoveBlueVoid ? 12.0F : -((float) (depth - 16.0)), 0.0F);
 
         if (blueVoidRenderer == null) {
-            blueVoidRenderer = Renderer.of("Blue void sky disc");
+            blueVoidRenderer = ImmediateRenderer.of("Blue void sky disc");
         }
 
         final RenderPipeline pipeline = getLegacySkyPipeline(AnimatiumConfig.instance().other.planarSkyFog);
@@ -115,7 +115,7 @@ public class SkyRendererUtility {
         blueVoidRenderer.setup(getGpuBuffer(), quadsIndexBuffer.getBuffer(indexCount), quadsIndexBuffer.type(), indexCount);
 
         blueVoidRenderer.setDynamicTransforms(blueVoidRenderer.getDynamicTransforms().withShaderColor(new Vector4f(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F, 1.0F)));
-        blueVoidRenderer.draw();
+        blueVoidRenderer.drawTo();
 
         modelViewStack.popMatrix();
     }
@@ -157,7 +157,7 @@ public class SkyRendererUtility {
     // TODO/NOTE: Figure out why its rendering differently than in 18w07a (last snapshot to have it)
     public void renderVoidBox(double depth) {
         if (voidBoxRenderer == null) {
-            voidBoxRenderer = Renderer.of("Player Void Box");
+            voidBoxRenderer = ImmediateRenderer.of("Player Void Box");
             voidBoxRenderer.setPipeline(VOID_BOX_PIPELINE);
             voidBoxRenderer.setDynamicTransforms(voidBoxRenderer.getDynamicTransforms().withShaderColor(0xFF000000));
         }
@@ -195,7 +195,7 @@ public class SkyRendererUtility {
             vertexConsumer.addVertex(1.0F, -1.0F, -1.0F);
         }, 20);
 
-        voidBoxRenderer.draw();
+        voidBoxRenderer.drawTo();
     }
 
     public double getHorizonEyeHeight(ClientLevel level, float tickDelta) {

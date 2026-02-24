@@ -2,6 +2,6 @@
 	"pack": {
 		"min_format": 65.0,
 		"max_format": 69420.0,
-		"description": "Requires \"Old Water Color\" to be enabled!"
+		"description": "Restores the classic 1.12.2 era panorama."
 	}
 }

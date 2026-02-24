@@ -257,12 +257,12 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
 		}
 	}
 
-	private void draw(RenderPipeline pipeline, Vector3f offset, int color) {
-		final RenderTarget cloudsTarget = Minecraft.getInstance().levelRenderer.getCloudsTarget();
-		try (final Renderer renderer = Renderer.of("Legacy Clouds")) {
+	private void draw(final RenderPipeline pipeline, final Vector3f offset, final int color) {
+		RenderTarget cloudsTarget = Minecraft.getInstance().levelRenderer.getCloudsTarget();
+		try (final ImmediateRenderer renderer = ImmediateRenderer.of("Legacy Clouds")) {
 			renderer.setPipeline(pipeline);
-			if (cloudsTarget != null) {
-				renderer.setFramebuffer(cloudsTarget);
+			if (cloudsTarget == null) {
+				cloudsTarget = Minecraft.getInstance().getMainRenderTarget();
 			}
 
 			final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(renderer.getPipeline().getVertexFormatMode());
@@ -270,7 +270,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
 			renderer.setDynamicTransforms(renderer.getDynamicTransforms()
 					.withShaderColor(ARGB.color(1.0F, color))
 					.withModelOffset(offset));
-			renderer.draw();
+			renderer.drawTo(cloudsTarget);
 		}
 	}
 

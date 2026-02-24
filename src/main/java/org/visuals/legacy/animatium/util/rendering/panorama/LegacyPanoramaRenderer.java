@@ -30,6 +30,7 @@ import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuTextureView;
+import com.mojang.math.Axis;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.CachedPerspectiveProjectionMatrixBuffer;
@@ -38,9 +39,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector4i;
 import org.visuals.legacy.animatium.util.Utils;
-import org.visuals.legacy.animatium.util.rendering.Renderer;
+import org.visuals.legacy.animatium.util.rendering.ImmediateRenderer;
 
 @UtilityClass
 // Ported code of the old <=1.12.2 panorama renderer (w/ blur)
@@ -74,29 +76,33 @@ public class LegacyPanoramaRenderer {
 
 	private void renderPanorama(final int width, final int height) {
 		RenderSystem.setProjectionMatrix(projectionMatrixBuffer.getBuffer(width, height, 120.0F), ProjectionType.PERSPECTIVE);
-		final Matrix4f rootMatrix = new Matrix4f().identity().rotateX(Utils.toRadians(180.0F)).rotateZ(Utils.toRadians(90.0F));
+		final Matrix4f rootMatrix = new Matrix4f()
+				.rotateX(Utils.toRadians(180.0F))
+				.rotateZ(Utils.toRadians(90.0F));
 		for (int layer = 0; layer < 64; layer++) {
-			float x = (layer % 8 / 8.0F - 0.5F) / 64.0F;
-			float y = ((float) layer / 8 / 8.0F - 0.5F) / 64.0F;
-			final Matrix4f layerMatrix = new Matrix4f(rootMatrix).translate(x, y, 0.0F).rotateX(Utils.toRadians(getXRot())).rotateY(Utils.toRadians(getYRot()));
+			final float x = (layer % 8 / 8.0F - 0.5F) / 64.0F;
+			final float y = ((float) layer / 8 / 8.0F - 0.5F) / 64.0F;
+			final Matrix4f layerMatrix = new Matrix4f(rootMatrix)
+					.translate(x, y, 0.0F)
+					.rotateX(Utils.toRadians(getXRot()))
+					.rotateY(Utils.toRadians(getYRot()));
 			for (int panoramaIdx = 0; panoramaIdx < 6; panoramaIdx++) {
 				final Matrix4f faceMatrix = new Matrix4f(layerMatrix);
-				if (panoramaIdx == 1) {
-					faceMatrix.rotateY(Utils.toRadians(90.0F));
-				} else if (panoramaIdx == 2) {
-					faceMatrix.rotateY(Utils.toRadians(180.0F));
-				} else if (panoramaIdx == 3) {
-					faceMatrix.rotateY(Utils.toRadians(-90.0F));
-				} else if (panoramaIdx == 4) {
-					faceMatrix.rotateX(Utils.toRadians(90.0F));
-				} else if (panoramaIdx == 5) {
-					faceMatrix.rotateX(Utils.toRadians(-90.0F));
+				final Quaternionf rotation = switch (panoramaIdx) {
+					case 1 -> Axis.YP.rotationDegrees(90.0F);
+					case 2 -> Axis.YP.rotationDegrees(180.0F);
+					case 3 -> Axis.YN.rotationDegrees(90.0F);
+					case 4 -> Axis.XP.rotationDegrees(90.0F);
+					case 5 -> Axis.XN.rotationDegrees(90.0F);
+					default -> null;
+				};
+				if (rotation != null) {
+					faceMatrix.rotate(rotation);
 				}
 
-				try (final Renderer renderer = Renderer.of("Panorama")) {
+				try (final ImmediateRenderer renderer = ImmediateRenderer.of("Panorama")) {
 					renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA);
 					renderer.setViewport(VIEWPORT);
-					renderer.setFramebuffer(panoramaTarget);
 					renderer.setDynamicTransforms(renderer.getDynamicTransforms().withModelViewMatrix(faceMatrix));
 
 					final int currentLayer = layer;
@@ -109,7 +115,7 @@ public class LegacyPanoramaRenderer {
 					}, 4);
 
 					renderer.setTexture(0, getPanoramaTexture(panoramaIdx));
-					renderer.draw();
+					renderer.drawTo(panoramaTarget);
 				}
 			}
 		}

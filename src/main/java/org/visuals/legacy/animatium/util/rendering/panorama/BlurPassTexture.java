@@ -35,7 +35,7 @@ import lombok.AllArgsConstructor;
 import net.minecraft.util.ARGB;
 import org.joml.Matrix3x2f;
 import org.joml.Vector4i;
-import org.visuals.legacy.animatium.util.rendering.Renderer;
+import org.visuals.legacy.animatium.util.rendering.ImmediateRenderer;
 
 @AllArgsConstructor
 public class BlurPassTexture {
@@ -59,9 +59,8 @@ public class BlurPassTexture {
 				256 // height
 		);
 
-		try (final Renderer renderer = Renderer.of("Panorama Blur Pass")) {
+		try (final ImmediateRenderer renderer = ImmediateRenderer.of("Panorama Blur Pass")) {
 			renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA_BLUR);
-			renderer.setFramebuffer(renderTarget);
 			renderer.setViewport(viewport);
 			renderer.setup((vertexConsumer) -> {
 				for (int cycle = 0; cycle < 3; cycle++) {
@@ -74,7 +73,7 @@ public class BlurPassTexture {
 				}
 			}, 12);
 			renderer.setTexture(0, destTextureView);
-			renderer.drawInGui();
+			renderer.drawGui(renderTarget);
 		}
 	}
 }
