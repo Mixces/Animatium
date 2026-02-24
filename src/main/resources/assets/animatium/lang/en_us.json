@@ -300,6 +300,8 @@
 	"animatium.dontCloseChat.description": "Stops minecraft from closing the chat screen on teleport/some situations.",
 	"animatium.oldWaterColorEffects": "[1.12.2] Old Water Color Effects",
 	"animatium.oldWaterColorEffects.description": "Forces watercolor in biomes to be what it was in <=1.12.2.\n\nREQUIRES RESOURCE PACK",
+	"animatium.colorBoost": "[*] Color/Saturation boost",
+	"animatium.colorBoost.description": "Applies a colorboost/saturation boost to the games overall look.",
 	"animatium.category.extras.group.item_swing": "Item Swing",
 	"animatium.itemSwingSpeed": "Item Swing Speed",
 	"animatium.itemSwingSpeed.description": "",

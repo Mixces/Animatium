@@ -50,8 +50,8 @@ public class ConfigUtil {
 	public void load() throws Exception {
 		if (CONFIG_FILE.exists()) {
 			data = GSON.fromJson(Files.readString(CONFIG_FILE.toPath()), JsonObject.class);
-		} else if (!save()) {
-			throw new Exception("Failed to save animatium utility config...");
+		} else {
+			save();
 		}
 	}
 
@@ -69,7 +69,7 @@ public class ConfigUtil {
 		save();
 	}
 
-	public boolean save() {
+	public void save() {
 		boolean success = true;
 		try {
 			if (!CONFIG_FILE.exists()) {
@@ -83,6 +83,8 @@ public class ConfigUtil {
 			success = false;
 		}
 
-		return success;
+		if (!success) {
+			System.err.println("Failed to save animatium utility config...");
+		}
 	}
 }

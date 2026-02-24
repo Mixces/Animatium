@@ -36,16 +36,16 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(AbstractButton.class)
 public abstract class MixinAbstractButton_LegacyTextHoverColor extends AbstractWidget {
-    public MixinAbstractButton_LegacyTextHoverColor(int x, int y, int width, int height, Component message) {
-        super(x, y, width, height, message);
-    }
+	public MixinAbstractButton_LegacyTextHoverColor(final int x, final int y, final int width, final int height, final Component message) {
+		super(x, y, width, height, message);
+	}
 
-    @ModifyConstant(method = "renderWidget", constant = @Constant(intValue = 0xFFFFFFFF))
-    private int animatium$renderWidget$old$textColor(int constant) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.legacyWidgetHoverTextColor) {
-            return !active ? 0xFFE0E0E0 : (isHoveredOrFocused() ? 0xFFFFFFA0 : 0xFFE0E0E0);
-        } else {
-            return constant;
-        }
-    }
+	@ModifyConstant(method = "renderWidget", constant = @Constant(intValue = 0xFFFFFFFF))
+	private int animatium$renderWidget$old$textColor(final int constant) {
+		if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.legacyWidgetHoverTextColor) {
+			return !this.active ? 0xFFE0E0E0 : (this.isHoveredOrFocused() ? 0xFFFFFFA0 : 0xFFE0E0E0);
+		} else {
+			return constant;
+		}
+	}
 }

@@ -53,9 +53,6 @@ public final class Animatium {
 	public void setEnabled(final boolean enabled) {
 		Animatium.enabled = enabled;
 		ConfigUtil.put("enabled", enabled);
-		if (!ConfigUtil.save()) {
-			System.err.println("Failed to save animatium utility config...");
-		}
 	}
 
 	public boolean hasServerFeature(final ServerFeature feature) {

@@ -41,15 +41,20 @@ import org.visuals.legacy.animatium.packet.ConfigDataPayloadPacket;
 import org.visuals.legacy.animatium.packet.InfoPayloadPacket;
 import org.visuals.legacy.animatium.packet.SetServerFeaturesPayloadPacket;
 
+import java.util.List;
+
 @Entrypoint
 public final class AnimatiumFabricClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		Animatium.initialize();
 		final ModContainer modContainer = FabricLoader.getInstance().getModContainer(AnimatiumConstants.MOD_ID).orElseThrow(() -> new RuntimeException("Mod container data could not be found for Animatium!"));
-		ResourceManagerHelper.registerBuiltinResourcePack(Animatium.location("classic_textures"), modContainer, ResourcePackActivationType.NORMAL);
-		ResourceManagerHelper.registerBuiltinResourcePack(Animatium.location("classic_panorama"), modContainer, ResourcePackActivationType.NORMAL);
-		ResourceManagerHelper.registerBuiltinResourcePack(Animatium.location("classic_water"), modContainer, ResourcePackActivationType.NORMAL);
+
+		final List<String> packs = List.of("classic_textures", "classic_panorama", "classic_water");
+		for (final String pack : packs) {
+			ResourceManagerHelper.registerBuiltinResourcePack(Animatium.location(pack), modContainer, ResourcePackActivationType.NORMAL);
+		}
+
 		ModelLoadingPlugin.register(context -> context.addModel(AnimatiumConstants.FAST_GRASS_MODEL_KEY, SimpleUnbakedExtraModel.blockStateModel(AnimatiumConstants.FAST_GRASS_MODEL_LOCATION)));
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) -> dispatcher.register(AnimatiumCommand.create()));
 		this.registerPayloads();

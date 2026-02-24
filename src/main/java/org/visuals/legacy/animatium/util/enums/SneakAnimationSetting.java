@@ -32,7 +32,7 @@ public enum SneakAnimationSetting {
 	VANILLA;
 
 	public boolean isSmooth() {
-		return this == V1_7 || this == V1_13 || this == VANILLA;
+		return this != V1_8;
 	}
 
 	public boolean isInstantResponse() {
