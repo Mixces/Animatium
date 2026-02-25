@@ -47,6 +47,8 @@ public class ExtrasConfigCategory extends Category {
 	public boolean alwaysSharpParticles = false;
 	public boolean disableRecipeAndTutorialToasts = false;
 	public boolean showArmWhileInvisible = false;
+	public boolean damageTintItems = false;
+	public boolean damageTintCape = false;
 	public boolean fakeMissPenaltySwing = false;
 	public boolean dontMoveBlueVoid = false;
 	public boolean disableEntityDeathTopple = false;
@@ -100,6 +102,8 @@ public class ExtrasConfigCategory extends Category {
 
 		final Minecraft minecraft = Minecraft.getInstance();
 		bundle.booleanEntry("showArmWhileInvisible");
+		bundle.booleanEntry("damageTintItems");
+		bundle.booleanEntry("damageTintCape");
 		bundle.booleanEntry("fakeMissPenaltySwing");
 		bundle.booleanEntry("dontMoveBlueVoid");
 		bundle.booleanEntry("disableEntityDeathTopple");

@@ -39,6 +39,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
@@ -83,16 +84,25 @@ public abstract class MixinAvatarRenderer_HeldItemArmLogic<AvatarLikeEntity exte
 	}
 
 	@WrapOperation(method = "renderHand", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModelPart(Lnet/minecraft/client/model/geom/ModelPart;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/RenderType;IILnet/minecraft/client/renderer/texture/TextureAtlasSprite;)V"))
-	private void animatium$partialVisibleArmWhileInvisible(final SubmitNodeCollector instance, final ModelPart modelPart, final PoseStack poseStack, final RenderType renderType, final int packedLight, final int packedOverlay, final TextureAtlasSprite textureAtlasSprite, final Operation<Void> original) {
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.showArmWhileInvisible) {
-			final Player player = Minecraft.getInstance().player;
-			if (player != null && player.isInvisible()) {
-				final int color = ARGB.multiply(654311423, this.getModelTint(animatium$renderState.get()));
-				instance.submitModelPart(modelPart, poseStack, renderType, packedLight, packedOverlay, textureAtlasSprite, color, null);
-				return;
+	private void animatium$partialVisibleArmWhileInvisible$damageTintArm(final SubmitNodeCollector instance, final ModelPart modelPart, final PoseStack poseStack, final RenderType renderType, final int packedLight, final int packedOverlay, final TextureAtlasSprite textureAtlasSprite, final Operation<Void> original) {
+		final AvatarRenderState avatarRenderState = animatium$renderState.get();
+
+		int overlay = packedOverlay;
+		if (Animatium.isEnabled() && avatarRenderState != null) {
+			if (AnimatiumConfig.instance().extras.damageTintItems) {
+				overlay = OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(avatarRenderState.hasRedOverlay));
+			}
+
+			if (AnimatiumConfig.instance().extras.showArmWhileInvisible) {
+				final Player player = Minecraft.getInstance().player;
+				if (player != null && player.isInvisible()) {
+					final int color = ARGB.multiply(654311423, this.getModelTint(avatarRenderState));
+					instance.submitModelPart(modelPart, poseStack, renderType, packedLight, overlay, textureAtlasSprite, color, null);
+					return;
+				}
 			}
 		}
 
-		original.call(instance, modelPart, poseStack, renderType, packedLight, packedOverlay, textureAtlasSprite);
+		original.call(instance, modelPart, poseStack, renderType, packedLight, overlay, textureAtlasSprite);
 	}
 }

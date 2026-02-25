@@ -175,47 +175,47 @@ public class ImmediateRenderer implements AutoCloseable {
 	}
 
 	public void setUniform(String name, int value) {
-		this.uniforms.put(name, new Uniform(Uniform.Type.INT, value));
+		this.uniforms.put(name, new Uniform<>(Uniform.Type.INT, value));
 	}
 
 	public void setUniform(String name, int... value) {
-		this.uniforms.put(name, new Uniform(Uniform.Type.INT_ARRAY, value));
+		this.uniforms.put(name, new Uniform<>(Uniform.Type.INT_ARRAY, value));
 	}
 
 	public void setUniform(String name, float value) {
-		this.uniforms.put(name, new Uniform(Uniform.Type.FLOAT, value));
+		this.uniforms.put(name, new Uniform<>(Uniform.Type.FLOAT, value));
 	}
 
 	public void setUniform(String name, float... value) {
-		this.uniforms.put(name, new Uniform(Uniform.Type.FLOAT_ARRAY, value));
+		this.uniforms.put(name, new Uniform<>(Uniform.Type.FLOAT_ARRAY, value));
 	}
 
 	public void setUniform(String name, Vector2ic value) {
-		this.uniforms.put(name, new Uniform(Uniform.Type.VECTOR2I, value));
+		this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR2I, value));
 	}
 
 	public void setUniform(String name, Vector2fc value) {
-		this.uniforms.put(name, new Uniform(Uniform.Type.VECTOR2F, value));
+		this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR2F, value));
 	}
 
 	public void setUniform(String name, Vector3ic value) {
-		this.uniforms.put(name, new Uniform(Uniform.Type.VECTOR3I, value));
+		this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR3I, value));
 	}
 
 	public void setUniform(String name, Vector3fc value) {
-		this.uniforms.put(name, new Uniform(Uniform.Type.VECTOR3F, value));
+		this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR3F, value));
 	}
 
 	public void setUniform(String name, Vector4ic value) {
-		this.uniforms.put(name, new Uniform(Uniform.Type.VECTOR4I, value));
+		this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR4I, value));
 	}
 
 	public void setUniform(String name, Vector4fc value) {
-		this.uniforms.put(name, new Uniform(Uniform.Type.VECTOR4F, value));
+		this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR4F, value));
 	}
 
 	public void setUniform(String name, Matrix4fc value) {
-		this.uniforms.put(name, new Uniform(Uniform.Type.MATRIX4F, value));
+		this.uniforms.put(name, new Uniform<>(Uniform.Type.MATRIX4F, value));
 	}
 
 	public void drawTo(final RenderTarget renderTarget) {
@@ -390,7 +390,7 @@ public class ImmediateRenderer implements AutoCloseable {
 		}
 	}
 
-	private record Uniform(Type type, Object value) {
+	private record Uniform<T>(Type type, T value) {
 		public int size() {
 			final Std140SizeCalculator calculator = new Std140SizeCalculator();
 			switch (this.type) {

@@ -102,7 +102,7 @@ public abstract class MixinEquipmentLayerRenderer {
 	}
 
 	@Unique
-	private int animatium$getPackUv(int original, EntityRenderState entityRenderState) {
+	private int animatium$getPackUv(final int original, final EntityRenderState entityRenderState) {
 		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.entityArmorHurtTint && entityRenderState instanceof LivingEntityRenderState livingEntityRenderState) {
 			return OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(livingEntityRenderState.hasRedOverlay));
 		} else {
