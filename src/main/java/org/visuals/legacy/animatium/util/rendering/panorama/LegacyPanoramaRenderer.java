@@ -27,8 +27,8 @@ package org.visuals.legacy.animatium.util.rendering.panorama;
 
 import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.pipeline.MainTarget;
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.math.Axis;
 import lombok.experimental.UtilityClass;
@@ -48,6 +48,14 @@ import org.visuals.legacy.animatium.util.rendering.ImmediateRenderer;
 // Ported code of the old <=1.12.2 panorama renderer (w/ blur)
 public class LegacyPanoramaRenderer {
 	private final Vector4i VIEWPORT = new Vector4i(0, 0, 256, 256);
+	private final ResourceLocation[] PANORAMA_TEXTURES = new ResourceLocation[]{
+			ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_0.png"),
+			ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_1.png"),
+			ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_2.png"),
+			ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_3.png"),
+			ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_4.png"),
+			ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_5.png")
+	};
 
 	private final CachedPerspectiveProjectionMatrixBuffer projectionMatrixBuffer = new CachedPerspectiveProjectionMatrixBuffer("panorama", 0.05F, 10.0F);
 	private final MainTarget panoramaTarget = new MainTarget(256, 256);
@@ -57,12 +65,11 @@ public class LegacyPanoramaRenderer {
 	static {
 		final DynamicTexture dynamicTexture = new DynamicTexture(() -> "background", 256, 256, false);
 		backgroundTextureView = dynamicTexture.getTextureView();
-		backgroundTextureView.texture().setTextureFilter(FilterMode.LINEAR, FilterMode.LINEAR, true);
 		RenderSystem.getDevice().createCommandEncoder().clearDepthTexture(panoramaTarget.getDepthTexture(), 1.0F);
 	}
 
 	public void render(final GuiGraphics guiGraphics, final int width, final int height) {
-		renderPanorama(width, height);
+		renderPanorama(panoramaTarget, width, height);
 		for (int pass = 0; pass < 7; ++pass) {
 			new BlurPassTexture(
 					panoramaTarget,
@@ -71,10 +78,18 @@ public class LegacyPanoramaRenderer {
 			).render(guiGraphics.pose(), width, height, VIEWPORT);
 		}
 
-		guiGraphics.guiRenderState.submitGuiElement(new BlitFinalTexture(guiGraphics.pose(), backgroundTextureView, width, height, ARGB.white(1.0F)));
+		guiGraphics.guiRenderState.submitGuiElement(
+				new BlitFinalTexture(
+						guiGraphics.pose(),
+						backgroundTextureView,
+						width,
+						height,
+						ARGB.white(1.0F)
+				)
+		);
 	}
 
-	private void renderPanorama(final int width, final int height) {
+	private void renderPanorama(final RenderTarget renderTarget, final int width, final int height) {
 		RenderSystem.setProjectionMatrix(projectionMatrixBuffer.getBuffer(width, height, 120.0F), ProjectionType.PERSPECTIVE);
 		final Matrix4f rootMatrix = new Matrix4f()
 				.rotateX(Utils.toRadians(180.0F))
@@ -84,8 +99,8 @@ public class LegacyPanoramaRenderer {
 			final float y = ((float) layer / 8 / 8.0F - 0.5F) / 64.0F;
 			final Matrix4f layerMatrix = new Matrix4f(rootMatrix)
 					.translate(x, y, 0.0F)
-					.rotateX(Utils.toRadians(getXRot()))
-					.rotateY(Utils.toRadians(getYRot()));
+					.rotateX(Utils.toRadians(Mth.sin(spin / 400.0F) * 25.0F + 20.0F)) // xRot
+					.rotateY(Utils.toRadians(-spin * 0.1F)); // yRot
 			for (int panoramaIdx = 0; panoramaIdx < 6; panoramaIdx++) {
 				final Matrix4f faceMatrix = new Matrix4f(layerMatrix);
 				final Quaternionf rotation = switch (panoramaIdx) {
@@ -100,7 +115,7 @@ public class LegacyPanoramaRenderer {
 					faceMatrix.rotate(rotation);
 				}
 
-				try (final ImmediateRenderer renderer = ImmediateRenderer.of("Panorama")) {
+				try (final ImmediateRenderer renderer = ImmediateRenderer.of("Legacy Panorama")) {
 					renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA);
 					renderer.setViewport(VIEWPORT);
 					renderer.setDynamicTransforms(renderer.getDynamicTransforms().withModelViewMatrix(faceMatrix));
@@ -114,8 +129,8 @@ public class LegacyPanoramaRenderer {
 						vertexConsumer.addVertex(-1.0F, 1.0F, 1.0F).setUv(0.0F, 1.0F).setColor(color);
 					}, 4);
 
-					renderer.setTexture(0, getPanoramaTexture(panoramaIdx));
-					renderer.drawTo(panoramaTarget);
+					renderer.setTexture(0, PANORAMA_TEXTURES[panoramaIdx]);
+					renderer.drawTo(renderTarget);
 				}
 			}
 		}
@@ -123,17 +138,5 @@ public class LegacyPanoramaRenderer {
 
 	public void update(float tickDelta) {
 		spin += tickDelta;
-	}
-
-	public float getXRot() {
-		return Mth.sin(spin / 400.0F) * 25.0F + 20.0F;
-	}
-
-	public float getYRot() {
-		return -spin * 0.1F;
-	}
-
-	public ResourceLocation getPanoramaTexture(int side) {
-		return ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_" + side + ".png");
 	}
 }

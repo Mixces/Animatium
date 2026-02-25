@@ -45,7 +45,7 @@ public record BlitFinalTexture(
 ) implements GuiElementRenderState {
 	@Override
 	public void buildVertices(VertexConsumer consumer) {
-		final float aspect = 120.0F / Math.max(this.width, this.height);
+		final float aspect = this.width > this.height ? 120.0F / this.width : 120.0F / this.height;
 		final float sw = this.width * aspect / 256.0F;
 		final float sh = this.height * aspect / 256.0F;
 		consumer.addVertexWith2DPose(this.pose, 0.0F, this.height).setUv(0.5F - sh, 0.5F + sw).setColor(this.color);

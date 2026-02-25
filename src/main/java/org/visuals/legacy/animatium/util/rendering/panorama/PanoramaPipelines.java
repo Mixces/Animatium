@@ -44,20 +44,10 @@ public class PanoramaPipelines {
 					.withLocation(Animatium.location("pipeline/legacy_panorama"))
 					.withVertexShader(Animatium.location("core/legacy_panorama"))
 					.withFragmentShader(Animatium.location("core/legacy_panorama"))
-					.withCull(false)
-					.withDepthWrite(false)
 					.withBlend(PANORAMA_BLEND)
-					// .withColorWrite(true, false) // TODO/NOTE: Causes it to not render (alpha becomes 0.0?!??!?!)
+					.withDepthWrite(false)
+					.withCull(false)
 					.withSampler("Sampler0")
 					.withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
-					.build();
-
-	public RenderPipeline LEGACY_PANORAMA_BLUR =
-			RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
-					.withLocation(Animatium.location("pipeline/legacy_panorama_blur"))
-					.withVertexShader(Animatium.location("core/legacy_panorama_blur"))
-					.withFragmentShader(Animatium.location("core/legacy_panorama_blur"))
-					.withBlend(PANORAMA_BLEND)
-					.withColorWrite(true, false)
 					.build();
 }

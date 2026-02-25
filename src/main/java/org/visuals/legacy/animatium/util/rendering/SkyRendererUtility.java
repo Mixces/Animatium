@@ -115,7 +115,7 @@ public class SkyRendererUtility {
         blueVoidRenderer.setup(getGpuBuffer(), quadsIndexBuffer.getBuffer(indexCount), quadsIndexBuffer.type(), indexCount);
 
         blueVoidRenderer.setDynamicTransforms(blueVoidRenderer.getDynamicTransforms().withShaderColor(new Vector4f(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F, 1.0F)));
-        blueVoidRenderer.drawTo();
+        blueVoidRenderer.draw();
 
         modelViewStack.popMatrix();
     }
@@ -195,7 +195,7 @@ public class SkyRendererUtility {
             vertexConsumer.addVertex(1.0F, -1.0F, -1.0F);
         }, 20);
 
-        voidBoxRenderer.drawTo();
+        voidBoxRenderer.draw();
     }
 
     public double getHorizonEyeHeight(ClientLevel level, float tickDelta) {

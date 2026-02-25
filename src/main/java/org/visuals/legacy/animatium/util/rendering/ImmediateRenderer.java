@@ -257,11 +257,11 @@ public class ImmediateRenderer implements AutoCloseable {
 		}
 	}
 
-	public void drawTo() {
+	public void draw() {
 		drawTo(Minecraft.getInstance().getMainRenderTarget());
 	}
 
-	public void drawGui(final RenderTarget renderTarget) {
+	public void drawGuiTo(final RenderTarget renderTarget) {
 		final Minecraft minecraft = Minecraft.getInstance();
 		final Window window = minecraft.getWindow();
 		final GuiRendererAccessor guiRendererAccessor = (GuiRendererAccessor) ((GameRendererAccessor) minecraft.gameRenderer).animatium$getGuiRenderer();
@@ -270,6 +270,10 @@ public class ImmediateRenderer implements AutoCloseable {
 		this.setDynamicTransforms(this.dynamicTransforms.withModelViewMatrix(new Matrix4f(this.dynamicTransforms.getModelViewMatrix()).setTranslation(0.0F, 0.0F, -11000.0F)));
 		this.drawTo(renderTarget);
 		RenderSystem.restoreProjectionMatrix();
+	}
+
+	public void drawGui() {
+		drawGuiTo(Minecraft.getInstance().getMainRenderTarget());
 	}
 
 	private @Nullable GpuBufferSlice setupUniformsBuffer() {
