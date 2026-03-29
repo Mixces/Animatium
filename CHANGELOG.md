@@ -10,7 +10,6 @@
 
 - Old Crafting Slots Position
 - Old Water Color Effects
-- Fix thrown egg kicking you
 - Option to turn on/off 1.7 "longer un-sneak" animation
 - New "extras" setting to color-boost the game
 - Singleplayer toggles for server features (in extras config tab)
@@ -19,6 +18,7 @@
 
 #### General
 
+- Fix thrown egg kicking you
 - Fixed "Old Widget Text Colors" causing disabled buttons to have white text
 - Removed "Old Depth Far" & "Always Steve Model"
 - "Force High Attack Speed Visual" is now default to false & won't change based on preset
