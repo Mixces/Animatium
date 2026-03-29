@@ -34,18 +34,16 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.visuals.legacy.animatium.util.states.ViewBobbingStorage;
 
 @Mixin(Player.class)
 public abstract class MixinPlayer_SetViewBobbingTilt extends LivingEntity {
-    protected MixinPlayer_SetViewBobbingTilt(EntityType<? extends LivingEntity> entityType, Level level) {
+    protected MixinPlayer_SetViewBobbingTilt(final EntityType<? extends LivingEntity> entityType, final Level level) {
         super(entityType, level);
     }
 
     @Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;setSpeed(F)V", shift = At.Shift.AFTER))
-    private void animatium$updateBobbingTiltValues(CallbackInfo ci) {
-        final ViewBobbingStorage bobbingStorage = (ViewBobbingStorage) this;
+    private void animatium$updateBobbingTiltValues(final CallbackInfo ci) {
         final float tilt = this.onGround() || this.getHealth() <= 0.0F ? 0.0F : (float) (Math.atan(-this.getDeltaMovement().y * (double) 0.2F) * 15.0F);
-        bobbingStorage.animatium$setBobbingTilt(Mth.lerp(0.8F, bobbingStorage.animatium$getBobbingTilt(), tilt));
+        this.animatium$setBobbingTilt(Mth.lerp(0.8F, this.animatium$getBobbingTilt(), tilt));
     }
 }

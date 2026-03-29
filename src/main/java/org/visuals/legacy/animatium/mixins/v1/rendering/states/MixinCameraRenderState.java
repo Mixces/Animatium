@@ -33,9 +33,6 @@ import org.visuals.legacy.animatium.util.states.CameraUtilityRenderState;
 @Mixin(CameraRenderState.class)
 public abstract class MixinCameraRenderState implements CameraUtilityRenderState {
     @Unique
-    private int animatium$id = -1;
-
-    @Unique
     private float animatium$partialTickTime = 0.0F;
 
     @Unique
@@ -49,16 +46,6 @@ public abstract class MixinCameraRenderState implements CameraUtilityRenderState
 
     @Unique
     private float animatium$xRot = 0.0F;
-
-    @Override
-    public int animatium$getId() {
-        return this.animatium$id;
-    }
-
-    @Override
-    public void animatium$setId(int id) {
-        this.animatium$id = id;
-    }
 
     @Override
     public float animatium$getPartialTickTime() {

@@ -158,7 +158,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
 	private void animatium$oldSwordBlockArm(final HumanoidModel<?> instance, final ModelPart arm, final boolean isRightArm, final Operation<Void> original, @Local(argsOnly = true) T humanoidRenderState) {
 		original.call(instance, arm, isRightArm);
 		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.thirdPersonSwordBlockingPosition) {
-			final ItemStack stack = ((UtilityRenderState) humanoidRenderState).animatium$getItemHeldByArm(isRightArm ? HumanoidArm.RIGHT : HumanoidArm.LEFT);
+			final ItemStack stack = humanoidRenderState.animatium$getItemHeldByArm(isRightArm ? HumanoidArm.RIGHT : HumanoidArm.LEFT);
 			if (!(stack.getItem() instanceof ShieldItem)) {
 				arm.xRot = arm.xRot * 0.5F - ((float) Math.PI / 10.0F) * 2.0F;
 				arm.yRot = 0;

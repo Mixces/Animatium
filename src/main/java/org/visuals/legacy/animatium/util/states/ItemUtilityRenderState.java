@@ -28,7 +28,11 @@ package org.visuals.legacy.animatium.util.states;
 import net.minecraft.world.item.ItemStack;
 
 public interface ItemUtilityRenderState {
-    ItemStack animatium$getItemStack();
+    default ItemStack animatium$getItemStack() {
+        throw new UnsupportedOperationException();
+    }
 
-    void animatium$setItemStack(ItemStack itemStack);
+    default void animatium$setItemStack(final ItemStack itemStack) {
+        throw new UnsupportedOperationException();
+    }
 }

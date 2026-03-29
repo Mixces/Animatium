@@ -73,7 +73,7 @@ public abstract class MixinItemStackRenderLayerState {
 	@Inject(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack$Pose;)V"))
 	private void animatium$itemPositions(final PoseStack poseStack, final SubmitNodeCollector nodeCollector, final int packedLight, final int packedOverlay, final int outlineColor, final CallbackInfo ci) {
 		if (Animatium.isEnabled()) {
-			final ItemStack stack = ((ItemUtilityRenderState) itemStackRenderState).animatium$getItemStack();
+			final ItemStack stack = itemStackRenderState.animatium$getItemStack();
 			if (!stack.isEmpty()) {
 				final ItemDisplayContext itemDisplayContext = this.itemStackRenderState.displayContext;
 				final boolean isGui = itemDisplayContext == ItemDisplayContext.GUI;

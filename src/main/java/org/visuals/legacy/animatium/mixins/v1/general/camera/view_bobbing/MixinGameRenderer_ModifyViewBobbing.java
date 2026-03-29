@@ -35,6 +35,7 @@ import net.minecraft.client.entity.ClientAvatarState;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -46,7 +47,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.states.ViewBobbingStorage;
 
 @Mixin(GameRenderer.class)
 public abstract class MixinGameRenderer_ModifyViewBobbing {
@@ -81,15 +81,14 @@ public abstract class MixinGameRenderer_ModifyViewBobbing {
 	@Inject(method = "bobView", at = @At("TAIL"))
 	private void animatium$fixVerticalBobbingTilt(final PoseStack poseStack, final float partialTicks, final CallbackInfo ci) {
 		if (AnimatiumConfig.instance().fixes.fixVerticalBobbingTilt && this.minecraft.getCameraEntity() instanceof AbstractClientPlayer player) {
-			final ViewBobbingStorage bobbingAccessor = (ViewBobbingStorage) player;
-			final float fallDist = Mth.lerp(partialTicks, bobbingAccessor.animatium$getPreviousBobbingTilt(), bobbingAccessor.animatium$getBobbingTilt());
+			final float fallDist = Mth.lerp(partialTicks, player.animatium$getPreviousBobbingTilt(), player.animatium$getBobbingTilt());
 			poseStack.mulPose(Axis.XP.rotationDegrees(fallDist));
 		}
 	}
 
 	@WrapOperation(method = "bobView", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/ClientAvatarState;getBackwardsInterpolatedWalkDistance(F)F"))
 	private float animatium$viewBobbing$changeDistance(final ClientAvatarState instance, final float partialTicks, final Operation<Float> original) {
-		final ViewBobbingStorage bobbingStorage = (ViewBobbingStorage) this.minecraft.getCameraEntity();
+		final Entity bobbingStorage = this.minecraft.getCameraEntity();
 		if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.handViewBobbingMovement && bobbingStorage != null) {
 			final float walkDist = bobbingStorage.animatium$getHorizontalSpeed();
 			final float walkDistO = bobbingStorage.animatium$getPreviousHorizontalSpeed();

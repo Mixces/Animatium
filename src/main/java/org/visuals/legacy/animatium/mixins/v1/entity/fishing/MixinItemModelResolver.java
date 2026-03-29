@@ -51,12 +51,19 @@ import org.visuals.legacy.animatium.util.states.ItemUtilityRenderState;
 @Mixin(ItemModelResolver.class)
 public abstract class MixinItemModelResolver {
     @Inject(method = "appendItemLayers", at = @At("HEAD"))
-    private void animatium$storeItemStack(ItemStackRenderState itemStackRenderState, ItemStack itemStack, ItemDisplayContext itemDisplayContext, Level level, ItemOwner itemOwner, int i, CallbackInfo ci) {
-        ((ItemUtilityRenderState) itemStackRenderState).animatium$setItemStack(itemStack);
+    private void animatium$storeItemStack(final ItemStackRenderState itemStackRenderState, final ItemStack itemStack, final ItemDisplayContext itemDisplayContext, final Level level, final ItemOwner itemOwner, final int i, final CallbackInfo ci) {
+        itemStackRenderState.animatium$setItemStack(itemStack);
     }
 
     @WrapOperation(method = "appendItemLayers", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;get(Lnet/minecraft/core/component/DataComponentType;)Ljava/lang/Object;"))
-    private Object animatium$stickModelWhenCastInThirdperson(ItemStack instance, DataComponentType<?> dataComponentType, Operation<Object> original, @Local(argsOnly = true) ItemDisplayContext displayContext, @Local(argsOnly = true) ItemOwner itemOwner, @Local(argsOnly = true) ItemStack itemStack) {
+    private Object animatium$stickModelWhenCastInThirdperson(
+            final ItemStack instance,
+            final DataComponentType<?> dataComponentType,
+            final Operation<Object> original,
+            @Local(argsOnly = true) final ItemDisplayContext displayContext,
+            @Local(argsOnly = true) final ItemOwner itemOwner,
+            @Local(argsOnly = true) final ItemStack itemStack
+    ) {
         final LivingEntity livingEntity = itemOwner == null ? null : itemOwner.asLivingEntity();
 		// TODO: Fix
         if (Animatium.isEnabled() &&

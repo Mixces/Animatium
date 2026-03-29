@@ -26,27 +26,43 @@
 package org.visuals.legacy.animatium.util.states;
 
 public interface CameraUtilityRenderState {
-    int animatium$getId();
+    default float animatium$getPartialTickTime() {
+        throw new UnsupportedOperationException();
+    }
 
-    void animatium$setId(int id);
+    default void animatium$setPartialTickTime(final float partialTickTime) {
+        throw new UnsupportedOperationException();
+    }
 
-    float animatium$getPartialTickTime();
+    default float animatium$getOldEyeHeight() {
+        throw new UnsupportedOperationException();
+    }
 
-    void animatium$setPartialTickTime(float partialTickTime);
+    default void animatium$setOldEyeHeight(final float oldEyeHeight) {
+        throw new UnsupportedOperationException();
+    }
 
-    float animatium$getOldEyeHeight();
+    default float animatium$getEyeHeight() {
+        throw new UnsupportedOperationException();
+    }
 
-    void animatium$setOldEyeHeight(float oldEyeHeight);
+    default void animatium$setEyeHeight(final float eyeHeight) {
+        throw new UnsupportedOperationException();
+    }
 
-    float animatium$getEyeHeight();
+    default float animatium$getYRot() {
+        throw new UnsupportedOperationException();
+    }
 
-    void animatium$setEyeHeight(float eyeHeight);
+    default void animatium$setYRot(final float yRot) {
+        throw new UnsupportedOperationException();
+    }
 
-    float animatium$getYRot();
+    default float animatium$getXRot() {
+        throw new UnsupportedOperationException();
+    }
 
-    void animatium$setYRot(float yRot);
-
-    float animatium$getXRot();
-
-    void animatium$setXRot(float xRot);
+    default void animatium$setXRot(final float xRot) {
+        throw new UnsupportedOperationException();
+    }
 }
