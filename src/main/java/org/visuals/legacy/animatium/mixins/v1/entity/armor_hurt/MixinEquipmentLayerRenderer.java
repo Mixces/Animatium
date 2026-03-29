@@ -36,11 +36,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.Identifier;
@@ -57,7 +58,7 @@ public abstract class MixinEquipmentLayerRenderer {
 	@WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/Identifier;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;armorCutoutNoCull(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/RenderType;"))
 	private RenderType animatium$renderLayerArmorTint(Identifier resourceLocation, Operation<RenderType> original) {
 		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.entityArmorHurtTint) {
-			return RenderType.entityCutoutNoCullZOffset(resourceLocation);
+			return RenderTypes.entityCutoutNoCullZOffset(resourceLocation);
 		} else {
 			return original.call(resourceLocation);
 		}
@@ -66,7 +67,7 @@ public abstract class MixinEquipmentLayerRenderer {
 	@WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/Identifier;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/Sheets;armorTrimsSheet(Z)Lnet/minecraft/client/renderer/RenderType;"))
 	private RenderType animatium$renderLayerArmorTrimTint(boolean bl, Operation<RenderType> original, @Local TextureAtlasSprite textureAtlasSprite) {
 		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.entityArmorHurtTint) {
-			return RenderType.entityCutoutNoCullZOffset(textureAtlasSprite.atlasLocation());
+			return RenderTypes.entityCutoutNoCullZOffset(textureAtlasSprite.atlasLocation());
 		} else {
 			return original.call(bl);
 		}

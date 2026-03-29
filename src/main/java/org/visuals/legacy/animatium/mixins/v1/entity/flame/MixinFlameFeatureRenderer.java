@@ -64,7 +64,7 @@ public abstract class MixinFlameFeatureRenderer {
     @ModifyArg(method = "renderFlame", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack$Pose;translate(FFF)Lorg/joml/Matrix4f;", ordinal = 0), index = 1)
     private float animatium$flameOffset(float original, @Local(argsOnly = true) EntityRenderState entityRenderState) {
         final Camera camera = Minecraft.getInstance().getEntityRenderDispatcher().camera;
-        if (Animatium.isEnabled() && entityRenderState instanceof AvatarRenderState avatarRenderState && camera != null && camera.getEntity().getId() == avatarRenderState.id) {
+        if (Animatium.isEnabled() && entityRenderState instanceof AvatarRenderState avatarRenderState && camera != null && camera.entity().getId() == avatarRenderState.id) {
             final boolean shouldSyncPlayerModelWithEyeHeight = AnimatiumConfig.instance().movement.sneakAnimation == SneakAnimationSetting.V1_7;
             if (shouldSyncPlayerModelWithEyeHeight) {
                 final float cameraLerpValue = Utils.lerpCameraPosition(camera);

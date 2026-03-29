@@ -27,39 +27,26 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.outlines;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.state.BlockOutlineRenderState;
-import net.minecraft.client.renderer.state.LevelRenderState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.Utils;
-import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
 @Mixin(LevelRenderer.class)
 public abstract class MixinLevelRenderer_BlockOutlines {
-	@WrapOperation(method = "renderBlockOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderHitOutline(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;DDDLnet/minecraft/client/renderer/state/BlockOutlineRenderState;I)V"))
-	private void animatium$setBlockOutlineWidth(final LevelRenderer instance, final PoseStack poseStack, final VertexConsumer consumer, final double camX, final double camY, final double camZ, final BlockOutlineRenderState outlineRenderState, final int color, final Operation<Void> original) {
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.blockOutlineRendering) {
-			RenderUtils.getLineState().setWidth(2.0F);
-		}
-
-		original.call(instance, poseStack, consumer, camX, camY, camZ, outlineRenderState, color);
-	}
-
-	@Inject(method = "renderBlockOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;endLastBatch()V", shift = At.Shift.AFTER))
-	private void animatium$restoreBlockOutlineWidth(final MultiBufferSource.BufferSource bufferSource, final PoseStack poseStack, final boolean translucent, final LevelRenderState renderState, final CallbackInfo ci) {
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.blockOutlineRendering) {
-			RenderUtils.getLineState().setWidth(-1.0F);
-		}
-	}
+    @ModifyArg(method = "renderBlockOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderHitOutline(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;DDDLnet/minecraft/client/renderer/state/BlockOutlineRenderState;IF)V", ordinal = 1), index = 7)
+    private float animatium$oldBlockOutline(final float lineWidth) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.blockOutlineRendering) {
+            return 2.0F;
+        } else {
+            return lineWidth;
+        }
+    }
 
 	@WrapOperation(method = "renderHitOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/state/BlockOutlineRenderState;shape()Lnet/minecraft/world/phys/shapes/VoxelShape;"))
 	private VoxelShape animatium$blockOutlineRendering(final BlockOutlineRenderState instance, final Operation<VoxelShape> original) {

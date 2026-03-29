@@ -29,13 +29,10 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.FishingHookRenderer;
 import net.minecraft.client.renderer.entity.state.FishingHookRenderState;
-import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
@@ -45,17 +42,14 @@ import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.mixins.accessor.CameraAccessor;
 import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
-import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
 @Mixin(FishingHookRenderer.class)
 public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHook, FishingHookRenderState> {
@@ -77,16 +71,14 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
         }
     }
 
-    @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/FishingHookRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V", ordinal = 0, shift = At.Shift.AFTER))
-    private void animatium$fishingRodLineThickness(FishingHookRenderState fishingHookRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
-        if (Animatium.isEnabled()) {
-            // TODO/NOTE: 1.21.11 removes setLineWidth, lineWidth is now part of the vertex consumer/buffer builder
-            final LineState lineState = RenderUtils.getLineState();
-            if (AnimatiumConfig.instance().items.thinFishingRodLineThickness) {
-                lineState.setWidth(1.0F);
-            } else if (AnimatiumConfig.instance().items.fishingRodVersion.ordinal() <= FishingRodVersion.V1_13.ordinal()) {
-                lineState.setWidth(2.0F);
-            }
+    @ModifyArg(method = "method_72983", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/FishingHookRenderer;stringVertex(FFFLcom/mojang/blaze3d/vertex/VertexConsumer;Lcom/mojang/blaze3d/vertex/PoseStack$Pose;FFF)V"), index = 7)
+    private static float animatium$fishingRodLineThickness(final float lineWidth) {
+        if (AnimatiumConfig.instance().items.thinFishingRodLineThickness) {
+            return 1.0F;
+        } else if (AnimatiumConfig.instance().items.fishingRodVersion.ordinal() <= FishingRodVersion.V1_13.ordinal()) {
+            return 2.0F;
+        } else {
+            return lineWidth;
         }
     }
 

@@ -117,7 +117,6 @@
 		"v1.rendering.items.usage.MixinIsUsingItem",
 		"v1.rendering.items.usage.MixinMinecraft",
 		"v1.rendering.min_transparency.MixinSpriteContents_FixTransparencyLimit",
-		"v1.rendering.outlines.MixinCompositeRenderType_BlockOutlineLineWidth",
 		"v1.rendering.outlines.MixinGameRenderer_PersistentBlockOutline",
 		"v1.rendering.outlines.MixinLevelRenderer_BlockOutlines",
 		"v1.rendering.outlines.MixinLevelRenderer_EntityOutlines",

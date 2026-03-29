@@ -26,12 +26,12 @@
 package org.visuals.legacy.animatium.mixins.v1.entity.cape_movement;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.model.PlayerCapeModel;
+import net.minecraft.client.model.player.PlayerCapeModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.OutlineBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
