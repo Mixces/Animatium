@@ -44,7 +44,7 @@ public class LegacyLogoTexture extends ReloadableTexture {
 	}
 
 	@Override
-	public @NotNull TextureContents loadContents(ResourceManager resourceManager) throws IOException {
+	public @NotNull TextureContents loadContents(final ResourceManager resourceManager) throws IOException {
 		try (final InputStream inputStream = Minecraft.getInstance().getResourceManager().open(this.resourceId())) {
 			// TODO: Get real metadata file
 			return new TextureContents(NativeImage.read(inputStream), new TextureMetadataSection(TextureMetadataSection.DEFAULT_BLUR, TextureMetadataSection.DEFAULT_CLAMP));

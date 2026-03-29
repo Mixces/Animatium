@@ -57,19 +57,18 @@ public abstract class MixinArmedEntityRenderState implements UtilityRenderState 
 
     @Inject(method = "extractArmedEntityRenderState", at = @At("TAIL"))
     private static void animatium$storeData(LivingEntity livingEntity, ArmedEntityRenderState armedEntityRenderState, ItemModelResolver itemModelResolver, CallbackInfo ci) {
-        UtilityRenderState utilityRenderState = (UtilityRenderState) armedEntityRenderState;
-        utilityRenderState.animatium$setItemHeldByArm(HumanoidArm.LEFT, livingEntity.getItemHeldByArm(HumanoidArm.LEFT));
-        utilityRenderState.animatium$setItemHeldByArm(HumanoidArm.RIGHT, livingEntity.getItemHeldByArm(HumanoidArm.RIGHT));
+        armedEntityRenderState.animatium$setItemHeldByArm(HumanoidArm.LEFT, livingEntity.getItemHeldByArm(HumanoidArm.LEFT));
+        armedEntityRenderState.animatium$setItemHeldByArm(HumanoidArm.RIGHT, livingEntity.getItemHeldByArm(HumanoidArm.RIGHT));
         if (livingEntity instanceof Player player && player.fishing != null) {
-            utilityRenderState.animatium$setFishing();
+            armedEntityRenderState.animatium$setFishing();
         }
 
         if (livingEntity.isSleeping()) {
-            utilityRenderState.animatium$setSleeping();
+            armedEntityRenderState.animatium$setSleeping();
         }
 
 		if (livingEntity instanceof Avatar avatar) {
-			utilityRenderState.animatium$setStandingDimensions(avatar.getDefaultDimensions(Pose.STANDING));
+            armedEntityRenderState.animatium$setStandingDimensions(avatar.getDefaultDimensions(Pose.STANDING));
 		}
     }
 

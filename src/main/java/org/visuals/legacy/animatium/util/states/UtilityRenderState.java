@@ -31,20 +31,36 @@ import net.minecraft.world.item.ItemStack;
 
 public interface UtilityRenderState {
     // TODO/REMOVE 1.21.11
-    ItemStack animatium$getItemHeldByArm(HumanoidArm humanoidArm);
+    default ItemStack animatium$getItemHeldByArm(final HumanoidArm humanoidArm) {
+        throw new UnsupportedOperationException();
+    }
 
-    void animatium$setItemHeldByArm(HumanoidArm arm, ItemStack itemStack);
+    default void animatium$setItemHeldByArm(final HumanoidArm arm, final ItemStack itemStack) {
+        throw new UnsupportedOperationException();
+    }
     // TODO/REMOVE 1.21.11
 
-    boolean animatium$isFishing();
+    default boolean animatium$isFishing() {
+        throw new UnsupportedOperationException();
+    }
 
-    void animatium$setFishing();
+    default void animatium$setFishing() {
+        throw new UnsupportedOperationException();
+    }
 
-    boolean animatium$isSleeping();
+    default boolean animatium$isSleeping() {
+        throw new UnsupportedOperationException();
+    }
 
-    void animatium$setSleeping();
+    default void animatium$setSleeping() {
+        throw new UnsupportedOperationException();
+    }
 	
-	EntityDimensions animatium$getStandingDimensions();
+	default EntityDimensions animatium$getStandingDimensions() {
+        throw new UnsupportedOperationException();
+    }
 
-	void animatium$setStandingDimensions(EntityDimensions entityDimensions);
+	default void animatium$setStandingDimensions(final EntityDimensions entityDimensions) {
+        throw new UnsupportedOperationException();
+    }
 }

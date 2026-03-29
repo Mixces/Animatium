@@ -42,7 +42,7 @@ public abstract class MixinItemStackRenderState implements ItemUtilityRenderStat
     }
 
     @Override
-    public void animatium$setItemStack(ItemStack itemStack) {
+    public void animatium$setItemStack(final ItemStack itemStack) {
         animatium$stack = itemStack;
     }
 }

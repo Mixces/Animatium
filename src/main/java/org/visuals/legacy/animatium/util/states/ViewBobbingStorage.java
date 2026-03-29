@@ -27,14 +27,24 @@ package org.visuals.legacy.animatium.util.states;
 
 public interface ViewBobbingStorage {
     // Bobbing Tilt
-    void animatium$setBobbingTilt(float bobbingTilt);
+    default void animatium$setBobbingTilt(final float bobbingTilt) {
+        throw new UnsupportedOperationException();
+    }
 
-    float animatium$getBobbingTilt();
+    default float animatium$getBobbingTilt() {
+        throw new UnsupportedOperationException();
+    }
 
-    float animatium$getPreviousBobbingTilt();
+    default float animatium$getPreviousBobbingTilt() {
+        throw new UnsupportedOperationException();
+    }
 
     // Horizontal Speed
-    float animatium$getHorizontalSpeed();
+    default float animatium$getHorizontalSpeed() {
+        throw new UnsupportedOperationException();
+    }
 
-    float animatium$getPreviousHorizontalSpeed();
+    default float animatium$getPreviousHorizontalSpeed() {
+        throw new UnsupportedOperationException();
+    }
 }

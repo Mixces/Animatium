@@ -35,6 +35,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
 import net.minecraft.network.protocol.game.ServerboundSwingPacket;
@@ -57,7 +58,6 @@ import org.visuals.legacy.animatium.mixins.accessor.CameraAccessor;
 import org.visuals.legacy.animatium.mixins.accessor.ClientLevelDataAccessor;
 import org.visuals.legacy.animatium.mixins.accessor.LivingEntityAccessor;
 import org.visuals.legacy.animatium.mixins.accessor.PlayerAccessor;
-import org.visuals.legacy.animatium.util.states.CameraUtilityRenderState;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -78,8 +78,8 @@ public class Utils {
         return Mth.lerp(camera.getPartialTickTime(), cameraAccessor.animatium$getOldEyeHeight(), cameraAccessor.animatium$getEyeHeight());
     }
 
-    public float lerpCameraPosition(final CameraUtilityRenderState cameraUtilityRenderState) {
-        return Mth.lerp(cameraUtilityRenderState.animatium$getPartialTickTime(), cameraUtilityRenderState.animatium$getOldEyeHeight(), cameraUtilityRenderState.animatium$getEyeHeight());
+    public float lerpCameraPosition(final CameraRenderState cameraRenderState) {
+        return Mth.lerp(cameraRenderState.animatium$getPartialTickTime(), cameraRenderState.animatium$getOldEyeHeight(), cameraRenderState.animatium$getEyeHeight());
     }
 
     public int getHandMultiplier(final Player player) {
