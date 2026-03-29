@@ -27,13 +27,10 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.sky.the_void;
 
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.SkyRenderer;
 import net.minecraft.client.renderer.state.SkyRenderState;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -43,20 +40,13 @@ import org.visuals.legacy.animatium.util.rendering.SkyRendererUtility;
 
 @Mixin(LevelRenderer.class)
 public abstract class MixinLevelRenderer_VoidBox {
-	@Shadow
-	@Nullable
-	private ClientLevel level;
-
-	@Shadow
-	@Final
-	private Minecraft minecraft;
-
-	@Inject(method = "method_62215", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SkyRenderer;renderDarkDisc()V", shift = At.Shift.AFTER))
-	private void animatium$renderVoidBox(GpuBufferSlice gpuBufferSlice, SkyRenderState skyRenderState, CallbackInfo ci) {
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.playerVoidBox) {
-			final float tickDelta = this.minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true);
-			assert this.level != null;
-			SkyRendererUtility.renderVoidBox(SkyRendererUtility.getHorizonEyeHeight(this.level, tickDelta));
-		}
-	}
+    @Inject(method = "method_62215", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SkyRenderer;renderDarkDisc()V", shift = At.Shift.AFTER))
+    private static void animatium$renderVoidBox(GpuBufferSlice gpuBufferSlice, SkyRenderState skyRenderState, SkyRenderer skyRenderer, CallbackInfo ci) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.playerVoidBox) {
+            final Minecraft minecraft = Minecraft.getInstance();
+            final float tickDelta = minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true);
+            assert minecraft.level != null;
+            SkyRendererUtility.renderVoidBox(SkyRendererUtility.getHorizonEyeHeight(minecraft.level, tickDelta));
+        }
+    }
 }

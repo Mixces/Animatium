@@ -98,7 +98,7 @@
 		"v1.rendering.blocks.MixinBiomeSpecialEffects_DisableWaterBiomeTint",
 		"v1.rendering.blocks.MixinBlockRenderDispatcher_FastGrassSide",
 		"v1.rendering.blocks.MixinWeightedVariantsUnbaked_DisableRandomBlockRotations",
-		"v1.rendering.fog.MixinAirBasedFogEnvironment_OldRenderDistance",
+		"v1.rendering.fog.MixinAtmosphericFogEnvironment_OldRenderDistance",
 		"v1.rendering.fog.MixinAtmosphericFogEnvironment_OldCloudRendering",
 		"v1.rendering.fog.MixinFogRenderer_OldMinY",
 		"v1.rendering.fog.MixinFogRenderer_VoidFog",

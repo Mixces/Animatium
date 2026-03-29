@@ -27,14 +27,11 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.sky.the_void;
 
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.SkyRenderer;
 import net.minecraft.client.renderer.state.SkyRenderState;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.world.level.dimension.DimensionType;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -44,20 +41,12 @@ import org.visuals.legacy.animatium.util.rendering.SkyRendererUtility;
 
 @Mixin(LevelRenderer.class)
 public abstract class MixinLevelRenderer_BlueVoidDisc {
-    @Shadow
-    @Final
-    private Minecraft minecraft;
-
-    @Shadow
-    @Nullable
-    private ClientLevel level;
-
     @Inject(method = "method_62215", at = @At("TAIL"))
-    private void animatium$blueVoidSky(GpuBufferSlice gpuBufferSlice, SkyRenderState skyRenderState, CallbackInfo ci) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.blueVoidSky && skyRenderState.skyType != DimensionSpecialEffects.SkyType.END && this.level != null && this.minecraft.player != null) {
-            final float tickDelta = this.minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true);
-            final int skyColor = this.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), tickDelta);
-            SkyRendererUtility.renderBlueVoid(skyColor, SkyRendererUtility.getHorizonEyeHeight(this.level, tickDelta));
+    private static void animatium$blueVoidSky(GpuBufferSlice gpuBufferSlice, SkyRenderState skyRenderState, SkyRenderer skyRenderer, CallbackInfo ci) {
+        final Minecraft minecraft = Minecraft.getInstance();
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.blueVoidSky && skyRenderState.skybox != DimensionType.Skybox.END && minecraft.level != null && minecraft.player != null) {
+            final float tickDelta = minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true);
+            SkyRendererUtility.renderBlueVoid(skyRenderState.skyColor, SkyRendererUtility.getHorizonEyeHeight(minecraft.level, tickDelta));
         }
     }
 

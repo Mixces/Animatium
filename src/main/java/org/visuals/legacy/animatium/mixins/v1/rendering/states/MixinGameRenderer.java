@@ -48,7 +48,7 @@ public abstract class MixinGameRenderer {
         cameraRenderState.animatium$setPartialTickTime(this.mainCamera.getPartialTickTime());
         cameraRenderState.animatium$setOldEyeHeight(((CameraAccessor) this.mainCamera).animatium$getOldEyeHeight());
         cameraRenderState.animatium$setEyeHeight(((CameraAccessor) this.mainCamera).animatium$getEyeHeight());
-        cameraRenderState.animatium$setYRot(this.mainCamera.getYRot());
-        cameraRenderState.animatium$setXRot(this.mainCamera.getXRot());
+        cameraRenderState.animatium$setYRot(this.mainCamera.yRot());
+        cameraRenderState.animatium$setXRot(this.mainCamera.xRot());
     }
 }

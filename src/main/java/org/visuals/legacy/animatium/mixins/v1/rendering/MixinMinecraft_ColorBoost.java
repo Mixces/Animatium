@@ -31,6 +31,7 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
@@ -69,7 +70,7 @@ public abstract class MixinMinecraft_ColorBoost {
 			try (final RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Color boost render target blit", instance.getColorTextureView(), OptionalInt.empty())) {
 				renderPass.setPipeline(animatium$boostPipeline);
 				RenderSystem.bindDefaultUniforms(renderPass);
-				renderPass.bindSampler("Sampler0", instance.getColorTextureView());
+				renderPass.bindTexture("Sampler0", instance.getColorTextureView(), RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST));
 				renderPass.draw(0, 3);
 			}
 		}

@@ -67,7 +67,7 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState> {
     }
 
     @Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/item/ItemStackRenderState;submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V"))
-    private void animatium$itemPositionsThird(S armedEntityRenderState, ItemStackRenderState itemStackRenderState, HumanoidArm humanoidArm, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, CallbackInfo ci) {
+    private void animatium$itemPositionsThird(S armedEntityRenderState, ItemStackRenderState itemStackRenderState, ItemStack item, HumanoidArm humanoidArm, PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, CallbackInfo ci) {
         if (Animatium.isEnabled() && ItemUtils.shouldApplyItemPositionsInThirdPerson(armedEntityRenderState)) {
             final int direction = Utils.getArmMultiplier(humanoidArm);
             final ItemStack stack = armedEntityRenderState.animatium$getItemHeldByArm(humanoidArm);

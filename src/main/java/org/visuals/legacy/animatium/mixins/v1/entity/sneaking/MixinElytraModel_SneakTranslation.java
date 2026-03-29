@@ -26,7 +26,7 @@
 package org.visuals.legacy.animatium.mixins.v1.entity.sneaking;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.minecraft.client.model.ElytraModel;
+import net.minecraft.client.model.object.equipment.ElytraModel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;

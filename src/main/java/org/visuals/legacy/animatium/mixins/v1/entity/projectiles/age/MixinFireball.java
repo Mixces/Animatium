@@ -27,7 +27,7 @@ package org.visuals.legacy.animatium.mixins.v1.entity.projectiles.age;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.world.entity.projectile.Fireball;
+import net.minecraft.world.entity.projectile.hurtingprojectile.Fireball;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,7 +36,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(Fireball.class)
 public abstract class MixinFireball {
-    @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/projectile/Fireball;tickCount:I"))
+    @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/projectile/hurtingprojectile/Fireball;tickCount:I"))
     private int animatium$projectileAgeCheck(Fireball instance, Operation<Integer> original) {
         final int originalTick = original.call(instance);
         if (Animatium.isEnabled() && !AnimatiumConfig.instance().other.projectileAgeCheck) {

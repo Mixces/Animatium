@@ -26,14 +26,14 @@
 package org.visuals.legacy.animatium.mixins.v1.rendering.fog;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.minecraft.client.renderer.fog.environment.AirBasedFogEnvironment;
+import net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(AirBasedFogEnvironment.class)
-public abstract class MixinAirBasedFogEnvironment_OldRenderDistance {
+@Mixin(AtmosphericFogEnvironment.class)
+public abstract class MixinAtmosphericFogEnvironment_OldRenderDistance {
     @ModifyExpressionValue(method = "getBaseColor", at = @At(value = "CONSTANT", args = "floatValue=32.0"))
     private float animatium$voidFog$useOldRenderDistanceCalculation(float original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidFog.hasFog()) {

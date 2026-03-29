@@ -45,7 +45,7 @@ public abstract class MixinBiomeSpecialEffects_DisableWaterBiomeTint {
 
     @Definition(id = "waterColor", field = "Lnet/minecraft/world/level/biome/BiomeSpecialEffects;waterColor:I")
     @Expression("this.waterColor")
-    @ModifyExpressionValue(method = "getWaterColor", at = @At("MIXINEXTRAS:EXPRESSION"))
+    @ModifyExpressionValue(method = "waterColor", at = @At("MIXINEXTRAS:EXPRESSION"))
     private int animatium$oldWaterColor(int original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.oldWaterColorEffects) {
             if (this.waterColor == 6388580/*Swamp Water Color*/) {

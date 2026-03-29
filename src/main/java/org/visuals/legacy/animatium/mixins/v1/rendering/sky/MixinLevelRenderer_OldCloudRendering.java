@@ -55,12 +55,12 @@ public abstract class MixinLevelRenderer_OldCloudRendering {
 		}
 	}
 
-	@WrapOperation(method = "method_62205", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CloudRenderer;render(ILnet/minecraft/client/CloudStatus;FLnet/minecraft/world/phys/Vec3;F)V"))
-	private void animatium$renderLegacyClouds(CloudRenderer instance, int cloudColor, CloudStatus cloudStatus, float height, Vec3 cameraPosition, float ticks, Operation<Void> original) {
+	@WrapOperation(method = "method_62205", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CloudRenderer;render(ILnet/minecraft/client/CloudStatus;FLnet/minecraft/world/phys/Vec3;JF)V"))
+	private void animatium$renderLegacyClouds(CloudRenderer instance, int cloudColor, CloudStatus cloudStatus, float height, Vec3 cameraPosition, long ticks, float partialTick, Operation<Void> original) {
 		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldCloudRendering) {
-			LegacyCloudRenderer.INSTANCE.render(cloudColor, cloudStatus, height, cameraPosition, ticks);
+			LegacyCloudRenderer.INSTANCE.render(cloudColor, cloudStatus, height, cameraPosition, partialTick);
 		} else {
-			original.call(instance, cloudColor, cloudStatus, height, cameraPosition, ticks);
+			original.call(instance, cloudColor, cloudStatus, height, cameraPosition, ticks, partialTick);
 		}
 	}
 
