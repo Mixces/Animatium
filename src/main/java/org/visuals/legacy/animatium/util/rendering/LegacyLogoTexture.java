@@ -30,7 +30,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.ReloadableTexture;
 import net.minecraft.client.renderer.texture.TextureContents;
 import net.minecraft.client.resources.metadata.texture.TextureMetadataSection;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,8 +39,8 @@ import java.io.InputStream;
 
 // LoadingOverlay#LogoTexture but customizable
 public class LegacyLogoTexture extends ReloadableTexture {
-	public LegacyLogoTexture(ResourceLocation resourceLocation) {
-		super(resourceLocation);
+	public LegacyLogoTexture(final Identifier identifier) {
+		super(identifier);
 	}
 
 	@Override

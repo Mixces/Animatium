@@ -29,7 +29,7 @@ import net.minecraft.client.gui.components.debug.DebugEntryCategory;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +44,7 @@ import java.util.List;
 
 public final class AnimatiumDebugEntry implements DebugScreenEntry {
 	public static final DebugEntryCategory CATEGORY = new DebugEntryCategory(Component.translatable("animatium.category.debug"), 9999.0F);
-	public static final ResourceLocation GROUP = Animatium.location("debug");
+	public static final Identifier GROUP = Animatium.location("debug");
 
 	@Override
 	public void display(final DebugScreenDisplayer debugScreenDisplayer, final @Nullable Level level, final @Nullable LevelChunk levelChunk, final @Nullable LevelChunk levelChunk2) {

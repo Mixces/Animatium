@@ -56,7 +56,6 @@ public class BlurPassTexture {
 
 	public void render(final Matrix3x2f pose, final int width, final int height, final Vector4i viewport) {
 		final GpuTexture destinationTexture = this.destinationTextureView.texture();
-		destinationTexture.setTextureFilter(FilterMode.LINEAR, FilterMode.LINEAR, true);
 
 		RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(
 				sourceTexture, // source
@@ -83,7 +82,8 @@ public class BlurPassTexture {
 					vertexConsumer.addVertexWith2DPose(pose, 0.0F, height).setUv(0.0F + growth, 0.0F).setColor(color);
 				}
 			}, 12);
-			renderer.setTexture(0, destinationTextureView);
+
+			renderer.setTexture(0, destinationTextureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
 			renderer.drawGuiTo(renderTarget);
 		}
 	}

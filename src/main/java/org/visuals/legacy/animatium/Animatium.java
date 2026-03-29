@@ -30,7 +30,7 @@ import lombok.experimental.UtilityClass;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenEntries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
@@ -69,8 +69,8 @@ public final class Animatium {
 		}
 	}
 
-	public ResourceLocation location(final String path) {
-		return ResourceLocation.fromNamespaceAndPath(AnimatiumConstants.MOD_ID, path);
+	public Identifier location(final String path) {
+		return Identifier.fromNamespaceAndPath(AnimatiumConstants.MOD_ID, path);
 	}
 
 	public void initialize() {

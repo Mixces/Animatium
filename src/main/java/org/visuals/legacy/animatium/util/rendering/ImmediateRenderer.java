@@ -36,13 +36,16 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.GpuSampler;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.vertex.*;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.TextureSetup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.rendertype.RenderSetup;
+import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
@@ -61,7 +64,7 @@ import java.util.function.Consumer;
 
 public class ImmediateRenderer implements AutoCloseable {
 	// Data
-	private final Map<String, GpuTextureView> textures;
+	private final Map<String, RenderSetup.TextureAndSampler> textures;
 	private final Map<String, Uniform> uniforms;
 
 	@Getter
@@ -149,28 +152,29 @@ public class ImmediateRenderer implements AutoCloseable {
 		}
 	}
 
-	public void setTexture(int id, GpuTextureView textureView) {
-		this.textures.put("Sampler" + id, textureView);
+	public void setTexture(int id, GpuTextureView textureView, GpuSampler sampler) {
+		this.textures.put("Sampler" + id, new RenderSetup.TextureAndSampler(textureView, sampler));
 	}
 
-	public void setTexture(int id, ResourceLocation resourceLocation) {
-		this.setTexture(id, Minecraft.getInstance().getTextureManager().getTexture(resourceLocation).getTextureView());
+	public void setTexture(int id, Identifier resourceLocation) {
+        final AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(resourceLocation);
+		this.textures.put("Sampler" + id, new RenderSetup.TextureAndSampler(texture.getTextureView(), texture.getSampler()));
 	}
 
 	public void setTextures(TextureSetup textureSetup) {
 		final GpuTextureView texture0 = textureSetup.texure0();
 		if (texture0 != null) {
-			this.setTexture(0, texture0);
+			this.setTexture(0, texture0, textureSetup.sampler0());
 		}
 
 		final GpuTextureView texture1 = textureSetup.texure1();
 		if (texture1 != null) {
-			this.setTexture(1, texture1);
+			this.setTexture(1, texture1, textureSetup.sampler1());
 		}
 
 		final GpuTextureView texture2 = textureSetup.texure2();
 		if (texture2 != null) {
-			this.setTexture(2, texture2);
+			this.setTexture(2, texture2, textureSetup.sampler2());
 		}
 	}
 
@@ -239,8 +243,9 @@ public class ImmediateRenderer implements AutoCloseable {
 				renderPass.setPipeline(this.pipeline);
 				renderPass.setVertexBuffer(0, this.vertexBuffer);
 				renderPass.setIndexBuffer(this.indexBuffer, this.indexType);
-				for (Map.Entry<String, GpuTextureView> entry : this.textures.entrySet()) {
-					renderPass.bindSampler(entry.getKey(), entry.getValue());
+				for (Map.Entry<String, RenderSetup.TextureAndSampler> entry : this.textures.entrySet()) {
+                    final RenderSetup.TextureAndSampler textureAndSampler = entry.getValue();
+					renderPass.bindTexture(entry.getKey(), textureAndSampler.textureView(), textureAndSampler.sampler());
 				}
 
 				RenderSystem.bindDefaultUniforms(renderPass);
@@ -382,14 +387,13 @@ public class ImmediateRenderer implements AutoCloseable {
 		}
 
 		public Matrix4f getTextureMatrix() {
-			return this.textureMatrix == null ? new Matrix4f(RenderSystem.getTextureMatrix()) : this.textureMatrix;
+			return this.textureMatrix == null ? new Matrix4f() : this.textureMatrix;
 		}
 
 		public GpuBufferSlice buffer() {
 			return RenderSystem.getDynamicUniforms().writeTransform(
 					this.getModelViewMatrix(), this.shaderColor(),
-					this.modelOffset(), this.getTextureMatrix(),
-					RenderUtils.getLineState().get(RenderSystem.getShaderLineWidth())
+					this.modelOffset(), this.getTextureMatrix()
 			);
 		}
 	}

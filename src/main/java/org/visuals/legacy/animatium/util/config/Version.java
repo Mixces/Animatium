@@ -25,7 +25,7 @@
 
 package org.visuals.legacy.animatium.util.config;
 
-import net.minecraft.client.GraphicsStatus;
+import net.minecraft.client.GraphicsPreset;
 import net.minecraft.client.Minecraft;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.config.category.ItemsConfigCategory;
@@ -131,7 +131,7 @@ public enum Version {
         other.flameOffset = true;
         other.persistentBlockOutline = true;
         other.oldCloudRendering = true;
-        other.fastGrass = GraphicsStatus.FAST.equals(Minecraft.getInstance().options.graphicsMode().get());
+        other.fastGrass = GraphicsPreset.FAST.equals(Minecraft.getInstance().options.graphicsPreset().get());
         other.oldWaterOverlayOpacity = true;
         other.oldWaterColorFog = true;
         other.disableRandomBlockRotations = true;

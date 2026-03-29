@@ -41,8 +41,8 @@ public abstract class MixinPanoramaRenderer_LegacyRendering {
 		}
 	}
 
-	@WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/ResourceLocation;IIFFIIIIII)V"))
-	private void animatium$panoramaGradient(GuiGraphics instance, RenderPipeline pipeline, ResourceLocation atlas, int x, int y, float u, float v, int width, int height, int uWidth, int vHeight, int textureWidth, int textureHeight, Operation<Void> original) {
+	@WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIIIII)V"))
+	private void animatium$panoramaGradient(GuiGraphics instance, RenderPipeline pipeline, Identifier atlas, int x, int y, float u, float v, int width, int height, int uWidth, int vHeight, int textureWidth, int textureHeight, Operation<Void> original) {
 		if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.panoramaRendering) {
 			instance.fillGradient(0, 0, width, height, -2130706433, 16777215);
 			instance.fillGradient(0, 0, width, height, 0, Integer.MIN_VALUE);

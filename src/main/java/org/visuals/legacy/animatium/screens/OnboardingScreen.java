@@ -62,7 +62,7 @@ public class OnboardingScreen extends Screen {
 		}
 
 		if (this.original != null) {
-			this.original.init(this.minecraft, this.width, this.height);
+			this.original.init(this.width, this.height);
 		}
 
 		final int buttonWidth = 100;

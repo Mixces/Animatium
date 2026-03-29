@@ -34,7 +34,7 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
@@ -79,7 +79,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
 	@Final
 	public ModelPart leftLeg;
 
-	protected MixinHumanoidModel(final ModelPart modelPart, final Function<ResourceLocation, RenderType> function) {
+	protected MixinHumanoidModel(final ModelPart modelPart, final Function<Identifier, RenderType> function) {
 		super(modelPart, function);
 	}
 

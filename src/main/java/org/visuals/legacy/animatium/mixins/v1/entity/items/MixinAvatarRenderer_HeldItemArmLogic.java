@@ -40,7 +40,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.HumanoidArm;
@@ -70,7 +70,7 @@ public abstract class MixinAvatarRenderer_HeldItemArmLogic<AvatarLikeEntity exte
     }
 
     @Inject(method = "renderHand", at = @At(value = "FIELD", target = "Lnet/minecraft/client/model/geom/ModelPart;visible:Z", ordinal = 2, opcode = Opcodes.PUTFIELD))
-    private void animatium$heldItemArmLogic(final PoseStack poseStack, final SubmitNodeCollector nodeCollector, final int packedLight, final ResourceLocation skinTexture, final ModelPart modelPart, final boolean renderSleeve, final CallbackInfo ci) {
+    private void animatium$heldItemArmLogic(final PoseStack poseStack, final SubmitNodeCollector nodeCollector, final int packedLight, final Identifier skinTexture, final ModelPart modelPart, final boolean renderSleeve, final CallbackInfo ci) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.heldItemArmLogic) {
             final HumanoidArm arm = modelPart == model.rightArm ? HumanoidArm.RIGHT : HumanoidArm.LEFT;
             final AvatarRenderState avatarRenderState = animatium$renderState.get();

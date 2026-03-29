@@ -26,6 +26,8 @@
 package org.visuals.legacy.animatium.util.rendering.panorama;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
@@ -61,7 +63,7 @@ public record BlitFinalTexture(
 
 	@Override
 	public @NotNull TextureSetup textureSetup() {
-		return TextureSetup.singleTexture(this.texture);
+		return TextureSetup.singleTexture(this.texture, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
 	}
 
 	@Override

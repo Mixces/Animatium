@@ -26,7 +26,6 @@
 package org.visuals.legacy.animatium.util.rendering;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -35,9 +34,6 @@ import org.joml.Matrix3x2fStack;
 
 @UtilityClass
 public class RenderUtils {
-    @Getter
-    private final LineState lineState = new LineState();
-
     public void fillVerticalLine(GuiGraphics context, int x, int y, int length, int color) {
         context.fill(x, y, x + 1, y + length, color);
     }

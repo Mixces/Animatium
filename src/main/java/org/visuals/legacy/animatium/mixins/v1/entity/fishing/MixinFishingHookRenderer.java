@@ -55,7 +55,6 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.mixins.accessor.CameraAccessor;
 import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
-import org.visuals.legacy.animatium.util.rendering.LineState;
 import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
 @Mixin(FishingHookRenderer.class)

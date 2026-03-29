@@ -31,7 +31,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -65,7 +65,7 @@ public abstract class MixinItemModelResolver {
                 (livingEntity instanceof Player player && player.fishing != null) &&
                 ((displayContext == ItemDisplayContext.THIRD_PERSON_LEFT_HAND && livingEntity.getOffhandItem() == itemStack) ||
                         (displayContext == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND && livingEntity.getMainHandItem() == itemStack))) {
-            return ResourceLocation.withDefaultNamespace("stick");
+            return Identifier.withDefaultNamespace("stick");
         } else {
             return original.call(instance, dataComponentType);
         }

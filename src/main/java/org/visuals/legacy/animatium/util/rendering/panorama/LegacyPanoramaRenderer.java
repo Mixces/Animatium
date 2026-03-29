@@ -35,7 +35,7 @@ import lombok.experimental.UtilityClass;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.CachedPerspectiveProjectionMatrixBuffer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
@@ -48,13 +48,13 @@ import org.visuals.legacy.animatium.util.rendering.ImmediateRenderer;
 // Ported code of the old <=1.12.2 panorama renderer (w/ blur)
 public class LegacyPanoramaRenderer {
 	private final Vector4i VIEWPORT = new Vector4i(0, 0, 256, 256);
-	private final ResourceLocation[] PANORAMA_TEXTURES = new ResourceLocation[]{
-			ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_0.png"),
-			ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_1.png"),
-			ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_2.png"),
-			ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_3.png"),
-			ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_4.png"),
-			ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_5.png")
+	private final Identifier[] PANORAMA_TEXTURES = new Identifier[]{
+			Identifier.withDefaultNamespace("textures/gui/title/background/panorama_0.png"),
+			Identifier.withDefaultNamespace("textures/gui/title/background/panorama_1.png"),
+			Identifier.withDefaultNamespace("textures/gui/title/background/panorama_2.png"),
+			Identifier.withDefaultNamespace("textures/gui/title/background/panorama_3.png"),
+			Identifier.withDefaultNamespace("textures/gui/title/background/panorama_4.png"),
+			Identifier.withDefaultNamespace("textures/gui/title/background/panorama_5.png")
 	};
 
 	private final CachedPerspectiveProjectionMatrixBuffer projectionMatrixBuffer = new CachedPerspectiveProjectionMatrixBuffer("panorama", 0.05F, 10.0F);

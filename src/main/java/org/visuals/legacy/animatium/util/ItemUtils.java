@@ -29,7 +29,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.*;
@@ -164,7 +164,7 @@ public class ItemUtils {
 		}
 	}
 
-	public static @Nullable ResourceLocation getMobHeadLocation(final Item item) {
+	public static @Nullable Identifier getMobHeadLocation(final Item item) {
 		final Block block = Block.byItem(item);
 		if (block == Blocks.AIR || !(block instanceof SkullBlock skullBlock && skullBlock.getType() instanceof SkullBlock.Types types)) {
 			return null;
