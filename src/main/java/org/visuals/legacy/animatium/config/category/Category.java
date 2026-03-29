@@ -25,7 +25,10 @@
 
 package org.visuals.legacy.animatium.config.category;
 
-import dev.isxander.yacl3.api.*;
+import dev.isxander.yacl3.api.Binding;
+import dev.isxander.yacl3.api.Option;
+import dev.isxander.yacl3.api.OptionDescription;
+import dev.isxander.yacl3.api.StateManager;
 import dev.isxander.yacl3.api.controller.ControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
@@ -35,162 +38,168 @@ import org.visuals.legacy.animatium.AnimatiumConstants;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
 
 import java.lang.reflect.Field;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public abstract class Category {
-	public enum OptionType {
-		BOOLEAN(false),
-		FLOAT(true),
-		ENUM(false);
+    public enum OptionType {
+        BOOLEAN(false),
+        FLOAT(true),
+        ENUM(false);
 
-		private final boolean sliderCapable;
+        private final boolean sliderCapable;
 
-		OptionType(final boolean sliderCapable) {
-			this.sliderCapable = sliderCapable;
-		}
+        OptionType(final boolean sliderCapable) {
+            this.sliderCapable = sliderCapable;
+        }
 
-		public boolean isSliderCapable() {
-			return this.sliderCapable;
-		}
-	}
+        public boolean isSliderCapable() {
+            return this.sliderCapable;
+        }
+    }
 
-	public static class OptionBuilder<T> {
-		private final String name;
-		private OptionType type = null;
-		private boolean instant = false;
+    public static class OptionBuilder<T> {
+        private final String name;
+        private OptionType type = null;
+        private boolean instant = false;
 
-		private OptionEventListener<T> listener = null;
+        private BiConsumer<Option<?>, ?> listener = null;
 
-		private boolean slider = false;
-		private Object min = null;
-		private Object max = null;
-		private Object step = null;
+        private boolean slider = false;
+        private Object min = null;
+        private Object max = null;
+        private Object step = null;
 
-		private Class<?> enumClazz;
+        private Class<?> enumClazz;
 
-		OptionBuilder(final String name) {
-			this.name = name;
-		}
+        OptionBuilder(final String name) {
+            this.name = name;
+        }
 
-		public static <T> OptionBuilder<T> of(final String name) {
-			return new OptionBuilder<>(name);
-		}
+        public static <T> OptionBuilder<T> of(final String name) {
+            return new OptionBuilder<>(name);
+        }
 
-		public static <S extends Enum<S>> OptionBuilder<Enum<S>> ofEnum(final String name, final Class<S> enumClazz) {
-			final OptionBuilder<Enum<S>> builder = new OptionBuilder<>(name);
-			builder.type = OptionType.ENUM;
-			builder.enumClazz = enumClazz;
-			return builder;
-		}
+        public static <S extends Enum<S>> OptionBuilder<Enum<S>> ofEnum(final String name, final Class<S> enumClazz) {
+            final OptionBuilder<Enum<S>> builder = new OptionBuilder<>(name);
+            builder.type = OptionType.ENUM;
+            builder.enumClazz = enumClazz;
+            return builder;
+        }
 
-		public OptionBuilder<T> type(final OptionType type) {
-			this.type = type;
-			return this;
-		}
+        public OptionBuilder<T> type(final OptionType type) {
+            this.type = type;
+            return this;
+        }
 
-		public <S> OptionBuilder<T> slider(final S min, final S max, final S step) {
-			if (this.type == null || !this.type.isSliderCapable()) {
-				throw new RuntimeException("Option doesn't allow slider.");
-			} else {
-				this.slider = true;
-				this.min = min;
-				this.max = max;
-				this.step = step;
-				return this;
-			}
-		}
+        public <S> OptionBuilder<T> slider(final S min, final S max, final S step) {
+            if (this.type == null || !this.type.isSliderCapable()) {
+                throw new RuntimeException("Option doesn't allow slider.");
+            } else {
+                this.slider = true;
+                this.min = min;
+                this.max = max;
+                this.step = step;
+                return this;
+            }
+        }
 
-		public OptionBuilder<T> listener(final OptionEventListener<T> listener) {
-			this.listener = listener;
-			return this;
-		}
+        public OptionBuilder<T> listener(final BiConsumer<Option<?>, ?> listener) {
+            this.listener = listener;
+            return this;
+        }
 
-		public OptionBuilder<T> instant() {
-			this.instant = true;
-			return this;
-		}
+        public OptionBuilder<T> instant() {
+            this.instant = true;
+            return this;
+        }
 
-		public <CategoryLike extends Category, K> Option<K> build(final CategoryLike defaults, final CategoryLike current) {
-			final Function<Option<K>, ControllerBuilder<K>> controllerBuilder = switch (this.type) {
-				case BOOLEAN -> (opt) ->
-						(ControllerBuilder<K>) TickBoxControllerBuilder
-								.create((Option<Boolean>) opt);
+        public <CategoryLike extends Category, K> Option<K> build(final CategoryLike defaults, final CategoryLike current) {
+            final Function<Option<K>, ControllerBuilder<K>> controllerBuilder = switch (this.type) {
+                case BOOLEAN -> (opt) ->
+                        (ControllerBuilder<K>) TickBoxControllerBuilder
+                                .create((Option<Boolean>) opt);
 
-				case FLOAT -> (opt) -> {
-					if (this.slider) {
-						return (ControllerBuilder<K>) FloatSliderControllerBuilder
-								.create((Option<Float>) opt)
-								.range((float) this.min, (float) this.max)
-								.step((float) this.step);
-					} else {
-						throw new RuntimeException("TODO: Float non-slider");
-					}
-				};
+                case FLOAT -> (opt) -> {
+                    if (this.slider) {
+                        return (ControllerBuilder<K>) FloatSliderControllerBuilder
+                                .create((Option<Float>) opt)
+                                .range((float) this.min, (float) this.max)
+                                .step((float) this.step);
+                    } else {
+                        throw new RuntimeException("TODO: Float non-slider");
+                    }
+                };
 
-				case ENUM -> (opt) ->
-						EnumControllerBuilder
-								.create((Option<? extends Enum>) opt)
-								.enumClass(enumClazz)
-								.formatValue(it -> Component.translatable(AnimatiumConstants.MOD_ID + ".enum." + enumClazz.getSimpleName() + "." + ((Enum<?>) it).name()));
-			};
+                case ENUM -> (opt) ->
+                        EnumControllerBuilder
+                                .create((Option<? extends Enum>) opt)
+                                .enumClass(enumClazz)
+                                .formatValue(it -> Component.translatable(AnimatiumConstants.MOD_ID + ".enum." + enumClazz.getSimpleName() + "." + ((Enum<?>) it).name()));
+            };
 
-			final Reference<K> reference = Reference.get(this.name, defaults, current);
-			final Binding<K> binding = Binding.generic(reference.defaultValue, () -> {
-				try {
-					return (K) reference.currentField.get(current);
-				} catch (IllegalAccessException exception) {
-					exception.printStackTrace();
-					return reference.defaultValue;
-				}
-			}, (newVal) -> {
-				try {
-					reference.currentField.set(current, newVal);
-				} catch (IllegalAccessException exception) {
-					exception.printStackTrace();
-				}
-			});
+            final Reference<K> reference = Reference.get(this.name, defaults, current);
+            final Binding<K> binding = Binding.generic(reference.defaultValue, () -> {
+                try {
+                    return (K) reference.currentField.get(current);
+                } catch (IllegalAccessException exception) {
+                    exception.printStackTrace();
+                    return reference.defaultValue;
+                }
+            }, (newVal) -> {
+                try {
+                    reference.currentField.set(current, newVal);
+                } catch (IllegalAccessException exception) {
+                    exception.printStackTrace();
+                }
+            });
 
-			final Option.Builder<K> builder = Option.createBuilder();
-			final String id = AnimatiumConstants.MOD_ID + "." + this.name;
-			builder.name(Component.translatable(id));
-			builder.description(OptionDescription.of(Component.translatable(id + ".description")));
-			builder.controller(controllerBuilder);
-			if (this.instant) {
-				builder.stateManager(StateManager.createInstant(binding));
-			} else {
-				builder.binding(binding);
-			}
+            final Option.Builder<K> builder = Option.createBuilder();
+            final String id = AnimatiumConstants.MOD_ID + "." + this.name;
+            builder.name(Component.translatable(id));
+            builder.description(OptionDescription.of(Component.translatable(id + ".description")));
+            builder.controller(controllerBuilder);
 
-			return builder.build();
-		}
-	}
+            if (this.listener != null) {
+                builder.listener((BiConsumer<Option<K>, K>) (Object) this.listener);
+            }
 
-	public abstract EntryBundle bundle();
+            if (this.instant) {
+                builder.stateManager(StateManager.createInstant(binding));
+            } else {
+                builder.binding(binding);
+            }
 
-	private static class Reference<S> {
-		public Field defaultField;
-		public Field currentField;
-		public S defaultValue;
+            return builder.build();
+        }
+    }
 
-		public static <T extends Category, S> Reference<S> get(String fieldName, T defaults, T current) {
-			final Reference<S> reference = new Reference<>();
+    public abstract EntryBundle bundle();
 
-			final Class<?> defaultsClazz = defaults.getClass();
-			try {
-				reference.defaultField = defaultsClazz.getField(fieldName);
-				reference.defaultValue = (S) reference.defaultField.get(defaults);
-			} catch (NoSuchFieldException | IllegalAccessException exception) {
-				exception.printStackTrace();
-			}
+    private static class Reference<S> {
+        public Field defaultField;
+        public Field currentField;
+        public S defaultValue;
 
-			final Class<?> currentClazz = current.getClass();
-			try {
-				reference.currentField = currentClazz.getField(fieldName);
-			} catch (NoSuchFieldException exception) {
-				exception.printStackTrace();
-			}
+        public static <T extends Category, S> Reference<S> get(String fieldName, T defaults, T current) {
+            final Reference<S> reference = new Reference<>();
 
-			return reference;
-		}
-	}
+            final Class<?> defaultsClazz = defaults.getClass();
+            try {
+                reference.defaultField = defaultsClazz.getField(fieldName);
+                reference.defaultValue = (S) reference.defaultField.get(defaults);
+            } catch (NoSuchFieldException | IllegalAccessException exception) {
+                exception.printStackTrace();
+            }
+
+            final Class<?> currentClazz = current.getClass();
+            try {
+                reference.currentField = currentClazz.getField(fieldName);
+            } catch (NoSuchFieldException exception) {
+                exception.printStackTrace();
+            }
+
+            return reference;
+        }
+    }
 }

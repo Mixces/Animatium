@@ -44,62 +44,70 @@ import org.visuals.legacy.animatium.util.config.ConfigUtil;
 import java.util.Random;
 
 public class AnimatiumCommand implements Command<FabricClientCommandSource> {
-	public static LiteralArgumentBuilder<FabricClientCommandSource> create() {
-		final LiteralArgumentBuilder<FabricClientCommandSource> command = ClientCommandManager.literal("animatium").executes(new AnimatiumCommand());
+    public static LiteralArgumentBuilder<FabricClientCommandSource> create() {
+        final LiteralArgumentBuilder<FabricClientCommandSource> command = ClientCommandManager.literal("animatium").executes(new AnimatiumCommand());
 
-		command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("on").executes((context) -> {
-			final FabricClientCommandSource source = context.getSource();
-			if (Animatium.isEnabled()) {
-				source.sendFeedback(Component.literal("Mod is already enabled!").withStyle(ChatFormatting.YELLOW));
-			} else {
-				source.sendFeedback(Component.literal("Mod enabled.").withStyle(ChatFormatting.GREEN));
-				Animatium.setEnabled(true);
-				reload();
-			}
+        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("on").executes((context) -> {
+            final FabricClientCommandSource source = context.getSource();
+            if (Animatium.isEnabled()) {
+                source.sendFeedback(Component.literal("Mod is already enabled!").withStyle(ChatFormatting.YELLOW));
+            } else {
+                source.sendFeedback(Component.literal("Mod enabled.").withStyle(ChatFormatting.GREEN));
+                Animatium.setEnabled(true);
+                reload();
+            }
 
-			return Command.SINGLE_SUCCESS;
-		}));
+            return Command.SINGLE_SUCCESS;
+        }));
 
-		command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("off").executes((context) -> {
-			final FabricClientCommandSource source = context.getSource();
-			if (!Animatium.isEnabled()) {
-				source.sendFeedback(Component.literal("Mod is already disabled!").withStyle(ChatFormatting.YELLOW));
-			} else {
-				source.sendFeedback(Component.literal("Mod disabled.").withStyle(ChatFormatting.RED));
-				Animatium.setEnabled(false);
-				reload();
-			}
+        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("off").executes((context) -> {
+            final FabricClientCommandSource source = context.getSource();
+            if (!Animatium.isEnabled()) {
+                source.sendFeedback(Component.literal("Mod is already disabled!").withStyle(ChatFormatting.YELLOW));
+            } else {
+                source.sendFeedback(Component.literal("Mod disabled.").withStyle(ChatFormatting.RED));
+                Animatium.setEnabled(false);
+                reload();
+            }
 
-			return Command.SINGLE_SUCCESS;
-		}));
+            return Command.SINGLE_SUCCESS;
+        }));
 
-		command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("onboarding").executes((context) -> {
-			ConfigUtil.put("onboarding", true);
+        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("reload").executes((context) -> {
+            final FabricClientCommandSource source = context.getSource();
+            source.sendFeedback(Component.literal("Mod reloaded.").withStyle(ChatFormatting.GREEN));
+            reload();
 
-			final Minecraft minecraft = context.getSource().getClient();
-			minecraft.schedule(() -> minecraft.setScreen(new OnboardingScreen(minecraft.screen)));
+            return Command.SINGLE_SUCCESS;
+        }));
 
-			return Command.SINGLE_SUCCESS;
-		}));
+        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("onboarding").executes((context) -> {
+            ConfigUtil.put("onboarding", true);
 
-		return command;
-	}
+            final Minecraft minecraft = context.getSource().getClient();
+            minecraft.schedule(() -> minecraft.setScreen(new OnboardingScreen(minecraft.screen)));
 
-	@Override
-	public int run(final CommandContext<FabricClientCommandSource> context) {
-		final FabricClientCommandSource source = context.getSource();
-		source.sendFeedback(Component.literal("Opening config menu...").withColor(new Random().nextInt(0xFFFFFF)));
+            return Command.SINGLE_SUCCESS;
+        }));
 
-		final Minecraft minecraft = source.getClient();
-		minecraft.schedule(() -> minecraft.setScreen(AnimatiumConfig.getConfigScreen(minecraft.screen)));
+        return command;
+    }
 
-		return Command.SINGLE_SUCCESS;
-	}
+    @Override
+    public int run(final CommandContext<FabricClientCommandSource> context) {
+        final FabricClientCommandSource source = context.getSource();
+        source.sendFeedback(Component.literal("Opening config menu...").withColor(new Random().nextInt(0xFFFFFF)));
 
-	private static void reload() {
-		final Minecraft minecraft = Minecraft.getInstance();
-		((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture()); // deepRedHurtTint
-		Utils.reinitializeInventorySlots(); // oldCraftingSlotsPosition
-		// minecraft.reloadResourcePacks(); // ?
-	}
+        final Minecraft minecraft = source.getClient();
+        minecraft.schedule(() -> minecraft.setScreen(AnimatiumConfig.getConfigScreen(minecraft.screen)));
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static void reload() {
+        final Minecraft minecraft = Minecraft.getInstance();
+        minecraft.levelRenderer.allChanged();
+        ((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
+        Utils.reinitializeInventorySlots();
+    }
 }

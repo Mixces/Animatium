@@ -34,7 +34,8 @@ import org.visuals.legacy.animatium.packet.InfoPayloadPacket;
 @UtilityClass
 public class AnimatiumConstants {
 	public final String MOD_ID = "@MODID@";
-	public final Double VERSION = Double.parseDouble("@VERSION@");
+	@SuppressWarnings("DataFlowIssue")
+    public final Double VERSION = Double.parseDouble("@VERSION@");
 	public final String DEVELOPMENT_VERSION = "@COMMIT@";
 	public final boolean IS_DEVELOPMENT = Boolean.parseBoolean("@DEVELOPMENT@");
 

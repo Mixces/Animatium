@@ -80,10 +80,11 @@ public final class AnimatiumConfig {
 			builder.save(() -> {
 				CONFIG.save();
 
-				final Minecraft minecraft = Minecraft.getInstance();
-				if (minecraft.getConnection() != null && !minecraft.isLocalServer()) {
-					ClientPlayNetworking.send(new ConfigDataPayloadPacket());
-				}
+                // TODO:
+				// final Minecraft minecraft = Minecraft.getInstance();
+				// if (minecraft.getConnection() != null && !minecraft.isLocalServer()) {
+				//     ClientPlayNetworking.send(new ConfigDataPayloadPacket());
+				// }
 			});
 			return builder;
 		}).generateScreen(parent);

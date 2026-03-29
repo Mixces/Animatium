@@ -32,61 +32,61 @@ import org.visuals.legacy.animatium.util.config.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.CameraVersion;
 
 public class ScreenConfigCategory extends Category {
-	public CameraVersion cameraVersion = CameraVersion.V1_8;
-	public boolean crosshairInThirdPerson = true;
-	public boolean disableHeartFlash = true;
-	public boolean centerScrollableListWidgets = true;
-	public boolean listWidgetSelectedBorderColor = true;
-	public boolean legacyWidgetHoverTextColor = true;
-	public boolean disableDebugHudBackground = true;
-	public boolean debugHudTextShadow = true;
-	public boolean disableCameraTransparentPassthrough = true;
-	public boolean tooltipStyleRendering = true;
-	public boolean slotHoverStyleRendering = true;
-	public boolean listBackgroundGradient = true;
-	public boolean effectsInventoryPosition = true;
-	public boolean snappySliderMovement = true;
-	public boolean hideRecipeBook = true;
-	public boolean panoramaRendering = false;
-	public boolean legacyLoadingScreen = true;
-	public boolean oldChatPosition = true;
-	public boolean oldCrosshairPosition = true;
-	public boolean disconnectServerToTitleScreen = true;
-	public boolean oldCraftingSlotsPosition = false;
+    public CameraVersion cameraVersion = CameraVersion.V1_8;
+    public boolean crosshairInThirdPerson = true;
+    public boolean disableHeartFlash = true;
+    public boolean centerScrollableListWidgets = true;
+    public boolean listWidgetSelectedBorderColor = true;
+    public boolean legacyWidgetHoverTextColor = true;
+    public boolean disableDebugHudBackground = true;
+    public boolean debugHudTextShadow = true;
+    public boolean disableCameraTransparentPassthrough = true;
+    public boolean tooltipStyleRendering = true;
+    public boolean slotHoverStyleRendering = true;
+    public boolean listBackgroundGradient = true;
+    public boolean effectsInventoryPosition = true;
+    public boolean snappySliderMovement = true;
+    public boolean hideRecipeBook = true;
+    // TODO 3.2: public boolean panoramaRendering = false;
+    public boolean legacyLoadingScreen = true;
+    public boolean oldChatPosition = true;
+    public boolean oldCrosshairPosition = true;
+    public boolean disconnectServerToTitleScreen = true;
+    public boolean oldCraftingSlotsPosition = false;
 
-	public static ConfigCategory create(final ScreenConfigCategory defaults, final ScreenConfigCategory config) {
-		final ConfigCategory.Builder category = ConfigCategory.createBuilder();
-		category.name(Component.translatable("animatium.category.screen"));
-		config.bundle().install(category, defaults, config);
-		return category.build();
-	}
+    public static ConfigCategory create(final ScreenConfigCategory defaults, final ScreenConfigCategory config) {
+        final ConfigCategory.Builder category = ConfigCategory.createBuilder();
+        category.name(Component.translatable("animatium.category.screen"));
+        config.bundle().install(category, defaults, config);
+        return category.build();
+    }
 
-	@Override
-	public EntryBundle bundle() {
-		final EntryBundle bundle = new EntryBundle(this, "screen");
+    @Override
+    public EntryBundle bundle() {
+        final EntryBundle bundle = new EntryBundle(this, "screen");
 
-		bundle.enumEntry("cameraVersion", CameraVersion.class);
-		bundle.booleanEntry("crosshairInThirdPerson");
-		bundle.booleanEntry("disableHeartFlash");
-		bundle.booleanEntry("centerScrollableListWidgets");
-		bundle.booleanEntry("listWidgetSelectedBorderColor");
-		bundle.booleanEntry("legacyWidgetHoverTextColor");
-		bundle.booleanEntry("disableDebugHudBackground");
-		bundle.booleanEntry("debugHudTextShadow");
-		bundle.booleanEntry("disableCameraTransparentPassthrough");
-		bundle.booleanEntry("tooltipStyleRendering");
-		bundle.booleanEntry("slotHoverStyleRendering");
-		bundle.booleanEntry("listBackgroundGradient");
-		bundle.booleanEntry("effectsInventoryPosition");
-		bundle.booleanEntry("snappySliderMovement");
-		bundle.booleanEntry("hideRecipeBook");
-		bundle.booleanEntry("panoramaRendering");
-		bundle.booleanEntry("legacyLoadingScreen");
-		bundle.booleanEntry("oldChatPosition");
-		bundle.booleanEntry("oldCrosshairPosition");
-		bundle.booleanEntry("disconnectServerToTitleScreen");
-		bundle.booleanEntry("oldCraftingSlotsPosition", (option, event) -> Utils.reinitializeInventorySlots());
+        bundle.enumEntry("cameraVersion", CameraVersion.class);
+        bundle.booleanEntry("crosshairInThirdPerson");
+        bundle.booleanEntry("disableHeartFlash");
+        bundle.booleanEntry("centerScrollableListWidgets");
+        bundle.booleanEntry("listWidgetSelectedBorderColor");
+        bundle.booleanEntry("legacyWidgetHoverTextColor");
+        bundle.booleanEntry("disableDebugHudBackground");
+        bundle.booleanEntry("debugHudTextShadow");
+        bundle.booleanEntry("disableCameraTransparentPassthrough");
+        bundle.booleanEntry("tooltipStyleRendering");
+        bundle.booleanEntry("slotHoverStyleRendering");
+        bundle.booleanEntry("listBackgroundGradient");
+        bundle.booleanEntry("effectsInventoryPosition");
+        bundle.booleanEntry("snappySliderMovement");
+        bundle.booleanEntry("hideRecipeBook");
+        // TODO 3.2: bundle.booleanEntry("panoramaRendering");
+        bundle.booleanEntry("legacyLoadingScreen");
+        bundle.booleanEntry("oldChatPosition");
+        bundle.booleanEntry("oldCrosshairPosition");
+        bundle.booleanEntry("disconnectServerToTitleScreen");
+        bundle.booleanEntry("oldCraftingSlotsPosition", (option, event) -> Utils.reinitializeInventorySlots());
 
-		return bundle;
-	}
+        return bundle;
+    }
 }

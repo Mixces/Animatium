@@ -1,14 +1,11 @@
-## 3.1 TODO:
+## 3.2 TODO:
 
 #### HIGH PRIORITY
-
-- fix old crafting slots updating
-- fix fast grass w/ sodium
-- fix lang inaccuracies
 
 #### MEDIUM PRIORITY
 
 - 1.21.11: old effects width in inventory
+- fix lang inaccuracies
 - old obfuscated text
 - old window icon
 - item swing stuff
@@ -17,7 +14,8 @@
 
 #### LOW PRIORITY
 
-- fix panorama pixelness
+- fix fast grass w/ sodium
+- fix panorama pixelness/re-enable old panorama
 - old head rotation (1.1/1.7)
 
 #### ???

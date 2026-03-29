@@ -35,5 +35,5 @@ public final class ConfigBundles {
 	public static final EntryBundle OTHER = AnimatiumConfig.instance().other.bundle();
 	public static final EntryBundle EXTRAS = AnimatiumConfig.instance().extras.bundle();
 
-	public static final EntryBundle[] BUNDLES = new EntryBundle[]{MOVEMENT, ITEMS, SCREEN, FIXES, OTHER, EXTRAS};
+	public static final EntryBundle[] ALL = new EntryBundle[]{MOVEMENT, ITEMS, SCREEN, FIXES, OTHER, EXTRAS};
 }

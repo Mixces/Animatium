@@ -258,6 +258,8 @@
 	"animatium.planarSkyFog.description": "Changes the sky fog to use the planar type. This fog is also known as OptiFine Fast Fog.",
 	"animatium.cloudHeight": "[1.16] Old Cloud Height",
 	"animatium.cloudHeight.description": "Change the cloud height back to 128 like it was in <=1.16.5.",
+	"animatium.playerVoidBox": "[?] Player Void Box",
+	"animatium.playerVoidBox.description": "Reintroduces the void box that encapsulates the player upon falling into the void.",
 
 	"animatium.category.extras": "Extras",
 	"animatium.minimalViewBobbing": "[*] Minimal view bobbing",
@@ -302,6 +304,7 @@
 	"animatium.oldWaterColorEffects.description": "Forces watercolor in biomes to be what it was in <=1.12.2.\n\nREQUIRES RESOURCE PACK",
 	"animatium.colorBoost": "[*] Color/Saturation boost",
 	"animatium.colorBoost.description": "Applies a colorboost/saturation boost to the games overall look.",
+
 	"animatium.category.extras.group.item_swing": "Item Swing",
 	"animatium.itemSwingSpeed": "Item Swing Speed",
 	"animatium.itemSwingSpeed.description": "",
@@ -315,7 +318,26 @@
 	"animatium.ignoreHasteSpeed.description": "",
 	"animatium.ignoreMiningFatigueSpeed": "Ignore Mining Fatigue Speed",
 	"animatium.ignoreMiningFatigueSpeed.description": "",
+
 	"animatium.category.extras.group.server_features": "Server Features (Singleplayer Only)",
+	"animatium.miss_penalty": "miss_penalty",
+	"animatium.miss_penalty.description": "",
+	"animatium.left_click_item_usage": "left_click_item_usage",
+	"animatium.left_click_item_usage.description": "",
+	"animatium.mining_item_usage": "mining_item_usage",
+	"animatium.mining_item_usage.description": "",
+	"animatium.hide_rod_bobber": "hide_rod_bobber",
+	"animatium.hide_rod_bobber.description": "",
+	"animatium.pick_inflation": "pick_inflation",
+	"animatium.pick_inflation.description": "",
+	"animatium.old_sneak_height": "old_sneak_height",
+	"animatium.old_sneak_height.description": "",
+	"animatium.clientside_entities": "clientside_entities",
+	"animatium.clientside_entities.description": "",
+	"animatium.disable_sprint_item_use": "disable_sprint_item_use",
+	"animatium.disable_sprint_item_use.description": "",
+	"animatium.disable_sprint_sneaking": "disable_sprint_sneaking",
+	"animatium.disable_sprint_sneaking.description": "",
 
 	"animatium.category.debug": "Animatium"
 }

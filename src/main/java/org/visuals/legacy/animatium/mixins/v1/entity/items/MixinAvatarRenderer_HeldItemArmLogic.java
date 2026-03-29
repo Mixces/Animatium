@@ -39,7 +39,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
@@ -58,51 +57,52 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(AvatarRenderer.class)
 public abstract class MixinAvatarRenderer_HeldItemArmLogic<AvatarLikeEntity extends Avatar & ClientAvatarEntity> extends LivingEntityRenderer<AvatarLikeEntity, AvatarRenderState, PlayerModel> {
-	@Unique
-	private final ThreadLocal<@Nullable AvatarRenderState> animatium$renderState = ThreadLocal.withInitial(() -> null);
+    @Unique
+    private final ThreadLocal<@Nullable AvatarRenderState> animatium$renderState = ThreadLocal.withInitial(() -> null);
 
-	public MixinAvatarRenderer_HeldItemArmLogic(final EntityRendererProvider.Context context, final PlayerModel model, final float shadowRadius) {
-		super(context, model, shadowRadius);
-	}
+    public MixinAvatarRenderer_HeldItemArmLogic(final EntityRendererProvider.Context context, final PlayerModel model, final float shadowRadius) {
+        super(context, model, shadowRadius);
+    }
 
-	@Inject(method = "extractRenderState(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;F)V", at = @At("TAIL"))
-	private void animatium$storeAvatarState(final AvatarLikeEntity avatar, final AvatarRenderState avatarRenderState, final float tickDelta, final CallbackInfo ci) {
-		animatium$renderState.set(avatarRenderState);
-	}
+    @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;F)V", at = @At("TAIL"))
+    private void animatium$storeAvatarState(final AvatarLikeEntity avatar, final AvatarRenderState avatarRenderState, final float tickDelta, final CallbackInfo ci) {
+        animatium$renderState.set(avatarRenderState);
+    }
 
-	@Inject(method = "renderHand", at = @At(value = "FIELD", target = "Lnet/minecraft/client/model/geom/ModelPart;visible:Z", ordinal = 2, opcode = Opcodes.PUTFIELD))
-	private void animatium$heldItemArmLogic(final PoseStack poseStack, final SubmitNodeCollector nodeCollector, final int packedLight, final ResourceLocation skinTexture, final ModelPart modelPart, final boolean renderSleeve, final CallbackInfo ci) {
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.heldItemArmLogic) {
-			final HumanoidArm arm = modelPart == model.rightArm ? HumanoidArm.RIGHT : HumanoidArm.LEFT;
-			final AvatarRenderState avatarRenderState = animatium$renderState.get();
-			if (avatarRenderState != null && (avatarRenderState.mainArm == arm ? avatarRenderState.rightArmPose : avatarRenderState.leftArmPose) == HumanoidModel.ArmPose.ITEM) {
-				// Adapted from the ITEM arm pose rotations in HumanoidModel#poseRightArm/poseLeftArm
-				modelPart.xRot = modelPart.xRot * 0.5F - (float) (Math.PI / 10);
-				modelPart.yRot = 0.0F;
-			}
-		}
-	}
+    @Inject(method = "renderHand", at = @At(value = "FIELD", target = "Lnet/minecraft/client/model/geom/ModelPart;visible:Z", ordinal = 2, opcode = Opcodes.PUTFIELD))
+    private void animatium$heldItemArmLogic(final PoseStack poseStack, final SubmitNodeCollector nodeCollector, final int packedLight, final ResourceLocation skinTexture, final ModelPart modelPart, final boolean renderSleeve, final CallbackInfo ci) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.heldItemArmLogic) {
+            final HumanoidArm arm = modelPart == model.rightArm ? HumanoidArm.RIGHT : HumanoidArm.LEFT;
+            final AvatarRenderState avatarRenderState = animatium$renderState.get();
+            if (avatarRenderState != null && (avatarRenderState.mainArm == arm ? avatarRenderState.rightArmPose : avatarRenderState.leftArmPose) == HumanoidModel.ArmPose.ITEM) {
+                // Adapted from the ITEM arm pose rotations in HumanoidModel#poseRightArm/poseLeftArm
+                modelPart.xRot = modelPart.xRot * 0.5F - (float) (Math.PI / 10);
+                modelPart.yRot = 0.0F;
+            }
+        }
+    }
 
-	@WrapOperation(method = "renderHand", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModelPart(Lnet/minecraft/client/model/geom/ModelPart;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/RenderType;IILnet/minecraft/client/renderer/texture/TextureAtlasSprite;)V"))
-	private void animatium$partialVisibleArmWhileInvisible$damageTintArm(final SubmitNodeCollector instance, final ModelPart modelPart, final PoseStack poseStack, final RenderType renderType, final int packedLight, final int packedOverlay, final TextureAtlasSprite textureAtlasSprite, final Operation<Void> original) {
-		final AvatarRenderState avatarRenderState = animatium$renderState.get();
+    @WrapOperation(method = "renderHand", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModelPart(Lnet/minecraft/client/model/geom/ModelPart;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/RenderType;IILnet/minecraft/client/renderer/texture/TextureAtlasSprite;)V"))
+    private void animatium$partialVisibleArmWhileInvisible$damageTintArm(final SubmitNodeCollector instance, final ModelPart modelPart, final PoseStack poseStack, final RenderType renderType, final int packedLight, final int packedOverlay, final TextureAtlasSprite textureAtlasSprite, final Operation<Void> original) {
+        final AvatarRenderState avatarRenderState = animatium$renderState.get();
 
-		int overlay = packedOverlay;
-		if (Animatium.isEnabled() && avatarRenderState != null) {
-			if (AnimatiumConfig.instance().extras.damageTintItems) {
-				overlay = OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(avatarRenderState.hasRedOverlay));
-			}
+        int overlay = packedOverlay;
+        if (Animatium.isEnabled() && avatarRenderState != null) {
+            // TODO 3.2:
+            // if (AnimatiumConfig.instance().extras.damageTintItems) {
+            // 	overlay = OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(avatarRenderState.hasRedOverlay));
+            // }
 
-			if (AnimatiumConfig.instance().extras.showArmWhileInvisible) {
-				final Player player = Minecraft.getInstance().player;
-				if (player != null && player.isInvisible()) {
-					final int color = ARGB.multiply(654311423, this.getModelTint(avatarRenderState));
-					instance.submitModelPart(modelPart, poseStack, renderType, packedLight, overlay, textureAtlasSprite, color, null);
-					return;
-				}
-			}
-		}
+            if (AnimatiumConfig.instance().extras.showArmWhileInvisible) {
+                final Player player = Minecraft.getInstance().player;
+                if (player != null && player.isInvisible()) {
+                    final int color = ARGB.multiply(654311423, this.getModelTint(avatarRenderState));
+                    instance.submitModelPart(modelPart, poseStack, renderType, packedLight, overlay, textureAtlasSprite, color, null);
+                    return;
+                }
+            }
+        }
 
-		original.call(instance, modelPart, poseStack, renderType, packedLight, overlay, textureAtlasSprite);
-	}
+        original.call(instance, modelPart, poseStack, renderType, packedLight, overlay, textureAtlasSprite);
+    }
 }

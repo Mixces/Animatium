@@ -36,38 +36,37 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.mixins.accessor.SlotAccessor;
 
-// TODO: Fix it not resetting when turning the setting off
 // TODO: Move recipe book button
 @Mixin(InventoryMenu.class)
 public abstract class MixinInventoryMenu_OldCraftingSlots {
-	@WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/InventoryMenu;addCraftingGridSlots(II)V"))
-	private void animatium$modifyCraftingSlotsPosition(final InventoryMenu instance, final int x, final int y, final Operation<Void> original) {
-		int newX = x, newY = y;
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldCraftingSlotsPosition) {
-			newX -= 10;
-			newY += 8;
-		}
+    @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/InventoryMenu;addCraftingGridSlots(II)V"))
+    private void animatium$modifyCraftingSlotsPosition(final InventoryMenu instance, final int x, final int y, final Operation<Void> original) {
+        int newX = x, newY = y;
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldCraftingSlotsPosition) {
+            newX -= 10;
+            newY += 8;
+        }
 
-		original.call(instance, newX, newY);
-	}
+        original.call(instance, newX, newY);
+    }
 
-	@WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/InventoryMenu;addResultSlot(Lnet/minecraft/world/entity/player/Player;II)Lnet/minecraft/world/inventory/Slot;"))
-	private Slot animatium$modifyCraftingResultSlotPosition(final InventoryMenu instance, final Player player, final int x, final int y, final Operation<Slot> original) {
-		int newX = x, newY = y;
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldCraftingSlotsPosition) {
-			newX -= 10;
-			newY += 8;
-		}
+    @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/InventoryMenu;addResultSlot(Lnet/minecraft/world/entity/player/Player;II)Lnet/minecraft/world/inventory/Slot;"))
+    private Slot animatium$modifyCraftingResultSlotPosition(final InventoryMenu instance, final Player player, final int x, final int y, final Operation<Slot> original) {
+        int newX = x, newY = y;
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldCraftingSlotsPosition) {
+            newX -= 10;
+            newY += 8;
+        }
 
-		return original.call(instance, player, newX, newY);
-	}
+        return original.call(instance, player, newX, newY);
+    }
 
-	@WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/InventoryMenu;addSlot(Lnet/minecraft/world/inventory/Slot;)Lnet/minecraft/world/inventory/Slot;", ordinal = 1))
-	private Slot animatium$moveOffhandSlot(final InventoryMenu instance, final Slot slot, final Operation<Slot> original) {
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldCraftingSlotsPosition) {
-			((SlotAccessor) slot).animatium$setX(slot.x + 75);
-		}
+    @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/InventoryMenu;addSlot(Lnet/minecraft/world/inventory/Slot;)Lnet/minecraft/world/inventory/Slot;", ordinal = 1))
+    private Slot animatium$moveOffhandSlot(final InventoryMenu instance, final Slot slot, final Operation<Slot> original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldCraftingSlotsPosition) {
+            ((SlotAccessor) slot).animatium$setX(slot.x + 75);
+        }
 
-		return original.call(instance, slot);
-	}
+        return original.call(instance, slot);
+    }
 }

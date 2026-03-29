@@ -53,13 +53,19 @@ want to suggest features, join our [discord](https://discord.gg/C8KKgbA8jy)!
 
 Allows the server to enable/disable server-only features that enhance gameplay.
 
-| Identifier             | Direction | Field Name            | Field Type            | Description                                                                         |
-|------------------------|-----------|:----------------------|:----------------------|:------------------------------------------------------------------------------------|
-| animatium:info         | Server    | Version               | Double                | Current release version of the mod.                                                 |
-|                        |           | Development Version   | Optional<String>      | Current dev build commit of the mod. Only provided when mod is a development build. |
-|                        |           | Config Category Count | Var Int               |                                                                                     |
-|                        |           | Config Entry*         | Config Category (x)^* |                                                                                     |
-| animatium:set_features | Client    | Features List         | EnumSet\<Feature\>    | List of server-features the client should use currently.                            |
+| Identifier             | Direction | Field Name          | Field Type         | Description                                                                         |
+|------------------------|-----------|:--------------------|:-------------------|:------------------------------------------------------------------------------------|
+| animatium:info         | Server    | Version             | Double             | Current release version of the mod.                                                 |
+|                        |           | Development Version | Optional<String>   | Current dev build commit of the mod. Only provided when mod is a development build. |
+| animatium:config_data  | Server    | Bundle Count        | Byte               |                                                                                     |
+|                        |           | Bundle Entry*       | Bundle Entry (x)^* |                                                                                     |
+| animatium:set_features | Client    | Features List       | EnumSet\<Feature\> | List of server-features the client should use currently.                            |
+
+NOTE: As of 3.1 for now, 'animatium:config_data' is never sent as its been disabled for now.
+
+### Bundle Entry
+
+TODO/Currently disabled.
 
 ### Config Category
 

@@ -10,23 +10,27 @@ jobs:
   build:
     strategy:
       matrix:
-        java: [21]
-        os: [ubuntu-22.04]
-    runs-on: ${{ matrix.os }}
+        # Use these Java versions
+        java: [
+          25,    # Current Java LTS
+        ]
+    runs-on: ubuntu-22.04
     steps:
-      - name: checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
-      - name: validate gradle wrapper
-        uses: gradle/wrapper-validation-action@v2
-      - name: setup jdk ${{ matrix.java }}
+      - name: Validate Gradle
+        uses: gradle/actions/wrapper-validation@v4
+      - name: Setup JDK-${{ matrix.java }}
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
           distribution: 'microsoft'
-      - name: build
-        run: ./gradlew build
-      - name: capture build artifacts
-        if: ${{ runner.os == 'Linux' && matrix.java == '21' }}
+      - name: Make Gradle Executable
+        run: chmod +x ./gradlew
+      - name: Build
+        run: ./gradlew buildAndCollect
+      - name: Upload Built Jars
+        if: ${{ matrix.java == '25' }} # Only upload artifacts built from latest java
         uses: actions/upload-artifact@v4
         with:
           name: Artifacts

@@ -5,11 +5,10 @@
 - New Server Features:
     - "all" - enables everything
     - "mining_item_usage" - Allows mining blocks whilst using an item like in <=1.7
-  
+
 #### General
 
 - Old Crafting Slots Position
-- Item Swing Settings
 - Old Water Color Effects
 - Fix thrown egg kicking you
 - Option to turn on/off 1.7 "longer un-sneak" animation
@@ -26,8 +25,9 @@
 - Refactored some settings to be reversed of what they were before (Missed in 3.0)
 - Changing settings no longer reloads resource pack unless the specific setting requiring it was changed
 - "Fast" settings are no longer dependent of video settings
-  - Presets will still set accordingly
+    - Presets will still set accordingly
+- Temporarily disable "Old Panorama Rendering" setting for now.
 
 ### Server
 
-- TODO
+- Config payload temporarily disabled for now.

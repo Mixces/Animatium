@@ -68,7 +68,7 @@ public final class AnimatiumFabricClient implements ClientModInitializer {
 		ClientPlayConnectionEvents.JOIN.register((listener, sender, client) -> {
 			if (!client.isLocalServer()) {
 				sender.sendPacket(AnimatiumConstants.getInfoPayload());
-				sender.sendPacket(new ConfigDataPayloadPacket());
+				// TODO: sender.sendPacket(new ConfigDataPayloadPacket());
 			}
 		});
 
