@@ -184,7 +184,7 @@ public abstract class MixinItemInHandRenderer {
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;applyItemArmTransform(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/HumanoidArm;F)V", shift = At.Shift.AFTER),
 			slice = @Slice(
 					from = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/ItemUseAnimation;"),
-					to = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;applyItemArmTransform(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/HumanoidArm;F)V", ordinal = 6)
+					to = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;applyItemArmTransform(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/HumanoidArm;F)V", ordinal = 4)
 			))
 	private void animatium$itemUsageSwinging(final AbstractClientPlayer player, final float partialTick, final float pitch, final InteractionHand hand, final float swingProgress, final ItemStack item, final float equippedProgress, final PoseStack poseStack, final SubmitNodeCollector nodeCollector, final int packedLight, final CallbackInfo ci, @Local HumanoidArm arm) {
 		if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemUsageSwinging) {
@@ -192,7 +192,7 @@ public abstract class MixinItemInHandRenderer {
 		}
 	}
 
-	@WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getAttackStrengthScale(F)F"))
+	@WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getItemSwapScale(F)F"))
 	private float animatium$highAttackSpeedVisual(final LocalPlayer instance, final float defaultAttackScale, final Operation<Float> original) {
 		if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.highAttackSpeedVisual) {
 			return defaultAttackScale;

@@ -56,7 +56,7 @@ public abstract class MixinArmedEntityRenderState implements UtilityRenderState 
 	private EntityDimensions animatium$standingDimensions = null;
 
     @Inject(method = "extractArmedEntityRenderState", at = @At("TAIL"))
-    private static void animatium$storeData(LivingEntity livingEntity, ArmedEntityRenderState armedEntityRenderState, ItemModelResolver itemModelResolver, CallbackInfo ci) {
+    private static void animatium$storeData(LivingEntity livingEntity, ArmedEntityRenderState armedEntityRenderState, ItemModelResolver modelResolver, float partialTick, CallbackInfo ci) {
         armedEntityRenderState.animatium$setItemHeldByArm(HumanoidArm.LEFT, livingEntity.getItemHeldByArm(HumanoidArm.LEFT));
         armedEntityRenderState.animatium$setItemHeldByArm(HumanoidArm.RIGHT, livingEntity.getItemHeldByArm(HumanoidArm.RIGHT));
         if (livingEntity instanceof Player player && player.fishing != null) {

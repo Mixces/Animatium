@@ -25,17 +25,13 @@
 
 package org.visuals.legacy.animatium.mixins.v1.gui.old_inventory_rendering;
 
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(InventoryScreen.class)
 public abstract class MixinInventoryScreen_DisableEntityScissor {
-    @WrapWithCondition(method = "renderEntityInInventoryFollowsMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;enableScissor(IIII)V"))
+    // TODO 3.2
+    /*@WrapWithCondition(method = "renderEntityInInventoryFollowsMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;enableScissor(IIII)V"))
     private static boolean animatium$entityScissor(GuiGraphics instance, int minX, int minY, int maxX, int maxY) {
         return !Animatium.isEnabled() || !AnimatiumConfig.instance().other.disableInventoryEntityScissor;
     }
@@ -43,5 +39,5 @@ public abstract class MixinInventoryScreen_DisableEntityScissor {
     @WrapWithCondition(method = "renderEntityInInventoryFollowsMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;disableScissor()V"))
     private static boolean animatium$entityScissor(GuiGraphics instance) {
         return !Animatium.isEnabled() || !AnimatiumConfig.instance().other.disableInventoryEntityScissor;
-    }
+    }*/
 }

@@ -40,7 +40,7 @@ public abstract class MixinChatComponent_OldPosition {
     private static final int animatium$oldChatY = 28;
 
     @Expression("40")
-    @ModifyExpressionValue(method = "render", at = @At("MIXINEXTRAS:EXPRESSION"))
+    @ModifyExpressionValue(method = "render(Lnet/minecraft/client/gui/components/ChatComponent$ChatGraphicsAccess;IIZ)V", at = @At("MIXINEXTRAS:EXPRESSION"))
     private int animatium$oldChatPosition$render(int original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldChatPosition) {
             return animatium$oldChatY;
@@ -49,7 +49,8 @@ public abstract class MixinChatComponent_OldPosition {
         }
     }
 
-    @Expression("40.0")
+    // TODO
+    /*@Expression("40.0")
     @ModifyExpressionValue(method = "handleChatQueueClicked", at = @At("MIXINEXTRAS:EXPRESSION"))
     private double animatium$oldChatPosition$handleChatQueueClicked(double original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldChatPosition) {
@@ -67,5 +68,5 @@ public abstract class MixinChatComponent_OldPosition {
         } else {
             return original;
         }
-    }
+    }*/
 }

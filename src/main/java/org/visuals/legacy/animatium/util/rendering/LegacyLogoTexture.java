@@ -27,6 +27,7 @@ package org.visuals.legacy.animatium.util.rendering;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.MipmapStrategy;
 import net.minecraft.client.renderer.texture.ReloadableTexture;
 import net.minecraft.client.renderer.texture.TextureContents;
 import net.minecraft.client.resources.metadata.texture.TextureMetadataSection;
@@ -47,7 +48,7 @@ public class LegacyLogoTexture extends ReloadableTexture {
 	public @NotNull TextureContents loadContents(final ResourceManager resourceManager) throws IOException {
 		try (final InputStream inputStream = Minecraft.getInstance().getResourceManager().open(this.resourceId())) {
 			// TODO: Get real metadata file
-			return new TextureContents(NativeImage.read(inputStream), new TextureMetadataSection(TextureMetadataSection.DEFAULT_BLUR, TextureMetadataSection.DEFAULT_CLAMP));
+			return new TextureContents(NativeImage.read(inputStream), new TextureMetadataSection(TextureMetadataSection.DEFAULT_BLUR, TextureMetadataSection.DEFAULT_CLAMP, MipmapStrategy.AUTO, TextureMetadataSection.DEFAULT_ALPHA_CUTOFF_BIAS));
 		}
 	}
 }

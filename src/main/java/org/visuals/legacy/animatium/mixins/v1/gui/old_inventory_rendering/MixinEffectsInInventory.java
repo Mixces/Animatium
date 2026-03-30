@@ -45,7 +45,7 @@ public abstract class MixinEffectsInInventory {
     @Final
     private AbstractContainerScreen<?> screen;
 
-    @WrapOperation(method = "renderEffects", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;imageWidth:I"))
+    @WrapOperation(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;imageWidth:I"))
     private int animatium$effectsInventoryPosition(AbstractContainerScreen<?> instance, Operation<Integer> original) {
         final int imageWidth = original.call(instance);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.effectsInventoryPosition && !(this.screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && ((AbstractRecipeBookScreenAccessor) recipeBookScreen).animatium$getRecipeBookComponent().isVisible())) {
@@ -55,7 +55,7 @@ public abstract class MixinEffectsInInventory {
         }
     }
 
-    @ModifyExpressionValue(method = "renderEffects", at = @At(value = "CONSTANT", args = "intValue=2"))
+    @ModifyExpressionValue(method = "render", at = @At(value = "CONSTANT", args = "intValue=2"))
     private int animatium$effectsInventoryPosition(int original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.effectsInventoryPosition && !(this.screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && ((AbstractRecipeBookScreenAccessor) recipeBookScreen).animatium$getRecipeBookComponent().isVisible())) {
             return -124;

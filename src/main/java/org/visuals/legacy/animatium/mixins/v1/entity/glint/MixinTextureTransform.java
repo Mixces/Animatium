@@ -27,14 +27,14 @@ package org.visuals.legacy.animatium.mixins.v1.entity.glint;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.rendertype.TextureTransform;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(RenderStateShard.class)
-public abstract class MixinRenderStateShard {
+@Mixin(TextureTransform.class)
+public abstract class MixinTextureTransform {
     @ModifyExpressionValue(method = "setupGlintTexturing", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/OptionInstance;get()Ljava/lang/Object;"))
     private static Object animatium$forceMaxGlintSpeed(Object original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.maxGlintProperties) {
