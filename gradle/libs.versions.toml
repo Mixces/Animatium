@@ -1,6 +1,6 @@
 [versions]
 kotlin-jvm = "2.3.10"
-loom = "1.14-SNAPSHOT"
+loom = "1.15-SNAPSHOT"
 publishing = "1.1.0"
 blossom = "1.3.2"
 ksp = "2.3.6"
@@ -9,7 +9,8 @@ spotless = "8.2.1"
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-jvm" }
-loom = { id = "dev.architectury.loom", version.ref = "loom" }
+loom = { id = "net.fabricmc.fabric-loom", version.ref = "loom" }
+loom-remap = { id = "net.fabricmc.fabric-loom-remap", version.ref = "loom" }
 publishing = { id = "me.modmuss50.mod-publish-plugin", version.ref = "publishing" }
 blossom = { id = "net.kyori.blossom", version.ref = "blossom" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

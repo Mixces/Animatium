@@ -1,8 +1,14 @@
-import java.lang.Boolean.parseBoolean
+@file:OptIn(StonecutterExperimentalAPI::class)
+
+import com.google.devtools.ksp.processing.parseBoolean
+import dev.kikugie.stonecutter.StonecutterExperimentalAPI
+import net.fabricmc.loom.api.LoomGradleExtensionAPI
+import net.fabricmc.loom.api.fabricapi.FabricApiExtension
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.loom)
+    alias(libs.plugins.loom) apply false
+    alias(libs.plugins.loom.remap) apply false
     alias(libs.plugins.publishing)
     alias(libs.plugins.blossom)
     alias(libs.plugins.ksp)
@@ -49,8 +55,15 @@ class Dependencies {
 val mod = ModData()
 val deps = Dependencies()
 
+// Apply specific loom
+if (mod.obfuscated) {
+    apply(plugin = "net.fabricmc.fabric-loom-remap")
+} else {
+    apply(plugin = "net.fabricmc.fabric-loom")
+}
+
 class LoaderData {
-    val name = loom.platform.get().name.lowercase()
+    val name = property("loader.platform") as String?
 }
 
 val loader = LoaderData()
@@ -59,25 +72,21 @@ version = "${mod.version}+${mod.minecraftVersion}-${loader.name}" + (if (mod.dev
 group = mod.group
 base { archivesName.set(mod.id) }
 
-loom {
-    silentMojangMappingsLicense()
+extensions.configure<LoomGradleExtensionAPI> {
     runConfigs.all {
         ideConfigGenerated(stonecutter.current.isActive)
         runDir = "../../run"
     }
 
     runConfigs.remove(runConfigs["server"]) // Removes server run configs
-    accessWidenerPath = rootProject.file("src/main/resources/animatium.accesswidener")
+    accessWidenerPath = stonecutter.process(
+        rootProject.file("src/main/resources/${mod.id}.accesswidener"),
+        "build/processed.accesswidener"
+    )
 
     runs {
         afterEvaluate {
-            val mixinJarFile = configurations.runtimeClasspath.get().incoming.artifactView {
-                componentFilter {
-                    it is ModuleComponentIdentifier && it.group == "net.fabricmc" && it.module == "sponge-mixin"
-                }
-            }.files.first()
             configureEach {
-                vmArg("-javaagent:$mixinJarFile")
                 property("mixin.hotSwap", "true")
                 property("mixin.debug.export", "true") // Puts mixin outputs in /run/.mixin.out
                 property("devauth.enabled", "true")
@@ -96,6 +105,15 @@ fletchingTable {
         patterns.add("assets/${mod.id}/lang/**")
     }
 }
+
+val loom: LoomGradleExtensionAPI by extensions
+val fabricApi: FabricApiExtension by extensions
+val minecraft by configurations.existing
+val include by configurations.existing
+val modImplementation: NamedDomainObjectProvider<Configuration> =
+    configurations.named(if (mod.obfuscated) "modImplementation" else "implementation")
+val modRuntimeOnly: NamedDomainObjectProvider<Configuration> =
+    configurations.named(if (mod.obfuscated) "modRuntimeOnly" else "runtimeOnly")
 
 dependencies {
     minecraft("com.mojang:minecraft:${mod.minecraftVersion}")

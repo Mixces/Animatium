@@ -27,7 +27,7 @@ package org.visuals.legacy.animatium;
 
 import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.resources.Identifier;
 import org.visuals.legacy.animatium.packet.InfoPayloadPacket;
 

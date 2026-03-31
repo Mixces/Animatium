@@ -58,7 +58,7 @@ public abstract class MixinEquipmentLayerRenderer {
     @WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/Identifier;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorCutoutNoCull(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
     private RenderType animatium$renderLayerArmorTint(Identifier resourceLocation, Operation<RenderType> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.entityArmorHurtTint) {
-            return RenderTypes.entityCutoutNoCullZOffset(resourceLocation);
+            return RenderTypes.entityCutoutZOffset(resourceLocation);
         } else {
             return original.call(resourceLocation);
         }
@@ -67,7 +67,7 @@ public abstract class MixinEquipmentLayerRenderer {
     @WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/Identifier;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/Sheets;armorTrimsSheet(Z)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
     private RenderType animatium$renderLayerArmorTrimTint(boolean bl, Operation<RenderType> original, @Local TextureAtlasSprite textureAtlasSprite) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.entityArmorHurtTint) {
-            return RenderTypes.entityCutoutNoCullZOffset(textureAtlasSprite.atlasLocation());
+            return RenderTypes.entityCutoutZOffset(textureAtlasSprite.atlasLocation());
         } else {
             return original.call(bl);
         }

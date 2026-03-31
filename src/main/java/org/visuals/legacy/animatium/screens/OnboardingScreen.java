@@ -26,7 +26,7 @@
 package org.visuals.legacy.animatium.screens;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -89,20 +89,20 @@ public class OnboardingScreen extends Screen {
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+	public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
 		if (this.original != null) {
-			this.original.render(guiGraphics, -999, -999, partialTick);
+			this.original.extractRenderState(guiGraphics, -999, -999, partialTick);
 		}
 
 		guiGraphics.fill(0, 0, this.width, this.height, ARGB.color(0.72F, 0x000000));
-		super.render(guiGraphics, mouseX, mouseY, partialTick);
+		super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
 		RenderUtils.drawScaledText(guiGraphics, this.font, "Welcome to Animatium Onboarding!", this.width / 2, this.height / 4, 2.0F);
-		guiGraphics.drawCenteredString(this.font, "Hello! Thank you for downloading Animatium!", this.width / 2, (int) (this.height / 2.8), 0xFFD6D6D6);
-		guiGraphics.drawCenteredString(this.font, "Please select the version of visuals you would like to use!", this.width / 2, (int) (this.height / 2.4), 0xFFD6D6D6);
+		guiGraphics.centeredText(this.font, "Hello! Thank you for downloading Animatium!", this.width / 2, (int) (this.height / 2.8), 0xFFD6D6D6);
+		guiGraphics.centeredText(this.font, "Please select the version of visuals you would like to use!", this.width / 2, (int) (this.height / 2.4), 0xFFD6D6D6);
 
-		guiGraphics.drawCenteredString(this.font, "NOTE: If you have already went through this,", this.width / 2, (int) (this.height / 1.4F), 0xFFFFA600);
-		guiGraphics.drawCenteredString(this.font, "ask for help in the discord before continuing!", this.width / 2, (int) (this.height / 1.3F), 0xFFFFA600);
+		guiGraphics.centeredText(this.font, "NOTE: If you have already went through this,", this.width / 2, (int) (this.height / 1.4F), 0xFFFFA600);
+		guiGraphics.centeredText(this.font, "ask for help in the discord before continuing!", this.width / 2, (int) (this.height / 1.3F), 0xFFFFA600);
 	}
 
 	@Override

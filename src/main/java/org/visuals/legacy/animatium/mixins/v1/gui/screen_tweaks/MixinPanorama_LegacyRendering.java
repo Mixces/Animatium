@@ -25,11 +25,11 @@
 
 package org.visuals.legacy.animatium.mixins.v1.gui.screen_tweaks;
 
-import net.minecraft.client.renderer.PanoramaRenderer;
+import net.minecraft.client.renderer.Panorama;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(PanoramaRenderer.class)
-public abstract class MixinPanoramaRenderer_LegacyRendering {
+@Mixin(Panorama.class)
+public abstract class MixinPanorama_LegacyRendering {
     // TODO 3.3
 	/*@WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CubeMap;render(Lnet/minecraft/client/Minecraft;FF)V", ordinal = 0))
 	private void animatium$panoramaRendering(CubeMap instance, Minecraft minecraft, float xRot, float yRot, Operation<Void> original, @Local(argsOnly = true) GuiGraphics guiGraphics, @Local(argsOnly = true, ordinal = 0) int width, @Local(argsOnly = true, ordinal = 1) int height) {

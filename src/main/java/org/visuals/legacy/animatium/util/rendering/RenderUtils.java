@@ -25,39 +25,43 @@
 
 package org.visuals.legacy.animatium.util.rendering;
 
+import com.mojang.blaze3d.pipeline.DepthStencilState;
+import com.mojang.blaze3d.platform.CompareOp;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.phys.AABB;
 import org.joml.Matrix3x2fStack;
 
 @UtilityClass
 public class RenderUtils {
-    public void fillVerticalLine(GuiGraphics context, int x, int y, int length, int color) {
+    public static final DepthStencilState NO_DEPTH_WRITE = new DepthStencilState(CompareOp.LESS_THAN, false);
+
+    public void fillVerticalLine(GuiGraphicsExtractor context, int x, int y, int length, int color) {
         context.fill(x, y, x + 1, y + length, color);
     }
 
-    public void fillVerticalGradientLine(GuiGraphics context, int x, int y, int length, int startColor, int endColor) {
+    public void fillVerticalGradientLine(GuiGraphicsExtractor context, int x, int y, int length, int startColor, int endColor) {
         context.fillGradient(x, y, x + 1, y + length, startColor, endColor);
     }
 
-    public void fillHorizontalLine(GuiGraphics context, int x, int y, int length, int color) {
+    public void fillHorizontalLine(GuiGraphicsExtractor context, int x, int y, int length, int color) {
         context.fill(x, y, x + length, y + 1, color);
     }
 
-    public void fillRectangle(GuiGraphics context, int x, int y, int width, int height, int color) {
+    public void fillRectangle(GuiGraphicsExtractor context, int x, int y, int width, int height, int color) {
         context.fill(x, y, x + width, y + height, color);
     }
 
-    public void fillFrameGradient(GuiGraphics guiGraphics, int x, int y, int width, int height, int startColor, int endColor) {
+    public void fillFrameGradient(GuiGraphicsExtractor guiGraphics, int x, int y, int width, int height, int startColor, int endColor) {
         fillVerticalGradientLine(guiGraphics, x, y, height - 2, startColor, endColor);
         fillVerticalGradientLine(guiGraphics, x + width - 1, y, height - 2, startColor, endColor);
         fillHorizontalLine(guiGraphics, x, y - 1, width, startColor);
         fillHorizontalLine(guiGraphics, x, y - 1 + height - 1, width, endColor);
     }
 
-    public void drawScaledText(GuiGraphics guiGraphics, Font font, String text, int x, int y, float scale) {
+    public void drawScaledText(GuiGraphicsExtractor guiGraphics, Font font, String text, int x, int y, float scale) {
         final Matrix3x2fStack stack = guiGraphics.pose();
         stack.pushMatrix();
         final float originX = stack.m20;
@@ -65,7 +69,7 @@ public class RenderUtils {
         stack.setTranslation(0.0F, 0.0F);
         stack.scale(scale, scale);
         stack.setTranslation(originX, originY);
-        guiGraphics.drawCenteredString(font, text, (int) (x / scale), (int) (y / scale), 0xFFFFFFFF);
+        guiGraphics.centeredText(font, text, (int) (x / scale), (int) (y / scale), 0xFFFFFFFF);
         stack.popMatrix();
     }
 

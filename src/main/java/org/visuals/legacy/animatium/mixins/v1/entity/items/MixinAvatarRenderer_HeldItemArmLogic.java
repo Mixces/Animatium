@@ -45,7 +45,6 @@ import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -58,7 +57,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 @Mixin(AvatarRenderer.class)
 public abstract class MixinAvatarRenderer_HeldItemArmLogic<AvatarLikeEntity extends Avatar & ClientAvatarEntity> extends LivingEntityRenderer<AvatarLikeEntity, AvatarRenderState, PlayerModel> {
     @Unique
-    private final ThreadLocal<@Nullable AvatarRenderState> animatium$renderState = ThreadLocal.withInitial(() -> null);
+    private final ThreadLocal<AvatarRenderState> animatium$renderState = ThreadLocal.withInitial(() -> null);
 
     public MixinAvatarRenderer_HeldItemArmLogic(final EntityRendererProvider.Context context, final PlayerModel model, final float shadowRadius) {
         super(context, model, shadowRadius);

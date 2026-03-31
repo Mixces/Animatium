@@ -32,9 +32,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.Level;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -59,10 +57,13 @@ public abstract class MixinCamera {
 	@Shadow
 	private Entity entity;
 
-	@Shadow
-	protected abstract void move(float zoom, float dy, float dx);
+    @Shadow
+    private boolean detached;
 
-	@Inject(method = "setup", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setRotation(FF)V", shift = At.Shift.AFTER))
+    @Shadow
+    protected abstract void move(float zoom, float dy, float dx);
+
+    @Inject(method = "alignWithEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setRotation(FF)V", shift = At.Shift.AFTER))
 	private void animatium$removeSmoothSneaking(final CallbackInfo ci) {
 		if (Animatium.isEnabled() && !AnimatiumConfig.instance().movement.sneakAnimation.isSmooth()) {
 			this.eyeHeightOld = this.eyeHeight;
@@ -103,10 +104,10 @@ public abstract class MixinCamera {
 		}
 	}
 
-	@Inject(method = "setup", at = @At(value = "TAIL"))
-	private void animatium$oldCameraVersion(final Level level, final Entity entity, final boolean detached, final boolean mirror, final float partialTickTime, final CallbackInfo ci) {
+	@Inject(method = "alignWithEntity", at = @At(value = "TAIL"))
+	private void animatium$oldCameraVersion(final float partialTicks, final CallbackInfo ci) {
 		// TODO: Fix bed/sleeping position
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.cameraVersion != CameraVersion.VANILLA && !detached && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
+		if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.cameraVersion != CameraVersion.VANILLA && !this.detached && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
 			final int ordinal = AnimatiumConfig.instance().screen.cameraVersion.ordinal();
 			if (ordinal <= CameraVersion.V1_14_V1_14_3.ordinal()) {
 				// <= 1.14.3

@@ -28,7 +28,7 @@ package org.visuals.legacy.animatium.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -45,7 +45,7 @@ import java.util.Random;
 
 public class AnimatiumCommand implements Command<FabricClientCommandSource> {
     public static LiteralArgumentBuilder<FabricClientCommandSource> create() {
-        final LiteralArgumentBuilder<FabricClientCommandSource> command = ClientCommandManager.literal("animatium").executes(new AnimatiumCommand());
+        final LiteralArgumentBuilder<FabricClientCommandSource> command = ClientCommands.literal("animatium").executes(new AnimatiumCommand());
 
         command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("on").executes((context) -> {
             final FabricClientCommandSource source = context.getSource();

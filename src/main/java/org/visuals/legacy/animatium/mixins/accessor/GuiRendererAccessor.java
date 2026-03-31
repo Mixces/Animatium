@@ -26,12 +26,16 @@
 package org.visuals.legacy.animatium.mixins.accessor;
 
 import net.minecraft.client.gui.render.GuiRenderer;
-import net.minecraft.client.renderer.CachedOrthoProjectionMatrixBuffer;
+import net.minecraft.client.renderer.Projection;
+import net.minecraft.client.renderer.ProjectionMatrixBuffer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(GuiRenderer.class)
 public interface GuiRendererAccessor {
+    @Accessor("guiProjection")
+    Projection animatium$projection();
+
     @Accessor("guiProjectionMatrixBuffer")
-    CachedOrthoProjectionMatrixBuffer animatium$orthoMatrixBuffer();
+    ProjectionMatrixBuffer animatium$orthoMatrixBuffer();
 }

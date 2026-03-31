@@ -71,7 +71,7 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
         }
     }
 
-    @ModifyArg(method = "method_72983", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/FishingHookRenderer;stringVertex(FFFLcom/mojang/blaze3d/vertex/VertexConsumer;Lcom/mojang/blaze3d/vertex/PoseStack$Pose;FFF)V"), index = 7)
+    @ModifyArg(method = "lambda$submit$1", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/FishingHookRenderer;stringVertex(FFFLcom/mojang/blaze3d/vertex/VertexConsumer;Lcom/mojang/blaze3d/vertex/PoseStack$Pose;FFF)V"), index = 7)
     private static float animatium$fishingRodLineThickness(final float lineWidth) {
         if (AnimatiumConfig.instance().items.thinFishingRodLineThickness) {
             return 1.0F;

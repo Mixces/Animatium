@@ -71,19 +71,19 @@ public final class AnimatiumFabricClient implements ClientModInitializer {
             }
         });
 
-        PayloadTypeRegistry.configurationS2C().register(SetServerFeaturesPayloadPacket.PAYLOAD_ID, SetServerFeaturesPayloadPacket.CODEC);
+        PayloadTypeRegistry.clientboundConfiguration().register(SetServerFeaturesPayloadPacket.PAYLOAD_ID, SetServerFeaturesPayloadPacket.CODEC);
         ClientConfigurationNetworking.registerGlobalReceiver(SetServerFeaturesPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> {
             Animatium.ENABLED_SERVER_FEATURES.clear();
             Animatium.ENABLED_SERVER_FEATURES.addAll(payload.features());
         }));
 
-        PayloadTypeRegistry.playS2C().register(SetServerFeaturesPayloadPacket.PAYLOAD_ID, SetServerFeaturesPayloadPacket.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(SetServerFeaturesPayloadPacket.PAYLOAD_ID, SetServerFeaturesPayloadPacket.CODEC);
         ClientPlayNetworking.registerGlobalReceiver(SetServerFeaturesPayloadPacket.PAYLOAD_ID, (payload, context) -> context.client().schedule(() -> {
             Animatium.ENABLED_SERVER_FEATURES.clear();
             Animatium.ENABLED_SERVER_FEATURES.addAll(payload.features());
         }));
 
-        PayloadTypeRegistry.playC2S().register(InfoPayloadPacket.PAYLOAD_ID, InfoPayloadPacket.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(InfoPayloadPacket.PAYLOAD_ID, InfoPayloadPacket.CODEC);
         // TODO 3.3: PayloadTypeRegistry.playC2S().register(ConfigDataPayloadPacket.PAYLOAD_ID, ConfigDataPayloadPacket.CODEC);
     }
 }

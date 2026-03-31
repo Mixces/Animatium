@@ -49,7 +49,7 @@ public class SkyRendererUtility {
             RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
                     .withVertexShader("core/position")
                     .withFragmentShader("core/position")
-                    .withDepthWrite(false)
+                    .withDepthStencilState(RenderUtils.NO_DEPTH_WRITE)
                     .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
                     .buildSnippet();
 
@@ -63,7 +63,7 @@ public class SkyRendererUtility {
                     .withLocation(Animatium.location("pipeline/legacy_sky"))
                     .withVertexShader(Animatium.location("core/legacy_sky"))
                     .withFragmentShader(Animatium.location("core/legacy_sky"))
-                    .withDepthWrite(false)
+                    .withDepthStencilState(RenderUtils.NO_DEPTH_WRITE)
                     .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
                     .buildSnippet();
 

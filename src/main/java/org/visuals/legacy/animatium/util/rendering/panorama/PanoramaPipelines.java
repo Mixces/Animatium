@@ -26,7 +26,10 @@
 package org.visuals.legacy.animatium.util.rendering.panorama;
 
 import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.ColorTargetState;
+import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.CompareOp;
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -34,6 +37,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.renderer.RenderPipelines;
 import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
 @UtilityClass
 public class PanoramaPipelines {
@@ -44,9 +48,9 @@ public class PanoramaPipelines {
 					.withLocation(Animatium.location("pipeline/legacy_panorama"))
 					.withVertexShader(Animatium.location("core/legacy_panorama"))
 					.withFragmentShader(Animatium.location("core/legacy_panorama"))
-					.withBlend(PANORAMA_BLEND)
-					.withDepthWrite(false)
-					.withCull(false)
+                    .withColorTargetState(new ColorTargetState(PANORAMA_BLEND))
+                    .withDepthStencilState(RenderUtils.NO_DEPTH_WRITE)
+                    .withCull(false)
 					.withSampler("Sampler0")
 					.withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
 					.build();
