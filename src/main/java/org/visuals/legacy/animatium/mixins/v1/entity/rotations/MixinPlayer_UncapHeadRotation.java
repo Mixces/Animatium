@@ -34,9 +34,15 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(Player.class)
-public abstract class MixinPlayer {
+public abstract class MixinPlayer_UncapHeadRotation {
     @WrapOperation(method = "getMaxHeadRotationRelativeToBody", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isBlocking()Z"))
-    private boolean animatium$uncapBlockingHeadRotation(Player instance, Operation<Boolean> original) {
-        return !(Animatium.isEnabled() && AnimatiumConfig.instance().movement.uncapBlockingHeadRotation) && original.call(instance);
+    private boolean animatium$uncapBlockingHeadRotation(final Player instance, final Operation<Boolean> original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.uncapBlockingHeadRotation) {
+            return false;
+        } else if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.alwaysBlockingHeadCap) {
+            return true;
+        } else {
+            return original.call(instance);
+        }
     }
 }

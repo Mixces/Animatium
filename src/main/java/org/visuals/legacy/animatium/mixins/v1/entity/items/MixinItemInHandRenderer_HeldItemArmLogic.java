@@ -45,7 +45,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinItemInHandRenderer_HeldItemArmLogic {
     @Inject(method = "renderPlayerArm", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/ClientAsset$Texture;texturePath()Lnet/minecraft/resources/ResourceLocation;", shift = At.Shift.AFTER))
     private void animatium$extractArmState(final PoseStack poseStack, final SubmitNodeCollector nodeCollector, final int packedLight, final float equippedProgress, final float swingProgress, final HumanoidArm arm, final CallbackInfo ci, @Local AvatarRenderer<AbstractClientPlayer> avatarRenderer) {
-        if (Animatium.isEnabled() && (AnimatiumConfig.instance().other.heldItemArmLogic || AnimatiumConfig.instance().extras.showArmWhileInvisible/*TODO 3.2: || AnimatiumConfig.instance().extras.damageTintItems*/)) {
+        if (Animatium.isEnabled() && (AnimatiumConfig.instance().other.heldItemArmLogic || AnimatiumConfig.instance().extras.showArmWhileInvisible/*TODO 3.3: || AnimatiumConfig.instance().extras.damageTintItems*/)) {
             final Minecraft minecraft = Minecraft.getInstance();
             avatarRenderer.extractRenderState(minecraft.player, new AvatarRenderState(), minecraft.getDeltaTracker().getGameTimeDeltaTicks());
         }

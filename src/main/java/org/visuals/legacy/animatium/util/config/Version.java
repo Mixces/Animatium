@@ -100,7 +100,7 @@ public enum Version {
         screen.effectsInventoryPosition = true;
         screen.snappySliderMovement = true;
         screen.hideRecipeBook = true;
-        // TODO 3.2: screen.panoramaRendering = true;
+        // TODO 3.3: screen.panoramaRendering = true;
         screen.legacyLoadingScreen = true;
         screen.oldChatPosition = true;
         screen.oldCrosshairPosition = true;
@@ -197,7 +197,7 @@ public enum Version {
         screen.effectsInventoryPosition = true;
         screen.snappySliderMovement = true;
         screen.hideRecipeBook = true;
-        // TODO 3.2: screen.panoramaRendering = true;
+        // TODO 3.3: screen.panoramaRendering = true;
         screen.legacyLoadingScreen = true;
         screen.oldChatPosition = true;
         screen.oldCrosshairPosition = true;
@@ -309,7 +309,7 @@ public enum Version {
         screen.effectsInventoryPosition = false;
         screen.snappySliderMovement = false;
         screen.hideRecipeBook = false;
-        // TODO 3.2: screen.panoramaRendering = false;
+        // TODO 3.3: screen.panoramaRendering = false;
         screen.legacyLoadingScreen = false;
         screen.oldChatPosition = false;
         screen.oldCrosshairPosition = false;

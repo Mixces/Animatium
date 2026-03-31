@@ -302,8 +302,10 @@
 	"animatium.dontCloseChat.description": "Stops minecraft from closing the chat screen on teleport/some situations.",
 	"animatium.oldWaterColorEffects": "[1.12.2] Old Water Color Effects",
 	"animatium.oldWaterColorEffects.description": "Forces watercolor in biomes to be what it was in <=1.12.2.\n\nREQUIRES RESOURCE PACK",
-	"animatium.colorBoost": "[*] Color/Saturation boost",
+	"animatium.colorBoost": "[*] Color/Saturation Boost",
 	"animatium.colorBoost.description": "Applies a colorboost/saturation boost to the games overall look.",
+	"animatium.alwaysBlockingHeadCap": "[*] Always Blocking Head Cap",
+	"animatium.alwaysBlockingHeadCap.description": "Always caps the head rotation relative to the body of the model to that of when blocking.\n\nNOTE: Requires \"[1.20.1] Reverts head rotation whilst blocking\" (in Movement category) to be turned off.",
 
 	"animatium.category.extras.group.item_swing": "Item Swing",
 	"animatium.itemSwingSpeed": "Item Swing Speed",
