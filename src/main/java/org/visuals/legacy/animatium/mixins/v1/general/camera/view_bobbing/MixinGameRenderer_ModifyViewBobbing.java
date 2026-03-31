@@ -54,7 +54,7 @@ public abstract class MixinGameRenderer_ModifyViewBobbing {
     @Final
     private Minecraft minecraft;
 
-    @WrapOperation(method = "bobHurt", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/state/level/CameraEntityRenderState;hurtDir:F"))
+    @WrapOperation(method = "bobHurt", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/state/level/CameraEntityRenderState;hurtDir:F", opcode = Opcodes.GETFIELD))
     private float animatium$damageTilt(final CameraEntityRenderState instance, final Operation<Float> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.legacyDamageTilt) {
             return 0.0F;
@@ -69,8 +69,8 @@ public abstract class MixinGameRenderer_ModifyViewBobbing {
     }
 
     @WrapOperation(method = "bobHurt", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/state/level/CameraEntityRenderState;hurtTime:F", opcode = Opcodes.GETFIELD))
-    private float animatium$offsetHurtTime(final CameraEntityRenderState instance, final Operation<Integer> original) {
-        final int hurtTime = original.call(instance);
+    private float animatium$offsetHurtTime(final CameraEntityRenderState instance, final Operation<Float> original) {
+        final float hurtTime = original.call(instance);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.offsetHurtTime) {
             return Math.max(hurtTime - 1, 0);
         } else {
@@ -86,13 +86,13 @@ public abstract class MixinGameRenderer_ModifyViewBobbing {
         }
     }
 
-    @WrapOperation(method = "bobView", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/state/level/CameraEntityRenderState;backwardsInterpolatedWalkDistance:F"))
+    @WrapOperation(method = "bobView", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/state/level/CameraEntityRenderState;backwardsInterpolatedWalkDistance:F", opcode = Opcodes.GETFIELD))
     private float animatium$viewBobbing$changeDistance(final CameraEntityRenderState instance, final Operation<Float> original) {
         final Entity bobbingStorage = this.minecraft.getCameraEntity();
         if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.handViewBobbingMovement && bobbingStorage != null) {
             final float walkDist = bobbingStorage.animatium$getHorizontalSpeed();
             final float walkDistO = bobbingStorage.animatium$getPreviousHorizontalSpeed();
-            return -(walkDist + (walkDist - walkDistO) * Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaTicks());
+            return -(walkDist + (walkDist - walkDistO) * Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(true));
         } else {
             return original.call(instance);
         }
