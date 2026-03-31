@@ -30,7 +30,7 @@ import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(PanoramaRenderer.class)
 public abstract class MixinPanoramaRenderer_LegacyRendering {
-    // TODO 3.2
+    // TODO 3.3
 	/*@WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CubeMap;render(Lnet/minecraft/client/Minecraft;FF)V", ordinal = 0))
 	private void animatium$panoramaRendering(CubeMap instance, Minecraft minecraft, float xRot, float yRot, Operation<Void> original, @Local(argsOnly = true) GuiGraphics guiGraphics, @Local(argsOnly = true, ordinal = 0) int width, @Local(argsOnly = true, ordinal = 1) int height) {
 		if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.panoramaRendering) {

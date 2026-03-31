@@ -47,7 +47,7 @@ public class ScreenConfigCategory extends Category {
     public boolean effectsInventoryPosition = true;
     public boolean snappySliderMovement = true;
     public boolean hideRecipeBook = true;
-    // TODO 3.2: public boolean panoramaRendering = false;
+    // TODO 3.3: public boolean panoramaRendering = false;
     public boolean legacyLoadingScreen = true;
     public boolean oldChatPosition = true;
     public boolean oldCrosshairPosition = true;
@@ -80,7 +80,7 @@ public class ScreenConfigCategory extends Category {
         bundle.booleanEntry("effectsInventoryPosition");
         bundle.booleanEntry("snappySliderMovement");
         bundle.booleanEntry("hideRecipeBook");
-        // TODO 3.2: bundle.booleanEntry("panoramaRendering");
+        // TODO 3.3: bundle.booleanEntry("panoramaRendering");
         bundle.booleanEntry("legacyLoadingScreen");
         bundle.booleanEntry("oldChatPosition");
         bundle.booleanEntry("oldCrosshairPosition");

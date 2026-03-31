@@ -88,7 +88,7 @@ public abstract class MixinAvatarRenderer_HeldItemArmLogic<AvatarLikeEntity exte
 
         int overlay = packedOverlay;
         if (Animatium.isEnabled() && avatarRenderState != null) {
-            // TODO 3.2:
+            // TODO 3.3:
             // if (AnimatiumConfig.instance().extras.damageTintItems) {
             // 	overlay = OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(avatarRenderState.hasRedOverlay));
             // }

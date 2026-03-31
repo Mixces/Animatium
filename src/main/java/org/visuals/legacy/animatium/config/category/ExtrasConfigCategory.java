@@ -47,8 +47,8 @@ public class ExtrasConfigCategory extends Category {
     public boolean alwaysSharpParticles = false;
     public boolean disableRecipeAndTutorialToasts = false;
     public boolean showArmWhileInvisible = false;
-    // TODO 3.2: public boolean damageTintItems = false;
-    // TODO 3.2: public boolean damageTintCape = false;
+    // TODO 3.3: public boolean damageTintItems = false;
+    // TODO 3.3: public boolean damageTintCape = false;
     public boolean fakeMissPenaltySwing = false;
     public boolean dontMoveBlueVoid = false;
     public boolean disableEntityDeathTopple = false;
@@ -59,13 +59,14 @@ public class ExtrasConfigCategory extends Category {
     public boolean dontCloseChat = false;
     public boolean oldWaterColorEffects = false;
     public boolean colorBoost = false;
+    public boolean alwaysBlockingHeadCap = false;
     // Item Swing
-    // TODO: public float itemSwingSpeed = 0.0F;
-    // TODO: public float hasteSwingSpeed = 0.0F;
-    // TODO: public float miningFatigueSwingSpeed = 0.0F;
+    // TODO 3.3: public float itemSwingSpeed = 0.0F;
+    // TODO 3.3: public float hasteSwingSpeed = 0.0F;
+    // TODO 3.3: public float miningFatigueSwingSpeed = 0.0F;
     public boolean highAttackSpeedVisual = false;
-    // TODO: public boolean ignoreHasteSpeed = false;
-    // TODO: public boolean ignoreMiningFatigueSpeed = false;
+    // TODO 3.3: public boolean ignoreHasteSpeed = false;
+    // TODO 3.3: public boolean ignoreMiningFatigueSpeed = false;
     // Server Features (Singleplayer Only)
     public boolean miss_penalty = false;
     public boolean left_click_item_usage = false;
@@ -102,8 +103,8 @@ public class ExtrasConfigCategory extends Category {
 
         final Minecraft minecraft = Minecraft.getInstance();
         bundle.booleanEntry("showArmWhileInvisible");
-        // TODO 3.2: bundle.booleanEntry("damageTintItems");
-        // TODO 3.2: bundle.booleanEntry("damageTintCape");
+        // TODO 3.3: bundle.booleanEntry("damageTintItems");
+        // TODO 3.3: bundle.booleanEntry("damageTintCape");
         bundle.booleanEntry("fakeMissPenaltySwing");
         bundle.booleanEntry("dontMoveBlueVoid");
         bundle.booleanEntry("disableEntityDeathTopple");
@@ -114,14 +115,15 @@ public class ExtrasConfigCategory extends Category {
         bundle.booleanEntry("dontCloseChat");
         bundle.booleanEntry("oldWaterColorEffects", (option, event) -> minecraft.levelRenderer.allChanged());
         bundle.booleanEntry("colorBoost");
+        bundle.booleanEntry("alwaysBlockingHeadCap");
 
         bundle.group((EntryBundle.Group) new EntryBundle.Group("item_swing")
-                // TODO 3.2: .floatEntry("itemSwingSpeed", -1.0F, 1.0F, 0.1F)
-                // TODO 3.2: .floatEntry("hasteSwingSpeed", -1.0F, 1.0F, 0.1F)
-                // TODO 3.2: .floatEntry("miningFatigueSwingSpeed", -1.0F, 1.0F, 0.1F)
+                // TODO 3.3: .floatEntry("itemSwingSpeed", -1.0F, 1.0F, 0.1F)
+                // TODO 3.3: .floatEntry("hasteSwingSpeed", -1.0F, 1.0F, 0.1F)
+                // TODO 3.3: .floatEntry("miningFatigueSwingSpeed", -1.0F, 1.0F, 0.1F)
                 .booleanEntry("highAttackSpeedVisual"));
-                // TODO 3.2: .booleanEntry("ignoreHasteSpeed")
-                // TODO 3.2: .booleanEntry("ignoreMiningFatigueSpeed"));
+                // TODO 3.3: .booleanEntry("ignoreHasteSpeed")
+                // TODO 3.3: .booleanEntry("ignoreMiningFatigueSpeed"));
 
         {
             final EntryBundle.Group serverFeatureGroup = new EntryBundle.Group("server_features");
