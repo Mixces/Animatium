@@ -45,7 +45,8 @@ public abstract class MixinInventoryScreen_DisableEntityScissor {
     private static void animatium$disableEntityScissor(final GuiGraphics instance, final EntityRenderState renderState, final float scale, final Vector3f translation, final Quaternionf rotation, final Quaternionf overrideCameraAngle, final int x0, final int y0, final int x1, final int y1, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.disableInventoryEntityScissor) {
             final ScreenRectangle bounds = new ScreenRectangle(0, 0, instance.guiWidth(), instance.guiHeight());
-            instance.guiRenderState.submitPicturesInPictureState(new GuiEntityRenderState(renderState, translation, rotation, overrideCameraAngle, x0, y0, x1, y1, scale, null, bounds));
+            final int expansion = 40;
+            instance.guiRenderState.submitPicturesInPictureState(new GuiEntityRenderState(renderState, translation, rotation, overrideCameraAngle, x0 - expansion, y0 - expansion, x1 + expansion, y1 + expansion, scale, null, bounds));
         } else {
             original.call(instance, renderState, scale, translation, rotation, overrideCameraAngle, x0, y0, x1, y1);
         }
