@@ -25,26 +25,14 @@
 
 package org.visuals.legacy.animatium.mixins.v1.rendering.blocks;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.renderer.block.BlockModelShaper;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.GrassBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.AnimatiumConstants;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.Utils;
 
-@Mixin(BlockRenderDispatcher.class)
+// TODO 26.1
+// BlockRenderDispatcher
+@Mixin(Minecraft.class)
 public abstract class MixinBlockRenderDispatcher_FastGrassSide {
-    @Shadow
+    /*@Shadow
     @Final
     private BlockModelShaper blockModelShaper;
 
@@ -55,5 +43,5 @@ public abstract class MixinBlockRenderDispatcher_FastGrassSide {
         } else {
             return original.call(instance, state);
         }
-    }
+    }*/
 }

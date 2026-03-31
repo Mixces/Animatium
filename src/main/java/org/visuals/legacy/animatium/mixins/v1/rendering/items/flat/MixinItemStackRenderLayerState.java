@@ -49,13 +49,13 @@ import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
 @Mixin(ItemStackRenderState.LayerRenderState.class)
 public abstract class MixinItemStackRenderLayerState {
     @Shadow
-    ItemTransform transform;
+    private ItemTransform itemTransform;
 
-    @Shadow(aliases = "field_55345") // ItemStackRenderState.this
+    @Shadow(aliases = "this$0")
     @Final
     ItemStackRenderState itemStackRenderState;
 
-    @ModifyArg(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemDisplayContext;III[ILjava/util/List;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"), index = 8)
+    @ModifyArg(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemDisplayContext;III[ILjava/util/List;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"), index = 7)
     private ItemStackRenderState.FoilType animatium$disableGlintOn2DItems(final ItemStackRenderState.FoilType foilType) {
         final boolean glintDropped = !AnimatiumConfig.instance().items.glintOnItemDrops2D;
         final boolean glintFramed = !AnimatiumConfig.instance().items.glintOnItemFramed2D;
@@ -78,9 +78,9 @@ public abstract class MixinItemStackRenderLayerState {
                 final boolean isGui = itemDisplayContext == ItemDisplayContext.GUI;
                 final boolean isFirstPerson = itemDisplayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || itemDisplayContext == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
                 final boolean isThirdPerson = itemDisplayContext == ItemDisplayContext.THIRD_PERSON_LEFT_HAND || itemDisplayContext == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
-                float x = this.transform.translation().x();
-                float y = this.transform.translation().y();
-                float z = this.transform.translation().z();
+                float x = this.itemTransform.translation().x();
+                float y = this.itemTransform.translation().y();
+                float z = this.itemTransform.translation().z();
                 if (AnimatiumConfig.instance().items.fishingRodVersion != FishingRodVersion.VANILLA && ItemUtils.isFishingRodItem(stack) && isFirstPerson) {
                     final int ordinal = AnimatiumConfig.instance().items.fishingRodVersion.ordinal();
                     if (ordinal <= FishingRodVersion.V1_8.ordinal()) {
@@ -106,11 +106,11 @@ public abstract class MixinItemStackRenderLayerState {
                 // TODO/NEED TO FIX
                 if (AnimatiumConfig.instance().items.skullPosition && ItemUtils.isSkullBlock(stack) && isGui && !AnimatiumConfig.instance().items.mobHeadIcons) {
                     poseStack.translate(x, y, z);
-                    poseStack.mulPose(Axis.XP.rotationDegrees(Utils.toRadians(this.transform.rotation().x())));
-                    poseStack.mulPose(Axis.YP.rotationDegrees(Utils.toRadians(this.transform.rotation().y())));
-                    poseStack.mulPose(Axis.ZP.rotationDegrees(Utils.toRadians(this.transform.rotation().x())));
+                    poseStack.mulPose(Axis.XP.rotationDegrees(Utils.toRadians(this.itemTransform.rotation().x())));
+                    poseStack.mulPose(Axis.YP.rotationDegrees(Utils.toRadians(this.itemTransform.rotation().y())));
+                    poseStack.mulPose(Axis.ZP.rotationDegrees(Utils.toRadians(this.itemTransform.rotation().x())));
                     poseStack.scale(0.9F, 0.9F, 0.9F);
-                    poseStack.scale(this.transform.scale().x(), this.transform.scale().y(), this.transform.scale().z());
+                    poseStack.scale(this.itemTransform.scale().x(), this.itemTransform.scale().y(), this.itemTransform.scale().z());
                     animatium$doInverseTransformations(poseStack);
                 }
             }
@@ -119,10 +119,10 @@ public abstract class MixinItemStackRenderLayerState {
 
     @Unique
     private void animatium$doInverseTransformations(final PoseStack poseStack) {
-        poseStack.scale(1 / this.transform.scale().x(), 1 / this.transform.scale().y(), 1 / this.transform.scale().z());
-        poseStack.mulPose(Axis.ZP.rotationDegrees(-Utils.toRadians(this.transform.rotation().x())));
-        poseStack.mulPose(Axis.YP.rotationDegrees(-Utils.toRadians(this.transform.rotation().y())));
-        poseStack.mulPose(Axis.XP.rotationDegrees(-Utils.toRadians(this.transform.rotation().z())));
-        poseStack.translate(-this.transform.translation().x(), -this.transform.translation().y(), -this.transform.translation().z());
+        poseStack.scale(1 / this.itemTransform.scale().x(), 1 / this.itemTransform.scale().y(), 1 / this.itemTransform.scale().z());
+        poseStack.mulPose(Axis.ZP.rotationDegrees(-Utils.toRadians(this.itemTransform.rotation().x())));
+        poseStack.mulPose(Axis.YP.rotationDegrees(-Utils.toRadians(this.itemTransform.rotation().y())));
+        poseStack.mulPose(Axis.XP.rotationDegrees(-Utils.toRadians(this.itemTransform.rotation().z())));
+        poseStack.translate(-this.itemTransform.translation().x(), -this.itemTransform.translation().y(), -this.itemTransform.translation().z());
     }
 }
