@@ -25,34 +25,24 @@
 
 package org.visuals.legacy.animatium.mixins.v1.rendering.items.flat;
 
-import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.core.Direction;
+import net.minecraft.client.renderer.feature.ItemFeatureRenderer;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 // TODO/FIX
-@Mixin(ItemRenderer.class)
-public abstract class MixinItemRenderer {
+@Mixin(ItemFeatureRenderer.class)
+public abstract class MixinItemFeatureRenderer {
 	/*@Unique
 	private static ItemDisplayContext animatium$displayContext = null;*/
 
-	@Unique
-	private static boolean animatium$blocksLight = false;
+    @Unique
+    private static boolean animatium$blocksLight = false;
 
-	@ModifyArg(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderQuadList(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Ljava/util/List;[III)V"), index = 2)
-	private static List<BakedQuad> animatium$itemDrops2D(List<BakedQuad> quads, @Local(argsOnly = true) ItemDisplayContext displayContext, @Local(argsOnly = true) RenderType renderType) {
+    // TODO 26.1
+	/*@ModifyArg(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeStorage$ItemSubmit;quads()Ljava/util/List;"), index = 2)
+	private static List<BakedQuad> animatium$itemDrops2D(List<BakedQuad> quads) {
 		// animatium$displayContext = displayContext;
 		animatium$blocksLight = renderType.pipeline() == RenderPipelines.ENTITY_CUTOUT; // TODO: not entirely accurate
 		if (Animatium.isEnabled() && animatium$isTransformationModeValid(displayContext) && !animatium$blocksLight) {
@@ -60,10 +50,10 @@ public abstract class MixinItemRenderer {
 		} else {
 			return quads;
 		}
-	}
+	}*/
 
-	// TODO/FIX
-	// TODO: this is only half of the battle + framed item 2d colors are disabled
+    // TODO/FIX
+    // TODO: this is only half of the battle + framed item 2d colors are disabled
 	/*@WrapOperation(method = "renderQuadList", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexConsumer;putBulkData(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;FFFFII)V"))
 	private static void animatium$itemColors2D(VertexConsumer instance, PoseStack.Pose pose, BakedQuad bakedQuad, float f, float g, float h, float i, int j, int k, Operation<Void> original) {
 		if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemColors2D && animatium$displayContext == ItemDisplayContext.GROUND && !animatium$blocksLight) {
@@ -74,10 +64,10 @@ public abstract class MixinItemRenderer {
 		original.call(instance, pose, bakedQuad, f, g, h, i, j, k);
 	}*/
 
-	@Unique
-	private static boolean animatium$isTransformationModeValid(ItemDisplayContext displayContext) {
-		final boolean itemDrops2D = AnimatiumConfig.instance().items.itemDrops2D;
-		final boolean itemFramed2D = AnimatiumConfig.instance().items.itemFramed2D;
-		return (itemDrops2D && displayContext == ItemDisplayContext.GROUND) || (itemFramed2D && displayContext == ItemDisplayContext.FIXED);
-	}
+    @Unique
+    private static boolean animatium$isTransformationModeValid(ItemDisplayContext displayContext) {
+        final boolean itemDrops2D = AnimatiumConfig.instance().items.itemDrops2D;
+        final boolean itemFramed2D = AnimatiumConfig.instance().items.itemFramed2D;
+        return (itemDrops2D && displayContext == ItemDisplayContext.GROUND) || (itemFramed2D && displayContext == ItemDisplayContext.FIXED);
+    }
 }

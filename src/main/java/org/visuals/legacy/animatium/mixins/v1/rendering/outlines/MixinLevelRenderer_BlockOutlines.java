@@ -28,7 +28,7 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.outlines;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.state.BlockOutlineRenderState;
+import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -39,7 +39,7 @@ import org.visuals.legacy.animatium.util.Utils;
 
 @Mixin(LevelRenderer.class)
 public abstract class MixinLevelRenderer_BlockOutlines {
-    @ModifyArg(method = "renderBlockOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderHitOutline(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;DDDLnet/minecraft/client/renderer/state/BlockOutlineRenderState;IF)V", ordinal = 1), index = 7)
+    @ModifyArg(method = "renderBlockOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderHitOutline(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;DDDLnet/minecraft/client/renderer/state/level/BlockOutlineRenderState;IF)V", ordinal = 1), index = 7)
     private float animatium$oldBlockOutline(final float lineWidth) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.blockOutlineRendering) {
             return 2.0F;
@@ -48,13 +48,13 @@ public abstract class MixinLevelRenderer_BlockOutlines {
         }
     }
 
-	@WrapOperation(method = "renderHitOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/state/BlockOutlineRenderState;shape()Lnet/minecraft/world/phys/shapes/VoxelShape;"))
-	private VoxelShape animatium$blockOutlineRendering(final BlockOutlineRenderState instance, final Operation<VoxelShape> original) {
-		final VoxelShape shape = original.call(instance);
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.blockOutlineRendering) {
-			return Utils.expandVoxelShape(shape, 0.0020000000949949026F); // Value sourced from older minecraft version
-		} else {
-			return shape;
-		}
-	}
+    @WrapOperation(method = "renderHitOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/state/level/BlockOutlineRenderState;shape()Lnet/minecraft/world/phys/shapes/VoxelShape;"))
+    private VoxelShape animatium$blockOutlineRendering(final BlockOutlineRenderState instance, final Operation<VoxelShape> original) {
+        final VoxelShape shape = original.call(instance);
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.blockOutlineRendering) {
+            return Utils.expandVoxelShape(shape, 0.0020000000949949026F); // Value sourced from older minecraft version
+        } else {
+            return shape;
+        }
+    }
 }

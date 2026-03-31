@@ -49,32 +49,32 @@ import java.util.OptionalInt;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft_ColorBoost {
-	@Shadow
-	@Nullable
-	public Screen screen;
+    @Shadow
+    @Nullable
+    public Screen screen;
 
-	@Unique
-	private static final RenderPipeline animatium$boostPipeline = RenderPipelines.register(
-			RenderPipeline.builder()
-					.withLocation(Animatium.location("pipeline/colorboost"))
-					.withVertexShader("core/screenquad")
-					.withFragmentShader(Animatium.location("core/colorboost"))
-					.withSampler("Sampler0")
-					.withVertexFormat(DefaultVertexFormat.EMPTY, VertexFormat.Mode.TRIANGLES)
-					.build()
-	);
+    @Unique
+    private static final RenderPipeline animatium$boostPipeline = RenderPipelines.register(
+            RenderPipeline.builder()
+                    .withLocation(Animatium.location("pipeline/colorboost"))
+                    .withVertexShader("core/screenquad")
+                    .withFragmentShader(Animatium.location("core/colorboost"))
+                    .withSampler("Sampler0")
+                    .withVertexFormat(DefaultVertexFormat.EMPTY, VertexFormat.Mode.TRIANGLES)
+                    .build()
+    );
 
-	@WrapOperation(method = "runTick(Z)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;blitToScreen()V"))
-	private void animatium$colorBoost(final RenderTarget instance, final Operation<Void> original) {
-		if (AnimatiumConfig.instance().extras.colorBoost && this.screen == null) {
-			try (final RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Color boost render target blit", instance.getColorTextureView(), OptionalInt.empty())) {
-				renderPass.setPipeline(animatium$boostPipeline);
-				RenderSystem.bindDefaultUniforms(renderPass);
-				renderPass.bindTexture("Sampler0", instance.getColorTextureView(), RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST));
-				renderPass.draw(0, 3);
-			}
-		}
+    @WrapOperation(method = "renderFrame", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;blitToScreen()V"))
+    private void animatium$colorBoost(final RenderTarget instance, final Operation<Void> original) {
+        if (AnimatiumConfig.instance().extras.colorBoost && this.screen == null) {
+            try (final RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Color boost render target blit", instance.getColorTextureView(), OptionalInt.empty())) {
+                renderPass.setPipeline(animatium$boostPipeline);
+                RenderSystem.bindDefaultUniforms(renderPass);
+                renderPass.bindTexture("Sampler0", instance.getColorTextureView(), RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST));
+                renderPass.draw(0, 3);
+            }
+        }
 
-		original.call(instance);
-	}
+        original.call(instance);
+    }
 }

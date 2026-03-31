@@ -75,7 +75,7 @@ public class Utils {
 
     public float lerpCameraPosition(final Camera camera) {
         final CameraAccessor cameraAccessor = (CameraAccessor) camera;
-        return Mth.lerp(camera.getPartialTickTime(), cameraAccessor.animatium$getOldEyeHeight(), cameraAccessor.animatium$getEyeHeight());
+        return Mth.lerp(camera.getCameraEntityPartialTicks(Minecraft.getInstance().getDeltaTracker()), cameraAccessor.animatium$getOldEyeHeight(), cameraAccessor.animatium$getEyeHeight());
     }
 
     public float lerpCameraPosition(final CameraRenderState cameraRenderState) {
