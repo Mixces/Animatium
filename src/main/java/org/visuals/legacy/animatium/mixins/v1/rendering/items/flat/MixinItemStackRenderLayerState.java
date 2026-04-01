@@ -27,11 +27,11 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.items.flat;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.resources.model.cuboid.ItemTransform;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -69,8 +69,8 @@ public abstract class MixinItemStackRenderLayerState {
     }
 
     // TODO/MOVE
-    @Inject(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/item/ItemStackRenderState$LayerRenderState;applyTransform(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;)V"))
-    private void animatium$itemPositions(final PoseStack poseStack, final SubmitNodeCollector nodeCollector, final int packedLight, final int packedOverlay, final int outlineColor, final CallbackInfo ci) {
+    @Inject(method = "applyTransform", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/cuboid/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack$Pose;)V"))
+    private void animatium$itemPositions(final PoseStack.Pose localPose, final CallbackInfo ci) {
         if (Animatium.isEnabled()) {
             final ItemStack stack = itemStackRenderState.animatium$getItemStack();
             if (!stack.isEmpty()) {
@@ -84,45 +84,45 @@ public abstract class MixinItemStackRenderLayerState {
                 if (AnimatiumConfig.instance().items.fishingRodVersion != FishingRodVersion.VANILLA && ItemUtils.isFishingRodItem(stack) && isFirstPerson) {
                     final int ordinal = AnimatiumConfig.instance().items.fishingRodVersion.ordinal();
                     if (ordinal <= FishingRodVersion.V1_8.ordinal()) {
-                        poseStack.translate(0.070625, 0.1, 0.020625);
+                        localPose.translate(0.070625F, 0.1F, 0.020625F);
                     }
 
-                    poseStack.translate(x, y, z);
+                    localPose.translate(x, y, z);
                     if (ordinal == FishingRodVersion.V1_7.ordinal()) {
-                        poseStack.mulPose(Axis.YP.rotationDegrees(180));
+                        localPose.mulPose(Axis.YP.rotationDegrees(180).get(new Matrix4f()));
                     }
 
-                    poseStack.translate(-x, -y, -z);
+                    localPose.translate(-x, -y, -z);
                 }
 
                 if (AnimatiumConfig.instance().items.thinBlockPositions && ItemUtils.isThinBlockItem(stack)) {
                     if (isFirstPerson) {
-                        poseStack.translate(0, -4.2 * 0.0625, 0);
+                        localPose.translate(0.0F, -4.2F * 0.0625F, 0.0F);
                     } else if (isThirdPerson) {
-                        poseStack.translate(0, 0, -2 * 0.0625);
+                        localPose.translate(0.0F, 0.0F, -2.0F * 0.0625F);
                     }
                 }
 
                 // TODO/NEED TO FIX
                 if (AnimatiumConfig.instance().items.skullPosition && ItemUtils.isSkullBlock(stack) && isGui && !AnimatiumConfig.instance().items.mobHeadIcons) {
-                    poseStack.translate(x, y, z);
-                    poseStack.mulPose(Axis.XP.rotationDegrees(Utils.toRadians(this.itemTransform.rotation().x())));
-                    poseStack.mulPose(Axis.YP.rotationDegrees(Utils.toRadians(this.itemTransform.rotation().y())));
-                    poseStack.mulPose(Axis.ZP.rotationDegrees(Utils.toRadians(this.itemTransform.rotation().x())));
-                    poseStack.scale(0.9F, 0.9F, 0.9F);
-                    poseStack.scale(this.itemTransform.scale().x(), this.itemTransform.scale().y(), this.itemTransform.scale().z());
-                    animatium$doInverseTransformations(poseStack);
+                    localPose.translate(x, y, z);
+                    localPose.mulPose(Axis.XP.rotationDegrees(Utils.toRadians(this.itemTransform.rotation().x())).get(new Matrix4f()));
+                    localPose.mulPose(Axis.YP.rotationDegrees(Utils.toRadians(this.itemTransform.rotation().y())).get(new Matrix4f()));
+                    localPose.mulPose(Axis.ZP.rotationDegrees(Utils.toRadians(this.itemTransform.rotation().x())).get(new Matrix4f()));
+                    localPose.scale(0.9F, 0.9F, 0.9F);
+                    localPose.scale(this.itemTransform.scale().x(), this.itemTransform.scale().y(), this.itemTransform.scale().z());
+                    animatium$doInverseTransformations(localPose);
                 }
             }
         }
     }
 
     @Unique
-    private void animatium$doInverseTransformations(final PoseStack poseStack) {
-        poseStack.scale(1 / this.itemTransform.scale().x(), 1 / this.itemTransform.scale().y(), 1 / this.itemTransform.scale().z());
-        poseStack.mulPose(Axis.ZP.rotationDegrees(-Utils.toRadians(this.itemTransform.rotation().x())));
-        poseStack.mulPose(Axis.YP.rotationDegrees(-Utils.toRadians(this.itemTransform.rotation().y())));
-        poseStack.mulPose(Axis.XP.rotationDegrees(-Utils.toRadians(this.itemTransform.rotation().z())));
-        poseStack.translate(-this.itemTransform.translation().x(), -this.itemTransform.translation().y(), -this.itemTransform.translation().z());
+    private void animatium$doInverseTransformations(final PoseStack.Pose localPose) {
+        localPose.scale(1 / this.itemTransform.scale().x(), 1 / this.itemTransform.scale().y(), 1 / this.itemTransform.scale().z());
+        localPose.mulPose(Axis.ZP.rotationDegrees(-Utils.toRadians(this.itemTransform.rotation().x())).get(new Matrix4f()));
+        localPose.mulPose(Axis.YP.rotationDegrees(-Utils.toRadians(this.itemTransform.rotation().y())).get(new Matrix4f()));
+        localPose.mulPose(Axis.XP.rotationDegrees(-Utils.toRadians(this.itemTransform.rotation().z())).get(new Matrix4f()));
+        localPose.translate(-this.itemTransform.translation().x(), -this.itemTransform.translation().y(), -this.itemTransform.translation().z());
     }
 }

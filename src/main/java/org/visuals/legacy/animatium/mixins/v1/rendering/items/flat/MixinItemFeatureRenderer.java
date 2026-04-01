@@ -25,11 +25,21 @@
 
 package org.visuals.legacy.animatium.mixins.v1.rendering.items.flat;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.feature.ItemFeatureRenderer;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 // TODO/FIX
 @Mixin(ItemFeatureRenderer.class)
@@ -40,17 +50,17 @@ public abstract class MixinItemFeatureRenderer {
     @Unique
     private static boolean animatium$blocksLight = false;
 
-    // TODO 26.1
-	/*@ModifyArg(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeStorage$ItemSubmit;quads()Ljava/util/List;"), index = 2)
-	private static List<BakedQuad> animatium$itemDrops2D(List<BakedQuad> quads) {
-		// animatium$displayContext = displayContext;
-		animatium$blocksLight = renderType.pipeline() == RenderPipelines.ENTITY_CUTOUT; // TODO: not entirely accurate
-		if (Animatium.isEnabled() && animatium$isTransformationModeValid(displayContext) && !animatium$blocksLight) {
-			return quads.stream().filter(baked -> baked.direction() == Direction.SOUTH).collect(Collectors.toList());
-		} else {
-			return quads;
-		}
-	}*/
+    @WrapOperation(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeStorage$ItemSubmit;quads()Ljava/util/List;"))
+    private static List<BakedQuad> animatium$itemDrops2D(final SubmitNodeStorage.ItemSubmit instance, final Operation<List<BakedQuad>> original) {
+        // animatium$displayContext = displayContext;
+        // TODO 26.1: animatium$blocksLight = renderType.pipeline() == RenderPipelines.ENTITY_CUTOUT; // TODO: not entirely accurate
+        final List<BakedQuad> quads = original.call(instance);
+        if (Animatium.isEnabled() && animatium$isTransformationModeValid(instance.displayContext()) && !animatium$blocksLight) {
+            return quads.stream().filter(baked -> baked.direction() == Direction.SOUTH).collect(Collectors.toList());
+        } else {
+            return quads;
+        }
+    }
 
     // TODO/FIX
     // TODO: this is only half of the battle + framed item 2d colors are disabled
