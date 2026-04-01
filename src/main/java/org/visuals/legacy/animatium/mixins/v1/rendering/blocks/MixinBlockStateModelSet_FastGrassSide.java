@@ -26,22 +26,26 @@
 package org.visuals.legacy.animatium.mixins.v1.rendering.blocks;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.BlockStateModelSet;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.GrassBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.AnimatiumConstants;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 // TODO 26.1
-// BlockRenderDispatcher
-@Mixin(Minecraft.class)
-public abstract class MixinBlockRenderDispatcher_FastGrassSide {
-    /*@Shadow
-    @Final
-    private BlockModelShaper blockModelShaper;
-
-    @WrapOperation(method = "getBlockModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/BlockModelShaper;getBlockModel(Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/client/renderer/block/model/BlockStateModel;"))
-    private BlockStateModel animatium$fastGrass(BlockModelShaper instance, BlockState state, Operation<BlockStateModel> original) {
+@Mixin(BlockStateModelSet.class)
+public abstract class MixinBlockStateModelSet_FastGrassSide {
+    @Inject(method = "get", at = @At("HEAD"), cancellable = true)
+    private void animatium$fastGrass(final BlockState state, final CallbackInfoReturnable<BlockStateModel> cir) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.fastGrass && (state.is(Blocks.GRASS_BLOCK) && !state.getValue(GrassBlock.SNOWY))) {
-            return this.blockModelShaper.getModelManager().getModel(AnimatiumConstants.FAST_GRASS_MODEL_KEY);
-        } else {
-            return original.call(instance, state);
+            cir.setReturnValue(Minecraft.getInstance().getModelManager().getModel(AnimatiumConstants.FAST_GRASS_MODEL_KEY));
         }
-    }*/
+    }
 }
