@@ -39,7 +39,6 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.AnimatiumConstants;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-// TODO 26.1
 @Mixin(BlockStateModelSet.class)
 public abstract class MixinBlockStateModelSet_FastGrassSide {
     @Inject(method = "get", at = @At("HEAD"), cancellable = true)
