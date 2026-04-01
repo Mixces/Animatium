@@ -26,10 +26,7 @@
 package org.visuals.legacy.animatium.util.rendering;
 
 import com.mojang.blaze3d.buffers.GpuBuffer;
-import com.mojang.blaze3d.pipeline.BlendFunction;
-import com.mojang.blaze3d.pipeline.ColorTargetState;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.pipeline.*;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -61,17 +58,17 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
     private static final RenderPipeline.Snippet CLOUDS_SNIPPET = RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
             .withVertexShader(Animatium.location("core/legacy_clouds"))
             .withFragmentShader("core/rendertype_clouds")
+            .withDepthStencilState(DepthStencilState.DEFAULT)
+            .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
             .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS)
             .buildSnippet();
 
     public static final RenderPipeline CLOUDS = RenderPipelines.register(RenderPipeline.builder(CLOUDS_SNIPPET)
             .withLocation(Animatium.location("pipeline/legacy_clouds"))
-            .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
             .build());
 
     public static final RenderPipeline FLAT_CLOUDS = RenderPipelines.register(RenderPipeline.builder(CLOUDS_SNIPPET)
             .withLocation(Animatium.location("pipeline/legacy_flat_clouds"))
-            .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
             .withCull(false)
             .build());
 
