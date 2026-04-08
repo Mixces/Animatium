@@ -388,7 +388,7 @@ public class ImmediateRenderer implements AutoCloseable {
         }
 
         public Matrix4f getModelViewMatrix() {
-            return this.modelViewMatrix == null ? new Matrix4f(RenderSystem.getModelViewMatrixCopy()) : this.modelViewMatrix;
+            return this.modelViewMatrix == null ? new Matrix4f(RenderSystem.getModelViewStack()) : this.modelViewMatrix;
         }
 
         public Matrix4f getTextureMatrix() {
