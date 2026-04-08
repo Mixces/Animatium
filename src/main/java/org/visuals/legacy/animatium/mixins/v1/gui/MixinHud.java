@@ -31,16 +31,16 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import net.minecraft.client.CameraType;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(Gui.class)
-public abstract class MixinInGameHud {
+@Mixin(Hud.class)
+public abstract class MixinHud {
     @WrapOperation(method = "extractCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/CameraType;isFirstPerson()Z"))
     private boolean animatium$crosshairInThirdPerson(CameraType instance, Operation<Boolean> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.crosshairInThirdPerson) {
@@ -59,8 +59,8 @@ public abstract class MixinInGameHud {
         }
     }
 
-    @WrapWithCondition(method = "extractHearts", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;extractHeart(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/gui/Gui$HeartType;IIZZZ)V"))
-    private boolean animatium$heartFlash(Gui instance, GuiGraphicsExtractor guiGraphics, Gui.HeartType type, int x, int y, boolean hardcore, boolean blinking, boolean half) {
-        return !Animatium.isEnabled() || !AnimatiumConfig.instance().screen.disableHeartFlash || !blinking || type == Gui.HeartType.CONTAINER;
+    @WrapWithCondition(method = "extractHearts", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Hud;extractHeart(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/gui/Hud$HeartType;IIZZZ)V"))
+    private boolean animatium$heartFlash(Hud instance, GuiGraphicsExtractor guiGraphics, Hud.HeartType type, int x, int y, boolean hardcore, boolean blinking, boolean half) {
+        return !Animatium.isEnabled() || !AnimatiumConfig.instance().screen.disableHeartFlash || !blinking || type == Hud.HeartType.CONTAINER;
     }
 }

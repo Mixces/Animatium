@@ -27,12 +27,12 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.outlines;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.mojang.blaze3d.GpuFormat;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.textures.GpuTextureView;
-import com.mojang.blaze3d.textures.TextureFormat;
 import net.minecraft.client.renderer.LevelRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -54,7 +54,7 @@ public abstract class MixinLevelRenderer_EntityOutlines {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.disableEntityGlowOutline) {
             final GpuDevice device = RenderSystem.getDevice();
             if (this.animatium$blankTexture == null) {
-                this.animatium$blankTexture = device.createTexture(() -> "Blank", 15, TextureFormat.RGBA8, 1, 1, 1, 1);
+                this.animatium$blankTexture = device.createTexture(() -> "Blank", 15, GpuFormat.RGBA8_UINT, 1, 1, 1, 1);
             }
 
             if (this.animatium$blankTextureView == null) {

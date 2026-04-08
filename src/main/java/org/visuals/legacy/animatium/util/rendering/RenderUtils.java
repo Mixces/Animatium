@@ -36,7 +36,7 @@ import org.joml.Matrix3x2fStack;
 
 @UtilityClass
 public class RenderUtils {
-    public static final DepthStencilState NO_DEPTH_WRITE = new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false);
+    public static final DepthStencilState NO_DEPTH_WRITE = new DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false);
 
     public void fillVerticalLine(GuiGraphicsExtractor context, int x, int y, int length, int color) {
         context.fill(x, y, x + 1, y + length, color);

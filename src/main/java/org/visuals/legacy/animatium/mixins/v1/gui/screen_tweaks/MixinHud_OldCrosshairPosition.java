@@ -29,15 +29,15 @@ import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.Hud;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(Gui.class)
-public abstract class MixinGui_OldCrosshairPosition {
+@Mixin(Hud.class)
+public abstract class MixinHud_OldCrosshairPosition {
     @Definition(id = "graphics", local = @Local(type = GuiGraphicsExtractor.class, argsOnly = true))
     @Definition(id = "guiWidth", method = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;guiWidth()I")
     @Expression("(graphics.guiWidth() - 15) / 2")

@@ -46,7 +46,7 @@ import java.util.function.Consumer;
 @UtilityClass
 public class SkyRendererUtility {
     public final RenderPipeline.Snippet VOID_BOX_SNIPPET =
-            RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
+            RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
                     .withVertexShader("core/position")
                     .withFragmentShader("core/position")
                     .withDepthStencilState(RenderUtils.NO_DEPTH_WRITE)

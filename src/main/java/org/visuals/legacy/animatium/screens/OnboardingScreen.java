@@ -57,7 +57,7 @@ public class OnboardingScreen extends Screen {
 	@SuppressWarnings({"DataFlowIssue"})
 	protected void init() {
 		if (!ConfigUtil.bool("onboarding")) {
-			this.minecraft.setScreen(this.original);
+			this.minecraft.gui.setScreen(this.original);
 			return;
 		}
 
@@ -84,7 +84,7 @@ public class OnboardingScreen extends Screen {
 			ConfigUtil.put("onboarding", false);
 			this.version.apply(AnimatiumConfig.instance());
 			AnimatiumConfig.save();
-			this.minecraft.setScreen(this.original);
+			this.minecraft.gui.setScreen(this.original);
 		}).pos((this.width / 2) - (Button.DEFAULT_WIDTH / 2), (int) (this.height / 1.2F)).tooltip(Tooltip.create(Component.literal("WARNING! THIS WILL RESET ALL YOUR SETTINGS").withStyle(ChatFormatting.RED))).build());
 	}
 

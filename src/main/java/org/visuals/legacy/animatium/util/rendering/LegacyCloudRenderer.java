@@ -91,8 +91,11 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
         final int colorB = ARGB.colorFromFloat(0.8F, 1.0F, 1.0F, 1.0F);
         final int colorC = ARGB.colorFromFloat(0.8F, 0.9F, 0.9F, 0.9F);
         final int colorD = ARGB.colorFromFloat(0.8F, 0.8F, 0.8F, 0.8F);
-        final BufferBuilder builder = Tesselator.getInstance().begin(pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
+
+        final ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(52 * 64 * 64 * DefaultVertexFormat.POSITION_COLOR.getVertexSize());
+        final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
         this.buildMesh(relativeCameraPos, builder, cellX, cellZ, colorA, colorB, colorC, colorD, cloudStatus == CloudStatus.FANCY);
+
         try (final MeshData meshData = builder.build()) {
             if (meshData == null) {
                 this.indexCount = 0;

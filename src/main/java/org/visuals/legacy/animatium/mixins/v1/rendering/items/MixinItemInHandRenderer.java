@@ -91,7 +91,7 @@ public abstract class MixinItemInHandRenderer {
 	@WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;isUsingItem()Z"))
 	private boolean animatium$fixDoubleBlockingVisual$itemUsageVisualInGUI(AbstractClientPlayer instance, Operation<Boolean> original) {
 		final boolean value = original.call(instance);
-		if (AnimatiumConfig.instance().fixes.fixItemUsageVisualInGUI && this.minecraft.screen != null) {
+		if (AnimatiumConfig.instance().fixes.fixItemUsageVisualInGUI && this.minecraft.gui.screen() != null) {
 			return false;
 		} else if (AnimatiumConfig.instance().fixes.fixDoubleUsageVisual) {
 			return value && this.minecraft.options.keyUse.isDown();

@@ -85,7 +85,7 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
             ConfigUtil.put("onboarding", true);
 
             final Minecraft minecraft = context.getSource().getClient();
-            minecraft.schedule(() -> minecraft.setScreen(new OnboardingScreen(minecraft.screen)));
+            minecraft.schedule(() -> minecraft.gui.setScreen(new OnboardingScreen(minecraft.gui.screen())));
 
             return Command.SINGLE_SUCCESS;
         }));
@@ -99,7 +99,7 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
         source.sendFeedback(Component.literal("Opening config menu...").withColor(new Random().nextInt(0xFFFFFF)));
 
         final Minecraft minecraft = source.getClient();
-        minecraft.schedule(() -> minecraft.setScreen(AnimatiumConfig.getConfigScreen(minecraft.screen)));
+        minecraft.schedule(() -> minecraft.gui.setScreen(AnimatiumConfig.getConfigScreen(minecraft.gui.screen())));
 
         return Command.SINGLE_SUCCESS;
     }

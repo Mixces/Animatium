@@ -58,7 +58,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
                 && livingEntityRenderState instanceof ArmedEntityRenderState armedEntityRenderState
                 && Utils.isSelf(armedEntityRenderState)
                 && !livingEntityRenderState.hasPose(Pose.SWIMMING) /* Disable Crawling/Swimming as it's wrong */
-                && (Minecraft.getInstance().screen == null /* Disable when in inventory/not in-game */)) {
+                && (Minecraft.getInstance().gui.screen() == null /* Disable when in inventory/not in-game */)) {
             final float cameraLerpValue = Utils.lerpCameraPosition(cameraRenderState);
             poseStack.translate(0.0F, (armedEntityRenderState.animatium$getStandingDimensions().eyeHeight() * livingEntityRenderState.scale) - cameraLerpValue, 0.0F);
         }

@@ -28,16 +28,18 @@ package org.visuals.legacy.animatium.mixins.v1.rendering;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.systems.CommandEncoder;
+import com.mojang.blaze3d.systems.GpuSurface;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.FilterMode;
+import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderPipelines;
-import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -50,8 +52,8 @@ import java.util.OptionalInt;
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft_ColorBoost {
     @Shadow
-    @Nullable
-    public Screen screen;
+    @Final
+    public Gui gui;
 
     @Unique
     private static final RenderPipeline animatium$boostPipeline = RenderPipelines.register(
@@ -64,17 +66,17 @@ public abstract class MixinMinecraft_ColorBoost {
                     .build()
     );
 
-    @WrapOperation(method = "renderFrame", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;blitToScreen()V"))
-    private void animatium$colorBoost(final RenderTarget instance, final Operation<Void> original) {
-        if (AnimatiumConfig.instance().extras.colorBoost && this.screen == null) {
-            try (final RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Color boost render target blit", instance.getColorTextureView(), OptionalInt.empty())) {
+    @WrapOperation(method = "renderFrame", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/GpuSurface;blitFromTexture(Lcom/mojang/blaze3d/systems/CommandEncoder;Lcom/mojang/blaze3d/textures/GpuTextureView;)V"))
+    private void animatium$colorBoost(final GpuSurface instance, final CommandEncoder commandEncoder, final GpuTextureView textureView, final Operation<Void> original) {
+        if (AnimatiumConfig.instance().extras.colorBoost && this.gui.screen() == null) {
+            try (final RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Color boost render target blit", textureView, OptionalInt.empty())) {
                 renderPass.setPipeline(animatium$boostPipeline);
                 RenderSystem.bindDefaultUniforms(renderPass);
-                renderPass.bindTexture("Sampler0", instance.getColorTextureView(), RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST));
+                renderPass.bindTexture("Sampler0", textureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST));
                 renderPass.draw(0, 3);
             }
         }
 
-        original.call(instance);
+        original.call(instance, commandEncoder, textureView);
     }
 }

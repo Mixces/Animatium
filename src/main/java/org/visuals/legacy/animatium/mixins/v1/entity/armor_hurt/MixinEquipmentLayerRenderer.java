@@ -30,8 +30,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.opengl.GlConst;
 import com.mojang.blaze3d.opengl.GlStateManager;
-import com.mojang.blaze3d.platform.DestFactor;
-import com.mojang.blaze3d.platform.SourceFactor;
+import com.mojang.blaze3d.platform.BlendFactor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.client.model.Model;
@@ -95,7 +94,7 @@ public abstract class MixinEquipmentLayerRenderer {
                 // TODO: Check if this code even does anything at all
                 // TODO: Too strong? & glint needs to be tinted hurt color
                 GlStateManager._enableBlend();
-                GlStateManager._blendFuncSeparate(GlConst.toGl(SourceFactor.SRC_ALPHA), GlConst.toGl(DestFactor.ONE_MINUS_SRC_ALPHA), GlConst.toGl(SourceFactor.SRC_ALPHA), GlConst.toGl(DestFactor.ONE_MINUS_SRC_ALPHA));
+                GlStateManager._blendFuncSeparate(GlConst.toGl(BlendFactor.SRC_ALPHA), GlConst.toGl(BlendFactor.ONE_MINUS_SRC_ALPHA), GlConst.toGl(BlendFactor.SRC_ALPHA), GlConst.toGl(BlendFactor.ONE_MINUS_SRC_ALPHA));
                 original.call(instance, model, renderState, poseStack, renderType, light, overlay, color, textureAtlasSprite, i, crumblingOverlay);
                 GlStateManager._disableBlend();
             }
