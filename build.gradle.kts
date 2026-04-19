@@ -148,9 +148,6 @@ dependencies {
         modImplementation("com.terraformersmc:modmenu:$prop") {
             exclude(group="net.fabricmc.fabric-api")
         }
-
-        modImplementation(fabricApi.module("fabric-screen-api-v1", deps.fabricApiVersion))
-        modImplementation(fabricApi.module("fabric-key-binding-api-v1", deps.fabricApiVersion))
     }
 
     optionalProp("deps.yacl_version") { prop ->
