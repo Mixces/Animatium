@@ -81,7 +81,7 @@ public abstract class MixinMinecraft_EquipUseLogic {
     @Final
     public GameRenderer gameRenderer;
 
-    @ModifyVariable(method = "startUseItem", at = @At("STORE"), name = "heldItem")
+    @ModifyVariable(method = "startUseItem", at = @At(value = "STORE", ordinal = 0))
     private ItemStack animatium$fixCopyStackUseItem(final ItemStack original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
             // Update the stack to match mutations to the stack in other classes
@@ -92,7 +92,7 @@ public abstract class MixinMinecraft_EquipUseLogic {
     }
 
     @WrapOperation(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V", ordinal = 2))
-    private void animatium$swingOnUse(final LocalPlayer instance, final InteractionHand hand, final Operation<Void> original, @Local(name = "heldItem") ItemStack itemStack) {
+    private void animatium$swingOnUse(final LocalPlayer instance, final InteractionHand hand, final Operation<Void> original, @Local(ordinal = 0) ItemStack itemStack) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.disableSwingOnUse && ItemUtils.isSwingItemBlacklisted(itemStack)) {
             Utils.sendSwingPacket(instance, hand);
         } else {
@@ -143,11 +143,11 @@ public abstract class MixinMinecraft_EquipUseLogic {
         }
     }
 
-    @Definition(id = "useResult", local = @Local(type = InteractionResult.class, name = "useResult"))
+    @Definition(id = "interactionResult2", local = @Local(type = InteractionResult.class, name = "interactionResult2"))
     @Definition(id = "Fail", type = InteractionResult.Fail.class)
-    @Expression("useResult instanceof Fail")
+    @Expression("interactionResult2 instanceof Fail")
     @Inject(method = "startUseItem", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.BEFORE))
-    private void animatium$oldEquipUse(final CallbackInfo ci, @Local(name = "heldItem") final ItemStack heldItem, @Local(name = "oldCount") final int oldCount, @Local(name = "hand") final InteractionHand hand) {
+    private void animatium$oldEquipUse(final CallbackInfo ci, @Local(ordinal = 0) final ItemStack heldItem, @Local(ordinal = 2) final int oldCount, @Local(ordinal = 0) final InteractionHand hand) {
         if (Animatium.isEnabled()
                 && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck
                 && !heldItem.isEmpty()
