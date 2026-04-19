@@ -193,6 +193,8 @@
 	"animatium.fixDoubleUsageVisual.description": "Fixes the double item usage issue on servers, usually found when you have high ping.",
 	"animatium.oldSkyRenderingCheck": "[*] Sky Rendering Check",
 	"animatium.oldSkyRenderingCheck.description": "Brings back the old render distance check for sky rendering, making it not render in <=4 render distance.",
+	"animatium.instantBed": "[*] Instant Bed",
+	"animatium.instantBed.description": "Makes bed placing appear instant instead of showing the head first, like in <=1.12.x.",
 
 	"animatium.category.other": "Other",
 	"animatium.thirdPersonSwordBlockingPosition": "[1.7] Third-person arm block animation",

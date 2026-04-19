@@ -116,11 +116,7 @@ public class Utils {
     // Sends necessary swing packets, without playing the player hand swing animation
     public void sendSwingPacket(final Player player, final InteractionHand hand) {
         if (isNotSwinging(player) && player.level() instanceof ServerLevel serverLevel) {
-            int swingHand = ClientboundAnimatePacket.SWING_MAIN_HAND;
-            if (hand == InteractionHand.OFF_HAND) {
-                swingHand = ClientboundAnimatePacket.SWING_OFF_HAND;
-            }
-
+            final int swingHand = hand == InteractionHand.MAIN_HAND ? ClientboundAnimatePacket.SWING_MAIN_HAND : ClientboundAnimatePacket.SWING_OFF_HAND;
             serverLevel.getChunkSource().sendToTrackingPlayers(player, new ClientboundAnimatePacket(player, swingHand));
         }
 
