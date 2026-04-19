@@ -106,7 +106,7 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
 
     private static void reload() {
         final Minecraft minecraft = Minecraft.getInstance();
-        minecraft.levelRenderer.allChanged();
+        minecraft.levelExtractor.allChanged();
         ((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
         Utils.reinitializeInventorySlots();
     }

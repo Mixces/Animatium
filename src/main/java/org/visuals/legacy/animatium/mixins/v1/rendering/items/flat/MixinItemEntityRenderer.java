@@ -45,7 +45,7 @@ import org.visuals.legacy.animatium.util.Utils;
 @Mixin(ItemEntityRenderer.class)
 public abstract class MixinItemEntityRenderer {
     @WrapOperation(method = "submit(Lnet/minecraft/client/renderer/entity/state/ItemEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;getSpin(FF)F"))
-    private float animatium$itemDropsFaceCamera(float age, float uniqueOffset, Operation<Float> original, @Local(argsOnly = true) ItemEntityRenderState itemEntityRenderState, @Local(argsOnly = true) CameraRenderState cameraRenderState) {
+    private float animatium$itemDropsFaceCamera(float age, float uniqueOffset, final Operation<Float> original, @Local(argsOnly = true) ItemEntityRenderState itemEntityRenderState, @Local(argsOnly = true) CameraRenderState cameraRenderState) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemDropsFaceCamera && !itemEntityRenderState.item.usesBlockLight()) {
             return Utils.toRadians(180.0F - cameraRenderState.animatium$getYRot());
         }

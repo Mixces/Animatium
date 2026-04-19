@@ -46,7 +46,7 @@ public abstract class MixinLevelRenderer_OldCloudRendering {
         LegacyCloudRenderer.INSTANCE.close();
     }
 
-    @WrapOperation(method = "allChanged", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CloudRenderer;markForRebuild()V"))
+    @WrapOperation(method = "invalidateCompiledGeometry", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CloudRenderer;markForRebuild()V"))
     private void animatium$markLegacyCloudsForRebuild$1(CloudRenderer instance, Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldCloudRendering) {
             LegacyCloudRenderer.INSTANCE.markForRebuild();
@@ -67,15 +67,6 @@ public abstract class MixinLevelRenderer_OldCloudRendering {
     @WrapOperation(method = "endFrame", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CloudRenderer;endFrame()V"))
     private void animatium$endLegacyCloudsFrame(CloudRenderer instance, Operation<Void> original) {
         if (!Animatium.isEnabled() || !AnimatiumConfig.instance().other.oldCloudRendering) {
-            original.call(instance);
-        }
-    }
-
-    @WrapOperation(method = "needsUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CloudRenderer;markForRebuild()V"))
-    private void animatium$markLegacyCloudsForRebuild$2(CloudRenderer instance, Operation<Void> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldCloudRendering) {
-            LegacyCloudRenderer.INSTANCE.markForRebuild();
-        } else {
             original.call(instance);
         }
     }

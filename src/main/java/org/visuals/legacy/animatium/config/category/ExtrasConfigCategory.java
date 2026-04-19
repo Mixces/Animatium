@@ -113,7 +113,7 @@ public class ExtrasConfigCategory extends Category {
         bundle.booleanEntry("disableFirstPersonParticles");
         bundle.booleanEntry("dontClearChat");
         bundle.booleanEntry("dontCloseChat");
-        bundle.booleanEntry("oldWaterColorEffects", (option, event) -> minecraft.levelRenderer.allChanged());
+        bundle.booleanEntry("oldWaterColorEffects", (option, event) -> minecraft.levelExtractor.allChanged());
         bundle.booleanEntry("colorBoost");
         bundle.booleanEntry("alwaysBlockingHeadCap");
 

@@ -41,7 +41,7 @@ import org.visuals.legacy.animatium.util.rendering.SkyRendererUtility;
 @Mixin(LevelRenderer.class)
 public abstract class MixinLevelRenderer_VoidBox {
     @Inject(method = "lambda$addSkyPass$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SkyRenderer;renderDarkDisc()V", shift = At.Shift.AFTER))
-    private static void animatium$renderVoidBox(GpuBufferSlice gpuBufferSlice, SkyRenderState skyRenderState, SkyRenderer skyRenderer, CallbackInfo ci) {
+    private static void animatium$renderVoidBox(final GpuBufferSlice gpuBufferSlice, final SkyRenderState skyRenderState, final CallbackInfo ci) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.playerVoidBox) {
             final Minecraft minecraft = Minecraft.getInstance();
             final float tickDelta = minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true);

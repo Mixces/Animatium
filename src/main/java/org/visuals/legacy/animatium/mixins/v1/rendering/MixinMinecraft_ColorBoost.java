@@ -27,6 +27,7 @@ package org.visuals.legacy.animatium.mixins.v1.rendering;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.mojang.blaze3d.pipeline.BindGroupLayout;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.CommandEncoder;
 import com.mojang.blaze3d.systems.GpuSurface;
@@ -61,7 +62,7 @@ public abstract class MixinMinecraft_ColorBoost {
                     .withLocation(Animatium.location("pipeline/colorboost"))
                     .withVertexShader("core/screenquad")
                     .withFragmentShader(Animatium.location("core/colorboost"))
-                    .withSampler("Sampler0")
+                    .withBindGroupLayout(BindGroupLayout.builder().withSampler("Sampler0").build())
                     .withVertexFormat(DefaultVertexFormat.EMPTY, VertexFormat.Mode.TRIANGLES)
                     .build()
     );

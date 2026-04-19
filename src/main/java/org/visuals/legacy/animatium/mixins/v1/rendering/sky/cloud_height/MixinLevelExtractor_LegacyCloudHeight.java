@@ -28,7 +28,7 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.sky.cloud_height;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.extract.LevelExtractor;
 import net.minecraft.world.attribute.EnvironmentAttribute;
 import net.minecraft.world.attribute.EnvironmentAttributeProbe;
 import org.jspecify.annotations.Nullable;
@@ -38,12 +38,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(LevelRenderer.class)
-public abstract class MixinLevelRenderer_LegacyCloudHeight {
+@Mixin(LevelExtractor.class)
+public abstract class MixinLevelExtractor_LegacyCloudHeight {
     @Shadow
     private @Nullable ClientLevel level;
 
-    @WrapOperation(method = "extractLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/attribute/EnvironmentAttributeProbe;getValue(Lnet/minecraft/world/attribute/EnvironmentAttribute;F)Ljava/lang/Object;", ordinal = 1))
+    @WrapOperation(method = "extract", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/attribute/EnvironmentAttributeProbe;getValue(Lnet/minecraft/world/attribute/EnvironmentAttribute;F)Ljava/lang/Object;", ordinal = 1))
     private <Value> Value animatium$cloudHeight(EnvironmentAttributeProbe instance, EnvironmentAttribute<Value> attribute, float partialTick, Operation<Value> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.cloudHeight && !this.level.dimensionType().hasCeiling()) {
             return (Value) (Object) 128.0F;

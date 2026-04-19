@@ -34,6 +34,7 @@ import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuSampler;
@@ -56,12 +57,14 @@ import org.lwjgl.system.MemoryStack;
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.mixins.accessor.GuiRendererAccessor;
 
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class ImmediateRenderer implements AutoCloseable {
     // Data
@@ -120,12 +123,15 @@ public class ImmediateRenderer implements AutoCloseable {
         this.setup = true;
     }
 
+    private GpuBuffer immediateDrawVertexBuffer;
+    private GpuBuffer immediateDrawIndexBuffer;
+
     public void setup(final MeshData meshData) {
         if (this.pipeline == null) {
             throw new RuntimeException("Cannot create mesh data without a pipeline bound!");
         } else {
             final int indexCount = meshData.drawState().indexCount();
-            final GpuBuffer vertexBuffer = this.pipeline.getVertexFormat().uploadImmediateVertexBuffer(meshData.vertexBuffer());
+            final GpuBuffer vertexBuffer = uploadImmediateVertexBuffer(meshData.vertexBuffer());
             GpuBuffer indexBuffer;
             VertexFormat.IndexType indexType;
             if (meshData.indexBuffer() == null) {
@@ -133,13 +139,40 @@ public class ImmediateRenderer implements AutoCloseable {
                 indexBuffer = autoStorageIndexBuffer.getBuffer(indexCount);
                 indexType = autoStorageIndexBuffer.type();
             } else {
-                indexBuffer = this.pipeline.getVertexFormat().uploadImmediateIndexBuffer(meshData.indexBuffer());
+                indexBuffer = uploadImmediateIndexBuffer(meshData.indexBuffer());
                 indexType = meshData.drawState().indexType();
             }
 
             this.setup(vertexBuffer, indexBuffer, indexType, indexCount);
         }
     }
+
+    private GpuBuffer uploadImmediateVertexBuffer(final ByteBuffer buffer) {
+        return this.immediateDrawVertexBuffer = uploadToBuffer(this.immediateDrawVertexBuffer, buffer, GpuBuffer.USAGE_VERTEX | GpuBuffer.USAGE_COPY_DST, () -> "Immediate vertex buffer for " + this.displayName);
+    }
+
+    private GpuBuffer uploadImmediateIndexBuffer(final ByteBuffer buffer) {
+        return this.immediateDrawIndexBuffer = uploadToBuffer(this.immediateDrawIndexBuffer, buffer, GpuBuffer.USAGE_INDEX | GpuBuffer.USAGE_COPY_DST, () -> "Immediate index buffer for " + this.displayName);
+    }
+
+    private static GpuBuffer uploadToBuffer(final @Nullable GpuBuffer target, final ByteBuffer buffer, final @GpuBuffer.Usage int usage, final Supplier<String> label) {
+        final GpuDevice device = RenderSystem.getDevice();
+
+        GpuBuffer result = target;
+        if (result == null) {
+            result = device.createBuffer(label, usage, buffer);
+        } else {
+            if (result.size() < buffer.remaining()) {
+                result.close();
+                result = device.createBuffer(label, usage, buffer);
+            } else {
+                device.createCommandEncoder().writeToBuffer(result.slice(), buffer);
+            }
+        }
+
+        return result;
+    }
+
 
     public void setup(final Consumer<VertexConsumer> renderConsumer, final int vertexCount) {
         if (this.pipeline == null) {
@@ -264,7 +297,7 @@ public class ImmediateRenderer implements AutoCloseable {
     }
 
     public void draw() {
-        drawTo(Minecraft.getInstance().getMainRenderTarget());
+        drawTo(Minecraft.getInstance().gameRenderer.mainRenderTarget());
     }
 
     public void drawGuiTo(final RenderTarget renderTarget) {
@@ -283,7 +316,7 @@ public class ImmediateRenderer implements AutoCloseable {
     }
 
     public void drawGui() {
-        drawGuiTo(Minecraft.getInstance().getMainRenderTarget());
+        drawGuiTo(Minecraft.getInstance().gameRenderer.mainRenderTarget());
     }
 
     private @Nullable GpuBufferSlice setupUniformsBuffer() {
