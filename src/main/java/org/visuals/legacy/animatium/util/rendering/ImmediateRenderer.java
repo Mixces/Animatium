@@ -266,14 +266,10 @@ public class ImmediateRenderer implements AutoCloseable {
             final GpuTextureView depthTextureView = renderTarget.useDepth ? (RenderSystem.outputDepthTextureOverride != null ? RenderSystem.outputDepthTextureOverride : renderTarget.getDepthTextureView()) : null;
             final GpuBufferSlice transforms = this.dynamicTransforms.buffer();
             final GpuBufferSlice uniformData = this.setupUniformsBuffer();
-            try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> this.displayName, colorTextureView, OptionalInt.empty(), depthTextureView, OptionalDouble.empty())) {
-                IntBuffer viewportBuffer = null;
-                if (this.viewport != null) {
-                    viewportBuffer = BufferUtils.createIntBuffer(4);
-                    GL11.glGetIntegerv(GL11.GL_VIEWPORT, viewportBuffer);
-                    GlStateManager._viewport(this.viewport.x, this.viewport.y, this.viewport.z, this.viewport.w);
-                }
-
+            final RenderPass.RenderArea renderArea = this.viewport != null
+                    ? new RenderPass.RenderArea(this.viewport.x, this.viewport.y, this.viewport.z, this.viewport.w)
+                    : new RenderPass.RenderArea(0, 0, colorTextureView.getWidth(0), colorTextureView.getHeight(0));
+            try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> this.displayName, colorTextureView, OptionalInt.empty(), depthTextureView, OptionalDouble.empty(), renderArea)) {
                 renderPass.setPipeline(this.pipeline);
                 renderPass.setVertexBuffer(0, this.vertexBuffer);
                 renderPass.setIndexBuffer(this.indexBuffer, this.indexType);
@@ -289,9 +285,6 @@ public class ImmediateRenderer implements AutoCloseable {
                 }
 
                 renderPass.drawIndexed(0, 0, this.indexCount, 1);
-                if (viewportBuffer != null) {
-                    GlStateManager._viewport(viewportBuffer.get(), viewportBuffer.get(), viewportBuffer.get(), viewportBuffer.get());
-                }
             }
         }
     }

@@ -39,6 +39,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderPipelines;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -48,6 +49,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
+import java.util.OptionalDouble;
 import java.util.OptionalInt;
 
 @Mixin(Minecraft.class)
@@ -55,6 +57,10 @@ public abstract class MixinMinecraft_ColorBoost {
     @Shadow
     @Final
     public Gui gui;
+
+    @Shadow
+    @Final
+    public GameRenderer gameRenderer;
 
     @Unique
     private static final RenderPipeline animatium$boostPipeline = RenderPipelines.register(
@@ -70,7 +76,7 @@ public abstract class MixinMinecraft_ColorBoost {
     @WrapOperation(method = "renderFrame", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/GpuSurface;blitFromTexture(Lcom/mojang/blaze3d/systems/CommandEncoder;Lcom/mojang/blaze3d/textures/GpuTextureView;)V"))
     private void animatium$colorBoost(final GpuSurface instance, final CommandEncoder commandEncoder, final GpuTextureView textureView, final Operation<Void> original) {
         if (AnimatiumConfig.instance().extras.colorBoost && this.gui.screen() == null) {
-            try (final RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Color boost render target blit", textureView, OptionalInt.empty())) {
+            try (final RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Color boost render target blit", textureView, OptionalInt.empty(), this.gameRenderer.mainRenderTarget().getDepthTextureView(), OptionalDouble.empty())) {
                 renderPass.setPipeline(animatium$boostPipeline);
                 RenderSystem.bindDefaultUniforms(renderPass);
                 renderPass.bindTexture("Sampler0", textureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST));

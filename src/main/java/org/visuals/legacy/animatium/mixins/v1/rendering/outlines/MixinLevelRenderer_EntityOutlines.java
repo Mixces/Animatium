@@ -48,9 +48,9 @@ public abstract class MixinLevelRenderer_EntityOutlines {
     @Unique
     private GpuTextureView animatium$blankTextureView = null;
 
-    @WrapOperation(method = "doEntityOutline", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;blitAndBlendToTexture(Lcom/mojang/blaze3d/textures/GpuTextureView;)V"))
-    private void animatium$entityGlowOutline(RenderTarget instance, GpuTextureView gpuTextureView, Operation<Void> original) {
-        GpuTextureView textureView = gpuTextureView;
+    @WrapOperation(method = "doEntityOutline", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;blitAndBlendToTexture(Lcom/mojang/blaze3d/textures/GpuTextureView;Lcom/mojang/blaze3d/textures/GpuTextureView;)V"))
+    private void animatium$entityGlowOutline(RenderTarget instance, GpuTextureView colorTexture, GpuTextureView depthTexture, final Operation<Void> original) {
+        GpuTextureView textureView = colorTexture;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.disableEntityGlowOutline) {
             final GpuDevice device = RenderSystem.getDevice();
             if (this.animatium$blankTexture == null) {
@@ -64,6 +64,6 @@ public abstract class MixinLevelRenderer_EntityOutlines {
             textureView = this.animatium$blankTextureView;
         }
 
-        original.call(instance, textureView);
+        original.call(instance, textureView, depthTexture);
     }
 }

@@ -27,7 +27,6 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.items.flat;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.feature.ItemFeatureRenderer;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.Direction;
@@ -50,8 +49,8 @@ public abstract class MixinItemFeatureRenderer {
     @Unique
     private static boolean animatium$blocksLight = false;
 
-    @WrapOperation(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeStorage$ItemSubmit;quads()Ljava/util/List;"))
-    private static List<BakedQuad> animatium$itemDrops2D(final SubmitNodeStorage.ItemSubmit instance, final Operation<List<BakedQuad>> original) {
+    @WrapOperation(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/feature/ItemFeatureRenderer$Submit;quads()Ljava/util/List;"))
+    private static List<BakedQuad> animatium$itemDrops2D(final ItemFeatureRenderer.Submit instance, final Operation<List<BakedQuad>> original) {
         // animatium$displayContext = displayContext;
         // TODO 26.1: animatium$blocksLight = renderType.pipeline() == RenderPipelines.ENTITY_CUTOUT; // TODO: not entirely accurate
         final List<BakedQuad> quads = original.call(instance);

@@ -226,19 +226,19 @@ public abstract class MixinItemInHandRenderer {
         }
     }
 
-    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;shouldInstantlyReplaceVisibleItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z", ordinal = 0))
-    private boolean animatium$fixEquipAnimationItemCheck2(final ItemInHandRenderer instance, final ItemStack itemStack, final ItemStack itemStack2, final Operation<Boolean> original, @Local LocalPlayer localPlayer) {
+    @WrapOperation(method = "synchronizeVisibleHandItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;shouldInstantlyReplaceVisibleItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z", ordinal = 0))
+    private boolean animatium$fixEquipAnimationItemCheck2(final ItemInHandRenderer instance, final ItemStack itemStack, final ItemStack itemStack2, final Operation<Boolean> original) {
         final boolean value = original.call(instance, itemStack, itemStack2);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
             // Apply our equip logic fix to offhand items
-            final boolean slotsMatch = this.animatium$currentSlot == localPlayer.getInventory().getSelectedSlot();
+            final boolean slotsMatch = this.animatium$currentSlot == this.minecraft.player.getInventory().getSelectedSlot();
             return (slotsMatch && ItemUtils.shouldInstantlyReplaceVisibleItem1_8(itemStack, itemStack2)) || value;
         } else {
             return value;
         }
     }
 
-    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;shouldInstantlyReplaceVisibleItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z", ordinal = 1))
+    @WrapOperation(method = "synchronizeVisibleHandItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;shouldInstantlyReplaceVisibleItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z", ordinal = 1))
     private boolean animatium$fixEquipAnimationItemCheck(final ItemInHandRenderer instance, final ItemStack itemStack, final ItemStack itemStack2, final Operation<Boolean> original) {
         final boolean value = original.call(instance, itemStack, itemStack2);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
@@ -249,7 +249,7 @@ public abstract class MixinItemInHandRenderer {
         }
     }
 
-    @ModifyExpressionValue(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;mainHandItem:Lnet/minecraft/world/item/ItemStack;", ordinal = 1))
+    @ModifyExpressionValue(method = "synchronizeVisibleHandItems", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;mainHandItem:Lnet/minecraft/world/item/ItemStack;"))
     private ItemStack animatium$useCopyStackField(final ItemStack original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
             // Use the copy stack field for the stack comparison

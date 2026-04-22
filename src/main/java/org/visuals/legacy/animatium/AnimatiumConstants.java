@@ -33,16 +33,16 @@ import org.visuals.legacy.animatium.packet.InfoPayloadPacket;
 
 @UtilityClass
 public class AnimatiumConstants {
-	public final String MOD_ID = "@MODID@";
-	@SuppressWarnings("DataFlowIssue")
+    public final String MOD_ID = "@MODID@";
+    @SuppressWarnings("DataFlowIssue")
     public final Double VERSION = Double.parseDouble("@VERSION@");
-	public final String DEVELOPMENT_VERSION = "@COMMIT@";
-	public final boolean IS_DEVELOPMENT = Boolean.parseBoolean("@DEVELOPMENT@");
+    public final String DEVELOPMENT_VERSION = "@COMMIT@";
+    public final boolean IS_DEVELOPMENT = Boolean.parseBoolean("@DEVELOPMENT@");
 
-	public final Identifier FAST_GRASS_MODEL_LOCATION = Animatium.location("block/fast_grass_block");
-	public final ExtraModelKey<BlockStateModel> FAST_GRASS_MODEL_KEY = ExtraModelKey.create(FAST_GRASS_MODEL_LOCATION::toString);
+    public final Identifier FAST_GRASS_MODEL_LOCATION = Animatium.location("block/fast_grass_block");
+    public final ExtraModelKey<BlockStateModel> FAST_GRASS_MODEL_KEY = ExtraModelKey.create(FAST_GRASS_MODEL_LOCATION::toString);
 
-	public InfoPayloadPacket getInfoPayload() {
-		return new InfoPayloadPacket(VERSION, IS_DEVELOPMENT ? DEVELOPMENT_VERSION : null);
-	}
+    public InfoPayloadPacket getInfoPayload() {
+        return new InfoPayloadPacket(VERSION, IS_DEVELOPMENT ? DEVELOPMENT_VERSION : null);
+    }
 }
