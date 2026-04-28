@@ -27,16 +27,16 @@ package org.visuals.legacy.animatium.mixins.v1.entity.nametag;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.renderer.feature.NameTagFeatureRenderer;
+import net.minecraft.client.renderer.SubmitNodeCollection;
 import net.minecraft.client.renderer.state.OptionsRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(NameTagFeatureRenderer.Storage.class)
-public abstract class MixinNameTagFeatureStorage {
-    @WrapOperation(method = "add", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/state/OptionsRenderState;getBackgroundOpacity(F)F"))
+@Mixin(SubmitNodeCollection.class)
+public abstract class MixinSubmitNodeCollection {
+    @WrapOperation(method = "submitNameTag", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/state/OptionsRenderState;getBackgroundOpacity(F)F"))
     private float animatium$nameTagBackground(OptionsRenderState instance, float defaultOpacity, Operation<Float> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.hideNameTagBackground) {
             return 0F;

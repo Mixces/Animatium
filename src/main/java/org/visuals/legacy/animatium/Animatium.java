@@ -30,6 +30,7 @@ import lombok.experimental.UtilityClass;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenEntries;
+import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.resources.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,49 +45,54 @@ import java.util.EnumSet;
 
 @UtilityClass
 public final class Animatium {
-	public static final EnumSet<ServerFeature> ENABLED_SERVER_FEATURES = EnumSet.noneOf(ServerFeature.class);
-	@Getter
-	private final Logger logger = LogManager.getLogger(Animatium.class);
-	@Getter
-	private boolean enabled = true;
+    public static final EnumSet<ServerFeature> ENABLED_SERVER_FEATURES = EnumSet.noneOf(ServerFeature.class);
+    @Getter
+    private final Logger logger = LogManager.getLogger(Animatium.class);
+    @Getter
+    private boolean enabled = true;
 
-	public void setEnabled(final boolean enabled) {
-		Animatium.enabled = enabled;
-		ConfigUtil.put("enabled", enabled);
-	}
+    public void setEnabled(final boolean enabled) {
+        Animatium.enabled = enabled;
+        ConfigUtil.put("enabled", enabled);
+    }
 
-	public boolean hasServerFeature(final ServerFeature feature) {
-		if (Minecraft.getInstance().isSingleplayer()) {
-			for (final EntryBundle.Entry<?> entry : ConfigBundles.EXTRAS.entries()) {
-				if (entry.name.equals(feature.getName())) {
-					return (boolean) entry.value();
-				}
-			}
+    public boolean hasServerFeature(final ServerFeature feature) {
+        if (isSingleplayer()) {
+            for (final EntryBundle.Entry<?> entry : ConfigBundles.EXTRAS.entries()) {
+                if (entry.name.equals(feature.getName())) {
+                    return (boolean) entry.value();
+                }
+            }
 
-			return false;
-		} else {
-			return ENABLED_SERVER_FEATURES.contains(ServerFeature.ALL) || ENABLED_SERVER_FEATURES.contains(feature);
-		}
-	}
+            return false;
+        } else {
+            return ENABLED_SERVER_FEATURES.contains(ServerFeature.ALL) || ENABLED_SERVER_FEATURES.contains(feature);
+        }
+    }
 
-	public Identifier location(final String path) {
-		return Identifier.fromNamespaceAndPath(AnimatiumConstants.MOD_ID, path);
-	}
+    private static boolean isSingleplayer() {
+        final IntegratedServer server = Minecraft.getInstance().getSingleplayerServer();
+        return server != null && server.isSingleplayer();
+    }
 
-	public void initialize() {
-		if (AnimatiumConstants.IS_DEVELOPMENT) {
-			SharedConstants.IS_RUNNING_IN_IDE = true;
-		}
+    public Identifier location(final String path) {
+        return Identifier.fromNamespaceAndPath(AnimatiumConstants.MOD_ID, path);
+    }
 
-		AnimatiumConfig.load();
-		try {
-			ConfigUtil.load();
-			System.err.println("Successfully loaded the animatium utility config!");
-		} catch (Exception ignored) {
-			enabled = ConfigUtil.bool("enabled");
-			System.err.println("Failed to load animatium utility config, defaulting...");
-		}
+    public void initialize() {
+        if (AnimatiumConstants.IS_DEVELOPMENT) {
+            SharedConstants.IS_RUNNING_IN_IDE = true;
+        }
 
-		DebugScreenEntries.register(AnimatiumDebugEntry.GROUP, new AnimatiumDebugEntry());
-	}
+        AnimatiumConfig.load();
+        try {
+            ConfigUtil.load();
+            System.err.println("Successfully loaded the animatium utility config!");
+        } catch (Exception ignored) {
+            enabled = ConfigUtil.bool("enabled");
+            System.err.println("Failed to load animatium utility config, defaulting...");
+        }
+
+        DebugScreenEntries.register(AnimatiumDebugEntry.GROUP, new AnimatiumDebugEntry());
+    }
 }

@@ -30,7 +30,6 @@ import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.buffers.Std140Builder;
 import com.mojang.blaze3d.buffers.Std140SizeCalculator;
-import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.Window;
@@ -45,20 +44,16 @@ import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.Projection;
-import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.mixins.accessor.GuiRendererAccessor;
 
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.OptionalDouble;
@@ -68,8 +63,8 @@ import java.util.function.Supplier;
 
 public class ImmediateRenderer implements AutoCloseable {
     // Data
-    private final Map<String, RenderSetup.TextureAndSampler> textures;
-    private final Map<String, Uniform> uniforms;
+    private final Map<String, TextureAndSampler> textures;
+    private final Map<String, Uniform<?>> uniforms;
 
     @Getter
     @Setter
@@ -187,12 +182,12 @@ public class ImmediateRenderer implements AutoCloseable {
     }
 
     public void setTexture(int id, GpuTextureView textureView, GpuSampler sampler) {
-        this.textures.put("Sampler" + id, new RenderSetup.TextureAndSampler(textureView, sampler));
+        this.textures.put("Sampler" + id, new TextureAndSampler(textureView, sampler));
     }
 
     public void setTexture(int id, Identifier resourceLocation) {
         final AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(resourceLocation);
-        this.textures.put("Sampler" + id, new RenderSetup.TextureAndSampler(texture.getTextureView(), texture.getSampler()));
+        this.textures.put("Sampler" + id, new TextureAndSampler(texture.getTextureView(), texture.getSampler()));
     }
 
     public void setTextures(TextureSetup textureSetup) {
@@ -273,9 +268,9 @@ public class ImmediateRenderer implements AutoCloseable {
                 renderPass.setPipeline(this.pipeline);
                 renderPass.setVertexBuffer(0, this.vertexBuffer);
                 renderPass.setIndexBuffer(this.indexBuffer, this.indexType);
-                for (Map.Entry<String, RenderSetup.TextureAndSampler> entry : this.textures.entrySet()) {
-                    final RenderSetup.TextureAndSampler textureAndSampler = entry.getValue();
-                    renderPass.bindTexture(entry.getKey(), textureAndSampler.textureView(), textureAndSampler.sampler());
+                for (Map.Entry<String, TextureAndSampler> entry : this.textures.entrySet()) {
+                    final TextureAndSampler textureAndSampler = entry.getValue();
+                    renderPass.bindTexture(entry.getKey(), textureAndSampler.textureView, textureAndSampler.sampler);
                 }
 
                 RenderSystem.bindDefaultUniforms(renderPass);
@@ -475,4 +470,6 @@ public class ImmediateRenderer implements AutoCloseable {
             MATRIX4F
         }
     }
+
+    private record TextureAndSampler(GpuTextureView textureView, GpuSampler sampler) {}
 }

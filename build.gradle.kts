@@ -142,7 +142,9 @@ dependencies {
     modImplementation(fabricApi.module("fabric-resource-loader-v0", deps.fabricApiVersion!!))
     modImplementation(fabricApi.module("fabric-networking-api-v1", deps.fabricApiVersion))
     modImplementation(fabricApi.module("fabric-command-api-v2", deps.fabricApiVersion))
-    modImplementation(fabricApi.module("fabric-model-loading-api-v1", deps.fabricApiVersion))
+    //		"fabric-model-loading-api-v1": "*",
+//    modImplementation(fabricApi.module("fabric-model-loading-api-v1", deps.fabricApiVersion))
+    modImplementation(fabricApi.module("fabric-transitive-access-wideners-v1", deps.fabricApiVersion)) // TEMP 26.2
 
     optionalProp("deps.modmenu_version") { prop ->
         modImplementation("com.terraformersmc:modmenu:$prop") {

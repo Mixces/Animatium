@@ -29,6 +29,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.resources.model.cuboid.ItemTransform;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
@@ -46,6 +48,9 @@ import org.visuals.legacy.animatium.util.ItemUtils;
 import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Mixin(ItemStackRenderState.LayerRenderState.class)
 public abstract class MixinItemStackRenderLayerState {
     @Shadow
@@ -54,6 +59,18 @@ public abstract class MixinItemStackRenderLayerState {
     @Shadow(aliases = "this$0")
     @Final
     ItemStackRenderState itemStackRenderState;
+
+    @Shadow
+    private boolean usesBlockLight;
+
+    @ModifyArg(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemDisplayContext;III[ILjava/util/List;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"), index = 6)
+    private List<BakedQuad> animatium$itemDrops2D(final List<BakedQuad> quads) {
+        if (Animatium.isEnabled() && animatium$isTransformationModeValid() && !this.usesBlockLight) {
+            return quads.stream().filter(baked -> baked.direction() == Direction.SOUTH).collect(Collectors.toList());
+        } else {
+            return quads;
+        }
+    }
 
     @ModifyArg(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemDisplayContext;III[ILjava/util/List;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"), index = 7)
     private ItemStackRenderState.FoilType animatium$disableGlintOn2DItems(final ItemStackRenderState.FoilType foilType) {
@@ -124,5 +141,12 @@ public abstract class MixinItemStackRenderLayerState {
         localPose.mulPose(Axis.YP.rotationDegrees(-Utils.toRadians(this.itemTransform.rotation().y())).get(new Matrix4f()));
         localPose.mulPose(Axis.XP.rotationDegrees(-Utils.toRadians(this.itemTransform.rotation().z())).get(new Matrix4f()));
         localPose.translate(-this.itemTransform.translation().x(), -this.itemTransform.translation().y(), -this.itemTransform.translation().z());
+    }
+
+    @Unique
+    private boolean animatium$isTransformationModeValid() {
+        final boolean itemDrops2D = AnimatiumConfig.instance().items.itemDrops2D;
+        final boolean itemFramed2D = AnimatiumConfig.instance().items.itemFramed2D;
+        return (itemDrops2D && this.itemStackRenderState.displayContext == ItemDisplayContext.GROUND) || (itemFramed2D && this.itemStackRenderState.displayContext == ItemDisplayContext.FIXED);
     }
 }

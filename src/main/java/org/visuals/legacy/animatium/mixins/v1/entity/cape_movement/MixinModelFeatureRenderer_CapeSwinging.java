@@ -26,10 +26,7 @@
 package org.visuals.legacy.animatium.mixins.v1.entity.cape_movement;
 
 import net.minecraft.client.model.player.PlayerCapeModel;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.OutlineBufferSource;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.rendertype.RenderType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -39,10 +36,10 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(ModelFeatureRenderer.class)
 public abstract class MixinModelFeatureRenderer_CapeSwinging {
-	@Inject(method = "renderModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/Model;setupAnim(Ljava/lang/Object;)V", shift = At.Shift.AFTER))
-	private <S> void animatium$capeSwingRotation(final ModelFeatureRenderer.Submit<S> submit, final RenderType renderType, final MultiBufferSource bufferSource, final OutlineBufferSource outlineBufferSource, final CallbackInfo ci) {
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.disableCapeSwingRotation && submit.model() instanceof PlayerCapeModel playerCapeModel) {
-			playerCapeModel.body.yRot = 0;
-		}
-	}
+    @Inject(method = "prepareModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/Model;setupAnim(Ljava/lang/Object;)V", shift = At.Shift.AFTER))
+    private <S> void animatium$capeSwingRotation(final ModelFeatureRenderer.Submit<S> submit, final CallbackInfo ci) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.disableCapeSwingRotation && submit.model() instanceof PlayerCapeModel playerCapeModel) {
+            playerCapeModel.body.yRot = 0;
+        }
+    }
 }

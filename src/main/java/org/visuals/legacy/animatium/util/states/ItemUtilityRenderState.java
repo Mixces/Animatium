@@ -29,10 +29,9 @@ import net.minecraft.world.item.ItemStack;
 
 public interface ItemUtilityRenderState {
     default ItemStack animatium$getItemStack() {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     default void animatium$setItemStack(final ItemStack itemStack) {
-        throw new UnsupportedOperationException();
     }
 }

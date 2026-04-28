@@ -88,7 +88,7 @@ public abstract class MixinItemInHandRenderer {
     @Shadow
     protected abstract boolean shouldInstantlyReplaceVisibleItem(ItemStack itemStack, ItemStack itemStack2);
 
-    @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;isUsingItem()Z"))
+    @WrapOperation(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;isUsingItem()Z"))
     private boolean animatium$fixDoubleBlockingVisual$itemUsageVisualInGUI(AbstractClientPlayer instance, Operation<Boolean> original) {
         final boolean value = original.call(instance);
         if (AnimatiumConfig.instance().fixes.fixItemUsageVisualInGUI && this.minecraft.gui.screen() != null) {
@@ -100,7 +100,7 @@ public abstract class MixinItemInHandRenderer {
         }
     }
 
-    @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V", ordinal = 1))
+    @WrapOperation(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V", ordinal = 1))
     private void animatium$postBowTransform(PoseStack poseStack, float x, float y, float z, Operation<Void> original, @Local(argsOnly = true) AbstractClientPlayer player, @Local(argsOnly = true) InteractionHand hand) {
         final int direction = Utils.getHandMultiplier(player, hand);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemPositions) {
@@ -119,7 +119,7 @@ public abstract class MixinItemInHandRenderer {
     @Definition(id = "getItem", method = "Lnet/minecraft/world/item/ItemStack;getItem()Lnet/minecraft/world/item/Item;")
     @Definition(id = "ShieldItem", type = ShieldItem.class)
     @Expression("item.getItem() instanceof ShieldItem")
-    @ModifyExpressionValue(method = "renderArmWithItem", at = @At("MIXINEXTRAS:EXPRESSION"))
+    @ModifyExpressionValue(method = "submitArmWithItem", at = @At("MIXINEXTRAS:EXPRESSION"))
     private boolean animatium$oldFirstPersonSwordBlock(final boolean original, @Local(argsOnly = true) AbstractClientPlayer player, @Local(argsOnly = true) InteractionHand hand, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) PoseStack poseStack) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemPositions && !(stack.getItem() instanceof ShieldItem)) {
             final int direction = Utils.getHandMultiplier(player, hand);
@@ -136,7 +136,7 @@ public abstract class MixinItemInHandRenderer {
         }
     }
 
-    @Inject(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V"))
+    @Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V"))
     private void animatium$itemPositions(final AbstractClientPlayer player, final float partialTick, final float pitch, final InteractionHand hand, final float swingProgress, final ItemStack item, final float equippedProgress, final PoseStack poseStack, final SubmitNodeCollector nodeCollector, final int packedLight, final CallbackInfo ci) {
         final int direction = Utils.getHandMultiplier(player, hand);
         if (Animatium.isEnabled()) {
@@ -180,7 +180,7 @@ public abstract class MixinItemInHandRenderer {
         }
     }
 
-    @Inject(method = "renderArmWithItem",
+    @Inject(method = "submitArmWithItem",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;applyItemArmTransform(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/HumanoidArm;F)V", shift = At.Shift.AFTER),
             slice = @Slice(
                     from = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/ItemUseAnimation;"),
@@ -280,9 +280,10 @@ public abstract class MixinItemInHandRenderer {
         }
     }
 
-    @ModifyArg(method = "renderHandsWithItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderArmWithItem(Lnet/minecraft/client/player/AbstractClientPlayer;FFLnet/minecraft/world/InteractionHand;FLnet/minecraft/world/item/ItemStack;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V", ordinal = 0), index = 5)
+    @ModifyArg(method = "submitHandsWithItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;submitArmWithItem(Lnet/minecraft/client/player/AbstractClientPlayer;FFLnet/minecraft/world/InteractionHand;FLnet/minecraft/world/item/ItemStack;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V", ordinal = 0), index = 5)
     private ItemStack animatium$useCopyStackFieldForRender(final ItemStack original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
+        // TODO/NOTE: 26.2 makes the item persist in hand even when empty (temp check added)
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck && !original.isEmpty()) {
             // Use our copied stack field for hand animations
             return animatium$mainHandItem;
         } else {
@@ -290,7 +291,7 @@ public abstract class MixinItemInHandRenderer {
         }
     }
 
-    @ModifyArg(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V"), index = 1)
+    @ModifyArg(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V"), index = 1)
     private ItemStack animatium$useActualStackForRender(final ItemStack original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
             // Use the original stack for rendering to avoid rendering issues
@@ -300,7 +301,7 @@ public abstract class MixinItemInHandRenderer {
         }
     }
 
-    @ModifyExpressionValue(method = {"renderOneHandedMap", "renderTwoHandedMap", "renderArmWithItem"}, at = {
+    @ModifyExpressionValue(method = {"renderOneHandedMap", "renderTwoHandedMap", "submitArmWithItem"}, at = {
             @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;isInvisible()Z"),
             @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isInvisible()Z")
     })
