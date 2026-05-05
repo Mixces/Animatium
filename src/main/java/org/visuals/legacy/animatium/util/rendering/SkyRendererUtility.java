@@ -25,6 +25,7 @@
 
 package org.visuals.legacy.animatium.util.rendering;
 
+import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -50,7 +51,8 @@ public class SkyRendererUtility {
                     .withVertexShader("core/position")
                     .withFragmentShader("core/position")
                     .withDepthStencilState(RenderUtils.NO_DEPTH_WRITE)
-                    .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
+                    .withVertexBinding(0, DefaultVertexFormat.POSITION)
+                    .withPrimitiveTopology(PrimitiveTopology.QUADS)
                     .buildSnippet();
 
     public final RenderPipeline VOID_BOX_PIPELINE =
@@ -64,7 +66,8 @@ public class SkyRendererUtility {
                     .withVertexShader(Animatium.location("core/legacy_sky"))
                     .withFragmentShader(Animatium.location("core/legacy_sky"))
                     .withDepthStencilState(RenderUtils.NO_DEPTH_WRITE)
-                    .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
+                    .withVertexBinding(0, DefaultVertexFormat.POSITION)
+                    .withPrimitiveTopology(PrimitiveTopology.QUADS)
                     .buildSnippet();
 
     public final RenderPipeline LEGACY_SKY_PIPELINE =
@@ -80,30 +83,25 @@ public class SkyRendererUtility {
 
     private ImmediateRenderer blueVoidRenderer;
     private ImmediateRenderer voidBoxRenderer;
-    private GpuBuffer vertexBuffer = null;
+    private final GpuBuffer vertexBuffer = initializeSky((builder) -> buildSkyHalf(builder, -16.0F, true));
     private int indexCount = -1;
 
     static {
         IrisUtil.assignPipeline(IrisPipeline.SKY_BASIC, LEGACY_SKY_PIPELINE, LEGACY_SKY_PLANAR_FOG_PIPELINE);
     }
 
-    public RenderPipeline getLegacySkyPipeline(boolean planar) {
+    public RenderPipeline getLegacySkyPipeline(final boolean planar) {
         return planar ? LEGACY_SKY_PLANAR_FOG_PIPELINE : LEGACY_SKY_PIPELINE;
     }
 
     public GpuBuffer getGpuBuffer() {
-        if (vertexBuffer == null) {
-            vertexBuffer = initializeSky((builder) -> buildSkyHalf(builder, -16.0F, true));
-        }
-
         return vertexBuffer;
     }
 
-    public void renderBlueVoid(int skyColor, double depth) {
+    public void renderBlueVoid(final int skyColor, final double depth) {
         final Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
         modelViewStack.pushMatrix();
         modelViewStack.translate(0.0F, AnimatiumConfig.instance().extras.dontMoveBlueVoid ? 12.0F : -((float) (depth - 16.0)), 0.0F);
-
         if (blueVoidRenderer == null) {
             blueVoidRenderer = ImmediateRenderer.of("Blue void sky disc");
         }
@@ -111,7 +109,7 @@ public class SkyRendererUtility {
         final RenderPipeline pipeline = getLegacySkyPipeline(AnimatiumConfig.instance().other.planarSkyFog);
         blueVoidRenderer.setPipeline(pipeline);
 
-        final RenderSystem.AutoStorageIndexBuffer quadsIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.getVertexFormatMode());
+        final RenderSystem.AutoStorageIndexBuffer quadsIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.getPrimitiveTopology());
         blueVoidRenderer.setup(getGpuBuffer(), quadsIndexBuffer.getBuffer(indexCount), quadsIndexBuffer.type(), indexCount);
 
         blueVoidRenderer.setDynamicTransforms(blueVoidRenderer.getDynamicTransforms().withShaderColor(new Vector4f(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F, 1.0F)));
@@ -120,7 +118,7 @@ public class SkyRendererUtility {
         modelViewStack.popMatrix();
     }
 
-    public void buildSkyHalf(VertexConsumer vertexConsumer, float y, boolean bottom) {
+    public void buildSkyHalf(final VertexConsumer vertexConsumer, final float y, final boolean bottom) {
         final int width = 64;
         for (int k = -384; k <= 384; k += width) {
             for (int l = -384; l <= 384; l += width) {
@@ -141,21 +139,21 @@ public class SkyRendererUtility {
         }
     }
 
-    public GpuBuffer initializeSky(Consumer<BufferBuilder> bufferBuilderConsumer) {
+    public GpuBuffer initializeSky(final Consumer<BufferBuilder> bufferBuilderConsumer) {
         try (ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(8112)) {
-            final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+            final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, PrimitiveTopology.QUADS, DefaultVertexFormat.POSITION);
             bufferBuilderConsumer.accept(builder);
             try (MeshData meshData = builder.buildOrThrow()) {
                 indexCount = meshData.drawState().indexCount();
                 return RenderSystem.getDevice().createBuffer(() -> "Static sky vertex buffer", GpuBuffer.USAGE_VERTEX, meshData.vertexBuffer());
-            } catch (Exception ignored) {
+            } catch (final Exception ignored) {
                 return null;
             }
         }
     }
 
     // TODO/NOTE: Figure out why its rendering differently than in 18w07a (last snapshot to have it)
-    public void renderVoidBox(double depth) {
+    public void renderVoidBox(final double depth) {
         if (voidBoxRenderer == null) {
             voidBoxRenderer = ImmediateRenderer.of("Player Void Box");
             voidBoxRenderer.setPipeline(VOID_BOX_PIPELINE);
@@ -198,7 +196,7 @@ public class SkyRendererUtility {
         voidBoxRenderer.draw();
     }
 
-    public double getHorizonEyeHeight(ClientLevel level, float tickDelta) {
+    public double getHorizonEyeHeight(final ClientLevel level, final float tickDelta) {
         return Minecraft.getInstance().player.getEyePosition(tickDelta).y - level.getLevelData().getHorizonHeight(level);
     }
 

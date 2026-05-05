@@ -25,6 +25,7 @@
 
 package org.visuals.legacy.animatium.util.rendering.panorama;
 
+import com.mojang.blaze3d.GpuFormat;
 import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
@@ -49,7 +50,7 @@ public class BlurPassTexture {
 					.withLocation(Animatium.location("pipeline/legacy_panorama_blur"))
 					.withVertexShader(Animatium.location("core/legacy_panorama_blur"))
 					.withFragmentShader(Animatium.location("core/legacy_panorama_blur"))
-                    .withColorTargetState(new ColorTargetState(Optional.of(PanoramaPipelines.PANORAMA_BLEND), ColorTargetState.WRITE_COLOR))
+                    .withColorTargetState(new ColorTargetState(Optional.of(PanoramaPipelines.PANORAMA_BLEND), GpuFormat.RGBA8_UNORM, ColorTargetState.WRITE_COLOR))
 					.build();
 
 	private final RenderTarget renderTarget;

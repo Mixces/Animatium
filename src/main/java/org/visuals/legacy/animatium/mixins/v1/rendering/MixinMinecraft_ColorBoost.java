@@ -27,16 +27,12 @@ package org.visuals.legacy.animatium.mixins.v1.rendering;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.pipeline.BindGroupLayout;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.systems.CommandEncoder;
-import com.mojang.blaze3d.systems.GpuSurface;
-import com.mojang.blaze3d.systems.RenderPass;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.systems.*;
 import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuTextureView;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GameRenderer;
@@ -48,9 +44,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-
-import java.util.OptionalDouble;
-import java.util.OptionalInt;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft_ColorBoost {
@@ -69,21 +62,25 @@ public abstract class MixinMinecraft_ColorBoost {
                     .withVertexShader("core/screenquad")
                     .withFragmentShader(Animatium.location("core/colorboost"))
                     .withBindGroupLayout(BindGroupLayout.builder().withSampler("Sampler0").build())
-                    .withVertexFormat(DefaultVertexFormat.EMPTY, VertexFormat.Mode.TRIANGLES)
+                    .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
                     .build()
     );
 
     @WrapOperation(method = "renderFrame", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/GpuSurface;blitFromTexture(Lcom/mojang/blaze3d/systems/CommandEncoder;Lcom/mojang/blaze3d/textures/GpuTextureView;)V"))
-    private void animatium$colorBoost(final GpuSurface instance, final CommandEncoder commandEncoder, final GpuTextureView textureView, final Operation<Void> original) {
+    private void animatium$colorBoost(final GpuSurface instance, final CommandEncoder commandEncoder, final GpuTextureView colorAttachment, final Operation<Void> original) {
         if (AnimatiumConfig.instance().extras.colorBoost && this.gui.screen() == null) {
-            try (final RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Color boost render target blit", textureView, OptionalInt.empty(), this.gameRenderer.mainRenderTarget().getDepthTextureView(), OptionalDouble.empty())) {
+            final RenderPassDescriptor descriptor = RenderPassDescriptor.create(() -> "Color boost render target blit")
+                    .withColorAttachment(colorAttachment)
+                    .withDepthAttachment(this.gameRenderer.mainRenderTarget().getDepthTextureView())
+                    .withRenderArea(new RenderPass.RenderArea(0, 0, colorAttachment.getWidth(0), colorAttachment.getHeight(0)));
+            try (final RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(descriptor)) {
                 renderPass.setPipeline(animatium$boostPipeline);
                 RenderSystem.bindDefaultUniforms(renderPass);
-                renderPass.bindTexture("Sampler0", textureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST));
+                renderPass.bindTexture("Sampler0", colorAttachment, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST));
                 renderPass.draw(0, 3);
             }
         }
 
-        original.call(instance, commandEncoder, textureView);
+        original.call(instance, commandEncoder, colorAttachment);
     }
 }

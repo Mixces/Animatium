@@ -25,11 +25,16 @@
 
 package org.visuals.legacy.animatium.util.rendering;
 
+import com.mojang.blaze3d.GpuFormat;
+import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.pipeline.*;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.MeshData;
 import net.minecraft.client.CloudStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.CloudRenderer;
@@ -46,6 +51,7 @@ import org.visuals.legacy.animatium.Animatium;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -60,7 +66,8 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
             .withFragmentShader("core/rendertype_clouds")
             .withDepthStencilState(DepthStencilState.DEFAULT)
             .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
-            .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS)
+            .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
+            .withPrimitiveTopology(PrimitiveTopology.QUADS)
             .buildSnippet();
 
     public static final RenderPipeline CLOUDS = RenderPipelines.register(RenderPipeline.builder(CLOUDS_SNIPPET)
@@ -74,7 +81,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
 
     public static final RenderPipeline CLOUDS_DEPTH_ONLY = RenderPipelines.register(RenderPipeline.builder(CLOUDS_SNIPPET)
             .withLocation("pipeline/clouds_depth_only")
-            .withColorTargetState(new ColorTargetState(Optional.of(BlendFunction.TRANSLUCENT), ColorTargetState.WRITE_NONE))
+            .withColorTargetState(new ColorTargetState(Optional.of(BlendFunction.TRANSLUCENT), GpuFormat.RGBA8_UNORM, ColorTargetState.WRITE_NONE))
             .build());
 
     private boolean needsRebuild = true;
@@ -93,9 +100,8 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
         final int colorD = ARGB.colorFromFloat(0.8F, 0.8F, 0.8F, 0.8F);
 
         final ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(52 * 64 * 64 * DefaultVertexFormat.POSITION_COLOR.getVertexSize());
-        final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
+        final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, pipeline.getPrimitiveTopology(), Objects.requireNonNull(pipeline.getVertexFormatBinding(0)));
         this.buildMesh(relativeCameraPos, builder, cellX, cellZ, colorA, colorB, colorC, colorD, cloudStatus == CloudStatus.FANCY);
-
         try (final MeshData meshData = builder.build()) {
             if (meshData == null) {
                 this.indexCount = 0;
@@ -267,7 +273,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
                 cloudsTarget = Minecraft.getInstance().gameRenderer.mainRenderTarget();
             }
 
-            final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(renderer.getPipeline().getVertexFormatMode());
+            final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(renderer.getPipeline().getPrimitiveTopology());
             renderer.setup(this.vertexBuffer, autoStorageIndexBuffer.getBuffer(this.indexCount), autoStorageIndexBuffer.type(), this.indexCount);
             renderer.setDynamicTransforms(renderer.getDynamicTransforms()
                     .withShaderColor(ARGB.color(1.0F, color))

@@ -27,11 +27,12 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.fog;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.buffers.GpuBuffer;
+import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.renderer.SkyRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -53,7 +54,7 @@ public abstract class MixinSkyRenderer_PlanarFogSky {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
         animatium$topSkyBuffer = SkyRendererUtility.initializeSky((builder) -> SkyRendererUtility.buildSkyHalf(builder, 16.0F, false));
-        animatium$skyIndexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
+        animatium$skyIndexBuffer = RenderSystem.getSequentialBuffer(PrimitiveTopology.QUADS);
     }
 
     @WrapOperation(method = "renderSkyDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setPipeline(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V"))
@@ -66,11 +67,11 @@ public abstract class MixinSkyRenderer_PlanarFogSky {
         original.call(instance, pipeline);
     }
 
-    @WrapOperation(method = "renderSkyDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setVertexBuffer(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V", ordinal = 0))
-    private void animatium$planarFogPipeline$skyDisc$vertexBuffer(RenderPass instance, int index, GpuBuffer gpuBuffer, Operation<Void> original) {
-        GpuBuffer buffer = gpuBuffer;
+    @WrapOperation(method = "renderSkyDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setVertexBuffer(ILcom/mojang/blaze3d/buffers/GpuBufferSlice;)V", ordinal = 0))
+    private void animatium$planarFogPipeline$skyDisc$vertexBuffer(RenderPass instance, int index, GpuBufferSlice gpuBuffer, Operation<Void> original) {
+        GpuBufferSlice buffer = gpuBuffer;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
-            buffer = animatium$topSkyBuffer;
+            buffer = animatium$topSkyBuffer.slice();
             instance.setIndexBuffer(animatium$skyIndexBuffer.getBuffer(6), animatium$skyIndexBuffer.type());
         }
 
@@ -96,11 +97,11 @@ public abstract class MixinSkyRenderer_PlanarFogSky {
         }
     }
 
-    @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setVertexBuffer(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V", ordinal = 0))
-    private void animatium$planarFogPipeline$darkSkyDisc$vertexBuffer(RenderPass instance, int index, GpuBuffer gpuBuffer, Operation<Void> original) {
-        GpuBuffer buffer = gpuBuffer;
+    @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setVertexBuffer(ILcom/mojang/blaze3d/buffers/GpuBufferSlice;)V", ordinal = 0))
+    private void animatium$planarFogPipeline$darkSkyDisc$vertexBuffer(RenderPass instance, int index, GpuBufferSlice gpuBuffer, Operation<Void> original) {
+        GpuBufferSlice buffer = gpuBuffer;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
-            buffer = SkyRendererUtility.getGpuBuffer();
+            buffer = SkyRendererUtility.getGpuBuffer().slice();
             instance.setIndexBuffer(animatium$skyIndexBuffer.getBuffer(6), animatium$skyIndexBuffer.type());
         }
 

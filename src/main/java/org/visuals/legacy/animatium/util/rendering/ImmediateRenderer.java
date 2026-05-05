@@ -25,6 +25,7 @@
 
 package org.visuals.legacy.animatium.util.rendering;
 
+import com.mojang.blaze3d.IndexType;
 import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
@@ -35,6 +36,7 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderPass;
+import com.mojang.blaze3d.systems.RenderPassDescriptor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuSampler;
 import com.mojang.blaze3d.textures.GpuTextureView;
@@ -56,8 +58,7 @@ import org.visuals.legacy.animatium.mixins.accessor.GuiRendererAccessor;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.OptionalDouble;
-import java.util.OptionalInt;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -82,7 +83,7 @@ public class ImmediateRenderer implements AutoCloseable {
     // Internal
     private GpuBuffer vertexBuffer;
     private GpuBuffer indexBuffer;
-    private VertexFormat.IndexType indexType;
+    private IndexType indexType;
     private int indexCount;
     private GpuBuffer uniformBuffer;
     @Getter
@@ -110,7 +111,7 @@ public class ImmediateRenderer implements AutoCloseable {
         return new ImmediateRenderer(displayName);
     }
 
-    public void setup(final GpuBuffer vertexBuffer, final GpuBuffer indexBuffer, final VertexFormat.IndexType type, final int indexCount) {
+    public void setup(final GpuBuffer vertexBuffer, final GpuBuffer indexBuffer, final IndexType type, final int indexCount) {
         this.vertexBuffer = vertexBuffer;
         this.indexBuffer = indexBuffer;
         this.indexType = type;
@@ -128,9 +129,9 @@ public class ImmediateRenderer implements AutoCloseable {
             final int indexCount = meshData.drawState().indexCount();
             final GpuBuffer vertexBuffer = uploadImmediateVertexBuffer(meshData.vertexBuffer());
             GpuBuffer indexBuffer;
-            VertexFormat.IndexType indexType;
+            IndexType indexType;
             if (meshData.indexBuffer() == null) {
-                final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(meshData.drawState().mode());
+                final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(meshData.drawState().primitiveTopology());
                 indexBuffer = autoStorageIndexBuffer.getBuffer(indexCount);
                 indexType = autoStorageIndexBuffer.type();
             } else {
@@ -172,8 +173,9 @@ public class ImmediateRenderer implements AutoCloseable {
         if (this.pipeline == null) {
             throw new RuntimeException("Cannot create mesh data without a pipeline bound!");
         } else {
-            try (final ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(this.pipeline.getVertexFormat().getVertexSize() * vertexCount)) {
-                final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, this.pipeline.getVertexFormatMode(), this.pipeline.getVertexFormat());
+            final VertexFormat vertexFormatBinding = Objects.requireNonNull(this.pipeline.getVertexFormatBinding(0));
+            try (final ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(vertexFormatBinding.getVertexSize() * vertexCount)) {
+                final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, this.pipeline.getPrimitiveTopology(), vertexFormatBinding);
                 renderConsumer.accept(builder);
                 this.setup(builder.buildOrThrow());
             }
@@ -256,16 +258,11 @@ public class ImmediateRenderer implements AutoCloseable {
         } else if (this.pipeline == null) {
             throw new RuntimeException("Cannot draw without a pipeline bound!");
         } else {
-            final GpuTextureView colorTextureView = RenderSystem.outputColorTextureOverride != null ? RenderSystem.outputColorTextureOverride : renderTarget.getColorTextureView();
-            final GpuTextureView depthTextureView = renderTarget.useDepth ? (RenderSystem.outputDepthTextureOverride != null ? RenderSystem.outputDepthTextureOverride : renderTarget.getDepthTextureView()) : null;
             final GpuBufferSlice transforms = this.dynamicTransforms.buffer();
             final GpuBufferSlice uniformData = this.setupUniformsBuffer();
-            final RenderPass.RenderArea renderArea = this.viewport != null
-                    ? new RenderPass.RenderArea(this.viewport.x, this.viewport.y, this.viewport.z, this.viewport.w)
-                    : new RenderPass.RenderArea(0, 0, colorTextureView.getWidth(0), colorTextureView.getHeight(0));
-            try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> this.displayName, colorTextureView, OptionalInt.empty(), depthTextureView, OptionalDouble.empty(), renderArea)) {
+            try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(this.createDescriptor(renderTarget))) {
                 renderPass.setPipeline(this.pipeline);
-                renderPass.setVertexBuffer(0, this.vertexBuffer);
+                renderPass.setVertexBuffer(0, this.vertexBuffer.slice());
                 renderPass.setIndexBuffer(this.indexBuffer, this.indexType);
                 for (Map.Entry<String, TextureAndSampler> entry : this.textures.entrySet()) {
                     final TextureAndSampler textureAndSampler = entry.getValue();
@@ -281,6 +278,25 @@ public class ImmediateRenderer implements AutoCloseable {
                 renderPass.drawIndexed(0, 0, this.indexCount, 1);
             }
         }
+    }
+
+    private RenderPassDescriptor createDescriptor(final RenderTarget renderTarget) {
+        final RenderPassDescriptor descriptor = RenderPassDescriptor.create(() -> this.displayName);
+
+        final GpuTextureView colorTextureView = RenderSystem.outputColorTextureOverride != null ? RenderSystem.outputColorTextureOverride : renderTarget.getColorTextureView();
+        assert colorTextureView != null;
+        descriptor.withColorAttachment(colorTextureView);
+
+        if (renderTarget.useDepth) {
+            final GpuTextureView depthTextureView = RenderSystem.outputDepthTextureOverride != null ? RenderSystem.outputDepthTextureOverride : renderTarget.getDepthTextureView();
+            assert depthTextureView != null;
+            descriptor.withDepthAttachment(depthTextureView);
+        }
+
+        descriptor.withRenderArea(this.viewport != null
+                ? new RenderPass.RenderArea(this.viewport.x, this.viewport.y, this.viewport.z, this.viewport.w)
+                : new RenderPass.RenderArea(0, 0, renderTarget.width, renderTarget.height));
+        return descriptor;
     }
 
     public void draw() {
@@ -311,13 +327,13 @@ public class ImmediateRenderer implements AutoCloseable {
             return null;
         } else {
             int size = 0;
-            for (Uniform uniform : this.uniforms.values()) {
+            for (final Uniform<?> uniform : this.uniforms.values()) {
                 size += uniform.size();
             }
 
-            try (MemoryStack stack = MemoryStack.stackPush()) {
+            try (final MemoryStack stack = MemoryStack.stackPush()) {
                 final Std140Builder builder = Std140Builder.onStack(stack, size);
-                for (Uniform uniform : this.uniforms.values()) {
+                for (final Uniform<?> uniform : this.uniforms.values()) {
                     switch (uniform.type) {
                         case INT -> builder.putInt((int) uniform.value);
                         case INT_ARRAY -> {
@@ -470,5 +486,6 @@ public class ImmediateRenderer implements AutoCloseable {
         }
     }
 
-    private record TextureAndSampler(GpuTextureView textureView, GpuSampler sampler) {}
+    private record TextureAndSampler(GpuTextureView textureView, GpuSampler sampler) {
+    }
 }
