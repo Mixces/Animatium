@@ -73,12 +73,12 @@ group = mod.group
 base { archivesName.set(mod.id) }
 
 extensions.configure<LoomGradleExtensionAPI> {
+    runConfigs.remove(runConfigs["server"]) // Removes server run configs
     runConfigs.all {
         ideConfigGenerated(stonecutter.current.isActive)
         runDir = "../../run"
     }
 
-    runConfigs.remove(runConfigs["server"]) // Removes server run configs
     accessWidenerPath = stonecutter.process(
         rootProject.file("src/main/resources/${mod.id}.accesswidener"),
         "build/processed.accesswidener"

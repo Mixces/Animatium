@@ -168,7 +168,6 @@ public class ImmediateRenderer implements AutoCloseable {
         return result;
     }
 
-
     public void setup(final Consumer<VertexConsumer> renderConsumer, final int vertexCount) {
         if (this.pipeline == null) {
             throw new RuntimeException("Cannot create mesh data without a pipeline bound!");

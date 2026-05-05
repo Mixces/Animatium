@@ -28,17 +28,10 @@ package org.visuals.legacy.animatium.mixins.v1.entity.armor_hurt;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.blaze3d.opengl.GlConst;
-import com.mojang.blaze3d.opengl.GlStateManager;
-import com.mojang.blaze3d.platform.BlendFactor;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.moulberry.mixinconstraints.annotations.IfModAbsent;
-import net.minecraft.client.model.Model;
-import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
 import net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -80,25 +73,6 @@ public abstract class MixinEquipmentLayerRenderer {
     @ModifyArg(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/Identifier;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/OrderedSubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"), index = 5)
     private <S> int animatium$modifyUVTrimTint(int original, @Local(argsOnly = true) S entityRenderState) {
         return animatium$getPackUv(original, (EntityRenderState) entityRenderState);
-    }
-
-    @WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/Identifier;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/OrderedSubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"))
-    private <S> void animatium$armorHurtRendering(OrderedSubmitNodeCollector instance, Model<? super S> model, S renderState, PoseStack poseStack, RenderType renderType, int light, int overlay, int color, TextureAtlasSprite textureAtlasSprite, int i, ModelFeatureRenderer.CrumblingOverlay crumblingOverlay, Operation<Void> original) {
-        original.call(instance, model, renderState, poseStack, renderType, light, overlay, color, textureAtlasSprite, i, crumblingOverlay);
-        if (Animatium.isEnabled() &&
-                AnimatiumConfig.instance().other.entityArmorHurtTint &&
-                AnimatiumConfig.instance().other.armorHurtRendering &&
-                renderState instanceof LivingEntityRenderState livingEntityRenderState) {
-            final boolean isHurt = livingEntityRenderState.hasRedOverlay;
-            if (isHurt) {
-                // TODO: Check if this code even does anything at all
-                // TODO: Too strong? & glint needs to be tinted hurt color
-                GlStateManager._enableBlend();
-                GlStateManager._blendFuncSeparate(GlConst.toGl(BlendFactor.SRC_ALPHA), GlConst.toGl(BlendFactor.ONE_MINUS_SRC_ALPHA), GlConst.toGl(BlendFactor.SRC_ALPHA), GlConst.toGl(BlendFactor.ONE_MINUS_SRC_ALPHA));
-                original.call(instance, model, renderState, poseStack, renderType, light, overlay, color, textureAtlasSprite, i, crumblingOverlay);
-                GlStateManager._disableBlend();
-            }
-        }
     }
 
     @Unique
