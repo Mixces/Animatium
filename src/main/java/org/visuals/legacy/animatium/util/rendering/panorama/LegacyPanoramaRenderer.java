@@ -111,7 +111,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
 
     public void extractRenderState(final GuiGraphicsExtractor graphics, final int width, final int height, final float tickDelta) {
         final double panoramaSpeed = Minecraft.getInstance().gameRenderer.gameRenderState().optionsRenderState.panoramaSpeed;
-        this.state = new PanoramaRenderState(graphics.pose(), width, height, this.state == null ? 0 : (float) (this.state.spin + (tickDelta * panoramaSpeed)));
+        this.state = new PanoramaRenderState(graphics.pose(), width, height, this.state == null ? 0.0F : (float) (this.state.spin + (tickDelta * panoramaSpeed)));
         graphics.guiRenderState.addGuiElement(new BlitTexture(graphics.pose(), this.backgroundTextureView, width, height));
     }
 

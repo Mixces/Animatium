@@ -54,7 +54,7 @@ public abstract class MixinLevelRenderer_EntityOutlines {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.disableEntityGlowOutline) {
             final GpuDevice device = RenderSystem.getDevice();
             if (this.animatium$blankTexture == null) {
-                this.animatium$blankTexture = device.createTexture(() -> "Blank", 15, GpuFormat.RGBA8_UINT, 1, 1, 1, 1);
+                this.animatium$blankTexture = device.createTexture(() -> "Blank", 15, GpuFormat.RGBA8_UNORM, 1, 1, 1, 1);
             }
 
             if (this.animatium$blankTextureView == null) {
