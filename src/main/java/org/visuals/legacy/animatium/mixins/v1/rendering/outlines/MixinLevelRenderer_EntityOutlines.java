@@ -34,6 +34,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import net.minecraft.client.renderer.LevelRenderer;
+import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -55,6 +56,7 @@ public abstract class MixinLevelRenderer_EntityOutlines {
             final GpuDevice device = RenderSystem.getDevice();
             if (this.animatium$blankTexture == null) {
                 this.animatium$blankTexture = device.createTexture(() -> "Blank", 15, GpuFormat.RGBA8_UNORM, 1, 1, 1, 1);
+                device.createCommandEncoder().clearColorTexture(this.animatium$blankTexture, new Vector4f(0.0F));
             }
 
             if (this.animatium$blankTextureView == null) {
