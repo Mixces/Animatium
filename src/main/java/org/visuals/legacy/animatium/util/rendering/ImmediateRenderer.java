@@ -430,8 +430,15 @@ public class ImmediateRenderer implements AutoCloseable {
         }
     }
 
-    private record Uniform<T>(Type type, T value) {
-        public int size() {
+    private static class Uniform<T> {
+        private final Type type;
+        private final T value;
+        private final int size;
+
+        public Uniform(final Type type, final T value) {
+            this.type = type;
+            this.value = value;
+
             final Std140SizeCalculator calculator = new Std140SizeCalculator();
             switch (this.type) {
                 case INT -> calculator.putInt();
@@ -459,7 +466,11 @@ public class ImmediateRenderer implements AutoCloseable {
                 case MATRIX4F -> calculator.putMat4f();
             }
 
-            return calculator.get();
+            this.size = calculator.get();
+        }
+
+        public int size() {
+            return this.size;
         }
 
         enum Type {
