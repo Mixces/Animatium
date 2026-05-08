@@ -33,7 +33,6 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.BlendFactor;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.client.renderer.BindGroupLayouts;
-import net.minecraft.client.renderer.RenderPipelines;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
@@ -64,7 +63,7 @@ public class PanoramaPipelines {
             .withColorTargetState(new ColorTargetState(Optional.of(PANORAMA_BLEND), GpuFormat.RGBA8_UNORM, ColorTargetState.WRITE_COLOR))
             .build();
 
-    public static final RenderPipeline LEGACY_PANORAMA_BLUR = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
+    public static final RenderPipeline LEGACY_PANORAMA_BLUR = RenderPipeline.builder()
             .withLocation(Animatium.location("pipeline/legacy_panorama_blur"))
             .withVertexShader(Animatium.location("core/legacy_panorama_blur"))
             .withFragmentShader(Animatium.location("core/legacy_panorama_blur"))
