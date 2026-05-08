@@ -59,6 +59,7 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -438,35 +439,20 @@ public class ImmediateRenderer implements AutoCloseable {
         public Uniform(final Type type, final T value) {
             this.type = type;
             this.value = value;
+            this.size = calculateSize();
+        }
 
+        private int calculateSize() {
             final Std140SizeCalculator calculator = new Std140SizeCalculator();
-            switch (this.type) {
-                case INT -> calculator.putInt();
-                case INT_ARRAY -> {
-                    int[] array = (int[]) this.value;
-                    for (int ignored : array) {
-                        calculator.putInt();
-                    }
-                }
-
-                case FLOAT -> calculator.putFloat();
-                case FLOAT_ARRAY -> {
-                    float[] array = (float[]) this.value;
-                    for (float ignored : array) {
-                        calculator.putFloat();
-                    }
-                }
-
-                case VECTOR2I -> calculator.putIVec2();
-                case VECTOR2F -> calculator.putVec2();
-                case VECTOR3I -> calculator.putIVec3();
-                case VECTOR3F -> calculator.putVec3();
-                case VECTOR4I -> calculator.putIVec4();
-                case VECTOR4F -> calculator.putVec4();
-                case MATRIX4F -> calculator.putMat4f();
+            if (this.type == Type.INT_ARRAY) {
+                this.type.put(calculator, ((int[]) this.value).length);
+            } else if (this.type == Type.FLOAT_ARRAY) {
+                this.type.put(calculator, ((float[]) this.value).length);
+            } else {
+                this.type.put(calculator);
             }
 
-            this.size = calculator.get();
+            return calculator.get();
         }
 
         public int size() {
@@ -474,17 +460,39 @@ public class ImmediateRenderer implements AutoCloseable {
         }
 
         enum Type {
-            INT,
-            INT_ARRAY,
-            FLOAT,
-            FLOAT_ARRAY,
-            VECTOR2I,
-            VECTOR2F,
-            VECTOR3I,
-            VECTOR4I,
-            VECTOR3F,
-            VECTOR4F,
-            MATRIX4F
+            INT((calculator, _) -> calculator.putInt()),
+            INT_ARRAY((calculator, size) -> {
+                for (int i = 0; i < size; ++i) {
+                    calculator.putInt();
+                }
+            }),
+            FLOAT((calculator, _) -> calculator.putFloat()),
+            FLOAT_ARRAY((calculator, size) -> {
+                for (int i = 0; i < size; ++i) {
+                    calculator.putFloat();
+                }
+            }),
+            VECTOR2I((calculator, _) -> calculator.putIVec2()),
+            VECTOR2F((calculator, _) -> calculator.putVec2()),
+            VECTOR3I((calculator, _) -> calculator.putIVec3()),
+            VECTOR4I((calculator, _) -> calculator.putVec3()),
+            VECTOR3F((calculator, _) -> calculator.putIVec4()),
+            VECTOR4F((calculator, _) -> calculator.putVec4()),
+            MATRIX4F((calculator, _) -> calculator.putMat4f());
+
+            private final BiConsumer<Std140SizeCalculator, Integer> calculator;
+
+            Type(final BiConsumer<Std140SizeCalculator, Integer> calculator) {
+                this.calculator = calculator;
+            }
+
+            public void put(final Std140SizeCalculator calculator, final int size) {
+                this.calculator.accept(calculator, size);
+            }
+
+            public void put(final Std140SizeCalculator calculator) {
+                this.put(calculator, 0);
+            }
         }
     }
 
