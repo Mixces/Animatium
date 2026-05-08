@@ -26,12 +26,14 @@
 package org.visuals.legacy.animatium.util.rendering;
 
 import com.mojang.blaze3d.IndexType;
+import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import org.joml.Matrix3x2f;
 
 import java.nio.ByteBuffer;
 import java.util.function.Consumer;
@@ -42,6 +44,19 @@ public record Geometry(GpuBuffer vertexBuffer,
                        int indexCount,
                        boolean ownsIndexBuffer,
                        boolean persistent) implements AutoCloseable {
+    public static Geometry texturedQuad(final RenderPipeline pipeline, final Matrix3x2f pose, final int width, final int height) {
+        if (pipeline.getPrimitiveTopology() != PrimitiveTopology.QUADS) {
+            throw new RuntimeException("Only quads");
+        } else {
+            return compile(pipeline, 4, vertexConsumer -> {
+                vertexConsumer.addVertexWith2DPose(pose, width, height).setUv(0.0F, 1.0F);
+                vertexConsumer.addVertexWith2DPose(pose, width, 0.0F).setUv(1.0F, 1.0F);
+                vertexConsumer.addVertexWith2DPose(pose, 0.0F, 0.0F).setUv(1.0F, 0.0F);
+                vertexConsumer.addVertexWith2DPose(pose, 0.0F, height).setUv(0.0F, 0.0F);
+            });
+        }
+    }
+
     public static Geometry compile(final RenderPipeline pipeline, final boolean persistent, final int vertexCount, final Consumer<VertexConsumer> vertexConsumer) {
         final VertexFormat format = pipeline.getVertexFormatBinding(0);
         assert format != null;

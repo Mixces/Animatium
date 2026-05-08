@@ -59,12 +59,10 @@ import org.visuals.legacy.animatium.util.rendering.ImmediateRenderer;
 import java.util.Objects;
 
 // Ported code of the old <=1.12.2 panorama renderer (w/ blur)
-public class LegacyPanoramaRenderer {
+public final class LegacyPanoramaRenderer implements AutoCloseable {
     private static final RenderPass.RenderArea VIEWPORT = new RenderPass.RenderArea(0, 0, 256, 256);
     private static final Vector4f CLEAR_COLOR = new Vector4f(0.0F, 0.0F, 0.0F, 1.0F);
-
     private static final Identifier CUBE_MAP_LOCATION = Identifier.withDefaultNamespace("textures/gui/title/background/panorama");
-
     private static final Matrix4f BASE_PANORAMA_MATRIX = new Matrix4f()
             .rotateX(Utils.toRadians(180.0F))
             .rotateZ(Utils.toRadians(90.0F));
@@ -88,39 +86,41 @@ public class LegacyPanoramaRenderer {
         }
     });
 
-    private static final Projection projection;
-    private static final ProjectionMatrixBuffer projectionMatrixBuffer;
-    private static final MainTarget panoramaTarget;
-    private static final GpuTexture backgroundTexture;
-    private static final GpuTextureView backgroundTextureView;
+    public static final LegacyPanoramaRenderer INSTANCE = new LegacyPanoramaRenderer();
 
-    private static PanoramaRenderState state;
-    private static float spin = 0.0F;
+    private final Projection projection = new Projection();
+    private final ProjectionMatrixBuffer projectionMatrixBuffer = new ProjectionMatrixBuffer("Legacy Panorama Matrix");
+    private final MainTarget panoramaTarget = new MainTarget(256, 256);
+    private final GpuTexture backgroundTexture;
+    private final GpuTextureView backgroundTextureView;
 
-    static {
+    private @Nullable PanoramaRenderState state;
+
+    @SuppressWarnings("DataFlowIssue")
+    LegacyPanoramaRenderer() {
         final GpuDevice device = RenderSystem.getDevice();
-        projection = new Projection();
-        projectionMatrixBuffer = new ProjectionMatrixBuffer("Legacy Panorama");
-        panoramaTarget = new MainTarget(256, 256);
-        backgroundTexture = device.createTexture(() -> "Legacy Panorama Temp Texture", GpuTexture.USAGE_TEXTURE_BINDING | GpuTexture.USAGE_RENDER_ATTACHMENT | GpuTexture.USAGE_COPY_SRC | GpuTexture.USAGE_COPY_DST, GpuFormat.RGBA8_UNORM, panoramaTarget.width, panoramaTarget.height, 1, 1);
-        backgroundTextureView = device.createTextureView(backgroundTexture);
-        clearTargets();
+        this.backgroundTexture = device.createTexture(() -> "Legacy Panorama Temp Texture", GpuTexture.USAGE_TEXTURE_BINDING | GpuTexture.USAGE_RENDER_ATTACHMENT | GpuTexture.USAGE_COPY_SRC | GpuTexture.USAGE_COPY_DST, GpuFormat.RGBA8_UNORM, this.panoramaTarget.width, this.panoramaTarget.height, 1, 1);
+        this.backgroundTextureView = device.createTextureView(this.backgroundTexture);
+        device.createCommandEncoder().clearColorAndDepthTextures(this.panoramaTarget.getColorTexture(), CLEAR_COLOR, this.panoramaTarget.getDepthTexture(), 0.0F);
+        device.createCommandEncoder().clearColorTexture(this.backgroundTexture, CLEAR_COLOR);
     }
 
-    public static void render() {
-        renderPanorama();
-        blurPanorama();
+    public void render() {
+        if (this.state != null) {
+            renderPanorama(this.state.spin);
+            blurPanorama(this.state.pose, this.state.width, this.state.height);
+        }
     }
 
-    public static void extractRenderState(final GuiGraphicsExtractor graphics, final int width, final int height, final float tickDelta) {
-        state = new PanoramaRenderState(graphics.pose(), width, height, spin += tickDelta);
-        graphics.guiRenderState.addGuiElement(new BlitTexture(graphics.pose(), backgroundTextureView, width, height));
+    public void extractRenderState(final GuiGraphicsExtractor graphics, final int width, final int height, final float tickDelta) {
+        this.state = new PanoramaRenderState(graphics.pose(), width, height, this.state == null ? 0 : this.state.spin + tickDelta);
+        graphics.guiRenderState.addGuiElement(new BlitTexture(graphics.pose(), this.backgroundTextureView, width, height));
     }
 
-    private static void renderPanorama() {
-        projection.setupPerspective(0.05F, 10.0F, 120.0F, 1.0F, 1.0F);
+    private void renderPanorama(final float spin) {
+        this.projection.setupPerspective(0.05F, 10.0F, 120.0F, 1.0F, 1.0F);
         RenderSystem.backupProjectionMatrix();
-        RenderSystem.setProjectionMatrix(projectionMatrixBuffer.getBuffer(projection), ProjectionType.PERSPECTIVE);
+        RenderSystem.setProjectionMatrix(this.projectionMatrixBuffer.getBuffer(this.projection), ProjectionType.PERSPECTIVE);
         try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Panorama Cubemap")) {
             renderer.setRenderArea(VIEWPORT);
 
@@ -128,18 +128,17 @@ public class LegacyPanoramaRenderer {
             for (int layer = 0; layer < 64; layer++) {
                 final float x = (layer % 8 / 8.0F - 0.5F) / 64.0F;
                 final float y = ((float) layer / 8 / 8.0F - 0.5F) / 64.0F;
-                final Matrix4f layerMatrix = new Matrix4f(BASE_PANORAMA_MATRIX)
-                        .translate(x, y, 0.0F)
-                        .rotateX(Utils.toRadians(Mth.sin(state.spin / 400.0F) * 25.0F + 20.0F)) // xRot
-                        .rotateY(Utils.toRadians(-state.spin * 0.1F)); // yRot
 
                 renderer.setPipeline(pipeline);
                 renderer.setup(PANORAMA_GEOMETRY);
 
                 final int color = ARGB.white(1.0F / (layer + 1.0F));
                 renderer.setTexture(0, CUBE_MAP_LOCATION);
-                renderer.drawTo(panoramaTarget, DynamicTransforms.builder()
-                        .withModelViewMatrix(layerMatrix)
+                renderer.drawTo(this.panoramaTarget, DynamicTransforms.builder()
+                        .withModelViewMatrix(new Matrix4f(BASE_PANORAMA_MATRIX)
+                                .translate(x, y, 0.0F)
+                                .rotateX(Utils.toRadians(Mth.sin(spin / 400.0F) * 25.0F + 20.0F))
+                                .rotateY(Utils.toRadians(-spin * 0.1F)))
                         .withShaderColor(color));
 
                 pipeline = PanoramaPipelines.LEGACY_PANORAMA_2;
@@ -149,43 +148,26 @@ public class LegacyPanoramaRenderer {
         RenderSystem.restoreProjectionMatrix();
     }
 
-    private static void blurPanorama() {
+    private void blurPanorama(final Matrix3x2f pose, final int width, final int height) {
         final RenderPipeline pipeline = PanoramaPipelines.LEGACY_PANORAMA_BLUR;
         try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Panorama Blur")) {
             renderer.setPipeline(pipeline);
             renderer.setRenderArea(VIEWPORT);
-
-            renderer.setup(Geometry.compile(pipeline, 12, vertexConsumer -> {
-                for (int cycle = 0; cycle < 3; ++cycle) {
-                    final int color = ARGB.white(1.0F / (cycle + 1.0F));
-                    final float growth = (cycle - 1.5F) / 256.0F;
-                    vertexConsumer.addVertexWith2DPose(state.pose, state.width, state.height).setUv(0.0F + growth, 1.0F).setColor(color);
-                    vertexConsumer.addVertexWith2DPose(state.pose, state.width, 0.0F).setUv(1.0F + growth, 1.0F).setColor(color);
-                    vertexConsumer.addVertexWith2DPose(state.pose, 0.0F, 0.0F).setUv(1.0F + growth, 0.0F).setColor(color);
-                    vertexConsumer.addVertexWith2DPose(state.pose, 0.0F, state.height).setUv(0.0F + growth, 0.0F).setColor(color);
-                }
-            }));
-
-            renderer.setTexture(0, backgroundTextureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
+            renderer.setup(Geometry.texturedQuad(pipeline, pose, width, height));
+            renderer.setTexture(0, this.backgroundTextureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
             for (int iter = 0; iter < 7; ++iter) {
-                RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(Objects.requireNonNull(panoramaTarget.getColorTexture()), backgroundTexture, 0, 0, 0, 0, 0, panoramaTarget.width, panoramaTarget.height);
-                renderer.drawGuiTo(panoramaTarget, DynamicTransforms.builder());
+                RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(Objects.requireNonNull(this.panoramaTarget.getColorTexture()), this.backgroundTexture, 0, 0, 0, 0, 0, this.panoramaTarget.width, this.panoramaTarget.height);
+                renderer.drawGuiTo(this.panoramaTarget, DynamicTransforms.builder());
             }
         }
     }
 
-    public static void close() {
-        projectionMatrixBuffer.close();
-        backgroundTexture.close();
-        backgroundTextureView.close();
-        panoramaTarget.destroyBuffers();
-    }
-
-    @SuppressWarnings("DataFlowIssue")
-    private static void clearTargets() {
-        final GpuDevice device = RenderSystem.getDevice();
-        device.createCommandEncoder().clearColorAndDepthTextures(panoramaTarget.getColorTexture(), CLEAR_COLOR, panoramaTarget.getDepthTexture(), 0.0F);
-        device.createCommandEncoder().clearColorTexture(backgroundTexture, CLEAR_COLOR);
+    @Override
+    public void close() {
+        this.projectionMatrixBuffer.close();
+        this.backgroundTexture.close();
+        this.backgroundTextureView.close();
+        this.panoramaTarget.destroyBuffers();
     }
 
     private record BlitTexture(Matrix3x2f pose, GpuTextureView textureView,
