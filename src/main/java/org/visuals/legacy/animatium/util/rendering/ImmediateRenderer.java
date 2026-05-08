@@ -40,7 +40,7 @@ import com.mojang.blaze3d.systems.RenderPassDescriptor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuSampler;
 import com.mojang.blaze3d.textures.GpuTextureView;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.MeshData;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
@@ -58,9 +58,7 @@ import org.visuals.legacy.animatium.mixins.accessor.GuiRendererAccessor;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ImmediateRenderer implements AutoCloseable {
@@ -158,19 +156,6 @@ public class ImmediateRenderer implements AutoCloseable {
         } else {
             device.createCommandEncoder().writeToBuffer(target.slice(), buffer);
             return target;
-        }
-    }
-
-    public void setup(final Consumer<VertexConsumer> renderConsumer, final int vertexCount) {
-        if (this.pipeline == null) {
-            throw new RuntimeException("Cannot create mesh data without a pipeline bound!");
-        } else {
-            final VertexFormat vertexFormatBinding = Objects.requireNonNull(this.pipeline.getVertexFormatBinding(0));
-            try (final ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(vertexFormatBinding.getVertexSize() * vertexCount)) {
-                final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, this.pipeline.getPrimitiveTopology(), vertexFormatBinding);
-                renderConsumer.accept(builder);
-                this.setup(builder.buildOrThrow());
-            }
         }
     }
 

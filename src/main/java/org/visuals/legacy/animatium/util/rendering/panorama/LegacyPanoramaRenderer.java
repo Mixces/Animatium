@@ -72,6 +72,19 @@ public class LegacyPanoramaRenderer {
             Identifier.withDefaultNamespace("textures/gui/title/background/panorama_5.png")
     };
 
+    private static final Matrix4f BASE_PANORAMA_MATRIX = new Matrix4f()
+            .rotateX(Utils.toRadians(180.0F))
+            .rotateZ(Utils.toRadians(90.0F));
+
+    private static final Quaternionf[] PANORAMA_FACE_ROTATION = new Quaternionf[]{
+            new Quaternionf(),
+            Axis.YP.rotationDegrees(90.0F),
+            Axis.YP.rotationDegrees(180.0F),
+            Axis.YN.rotationDegrees(90.0F),
+            Axis.XP.rotationDegrees(90.0F),
+            Axis.XN.rotationDegrees(90.0F)
+    };
+
     private static final Projection projection;
     private static final ProjectionMatrixBuffer projectionMatrixBuffer;
     private static final MainTarget panoramaTarget;
@@ -101,26 +114,6 @@ public class LegacyPanoramaRenderer {
         graphics.guiRenderState.addGuiElement(new BlitTexture(graphics.pose(), backgroundTextureView, width, height));
     }
 
-    private static final Matrix4f BASE_PANORAMA_MATRIX = new Matrix4f()
-            .rotateX(Utils.toRadians(180.0F))
-            .rotateZ(Utils.toRadians(90.0F));
-
-    private static final Quaternionf[] PANORAMA_FACE_ROTATION = new Quaternionf[]{
-            new Quaternionf(),
-            Axis.YP.rotationDegrees(90.0F),
-            Axis.YP.rotationDegrees(180.0F),
-            Axis.YN.rotationDegrees(90.0F),
-            Axis.XP.rotationDegrees(90.0F),
-            Axis.XN.rotationDegrees(90.0F)
-    };
-
-    private static final Geometry PANORAMA_GEOMETRY = Geometry.compile(PanoramaPipelines.LEGACY_PANORAMA_1, 4, vertexConsumer -> {
-        vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F).setUv(0.0F, 0.0F);
-        vertexConsumer.addVertex(1.0F, -1.0F, 1.0F).setUv(1.0F, 0.0F);
-        vertexConsumer.addVertex(1.0F, 1.0F, 1.0F).setUv(1.0F, 1.0F);
-        vertexConsumer.addVertex(-1.0F, 1.0F, 1.0F).setUv(0.0F, 1.0F);
-    });
-
     private static void renderPanorama() {
         projection.setupPerspective(0.05F, 10.0F, 120.0F, 1.0F, 1.0F);
         RenderSystem.backupProjectionMatrix();
@@ -138,7 +131,12 @@ public class LegacyPanoramaRenderer {
                         .rotateY(Utils.toRadians(-state.spin * 0.1F)); // yRot
 
                 renderer.setPipeline(pipeline);
-                renderer.setup(PANORAMA_GEOMETRY);
+                renderer.setup(Geometry.compile(PanoramaPipelines.LEGACY_PANORAMA_1, 4, vertexConsumer -> {
+                    vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F).setUv(0.0F, 0.0F);
+                    vertexConsumer.addVertex(1.0F, -1.0F, 1.0F).setUv(1.0F, 0.0F);
+                    vertexConsumer.addVertex(1.0F, 1.0F, 1.0F).setUv(1.0F, 1.0F);
+                    vertexConsumer.addVertex(-1.0F, 1.0F, 1.0F).setUv(0.0F, 1.0F);
+                }));
 
                 final int color = ARGB.white(1.0F / (layer + 1.0F));
                 for (int panoramaIdx = 0; panoramaIdx < 6; panoramaIdx++) {
@@ -157,11 +155,12 @@ public class LegacyPanoramaRenderer {
     }
 
     private static void blurPanorama(final Matrix3x2f pose) {
+        final RenderPipeline pipeline = PanoramaPipelines.LEGACY_PANORAMA_BLUR;
         try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Panorama Blur")) {
-            renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA_BLUR);
+            renderer.setPipeline(pipeline);
             renderer.setRenderArea(VIEWPORT);
 
-            renderer.setup(vertexConsumer -> {
+            renderer.setup(Geometry.compile(pipeline, 12, vertexConsumer -> {
                 for (int cycle = 0; cycle < 3; ++cycle) {
                     final int color = ARGB.white(1.0F / (cycle + 1.0F));
                     final float growth = (cycle - 1.5F) / 256.0F;
@@ -170,7 +169,7 @@ public class LegacyPanoramaRenderer {
                     vertexConsumer.addVertexWith2DPose(pose, 0.0F, 0.0F).setUv(1.0F + growth, 0.0F).setColor(color);
                     vertexConsumer.addVertexWith2DPose(pose, 0.0F, state.height).setUv(0.0F + growth, 0.0F).setColor(color);
                 }
-            }, 12);
+            }));
 
             renderer.setTexture(0, backgroundTextureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
             for (int iter = 0; iter < 7; ++iter) {

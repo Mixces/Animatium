@@ -43,6 +43,7 @@ import org.visuals.legacy.animatium.util.compatibility.IrisPipeline;
 import org.visuals.legacy.animatium.util.compatibility.IrisUtil;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 @UtilityClass
 public class SkyRendererUtility {
@@ -80,6 +81,38 @@ public class SkyRendererUtility {
                     .withLocation(Animatium.location("pipeline/legacy_sky_planar_fog"))
                     .withShaderDefine("PLANAR_FOG")
                     .build());
+
+    private static final Function<Float, Geometry> VOID_BOX_GEOMETRY = offset -> Geometry.compile(VOID_BOX_PIPELINE, 20, vertexConsumer -> {
+        // Left
+        vertexConsumer.addVertex(-1.0F, offset, 1.0F);
+        vertexConsumer.addVertex(1.0F, offset, 1.0F);
+        vertexConsumer.addVertex(1.0F, -1.0F, 1.0F);
+        vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F);
+
+        // Right
+        vertexConsumer.addVertex(-1.0F, -1.0F, -1.0F);
+        vertexConsumer.addVertex(1.0F, -1.0F, -1.0F);
+        vertexConsumer.addVertex(1.0F, offset, -1.0F);
+        vertexConsumer.addVertex(-1.0F, offset, -1.0F);
+
+        // Back
+        vertexConsumer.addVertex(1.0F, -1.0F, -1.0F);
+        vertexConsumer.addVertex(1.0F, -1.0F, 1.0F);
+        vertexConsumer.addVertex(1.0F, offset, 1.0F);
+        vertexConsumer.addVertex(1.0F, offset, -1.0F);
+
+        // Front
+        vertexConsumer.addVertex(-1.0F, offset, -1.0F);
+        vertexConsumer.addVertex(-1.0F, offset, 1.0F);
+        vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F);
+        vertexConsumer.addVertex(-1.0F, -1.0F, -1.0F);
+
+        // Bottom
+        vertexConsumer.addVertex(-1.0F, -1.0F, -1.0F);
+        vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F);
+        vertexConsumer.addVertex(1.0F, -1.0F, 1.0F);
+        vertexConsumer.addVertex(1.0F, -1.0F, -1.0F);
+    });
 
     private ImmediateRenderer blueVoidRenderer;
     private ImmediateRenderer voidBoxRenderer;
@@ -161,39 +194,7 @@ public class SkyRendererUtility {
             voidBoxRenderer.setDynamicTransforms(voidBoxRenderer.getDynamicTransforms().withShaderColor(0xFF000000));
         }
 
-        final float offset = -((float) (depth + 65.0));
-        voidBoxRenderer.setup((vertexConsumer) -> {
-            // Left
-            vertexConsumer.addVertex(-1.0F, offset, 1.0F);
-            vertexConsumer.addVertex(1.0F, offset, 1.0F);
-            vertexConsumer.addVertex(1.0F, -1.0F, 1.0F);
-            vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F);
-
-            // Right
-            vertexConsumer.addVertex(-1.0F, -1.0F, -1.0F);
-            vertexConsumer.addVertex(1.0F, -1.0F, -1.0F);
-            vertexConsumer.addVertex(1.0F, offset, -1.0F);
-            vertexConsumer.addVertex(-1.0F, offset, -1.0F);
-
-            // Back
-            vertexConsumer.addVertex(1.0F, -1.0F, -1.0F);
-            vertexConsumer.addVertex(1.0F, -1.0F, 1.0F);
-            vertexConsumer.addVertex(1.0F, offset, 1.0F);
-            vertexConsumer.addVertex(1.0F, offset, -1.0F);
-
-            // Front
-            vertexConsumer.addVertex(-1.0F, offset, -1.0F);
-            vertexConsumer.addVertex(-1.0F, offset, 1.0F);
-            vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F);
-            vertexConsumer.addVertex(-1.0F, -1.0F, -1.0F);
-
-            // Bottom
-            vertexConsumer.addVertex(-1.0F, -1.0F, -1.0F);
-            vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F);
-            vertexConsumer.addVertex(1.0F, -1.0F, 1.0F);
-            vertexConsumer.addVertex(1.0F, -1.0F, -1.0F);
-        }, 20);
-
+        voidBoxRenderer.setup(VOID_BOX_GEOMETRY.apply(-((float) (depth + 65.0))));
         voidBoxRenderer.draw();
     }
 
