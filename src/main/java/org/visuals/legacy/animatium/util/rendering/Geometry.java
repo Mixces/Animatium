@@ -39,8 +39,9 @@ import java.util.function.Consumer;
 public record Geometry(GpuBuffer vertexBuffer,
                        GpuBuffer indexBuffer,
                        IndexType indexType,
-                       int indexCount) implements AutoCloseable {
-    public static Geometry compile(final RenderPipeline pipeline, final int vertexCount, final Consumer<VertexConsumer> vertexConsumer) {
+                       int indexCount,
+                       boolean persistent) implements AutoCloseable {
+    public static Geometry compile(final RenderPipeline pipeline, final boolean persistent, final int vertexCount, final Consumer<VertexConsumer> vertexConsumer) {
         final VertexFormat format = pipeline.getVertexFormatBinding(0);
         assert format != null;
         try (final ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(format.getVertexSize() * vertexCount)) {
@@ -64,9 +65,13 @@ public record Geometry(GpuBuffer vertexBuffer,
                     indexType = meshData.drawState().indexType();
                 }
 
-                return new Geometry(vertexBuffer, indexBuffer, indexType, indexCount);
+                return new Geometry(vertexBuffer, indexBuffer, indexType, indexCount, persistent);
             }
         }
+    }
+
+    public static Geometry compile(final RenderPipeline pipeline, final int vertexCount, final Consumer<VertexConsumer> vertexConsumer) {
+        return compile(pipeline, false, vertexCount, vertexConsumer);
     }
 
     public void render(final RenderPass pass) {
@@ -77,5 +82,8 @@ public record Geometry(GpuBuffer vertexBuffer,
 
     @Override
     public void close() {
+        if (!this.persistent) {
+            this.vertexBuffer.close();
+        }
     }
 }

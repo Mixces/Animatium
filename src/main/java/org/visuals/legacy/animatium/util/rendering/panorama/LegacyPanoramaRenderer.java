@@ -54,6 +54,7 @@ import org.joml.Vector4f;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.rendering.DynamicTransforms;
 import org.visuals.legacy.animatium.util.rendering.Geometry;
 import org.visuals.legacy.animatium.util.rendering.ImmediateRenderer;
 
@@ -131,7 +132,7 @@ public class LegacyPanoramaRenderer {
                         .rotateY(Utils.toRadians(-state.spin * 0.1F)); // yRot
 
                 renderer.setPipeline(pipeline);
-                renderer.setup(Geometry.compile(PanoramaPipelines.LEGACY_PANORAMA_1, 4, vertexConsumer -> {
+                renderer.setup(Geometry.compile(pipeline, 4, vertexConsumer -> {
                     vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F).setUv(0.0F, 0.0F);
                     vertexConsumer.addVertex(1.0F, -1.0F, 1.0F).setUv(1.0F, 0.0F);
                     vertexConsumer.addVertex(1.0F, 1.0F, 1.0F).setUv(1.0F, 1.0F);
@@ -140,11 +141,10 @@ public class LegacyPanoramaRenderer {
 
                 final int color = ARGB.white(1.0F / (layer + 1.0F));
                 for (int panoramaIdx = 0; panoramaIdx < 6; panoramaIdx++) {
-                    renderer.setDynamicTransforms(renderer.getDynamicTransforms()
+                    renderer.setTexture(0, PANORAMA_TEXTURES[panoramaIdx]);
+                    renderer.drawTo(panoramaTarget, DynamicTransforms.builder()
                             .withModelViewMatrix(new Matrix4f(layerMatrix).rotate(PANORAMA_FACE_ROTATION[panoramaIdx]))
                             .withShaderColor(color));
-                    renderer.setTexture(0, PANORAMA_TEXTURES[panoramaIdx]);
-                    renderer.drawTo(LegacyPanoramaRenderer.panoramaTarget);
                 }
 
                 pipeline = PanoramaPipelines.LEGACY_PANORAMA_2;
@@ -174,7 +174,7 @@ public class LegacyPanoramaRenderer {
             renderer.setTexture(0, backgroundTextureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
             for (int iter = 0; iter < 7; ++iter) {
                 RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(Objects.requireNonNull(panoramaTarget.getColorTexture()), backgroundTexture, 0, 0, 0, 0, 0, panoramaTarget.width, panoramaTarget.height);
-                renderer.drawGuiTo(panoramaTarget);
+                renderer.drawGuiTo(panoramaTarget, DynamicTransforms.builder());
             }
         }
     }

@@ -25,22 +25,17 @@
 
 package org.visuals.legacy.animatium.util.rendering;
 
-import com.mojang.blaze3d.IndexType;
 import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.buffers.Std140Builder;
-import com.mojang.blaze3d.buffers.Std140SizeCalculator;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderPass;
-import com.mojang.blaze3d.systems.RenderPassDescriptor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuSampler;
 import com.mojang.blaze3d.textures.GpuTextureView;
-import com.mojang.blaze3d.vertex.MeshData;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
@@ -48,17 +43,14 @@ import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.Projection;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
 import org.lwjgl.system.MemoryStack;
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.mixins.accessor.GuiRendererAccessor;
 
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class ImmediateRenderer implements AutoCloseable {
@@ -75,9 +67,6 @@ public class ImmediateRenderer implements AutoCloseable {
     @Getter
     @Setter
     private RenderPass.RenderArea renderArea;
-    @Getter
-    @Setter
-    private DynamicTransforms dynamicTransforms;
 
     // Internal
     private Geometry geometry;
@@ -92,7 +81,6 @@ public class ImmediateRenderer implements AutoCloseable {
         this.name = name;
         this.pipeline = null;
         this.renderArea = null;
-        this.dynamicTransforms = new DynamicTransforms(null, null, new Vector4f(1.0F), new Vector3f());
 
         // Internal
         this.geometry = null;
@@ -106,57 +94,11 @@ public class ImmediateRenderer implements AutoCloseable {
 
     public void setup(final Geometry geometry) {
         if (this.geometry != null && this.geometry != geometry) {
-            this.geometry.vertexBuffer().close();
+            this.geometry.close();
         }
 
         this.geometry = geometry;
         this.setup = true;
-    }
-
-    private GpuBuffer immediateDrawVertexBuffer;
-    private GpuBuffer immediateDrawIndexBuffer;
-
-    public void setup(final MeshData meshData) {
-        if (this.pipeline == null) {
-            throw new RuntimeException("Cannot create mesh data without a pipeline bound!");
-        } else {
-            final int indexCount = meshData.drawState().indexCount();
-            final GpuBuffer vertexBuffer = uploadImmediateVertexBuffer(meshData.vertexBuffer());
-            GpuBuffer indexBuffer;
-            IndexType indexType;
-            if (meshData.indexBuffer() == null) {
-                final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(meshData.drawState().primitiveTopology());
-                indexBuffer = autoStorageIndexBuffer.getBuffer(indexCount);
-                indexType = autoStorageIndexBuffer.type();
-            } else {
-                indexBuffer = uploadImmediateIndexBuffer(meshData.indexBuffer());
-                indexType = meshData.drawState().indexType();
-            }
-
-            this.setup(new Geometry(vertexBuffer, indexBuffer, indexType, indexCount));
-        }
-    }
-
-    private GpuBuffer uploadImmediateVertexBuffer(final ByteBuffer buffer) {
-        return this.immediateDrawVertexBuffer = uploadToBuffer(this.immediateDrawVertexBuffer, () -> "Immediate vertex buffer for " + this.name.get(), GpuBuffer.USAGE_VERTEX | GpuBuffer.USAGE_COPY_DST, buffer);
-    }
-
-    private GpuBuffer uploadImmediateIndexBuffer(final ByteBuffer buffer) {
-        return this.immediateDrawIndexBuffer = uploadToBuffer(this.immediateDrawIndexBuffer, () -> "Immediate index buffer for " + this.name.get(), GpuBuffer.USAGE_INDEX | GpuBuffer.USAGE_COPY_DST, buffer);
-    }
-
-    private static GpuBuffer uploadToBuffer(final @Nullable GpuBuffer target, final Supplier<String> label, final @GpuBuffer.Usage int usage, final ByteBuffer buffer) {
-        final GpuDevice device = RenderSystem.getDevice();
-        if (target == null || target.size() < buffer.remaining()) {
-            if (target != null) {
-                target.close();
-            }
-
-            return device.createBuffer(label, usage, buffer);
-        } else {
-            device.createCommandEncoder().writeToBuffer(target.slice(), buffer);
-            return target;
-        }
     }
 
     public void setTexture(final int id, final GpuTextureView textureView, final GpuSampler sampler) {
@@ -229,15 +171,15 @@ public class ImmediateRenderer implements AutoCloseable {
         this.uniforms.put(name, new Uniform<>(Uniform.Type.MATRIX4F, value));
     }
 
-    public void drawTo(final RenderTarget renderTarget) {
+    public void drawTo(final RenderTarget renderTarget, final DynamicTransforms.Builder dynamicTransforms) {
         if (!this.setup) {
             throw new RuntimeException("Cannot draw because renderer has not been setup yet!");
         } else if (this.pipeline == null) {
             throw new RuntimeException("Cannot draw without a pipeline bound!");
         } else {
-            final GpuBufferSlice transforms = this.dynamicTransforms.buffer();
+            final GpuBufferSlice transforms = dynamicTransforms.build();
             final GpuBufferSlice uniformData = this.setupUniformsBuffer();
-            try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(this.createDescriptor(renderTarget))) {
+            try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(RenderUtils.createDescriptor(this.name, renderTarget, this.renderArea))) {
                 pass.setPipeline(this.pipeline);
                 for (final Map.Entry<String, TextureAndSampler> entry : this.textures.entrySet()) {
                     final TextureAndSampler textureAndSampler = entry.getValue();
@@ -255,28 +197,11 @@ public class ImmediateRenderer implements AutoCloseable {
         }
     }
 
-    private RenderPassDescriptor createDescriptor(final RenderTarget renderTarget) {
-        final RenderPassDescriptor descriptor = RenderPassDescriptor.create(this.name);
-
-        final GpuTextureView colorTextureView = RenderSystem.outputColorTextureOverride != null ? RenderSystem.outputColorTextureOverride : renderTarget.getColorTextureView();
-        assert colorTextureView != null;
-        descriptor.withColorAttachment(colorTextureView);
-
-        if (renderTarget.useDepth) {
-            final GpuTextureView depthTextureView = RenderSystem.outputDepthTextureOverride != null ? RenderSystem.outputDepthTextureOverride : renderTarget.getDepthTextureView();
-            assert depthTextureView != null;
-            descriptor.withDepthAttachment(depthTextureView);
-        }
-
-        descriptor.withRenderArea(this.renderArea != null ? this.renderArea : new RenderPass.RenderArea(0, 0, renderTarget.width, renderTarget.height));
-        return descriptor;
+    public void draw(final DynamicTransforms.Builder dynamicTransforms) {
+        drawTo(Minecraft.getInstance().gameRenderer.mainRenderTarget(), dynamicTransforms);
     }
 
-    public void draw() {
-        drawTo(Minecraft.getInstance().gameRenderer.mainRenderTarget());
-    }
-
-    public void drawGuiTo(final RenderTarget renderTarget) {
+    public void drawGuiTo(final RenderTarget renderTarget, final DynamicTransforms.Builder dynamicTransforms) {
         final Minecraft minecraft = Minecraft.getInstance();
         final Window window = minecraft.getWindow();
         final GuiRendererAccessor guiRendererAccessor = (GuiRendererAccessor) ((GameRendererAccessor) minecraft.gameRenderer).animatium$getGuiRenderer();
@@ -286,13 +211,8 @@ public class ImmediateRenderer implements AutoCloseable {
         projection.setupOrtho(1000.0F, 11000.0F, (float) window.getWidth() / (float) window.getGuiScale(), (float) window.getHeight() / (float) window.getGuiScale(), true);
         RenderSystem.setProjectionMatrix(guiRendererAccessor.animatium$orthoMatrixBuffer().getBuffer(projection), ProjectionType.ORTHOGRAPHIC);
 
-        this.setDynamicTransforms(this.dynamicTransforms.withModelViewMatrix(new Matrix4f(this.dynamicTransforms.getModelViewMatrix()).setTranslation(0.0F, 0.0F, -11000.0F)));
-        this.drawTo(renderTarget);
+        this.drawTo(renderTarget, dynamicTransforms.withModelViewMatrix(new Matrix4f(dynamicTransforms.getModelViewMatrix()).setTranslation(0.0F, 0.0F, -11000.0F)));
         RenderSystem.restoreProjectionMatrix();
-    }
-
-    public void drawGui() {
-        drawGuiTo(Minecraft.getInstance().gameRenderer.mainRenderTarget());
     }
 
     private @Nullable GpuBufferSlice setupUniformsBuffer() {
@@ -307,30 +227,30 @@ public class ImmediateRenderer implements AutoCloseable {
             try (final MemoryStack stack = MemoryStack.stackPush()) {
                 final Std140Builder builder = Std140Builder.onStack(stack, size);
                 for (final Uniform<?> uniform : this.uniforms.values()) {
-                    switch (uniform.type) {
-                        case INT -> builder.putInt((int) uniform.value);
+                    switch (uniform.type()) {
+                        case INT -> builder.putInt((int) uniform.value());
                         case INT_ARRAY -> {
-                            int[] array = (int[]) uniform.value;
+                            int[] array = (int[]) uniform.value();
                             for (int value : array) {
                                 builder.putFloat(value);
                             }
                         }
 
-                        case FLOAT -> builder.putFloat((float) uniform.value);
+                        case FLOAT -> builder.putFloat((float) uniform.value());
                         case FLOAT_ARRAY -> {
-                            float[] array = (float[]) uniform.value;
+                            float[] array = (float[]) uniform.value();
                             for (float value : array) {
                                 builder.putFloat(value);
                             }
                         }
 
-                        case VECTOR2I -> builder.putIVec2((Vector2ic) uniform.value);
-                        case VECTOR2F -> builder.putVec2((Vector2fc) uniform.value);
-                        case VECTOR3I -> builder.putIVec3((Vector3ic) uniform.value);
-                        case VECTOR3F -> builder.putVec3((Vector3fc) uniform.value);
-                        case VECTOR4I -> builder.putIVec4((Vector4ic) uniform.value);
-                        case VECTOR4F -> builder.putVec4((Vector4fc) uniform.value);
-                        case MATRIX4F -> builder.putMat4f((Matrix4fc) uniform.value);
+                        case VECTOR2I -> builder.putIVec2((Vector2ic) uniform.value());
+                        case VECTOR2F -> builder.putVec2((Vector2fc) uniform.value());
+                        case VECTOR3I -> builder.putIVec3((Vector3ic) uniform.value());
+                        case VECTOR3F -> builder.putVec3((Vector3fc) uniform.value());
+                        case VECTOR4I -> builder.putIVec4((Vector4ic) uniform.value());
+                        case VECTOR4F -> builder.putVec4((Vector4fc) uniform.value());
+                        case MATRIX4F -> builder.putMat4f((Matrix4fc) uniform.value());
                     }
                 }
 
@@ -355,118 +275,6 @@ public class ImmediateRenderer implements AutoCloseable {
 
         if (this.uniformBuffer != null) {
             this.uniformBuffer = null;
-        }
-    }
-
-    public record DynamicTransforms(
-            @Nullable Matrix4f modelViewMatrix,
-            @Nullable Matrix4f textureMatrix,
-            Vector4f shaderColor,
-            Vector3f modelOffset
-    ) {
-        public DynamicTransforms withModelViewMatrix(Matrix4f matrix4f) {
-            return new DynamicTransforms(matrix4f, this.textureMatrix, this.shaderColor, this.modelOffset);
-        }
-
-        public DynamicTransforms withTextureMatrix(Matrix4f matrix4f) {
-            return new DynamicTransforms(this.modelViewMatrix, matrix4f, this.shaderColor, this.modelOffset);
-        }
-
-        public DynamicTransforms withShaderColor(Vector4f vector4f) {
-            return new DynamicTransforms(this.modelViewMatrix, this.textureMatrix, vector4f, this.modelOffset);
-        }
-
-        public DynamicTransforms withShaderColor(float red, float green, float blue, float alpha) {
-            return this.withShaderColor(new Vector4f(red, green, blue, alpha));
-        }
-
-        public DynamicTransforms withShaderColor(float red, float green, float blue) {
-            return this.withShaderColor(red, green, blue, 1.0F);
-        }
-
-        public DynamicTransforms withShaderColor(int color) {
-            return this.withShaderColor(ARGB.redFloat(color), ARGB.greenFloat(color), ARGB.blueFloat(color), ARGB.alphaFloat(color));
-        }
-
-        public DynamicTransforms withModelOffset(Vector3f vector3f) {
-            return new DynamicTransforms(this.modelViewMatrix, this.textureMatrix, this.shaderColor, vector3f);
-        }
-
-        public Matrix4f getModelViewMatrix() {
-            return this.modelViewMatrix == null ? new Matrix4f(RenderSystem.getModelViewStack()) : this.modelViewMatrix;
-        }
-
-        public Matrix4f getTextureMatrix() {
-            return this.textureMatrix == null ? new Matrix4f() : this.textureMatrix;
-        }
-
-        public GpuBufferSlice buffer() {
-            return RenderSystem.getDynamicUniforms().writeTransform(this.getModelViewMatrix(), this.shaderColor(), this.modelOffset(), this.getTextureMatrix());
-        }
-    }
-
-    private static class Uniform<T> {
-        private final Type type;
-        private final T value;
-        private final int size;
-
-        public Uniform(final Type type, final T value) {
-            this.type = type;
-            this.value = value;
-            this.size = calculateSize();
-        }
-
-        private int calculateSize() {
-            final Std140SizeCalculator calculator = new Std140SizeCalculator();
-            if (this.type == Type.INT_ARRAY) {
-                this.type.put(calculator, ((int[]) this.value).length);
-            } else if (this.type == Type.FLOAT_ARRAY) {
-                this.type.put(calculator, ((float[]) this.value).length);
-            } else {
-                this.type.put(calculator);
-            }
-
-            return calculator.get();
-        }
-
-        public int size() {
-            return this.size;
-        }
-
-        enum Type {
-            INT((calculator, _) -> calculator.putInt()),
-            INT_ARRAY((calculator, size) -> {
-                for (int i = 0; i < size; ++i) {
-                    calculator.putInt();
-                }
-            }),
-            FLOAT((calculator, _) -> calculator.putFloat()),
-            FLOAT_ARRAY((calculator, size) -> {
-                for (int i = 0; i < size; ++i) {
-                    calculator.putFloat();
-                }
-            }),
-            VECTOR2I((calculator, _) -> calculator.putIVec2()),
-            VECTOR2F((calculator, _) -> calculator.putVec2()),
-            VECTOR3I((calculator, _) -> calculator.putIVec3()),
-            VECTOR4I((calculator, _) -> calculator.putVec3()),
-            VECTOR3F((calculator, _) -> calculator.putIVec4()),
-            VECTOR4F((calculator, _) -> calculator.putVec4()),
-            MATRIX4F((calculator, _) -> calculator.putMat4f());
-
-            private final BiConsumer<Std140SizeCalculator, Integer> calculator;
-
-            Type(final BiConsumer<Std140SizeCalculator, Integer> calculator) {
-                this.calculator = calculator;
-            }
-
-            public void put(final Std140SizeCalculator calculator, final int size) {
-                this.calculator.accept(calculator, size);
-            }
-
-            public void put(final Std140SizeCalculator calculator) {
-                this.put(calculator, 0);
-            }
         }
     }
 

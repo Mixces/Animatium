@@ -82,7 +82,7 @@ public class SkyRendererUtility {
                     .withShaderDefine("PLANAR_FOG")
                     .build());
 
-    private static final Function<Float, Geometry> VOID_BOX_GEOMETRY = offset -> Geometry.compile(VOID_BOX_PIPELINE, 20, vertexConsumer -> {
+    private static final Function<Float, Geometry> VOID_BOX_GEOMETRY = offset -> Geometry.compile(VOID_BOX_PIPELINE, true, 20, vertexConsumer -> {
         // Left
         vertexConsumer.addVertex(-1.0F, offset, 1.0F);
         vertexConsumer.addVertex(1.0F, offset, 1.0F);
@@ -143,11 +143,8 @@ public class SkyRendererUtility {
         blueVoidRenderer.setPipeline(pipeline);
 
         final RenderSystem.AutoStorageIndexBuffer quadsIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.getPrimitiveTopology());
-        blueVoidRenderer.setup(new Geometry(getGpuBuffer(), quadsIndexBuffer.getBuffer(indexCount), quadsIndexBuffer.type(), indexCount));
-
-        blueVoidRenderer.setDynamicTransforms(blueVoidRenderer.getDynamicTransforms()
-                .withShaderColor(new Vector4f(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F, 1.0F)));
-        blueVoidRenderer.draw();
+        blueVoidRenderer.setup(new Geometry(getGpuBuffer(), quadsIndexBuffer.getBuffer(indexCount), quadsIndexBuffer.type(), indexCount, true));
+        blueVoidRenderer.draw(DynamicTransforms.builder().withShaderColor(new Vector4f(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F, 1.0F)));
 
         modelViewStack.popMatrix();
     }
@@ -191,11 +188,10 @@ public class SkyRendererUtility {
         if (voidBoxRenderer == null) {
             voidBoxRenderer = ImmediateRenderer.of(() -> "Player Void Box");
             voidBoxRenderer.setPipeline(VOID_BOX_PIPELINE);
-            voidBoxRenderer.setDynamicTransforms(voidBoxRenderer.getDynamicTransforms().withShaderColor(0xFF000000));
         }
 
         voidBoxRenderer.setup(VOID_BOX_GEOMETRY.apply(-((float) (depth + 65.0))));
-        voidBoxRenderer.draw();
+        voidBoxRenderer.draw(DynamicTransforms.builder().withShaderColor(0xFF000000));
     }
 
     public double getHorizonEyeHeight(final ClientLevel level, final float tickDelta) {
