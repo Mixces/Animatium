@@ -116,7 +116,7 @@ public class SkyRendererUtility {
 
     private ImmediateRenderer blueVoidRenderer;
     private ImmediateRenderer voidBoxRenderer;
-    private final GpuBuffer vertexBuffer = initializeSky((builder) -> buildSkyHalf(builder, -16.0F, true));
+    private final GpuBuffer vertexBuffer = initializeSky(vertexConsumer -> buildSkyHalf(vertexConsumer, -16.0F, true));
     private int indexCount = -1;
 
     static {
@@ -170,10 +170,10 @@ public class SkyRendererUtility {
         }
     }
 
-    public GpuBuffer initializeSky(final Consumer<BufferBuilder> bufferBuilderConsumer) {
+    public GpuBuffer initializeSky(final Consumer<VertexConsumer> vertexConsumer) {
         try (ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(8112)) {
             final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, PrimitiveTopology.QUADS, DefaultVertexFormat.POSITION);
-            bufferBuilderConsumer.accept(builder);
+            vertexConsumer.accept(builder);
             try (MeshData meshData = builder.buildOrThrow()) {
                 indexCount = meshData.drawState().indexCount();
                 return RenderSystem.getDevice().createBuffer(() -> "Static sky vertex buffer", GpuBuffer.USAGE_VERTEX, meshData.vertexBuffer());
@@ -207,6 +207,10 @@ public class SkyRendererUtility {
         if (voidBoxRenderer != null) {
             voidBoxRenderer.close();
             voidBoxRenderer = null;
+        }
+
+        if (vertexBuffer != null) {
+            vertexBuffer.close();
         }
     }
 }

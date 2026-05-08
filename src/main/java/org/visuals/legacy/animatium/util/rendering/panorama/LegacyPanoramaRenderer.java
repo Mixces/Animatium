@@ -86,6 +86,13 @@ public class LegacyPanoramaRenderer {
             Axis.XN.rotationDegrees(90.0F)
     };
 
+    private static final Geometry PANORAMA_GEOMETRY = Geometry.compile(PanoramaPipelines.LEGACY_PANORAMA_1, true, 4, vertexConsumer -> {
+        vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F).setUv(0.0F, 0.0F);
+        vertexConsumer.addVertex(1.0F, -1.0F, 1.0F).setUv(1.0F, 0.0F);
+        vertexConsumer.addVertex(1.0F, 1.0F, 1.0F).setUv(1.0F, 1.0F);
+        vertexConsumer.addVertex(-1.0F, 1.0F, 1.0F).setUv(0.0F, 1.0F);
+    });
+
     private static final Projection projection;
     private static final ProjectionMatrixBuffer projectionMatrixBuffer;
     private static final MainTarget panoramaTarget;
@@ -132,12 +139,7 @@ public class LegacyPanoramaRenderer {
                         .rotateY(Utils.toRadians(-state.spin * 0.1F)); // yRot
 
                 renderer.setPipeline(pipeline);
-                renderer.setup(Geometry.compile(pipeline, 4, vertexConsumer -> {
-                    vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F).setUv(0.0F, 0.0F);
-                    vertexConsumer.addVertex(1.0F, -1.0F, 1.0F).setUv(1.0F, 0.0F);
-                    vertexConsumer.addVertex(1.0F, 1.0F, 1.0F).setUv(1.0F, 1.0F);
-                    vertexConsumer.addVertex(-1.0F, 1.0F, 1.0F).setUv(0.0F, 1.0F);
-                }));
+                renderer.setup(PANORAMA_GEOMETRY);
 
                 final int color = ARGB.white(1.0F / (layer + 1.0F));
                 for (int panoramaIdx = 0; panoramaIdx < 6; panoramaIdx++) {
@@ -177,6 +179,14 @@ public class LegacyPanoramaRenderer {
                 renderer.drawGuiTo(panoramaTarget, DynamicTransforms.builder());
             }
         }
+    }
+
+    public static void close() {
+        PANORAMA_GEOMETRY.forceClose();
+        projectionMatrixBuffer.close();
+        backgroundTexture.close();
+        backgroundTextureView.close();
+        panoramaTarget.destroyBuffers();
     }
 
     private static void clearTargets() {

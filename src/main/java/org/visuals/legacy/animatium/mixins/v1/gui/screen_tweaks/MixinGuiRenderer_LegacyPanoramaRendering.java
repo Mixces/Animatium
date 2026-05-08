@@ -32,6 +32,8 @@ import net.minecraft.client.gui.render.GuiRenderer;
 import net.minecraft.client.renderer.CubeMap;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.rendering.panorama.LegacyPanoramaRenderer;
@@ -46,5 +48,10 @@ public abstract class MixinGuiRenderer_LegacyPanoramaRendering {
         } else {
             original.call(instance, rotXInDegrees, spin);
         }
+    }
+
+    @Inject(method = "close", at = @At("TAIL"))
+    private void animatium$closePanorama(final CallbackInfo ci) {
+        LegacyPanoramaRenderer.close();
     }
 }

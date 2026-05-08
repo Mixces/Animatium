@@ -49,7 +49,7 @@ public record Geometry(GpuBuffer vertexBuffer,
             vertexConsumer.accept(builder);
             try (final MeshData meshData = builder.buildOrThrow()) {
                 final GpuDevice device = RenderSystem.getDevice();
-                final GpuBuffer vertexBuffer = device.createBuffer(() -> "Static geometry vertex buffer", GpuBuffer.USAGE_VERTEX, meshData.vertexBuffer());
+                final GpuBuffer vertexBuffer = device.createBuffer(() -> "Vertex buffer for " + pipeline, GpuBuffer.USAGE_VERTEX, meshData.vertexBuffer());
                 final int indexCount = meshData.drawState().indexCount();
 
                 GpuBuffer indexBuffer;
@@ -61,7 +61,7 @@ public record Geometry(GpuBuffer vertexBuffer,
                     indexBuffer = autoStorageIndexBuffer.getBuffer(indexCount);
                     indexType = autoStorageIndexBuffer.type();
                 } else {
-                    indexBuffer = device.createBuffer(() -> "Static geometry index buffer", GpuBuffer.USAGE_INDEX, indexByteBuffer);
+                    indexBuffer = device.createBuffer(() -> "Index buffer for " + pipeline, GpuBuffer.USAGE_INDEX, indexByteBuffer);
                     indexType = meshData.drawState().indexType();
                 }
 
@@ -83,7 +83,11 @@ public record Geometry(GpuBuffer vertexBuffer,
     @Override
     public void close() {
         if (!this.persistent) {
-            this.vertexBuffer.close();
+            this.forceClose();
         }
+    }
+
+    public void forceClose() {
+        this.vertexBuffer.close();
     }
 }
