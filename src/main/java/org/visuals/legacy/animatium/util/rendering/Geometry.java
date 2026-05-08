@@ -44,7 +44,7 @@ public record Geometry(GpuBuffer vertexBuffer,
                        int indexCount,
                        boolean ownsIndexBuffer,
                        boolean persistent) implements AutoCloseable {
-    public static Geometry texturedQuad(final RenderPipeline pipeline, final Matrix3x2f pose, final int width, final int height) {
+    public static Geometry texturedScreenQuad(final RenderPipeline pipeline, final Matrix3x2f pose, final int width, final int height) {
         if (pipeline.getPrimitiveTopology() != PrimitiveTopology.QUADS) {
             throw new RuntimeException("Only quads");
         } else {

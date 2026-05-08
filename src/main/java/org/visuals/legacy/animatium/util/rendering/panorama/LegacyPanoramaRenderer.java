@@ -131,13 +131,11 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
                         .translate(x, y, 0.0F)
                         .rotateX(Utils.toRadians(Mth.sin(spin / 400.0F) * 25.0F + 20.0F))
                         .rotateY(Utils.toRadians(-spin * 0.1F));
-
                 final int color = ARGB.white(1.0F / (layer + 1.0F));
-                renderer.drawTo(this.panoramaTarget, DynamicTransforms.builder()
-                        .withModelViewMatrix(modelViewMatrix)
-                        .withShaderColor(color));
-
-                renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA_2);
+                renderer.drawTo(this.panoramaTarget, DynamicTransforms.builder().withModelViewMatrix(modelViewMatrix).withShaderColor(color));
+                if (layer == 0) {
+                    renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA_2);
+                }
             }
         }
 
@@ -149,7 +147,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
         try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Panorama Blur")) {
             renderer.setPipeline(pipeline);
             renderer.setRenderArea(VIEWPORT);
-            renderer.setup(Geometry.texturedQuad(pipeline, pose, width, height));
+            renderer.setup(Geometry.texturedScreenQuad(pipeline, pose, width, height));
             renderer.setTexture(0, this.backgroundTextureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
             for (int iter = 0; iter < 7; ++iter) {
                 RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(Objects.requireNonNull(this.panoramaTarget.getColorTexture()), this.backgroundTexture, 0, 0, 0, 0, 0, this.panoramaTarget.width, this.panoramaTarget.height);
