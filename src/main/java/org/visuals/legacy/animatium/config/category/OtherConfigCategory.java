@@ -32,86 +32,84 @@ import org.visuals.legacy.animatium.util.config.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.VoidFogSetting;
 
 public class OtherConfigCategory extends Category {
-	// Sky
-	public boolean blueVoidSky = true;
-	public boolean planarSkyFog = true;
-	public boolean cloudHeight = true;
-	public boolean playerVoidBox = true;
-	// Other
-	public boolean thirdPersonSwordBlockingPosition = true;
-	public boolean lockBlockingArmRotation = true;
-	public boolean projectileAgeCheck = false;
-	public boolean blockMiningProgress = true;
-	public boolean disableInventoryEntityScissor = false;
-	public boolean blockOutlineRendering = true;
-	public boolean disableModelWhilstSleeping = false;
-	public boolean entityArmorHurtTint = true;
-	public boolean itemGlintOnEntity = true;
-	public boolean maxGlintProperties = true;
-	public boolean armorHurtRendering = false;
-	public boolean disableEntityGlowOutline = false;
-	public boolean disableModernCombatSounds = true;
-	public boolean disableModernCombatParticles = true;
-	public boolean restoreParticleBlending = true;
-	public boolean heldItemArmLogic = true;
-	public boolean flameDimensions = true;
-	public boolean flameOffset = true;
-	public boolean persistentBlockOutline = false;
-	public boolean oldCloudRendering = true;
-	public boolean fastGrass = true;
-	public boolean oldY0Height = false;
-	public boolean oldWaterOverlayOpacity = true;
-	public boolean oldWaterColorFog = true;
-	public boolean disableRandomBlockRotations = true;
-	public VoidFogSetting voidFog = VoidFogSetting.PARTICLES;
+    // Sky
+    public boolean blueVoidSky = true;
+    public boolean planarSkyFog = true;
+    public boolean cloudHeight = true;
+    public boolean playerVoidBox = true;
+    // Other
+    public boolean thirdPersonSwordBlockingPosition = true;
+    public boolean lockBlockingArmRotation = true;
+    public boolean projectileAgeCheck = false;
+    public boolean blockMiningProgress = true;
+    public boolean disableInventoryEntityScissor = false;
+    public boolean blockOutlineRendering = true;
+    public boolean disableModelWhilstSleeping = false;
+    public boolean entityArmorHurtTint = true;
+    public boolean itemGlintOnEntity = true;
+    public boolean maxGlintProperties = true;
+    public boolean armorHurtRendering = false;
+    public boolean disableEntityGlowOutline = false;
+    public boolean disableModernCombatParticles = true;
+    public boolean restoreParticleBlending = true;
+    public boolean heldItemArmLogic = true;
+    public boolean flameDimensions = true;
+    public boolean flameOffset = true;
+    public boolean persistentBlockOutline = false;
+    public boolean oldCloudRendering = true;
+    public boolean fastGrass = true;
+    public boolean oldY0Height = false;
+    public boolean oldWaterOverlayOpacity = true;
+    public boolean oldWaterColorFog = true;
+    public boolean disableRandomBlockRotations = true;
+    public VoidFogSetting voidFog = VoidFogSetting.PARTICLES;
 
-	public static ConfigCategory create(final OtherConfigCategory defaults, final OtherConfigCategory config) {
-		final ConfigCategory.Builder category = ConfigCategory.createBuilder();
-		category.name(Component.translatable("animatium.category.other"));
-		config.bundle().install(category, defaults, config);
-		return category.build();
-	}
+    public static ConfigCategory create(final OtherConfigCategory defaults, final OtherConfigCategory config) {
+        final ConfigCategory.Builder category = ConfigCategory.createBuilder();
+        category.name(Component.translatable("animatium.category.other"));
+        config.bundle().install(category, defaults, config);
+        return category.build();
+    }
 
-	@Override
-	public EntryBundle bundle() {
-		final EntryBundle bundle = new EntryBundle(this, "other");
+    @Override
+    public EntryBundle bundle() {
+        final EntryBundle bundle = new EntryBundle(this, "other");
 
-		bundle.group((EntryBundle.Group) new EntryBundle.Group("sky")
-				.booleanEntry("blueVoidSky")
-				.booleanEntry("planarSkyFog")
-				.booleanEntry("cloudHeight")
-				.booleanEntry("playerVoidBox"));
+        bundle.group((EntryBundle.Group) new EntryBundle.Group("sky")
+                .booleanEntry("blueVoidSky")
+                .booleanEntry("planarSkyFog")
+                .booleanEntry("cloudHeight")
+                .booleanEntry("playerVoidBox"));
 
-		bundle.booleanEntry("thirdPersonSwordBlockingPosition");
-		bundle.booleanEntry("lockBlockingArmRotation");
-		bundle.booleanEntry("projectileAgeCheck");
-		bundle.booleanEntry("blockMiningProgress");
-		bundle.booleanEntry("disableInventoryEntityScissor");
-		bundle.booleanEntry("blockOutlineRendering");
-		bundle.booleanEntry("disableModelWhilstSleeping");
-		if (!Mods.HAS_LUNAR_CLIENT) {
-			bundle.booleanEntry("entityArmorHurtTint");
-		}
+        bundle.booleanEntry("thirdPersonSwordBlockingPosition");
+        bundle.booleanEntry("lockBlockingArmRotation");
+        bundle.booleanEntry("projectileAgeCheck");
+        bundle.booleanEntry("blockMiningProgress");
+        bundle.booleanEntry("disableInventoryEntityScissor");
+        bundle.booleanEntry("blockOutlineRendering");
+        bundle.booleanEntry("disableModelWhilstSleeping");
+        if (!Mods.HAS_LUNAR_CLIENT) {
+            bundle.booleanEntry("entityArmorHurtTint");
+        }
 
-		bundle.booleanEntry("itemGlintOnEntity");
-		bundle.booleanEntry("maxGlintProperties");
-		bundle.booleanEntry("armorHurtRendering");
-		bundle.booleanEntry("disableEntityGlowOutline");
-		bundle.booleanEntry("disableModernCombatSounds");
-		bundle.booleanEntry("disableModernCombatParticles");
-		bundle.booleanEntry("restoreParticleBlending");
-		bundle.booleanEntry("heldItemArmLogic");
-		bundle.booleanEntry("flameDimensions");
-		bundle.booleanEntry("flameOffset");
-		bundle.booleanEntry("persistentBlockOutline");
-		bundle.booleanEntry("oldCloudRendering");
-		bundle.booleanEntry("fastGrass");
-		bundle.booleanEntry("oldY0Height");
-		bundle.booleanEntry("oldWaterOverlayOpacity");
-		bundle.booleanEntry("oldWaterColorFog");
-		bundle.booleanEntry("disableRandomBlockRotations");
-		bundle.enumEntry("voidFog", VoidFogSetting.class);
+        bundle.booleanEntry("itemGlintOnEntity");
+        bundle.booleanEntry("maxGlintProperties");
+        bundle.booleanEntry("armorHurtRendering");
+        bundle.booleanEntry("disableEntityGlowOutline");
+        bundle.booleanEntry("disableModernCombatParticles");
+        bundle.booleanEntry("restoreParticleBlending");
+        bundle.booleanEntry("heldItemArmLogic");
+        bundle.booleanEntry("flameDimensions");
+        bundle.booleanEntry("flameOffset");
+        bundle.booleanEntry("persistentBlockOutline");
+        bundle.booleanEntry("oldCloudRendering");
+        bundle.booleanEntry("fastGrass");
+        bundle.booleanEntry("oldY0Height");
+        bundle.booleanEntry("oldWaterOverlayOpacity");
+        bundle.booleanEntry("oldWaterColorFog");
+        bundle.booleanEntry("disableRandomBlockRotations");
+        bundle.enumEntry("voidFog", VoidFogSetting.class);
 
-		return bundle;
-	}
+        return bundle;
+    }
 }

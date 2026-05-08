@@ -54,7 +54,6 @@
 		"v1.general.camera.view_bobbing.MixinLivingEntity_ViewBobbingTilt",
 		"v1.general.camera.view_bobbing.MixinPlayer_SetViewBobbingTilt",
 		"v1.general.combat.particles.MixinPlayer_HideModernCombatParticles",
-		"v1.general.combat.sounds.MixinSoundManager_DisableModernCombatSounds",
 		"v1.general.network.MixinClientPacketListener_DontCloseChat",
 		"v1.general.network.MixinMultiPlayerGameMode",
 		"v1.general.server_features.MixinEntity_ClientSideMovement",

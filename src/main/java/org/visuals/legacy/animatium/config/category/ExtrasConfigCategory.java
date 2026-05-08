@@ -64,7 +64,6 @@ public class ExtrasConfigCategory extends Category {
     // TODO 3.3: public float itemSwingSpeed = 0.0F;
     // TODO 3.3: public float hasteSwingSpeed = 0.0F;
     // TODO 3.3: public float miningFatigueSwingSpeed = 0.0F;
-    public boolean highAttackSpeedVisual = false;
     // TODO 3.3: public boolean ignoreHasteSpeed = false;
     // TODO 3.3: public boolean ignoreMiningFatigueSpeed = false;
     // Server Features (Singleplayer Only)
@@ -117,13 +116,12 @@ public class ExtrasConfigCategory extends Category {
         bundle.booleanEntry("colorBoost");
         bundle.booleanEntry("alwaysBlockingHeadCap");
 
-        bundle.group((EntryBundle.Group) new EntryBundle.Group("item_swing")
-                // TODO 3.3: .floatEntry("itemSwingSpeed", -1.0F, 1.0F, 0.1F)
-                // TODO 3.3: .floatEntry("hasteSwingSpeed", -1.0F, 1.0F, 0.1F)
-                // TODO 3.3: .floatEntry("miningFatigueSwingSpeed", -1.0F, 1.0F, 0.1F)
-                .booleanEntry("highAttackSpeedVisual"));
-                // TODO 3.3: .booleanEntry("ignoreHasteSpeed")
-                // TODO 3.3: .booleanEntry("ignoreMiningFatigueSpeed"));
+//        bundle.group((EntryBundle.Group) new EntryBundle.Group("item_swing")
+        // TODO 3.3: .floatEntry("itemSwingSpeed", -1.0F, 1.0F, 0.1F)
+        // TODO 3.3: .floatEntry("hasteSwingSpeed", -1.0F, 1.0F, 0.1F)
+        // TODO 3.3: .floatEntry("miningFatigueSwingSpeed", -1.0F, 1.0F, 0.1F)
+        // TODO 3.3: .booleanEntry("ignoreHasteSpeed")
+        // TODO 3.3: .booleanEntry("ignoreMiningFatigueSpeed"));
 
         {
             final EntryBundle.Group serverFeatureGroup = new EntryBundle.Group("server_features");

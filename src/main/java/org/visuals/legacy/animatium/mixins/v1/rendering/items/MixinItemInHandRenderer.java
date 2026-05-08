@@ -76,20 +76,20 @@ public abstract class MixinItemInHandRenderer {
     @Final
     private ItemModelResolver itemModelResolver;
 
+    @Shadow
+    protected abstract void applyItemArmAttackTransform(final PoseStack poseStack, final HumanoidArm arm, final float attackValue);
+
+    @Shadow
+    protected abstract boolean shouldInstantlyReplaceVisibleItem(final ItemStack currentlyVisibleItem, final ItemStack expectedItem);
+
     @Unique
     private int animatium$currentSlot = -1;
 
     @Unique
     private ItemStack animatium$mainHandItem = ItemStack.EMPTY;
 
-    @Shadow
-    protected abstract void applyItemArmAttackTransform(PoseStack matrices, HumanoidArm arm, float swingProgress);
-
-    @Shadow
-    protected abstract boolean shouldInstantlyReplaceVisibleItem(ItemStack itemStack, ItemStack itemStack2);
-
     @WrapOperation(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;isUsingItem()Z"))
-    private boolean animatium$fixDoubleBlockingVisual$itemUsageVisualInGUI(AbstractClientPlayer instance, Operation<Boolean> original) {
+    private boolean animatium$fixDoubleBlockingVisual$itemUsageVisualInGUI(final AbstractClientPlayer instance, final Operation<Boolean> original) {
         final boolean value = original.call(instance);
         if (AnimatiumConfig.instance().fixes.fixItemUsageVisualInGUI && this.minecraft.gui.screen() != null) {
             return false;
@@ -101,17 +101,17 @@ public abstract class MixinItemInHandRenderer {
     }
 
     @WrapOperation(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V", ordinal = 1))
-    private void animatium$postBowTransform(PoseStack poseStack, float x, float y, float z, Operation<Void> original, @Local(argsOnly = true) AbstractClientPlayer player, @Local(argsOnly = true) InteractionHand hand) {
+    private void animatium$postBowTransform(final PoseStack instance, final float xScale, final float yScale, final float zScale, final Operation<Void> original, @Local(argsOnly = true) AbstractClientPlayer player, @Local(argsOnly = true) final InteractionHand hand) {
         final int direction = Utils.getHandMultiplier(player, hand);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemPositions) {
-            poseStack.mulPose(Axis.ZP.rotationDegrees(direction * -335));
-            poseStack.mulPose(Axis.YP.rotationDegrees(direction * -50.0F));
+            instance.mulPose(Axis.ZP.rotationDegrees(direction * -335));
+            instance.mulPose(Axis.YP.rotationDegrees(direction * -50.0F));
         }
 
-        original.call(poseStack, x, y, z);
+        original.call(instance, xScale, yScale, zScale);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemPositions) {
-            poseStack.mulPose(Axis.YP.rotationDegrees(direction * 50.0F));
-            poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 335));
+            instance.mulPose(Axis.YP.rotationDegrees(direction * 50.0F));
+            instance.mulPose(Axis.ZP.rotationDegrees(direction * 335));
         }
     }
 
@@ -120,7 +120,7 @@ public abstract class MixinItemInHandRenderer {
     @Definition(id = "ShieldItem", type = ShieldItem.class)
     @Expression("item.getItem() instanceof ShieldItem")
     @ModifyExpressionValue(method = "submitArmWithItem", at = @At("MIXINEXTRAS:EXPRESSION"))
-    private boolean animatium$oldFirstPersonSwordBlock(final boolean original, @Local(argsOnly = true) AbstractClientPlayer player, @Local(argsOnly = true) InteractionHand hand, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) PoseStack poseStack) {
+    private boolean animatium$oldFirstPersonSwordBlock(final boolean original, @Local(argsOnly = true) final AbstractClientPlayer player, @Local(argsOnly = true) final InteractionHand hand, @Local(argsOnly = true) final ItemStack stack, @Local(argsOnly = true) final PoseStack poseStack) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemPositions && !(stack.getItem() instanceof ShieldItem)) {
             final int direction = Utils.getHandMultiplier(player, hand);
             // We do this to fix a rounding error in Mojangs code.
@@ -192,22 +192,13 @@ public abstract class MixinItemInHandRenderer {
         }
     }
 
-    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getItemSwapScale(F)F"))
-    private float animatium$highAttackSpeedVisual(final LocalPlayer instance, final float defaultAttackScale, final Operation<Float> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.highAttackSpeedVisual) {
-            return defaultAttackScale;
-        } else {
-            return original.call(instance, defaultAttackScale);
-        }
-    }
-
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isHandsBusy()Z"))
-    private boolean animatium$heldItemVisibilityInBoat(LocalPlayer instance, Operation<Boolean> original) {
+    private boolean animatium$heldItemVisibilityInBoat(final LocalPlayer instance, final Operation<Boolean> original) {
         return (!Animatium.isEnabled() || !AnimatiumConfig.instance().items.heldItemVisibilityInBoat) && original.call(instance);
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getOffhandItem()Lnet/minecraft/world/item/ItemStack;"))
-    private void animatium$createCopyStack(final CallbackInfo ci, @Local LocalPlayer localPlayer, @Local ItemStack itemStack, @Share("copyStack") LocalRef<ItemStack> copyStack) {
+    private void animatium$createCopyStack(final CallbackInfo ci, @Local(name = "player") final LocalPlayer localPlayer, @Local(name = "nextMainHand") final ItemStack itemStack, @Share("copyStack") final LocalRef<ItemStack> copyStack) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
             // Initialize our copied stack
             copyStack.set(itemStack.copy());
