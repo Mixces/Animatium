@@ -41,15 +41,18 @@ import java.util.Optional;
 public class PanoramaPipelines {
     public static final BlendFunction PANORAMA_BLEND = new BlendFunction(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA, BlendFactor.ONE, BlendFactor.ZERO);
 
-    public static final RenderPipeline.Snippet LEGACY_PANORAMA_SNIPPET = RenderPipeline.builder()
-            .withVertexShader(Animatium.location("core/legacy_panorama"))
-            .withFragmentShader(Animatium.location("core/legacy_panorama"))
-            .withDepthStencilState(RenderUtils.NO_DEPTH_WRITE)
-            .withCull(false)
+    public static final RenderPipeline.Snippet TEXTURED_QUAD = RenderPipeline.builder()
             .withBindGroupLayout(BindGroupLayouts.GLOBALS)
             .withBindGroupLayout(BindGroupLayouts.MATRICES_PROJECTION)
             .withBindGroupLayout(BindGroupLayouts.SAMPLER0)
             .withPrimitiveTopology(PrimitiveTopology.QUADS)
+            .buildSnippet();
+
+    public static final RenderPipeline.Snippet LEGACY_PANORAMA_SNIPPET = RenderPipeline.builder(TEXTURED_QUAD)
+            .withVertexShader(Animatium.location("core/legacy_panorama"))
+            .withFragmentShader(Animatium.location("core/legacy_panorama"))
+            .withDepthStencilState(RenderUtils.NO_DEPTH_WRITE)
+            .withCull(false)
             .withVertexBinding(0, DefaultVertexFormat.POSITION)
             .buildSnippet();
 
@@ -63,15 +66,11 @@ public class PanoramaPipelines {
             .withColorTargetState(new ColorTargetState(Optional.of(PANORAMA_BLEND), GpuFormat.RGBA8_UNORM, ColorTargetState.WRITE_COLOR))
             .build();
 
-    public static final RenderPipeline LEGACY_PANORAMA_BLUR = RenderPipeline.builder()
+    public static final RenderPipeline LEGACY_PANORAMA_BLUR = RenderPipeline.builder(TEXTURED_QUAD)
             .withLocation(Animatium.location("pipeline/legacy_panorama_blur"))
             .withVertexShader(Animatium.location("core/legacy_panorama_blur"))
             .withFragmentShader(Animatium.location("core/legacy_panorama_blur"))
             .withColorTargetState(new ColorTargetState(Optional.of(PanoramaPipelines.PANORAMA_BLEND), GpuFormat.RGBA8_UNORM, ColorTargetState.WRITE_COLOR))
-            .withBindGroupLayout(BindGroupLayouts.GLOBALS)
-            .withBindGroupLayout(BindGroupLayouts.MATRICES_PROJECTION)
-            .withBindGroupLayout(BindGroupLayouts.SAMPLER0)
-            .withPrimitiveTopology(PrimitiveTopology.QUADS)
             .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX)
             .build();
 }
