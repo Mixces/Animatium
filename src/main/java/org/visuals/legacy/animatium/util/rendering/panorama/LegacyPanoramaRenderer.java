@@ -26,16 +26,20 @@
 package org.visuals.legacy.animatium.util.rendering.panorama;
 
 import com.mojang.blaze3d.GpuFormat;
+import com.mojang.blaze3d.IndexType;
 import com.mojang.blaze3d.ProjectionType;
+import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderPass;
+import com.mojang.blaze3d.systems.RenderPassDescriptor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.textures.GpuTextureView;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
@@ -56,7 +60,11 @@ import org.jspecify.annotations.Nullable;
 import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.rendering.ImmediateRenderer;
 
+import java.nio.ByteBuffer;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 // Ported code of the old <=1.12.2 panorama renderer (w/ blur)
 public class LegacyPanoramaRenderer {
@@ -77,8 +85,7 @@ public class LegacyPanoramaRenderer {
     private static final GpuTexture backgroundTexture;
     private static final GpuTextureView backgroundTextureView;
 
-    private static int width;
-    private static int height;
+    private static PanoramaRenderState state;
     private static float spin = 0.0F;
 
     static {
@@ -92,47 +99,12 @@ public class LegacyPanoramaRenderer {
     }
 
     public static void render(final GuiGraphicsExtractor graphics) {
-        assert panoramaTarget.getColorTexture() != null;
         renderPanorama();
-
-        final Matrix3x2f pose = graphics.pose();
-        for (int pass = 0; pass < 7; ++pass) {
-            RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(
-                    panoramaTarget.getColorTexture(), // source
-                    backgroundTexture, // destination
-                    0, // mipLevel
-                    0, // destX
-                    0, // destY
-                    0, // srcX
-                    0, // srcY
-                    panoramaTarget.width, // width
-                    panoramaTarget.height // height
-            );
-
-            try (final ImmediateRenderer renderer = ImmediateRenderer.of("Legacy Panorama Blur")) {
-                renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA_BLUR);
-                renderer.setRenderArea(VIEWPORT);
-                renderer.setup(vertexConsumer -> {
-                    for (int cycle = 0; cycle < 3; ++cycle) {
-                        final int color = ARGB.white(1.0F / (cycle + 1.0F));
-                        final float growth = (cycle - 1.5F) / 256.0F;
-                        vertexConsumer.addVertexWith2DPose(pose, width, height).setUv(0.0F + growth, 1.0F).setColor(color);
-                        vertexConsumer.addVertexWith2DPose(pose, width, 0.0F).setUv(1.0F + growth, 1.0F).setColor(color);
-                        vertexConsumer.addVertexWith2DPose(pose, 0.0F, 0.0F).setUv(1.0F + growth, 0.0F).setColor(color);
-                        vertexConsumer.addVertexWith2DPose(pose, 0.0F, height).setUv(0.0F + growth, 0.0F).setColor(color);
-                    }
-                }, 12);
-
-                renderer.setTexture(0, backgroundTextureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
-                renderer.drawGuiTo(panoramaTarget);
-            }
-        }
+        blurPanorama(graphics.pose());
     }
 
     public static void extractRenderState(final GuiGraphicsExtractor graphics, final int width, final int height, final float tickDelta) {
-        LegacyPanoramaRenderer.width = width;
-        LegacyPanoramaRenderer.height = height;
-        spin += tickDelta;
+        state = new PanoramaRenderState(width, height, spin += tickDelta);
         graphics.guiRenderState.addGuiElement(new BlitTexture(graphics.pose(), backgroundTextureView, width, height));
     }
 
@@ -149,8 +121,8 @@ public class LegacyPanoramaRenderer {
             final float y = ((float) layer / 8 / 8.0F - 0.5F) / 64.0F;
             final Matrix4f layerMatrix = new Matrix4f(rootMatrix)
                     .translate(x, y, 0.0F)
-                    .rotateX(Utils.toRadians(Mth.sin(spin / 400.0F) * 25.0F + 20.0F)) // xRot
-                    .rotateY(Utils.toRadians(-spin * 0.1F)); // yRot
+                    .rotateX(Utils.toRadians(Mth.sin(state.spin / 400.0F) * 25.0F + 20.0F)) // xRot
+                    .rotateY(Utils.toRadians(-state.spin * 0.1F)); // yRot
             for (int panoramaIdx = 0; panoramaIdx < 6; panoramaIdx++) {
                 final Matrix4f faceMatrix = new Matrix4f(layerMatrix);
                 final Optional<Quaternionf> rotation = Optional.ofNullable(switch (panoramaIdx) {
@@ -184,6 +156,42 @@ public class LegacyPanoramaRenderer {
             pipeline = PanoramaPipelines.LEGACY_PANORAMA_2;
         }
         RenderSystem.restoreProjectionMatrix();
+    }
+
+    private static void blurPanorama(final Matrix3x2f pose) {
+        try (final ImmediateRenderer renderer = ImmediateRenderer.of("Legacy Panorama Blur")) {
+            renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA_BLUR);
+            renderer.setRenderArea(VIEWPORT);
+
+            renderer.setup(vertexConsumer -> {
+                for (int cycle = 0; cycle < 3; ++cycle) {
+                    final int color = ARGB.white(1.0F / (cycle + 1.0F));
+                    final float growth = (cycle - 1.5F) / 256.0F;
+                    vertexConsumer.addVertexWith2DPose(pose, state.width, state.height).setUv(0.0F + growth, 1.0F).setColor(color);
+                    vertexConsumer.addVertexWith2DPose(pose, state.width, 0.0F).setUv(1.0F + growth, 1.0F).setColor(color);
+                    vertexConsumer.addVertexWith2DPose(pose, 0.0F, 0.0F).setUv(1.0F + growth, 0.0F).setColor(color);
+                    vertexConsumer.addVertexWith2DPose(pose, 0.0F, state.height).setUv(0.0F + growth, 0.0F).setColor(color);
+                }
+            }, 12);
+
+            renderer.setTexture(0, backgroundTextureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
+            for (int iter = 0; iter < 7; ++iter) {
+                RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(Objects.requireNonNull(panoramaTarget.getColorTexture()), backgroundTexture, 0, 0, 0, 0, 0, panoramaTarget.width, panoramaTarget.height);
+                renderer.drawGuiTo(panoramaTarget);
+            }
+        }
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    private static RenderPassDescriptor createDescriptor(final Supplier<String> label, final RenderTarget renderTarget, final RenderPass.RenderArea renderArea) {
+        final RenderPassDescriptor descriptor = RenderPassDescriptor.create(label);
+        descriptor.withColorAttachment(renderTarget.getColorTextureView());
+        if (renderTarget.useDepth) {
+            descriptor.withDepthAttachment(renderTarget.getDepthTextureView());
+        }
+
+        descriptor.withRenderArea(renderArea);
+        return descriptor;
     }
 
     private static void clearTargets() {
@@ -233,6 +241,46 @@ public class LegacyPanoramaRenderer {
         @Override
         public @NonNull ScreenRectangle bounds() {
             return new ScreenRectangle(0, 0, this.width, this.height);
+        }
+    }
+
+    private record PanoramaRenderState(int width, int height, float spin) {
+    }
+
+    private record Geometry(GpuBuffer vertexBuffer, GpuBuffer indexBuffer, IndexType indexType, int indexCount) {
+        public static Geometry compile(final RenderPipeline pipeline, final int vertexCount, final Consumer<VertexConsumer> vertexConsumer) {
+            final VertexFormat format = pipeline.getVertexFormatBinding(0);
+            assert format != null;
+            try (final ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(format.getVertexSize() * vertexCount)) {
+                final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, pipeline.getPrimitiveTopology(), format);
+                vertexConsumer.accept(builder);
+                try (final MeshData meshData = builder.buildOrThrow()) {
+                    final GpuDevice device = RenderSystem.getDevice();
+                    final GpuBuffer vertexBuffer = device.createBuffer(() -> "Static geometry vertex buffer", GpuBuffer.USAGE_VERTEX, meshData.vertexBuffer());
+                    final int indexCount = meshData.drawState().indexCount();
+
+                    GpuBuffer indexBuffer;
+                    IndexType indexType;
+
+                    final ByteBuffer indexByteBuffer = meshData.indexBuffer();
+                    if (indexByteBuffer == null) {
+                        final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.getPrimitiveTopology());
+                        indexBuffer = autoStorageIndexBuffer.getBuffer(indexCount);
+                        indexType = autoStorageIndexBuffer.type();
+                    } else {
+                        indexBuffer = device.createBuffer(() -> "Static geometry index buffer", GpuBuffer.USAGE_INDEX, indexByteBuffer);
+                        indexType = meshData.drawState().indexType();
+                    }
+
+                    return new Geometry(vertexBuffer, indexBuffer, indexType, indexCount);
+                }
+            }
+        }
+
+        public void render(final RenderPass pass) {
+            pass.setVertexBuffer(0, this.vertexBuffer.slice());
+            pass.setIndexBuffer(this.indexBuffer, this.indexType);
+            pass.drawIndexed(0, 0, this.indexCount, 1);
         }
     }
 }
