@@ -26,7 +26,10 @@
 package org.visuals.legacy.animatium.util.rendering;
 
 import com.mojang.blaze3d.pipeline.DepthStencilState;
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.CompareOp;
+import com.mojang.blaze3d.systems.RenderPass;
+import com.mojang.blaze3d.systems.RenderPassDescriptor;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.gui.Font;
@@ -34,9 +37,23 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.phys.AABB;
 import org.joml.Matrix3x2fStack;
 
+import java.util.function.Supplier;
+
 @UtilityClass
 public class RenderUtils {
     public static final DepthStencilState NO_DEPTH_WRITE = new DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false);
+
+    @SuppressWarnings("DataFlowIssue")
+    public static RenderPassDescriptor createDescriptor(final Supplier<String> label, final RenderTarget renderTarget, final RenderPass.RenderArea renderArea) {
+        final RenderPassDescriptor descriptor = RenderPassDescriptor.create(label);
+        descriptor.withColorAttachment(renderTarget.getColorTextureView());
+        if (renderTarget.useDepth) {
+            descriptor.withDepthAttachment(renderTarget.getDepthTextureView());
+        }
+
+        descriptor.withRenderArea(renderArea);
+        return descriptor;
+    }
 
     public void fillVerticalLine(GuiGraphicsExtractor context, int x, int y, int length, int color) {
         context.fill(x, y, x + 1, y + length, color);

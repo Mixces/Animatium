@@ -51,7 +51,7 @@ public class PanoramaPipelines {
             .withBindGroupLayout(BindGroupLayouts.MATRICES_PROJECTION)
             .withBindGroupLayout(BindGroupLayouts.SAMPLER0)
             .withPrimitiveTopology(PrimitiveTopology.QUADS)
-            .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX_COLOR)
+            .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX)
             .buildSnippet();
 
     public static final RenderPipeline LEGACY_PANORAMA_1 = RenderPipeline.builder(LEGACY_PANORAMA_SNIPPET)

@@ -26,20 +26,16 @@
 package org.visuals.legacy.animatium.util.rendering.panorama;
 
 import com.mojang.blaze3d.GpuFormat;
-import com.mojang.blaze3d.IndexType;
 import com.mojang.blaze3d.ProjectionType;
-import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderPass;
-import com.mojang.blaze3d.systems.RenderPassDescriptor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.textures.GpuTextureView;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
@@ -58,13 +54,10 @@ import org.joml.Vector4f;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.rendering.Geometry;
 import org.visuals.legacy.animatium.util.rendering.ImmediateRenderer;
 
-import java.nio.ByteBuffer;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 // Ported code of the old <=1.12.2 panorama renderer (w/ blur)
 public class LegacyPanoramaRenderer {
@@ -108,58 +101,63 @@ public class LegacyPanoramaRenderer {
         graphics.guiRenderState.addGuiElement(new BlitTexture(graphics.pose(), backgroundTextureView, width, height));
     }
 
+    private static final Matrix4f BASE_PANORAMA_MATRIX = new Matrix4f()
+            .rotateX(Utils.toRadians(180.0F))
+            .rotateZ(Utils.toRadians(90.0F));
+
+    private static final Quaternionf[] PANORAMA_FACE_ROTATION = new Quaternionf[]{
+            new Quaternionf(),
+            Axis.YP.rotationDegrees(90.0F),
+            Axis.YP.rotationDegrees(180.0F),
+            Axis.YN.rotationDegrees(90.0F),
+            Axis.XP.rotationDegrees(90.0F),
+            Axis.XN.rotationDegrees(90.0F)
+    };
+
+    private static final Geometry PANORAMA_GEOMETRY = Geometry.compile(PanoramaPipelines.LEGACY_PANORAMA_1, 4, vertexConsumer -> {
+        vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F).setUv(0.0F, 0.0F);
+        vertexConsumer.addVertex(1.0F, -1.0F, 1.0F).setUv(1.0F, 0.0F);
+        vertexConsumer.addVertex(1.0F, 1.0F, 1.0F).setUv(1.0F, 1.0F);
+        vertexConsumer.addVertex(-1.0F, 1.0F, 1.0F).setUv(0.0F, 1.0F);
+    });
+
     private static void renderPanorama() {
         projection.setupPerspective(0.05F, 10.0F, 120.0F, 1.0F, 1.0F);
         RenderSystem.backupProjectionMatrix();
         RenderSystem.setProjectionMatrix(projectionMatrixBuffer.getBuffer(projection), ProjectionType.PERSPECTIVE);
-        final Matrix4f rootMatrix = new Matrix4f()
-                .rotateX(Utils.toRadians(180.0F))
-                .rotateZ(Utils.toRadians(90.0F));
-        RenderPipeline pipeline = PanoramaPipelines.LEGACY_PANORAMA_1;
-        for (int layer = 0; layer < 64; layer++) {
-            final float x = (layer % 8 / 8.0F - 0.5F) / 64.0F;
-            final float y = ((float) layer / 8 / 8.0F - 0.5F) / 64.0F;
-            final Matrix4f layerMatrix = new Matrix4f(rootMatrix)
-                    .translate(x, y, 0.0F)
-                    .rotateX(Utils.toRadians(Mth.sin(state.spin / 400.0F) * 25.0F + 20.0F)) // xRot
-                    .rotateY(Utils.toRadians(-state.spin * 0.1F)); // yRot
-            for (int panoramaIdx = 0; panoramaIdx < 6; panoramaIdx++) {
-                final Matrix4f faceMatrix = new Matrix4f(layerMatrix);
-                final Optional<Quaternionf> rotation = Optional.ofNullable(switch (panoramaIdx) {
-                    case 1 -> Axis.YP.rotationDegrees(90.0F);
-                    case 2 -> Axis.YP.rotationDegrees(180.0F);
-                    case 3 -> Axis.YN.rotationDegrees(90.0F);
-                    case 4 -> Axis.XP.rotationDegrees(90.0F);
-                    case 5 -> Axis.XN.rotationDegrees(90.0F);
-                    default -> null;
-                });
-                rotation.ifPresent(faceMatrix::rotate);
-                try (final ImmediateRenderer renderer = ImmediateRenderer.of("Legacy Panorama Face (Layer #" + layer + ", Index #" + panoramaIdx + ")")) {
-                    renderer.setPipeline(pipeline);
-                    renderer.setRenderArea(VIEWPORT);
-                    renderer.setDynamicTransforms(renderer.getDynamicTransforms().withModelViewMatrix(faceMatrix));
+        try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Panorama Cubemap")) {
+            renderer.setRenderArea(VIEWPORT);
 
-                    final int currentLayer = layer;
-                    renderer.setup((vertexConsumer) -> {
-                        final int color = ARGB.white(1.0F / (currentLayer + 1.0F));
-                        vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F).setUv(0.0F, 0.0F).setColor(color);
-                        vertexConsumer.addVertex(1.0F, -1.0F, 1.0F).setUv(1.0F, 0.0F).setColor(color);
-                        vertexConsumer.addVertex(1.0F, 1.0F, 1.0F).setUv(1.0F, 1.0F).setColor(color);
-                        vertexConsumer.addVertex(-1.0F, 1.0F, 1.0F).setUv(0.0F, 1.0F).setColor(color);
-                    }, 4);
+            RenderPipeline pipeline = PanoramaPipelines.LEGACY_PANORAMA_1;
+            for (int layer = 0; layer < 64; layer++) {
+                final float x = (layer % 8 / 8.0F - 0.5F) / 64.0F;
+                final float y = ((float) layer / 8 / 8.0F - 0.5F) / 64.0F;
+                final Matrix4f layerMatrix = new Matrix4f(BASE_PANORAMA_MATRIX)
+                        .translate(x, y, 0.0F)
+                        .rotateX(Utils.toRadians(Mth.sin(state.spin / 400.0F) * 25.0F + 20.0F)) // xRot
+                        .rotateY(Utils.toRadians(-state.spin * 0.1F)); // yRot
 
+                renderer.setPipeline(pipeline);
+                renderer.setup(PANORAMA_GEOMETRY);
+
+                final int color = ARGB.white(1.0F / (layer + 1.0F));
+                for (int panoramaIdx = 0; panoramaIdx < 6; panoramaIdx++) {
+                    renderer.setDynamicTransforms(renderer.getDynamicTransforms()
+                            .withModelViewMatrix(new Matrix4f(layerMatrix).rotate(PANORAMA_FACE_ROTATION[panoramaIdx]))
+                            .withShaderColor(color));
                     renderer.setTexture(0, PANORAMA_TEXTURES[panoramaIdx]);
                     renderer.drawTo(LegacyPanoramaRenderer.panoramaTarget);
                 }
-            }
 
-            pipeline = PanoramaPipelines.LEGACY_PANORAMA_2;
+                pipeline = PanoramaPipelines.LEGACY_PANORAMA_2;
+            }
         }
+
         RenderSystem.restoreProjectionMatrix();
     }
 
     private static void blurPanorama(final Matrix3x2f pose) {
-        try (final ImmediateRenderer renderer = ImmediateRenderer.of("Legacy Panorama Blur")) {
+        try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Panorama Blur")) {
             renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA_BLUR);
             renderer.setRenderArea(VIEWPORT);
 
@@ -182,18 +180,6 @@ public class LegacyPanoramaRenderer {
         }
     }
 
-    @SuppressWarnings("DataFlowIssue")
-    private static RenderPassDescriptor createDescriptor(final Supplier<String> label, final RenderTarget renderTarget, final RenderPass.RenderArea renderArea) {
-        final RenderPassDescriptor descriptor = RenderPassDescriptor.create(label);
-        descriptor.withColorAttachment(renderTarget.getColorTextureView());
-        if (renderTarget.useDepth) {
-            descriptor.withDepthAttachment(renderTarget.getDepthTextureView());
-        }
-
-        descriptor.withRenderArea(renderArea);
-        return descriptor;
-    }
-
     private static void clearTargets() {
         final GpuDevice device = RenderSystem.getDevice();
         final GpuTexture colorTexture = panoramaTarget.getColorTexture();
@@ -209,8 +195,8 @@ public class LegacyPanoramaRenderer {
         device.createCommandEncoder().clearColorTexture(backgroundTexture, CLEAR_COLOR);
     }
 
-    private record BlitTexture(Matrix3x2f pose,
-                               GpuTextureView textureView, int width, int height) implements GuiElementRenderState {
+    private record BlitTexture(Matrix3x2f pose, GpuTextureView textureView,
+                               int width, int height) implements GuiElementRenderState {
         @Override
         public void buildVertices(final VertexConsumer vertexConsumer) {
             final int color = ARGB.white(1.0F);
@@ -224,12 +210,12 @@ public class LegacyPanoramaRenderer {
         }
 
         @Override
-        public RenderPipeline pipeline() {
+        public @NonNull RenderPipeline pipeline() {
             return RenderPipelines.GUI_TEXTURED;
         }
 
         @Override
-        public TextureSetup textureSetup() {
+        public @NonNull TextureSetup textureSetup() {
             return TextureSetup.singleTexture(this.textureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
         }
 
@@ -245,42 +231,5 @@ public class LegacyPanoramaRenderer {
     }
 
     private record PanoramaRenderState(int width, int height, float spin) {
-    }
-
-    private record Geometry(GpuBuffer vertexBuffer, GpuBuffer indexBuffer, IndexType indexType, int indexCount) {
-        public static Geometry compile(final RenderPipeline pipeline, final int vertexCount, final Consumer<VertexConsumer> vertexConsumer) {
-            final VertexFormat format = pipeline.getVertexFormatBinding(0);
-            assert format != null;
-            try (final ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(format.getVertexSize() * vertexCount)) {
-                final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, pipeline.getPrimitiveTopology(), format);
-                vertexConsumer.accept(builder);
-                try (final MeshData meshData = builder.buildOrThrow()) {
-                    final GpuDevice device = RenderSystem.getDevice();
-                    final GpuBuffer vertexBuffer = device.createBuffer(() -> "Static geometry vertex buffer", GpuBuffer.USAGE_VERTEX, meshData.vertexBuffer());
-                    final int indexCount = meshData.drawState().indexCount();
-
-                    GpuBuffer indexBuffer;
-                    IndexType indexType;
-
-                    final ByteBuffer indexByteBuffer = meshData.indexBuffer();
-                    if (indexByteBuffer == null) {
-                        final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.getPrimitiveTopology());
-                        indexBuffer = autoStorageIndexBuffer.getBuffer(indexCount);
-                        indexType = autoStorageIndexBuffer.type();
-                    } else {
-                        indexBuffer = device.createBuffer(() -> "Static geometry index buffer", GpuBuffer.USAGE_INDEX, indexByteBuffer);
-                        indexType = meshData.drawState().indexType();
-                    }
-
-                    return new Geometry(vertexBuffer, indexBuffer, indexType, indexCount);
-                }
-            }
-        }
-
-        public void render(final RenderPass pass) {
-            pass.setVertexBuffer(0, this.vertexBuffer.slice());
-            pass.setIndexBuffer(this.indexBuffer, this.indexType);
-            pass.drawIndexed(0, 0, this.indexCount, 1);
-        }
     }
 }

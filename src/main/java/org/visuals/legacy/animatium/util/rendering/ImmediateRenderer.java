@@ -70,7 +70,7 @@ public class ImmediateRenderer implements AutoCloseable {
 
     @Getter
     @Setter
-    private String displayName;
+    private Supplier<String> name;
     @Getter
     @Setter
     private RenderPipeline pipeline;
@@ -82,41 +82,36 @@ public class ImmediateRenderer implements AutoCloseable {
     private DynamicTransforms dynamicTransforms;
 
     // Internal
-    private GpuBuffer vertexBuffer;
-    private GpuBuffer indexBuffer;
-    private IndexType indexType;
-    private int indexCount;
+    private Geometry geometry;
     private GpuBuffer uniformBuffer;
     @Getter
     private boolean setup;
 
-    private ImmediateRenderer(final String displayName) {
+    private ImmediateRenderer(final Supplier<String> name) {
         // Data
         this.textures = new HashMap<>();
         this.uniforms = new HashMap<>();
-        this.displayName = displayName;
+        this.name = name;
         this.pipeline = null;
         this.renderArea = null;
         this.dynamicTransforms = new DynamicTransforms(null, null, new Vector4f(1.0F), new Vector3f());
 
         // Internal
-        this.vertexBuffer = null;
-        this.indexBuffer = null;
-        this.indexType = null;
-        this.indexCount = -1;
+        this.geometry = null;
         this.uniformBuffer = null;
         this.setup = false;
     }
 
-    public static ImmediateRenderer of(final String displayName) {
-        return new ImmediateRenderer(displayName);
+    public static ImmediateRenderer of(final Supplier<String> label) {
+        return new ImmediateRenderer(label);
     }
 
-    public void setup(final GpuBuffer vertexBuffer, final GpuBuffer indexBuffer, final IndexType type, final int indexCount) {
-        this.vertexBuffer = vertexBuffer;
-        this.indexBuffer = indexBuffer;
-        this.indexType = type;
-        this.indexCount = indexCount;
+    public void setup(final Geometry geometry) {
+        if (this.geometry != null && this.geometry != geometry) {
+            this.geometry.vertexBuffer().close();
+        }
+
+        this.geometry = geometry;
         this.setup = true;
     }
 
@@ -140,16 +135,16 @@ public class ImmediateRenderer implements AutoCloseable {
                 indexType = meshData.drawState().indexType();
             }
 
-            this.setup(vertexBuffer, indexBuffer, indexType, indexCount);
+            this.setup(new Geometry(vertexBuffer, indexBuffer, indexType, indexCount));
         }
     }
 
     private GpuBuffer uploadImmediateVertexBuffer(final ByteBuffer buffer) {
-        return this.immediateDrawVertexBuffer = uploadToBuffer(this.immediateDrawVertexBuffer, () -> "Immediate vertex buffer for " + this.displayName, GpuBuffer.USAGE_VERTEX | GpuBuffer.USAGE_COPY_DST, buffer);
+        return this.immediateDrawVertexBuffer = uploadToBuffer(this.immediateDrawVertexBuffer, () -> "Immediate vertex buffer for " + this.name.get(), GpuBuffer.USAGE_VERTEX | GpuBuffer.USAGE_COPY_DST, buffer);
     }
 
     private GpuBuffer uploadImmediateIndexBuffer(final ByteBuffer buffer) {
-        return this.immediateDrawIndexBuffer = uploadToBuffer(this.immediateDrawIndexBuffer, () -> "Immediate index buffer for " + this.displayName, GpuBuffer.USAGE_INDEX | GpuBuffer.USAGE_COPY_DST, buffer);
+        return this.immediateDrawIndexBuffer = uploadToBuffer(this.immediateDrawIndexBuffer, () -> "Immediate index buffer for " + this.name.get(), GpuBuffer.USAGE_INDEX | GpuBuffer.USAGE_COPY_DST, buffer);
     }
 
     private static GpuBuffer uploadToBuffer(final @Nullable GpuBuffer target, final Supplier<String> label, final @GpuBuffer.Usage int usage, final ByteBuffer buffer) {
@@ -257,28 +252,26 @@ public class ImmediateRenderer implements AutoCloseable {
         } else {
             final GpuBufferSlice transforms = this.dynamicTransforms.buffer();
             final GpuBufferSlice uniformData = this.setupUniformsBuffer();
-            try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(this.createDescriptor(renderTarget))) {
-                renderPass.setPipeline(this.pipeline);
-                renderPass.setVertexBuffer(0, this.vertexBuffer.slice());
-                renderPass.setIndexBuffer(this.indexBuffer, this.indexType);
-                for (Map.Entry<String, TextureAndSampler> entry : this.textures.entrySet()) {
+            try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(this.createDescriptor(renderTarget))) {
+                pass.setPipeline(this.pipeline);
+                for (final Map.Entry<String, TextureAndSampler> entry : this.textures.entrySet()) {
                     final TextureAndSampler textureAndSampler = entry.getValue();
-                    renderPass.bindTexture(entry.getKey(), textureAndSampler.textureView, textureAndSampler.sampler);
+                    pass.bindTexture(entry.getKey(), textureAndSampler.textureView, textureAndSampler.sampler);
                 }
 
-                RenderSystem.bindDefaultUniforms(renderPass);
-                renderPass.setUniform("DynamicTransforms", transforms);
+                RenderSystem.bindDefaultUniforms(pass);
+                pass.setUniform("DynamicTransforms", transforms);
                 if (uniformData != null) {
-                    renderPass.setUniform("Data", uniformData);
+                    pass.setUniform("Data", uniformData);
                 }
 
-                renderPass.drawIndexed(0, 0, this.indexCount, 1);
+                this.geometry.render(pass);
             }
         }
     }
 
     private RenderPassDescriptor createDescriptor(final RenderTarget renderTarget) {
-        final RenderPassDescriptor descriptor = RenderPassDescriptor.create(() -> this.displayName);
+        final RenderPassDescriptor descriptor = RenderPassDescriptor.create(this.name);
 
         final GpuTextureView colorTextureView = RenderSystem.outputColorTextureOverride != null ? RenderSystem.outputColorTextureOverride : renderTarget.getColorTextureView();
         assert colorTextureView != null;
@@ -359,7 +352,7 @@ public class ImmediateRenderer implements AutoCloseable {
                 if (this.uniformBuffer != null) {
                     RenderSystem.getDevice().createCommandEncoder().writeToBuffer(this.uniformBuffer.slice(), builder.get());
                 } else {
-                    this.uniformBuffer = RenderSystem.getDevice().createBuffer(() -> this.displayName + " Uniform Buffer", GpuBuffer.USAGE_UNIFORM | GpuBuffer.USAGE_COPY_DST, builder.get());
+                    this.uniformBuffer = RenderSystem.getDevice().createBuffer(() -> this.name + " Uniform Buffer", GpuBuffer.USAGE_UNIFORM | GpuBuffer.USAGE_COPY_DST, builder.get());
                 }
             }
 
@@ -371,12 +364,8 @@ public class ImmediateRenderer implements AutoCloseable {
     public void close() {
         this.textures.clear();
         this.uniforms.clear();
-        if (this.vertexBuffer != null) {
-            this.vertexBuffer = null;
-        }
-
-        if (this.indexBuffer != null) {
-            this.indexBuffer = null;
+        if (this.geometry != null) {
+            this.geometry.close();
         }
 
         if (this.uniformBuffer != null) {
