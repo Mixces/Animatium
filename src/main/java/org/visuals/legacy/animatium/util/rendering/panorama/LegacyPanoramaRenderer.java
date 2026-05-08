@@ -36,7 +36,6 @@ import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
@@ -49,7 +48,6 @@ import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import org.joml.Matrix3x2f;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 import org.joml.Vector4f;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -64,33 +62,30 @@ import java.util.Objects;
 public class LegacyPanoramaRenderer {
     private static final RenderPass.RenderArea VIEWPORT = new RenderPass.RenderArea(0, 0, 256, 256);
     private static final Vector4f CLEAR_COLOR = new Vector4f(0.0F, 0.0F, 0.0F, 1.0F);
-    private static final Identifier[] PANORAMA_TEXTURES = new Identifier[]{
-            Identifier.withDefaultNamespace("textures/gui/title/background/panorama_0.png"),
-            Identifier.withDefaultNamespace("textures/gui/title/background/panorama_1.png"),
-            Identifier.withDefaultNamespace("textures/gui/title/background/panorama_2.png"),
-            Identifier.withDefaultNamespace("textures/gui/title/background/panorama_3.png"),
-            Identifier.withDefaultNamespace("textures/gui/title/background/panorama_4.png"),
-            Identifier.withDefaultNamespace("textures/gui/title/background/panorama_5.png")
-    };
+
+    private static final Identifier CUBE_MAP_LOCATION = Identifier.withDefaultNamespace("textures/gui/title/background/panorama");
 
     private static final Matrix4f BASE_PANORAMA_MATRIX = new Matrix4f()
             .rotateX(Utils.toRadians(180.0F))
             .rotateZ(Utils.toRadians(90.0F));
 
-    private static final Quaternionf[] PANORAMA_FACE_ROTATION = new Quaternionf[]{
-            new Quaternionf(),
-            Axis.YP.rotationDegrees(90.0F),
-            Axis.YP.rotationDegrees(180.0F),
-            Axis.YN.rotationDegrees(90.0F),
-            Axis.XP.rotationDegrees(90.0F),
-            Axis.XN.rotationDegrees(90.0F)
+    private static final Matrix4f[] PANORAMA_FACE_ROTATION = new Matrix4f[]{
+            new Matrix4f(),
+            new Matrix4f().rotateY((float) Math.toRadians(90.0F)),
+            new Matrix4f().rotateY((float) Math.toRadians(180.0F)),
+            new Matrix4f().rotateY((float) Math.toRadians(-90.0F)),
+            new Matrix4f().rotateX((float) Math.toRadians(90.0F)),
+            new Matrix4f().rotateX((float) Math.toRadians(-90.0F))
     };
 
-    private static final Geometry PANORAMA_GEOMETRY = Geometry.compile(PanoramaPipelines.LEGACY_PANORAMA_1, true, 4, vertexConsumer -> {
-        vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F).setUv(0.0F, 0.0F);
-        vertexConsumer.addVertex(1.0F, -1.0F, 1.0F).setUv(1.0F, 0.0F);
-        vertexConsumer.addVertex(1.0F, 1.0F, 1.0F).setUv(1.0F, 1.0F);
-        vertexConsumer.addVertex(-1.0F, 1.0F, 1.0F).setUv(0.0F, 1.0F);
+    private static final Geometry PANORAMA_GEOMETRY = Geometry.compile(PanoramaPipelines.LEGACY_PANORAMA_1, true, 24, vertexConsumer -> {
+        for (int panoramaIdx = 0; panoramaIdx < 6; panoramaIdx++) {
+            final Matrix4f pose = PANORAMA_FACE_ROTATION[panoramaIdx];
+            vertexConsumer.addVertex(pose, -1.0F, -1.0F, 1.0F);
+            vertexConsumer.addVertex(pose, 1.0F, -1.0F, 1.0F);
+            vertexConsumer.addVertex(pose, 1.0F, 1.0F, 1.0F);
+            vertexConsumer.addVertex(pose, -1.0F, 1.0F, 1.0F);
+        }
     });
 
     private static final Projection projection;
@@ -142,12 +137,10 @@ public class LegacyPanoramaRenderer {
                 renderer.setup(PANORAMA_GEOMETRY);
 
                 final int color = ARGB.white(1.0F / (layer + 1.0F));
-                for (int panoramaIdx = 0; panoramaIdx < 6; panoramaIdx++) {
-                    renderer.setTexture(0, PANORAMA_TEXTURES[panoramaIdx]);
-                    renderer.drawTo(panoramaTarget, DynamicTransforms.builder()
-                            .withModelViewMatrix(new Matrix4f(layerMatrix).rotate(PANORAMA_FACE_ROTATION[panoramaIdx]))
-                            .withShaderColor(color));
-                }
+                renderer.setTexture(0, CUBE_MAP_LOCATION);
+                renderer.drawTo(panoramaTarget, DynamicTransforms.builder()
+                        .withModelViewMatrix(layerMatrix)
+                        .withShaderColor(color));
 
                 pipeline = PanoramaPipelines.LEGACY_PANORAMA_2;
             }
@@ -182,7 +175,6 @@ public class LegacyPanoramaRenderer {
     }
 
     public static void close() {
-        PANORAMA_GEOMETRY.forceClose();
         projectionMatrixBuffer.close();
         backgroundTexture.close();
         backgroundTextureView.close();
