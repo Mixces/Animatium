@@ -179,6 +179,7 @@ public class ImmediateRenderer implements AutoCloseable {
         } else {
             final GpuBufferSlice transforms = dynamicTransforms.build();
             final GpuBufferSlice uniformData = this.setupUniformsBuffer();
+            final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(this.pipeline.getPrimitiveTopology());
             try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(RenderUtils.createDescriptor(this.name, renderTarget, this.renderArea))) {
                 pass.setPipeline(this.pipeline);
                 for (final Map.Entry<String, TextureAndSampler> entry : this.textures.entrySet()) {
@@ -186,13 +187,16 @@ public class ImmediateRenderer implements AutoCloseable {
                     pass.bindTexture(entry.getKey(), textureAndSampler.textureView, textureAndSampler.sampler);
                 }
 
+                pass.setVertexBuffer(0, this.geometry.vertexBuffer().slice());
+                pass.setIndexBuffer(autoStorageIndexBuffer.getBuffer(this.geometry.indexCount()), autoStorageIndexBuffer.type());
+
                 RenderSystem.bindDefaultUniforms(pass);
                 pass.setUniform("DynamicTransforms", transforms);
                 if (uniformData != null) {
                     pass.setUniform("Data", uniformData);
                 }
 
-                this.geometry.render(pass);
+                pass.drawIndexed(0, 0, this.geometry.indexCount(), 1);
             }
         }
     }

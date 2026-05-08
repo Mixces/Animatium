@@ -103,7 +103,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
 
     public void render() {
         if (this.state != null) {
-            this.renderCubeMap(this.state.spin);
+            this.renderCubeMap(0.0F);//this.state.spin);
             this.rotateAndBlurCubeMap(this.state.pose, this.state.width, this.state.height);
         }
     }
@@ -149,7 +149,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
             renderer.setRenderArea(VIEWPORT);
             renderer.setup(Geometry.texturedScreenQuad(pipeline, pose, width, height));
             renderer.setTexture(0, this.backgroundTextureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
-            for (int iter = 0; iter < 7; ++iter) {
+            for (int pass = 0; pass < 7; pass++) {
                 RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(Objects.requireNonNull(this.panoramaTarget.getColorTexture()), this.backgroundTexture, 0, 0, 0, 0, 0, this.panoramaTarget.width, this.panoramaTarget.height);
                 renderer.drawGuiTo(this.panoramaTarget, DynamicTransforms.builder());
             }

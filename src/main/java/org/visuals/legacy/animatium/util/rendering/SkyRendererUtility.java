@@ -139,8 +139,7 @@ public class SkyRendererUtility {
         final RenderPipeline pipeline = getLegacySkyPipeline(AnimatiumConfig.instance().other.planarSkyFog);
         blueVoidRenderer.setPipeline(pipeline);
 
-        final RenderSystem.AutoStorageIndexBuffer indexBuffer = RenderSystem.getSequentialBuffer(pipeline.getPrimitiveTopology());
-        blueVoidRenderer.setup(new Geometry(vertexBuffer, indexBuffer.getBuffer(indexCount), indexBuffer.type(), indexCount, false, true));
+        blueVoidRenderer.setup(new Geometry(vertexBuffer, indexCount, true));
         blueVoidRenderer.draw(DynamicTransforms.builder()
                 .withModelViewMatrix(RenderSystem.getModelViewMatrixCopy()
                         .translate(0.0F, AnimatiumConfig.instance().extras.dontMoveBlueVoid ? 12.0F : -((float) (depth - 16.0)), 0.0F))
