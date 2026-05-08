@@ -119,7 +119,6 @@
 		"v1.rendering.min_transparency.MixinSpriteContents_FixTransparencyLimit",
 		"v1.rendering.outlines.MixinGameRenderer_PersistentBlockOutline",
 		"v1.rendering.outlines.MixinLevelRenderer_BlockOutlines",
-		"v1.rendering.outlines.MixinLevelRenderer_EntityOutlines",
 		"v1.rendering.sky.MixinLevelRenderer_OldCloudRendering",
 		"v1.rendering.sky.MixinLevelRenderer_OldSkyRenderingCheck",
 		"v1.rendering.sky.MixinMinecraft_LoadLegacyClouds",
