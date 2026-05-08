@@ -107,13 +107,13 @@ public class LegacyPanoramaRenderer {
         clearTargets();
     }
 
-    public static void render(final Matrix3x2f pose) {
+    public static void render() {
         renderPanorama();
-        blurPanorama(pose);
+        blurPanorama();
     }
 
     public static void extractRenderState(final GuiGraphicsExtractor graphics, final int width, final int height, final float tickDelta) {
-        state = new PanoramaRenderState(width, height, spin += tickDelta);
+        state = new PanoramaRenderState(graphics.pose(), width, height, spin += tickDelta);
         graphics.guiRenderState.addGuiElement(new BlitTexture(graphics.pose(), backgroundTextureView, width, height));
     }
 
@@ -149,7 +149,7 @@ public class LegacyPanoramaRenderer {
         RenderSystem.restoreProjectionMatrix();
     }
 
-    private static void blurPanorama(final Matrix3x2f pose) {
+    private static void blurPanorama() {
         final RenderPipeline pipeline = PanoramaPipelines.LEGACY_PANORAMA_BLUR;
         try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Panorama Blur")) {
             renderer.setPipeline(pipeline);
@@ -159,10 +159,10 @@ public class LegacyPanoramaRenderer {
                 for (int cycle = 0; cycle < 3; ++cycle) {
                     final int color = ARGB.white(1.0F / (cycle + 1.0F));
                     final float growth = (cycle - 1.5F) / 256.0F;
-                    vertexConsumer.addVertexWith2DPose(pose, state.width, state.height).setUv(0.0F + growth, 1.0F).setColor(color);
-                    vertexConsumer.addVertexWith2DPose(pose, state.width, 0.0F).setUv(1.0F + growth, 1.0F).setColor(color);
-                    vertexConsumer.addVertexWith2DPose(pose, 0.0F, 0.0F).setUv(1.0F + growth, 0.0F).setColor(color);
-                    vertexConsumer.addVertexWith2DPose(pose, 0.0F, state.height).setUv(0.0F + growth, 0.0F).setColor(color);
+                    vertexConsumer.addVertexWith2DPose(state.pose, state.width, state.height).setUv(0.0F + growth, 1.0F).setColor(color);
+                    vertexConsumer.addVertexWith2DPose(state.pose, state.width, 0.0F).setUv(1.0F + growth, 1.0F).setColor(color);
+                    vertexConsumer.addVertexWith2DPose(state.pose, 0.0F, 0.0F).setUv(1.0F + growth, 0.0F).setColor(color);
+                    vertexConsumer.addVertexWith2DPose(state.pose, 0.0F, state.height).setUv(0.0F + growth, 0.0F).setColor(color);
                 }
             }));
 
@@ -181,18 +181,10 @@ public class LegacyPanoramaRenderer {
         panoramaTarget.destroyBuffers();
     }
 
+    @SuppressWarnings("DataFlowIssue")
     private static void clearTargets() {
         final GpuDevice device = RenderSystem.getDevice();
-        final GpuTexture colorTexture = panoramaTarget.getColorTexture();
-        if (colorTexture != null) {
-            device.createCommandEncoder().clearColorTexture(colorTexture, CLEAR_COLOR);
-        }
-
-        final GpuTexture depthTexture = panoramaTarget.getDepthTexture();
-        if (depthTexture != null) {
-            device.createCommandEncoder().clearDepthTexture(depthTexture, 0.0F);
-        }
-
+        device.createCommandEncoder().clearColorAndDepthTextures(panoramaTarget.getColorTexture(), CLEAR_COLOR, panoramaTarget.getDepthTexture(), 0.0F);
         device.createCommandEncoder().clearColorTexture(backgroundTexture, CLEAR_COLOR);
     }
 
@@ -231,6 +223,6 @@ public class LegacyPanoramaRenderer {
         }
     }
 
-    private record PanoramaRenderState(int width, int height, float spin) {
+    private record PanoramaRenderState(Matrix3x2f pose, int width, int height, float spin) {
     }
 }

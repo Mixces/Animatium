@@ -86,7 +86,6 @@
 		"v1.gui.screen_tweaks.MixinAbstractSliderButton_SnappySliderMovement",
 		"v1.gui.screen_tweaks.MixinFontPreparedTextBuilder_FixStrikethroughStyle",
 		"v1.gui.screen_tweaks.MixinGui_OnboardingScreen",
-		"v1.gui.screen_tweaks.MixinGui_SaveGraphics",
 		"v1.gui.screen_tweaks.MixinGuiRenderer_LegacyPanoramaRendering",
 		"v1.gui.screen_tweaks.MixinHud_OldCrosshairPosition",
 		"v1.gui.screen_tweaks.MixinInventoryMenu_OldCraftingSlots",
