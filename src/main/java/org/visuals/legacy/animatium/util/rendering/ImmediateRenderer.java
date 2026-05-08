@@ -144,14 +144,14 @@ public class ImmediateRenderer implements AutoCloseable {
     }
 
     private GpuBuffer uploadImmediateVertexBuffer(final ByteBuffer buffer) {
-        return this.immediateDrawVertexBuffer = uploadToBuffer(this.immediateDrawVertexBuffer, buffer, GpuBuffer.USAGE_VERTEX | GpuBuffer.USAGE_COPY_DST, () -> "Immediate vertex buffer for " + this.displayName);
+        return this.immediateDrawVertexBuffer = uploadToBuffer(this.immediateDrawVertexBuffer, () -> "Immediate vertex buffer for " + this.displayName, GpuBuffer.USAGE_VERTEX | GpuBuffer.USAGE_COPY_DST, buffer);
     }
 
     private GpuBuffer uploadImmediateIndexBuffer(final ByteBuffer buffer) {
-        return this.immediateDrawIndexBuffer = uploadToBuffer(this.immediateDrawIndexBuffer, buffer, GpuBuffer.USAGE_INDEX | GpuBuffer.USAGE_COPY_DST, () -> "Immediate index buffer for " + this.displayName);
+        return this.immediateDrawIndexBuffer = uploadToBuffer(this.immediateDrawIndexBuffer, () -> "Immediate index buffer for " + this.displayName, GpuBuffer.USAGE_INDEX | GpuBuffer.USAGE_COPY_DST, buffer);
     }
 
-    private static GpuBuffer uploadToBuffer(final @Nullable GpuBuffer target, final ByteBuffer buffer, final @GpuBuffer.Usage int usage, final Supplier<String> label) {
+    private static GpuBuffer uploadToBuffer(final @Nullable GpuBuffer target, final Supplier<String> label, final @GpuBuffer.Usage int usage, final ByteBuffer buffer) {
         final GpuDevice device = RenderSystem.getDevice();
         if (target == null || target.size() < buffer.remaining()) {
             if (target != null) {
