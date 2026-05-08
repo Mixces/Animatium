@@ -35,7 +35,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.ARGB;
-import org.joml.Matrix4fStack;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector4f;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
@@ -132,9 +132,6 @@ public class SkyRendererUtility {
     }
 
     public void renderBlueVoid(final int skyColor, final double depth) {
-        final Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
-        modelViewStack.pushMatrix();
-        modelViewStack.translate(0.0F, AnimatiumConfig.instance().extras.dontMoveBlueVoid ? 12.0F : -((float) (depth - 16.0)), 0.0F);
         if (blueVoidRenderer == null) {
             blueVoidRenderer = ImmediateRenderer.of(() -> "Blue void sky disc");
         }
@@ -142,11 +139,12 @@ public class SkyRendererUtility {
         final RenderPipeline pipeline = getLegacySkyPipeline(AnimatiumConfig.instance().other.planarSkyFog);
         blueVoidRenderer.setPipeline(pipeline);
 
-        final RenderSystem.AutoStorageIndexBuffer quadsIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.getPrimitiveTopology());
-        blueVoidRenderer.setup(new Geometry(getGpuBuffer(), quadsIndexBuffer.getBuffer(indexCount), quadsIndexBuffer.type(), indexCount, true));
-        blueVoidRenderer.draw(DynamicTransforms.builder().withShaderColor(new Vector4f(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F, 1.0F)));
-
-        modelViewStack.popMatrix();
+        final RenderSystem.AutoStorageIndexBuffer indexBuffer = RenderSystem.getSequentialBuffer(pipeline.getPrimitiveTopology());
+        blueVoidRenderer.setup(new Geometry(vertexBuffer, indexBuffer.getBuffer(indexCount), indexBuffer.type(), indexCount, false, true));
+        blueVoidRenderer.draw(DynamicTransforms.builder()
+                .withModelViewMatrix(RenderSystem.getModelViewMatrixCopy()
+                        .translate(0.0F, AnimatiumConfig.instance().extras.dontMoveBlueVoid ? 12.0F : -((float) (depth - 16.0)), 0.0F))
+                .withShaderColor(new Vector4f(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F, 1.0F)));
     }
 
     public void buildSkyHalf(final VertexConsumer vertexConsumer, final float y, final boolean bottom) {
@@ -170,13 +168,13 @@ public class SkyRendererUtility {
         }
     }
 
-    public GpuBuffer initializeSky(final Consumer<VertexConsumer> vertexConsumer) {
-        try (ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(8112)) {
+    public @Nullable GpuBuffer initializeSky(final Consumer<VertexConsumer> vertexConsumer) {
+        try (final ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(8112)) {
             final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, PrimitiveTopology.QUADS, DefaultVertexFormat.POSITION);
             vertexConsumer.accept(builder);
-            try (MeshData meshData = builder.buildOrThrow()) {
+            try (final MeshData meshData = builder.buildOrThrow()) {
                 indexCount = meshData.drawState().indexCount();
-                return RenderSystem.getDevice().createBuffer(() -> "Static sky vertex buffer", GpuBuffer.USAGE_VERTEX, meshData.vertexBuffer());
+                return RenderSystem.getDevice().createBuffer(() -> "Sky vertex buffer", GpuBuffer.USAGE_VERTEX, meshData.vertexBuffer());
             } catch (final Exception ignored) {
                 return null;
             }

@@ -274,7 +274,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
             }
 
             final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(renderer.getPipeline().getPrimitiveTopology());
-            renderer.setup(new Geometry(this.vertexBuffer, autoStorageIndexBuffer.getBuffer(this.indexCount), autoStorageIndexBuffer.type(), this.indexCount, true));
+            renderer.setup(new Geometry(this.vertexBuffer, autoStorageIndexBuffer.getBuffer(this.indexCount), autoStorageIndexBuffer.type(), this.indexCount, false, true));
             renderer.drawTo(cloudsTarget, DynamicTransforms.builder()
                     .withShaderColor(ARGB.color(1.0F, color))
                     .withModelOffset(offset));

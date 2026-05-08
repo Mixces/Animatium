@@ -40,6 +40,7 @@ public record Geometry(GpuBuffer vertexBuffer,
                        GpuBuffer indexBuffer,
                        IndexType indexType,
                        int indexCount,
+                       boolean ownsIndexBuffer,
                        boolean persistent) implements AutoCloseable {
     public static Geometry compile(final RenderPipeline pipeline, final boolean persistent, final int vertexCount, final Consumer<VertexConsumer> vertexConsumer) {
         final VertexFormat format = pipeline.getVertexFormatBinding(0);
@@ -54,18 +55,21 @@ public record Geometry(GpuBuffer vertexBuffer,
 
                 GpuBuffer indexBuffer;
                 IndexType indexType;
+                boolean ownsIndexBuffer;
 
                 final ByteBuffer indexByteBuffer = meshData.indexBuffer();
                 if (indexByteBuffer == null) {
                     final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.getPrimitiveTopology());
                     indexBuffer = autoStorageIndexBuffer.getBuffer(indexCount);
                     indexType = autoStorageIndexBuffer.type();
+                    ownsIndexBuffer = false;
                 } else {
                     indexBuffer = device.createBuffer(() -> "Index buffer for " + pipeline, GpuBuffer.USAGE_INDEX, indexByteBuffer);
                     indexType = meshData.drawState().indexType();
+                    ownsIndexBuffer = true;
                 }
 
-                return new Geometry(vertexBuffer, indexBuffer, indexType, indexCount, persistent);
+                return new Geometry(vertexBuffer, indexBuffer, indexType, indexCount, ownsIndexBuffer, persistent);
             }
         }
     }
@@ -89,5 +93,8 @@ public record Geometry(GpuBuffer vertexBuffer,
 
     public void forceClose() {
         this.vertexBuffer.close();
+        if (this.ownsIndexBuffer) {
+            this.indexBuffer.close();
+        }
     }
 }
