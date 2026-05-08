@@ -75,7 +75,7 @@ public class ImmediateRenderer implements AutoCloseable {
     private RenderPipeline pipeline;
     @Getter
     @Setter
-    private Vector4i viewport;
+    private RenderPass.RenderArea renderArea;
     @Getter
     @Setter
     private DynamicTransforms dynamicTransforms;
@@ -95,7 +95,7 @@ public class ImmediateRenderer implements AutoCloseable {
         this.uniforms = new HashMap<>();
         this.displayName = displayName;
         this.pipeline = null;
-        this.viewport = null;
+        this.renderArea = null;
         this.dynamicTransforms = new DynamicTransforms(null, null, new Vector4f(1.0F), new Vector3f());
 
         // Internal
@@ -153,20 +153,16 @@ public class ImmediateRenderer implements AutoCloseable {
 
     private static GpuBuffer uploadToBuffer(final @Nullable GpuBuffer target, final ByteBuffer buffer, final @GpuBuffer.Usage int usage, final Supplier<String> label) {
         final GpuDevice device = RenderSystem.getDevice();
-
-        GpuBuffer result = target;
-        if (result == null) {
-            result = device.createBuffer(label, usage, buffer);
-        } else {
-            if (result.size() < buffer.remaining()) {
-                result.close();
-                result = device.createBuffer(label, usage, buffer);
-            } else {
-                device.createCommandEncoder().writeToBuffer(result.slice(), buffer);
+        if (target == null || target.size() < buffer.remaining()) {
+            if (target != null) {
+                target.close();
             }
-        }
 
-        return result;
+            return device.createBuffer(label, usage, buffer);
+        } else {
+            device.createCommandEncoder().writeToBuffer(target.slice(), buffer);
+            return target;
+        }
     }
 
     public void setup(final Consumer<VertexConsumer> renderConsumer, final int vertexCount) {
@@ -182,16 +178,16 @@ public class ImmediateRenderer implements AutoCloseable {
         }
     }
 
-    public void setTexture(int id, GpuTextureView textureView, GpuSampler sampler) {
+    public void setTexture(final int id, final GpuTextureView textureView, final GpuSampler sampler) {
         this.textures.put("Sampler" + id, new TextureAndSampler(textureView, sampler));
     }
 
-    public void setTexture(int id, Identifier resourceLocation) {
+    public void setTexture(final int id, final Identifier resourceLocation) {
         final AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(resourceLocation);
         this.textures.put("Sampler" + id, new TextureAndSampler(texture.getTextureView(), texture.getSampler()));
     }
 
-    public void setTextures(TextureSetup textureSetup) {
+    public void setTextures(final TextureSetup textureSetup) {
         final GpuTextureView texture0 = textureSetup.texure0();
         if (texture0 != null) {
             this.setTexture(0, texture0, textureSetup.sampler0());
@@ -208,47 +204,47 @@ public class ImmediateRenderer implements AutoCloseable {
         }
     }
 
-    public void setUniform(String name, int value) {
+    public void setUniform(final String name, final int value) {
         this.uniforms.put(name, new Uniform<>(Uniform.Type.INT, value));
     }
 
-    public void setUniform(String name, int... value) {
+    public void setUniform(final String name, final int... value) {
         this.uniforms.put(name, new Uniform<>(Uniform.Type.INT_ARRAY, value));
     }
 
-    public void setUniform(String name, float value) {
+    public void setUniform(final String name, final float value) {
         this.uniforms.put(name, new Uniform<>(Uniform.Type.FLOAT, value));
     }
 
-    public void setUniform(String name, float... value) {
+    public void setUniform(final String name, final float... value) {
         this.uniforms.put(name, new Uniform<>(Uniform.Type.FLOAT_ARRAY, value));
     }
 
-    public void setUniform(String name, Vector2ic value) {
+    public void setUniform(final String name, final Vector2ic value) {
         this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR2I, value));
     }
 
-    public void setUniform(String name, Vector2fc value) {
+    public void setUniform(final String name, final Vector2fc value) {
         this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR2F, value));
     }
 
-    public void setUniform(String name, Vector3ic value) {
+    public void setUniform(final String name, final Vector3ic value) {
         this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR3I, value));
     }
 
-    public void setUniform(String name, Vector3fc value) {
+    public void setUniform(final String name, final Vector3fc value) {
         this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR3F, value));
     }
 
-    public void setUniform(String name, Vector4ic value) {
+    public void setUniform(final String name, final Vector4ic value) {
         this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR4I, value));
     }
 
-    public void setUniform(String name, Vector4fc value) {
+    public void setUniform(final String name, final Vector4fc value) {
         this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR4F, value));
     }
 
-    public void setUniform(String name, Matrix4fc value) {
+    public void setUniform(final String name, final Matrix4fc value) {
         this.uniforms.put(name, new Uniform<>(Uniform.Type.MATRIX4F, value));
     }
 
@@ -293,9 +289,7 @@ public class ImmediateRenderer implements AutoCloseable {
             descriptor.withDepthAttachment(depthTextureView);
         }
 
-        descriptor.withRenderArea(this.viewport != null
-                ? new RenderPass.RenderArea(this.viewport.x, this.viewport.y, this.viewport.z, this.viewport.w)
-                : new RenderPass.RenderArea(0, 0, renderTarget.width, renderTarget.height));
+        descriptor.withRenderArea(this.renderArea != null ? this.renderArea : new RenderPass.RenderArea(0, 0, renderTarget.width, renderTarget.height));
         return descriptor;
     }
 
@@ -432,10 +426,7 @@ public class ImmediateRenderer implements AutoCloseable {
         }
 
         public GpuBufferSlice buffer() {
-            return RenderSystem.getDynamicUniforms().writeTransform(
-                    this.getModelViewMatrix(), this.shaderColor(),
-                    this.modelOffset(), this.getTextureMatrix()
-            );
+            return RenderSystem.getDynamicUniforms().writeTransform(this.getModelViewMatrix(), this.shaderColor(), this.modelOffset(), this.getTextureMatrix());
         }
     }
 
