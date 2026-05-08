@@ -63,9 +63,6 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
     private static final RenderPass.RenderArea VIEWPORT = new RenderPass.RenderArea(0, 0, 256, 256);
     private static final Vector4f CLEAR_COLOR = new Vector4f(0.0F, 0.0F, 0.0F, 1.0F);
     private static final Identifier CUBE_MAP_LOCATION = Identifier.withDefaultNamespace("textures/gui/title/background/panorama");
-    private static final Matrix4f BASE_PANORAMA_MATRIX = new Matrix4f()
-            .rotateX(Utils.toRadians(180.0F))
-            .rotateZ(Utils.toRadians(90.0F));
 
     private static final Geometry PANORAMA_GEOMETRY = Geometry.compile(PanoramaPipelines.LEGACY_PANORAMA_1, true, 24, vertexConsumer -> {
         for (int panoramaIdx = 0; panoramaIdx < 6; panoramaIdx++) {
@@ -106,8 +103,8 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
 
     public void render() {
         if (this.state != null) {
-            renderPanorama(this.state.spin);
-            blurPanorama(this.state.pose, this.state.width, this.state.height);
+            this.renderCubeMap(this.state.spin);
+            this.rotateAndBlurCubeMap(this.state.pose, this.state.width, this.state.height);
         }
     }
 
@@ -116,38 +113,38 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
         graphics.guiRenderState.addGuiElement(new BlitTexture(graphics.pose(), this.backgroundTextureView, width, height));
     }
 
-    private void renderPanorama(final float spin) {
+    private void renderCubeMap(final float spin) {
         this.projection.setupPerspective(0.05F, 10.0F, 120.0F, 1.0F, 1.0F);
         RenderSystem.backupProjectionMatrix();
         RenderSystem.setProjectionMatrix(this.projectionMatrixBuffer.getBuffer(this.projection), ProjectionType.PERSPECTIVE);
         try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Panorama Cubemap")) {
             renderer.setRenderArea(VIEWPORT);
-
-            RenderPipeline pipeline = PanoramaPipelines.LEGACY_PANORAMA_1;
+            renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA_1);
+            renderer.setup(PANORAMA_GEOMETRY);
+            renderer.setTexture(0, CUBE_MAP_LOCATION);
             for (int layer = 0; layer < 64; layer++) {
                 final float x = (layer % 8 / 8.0F - 0.5F) / 64.0F;
                 final float y = ((float) layer / 8 / 8.0F - 0.5F) / 64.0F;
-
-                renderer.setPipeline(pipeline);
-                renderer.setup(PANORAMA_GEOMETRY);
+                final Matrix4f modelViewMatrix = new Matrix4f()
+                        .rotateX(Utils.toRadians(180.0F))
+                        .rotateZ(Utils.toRadians(90.0F))
+                        .translate(x, y, 0.0F)
+                        .rotateX(Utils.toRadians(Mth.sin(spin / 400.0F) * 25.0F + 20.0F))
+                        .rotateY(Utils.toRadians(-spin * 0.1F));
 
                 final int color = ARGB.white(1.0F / (layer + 1.0F));
-                renderer.setTexture(0, CUBE_MAP_LOCATION);
                 renderer.drawTo(this.panoramaTarget, DynamicTransforms.builder()
-                        .withModelViewMatrix(new Matrix4f(BASE_PANORAMA_MATRIX)
-                                .translate(x, y, 0.0F)
-                                .rotateX(Utils.toRadians(Mth.sin(spin / 400.0F) * 25.0F + 20.0F))
-                                .rotateY(Utils.toRadians(-spin * 0.1F)))
+                        .withModelViewMatrix(modelViewMatrix)
                         .withShaderColor(color));
 
-                pipeline = PanoramaPipelines.LEGACY_PANORAMA_2;
+                renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA_2);
             }
         }
 
         RenderSystem.restoreProjectionMatrix();
     }
 
-    private void blurPanorama(final Matrix3x2f pose, final int width, final int height) {
+    private void rotateAndBlurCubeMap(final Matrix3x2f pose, final int width, final int height) {
         final RenderPipeline pipeline = PanoramaPipelines.LEGACY_PANORAMA_BLUR;
         try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Panorama Blur")) {
             renderer.setPipeline(pipeline);
