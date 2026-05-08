@@ -29,7 +29,6 @@ import com.mojang.blaze3d.GpuFormat;
 import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -93,7 +92,8 @@ public class LegacyPanoramaRenderer {
     }
 
     public static void render(final GuiGraphicsExtractor graphics) {
-        renderPanorama(panoramaTarget);
+        assert panoramaTarget.getColorTexture() != null;
+        renderPanorama();
 
         final Matrix3x2f pose = graphics.pose();
         for (int pass = 0; pass < 7; ++pass) {
@@ -127,11 +127,16 @@ public class LegacyPanoramaRenderer {
                 renderer.drawGuiTo(panoramaTarget);
             }
         }
-
-        graphics.guiRenderState.addGuiElement(new BlitTexture(pose, backgroundTextureView, width, height));
     }
 
-    private static void renderPanorama(final RenderTarget target) {
+    public static void extractRenderState(final GuiGraphicsExtractor graphics, final int width, final int height, final float tickDelta) {
+        LegacyPanoramaRenderer.width = width;
+        LegacyPanoramaRenderer.height = height;
+        spin += tickDelta;
+        graphics.guiRenderState.addGuiElement(new BlitTexture(graphics.pose(), backgroundTextureView, width, height));
+    }
+
+    private static void renderPanorama() {
         projection.setupPerspective(0.05F, 10.0F, 120.0F, 1.0F, 1.0F);
         RenderSystem.backupProjectionMatrix();
         RenderSystem.setProjectionMatrix(projectionMatrixBuffer.getBuffer(projection), ProjectionType.PERSPECTIVE);
@@ -172,19 +177,13 @@ public class LegacyPanoramaRenderer {
                     }, 4);
 
                     renderer.setTexture(0, PANORAMA_TEXTURES[panoramaIdx]);
-                    renderer.drawTo(target);
+                    renderer.drawTo(LegacyPanoramaRenderer.panoramaTarget);
                 }
             }
 
             pipeline = PanoramaPipelines.LEGACY_PANORAMA_2;
         }
         RenderSystem.restoreProjectionMatrix();
-    }
-
-    public static void extractState(final int width, final int height, final float tickDelta) {
-        LegacyPanoramaRenderer.width = width;
-        LegacyPanoramaRenderer.height = height;
-        spin += tickDelta;
     }
 
     private static void clearTargets() {

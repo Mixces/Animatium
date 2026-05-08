@@ -34,24 +34,16 @@ import net.minecraft.client.renderer.Panorama;
 import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.rendering.panorama.LegacyPanoramaRenderer;
 
 @Mixin(Panorama.class)
 public abstract class MixinPanorama_LegacyPanorama {
-    @Inject(method = "extractRenderState", at = @At("TAIL"))
-    private void animatium$updatePanoramaSpin(final GuiGraphicsExtractor graphics, final int width, final int height, final boolean shouldSpin, final CallbackInfo ci) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.panoramaRendering) {
-            LegacyPanoramaRenderer.extractState(width, height, Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaTicks());
-        }
-    }
-
     @WrapOperation(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIIIII)V"))
-    private void animatium$panoramaGradient(final GuiGraphicsExtractor instance, final RenderPipeline renderPipeline, final Identifier texture, final int x, final int y, final float u, final float v, final int width, final int height, final int srcWidth, final int srcHeight, final int textureWidth, final int textureHeight, final Operation<Void> original) {
+    private void animatium$legacyPanorama(final GuiGraphicsExtractor instance, final RenderPipeline renderPipeline, final Identifier texture, final int x, final int y, final float u, final float v, final int width, final int height, final int srcWidth, final int srcHeight, final int textureWidth, final int textureHeight, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.panoramaRendering) {
+            LegacyPanoramaRenderer.extractRenderState(instance, width, height, Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaTicks());
             instance.fillGradient(0, 0, width, height, -2130706433, 16777215);
             instance.fillGradient(0, 0, width, height, 0, Integer.MIN_VALUE);
         } else {
