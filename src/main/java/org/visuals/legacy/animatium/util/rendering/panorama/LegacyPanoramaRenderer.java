@@ -67,18 +67,17 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
             .rotateX(Utils.toRadians(180.0F))
             .rotateZ(Utils.toRadians(90.0F));
 
-    private static final Matrix4f[] PANORAMA_FACE_ROTATION = new Matrix4f[]{
-            new Matrix4f(),
-            new Matrix4f().rotateY((float) Math.toRadians(90.0F)),
-            new Matrix4f().rotateY((float) Math.toRadians(180.0F)),
-            new Matrix4f().rotateY((float) Math.toRadians(-90.0F)),
-            new Matrix4f().rotateX((float) Math.toRadians(90.0F)),
-            new Matrix4f().rotateX((float) Math.toRadians(-90.0F))
-    };
-
     private static final Geometry PANORAMA_GEOMETRY = Geometry.compile(PanoramaPipelines.LEGACY_PANORAMA_1, true, 24, vertexConsumer -> {
         for (int panoramaIdx = 0; panoramaIdx < 6; panoramaIdx++) {
-            final Matrix4f pose = PANORAMA_FACE_ROTATION[panoramaIdx];
+            final Matrix4f pose = new Matrix4f();
+            switch (panoramaIdx) {
+                case 1 -> pose.rotateY((float) Math.toRadians(90.0F));
+                case 2 -> pose.rotateY((float) Math.toRadians(180.0F));
+                case 3 -> pose.rotateY((float) Math.toRadians(-90.0F));
+                case 4 -> pose.rotateX((float) Math.toRadians(90.0F));
+                case 5 -> pose.rotateX((float) Math.toRadians(-90.0F));
+            }
+
             vertexConsumer.addVertex(pose, -1.0F, -1.0F, 1.0F);
             vertexConsumer.addVertex(pose, 1.0F, -1.0F, 1.0F);
             vertexConsumer.addVertex(pose, 1.0F, 1.0F, 1.0F);
