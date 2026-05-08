@@ -112,9 +112,9 @@ public class LegacyPanoramaRenderer {
         clearTargets();
     }
 
-    public static void render(final GuiGraphicsExtractor graphics) {
+    public static void render(final Matrix3x2f pose) {
         renderPanorama();
-        blurPanorama(graphics.pose());
+        blurPanorama(pose);
     }
 
     public static void extractRenderState(final GuiGraphicsExtractor graphics, final int width, final int height, final float tickDelta) {

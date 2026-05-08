@@ -44,7 +44,7 @@ public abstract class MixinGuiRenderer_LegacyPanoramaRendering {
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CubeMap;render(FF)V", ordinal = 0))
     private void animatium$panoramaRendering(final CubeMap instance, final float rotXInDegrees, final float spin, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.panoramaRendering) {
-            LegacyPanoramaRenderer.render(((GuiUtility) Minecraft.getInstance().gui).animatium$getGraphics());
+            LegacyPanoramaRenderer.render(((GuiUtility) Minecraft.getInstance().gui).animatium$getGraphics().pose());
         } else {
             original.call(instance, rotXInDegrees, spin);
         }
