@@ -36,6 +36,7 @@ import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
@@ -103,13 +104,14 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
 
     public void render() {
         if (this.state != null) {
-            this.renderCubeMap(0.0F);//this.state.spin);
+            this.renderCubeMap(this.state.spin);
             this.rotateAndBlurCubeMap(this.state.pose, this.state.width, this.state.height);
         }
     }
 
     public void extractRenderState(final GuiGraphicsExtractor graphics, final int width, final int height, final float tickDelta) {
-        this.state = new PanoramaRenderState(graphics.pose(), width, height, this.state == null ? 0 : this.state.spin + tickDelta);
+        final double panoramaSpeed = Minecraft.getInstance().gameRenderer.gameRenderState().optionsRenderState.panoramaSpeed;
+        this.state = new PanoramaRenderState(graphics.pose(), width, height, this.state == null ? 0 : (float) (this.state.spin + (tickDelta * panoramaSpeed)));
         graphics.guiRenderState.addGuiElement(new BlitTexture(graphics.pose(), this.backgroundTextureView, width, height));
     }
 
