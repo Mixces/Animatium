@@ -116,7 +116,7 @@ public class SkyRendererUtility {
 
     private ImmediateRenderer blueVoidRenderer;
     private ImmediateRenderer voidBoxRenderer;
-    private final GpuBuffer vertexBuffer = initializeSky(vertexConsumer -> buildSkyHalf(vertexConsumer, -16.0F, true));
+    private GpuBuffer vertexBuffer = initializeSky(vertexConsumer -> buildSkyHalf(vertexConsumer, -16.0F, true));
     private int indexCount = -1;
 
     static {
@@ -208,6 +208,7 @@ public class SkyRendererUtility {
 
         if (vertexBuffer != null) {
             vertexBuffer.close();
+            vertexBuffer = null;
         }
     }
 }
