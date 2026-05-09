@@ -42,14 +42,11 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.TextureSetup;
-import net.minecraft.client.renderer.Projection;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
 import org.lwjgl.system.MemoryStack;
-import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
-import org.visuals.legacy.animatium.mixins.accessor.GuiRendererAccessor;
 
 import java.nio.ByteBuffer;
 import java.util.HashMap;
@@ -201,15 +198,14 @@ public class ImmediateRenderer implements AutoCloseable {
                 RenderSystem.backupProjectionMatrix();
                 try (final MemoryStack stack = MemoryStack.stackPush()) {
                     final ByteBuffer byteBuffer = Std140Builder.onStack(stack, RenderSystem.PROJECTION_MATRIX_UBO_SIZE).putMat4f(this.projectionMatrix).get();
-                    try (final GpuBuffer buffer = RenderSystem.getDevice().createBuffer(() -> "Immediate Projection Buffer", 136, byteBuffer)) {
+                    try (final GpuBuffer buffer = RenderSystem.getDevice().createBuffer(() -> "Immediate Projection Buffer", GpuBuffer.USAGE_UNIFORM | GpuBuffer.USAGE_COPY_DST, byteBuffer)) {
                         final int properties = this.projectionMatrix.properties();
+
                         ProjectionType projectionType;
                         if ((properties & Matrix4f.PROPERTY_PERSPECTIVE) != 0) {
                             projectionType = ProjectionType.PERSPECTIVE;
-                        } else if ((properties & Matrix4f.PROPERTY_ORTHONORMAL) != 0) {
-                            projectionType = ProjectionType.ORTHOGRAPHIC;
                         } else {
-                            throw new RuntimeException("Unknown projection type");
+                            projectionType = ProjectionType.ORTHOGRAPHIC; // Auto-assume it's orthographic
                         }
 
                         RenderSystem.setProjectionMatrix(buffer.slice(), projectionType);
@@ -246,15 +242,8 @@ public class ImmediateRenderer implements AutoCloseable {
     }
 
     public void drawGui(final DynamicTransforms.Builder dynamicTransforms) {
-        final Minecraft minecraft = Minecraft.getInstance();
-        final Window window = minecraft.getWindow();
-        final GuiRendererAccessor guiRendererAccessor = (GuiRendererAccessor) ((GameRendererAccessor) minecraft.gameRenderer).animatium$getGuiRenderer();
-
-        RenderSystem.backupProjectionMatrix();
-        final Projection projection = guiRendererAccessor.animatium$projection();
-        projection.setupOrtho(1000.0F, 11000.0F, (float) window.getWidth() / (float) window.getGuiScale(), (float) window.getHeight() / (float) window.getGuiScale(), true);
-        RenderSystem.setProjectionMatrix(guiRendererAccessor.animatium$orthoMatrixBuffer().getBuffer(projection), ProjectionType.ORTHOGRAPHIC);
-
+        final Window window = Minecraft.getInstance().getWindow();
+        this.projectionMatrix = new Matrix4f().setOrtho(0.0F, (float) window.getWidth() / (float) window.getGuiScale(), (float) window.getHeight() / (float) window.getGuiScale(), 0.0F, 1000.0F, 11000.0F, RenderSystem.getDevice().getDeviceInfo().isZZeroToOne());
         this.draw(dynamicTransforms.withModelViewMatrix(new Matrix4f(dynamicTransforms.getModelViewMatrix()).setTranslation(0.0F, 0.0F, -11000.0F)));
         RenderSystem.restoreProjectionMatrix();
     }
