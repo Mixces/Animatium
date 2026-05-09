@@ -47,7 +47,12 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
+import org.jspecify.annotations.NonNull;
 import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.util.rendering.renderer.DynamicTransforms;
+import org.visuals.legacy.animatium.util.rendering.renderer.Geometry;
+import org.visuals.legacy.animatium.util.rendering.renderer.ImmediateRenderer;
+import org.visuals.legacy.animatium.util.rendering.renderer.VertexLayouts;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -273,7 +278,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
 
         try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Clouds", cloudsTarget)) {
             renderer.setPipeline(pipeline);
-            renderer.setup(new Geometry(pipeline, this.vertexBuffer, this.indexCount, true));
+            renderer.setup(new Geometry(VertexLayouts.POSITIONED_QUAD, this.vertexBuffer, this.indexCount, true));
             renderer.draw(DynamicTransforms.builder().withShaderColor(ARGB.color(1.0F, color)).withModelOffset(offset));
         }
     }
@@ -283,7 +288,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
     }
 
     @Override
-    protected @NotNull Optional<CloudRenderer.TextureData> prepare(final ResourceManager resourceManager, final ProfilerFiller profilerFiller) {
+    protected @NotNull Optional<CloudRenderer.TextureData> prepare(final @NonNull ResourceManager resourceManager, final @NonNull ProfilerFiller profilerFiller) {
         try {
             final Optional<CloudRenderer.TextureData> optionalTextureData;
             try (final InputStream inputStream = resourceManager.open(CloudRenderer.TEXTURE_LOCATION); final NativeImage nativeImage = NativeImage.read(inputStream);) {
@@ -309,13 +314,13 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
             }
 
             return optionalTextureData;
-        } catch (IOException ignored) {
+        } catch (final IOException ignored) {
             return Optional.empty();
         }
     }
 
     @Override
-    protected void apply(Optional<CloudRenderer.TextureData> optional, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
+    protected void apply(final Optional<CloudRenderer.TextureData> optional, final @NonNull ResourceManager resourceManager, final @NonNull ProfilerFiller profilerFiller) {
         this.textureData = optional.orElse(null);
         this.needsRebuild = true;
     }
@@ -324,6 +329,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
     public void close() {
         if (this.vertexBuffer != null) {
             this.vertexBuffer.close();
+            this.vertexBuffer = null;
         }
     }
 }

@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering;
+package org.visuals.legacy.animatium.util.rendering.renderer;
 
 import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBuffer;
@@ -36,7 +36,6 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderPassDescriptor;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuSampler;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import lombok.Getter;
@@ -44,11 +43,11 @@ import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.ProjectionMatrixBuffer;
-import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
 import org.lwjgl.system.MemoryStack;
+import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -99,7 +98,7 @@ public class ImmediateRenderer implements AutoCloseable {
     }
 
     public void setup(final Geometry geometry) {
-        if (this.pipeline == null || this.pipeline != geometry.pipeline()) {
+        if (this.pipeline == null || this.pipeline.getVertexFormatBinding(0) != geometry.vertexLayout().vertexFormat() || this.pipeline.getPrimitiveTopology() != geometry.vertexLayout().primitiveTopology()) {
             throw new RuntimeException("Cannot setup renderer with geometry of mismatching pipelines!");
         }
 
@@ -115,30 +114,18 @@ public class ImmediateRenderer implements AutoCloseable {
         this.textures.put("Sampler" + id, new TextureAndSampler(textureView, sampler));
     }
 
-    public void setTexture(final int id, final GpuTextureView textureView) {
-        this.setTexture(id, textureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
+    public void setTexture(final int id, final TextureAndSampler textureAndSampler) {
+        this.textures.put("Sampler" + id, textureAndSampler);
     }
 
-    public void setTexture(final int id, final Identifier resourceLocation) {
-        final AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(resourceLocation);
-        this.setTexture(id, texture.getTextureView(), texture.getSampler());
+    public void setTexture(final int id, final Identifier location) {
+        this.setTexture(id, TextureAndSampler.get(location));
     }
 
-    public void setTextures(final TextureSetup textureSetup) {
-        final GpuTextureView texture0 = textureSetup.texure0();
-        if (texture0 != null) {
-            this.setTexture(0, texture0, textureSetup.sampler0());
-        }
-
-        final GpuTextureView texture1 = textureSetup.texure1();
-        if (texture1 != null) {
-            this.setTexture(1, texture1, textureSetup.sampler1());
-        }
-
-        final GpuTextureView texture2 = textureSetup.texure2();
-        if (texture2 != null) {
-            this.setTexture(2, texture2, textureSetup.sampler2());
-        }
+    public void setTextures(final TextureSetup setup) {
+        this.setTexture(0, TextureAndSampler.get(0, setup));
+        this.setTexture(1, TextureAndSampler.get(1, setup));
+        this.setTexture(2, TextureAndSampler.get(2, setup));
     }
 
     public void setUniform(final String name, final int value) {
@@ -213,7 +200,7 @@ public class ImmediateRenderer implements AutoCloseable {
                 pass.setPipeline(this.pipeline);
                 for (final Map.Entry<String, TextureAndSampler> entry : this.textures.entrySet()) {
                     final TextureAndSampler textureAndSampler = entry.getValue();
-                    pass.bindTexture(entry.getKey(), textureAndSampler.textureView, textureAndSampler.sampler);
+                    pass.bindTexture(entry.getKey(), textureAndSampler.textureView(), textureAndSampler.sampler());
                 }
 
                 pass.setVertexBuffer(0, this.geometry.vertexBuffer().slice());
@@ -242,7 +229,7 @@ public class ImmediateRenderer implements AutoCloseable {
     }
 
     public void drawGui() {
-        drawGui(DynamicTransforms.builder());
+        this.drawGui(DynamicTransforms.builder());
     }
 
     private @Nullable GpuBufferSlice setupUniformsBuffer() {
@@ -283,9 +270,11 @@ public class ImmediateRenderer implements AutoCloseable {
         this.uniforms.clear();
         if (this.geometry != null) {
             this.geometry.close();
+            this.geometry = null;
         }
 
         if (this.uniformBuffer != null) {
+            this.uniformBuffer.close();
             this.uniformBuffer = null;
         }
 
@@ -293,8 +282,5 @@ public class ImmediateRenderer implements AutoCloseable {
             this.projectionMatrixBuffer.close();
             this.projectionMatrixBuffer = null;
         }
-    }
-
-    private record TextureAndSampler(GpuTextureView textureView, GpuSampler sampler) {
     }
 }

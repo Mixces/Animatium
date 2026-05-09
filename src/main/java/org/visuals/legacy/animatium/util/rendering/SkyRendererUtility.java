@@ -41,6 +41,10 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.compatibility.IrisPipeline;
 import org.visuals.legacy.animatium.util.compatibility.IrisUtil;
+import org.visuals.legacy.animatium.util.rendering.renderer.DynamicTransforms;
+import org.visuals.legacy.animatium.util.rendering.renderer.VertexLayouts;
+import org.visuals.legacy.animatium.util.rendering.renderer.Geometry;
+import org.visuals.legacy.animatium.util.rendering.renderer.ImmediateRenderer;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -82,7 +86,7 @@ public class SkyRendererUtility {
                     .withShaderDefine("PLANAR_FOG")
                     .build());
 
-    private static final Function<Float, Geometry> VOID_BOX_GEOMETRY = offset -> Geometry.compile(VOID_BOX_PIPELINE, 20, vertexConsumer -> {
+    private static final Function<Float, Geometry> VOID_BOX_GEOMETRY = offset -> Geometry.compile(VertexLayouts.POSITIONED_QUAD, 20, vertexConsumer -> {
         // Left
         vertexConsumer.addVertex(-1.0F, offset, 1.0F);
         vertexConsumer.addVertex(1.0F, offset, 1.0F);
@@ -139,7 +143,7 @@ public class SkyRendererUtility {
         final RenderPipeline pipeline = getLegacySkyPipeline(AnimatiumConfig.instance().other.planarSkyFog);
         blueVoidRenderer.setPipeline(pipeline);
 
-        blueVoidRenderer.setup(new Geometry(pipeline, vertexBuffer, indexCount, true));
+        blueVoidRenderer.setup(new Geometry(VertexLayouts.POSITIONED_QUAD, vertexBuffer, indexCount, true));
         blueVoidRenderer.draw(DynamicTransforms.builder()
                 .withModelViewMatrix(RenderSystem.getModelViewMatrixCopy()
                         .translate(0.0F, AnimatiumConfig.instance().extras.dontMoveBlueVoid ? 12.0F : -((float) (depth - 16.0)), 0.0F))
