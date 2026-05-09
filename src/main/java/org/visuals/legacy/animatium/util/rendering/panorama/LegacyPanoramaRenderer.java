@@ -56,6 +56,7 @@ import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.rendering.DynamicTransforms;
 import org.visuals.legacy.animatium.util.rendering.Geometry;
 import org.visuals.legacy.animatium.util.rendering.ImmediateRenderer;
+import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
 import java.util.Objects;
 
@@ -119,8 +120,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
         this.projection.setupPerspective(0.05F, 10.0F, 120.0F, 1.0F, 1.0F);
         RenderSystem.backupProjectionMatrix();
         RenderSystem.setProjectionMatrix(this.projectionMatrixBuffer.getBuffer(this.projection), ProjectionType.PERSPECTIVE);
-        try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Panorama Cubemap", this.panoramaTarget)) {
-            renderer.setRenderArea(VIEWPORT);
+        try (final ImmediateRenderer renderer = ImmediateRenderer.of(RenderUtils.createDescriptor(() -> "Legacy Panorama Cubemap", this.panoramaTarget, VIEWPORT))) {
             renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA_1);
             renderer.setup(PANORAMA_GEOMETRY);
             renderer.setTexture(0, CUBE_MAP_LOCATION);
@@ -146,20 +146,20 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
 
     private void rotateAndBlurCubeMap(final Matrix3x2f pose, final int width, final int height) {
         final RenderPipeline pipeline = PanoramaPipelines.LEGACY_PANORAMA_BLUR;
-        try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Panorama Blur", this.panoramaTarget)) {
+        try (final ImmediateRenderer renderer = ImmediateRenderer.of(RenderUtils.createDescriptor(() -> "Legacy Panorama Blur", this.panoramaTarget, VIEWPORT))) {
             renderer.setPipeline(pipeline);
-            renderer.setRenderArea(VIEWPORT);
             renderer.setup(Geometry.texturedScreenQuad(pipeline, pose, width, height));
             renderer.setTexture(0, this.backgroundTextureView);
             for (int pass = 0; pass < 7; pass++) {
-                RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(Objects.requireNonNull(this.panoramaTarget.getColorTexture()), this.backgroundTexture, 0, 0, 0, 0, 0, this.panoramaTarget.width, this.panoramaTarget.height);
-                renderer.drawGui(DynamicTransforms.builder());
+                RenderUtils.copyTextureToTexture(Objects.requireNonNull(this.panoramaTarget.getColorTexture()), this.backgroundTexture);
+                renderer.drawGui();
             }
         }
     }
 
     @Override
     public void close() {
+        PANORAMA_GEOMETRY.forceClose();
         this.projectionMatrixBuffer.close();
         this.backgroundTexture.close();
         this.backgroundTextureView.close();

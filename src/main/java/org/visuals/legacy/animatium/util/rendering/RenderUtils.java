@@ -31,6 +31,7 @@ import com.mojang.blaze3d.platform.CompareOp;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderPassDescriptor;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import lombok.experimental.UtilityClass;
@@ -65,6 +66,10 @@ public class RenderUtils {
 
     public static RenderPassDescriptor createDescriptor(final Supplier<String> label, final RenderTarget renderTarget) {
         return createDescriptor(label, renderTarget, null);
+    }
+
+    public static void copyTextureToTexture(final GpuTexture source, final GpuTexture destination) {
+        RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(source, destination, 0, 0, 0, 0, 0, source.getWidth(0), source.getHeight(0));
     }
 
     public void fillVerticalLine(GuiGraphicsExtractor context, int x, int y, int length, int color) {

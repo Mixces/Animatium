@@ -33,6 +33,7 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderPass;
+import com.mojang.blaze3d.systems.RenderPassDescriptor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuSampler;
@@ -62,13 +63,10 @@ public class ImmediateRenderer implements AutoCloseable {
     @Getter
     private final Supplier<String> name;
     @Getter
-    private final RenderTarget renderTarget;
+    private final RenderPassDescriptor descriptor;
     @Getter
     @Setter
     private RenderPipeline pipeline;
-    @Getter
-    @Setter
-    private RenderPass.RenderArea renderArea;
 
     // Internal
     private Geometry geometry;
@@ -76,14 +74,13 @@ public class ImmediateRenderer implements AutoCloseable {
     @Getter
     private boolean setup;
 
-    private ImmediateRenderer(final Supplier<String> name, final RenderTarget renderTarget) {
+    private ImmediateRenderer(final RenderPassDescriptor descriptor) {
         // Data
         this.textures = new HashMap<>();
         this.uniforms = new HashMap<>();
-        this.name = name;
-        this.renderTarget = renderTarget;
+        this.name = descriptor.label();
+        this.descriptor = descriptor;
         this.pipeline = null;
-        this.renderArea = null;
 
         // Internal
         this.geometry = null;
@@ -91,8 +88,12 @@ public class ImmediateRenderer implements AutoCloseable {
         this.setup = false;
     }
 
+    public static ImmediateRenderer of(final RenderPassDescriptor descriptor) {
+        return new ImmediateRenderer(descriptor);
+    }
+
     public static ImmediateRenderer of(final Supplier<String> label, final RenderTarget renderTarget) {
-        return new ImmediateRenderer(label, renderTarget);
+        return of(RenderUtils.createDescriptor(label, renderTarget));
     }
 
     public static ImmediateRenderer of(final Supplier<String> label) {
@@ -195,7 +196,7 @@ public class ImmediateRenderer implements AutoCloseable {
             final GpuBufferSlice transforms = dynamicTransforms.build();
             final GpuBufferSlice uniformData = this.setupUniformsBuffer();
             final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(this.pipeline.getPrimitiveTopology());
-            try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(RenderUtils.createDescriptor(this.name, this.renderTarget, this.renderArea))) {
+            try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(this.descriptor)) {
                 pass.setPipeline(this.pipeline);
                 for (final Map.Entry<String, TextureAndSampler> entry : this.textures.entrySet()) {
                     final TextureAndSampler textureAndSampler = entry.getValue();
@@ -228,6 +229,10 @@ public class ImmediateRenderer implements AutoCloseable {
 
         this.draw(dynamicTransforms.withModelViewMatrix(new Matrix4f(dynamicTransforms.getModelViewMatrix()).setTranslation(0.0F, 0.0F, -11000.0F)));
         RenderSystem.restoreProjectionMatrix();
+    }
+
+    public void drawGui() {
+        drawGui(DynamicTransforms.builder());
     }
 
     private @Nullable GpuBufferSlice setupUniformsBuffer() {
