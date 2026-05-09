@@ -72,7 +72,7 @@ public class ImmediateRenderer implements AutoCloseable {
     private @Nullable Matrix4f projectionMatrix;
 
     // Internal
-    private final ProjectionMatrixBuffer projectionMatrixBuffer;
+    private ProjectionMatrixBuffer projectionMatrixBuffer;
     private Geometry geometry = null;
     private GpuBuffer uniformBuffer = null;
     private GpuBufferSlice lastUniformBuffer = null;
@@ -200,7 +200,7 @@ public class ImmediateRenderer implements AutoCloseable {
                 if ((properties & Matrix4f.PROPERTY_PERSPECTIVE) != 0) {
                     projectionType = ProjectionType.PERSPECTIVE;
                 } else {
-                    projectionType = ProjectionType.ORTHOGRAPHIC; // Auto-assume it's orthographic
+                    projectionType = ProjectionType.ORTHOGRAPHIC;
                 }
 
                 RenderSystem.setProjectionMatrix(this.projectionMatrixBuffer.getBuffer(this.projectionMatrix), projectionType);
@@ -287,6 +287,11 @@ public class ImmediateRenderer implements AutoCloseable {
 
         if (this.uniformBuffer != null) {
             this.uniformBuffer = null;
+        }
+
+        if (this.projectionMatrixBuffer != null) {
+            this.projectionMatrixBuffer.close();
+            this.projectionMatrixBuffer = null;
         }
     }
 
