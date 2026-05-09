@@ -161,8 +161,8 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
     public void close() {
         PANORAMA_GEOMETRY.forceClose();
         this.projectionMatrixBuffer.close();
-        this.backgroundTexture.close();
         this.backgroundTextureView.close();
+        this.backgroundTexture.close();
         this.panoramaTarget.destroyBuffers();
     }
 
