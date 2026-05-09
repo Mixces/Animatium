@@ -43,13 +43,13 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.TextureSetup;
+import net.minecraft.client.renderer.ProjectionMatrixBuffer;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
 import org.lwjgl.system.MemoryStack;
 
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -57,8 +57,8 @@ import java.util.function.Supplier;
 
 public class ImmediateRenderer implements AutoCloseable {
     // Data
-    private final Map<String, TextureAndSampler> textures;
-    private final Map<String, Uniform<?>> uniforms;
+    private final Map<String, TextureAndSampler> textures = new HashMap<>();
+    private final Map<String, Uniform<?>> uniforms = new TreeMap<>();
 
     @Getter
     private final Supplier<String> name;
@@ -66,31 +66,24 @@ public class ImmediateRenderer implements AutoCloseable {
     private final RenderPassDescriptor descriptor;
     @Getter
     @Setter
-    private RenderPipeline pipeline;
+    private RenderPipeline pipeline = null;
     @Getter
     @Setter
     private @Nullable Matrix4f projectionMatrix;
 
     // Internal
-    private Geometry geometry;
-    private GpuBuffer uniformBuffer;
-    private GpuBufferSlice lastUniformBuffer;
-    private boolean uniformsDirty;
+    private final ProjectionMatrixBuffer projectionMatrixBuffer;
+    private Geometry geometry = null;
+    private GpuBuffer uniformBuffer = null;
+    private GpuBufferSlice lastUniformBuffer = null;
+    private boolean uniformsDirty = true;
     @Getter
-    private boolean setup;
+    private boolean setup = false;
 
     private ImmediateRenderer(final RenderPassDescriptor descriptor) {
-        // Data
-        this.textures = new HashMap<>();
-        this.uniforms = new TreeMap<>();
         this.name = descriptor.label();
         this.descriptor = descriptor;
-        this.pipeline = null;
-
-        // Internal
-        this.geometry = null;
-        this.uniformBuffer = null;
-        this.setup = false;
+        this.projectionMatrixBuffer = new ProjectionMatrixBuffer("Immediate Projection Buffer for " + this.name);
     }
 
     public static ImmediateRenderer of(final RenderPassDescriptor descriptor) {
@@ -201,21 +194,16 @@ public class ImmediateRenderer implements AutoCloseable {
         } else {
             if (this.projectionMatrix != null) {
                 RenderSystem.backupProjectionMatrix();
-                try (final MemoryStack stack = MemoryStack.stackPush()) {
-                    final ByteBuffer byteBuffer = Std140Builder.onStack(stack, RenderSystem.PROJECTION_MATRIX_UBO_SIZE).putMat4f(this.projectionMatrix).get();
-                    try (final GpuBuffer buffer = RenderSystem.getDevice().createBuffer(() -> "Immediate Projection Buffer", GpuBuffer.USAGE_UNIFORM | GpuBuffer.USAGE_COPY_DST, byteBuffer)) {
-                        final int properties = this.projectionMatrix.properties();
 
-                        ProjectionType projectionType;
-                        if ((properties & Matrix4f.PROPERTY_PERSPECTIVE) != 0) {
-                            projectionType = ProjectionType.PERSPECTIVE;
-                        } else {
-                            projectionType = ProjectionType.ORTHOGRAPHIC; // Auto-assume it's orthographic
-                        }
-
-                        RenderSystem.setProjectionMatrix(buffer.slice(), projectionType);
-                    }
+                final int properties = this.projectionMatrix.properties();
+                ProjectionType projectionType;
+                if ((properties & Matrix4f.PROPERTY_PERSPECTIVE) != 0) {
+                    projectionType = ProjectionType.PERSPECTIVE;
+                } else {
+                    projectionType = ProjectionType.ORTHOGRAPHIC; // Auto-assume it's orthographic
                 }
+
+                RenderSystem.setProjectionMatrix(this.projectionMatrixBuffer.getBuffer(this.projectionMatrix), projectionType);
             }
 
             final GpuBufferSlice transforms = dynamicTransforms.build();

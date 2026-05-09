@@ -101,7 +101,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
     public void render() {
         if (this.state != null) {
             this.renderCubeMap(this.state.spin);
-            this.rotateAndBlurCubeMap(this.state.pose, this.state.width, this.state.height);
+//            this.rotateAndBlurCubeMap(this.state.pose, this.state.width, this.state.height);
         }
     }
 
