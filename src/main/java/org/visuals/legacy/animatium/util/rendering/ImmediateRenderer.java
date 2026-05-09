@@ -29,6 +29,7 @@ import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.buffers.Std140Builder;
+import com.mojang.blaze3d.buffers.Std140SizeCalculator;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.Window;
@@ -51,6 +52,7 @@ import org.lwjgl.system.MemoryStack;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Supplier;
 
 public class ImmediateRenderer implements AutoCloseable {
@@ -72,13 +74,15 @@ public class ImmediateRenderer implements AutoCloseable {
     // Internal
     private Geometry geometry;
     private GpuBuffer uniformBuffer;
+    private GpuBufferSlice lastUniformBuffer;
+    private boolean uniformsDirty;
     @Getter
     private boolean setup;
 
     private ImmediateRenderer(final RenderPassDescriptor descriptor) {
         // Data
         this.textures = new HashMap<>();
-        this.uniforms = new HashMap<>();
+        this.uniforms = new TreeMap<>();
         this.name = descriptor.label();
         this.descriptor = descriptor;
         this.pipeline = null;
@@ -145,46 +149,47 @@ public class ImmediateRenderer implements AutoCloseable {
     }
 
     public void setUniform(final String name, final int value) {
+        this.uniformsDirty = true;
         this.uniforms.put(name, new Uniform<>(Uniform.Type.INT, value));
     }
 
-    public void setUniform(final String name, final int... value) {
-        this.uniforms.put(name, new Uniform<>(Uniform.Type.INT_ARRAY, value));
-    }
-
     public void setUniform(final String name, final float value) {
+        this.uniformsDirty = true;
         this.uniforms.put(name, new Uniform<>(Uniform.Type.FLOAT, value));
     }
 
-    public void setUniform(final String name, final float... value) {
-        this.uniforms.put(name, new Uniform<>(Uniform.Type.FLOAT_ARRAY, value));
-    }
-
     public void setUniform(final String name, final Vector2ic value) {
+        this.uniformsDirty = true;
         this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR2I, value));
     }
 
     public void setUniform(final String name, final Vector2fc value) {
+        this.uniformsDirty = true;
         this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR2F, value));
     }
 
     public void setUniform(final String name, final Vector3ic value) {
+        this.uniformsDirty = true;
         this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR3I, value));
     }
 
     public void setUniform(final String name, final Vector3fc value) {
+        this.uniformsDirty = true;
         this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR3F, value));
     }
 
     public void setUniform(final String name, final Vector4ic value) {
+        this.uniformsDirty = true;
         this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR4I, value));
     }
 
     public void setUniform(final String name, final Vector4fc value) {
+        this.uniformsDirty = true;
         this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR4F, value));
     }
 
     public void setUniform(final String name, final Matrix4fc value) {
+        this.uniformsDirty = true;
         this.uniforms.put(name, new Uniform<>(Uniform.Type.MATRIX4F, value));
     }
 
@@ -216,7 +221,7 @@ public class ImmediateRenderer implements AutoCloseable {
             final GpuBufferSlice transforms = dynamicTransforms.build();
             final GpuBufferSlice uniformData = this.setupUniformsBuffer();
             final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(this.pipeline.getPrimitiveTopology());
-            try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(this.descriptor)) {
+            try (final RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(this.descriptor)) {
                 pass.setPipeline(this.pipeline);
                 for (final Map.Entry<String, TextureAndSampler> entry : this.textures.entrySet()) {
                     final TextureAndSampler textureAndSampler = entry.getValue();
@@ -255,40 +260,19 @@ public class ImmediateRenderer implements AutoCloseable {
     private @Nullable GpuBufferSlice setupUniformsBuffer() {
         if (this.uniforms.isEmpty()) {
             return null;
+        } else if (!this.uniformsDirty) {
+            return this.lastUniformBuffer;
         } else {
-            int size = 0;
+            final Std140SizeCalculator calculator = new Std140SizeCalculator();
             for (final Uniform<?> uniform : this.uniforms.values()) {
-                size += uniform.size();
+                uniform.size(calculator);
             }
 
+            final int size = calculator.get();
             try (final MemoryStack stack = MemoryStack.stackPush()) {
                 final Std140Builder builder = Std140Builder.onStack(stack, size);
                 for (final Uniform<?> uniform : this.uniforms.values()) {
-                    switch (uniform.type()) {
-                        case INT -> builder.putInt((int) uniform.value());
-                        case INT_ARRAY -> {
-                            int[] array = (int[]) uniform.value();
-                            for (int value : array) {
-                                builder.putFloat(value);
-                            }
-                        }
-
-                        case FLOAT -> builder.putFloat((float) uniform.value());
-                        case FLOAT_ARRAY -> {
-                            float[] array = (float[]) uniform.value();
-                            for (float value : array) {
-                                builder.putFloat(value);
-                            }
-                        }
-
-                        case VECTOR2I -> builder.putIVec2((Vector2ic) uniform.value());
-                        case VECTOR2F -> builder.putVec2((Vector2fc) uniform.value());
-                        case VECTOR3I -> builder.putIVec3((Vector3ic) uniform.value());
-                        case VECTOR3F -> builder.putVec3((Vector3fc) uniform.value());
-                        case VECTOR4I -> builder.putIVec4((Vector4ic) uniform.value());
-                        case VECTOR4F -> builder.putVec4((Vector4fc) uniform.value());
-                        case MATRIX4F -> builder.putMat4f((Matrix4fc) uniform.value());
-                    }
+                    uniform.put(builder);
                 }
 
                 if (this.uniformBuffer != null) {
@@ -298,7 +282,10 @@ public class ImmediateRenderer implements AutoCloseable {
                 }
             }
 
-            return this.uniformBuffer.slice(0, size);
+            final GpuBufferSlice slice = this.uniformBuffer.slice(0, size);
+            this.lastUniformBuffer = slice;
+            this.uniformsDirty = false;
+            return slice;
         }
     }
 

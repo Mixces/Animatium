@@ -25,79 +25,49 @@
 
 package org.visuals.legacy.animatium.util.rendering;
 
+import com.mojang.blaze3d.buffers.Std140Builder;
 import com.mojang.blaze3d.buffers.Std140SizeCalculator;
+import org.joml.*;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
-public class Uniform<T> {
-    private final Type type;
-    private final T value;
-    private final int size;
-
-    public Uniform(final Type type, final T value) {
-        this.type = type;
-        this.value = value;
-        this.size = calculateSize();
+public record Uniform<T>(Type<T> type, T value) {
+    public void put(final Std140Builder builder) {
+        this.type.put(builder, this.value);
     }
 
-    private int calculateSize() {
-        final Std140SizeCalculator calculator = new Std140SizeCalculator();
-        if (this.type == Type.INT_ARRAY) {
-            this.type.put(calculator, ((int[]) this.value).length);
-        } else if (this.type == Type.FLOAT_ARRAY) {
-            this.type.put(calculator, ((float[]) this.value).length);
-        } else {
-            this.type.put(calculator);
+    public void size(final Std140SizeCalculator calculator) {
+        this.type.size(calculator);
+    }
+
+    public abstract static class Type<T> {
+        public static final Type<Integer> INT = of(Std140SizeCalculator::putInt, Std140Builder::putInt);
+        public static final Type<Float> FLOAT = of(Std140SizeCalculator::putFloat, Std140Builder::putFloat);
+        public static final Type<Vector2ic> VECTOR2I = of(Std140SizeCalculator::putIVec2, Std140Builder::putIVec2);
+        public static final Type<Vector2fc> VECTOR2F = of(Std140SizeCalculator::putVec2, Std140Builder::putVec2);
+        public static final Type<Vector3ic> VECTOR3I = of(Std140SizeCalculator::putIVec3, Std140Builder::putIVec3);
+        public static final Type<Vector3fc> VECTOR3F = of(Std140SizeCalculator::putVec3, Std140Builder::putVec3);
+        public static final Type<Vector4ic> VECTOR4I = of(Std140SizeCalculator::putIVec4, Std140Builder::putIVec4);
+        public static final Type<Vector4fc> VECTOR4F = of(Std140SizeCalculator::putVec4, Std140Builder::putVec4);
+        public static final Type<Matrix4fc> MATRIX4F = of(Std140SizeCalculator::putMat4f, Std140Builder::putMat4f);
+
+        public static <T> Type<T> of(final Consumer<Std140SizeCalculator> sizeCalculator, final BiConsumer<Std140Builder, T> biConsumer) {
+            return new Type<>() {
+                @Override
+                public void put(final Std140Builder builder, final T value) {
+                    biConsumer.accept(builder, value);
+                }
+
+                @Override
+                public void size(final Std140SizeCalculator calculator) {
+                    sizeCalculator.accept(calculator);
+                }
+            };
         }
 
-        return calculator.get();
-    }
+        public abstract void put(final Std140Builder builder, final T value);
 
-    public Type type() {
-        return this.type;
-    }
-
-    public T value() {
-        return this.value;
-    }
-
-    public int size() {
-        return this.size;
-    }
-
-    public enum Type {
-        INT((calculator, _) -> calculator.putInt()),
-        INT_ARRAY((calculator, size) -> {
-            for (int i = 0; i < size; ++i) {
-                calculator.putInt();
-            }
-        }),
-        FLOAT((calculator, _) -> calculator.putFloat()),
-        FLOAT_ARRAY((calculator, size) -> {
-            for (int i = 0; i < size; ++i) {
-                calculator.putFloat();
-            }
-        }),
-        VECTOR2I((calculator, _) -> calculator.putIVec2()),
-        VECTOR2F((calculator, _) -> calculator.putVec2()),
-        VECTOR3I((calculator, _) -> calculator.putIVec3()),
-        VECTOR4I((calculator, _) -> calculator.putVec3()),
-        VECTOR3F((calculator, _) -> calculator.putIVec4()),
-        VECTOR4F((calculator, _) -> calculator.putVec4()),
-        MATRIX4F((calculator, _) -> calculator.putMat4f());
-
-        private final BiConsumer<Std140SizeCalculator, Integer> calculator;
-
-        Type(final BiConsumer<Std140SizeCalculator, Integer> calculator) {
-            this.calculator = calculator;
-        }
-
-        public void put(final Std140SizeCalculator calculator, final int size) {
-            this.calculator.accept(calculator, size);
-        }
-
-        public void put(final Std140SizeCalculator calculator) {
-            this.put(calculator, 0);
-        }
+        public abstract void size(final Std140SizeCalculator calculator);
     }
 }
