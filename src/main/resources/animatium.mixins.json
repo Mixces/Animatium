@@ -8,7 +8,6 @@
 		"accessor.CameraAccessor",
 		"accessor.ClientLevelDataAccessor",
 		"accessor.GameRendererAccessor",
-		"accessor.GuiRendererAccessor",
 		"accessor.LivingEntityAccessor",
 		"accessor.PlayerAccessor",
 		"accessor.SlotAccessor",
