@@ -51,6 +51,7 @@ import org.lwjgl.system.MemoryStack;
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.mixins.accessor.GuiRendererAccessor;
 
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -67,6 +68,9 @@ public class ImmediateRenderer implements AutoCloseable {
     @Getter
     @Setter
     private RenderPipeline pipeline;
+    @Getter
+    @Setter
+    private @Nullable Matrix4f projectionMatrix;
 
     // Internal
     private Geometry geometry;
@@ -193,6 +197,26 @@ public class ImmediateRenderer implements AutoCloseable {
         } else if (this.pipeline == null) {
             throw new RuntimeException("Cannot draw without a pipeline bound!");
         } else {
+            if (this.projectionMatrix != null) {
+                RenderSystem.backupProjectionMatrix();
+                try (final MemoryStack stack = MemoryStack.stackPush()) {
+                    final ByteBuffer byteBuffer = Std140Builder.onStack(stack, RenderSystem.PROJECTION_MATRIX_UBO_SIZE).putMat4f(this.projectionMatrix).get();
+                    try (final GpuBuffer buffer = RenderSystem.getDevice().createBuffer(() -> "Immediate Projection Buffer", 136, byteBuffer)) {
+                        final int properties = this.projectionMatrix.properties();
+                        ProjectionType projectionType;
+                        if ((properties & Matrix4f.PROPERTY_PERSPECTIVE) != 0) {
+                            projectionType = ProjectionType.PERSPECTIVE;
+                        } else if ((properties & Matrix4f.PROPERTY_ORTHONORMAL) != 0) {
+                            projectionType = ProjectionType.ORTHOGRAPHIC;
+                        } else {
+                            throw new RuntimeException("Unknown projection type");
+                        }
+
+                        RenderSystem.setProjectionMatrix(buffer.slice(), projectionType);
+                    }
+                }
+            }
+
             final GpuBufferSlice transforms = dynamicTransforms.build();
             final GpuBufferSlice uniformData = this.setupUniformsBuffer();
             final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(this.pipeline.getPrimitiveTopology());
@@ -213,6 +237,10 @@ public class ImmediateRenderer implements AutoCloseable {
                 }
 
                 pass.drawIndexed(0, 0, this.geometry.indexCount(), 1);
+            }
+
+            if (this.projectionMatrix != null) {
+                RenderSystem.restoreProjectionMatrix();
             }
         }
     }

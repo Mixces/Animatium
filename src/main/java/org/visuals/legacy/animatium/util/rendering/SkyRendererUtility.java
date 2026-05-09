@@ -82,7 +82,7 @@ public class SkyRendererUtility {
                     .withShaderDefine("PLANAR_FOG")
                     .build());
 
-    private static final Function<Float, Geometry> VOID_BOX_GEOMETRY = offset -> Geometry.compilePersistent(VOID_BOX_PIPELINE, 20, vertexConsumer -> {
+    private static final Function<Float, Geometry> VOID_BOX_GEOMETRY = offset -> Geometry.compile(VOID_BOX_PIPELINE, 20, vertexConsumer -> {
         // Left
         vertexConsumer.addVertex(-1.0F, offset, 1.0F);
         vertexConsumer.addVertex(1.0F, offset, 1.0F);

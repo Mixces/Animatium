@@ -26,7 +26,6 @@
 package org.visuals.legacy.animatium.util.rendering.panorama;
 
 import com.mojang.blaze3d.GpuFormat;
-import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.GpuDevice;
@@ -40,8 +39,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
-import net.minecraft.client.renderer.Projection;
-import net.minecraft.client.renderer.ProjectionMatrixBuffer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.state.gui.GuiElementRenderState;
 import net.minecraft.resources.Identifier;
@@ -86,8 +83,6 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
 
     public static final LegacyPanoramaRenderer INSTANCE = new LegacyPanoramaRenderer();
 
-    private final Projection projection = new Projection();
-    private final ProjectionMatrixBuffer projectionMatrixBuffer = new ProjectionMatrixBuffer("Legacy Panorama Matrix");
     private final MainTarget panoramaTarget = new MainTarget(256, 256);
     private final GpuTexture backgroundTexture;
     private final GpuTextureView backgroundTextureView;
@@ -117,13 +112,11 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
     }
 
     private void renderCubeMap(final float spin) {
-        this.projection.setupPerspective(0.05F, 10.0F, 120.0F, 1.0F, 1.0F);
-        RenderSystem.backupProjectionMatrix();
-        RenderSystem.setProjectionMatrix(this.projectionMatrixBuffer.getBuffer(this.projection), ProjectionType.PERSPECTIVE);
         try (final ImmediateRenderer renderer = ImmediateRenderer.of(RenderUtils.createDescriptor(() -> "Legacy Panorama Cubemap", this.panoramaTarget, VIEWPORT))) {
             renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA_1);
             renderer.setup(PANORAMA_GEOMETRY);
             renderer.setTexture(0, CUBE_MAP_LOCATION);
+            renderer.setProjectionMatrix(new Matrix4f().setPerspective(Utils.toRadians(120.0F), 1.0F, 0.05F, 10.0F));
             for (int layer = 0; layer < 64; layer++) {
                 final float x = (layer % 8 / 8.0F - 0.5F) / 64.0F;
                 final float y = ((float) layer / 8 / 8.0F - 0.5F) / 64.0F;
@@ -140,8 +133,6 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
                 }
             }
         }
-
-        RenderSystem.restoreProjectionMatrix();
     }
 
     private void rotateAndBlurCubeMap(final Matrix3x2f pose, final int width, final int height) {
@@ -160,7 +151,6 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
     @Override
     public void close() {
         PANORAMA_GEOMETRY.forceClose();
-        this.projectionMatrixBuffer.close();
         this.backgroundTextureView.close();
         this.backgroundTexture.close();
         this.panoramaTarget.destroyBuffers();
