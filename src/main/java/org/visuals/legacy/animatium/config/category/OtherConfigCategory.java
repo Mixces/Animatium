@@ -48,7 +48,6 @@ public class OtherConfigCategory extends Category {
     public boolean entityArmorHurtTint = true;
     public boolean itemGlintOnEntity = true;
     public boolean maxGlintProperties = true;
-    public boolean armorHurtRendering = false;
     public boolean disableModernCombatParticles = true;
     public boolean restoreParticleBlending = true;
     public boolean heldItemArmLogic = true;
@@ -93,7 +92,6 @@ public class OtherConfigCategory extends Category {
 
         bundle.booleanEntry("itemGlintOnEntity");
         bundle.booleanEntry("maxGlintProperties");
-        bundle.booleanEntry("armorHurtRendering");
         bundle.booleanEntry("disableModernCombatParticles");
         bundle.booleanEntry("restoreParticleBlending");
         bundle.booleanEntry("heldItemArmLogic");

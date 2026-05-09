@@ -42,11 +42,11 @@ public abstract class MixinHud_OldCrosshairPosition {
     @Definition(id = "guiWidth", method = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;guiWidth()I")
     @Expression("(graphics.guiWidth() - 15) / 2")
     @ModifyExpressionValue(method = "extractCrosshair", at = @At("MIXINEXTRAS:EXPRESSION"))
-    private int animatium$oldCrosshairPosition(int original) {
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldCrosshairPosition) {
-			original++; // like seriously, this is all it takes LMAO
-		}
-
-		return original;
-	}
+    private int animatium$oldCrosshairPosition(final int original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldCrosshairPosition) {
+            return original + 1;
+        } else {
+            return original;
+        }
+    }
 }

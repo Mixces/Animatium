@@ -36,10 +36,10 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 @Mixin(OverlayTexture.class)
 public abstract class MixinOverlayTexture {
     @ModifyExpressionValue(method = "<init>", at = @At(value = "CONSTANT", args = "intValue=-1291911168"))
-    private int animatium$deepRedHurtTint(int original) {
+    private int animatium$deepRedHurtTint(final int original) {
         if (Animatium.isEnabled()) {
             final float alpha = AnimatiumConfig.instance().extras.deepRedHurtTint ? 128.0F : ARGB.alphaFloat(original);
-            return ARGB.colorFromFloat(alpha, ARGB.redFloat(original), ARGB.greenFloat(original), ARGB.blueFloat(original));
+            return ARGB.color(alpha, ARGB.opaque(original));
         } else {
             return original;
         }
