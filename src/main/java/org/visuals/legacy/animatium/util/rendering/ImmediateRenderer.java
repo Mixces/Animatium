@@ -34,6 +34,7 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuSampler;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import lombok.Getter;
@@ -59,8 +60,9 @@ public class ImmediateRenderer implements AutoCloseable {
     private final Map<String, Uniform<?>> uniforms;
 
     @Getter
-    @Setter
-    private Supplier<String> name;
+    private final Supplier<String> name;
+    @Getter
+    private final RenderTarget renderTarget;
     @Getter
     @Setter
     private RenderPipeline pipeline;
@@ -74,11 +76,12 @@ public class ImmediateRenderer implements AutoCloseable {
     @Getter
     private boolean setup;
 
-    private ImmediateRenderer(final Supplier<String> name) {
+    private ImmediateRenderer(final Supplier<String> name, final RenderTarget renderTarget) {
         // Data
         this.textures = new HashMap<>();
         this.uniforms = new HashMap<>();
         this.name = name;
+        this.renderTarget = renderTarget;
         this.pipeline = null;
         this.renderArea = null;
 
@@ -88,11 +91,19 @@ public class ImmediateRenderer implements AutoCloseable {
         this.setup = false;
     }
 
+    public static ImmediateRenderer of(final Supplier<String> label, final RenderTarget renderTarget) {
+        return new ImmediateRenderer(label, renderTarget);
+    }
+
     public static ImmediateRenderer of(final Supplier<String> label) {
-        return new ImmediateRenderer(label);
+        return of(label, Minecraft.getInstance().gameRenderer.mainRenderTarget());
     }
 
     public void setup(final Geometry geometry) {
+        if (this.pipeline == null || this.pipeline != geometry.pipeline()) {
+            throw new RuntimeException("Cannot setup renderer with geometry of mismatching pipelines!");
+        }
+
         if (this.geometry != null && this.geometry != geometry) {
             this.geometry.close();
         }
@@ -105,9 +116,13 @@ public class ImmediateRenderer implements AutoCloseable {
         this.textures.put("Sampler" + id, new TextureAndSampler(textureView, sampler));
     }
 
+    public void setTexture(final int id, final GpuTextureView textureView) {
+        this.setTexture(id, textureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
+    }
+
     public void setTexture(final int id, final Identifier resourceLocation) {
         final AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(resourceLocation);
-        this.textures.put("Sampler" + id, new TextureAndSampler(texture.getTextureView(), texture.getSampler()));
+        this.setTexture(id, texture.getTextureView(), texture.getSampler());
     }
 
     public void setTextures(final TextureSetup textureSetup) {
@@ -171,7 +186,7 @@ public class ImmediateRenderer implements AutoCloseable {
         this.uniforms.put(name, new Uniform<>(Uniform.Type.MATRIX4F, value));
     }
 
-    public void drawTo(final RenderTarget renderTarget, final DynamicTransforms.Builder dynamicTransforms) {
+    public void draw(final DynamicTransforms.Builder dynamicTransforms) {
         if (!this.setup) {
             throw new RuntimeException("Cannot draw because renderer has not been setup yet!");
         } else if (this.pipeline == null) {
@@ -180,7 +195,7 @@ public class ImmediateRenderer implements AutoCloseable {
             final GpuBufferSlice transforms = dynamicTransforms.build();
             final GpuBufferSlice uniformData = this.setupUniformsBuffer();
             final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(this.pipeline.getPrimitiveTopology());
-            try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(RenderUtils.createDescriptor(this.name, renderTarget, this.renderArea))) {
+            try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(RenderUtils.createDescriptor(this.name, this.renderTarget, this.renderArea))) {
                 pass.setPipeline(this.pipeline);
                 for (final Map.Entry<String, TextureAndSampler> entry : this.textures.entrySet()) {
                     final TextureAndSampler textureAndSampler = entry.getValue();
@@ -201,11 +216,7 @@ public class ImmediateRenderer implements AutoCloseable {
         }
     }
 
-    public void draw(final DynamicTransforms.Builder dynamicTransforms) {
-        drawTo(Minecraft.getInstance().gameRenderer.mainRenderTarget(), dynamicTransforms);
-    }
-
-    public void drawGuiTo(final RenderTarget renderTarget, final DynamicTransforms.Builder dynamicTransforms) {
+    public void drawGui(final DynamicTransforms.Builder dynamicTransforms) {
         final Minecraft minecraft = Minecraft.getInstance();
         final Window window = minecraft.getWindow();
         final GuiRendererAccessor guiRendererAccessor = (GuiRendererAccessor) ((GameRendererAccessor) minecraft.gameRenderer).animatium$getGuiRenderer();
@@ -215,7 +226,7 @@ public class ImmediateRenderer implements AutoCloseable {
         projection.setupOrtho(1000.0F, 11000.0F, (float) window.getWidth() / (float) window.getGuiScale(), (float) window.getHeight() / (float) window.getGuiScale(), true);
         RenderSystem.setProjectionMatrix(guiRendererAccessor.animatium$orthoMatrixBuffer().getBuffer(projection), ProjectionType.ORTHOGRAPHIC);
 
-        this.drawTo(renderTarget, dynamicTransforms.withModelViewMatrix(new Matrix4f(dynamicTransforms.getModelViewMatrix()).setTranslation(0.0F, 0.0F, -11000.0F)));
+        this.draw(dynamicTransforms.withModelViewMatrix(new Matrix4f(dynamicTransforms.getModelViewMatrix()).setTranslation(0.0F, 0.0F, -11000.0F)));
         RenderSystem.restoreProjectionMatrix();
     }
 

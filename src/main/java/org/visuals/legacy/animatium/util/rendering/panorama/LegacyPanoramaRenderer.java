@@ -65,7 +65,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
     private static final Vector4f CLEAR_COLOR = new Vector4f(0.0F, 0.0F, 0.0F, 1.0F);
     private static final Identifier CUBE_MAP_LOCATION = Identifier.withDefaultNamespace("textures/gui/title/background/panorama");
 
-    private static final Geometry PANORAMA_GEOMETRY = Geometry.compile(PanoramaPipelines.LEGACY_PANORAMA_1, true, 24, vertexConsumer -> {
+    private static final Geometry PANORAMA_GEOMETRY = Geometry.compilePersistent(PanoramaPipelines.LEGACY_PANORAMA_1, 24, vertexConsumer -> {
         for (int panoramaIdx = 0; panoramaIdx < 6; panoramaIdx++) {
             final Matrix4f pose = new Matrix4f();
             switch (panoramaIdx) {
@@ -119,7 +119,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
         this.projection.setupPerspective(0.05F, 10.0F, 120.0F, 1.0F, 1.0F);
         RenderSystem.backupProjectionMatrix();
         RenderSystem.setProjectionMatrix(this.projectionMatrixBuffer.getBuffer(this.projection), ProjectionType.PERSPECTIVE);
-        try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Panorama Cubemap")) {
+        try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Panorama Cubemap", this.panoramaTarget)) {
             renderer.setRenderArea(VIEWPORT);
             renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA_1);
             renderer.setup(PANORAMA_GEOMETRY);
@@ -134,7 +134,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
                         .rotateX(Utils.toRadians(Mth.sin(spin / 400.0F) * 25.0F + 20.0F))
                         .rotateY(Utils.toRadians(-spin * 0.1F));
                 final int color = ARGB.white(1.0F / (layer + 1.0F));
-                renderer.drawTo(this.panoramaTarget, DynamicTransforms.builder().withModelViewMatrix(modelViewMatrix).withShaderColor(color));
+                renderer.draw(DynamicTransforms.builder().withModelViewMatrix(modelViewMatrix).withShaderColor(color));
                 if (layer == 0) {
                     renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA_2);
                 }
@@ -146,14 +146,14 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
 
     private void rotateAndBlurCubeMap(final Matrix3x2f pose, final int width, final int height) {
         final RenderPipeline pipeline = PanoramaPipelines.LEGACY_PANORAMA_BLUR;
-        try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Panorama Blur")) {
+        try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Panorama Blur", this.panoramaTarget)) {
             renderer.setPipeline(pipeline);
             renderer.setRenderArea(VIEWPORT);
             renderer.setup(Geometry.texturedScreenQuad(pipeline, pose, width, height));
-            renderer.setTexture(0, this.backgroundTextureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
+            renderer.setTexture(0, this.backgroundTextureView);
             for (int pass = 0; pass < 7; pass++) {
                 RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(Objects.requireNonNull(this.panoramaTarget.getColorTexture()), this.backgroundTexture, 0, 0, 0, 0, 0, this.panoramaTarget.width, this.panoramaTarget.height);
-                renderer.drawGuiTo(this.panoramaTarget, DynamicTransforms.builder());
+                renderer.drawGui(DynamicTransforms.builder());
             }
         }
     }

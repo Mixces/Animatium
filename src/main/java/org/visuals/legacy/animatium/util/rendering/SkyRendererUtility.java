@@ -82,7 +82,7 @@ public class SkyRendererUtility {
                     .withShaderDefine("PLANAR_FOG")
                     .build());
 
-    private static final Function<Float, Geometry> VOID_BOX_GEOMETRY = offset -> Geometry.compile(VOID_BOX_PIPELINE, true, 20, vertexConsumer -> {
+    private static final Function<Float, Geometry> VOID_BOX_GEOMETRY = offset -> Geometry.compilePersistent(VOID_BOX_PIPELINE, 20, vertexConsumer -> {
         // Left
         vertexConsumer.addVertex(-1.0F, offset, 1.0F);
         vertexConsumer.addVertex(1.0F, offset, 1.0F);
@@ -139,7 +139,7 @@ public class SkyRendererUtility {
         final RenderPipeline pipeline = getLegacySkyPipeline(AnimatiumConfig.instance().other.planarSkyFog);
         blueVoidRenderer.setPipeline(pipeline);
 
-        blueVoidRenderer.setup(new Geometry(vertexBuffer, indexCount, true));
+        blueVoidRenderer.setup(new Geometry(pipeline, vertexBuffer, indexCount, true));
         blueVoidRenderer.draw(DynamicTransforms.builder()
                 .withModelViewMatrix(RenderSystem.getModelViewMatrixCopy()
                         .translate(0.0F, AnimatiumConfig.instance().extras.dontMoveBlueVoid ? 12.0F : -((float) (depth - 16.0)), 0.0F))

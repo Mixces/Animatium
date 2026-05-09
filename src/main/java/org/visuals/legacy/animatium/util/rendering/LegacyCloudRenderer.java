@@ -267,16 +267,14 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
 
     private void draw(final RenderPipeline pipeline, final Vector3f offset, final int color) {
         RenderTarget cloudsTarget = Minecraft.getInstance().levelRenderer.cloudsTarget();
-        try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Clouds")) {
-            renderer.setPipeline(pipeline);
-            if (cloudsTarget == null) {
-                cloudsTarget = Minecraft.getInstance().gameRenderer.mainRenderTarget();
-            }
+        if (cloudsTarget == null) {
+            cloudsTarget = Minecraft.getInstance().gameRenderer.mainRenderTarget();
+        }
 
-            renderer.setup(new Geometry(this.vertexBuffer, this.indexCount, true));
-            renderer.drawTo(cloudsTarget, DynamicTransforms.builder()
-                    .withShaderColor(ARGB.color(1.0F, color))
-                    .withModelOffset(offset));
+        try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Clouds", cloudsTarget)) {
+            renderer.setPipeline(pipeline);
+            renderer.setup(new Geometry(pipeline, this.vertexBuffer, this.indexCount, true));
+            renderer.draw(DynamicTransforms.builder().withShaderColor(ARGB.color(1.0F, color)).withModelOffset(offset));
         }
     }
 
