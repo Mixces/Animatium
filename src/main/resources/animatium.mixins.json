@@ -81,7 +81,6 @@
 		"v1.gui.remove_recipe_book.MixinAbstractRecipeBookScreen_ToggleRecipeBookWidget",
 		"v1.gui.remove_recipe_book.MixinRecipeBookComponent_HideRecipeBookUI",
 		"v1.gui.screen_tweaks.MixinAbstractSelectionList_ListGradientBackground",
-		"v1.gui.screen_tweaks.MixinAbstractSliderButton_SnappySliderMovement",
 		"v1.gui.screen_tweaks.MixinFontPreparedTextBuilder_FixStrikethroughStyle",
 		"v1.gui.screen_tweaks.MixinGui_OnboardingScreen",
 		"v1.gui.screen_tweaks.MixinGuiRenderer_LegacyPanoramaRendering",

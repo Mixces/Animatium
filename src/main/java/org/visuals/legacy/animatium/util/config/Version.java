@@ -99,7 +99,6 @@ public enum Version {
         screen.listBackgroundGradient = true;
         screen.inventoryEffectsPosition = true;
         screen.fullWidthInventoryEffects = true;
-        screen.snappySliderMovement = true;
         screen.panoramaRendering = true;
         screen.legacyLoadingScreen = true;
         screen.oldChatPosition = true;
@@ -194,7 +193,6 @@ public enum Version {
         screen.listBackgroundGradient = true;
         screen.inventoryEffectsPosition = true;
         screen.fullWidthInventoryEffects = true;
-        screen.snappySliderMovement = true;
         screen.panoramaRendering = true;
         screen.legacyLoadingScreen = true;
         screen.oldChatPosition = true;
@@ -304,7 +302,6 @@ public enum Version {
         screen.listBackgroundGradient = false;
         screen.inventoryEffectsPosition = false;
         screen.fullWidthInventoryEffects = false;
-        screen.snappySliderMovement = false;
         screen.panoramaRendering = false;
         screen.legacyLoadingScreen = false;
         screen.oldChatPosition = false;

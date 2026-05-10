@@ -46,7 +46,6 @@ public class ScreenConfigCategory extends Category {
     public boolean listBackgroundGradient = false;
     public boolean inventoryEffectsPosition = false;
     public boolean fullWidthInventoryEffects = false;
-    public boolean snappySliderMovement = false;
     public boolean panoramaRendering = false;
     public boolean legacyLoadingScreen = false;
     public boolean oldChatPosition = false;
@@ -79,7 +78,6 @@ public class ScreenConfigCategory extends Category {
         bundle.booleanEntry("listBackgroundGradient");
         bundle.booleanEntry("inventoryEffectsPosition");
         bundle.booleanEntry("fullWidthInventoryEffects");
-        bundle.booleanEntry("snappySliderMovement");
         bundle.booleanEntry("panoramaRendering");
         bundle.booleanEntry("legacyLoadingScreen");
         bundle.booleanEntry("oldChatPosition");
