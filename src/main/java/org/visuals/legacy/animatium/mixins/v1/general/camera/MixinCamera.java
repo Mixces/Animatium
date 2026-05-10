@@ -48,14 +48,14 @@ import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 
 @Mixin(Camera.class)
 public abstract class MixinCamera {
-	@Shadow
-	private float eyeHeightOld;
+    @Shadow
+    private float eyeHeightOld;
 
-	@Shadow
-	private float eyeHeight;
+    @Shadow
+    private float eyeHeight;
 
-	@Shadow
-	private Entity entity;
+    @Shadow
+    private Entity entity;
 
     @Shadow
     private boolean detached;
@@ -64,77 +64,77 @@ public abstract class MixinCamera {
     protected abstract void move(float zoom, float dy, float dx);
 
     @Inject(method = "alignWithEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setRotation(FF)V", shift = At.Shift.AFTER))
-	private void animatium$removeSmoothSneaking(final CallbackInfo ci) {
-		if (Animatium.isEnabled() && !AnimatiumConfig.instance().movement.sneakAnimation.isSmooth()) {
-			this.eyeHeightOld = this.eyeHeight;
-			this.eyeHeight = this.animatium$getSneakingEyeHeight();
-		}
-	}
+    private void animatium$removeSmoothSneaking(final CallbackInfo ci) {
+        if (Animatium.isEnabled() && !AnimatiumConfig.instance().movement.sneakAnimation.isSmooth()) {
+            this.eyeHeightOld = this.eyeHeight;
+            this.eyeHeight = this.animatium$getSneakingEyeHeight();
+        }
+    }
 
-	@WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getEyeHeight()F"))
-	private float animatium$useOldEyeHeight(final Entity instance, final Operation<Float> original) {
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.fakeOldSneakEyeHeight) {
-			return this.animatium$getSneakingEyeHeight();
-		} else {
-			return original.call(instance);
-		}
-	}
+    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getEyeHeight()F"))
+    private float animatium$useOldEyeHeight(final Entity instance, final Operation<Float> original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.fakeOldSneakEyeHeight) {
+            return this.animatium$getSneakingEyeHeight();
+        } else {
+            return original.call(instance);
+        }
+    }
 
-	@WrapOperation(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/Camera;eyeHeight:F"))
-	private void animatium$oldSneakAnimationInterpolation(final Camera instance, final float value, final Operation<Void> original) {
-		if (Animatium.isEnabled() && this.entity.isCrouching()) {
-			if (AnimatiumConfig.instance().movement.sneakAnimation == SneakAnimationSetting.V1_7 && this.entity.getEyeHeight() < this.eyeHeight) {
-				this.eyeHeight = this.animatium$getSneakingEyeHeight();
-				return;
-			} else if (!AnimatiumConfig.instance().movement.longUnsneak && this.entity.getEyeHeight() > this.eyeHeight) {
-				this.eyeHeight = this.entity.getEyeHeight(Pose.STANDING) * (this.entity instanceof LivingEntity livingEntity ? livingEntity.getScale() : 1.0F);
-				return;
-			}
-		}
+    @WrapOperation(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/Camera;eyeHeight:F"))
+    private void animatium$oldSneakAnimationInterpolation(final Camera instance, final float value, final Operation<Void> original) {
+        if (Animatium.isEnabled() && this.entity.isCrouching()) {
+            if (AnimatiumConfig.instance().movement.sneakAnimation == SneakAnimationSetting.V1_7 && this.entity.getEyeHeight() < this.eyeHeight) {
+                this.eyeHeight = this.animatium$getSneakingEyeHeight();
+            } else if (!AnimatiumConfig.instance().movement.longUnsneak && this.entity.getEyeHeight() > this.eyeHeight) {
+                this.eyeHeight = this.entity.getEyeHeight(Pose.STANDING) * (this.entity instanceof LivingEntity livingEntity ? livingEntity.getScale() : 1.0F);
+            }
 
-		original.call(instance, value);
-	}
+            return;
+        }
 
-	@WrapOperation(method = "getMaxZoom", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/ClipContext$Block;VISUAL:Lnet/minecraft/world/level/ClipContext$Block;", opcode = Opcodes.GETSTATIC))
-	private ClipContext.Block animatium$cameraTransparentPassthrough(final Operation<ClipContext.Block> original) {
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.disableCameraTransparentPassthrough) {
-			return ClipContext.Block.OUTLINE;
-		} else {
-			return original.call();
-		}
-	}
+        original.call(instance, value);
+    }
 
-	@Inject(method = "alignWithEntity", at = @At(value = "TAIL"))
-	private void animatium$oldCameraVersion(final float partialTicks, final CallbackInfo ci) {
-		// TODO: Fix bed/sleeping position
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.cameraVersion != CameraVersion.VANILLA && !this.detached && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
-			final int ordinal = AnimatiumConfig.instance().screen.cameraVersion.ordinal();
-			if (ordinal <= CameraVersion.V1_14_V1_14_3.ordinal()) {
-				// <= 1.14.3
-				this.move(-0.05000000074505806F, 0.0F, 0.0F);
-				// <= 1.13.2
-				if (ordinal <= CameraVersion.V1_9_V1_13_2.ordinal()) {
-					this.move(0.1F, 0.0F, 0.0F);
-					// <= 1.8
-					if (ordinal == CameraVersion.V1_8.ordinal()) {
-						this.move(-0.15F, 0, 0); // unfixing parallax
-					}
-				}
-			}
-		}
-	}
+    @WrapOperation(method = "getMaxZoom", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/ClipContext$Block;VISUAL:Lnet/minecraft/world/level/ClipContext$Block;", opcode = Opcodes.GETSTATIC))
+    private ClipContext.Block animatium$cameraTransparentPassthrough(final Operation<ClipContext.Block> original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.disableCameraTransparentPassthrough) {
+            return ClipContext.Block.OUTLINE;
+        } else {
+            return original.call();
+        }
+    }
 
-	@Unique
-	private float animatium$getSneakingEyeHeight() {
-		final float currentEyeHeight = this.entity.getEyeHeight();
-		if (Animatium.isEnabled() &&
-				AnimatiumConfig.instance().movement.fakeOldSneakEyeHeight &&
-				this.entity.hasPose(Pose.CROUCHING) &&
-				this.entity instanceof Player player &&
-				((PlayerAccessor) player).animatium$canChangeIntoPose(Pose.STANDING)) {
-			return 1.54F * player.getScale();
-		} else {
-			return currentEyeHeight;
-		}
-	}
+    @Inject(method = "alignWithEntity", at = @At(value = "TAIL"))
+    private void animatium$oldCameraVersion(final float partialTicks, final CallbackInfo ci) {
+        // TODO: Fix bed/sleeping position
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.cameraVersion != CameraVersion.VANILLA && !this.detached && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
+            final int ordinal = AnimatiumConfig.instance().screen.cameraVersion.ordinal();
+            if (ordinal <= CameraVersion.V1_14_V1_14_3.ordinal()) {
+                // <= 1.14.3
+                this.move(-0.05000000074505806F, 0.0F, 0.0F);
+                // <= 1.13.2
+                if (ordinal <= CameraVersion.V1_9_V1_13_2.ordinal()) {
+                    this.move(0.1F, 0.0F, 0.0F);
+                    // <= 1.8
+                    if (ordinal == CameraVersion.V1_8.ordinal()) {
+                        this.move(-0.15F, 0, 0); // unfixing parallax
+                    }
+                }
+            }
+        }
+    }
+
+    @Unique
+    private float animatium$getSneakingEyeHeight() {
+        final float currentEyeHeight = this.entity.getEyeHeight();
+        if (Animatium.isEnabled() &&
+                AnimatiumConfig.instance().movement.fakeOldSneakEyeHeight &&
+                this.entity.hasPose(Pose.CROUCHING) &&
+                this.entity instanceof Player player &&
+                ((PlayerAccessor) player).animatium$canChangeIntoPose(Pose.STANDING)) {
+            return 1.54F * player.getScale();
+        } else {
+            return currentEyeHeight;
+        }
+    }
 }
