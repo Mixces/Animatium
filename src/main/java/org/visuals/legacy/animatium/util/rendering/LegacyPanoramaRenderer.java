@@ -23,8 +23,12 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering.panorama;
+package org.visuals.legacy.animatium.util.rendering;
 
+import btw.lowercase.renderer.Renderer;
+import btw.lowercase.renderer.buffer.DynamicTransforms;
+import btw.lowercase.renderer.buffer.Geometry;
+import btw.lowercase.renderer.vertex.VertexLayouts;
 import com.mojang.blaze3d.GpuFormat;
 import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -50,12 +54,6 @@ import org.joml.Vector4f;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.visuals.legacy.animatium.util.Utils;
-import org.visuals.legacy.animatium.util.rendering.AnimatiumPipelines;
-import org.visuals.legacy.animatium.util.rendering.RenderUtils;
-import org.visuals.legacy.animatium.util.rendering.renderer.DynamicTransforms;
-import org.visuals.legacy.animatium.util.rendering.renderer.Geometry;
-import org.visuals.legacy.animatium.util.rendering.renderer.ImmediateRenderer;
-import org.visuals.legacy.animatium.util.rendering.renderer.VertexLayouts;
 
 import java.util.Objects;
 
@@ -117,7 +115,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
     }
 
     private void renderCubeMap(final float xRot, final float yRot) {
-        try (final ImmediateRenderer renderer = ImmediateRenderer.of(RenderUtils.createDescriptor(() -> "Legacy Panorama Cubemap", this.panoramaTarget, VIEWPORT))) {
+        try (final Renderer renderer = Renderer.of(() -> "Legacy Panorama Cubemap", this.panoramaTarget, VIEWPORT)) {
             renderer.setPipeline(AnimatiumPipelines.LEGACY_PANORAMA_1);
             renderer.setup(CUBE_MAP_GEOMETRY);
             renderer.setTexture(0, CUBE_MAP_LOCATION);
@@ -132,7 +130,11 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
                         .rotateX(Utils.toRadians(xRot))
                         .rotateY(Utils.toRadians(yRot));
                 final int color = ARGB.white(1.0F / (layer + 1.0F));
-                renderer.draw(DynamicTransforms.builder().withModelViewMatrix(modelViewMatrix).withShaderColor(color));
+                renderer.setUniform(DynamicTransforms.KEY, DynamicTransforms.builder()
+                        .withModelViewMatrix(modelViewMatrix)
+                        .withShaderColor(color)
+                        .build());
+                renderer.draw();
                 if (layer == 0) {
                     renderer.setPipeline(AnimatiumPipelines.LEGACY_PANORAMA_2);
                 }
@@ -141,12 +143,12 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
     }
 
     private void rotateAndBlurCubeMap(final Matrix3x2f pose, final int width, final int height) {
-        try (final ImmediateRenderer renderer = ImmediateRenderer.of(RenderUtils.createDescriptor(() -> "Legacy Panorama Blur", this.panoramaTarget, VIEWPORT))) {
-            renderer.setPipeline(AnimatiumPipelines.LEGACY_PANORAMA_BLUR);
-            renderer.setup(Geometry.texturedScreenQuad(pose, width, height));
-            renderer.setTexture(0, this.backgroundTextureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
-            for (int pass = 0; pass < 7; pass++) {
-                RenderUtils.copyTextureToTexture(Objects.requireNonNull(this.panoramaTarget.getColorTexture()), this.backgroundTexture);
+        for (int pass = 0; pass < 7; pass++) {
+            RenderUtils.copyTextureToTexture(Objects.requireNonNull(this.panoramaTarget.getColorTexture()), this.backgroundTexture);
+            try (final Renderer renderer = Renderer.of(() -> "Legacy Panorama Blur", this.panoramaTarget, VIEWPORT)) {
+                renderer.setPipeline(AnimatiumPipelines.LEGACY_PANORAMA_BLUR);
+                renderer.setup(Geometry.texturedScreenQuad(pose, width, height));
+                renderer.setTexture(0, this.backgroundTextureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
                 renderer.drawGui();
             }
         }

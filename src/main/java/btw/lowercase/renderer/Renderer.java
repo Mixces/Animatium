@@ -23,13 +23,14 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering.renderer;
+package btw.lowercase.renderer;
 
+import btw.lowercase.renderer.buffer.DynamicTransforms;
+import btw.lowercase.renderer.buffer.Geometry;
+import btw.lowercase.renderer.texture.TextureAndSampler;
 import com.mojang.blaze3d.ProjectionType;
-import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
-import com.mojang.blaze3d.buffers.Std140Builder;
-import com.mojang.blaze3d.buffers.Std140SizeCalculator;
+import com.mojang.blaze3d.pipeline.BindGroupLayout;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.Window;
@@ -45,26 +46,25 @@ import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.ProjectionMatrixBuffer;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
-import org.joml.*;
-import org.lwjgl.system.MemoryStack;
-import org.visuals.legacy.animatium.util.rendering.RenderUtils;
+import org.joml.Matrix4f;
+import org.visuals.legacy.animatium.util.compatibility.IrisPipeline;
+import org.visuals.legacy.animatium.util.compatibility.IrisUtil;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.function.Supplier;
 
-public class ImmediateRenderer implements AutoCloseable {
+public class Renderer implements AutoCloseable {
     // Data
     private final Map<String, TextureAndSampler> textures = new HashMap<>();
-    private final Map<String, Uniform<?>> uniforms = new TreeMap<>();
+    private final Map<String, GpuBufferSlice> uniforms = new HashMap<>();
 
     @Getter
     private final Supplier<String> name;
     @Getter
     private final RenderPassDescriptor descriptor;
     @Getter
-    @Setter
     private RenderPipeline pipeline = null;
     @Getter
     @Setter
@@ -73,28 +73,58 @@ public class ImmediateRenderer implements AutoCloseable {
     // Internal
     private ProjectionMatrixBuffer projectionMatrixBuffer;
     private Geometry geometry = null;
-    private GpuBuffer uniformBuffer = null;
-    private GpuBufferSlice lastUniformBuffer = null;
-    private boolean uniformsDirty = true;
     @Getter
     private boolean setup = false;
 
-    private ImmediateRenderer(final RenderPassDescriptor descriptor) {
+    private Renderer(final RenderPassDescriptor descriptor) {
         this.name = descriptor.label();
         this.descriptor = descriptor;
         this.projectionMatrixBuffer = new ProjectionMatrixBuffer("Immediate Projection Buffer for " + this.name);
     }
 
-    public static ImmediateRenderer of(final RenderPassDescriptor descriptor) {
-        return new ImmediateRenderer(descriptor);
+    public static Renderer of(final RenderPassDescriptor descriptor) {
+        return new Renderer(descriptor);
     }
 
-    public static ImmediateRenderer of(final Supplier<String> label, final RenderTarget renderTarget) {
-        return of(RenderUtils.createDescriptor(label, renderTarget));
+    public static Renderer of(final Supplier<String> label, final RenderTarget renderTarget, final RenderPass.RenderArea renderArea) {
+        final RenderPassDescriptor descriptor = RenderPassDescriptor.create(label);
+
+        final GpuTextureView colorTextureView = RenderSystem.outputColorTextureOverride != null ? RenderSystem.outputColorTextureOverride : renderTarget.getColorTextureView();
+        assert colorTextureView != null;
+        descriptor.withColorAttachment(colorTextureView);
+        if (renderTarget.useDepth) {
+            final GpuTextureView depthTextureView = RenderSystem.outputDepthTextureOverride != null ? RenderSystem.outputDepthTextureOverride : renderTarget.getDepthTextureView();
+            assert depthTextureView != null;
+            descriptor.withDepthAttachment(depthTextureView);
+        }
+
+        descriptor.withRenderArea(renderArea);
+        return of(descriptor);
     }
 
-    public static ImmediateRenderer of(final Supplier<String> label) {
+    public static Renderer of(final Supplier<String> label, final RenderTarget renderTarget) {
+        return of(label, renderTarget, new RenderPass.RenderArea(0, 0, renderTarget.width, renderTarget.height));
+    }
+
+    public static Renderer of(final Supplier<String> label) {
         return of(label, Minecraft.getInstance().gameRenderer.mainRenderTarget());
+    }
+
+    public void setPipeline(final RenderPipeline pipeline, final IrisPipeline irisPipeline) {
+        this.pipeline = pipeline;
+        IrisUtil.assignPipeline(pipeline, irisPipeline);
+    }
+
+    public void setPipeline(final RenderPipeline pipeline) {
+        final List<String> samplers = BindGroupLayout.flattenSamplers(pipeline.getBindGroupLayouts());
+        IrisPipeline irisPipeline;
+        if (samplers.contains("Sampler0")) {
+            irisPipeline = IrisPipeline.TEXTURED;
+        } else {
+            irisPipeline = IrisPipeline.BASIC;
+        }
+
+        this.setPipeline(pipeline, irisPipeline);
     }
 
     public void setup(final Geometry geometry) {
@@ -128,56 +158,17 @@ public class ImmediateRenderer implements AutoCloseable {
         this.setTexture(2, TextureAndSampler.get(2, setup));
     }
 
-    public <T> void setUniform(final String name, final Uniform.Type<T> type, final T value) {
-        this.uniformsDirty = true;
-        this.uniforms.put(name, new Uniform<>(type, value));
+    public void setUniform(final String name, final GpuBufferSlice data) {
+        this.uniforms.put(name, data);
     }
 
-    public void setUniform(final String name, final int value) {
-        this.setUniform(name, Uniform.Type.INT, value);
-    }
-
-    public void setUniform(final String name, final float value) {
-        this.setUniform(name, Uniform.Type.FLOAT, value);
-    }
-
-    public void setUniform(final String name, final Vector2ic value) {
-        this.setUniform(name, Uniform.Type.VECTOR2I, value);
-    }
-
-    public void setUniform(final String name, final Vector2fc value) {
-        this.setUniform(name, Uniform.Type.VECTOR2F, value);
-    }
-
-    public void setUniform(final String name, final Vector3ic value) {
-        this.setUniform(name, Uniform.Type.VECTOR3I, value);
-    }
-
-    public void setUniform(final String name, final Vector3fc value) {
-        this.setUniform(name, Uniform.Type.VECTOR3F, value);
-    }
-
-    public void setUniform(final String name, final Vector4ic value) {
-        this.setUniform(name, Uniform.Type.VECTOR4I, value);
-    }
-
-    public void setUniform(final String name, final Vector4fc value) {
-        this.setUniform(name, Uniform.Type.VECTOR4F, value);
-    }
-
-    public void setUniform(final String name, final Matrix4fc value) {
-        this.setUniform(name, Uniform.Type.MATRIX4F, value);
-    }
-
-    public void draw(final DynamicTransforms.Builder dynamicTransforms) {
+    public void draw() {
         if (!this.setup) {
             throw new RuntimeException("Cannot draw because renderer has not been setup yet!");
         } else if (this.pipeline == null) {
             throw new RuntimeException("Cannot draw without a pipeline bound!");
         } else {
             if (this.projectionMatrix != null) {
-                RenderSystem.backupProjectionMatrix();
-
                 final int properties = this.projectionMatrix.properties();
                 ProjectionType projectionType;
                 if ((properties & Matrix4f.PROPERTY_PERSPECTIVE) != 0) {
@@ -186,26 +177,45 @@ public class ImmediateRenderer implements AutoCloseable {
                     projectionType = ProjectionType.ORTHOGRAPHIC;
                 }
 
+                RenderSystem.backupProjectionMatrix();
                 RenderSystem.setProjectionMatrix(this.projectionMatrixBuffer.getBuffer(this.projectionMatrix), projectionType);
             }
 
-            final GpuBufferSlice transforms = dynamicTransforms.build();
-            final GpuBufferSlice uniformData = this.setupUniformsBuffer();
+            final GpuBufferSlice dynamicTransforms = this.uniforms.getOrDefault(DynamicTransforms.KEY, DynamicTransforms.builder().build());
             final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(this.pipeline.getPrimitiveTopology());
             try (final RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(this.descriptor)) {
                 pass.setPipeline(this.pipeline);
-                for (final Map.Entry<String, TextureAndSampler> entry : this.textures.entrySet()) {
-                    final TextureAndSampler textureAndSampler = entry.getValue();
-                    pass.bindTexture(entry.getKey(), textureAndSampler.textureView(), textureAndSampler.sampler());
-                }
-
                 pass.setVertexBuffer(0, this.geometry.vertexBuffer().slice());
                 pass.setIndexBuffer(autoStorageIndexBuffer.getBuffer(this.geometry.indexCount()), autoStorageIndexBuffer.type());
 
-                RenderSystem.bindDefaultUniforms(pass);
-                pass.setUniform("DynamicTransforms", transforms);
-                if (uniformData != null) {
-                    pass.setUniform("Data", uniformData);
+                final List<BindGroupLayout> bindGroupLayouts = this.pipeline.getBindGroupLayouts();
+                final List<String> descriptions = BindGroupLayout.flattenUniforms(bindGroupLayouts)
+                        .stream()
+                        .map(BindGroupLayout.UniformDescription::name)
+                        .toList();
+                if (descriptions.contains("Globals")) {
+                    RenderSystem.bindDefaultUniforms(pass);
+                }
+
+                for (final Map.Entry<String, GpuBufferSlice> uniform : this.uniforms.entrySet()) {
+                    final String name = uniform.getKey();
+                    if (descriptions.contains(name)) {
+                        if (DynamicTransforms.KEY.equals(name)) { // Special Handling
+                            pass.setUniform(DynamicTransforms.KEY, dynamicTransforms);
+                            continue;
+                        }
+
+                        pass.setUniform(uniform.getKey(), uniform.getValue());
+                    }
+                }
+
+                final List<String> samplers = BindGroupLayout.flattenSamplers(bindGroupLayouts);
+                for (final Map.Entry<String, TextureAndSampler> entry : this.textures.entrySet()) {
+                    final String name = entry.getKey();
+                    if (samplers.contains(name)) {
+                        final TextureAndSampler textureAndSampler = entry.getValue();
+                        pass.bindTexture(name, textureAndSampler.textureView(), textureAndSampler.sampler());
+                    }
                 }
 
                 pass.drawIndexed(0, 0, this.geometry.indexCount(), 1);
@@ -217,47 +227,14 @@ public class ImmediateRenderer implements AutoCloseable {
         }
     }
 
-    public void drawGui(final DynamicTransforms.Builder dynamicTransforms) {
+    public void drawGui() {
         final Window window = Minecraft.getInstance().getWindow();
         this.projectionMatrix = new Matrix4f().setOrtho(0.0F, (float) window.getWidth() / (float) window.getGuiScale(), (float) window.getHeight() / (float) window.getGuiScale(), 0.0F, 1000.0F, 11000.0F, RenderSystem.getDevice().getDeviceInfo().isZZeroToOne());
-        this.draw(dynamicTransforms.withModelViewMatrix(new Matrix4f(dynamicTransforms.getModelViewMatrix()).setTranslation(0.0F, 0.0F, -11000.0F)));
+        this.setUniform(DynamicTransforms.KEY, DynamicTransforms.builder()
+                .withModelViewMatrix(new Matrix4f().setTranslation(0.0F, 0.0F, -11000.0F))
+                .build());
+        this.draw();
         RenderSystem.restoreProjectionMatrix();
-    }
-
-    public void drawGui() {
-        this.drawGui(DynamicTransforms.builder());
-    }
-
-    private @Nullable GpuBufferSlice setupUniformsBuffer() {
-        if (this.uniforms.isEmpty()) {
-            return null;
-        } else if (!this.uniformsDirty) {
-            return this.lastUniformBuffer;
-        } else {
-            final Std140SizeCalculator calculator = new Std140SizeCalculator();
-            for (final Uniform<?> uniform : this.uniforms.values()) {
-                uniform.size(calculator);
-            }
-
-            final int size = calculator.get();
-            try (final MemoryStack stack = MemoryStack.stackPush()) {
-                final Std140Builder builder = Std140Builder.onStack(stack, size);
-                for (final Uniform<?> uniform : this.uniforms.values()) {
-                    uniform.put(builder);
-                }
-
-                if (this.uniformBuffer != null) {
-                    RenderSystem.getDevice().createCommandEncoder().writeToBuffer(this.uniformBuffer.slice(), builder.get());
-                } else {
-                    this.uniformBuffer = RenderSystem.getDevice().createBuffer(() -> this.name + " Uniform Buffer", GpuBuffer.USAGE_UNIFORM | GpuBuffer.USAGE_COPY_DST, builder.get());
-                }
-            }
-
-            final GpuBufferSlice slice = this.uniformBuffer.slice(0, size);
-            this.lastUniformBuffer = slice;
-            this.uniformsDirty = false;
-            return slice;
-        }
     }
 
     @Override
@@ -267,11 +244,6 @@ public class ImmediateRenderer implements AutoCloseable {
         if (this.geometry != null) {
             this.geometry.close();
             this.geometry = null;
-        }
-
-        if (this.uniformBuffer != null) {
-            this.uniformBuffer.close();
-            this.uniformBuffer = null;
         }
 
         if (this.projectionMatrixBuffer != null) {

@@ -23,8 +23,10 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering.renderer;
+package btw.lowercase.renderer.buffer;
 
+import btw.lowercase.renderer.vertex.VertexLayout;
+import btw.lowercase.renderer.vertex.VertexLayouts;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderSystem;

@@ -23,13 +23,17 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering.renderer;
+package btw.lowercase.renderer.vertex;
 
 import com.mojang.blaze3d.PrimitiveTopology;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import org.jspecify.annotations.NonNull;
 
-public class VertexLayouts {
-    public static final VertexLayout POSITIONED_QUAD = new VertexLayout(DefaultVertexFormat.POSITION, PrimitiveTopology.QUADS);
-    public static final VertexLayout POSITIONED_COLOR_QUAD = new VertexLayout(DefaultVertexFormat.POSITION_COLOR, PrimitiveTopology.QUADS);
-    public static final VertexLayout TEXTURED_QUAD = new VertexLayout(DefaultVertexFormat.POSITION_TEX, PrimitiveTopology.QUADS);
+import java.util.Objects;
+
+public record VertexLayout(@NonNull VertexFormat vertexFormat, @NonNull PrimitiveTopology primitiveTopology) {
+    public static VertexLayout of(final RenderPipeline pipeline) {
+        return new VertexLayout(Objects.requireNonNull(pipeline.getVertexFormatBinding(0)), pipeline.getPrimitiveTopology());
+    }
 }

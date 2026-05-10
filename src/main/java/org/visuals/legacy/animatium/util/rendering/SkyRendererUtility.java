@@ -25,6 +25,10 @@
 
 package org.visuals.legacy.animatium.util.rendering;
 
+import btw.lowercase.renderer.Renderer;
+import btw.lowercase.renderer.buffer.DynamicTransforms;
+import btw.lowercase.renderer.buffer.Geometry;
+import btw.lowercase.renderer.vertex.VertexLayouts;
 import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -41,10 +45,6 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.compatibility.IrisPipeline;
 import org.visuals.legacy.animatium.util.compatibility.IrisUtil;
-import org.visuals.legacy.animatium.util.rendering.renderer.DynamicTransforms;
-import org.visuals.legacy.animatium.util.rendering.renderer.VertexLayouts;
-import org.visuals.legacy.animatium.util.rendering.renderer.Geometry;
-import org.visuals.legacy.animatium.util.rendering.renderer.ImmediateRenderer;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -53,10 +53,10 @@ import java.util.function.Function;
 public class SkyRendererUtility {
     public final RenderPipeline.Snippet VOID_BOX_SNIPPET =
             RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
-                    .withVertexShader("core/position")
-                    .withFragmentShader("core/position")
+                    .withVertexShader("core/position_color")
+                    .withFragmentShader("core/position_color")
                     .withDepthStencilState(RenderUtils.NO_DEPTH_WRITE)
-                    .withVertexBinding(0, DefaultVertexFormat.POSITION)
+                    .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
                     .withPrimitiveTopology(PrimitiveTopology.QUADS)
                     .buildSnippet();
 
@@ -86,40 +86,40 @@ public class SkyRendererUtility {
                     .withShaderDefine("PLANAR_FOG")
                     .build());
 
-    private static final Function<Float, Geometry> VOID_BOX_GEOMETRY = offset -> Geometry.compile(VertexLayouts.POSITIONED_QUAD, 20, vertexConsumer -> {
+    private static final Function<Float, Geometry> VOID_BOX_GEOMETRY = offset -> Geometry.compile(VertexLayouts.POSITIONED_COLOR_QUAD, 20, vertexConsumer -> {
+        final int color = ARGB.opaque(0);
+
         // Left
-        vertexConsumer.addVertex(-1.0F, offset, 1.0F);
-        vertexConsumer.addVertex(1.0F, offset, 1.0F);
-        vertexConsumer.addVertex(1.0F, -1.0F, 1.0F);
-        vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F);
+        vertexConsumer.addVertex(-1.0F, offset, 1.0F).setColor(color);
+        vertexConsumer.addVertex(1.0F, offset, 1.0F).setColor(color);
+        vertexConsumer.addVertex(1.0F, -1.0F, 1.0F).setColor(color);
+        vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F).setColor(color);
 
         // Right
-        vertexConsumer.addVertex(-1.0F, -1.0F, -1.0F);
-        vertexConsumer.addVertex(1.0F, -1.0F, -1.0F);
-        vertexConsumer.addVertex(1.0F, offset, -1.0F);
-        vertexConsumer.addVertex(-1.0F, offset, -1.0F);
+        vertexConsumer.addVertex(-1.0F, -1.0F, -1.0F).setColor(color);
+        vertexConsumer.addVertex(1.0F, -1.0F, -1.0F).setColor(color);
+        vertexConsumer.addVertex(1.0F, offset, -1.0F).setColor(color);
+        vertexConsumer.addVertex(-1.0F, offset, -1.0F).setColor(color);
 
         // Back
-        vertexConsumer.addVertex(1.0F, -1.0F, -1.0F);
-        vertexConsumer.addVertex(1.0F, -1.0F, 1.0F);
-        vertexConsumer.addVertex(1.0F, offset, 1.0F);
-        vertexConsumer.addVertex(1.0F, offset, -1.0F);
+        vertexConsumer.addVertex(1.0F, -1.0F, -1.0F).setColor(color);
+        vertexConsumer.addVertex(1.0F, -1.0F, 1.0F).setColor(color);
+        vertexConsumer.addVertex(1.0F, offset, 1.0F).setColor(color);
+        vertexConsumer.addVertex(1.0F, offset, -1.0F).setColor(color);
 
         // Front
-        vertexConsumer.addVertex(-1.0F, offset, -1.0F);
-        vertexConsumer.addVertex(-1.0F, offset, 1.0F);
-        vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F);
-        vertexConsumer.addVertex(-1.0F, -1.0F, -1.0F);
+        vertexConsumer.addVertex(-1.0F, offset, -1.0F).setColor(color);
+        vertexConsumer.addVertex(-1.0F, offset, 1.0F).setColor(color);
+        vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F).setColor(color);
+        vertexConsumer.addVertex(-1.0F, -1.0F, -1.0F).setColor(color);
 
         // Bottom
-        vertexConsumer.addVertex(-1.0F, -1.0F, -1.0F);
-        vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F);
-        vertexConsumer.addVertex(1.0F, -1.0F, 1.0F);
-        vertexConsumer.addVertex(1.0F, -1.0F, -1.0F);
+        vertexConsumer.addVertex(-1.0F, -1.0F, -1.0F).setColor(color);
+        vertexConsumer.addVertex(-1.0F, -1.0F, 1.0F).setColor(color);
+        vertexConsumer.addVertex(1.0F, -1.0F, 1.0F).setColor(color);
+        vertexConsumer.addVertex(1.0F, -1.0F, -1.0F).setColor(color);
     });
 
-    private ImmediateRenderer blueVoidRenderer;
-    private ImmediateRenderer voidBoxRenderer;
     private GpuBuffer vertexBuffer = initializeSky(vertexConsumer -> buildSkyHalf(vertexConsumer, -16.0F, true));
     private int indexCount = -1;
 
@@ -136,18 +136,25 @@ public class SkyRendererUtility {
     }
 
     public void renderBlueVoid(final int skyColor, final double depth) {
-        if (blueVoidRenderer == null) {
-            blueVoidRenderer = ImmediateRenderer.of(() -> "Blue void sky disc");
+        try (final Renderer renderer = Renderer.of(() -> "Blue void sky disc")) {
+            renderer.setPipeline(getLegacySkyPipeline(AnimatiumConfig.instance().other.planarSkyFog));
+            renderer.setup(new Geometry(VertexLayouts.POSITIONED_QUAD, vertexBuffer, indexCount, true));
+            renderer.setUniform(DynamicTransforms.KEY, DynamicTransforms.builder()
+                    .withModelViewMatrix(RenderSystem.getModelViewMatrixCopy()
+                            .translate(0.0F, AnimatiumConfig.instance().extras.dontMoveBlueVoid ? 12.0F : -((float) (depth - 16.0)), 0.0F))
+                    .withShaderColor(new Vector4f(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F, 1.0F))
+                    .build());
+            renderer.draw();
         }
+    }
 
-        final RenderPipeline pipeline = getLegacySkyPipeline(AnimatiumConfig.instance().other.planarSkyFog);
-        blueVoidRenderer.setPipeline(pipeline);
-
-        blueVoidRenderer.setup(new Geometry(VertexLayouts.POSITIONED_QUAD, vertexBuffer, indexCount, true));
-        blueVoidRenderer.draw(DynamicTransforms.builder()
-                .withModelViewMatrix(RenderSystem.getModelViewMatrixCopy()
-                        .translate(0.0F, AnimatiumConfig.instance().extras.dontMoveBlueVoid ? 12.0F : -((float) (depth - 16.0)), 0.0F))
-                .withShaderColor(new Vector4f(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F, 1.0F)));
+    // TODO/NOTE: Figure out why its rendering differently than in 18w07a (last snapshot to have it)
+    public void renderVoidBox(final double depth) {
+        try (final Renderer renderer = Renderer.of(() -> "Player Void Box")) {
+            renderer.setPipeline(VOID_BOX_PIPELINE);
+            renderer.setup(VOID_BOX_GEOMETRY.apply(-((float) (depth + 65.0))));
+            renderer.draw();
+        }
     }
 
     public void buildSkyHalf(final VertexConsumer vertexConsumer, final float y, final boolean bottom) {
@@ -184,32 +191,11 @@ public class SkyRendererUtility {
         }
     }
 
-    // TODO/NOTE: Figure out why its rendering differently than in 18w07a (last snapshot to have it)
-    public void renderVoidBox(final double depth) {
-        if (voidBoxRenderer == null) {
-            voidBoxRenderer = ImmediateRenderer.of(() -> "Player Void Box");
-            voidBoxRenderer.setPipeline(VOID_BOX_PIPELINE);
-        }
-
-        voidBoxRenderer.setup(VOID_BOX_GEOMETRY.apply(-((float) (depth + 65.0))));
-        voidBoxRenderer.draw(DynamicTransforms.builder().withShaderColor(0xFF000000));
-    }
-
     public double getHorizonEyeHeight(final ClientLevel level, final float tickDelta) {
         return Minecraft.getInstance().player.getEyePosition(tickDelta).y - level.getLevelData().getHorizonHeight(level);
     }
 
     public void close() {
-        if (blueVoidRenderer != null) {
-            blueVoidRenderer.close();
-            blueVoidRenderer = null;
-        }
-
-        if (voidBoxRenderer != null) {
-            voidBoxRenderer.close();
-            voidBoxRenderer = null;
-        }
-
         if (vertexBuffer != null) {
             vertexBuffer.close();
             vertexBuffer = null;

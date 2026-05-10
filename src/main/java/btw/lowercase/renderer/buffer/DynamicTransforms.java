@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering.renderer;
+package btw.lowercase.renderer.buffer;
 
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -34,6 +34,8 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 public class DynamicTransforms {
+    public static final String KEY = "DynamicTransforms";
+
     public static Builder builder() {
         return new Builder();
     }

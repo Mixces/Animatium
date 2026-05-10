@@ -49,10 +49,10 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import org.jspecify.annotations.NonNull;
 import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.util.rendering.renderer.DynamicTransforms;
-import org.visuals.legacy.animatium.util.rendering.renderer.Geometry;
-import org.visuals.legacy.animatium.util.rendering.renderer.ImmediateRenderer;
-import org.visuals.legacy.animatium.util.rendering.renderer.VertexLayouts;
+import btw.lowercase.renderer.buffer.DynamicTransforms;
+import btw.lowercase.renderer.buffer.Geometry;
+import btw.lowercase.renderer.Renderer;
+import btw.lowercase.renderer.vertex.VertexLayouts;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -276,10 +276,14 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
             cloudsTarget = Minecraft.getInstance().gameRenderer.mainRenderTarget();
         }
 
-        try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Clouds", cloudsTarget)) {
+        try (final Renderer renderer = Renderer.of(() -> "Legacy Clouds", cloudsTarget)) {
             renderer.setPipeline(pipeline);
             renderer.setup(new Geometry(VertexLayouts.POSITIONED_COLOR_QUAD, this.vertexBuffer, this.indexCount, true));
-            renderer.draw(DynamicTransforms.builder().withShaderColor(ARGB.color(1.0F, color)).withModelOffset(offset));
+            renderer.setUniform(DynamicTransforms.KEY, DynamicTransforms.builder()
+                    .withShaderColor(ARGB.color(1.0F, color))
+                    .withModelOffset(offset)
+                    .build());
+            renderer.draw();
         }
     }
 

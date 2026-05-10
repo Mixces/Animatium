@@ -26,47 +26,19 @@
 package org.visuals.legacy.animatium.util.rendering;
 
 import com.mojang.blaze3d.pipeline.DepthStencilState;
-import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.CompareOp;
-import com.mojang.blaze3d.systems.RenderPass;
-import com.mojang.blaze3d.systems.RenderPassDescriptor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuTexture;
-import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2fStack;
-
-import java.util.function.Supplier;
 
 @UtilityClass
 public class RenderUtils {
     public static final DepthStencilState NO_DEPTH_WRITE = new DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false);
-
-    public static RenderPassDescriptor createDescriptor(final Supplier<String> label, final RenderTarget renderTarget, final @Nullable RenderPass.RenderArea renderArea) {
-        final RenderPassDescriptor descriptor = RenderPassDescriptor.create(label);
-
-        final GpuTextureView colorTextureView = RenderSystem.outputColorTextureOverride != null ? RenderSystem.outputColorTextureOverride : renderTarget.getColorTextureView();
-        assert colorTextureView != null;
-        descriptor.withColorAttachment(colorTextureView);
-
-        if (renderTarget.useDepth) {
-            final GpuTextureView depthTextureView = RenderSystem.outputDepthTextureOverride != null ? RenderSystem.outputDepthTextureOverride : renderTarget.getDepthTextureView();
-            assert depthTextureView != null;
-            descriptor.withDepthAttachment(depthTextureView);
-        }
-
-        descriptor.withRenderArea(renderArea != null ? renderArea : new RenderPass.RenderArea(0, 0, renderTarget.width, renderTarget.height));
-        return descriptor;
-    }
-
-    public static RenderPassDescriptor createDescriptor(final Supplier<String> label, final RenderTarget renderTarget) {
-        return createDescriptor(label, renderTarget, null);
-    }
 
     public static void copyTextureToTexture(final GpuTexture source, final GpuTexture destination) {
         RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(source, destination, 0, 0, 0, 0, 0, source.getWidth(0), source.getHeight(0));
