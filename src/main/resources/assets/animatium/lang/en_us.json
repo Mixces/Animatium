@@ -215,8 +215,6 @@
 	"animatium.itemGlintOnEntity.description": "Forces the glint on armor to use the item glint texture. This therefore unifies the glint texture like in older mc versions.",
 	"animatium.maxGlintProperties": "[*] Force Max Glint Speed/Strength",
 	"animatium.maxGlintProperties.description": "Forces the glint to use the maximum speed and strength by default like in older mc versions.",
-	"animatium.disableModernCombatParticles": "[1.8] Disable Modern Combat Particles",
-	"animatium.disableModernCombatParticles.description": "Disables the combat particles that were added in 1.9+.",
 	"animatium.restoreParticleBlending": "[1.20.6] Restore Particle Blending",
 	"animatium.restoreParticleBlending.description": "Restores the blending of potion colors on potion effect particles like it was in <=1.20.6.",
 	"animatium.heldItemArmLogic": "[1.8] Held Item Arm Position",

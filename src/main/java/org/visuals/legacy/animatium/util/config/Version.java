@@ -121,7 +121,6 @@ public enum Version {
         other.entityArmorHurtTint = true;
         other.itemGlintOnEntity = true;
         other.maxGlintProperties = true;
-        other.disableModernCombatParticles = true;
         other.restoreParticleBlending = true;
         other.heldItemArmLogic = false;
         other.flameDimensions = true;
@@ -215,7 +214,6 @@ public enum Version {
         other.entityArmorHurtTint = false;
         other.itemGlintOnEntity = true;
         other.maxGlintProperties = true;
-        other.disableModernCombatParticles = true;
         other.restoreParticleBlending = true;
         other.heldItemArmLogic = true;
         other.flameDimensions = true;
@@ -324,7 +322,6 @@ public enum Version {
         other.entityArmorHurtTint = false;
         other.itemGlintOnEntity = false;
         other.maxGlintProperties = false;
-        other.disableModernCombatParticles = false;
         other.restoreParticleBlending = false;
         other.heldItemArmLogic = false;
         other.flameDimensions = false;
