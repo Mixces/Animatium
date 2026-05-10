@@ -103,7 +103,9 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
 
     public void render() {
         if (this.state != null) {
-            this.renderCubeMap(this.state.spin);
+            final float xRot = Mth.sin(this.state.spin / 400.0F) * 25.0F + 20.0F;
+            final float yRot = -this.state.spin * 0.1F;
+            this.renderCubeMap(xRot, yRot);
             this.rotateAndBlurCubeMap(this.state.pose, this.state.width, this.state.height);
         }
     }
@@ -114,7 +116,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
         graphics.guiRenderState.addGuiElement(new BlitTexture(graphics.pose(), this.backgroundTextureView, width, height));
     }
 
-    private void renderCubeMap(final float spin) {
+    private void renderCubeMap(final float xRot, final float yRot) {
         try (final ImmediateRenderer renderer = ImmediateRenderer.of(RenderUtils.createDescriptor(() -> "Legacy Panorama Cubemap", this.panoramaTarget, VIEWPORT))) {
             renderer.setPipeline(AnimatiumPipelines.LEGACY_PANORAMA_1);
             renderer.setup(CUBE_MAP_GEOMETRY);
@@ -127,8 +129,8 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
                         .rotateX(Utils.toRadians(180.0F))
                         .rotateZ(Utils.toRadians(90.0F))
                         .translate(x, y, 0.0F)
-                        .rotateX(Utils.toRadians(Mth.sin(spin / 400.0F) * 25.0F + 20.0F))
-                        .rotateY(Utils.toRadians(-spin * 0.1F));
+                        .rotateX(Utils.toRadians(xRot))
+                        .rotateY(Utils.toRadians(yRot));
                 final int color = ARGB.white(1.0F / (layer + 1.0F));
                 renderer.draw(DynamicTransforms.builder().withModelViewMatrix(modelViewMatrix).withShaderColor(color));
                 if (layer == 0) {

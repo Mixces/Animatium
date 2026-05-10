@@ -64,7 +64,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @UtilityClass
 public class Utils {
     public float toRadians(final float angle) {
-        return angle * (float) Math.PI / 180F;
+        return angle * Mth.DEG_TO_RAD;
     }
 
     public VoxelShape expandVoxelShape(final VoxelShape shape, final float value) {
