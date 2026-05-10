@@ -278,7 +278,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
 
         try (final ImmediateRenderer renderer = ImmediateRenderer.of(() -> "Legacy Clouds", cloudsTarget)) {
             renderer.setPipeline(pipeline);
-            renderer.setup(new Geometry(VertexLayouts.POSITIONED_QUAD, this.vertexBuffer, this.indexCount, true));
+            renderer.setup(new Geometry(VertexLayouts.POSITIONED_COLOR_QUAD, this.vertexBuffer, this.indexCount, true));
             renderer.draw(DynamicTransforms.builder().withShaderColor(ARGB.color(1.0F, color)).withModelOffset(offset));
         }
     }

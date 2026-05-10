@@ -28,6 +28,7 @@ package org.visuals.legacy.animatium.mixins.v1.gui.remove_recipe_book;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
@@ -35,9 +36,9 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(RecipeBookComponent.class)
 public abstract class MixinRecipeBookComponent_HideRecipeBookUI {
-    @WrapOperation(method = "isVisible", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;visible:Z"))
+    @WrapOperation(method = "isVisible", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;visible:Z", opcode = Opcodes.GETFIELD))
     private boolean animatium$recipeBook(RecipeBookComponent<?> instance, Operation<Boolean> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.hideRecipeBook) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.hideRecipeBook) {
             return false;
         } else {
             return original.call(instance);

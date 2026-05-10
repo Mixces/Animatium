@@ -110,12 +110,12 @@ public class ImmediateRenderer implements AutoCloseable {
         this.setup = true;
     }
 
-    public void setTexture(final int id, final GpuTextureView textureView, final GpuSampler sampler) {
-        this.textures.put("Sampler" + id, new TextureAndSampler(textureView, sampler));
-    }
-
     public void setTexture(final int id, final TextureAndSampler textureAndSampler) {
         this.textures.put("Sampler" + id, textureAndSampler);
+    }
+
+    public void setTexture(final int id, final GpuTextureView textureView, final GpuSampler sampler) {
+        this.setTexture(id, new TextureAndSampler(textureView, sampler));
     }
 
     public void setTexture(final int id, final Identifier location) {
@@ -128,49 +128,45 @@ public class ImmediateRenderer implements AutoCloseable {
         this.setTexture(2, TextureAndSampler.get(2, setup));
     }
 
-    public void setUniform(final String name, final int value) {
+    public <T> void setUniform(final String name, final Uniform.Type<T> type, final T value) {
         this.uniformsDirty = true;
-        this.uniforms.put(name, new Uniform<>(Uniform.Type.INT, value));
+        this.uniforms.put(name, new Uniform<>(type, value));
+    }
+
+    public void setUniform(final String name, final int value) {
+        this.setUniform(name, Uniform.Type.INT, value);
     }
 
     public void setUniform(final String name, final float value) {
-        this.uniformsDirty = true;
-        this.uniforms.put(name, new Uniform<>(Uniform.Type.FLOAT, value));
+        this.setUniform(name, Uniform.Type.FLOAT, value);
     }
 
     public void setUniform(final String name, final Vector2ic value) {
-        this.uniformsDirty = true;
-        this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR2I, value));
+        this.setUniform(name, Uniform.Type.VECTOR2I, value);
     }
 
     public void setUniform(final String name, final Vector2fc value) {
-        this.uniformsDirty = true;
-        this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR2F, value));
+        this.setUniform(name, Uniform.Type.VECTOR2F, value);
     }
 
     public void setUniform(final String name, final Vector3ic value) {
-        this.uniformsDirty = true;
-        this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR3I, value));
+        this.setUniform(name, Uniform.Type.VECTOR3I, value);
     }
 
     public void setUniform(final String name, final Vector3fc value) {
-        this.uniformsDirty = true;
-        this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR3F, value));
+        this.setUniform(name, Uniform.Type.VECTOR3F, value);
     }
 
     public void setUniform(final String name, final Vector4ic value) {
-        this.uniformsDirty = true;
-        this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR4I, value));
+        this.setUniform(name, Uniform.Type.VECTOR4I, value);
     }
 
     public void setUniform(final String name, final Vector4fc value) {
-        this.uniformsDirty = true;
-        this.uniforms.put(name, new Uniform<>(Uniform.Type.VECTOR4F, value));
+        this.setUniform(name, Uniform.Type.VECTOR4F, value);
     }
 
     public void setUniform(final String name, final Matrix4fc value) {
-        this.uniformsDirty = true;
-        this.uniforms.put(name, new Uniform<>(Uniform.Type.MATRIX4F, value));
+        this.setUniform(name, Uniform.Type.MATRIX4F, value);
     }
 
     public void draw(final DynamicTransforms.Builder dynamicTransforms) {

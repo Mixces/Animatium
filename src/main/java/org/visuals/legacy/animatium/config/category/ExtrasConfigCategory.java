@@ -60,6 +60,7 @@ public class ExtrasConfigCategory extends Category {
     public boolean oldWaterColorEffects = false;
     public boolean colorBoost = false;
     public boolean alwaysBlockingHeadCap = false;
+    public boolean hideRecipeBook = false;
     // Item Swing
     // TODO 3.3: public float itemSwingSpeed = 0.0F;
     // TODO 3.3: public float hasteSwingSpeed = 0.0F;

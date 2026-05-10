@@ -33,34 +33,34 @@ import org.visuals.legacy.animatium.util.enums.VoidFogSetting;
 
 public class OtherConfigCategory extends Category {
     // Sky
-    public boolean blueVoidSky = true;
-    public boolean planarSkyFog = true;
-    public boolean cloudHeight = true;
-    public boolean playerVoidBox = true;
+    public boolean blueVoidSky = false;
+    public boolean planarSkyFog = false;
+    public boolean cloudHeight = false;
+    public boolean playerVoidBox = false;
     // Other
-    public boolean thirdPersonSwordBlockingPosition = true;
-    public boolean lockBlockingArmRotation = true;
+    public boolean thirdPersonSwordBlockingPosition = false;
+    public boolean lockBlockingArmRotation = false;
     public boolean projectileAgeCheck = false;
-    public boolean blockMiningProgress = true;
+    public boolean blockMiningProgress = false;
     public boolean disableInventoryEntityScissor = false;
-    public boolean blockOutlineRendering = true;
+    public boolean blockOutlineRendering = false;
     public boolean disableModelWhilstSleeping = false;
-    public boolean entityArmorHurtTint = true;
-    public boolean itemGlintOnEntity = true;
-    public boolean maxGlintProperties = true;
-    public boolean disableModernCombatParticles = true;
-    public boolean restoreParticleBlending = true;
-    public boolean heldItemArmLogic = true;
-    public boolean flameDimensions = true;
-    public boolean flameOffset = true;
+    public boolean entityArmorHurtTint = false;
+    public boolean itemGlintOnEntity = false;
+    public boolean maxGlintProperties = false;
+    public boolean disableModernCombatParticles = false;
+    public boolean restoreParticleBlending = false;
+    public boolean heldItemArmLogic = false;
+    public boolean flameDimensions = false;
+    public boolean flameOffset = false;
     public boolean persistentBlockOutline = false;
-    public boolean oldCloudRendering = true;
-    public boolean fastGrass = true;
+    public boolean oldCloudRendering = false;
+    public boolean fastGrass = false;
     public boolean oldY0Height = false;
-    public boolean oldWaterOverlayOpacity = true;
-    public boolean oldWaterColorFog = true;
-    public boolean disableRandomBlockRotations = true;
-    public VoidFogSetting voidFog = VoidFogSetting.PARTICLES;
+    public boolean oldWaterOverlayOpacity = false;
+    public boolean oldWaterColorFog = false;
+    public boolean disableRandomBlockRotations = false;
+    public VoidFogSetting voidFog = VoidFogSetting.OFF;
 
     public static ConfigCategory create(final OtherConfigCategory defaults, final OtherConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();

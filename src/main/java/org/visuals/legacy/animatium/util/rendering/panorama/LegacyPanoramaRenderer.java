@@ -52,14 +52,15 @@ import org.jspecify.annotations.Nullable;
 import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 import org.visuals.legacy.animatium.util.rendering.renderer.DynamicTransforms;
-import org.visuals.legacy.animatium.util.rendering.renderer.VertexLayouts;
 import org.visuals.legacy.animatium.util.rendering.renderer.Geometry;
 import org.visuals.legacy.animatium.util.rendering.renderer.ImmediateRenderer;
+import org.visuals.legacy.animatium.util.rendering.renderer.VertexLayouts;
 
 import java.util.Objects;
 
 // Ported code of the old <=1.12.2 panorama renderer (w/ blur)
 public final class LegacyPanoramaRenderer implements AutoCloseable {
+    private static final int SAMPLES = 64;
     private static final RenderPass.RenderArea VIEWPORT = new RenderPass.RenderArea(0, 0, 256, 256);
     private static final Vector4f CLEAR_COLOR = new Vector4f(0.0F, 0.0F, 0.0F, 1.0F);
     private static final Identifier CUBE_MAP_LOCATION = Identifier.withDefaultNamespace("textures/gui/title/background/panorama");
@@ -118,9 +119,9 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
             renderer.setup(CUBE_MAP_GEOMETRY);
             renderer.setTexture(0, CUBE_MAP_LOCATION);
             renderer.setProjectionMatrix(CUBE_MAP_PROJECTION);
-            for (int layer = 0; layer < 64; layer++) {
-                final float x = (layer % 8 / 8.0F - 0.5F) / 64.0F;
-                final float y = ((float) layer / 8 / 8.0F - 0.5F) / 64.0F;
+            for (int layer = 0; layer < SAMPLES; layer++) {
+                final float x = (layer % 8 / 8.0F - 0.5F) / SAMPLES;
+                final float y = ((float) layer / 8 / 8.0F - 0.5F) / SAMPLES;
                 final Matrix4f modelViewMatrix = new Matrix4f()
                         .rotateX(Utils.toRadians(180.0F))
                         .rotateZ(Utils.toRadians(90.0F))
