@@ -82,14 +82,15 @@ public abstract class MixinCamera {
 
     @WrapOperation(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/Camera;eyeHeight:F"))
     private void animatium$oldSneakAnimationInterpolation(final Camera instance, final float value, final Operation<Void> original) {
-        if (Animatium.isEnabled() && this.entity.isCrouching()) {
-            if (AnimatiumConfig.instance().movement.sneakAnimation == SneakAnimationSetting.V1_7 && this.entity.getEyeHeight() < this.eyeHeight) {
+        final SneakAnimationSetting sneakAnimation = AnimatiumConfig.instance().movement.sneakAnimation;
+        if (Animatium.isEnabled() && sneakAnimation != SneakAnimationSetting.VANILLA && this.entity.isCrouching()) {
+            if (sneakAnimation == SneakAnimationSetting.V1_7 && this.entity.getEyeHeight() < this.eyeHeight) {
                 this.eyeHeight = this.animatium$getSneakingEyeHeight();
+                return;
             } else if (!AnimatiumConfig.instance().movement.longUnsneak && this.entity.getEyeHeight() > this.eyeHeight) {
                 this.eyeHeight = this.entity.getEyeHeight(Pose.STANDING) * (this.entity instanceof LivingEntity livingEntity ? livingEntity.getScale() : 1.0F);
+                return;
             }
-
-            return;
         }
 
         original.call(instance, value);
