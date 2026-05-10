@@ -50,6 +50,7 @@ import org.joml.Vector4f;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.rendering.AnimatiumPipelines;
 import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 import org.visuals.legacy.animatium.util.rendering.renderer.DynamicTransforms;
 import org.visuals.legacy.animatium.util.rendering.renderer.Geometry;
@@ -115,7 +116,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
 
     private void renderCubeMap(final float spin) {
         try (final ImmediateRenderer renderer = ImmediateRenderer.of(RenderUtils.createDescriptor(() -> "Legacy Panorama Cubemap", this.panoramaTarget, VIEWPORT))) {
-            renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA_1);
+            renderer.setPipeline(AnimatiumPipelines.LEGACY_PANORAMA_1);
             renderer.setup(CUBE_MAP_GEOMETRY);
             renderer.setTexture(0, CUBE_MAP_LOCATION);
             renderer.setProjectionMatrix(CUBE_MAP_PROJECTION);
@@ -131,7 +132,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
                 final int color = ARGB.white(1.0F / (layer + 1.0F));
                 renderer.draw(DynamicTransforms.builder().withModelViewMatrix(modelViewMatrix).withShaderColor(color));
                 if (layer == 0) {
-                    renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA_2);
+                    renderer.setPipeline(AnimatiumPipelines.LEGACY_PANORAMA_2);
                 }
             }
         }
@@ -139,7 +140,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
 
     private void rotateAndBlurCubeMap(final Matrix3x2f pose, final int width, final int height) {
         try (final ImmediateRenderer renderer = ImmediateRenderer.of(RenderUtils.createDescriptor(() -> "Legacy Panorama Blur", this.panoramaTarget, VIEWPORT))) {
-            renderer.setPipeline(PanoramaPipelines.LEGACY_PANORAMA_BLUR);
+            renderer.setPipeline(AnimatiumPipelines.LEGACY_PANORAMA_BLUR);
             renderer.setup(Geometry.texturedScreenQuad(pose, width, height));
             renderer.setTexture(0, this.backgroundTextureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
             for (int pass = 0; pass < 7; pass++) {

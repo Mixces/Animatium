@@ -1,29 +1,4 @@
-/**
- * Animatium
- * The all-you-could-want legacy animations mod for modern minecraft versions.
- * Brings back animations from the 1.7/1.8 era and more.
- * <p>
- * Copyright (C) 2024-2025 lowercasebtw
- * Copyright (C) 2024-2025 mixces
- * Copyright (C) 2024-2025 Contributors to the project retain their copyright
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * <p>
- * "MINECRAFT" LINKING EXCEPTION TO THE GPL
- */
-
-package org.visuals.legacy.animatium.util.rendering.panorama;
+package org.visuals.legacy.animatium.util.rendering;
 
 import com.mojang.blaze3d.GpuFormat;
 import com.mojang.blaze3d.PrimitiveTopology;
@@ -33,12 +8,13 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.BlendFactor;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.client.renderer.BindGroupLayouts;
+import net.minecraft.client.renderer.RenderPipelines;
 import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
 import java.util.Optional;
 
-public class PanoramaPipelines {
+public class AnimatiumPipelines {
+    // Panorama
     public static final BlendFunction PANORAMA_BLEND = new BlendFunction(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA, BlendFactor.ONE, BlendFactor.ZERO);
 
     public static final RenderPipeline.Snippet TEXTURED_QUAD = RenderPipeline.builder()
@@ -70,7 +46,19 @@ public class PanoramaPipelines {
             .withLocation(Animatium.location("pipeline/legacy_panorama_blur"))
             .withVertexShader(Animatium.location("core/legacy_panorama_blur"))
             .withFragmentShader(Animatium.location("core/legacy_panorama_blur"))
-            .withColorTargetState(new ColorTargetState(Optional.of(PanoramaPipelines.PANORAMA_BLEND), GpuFormat.RGBA8_UNORM, ColorTargetState.WRITE_COLOR))
+            .withColorTargetState(new ColorTargetState(Optional.of(PANORAMA_BLEND), GpuFormat.RGBA8_UNORM, ColorTargetState.WRITE_COLOR))
             .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX)
+            .build();
+
+    // Items
+    public static final RenderPipeline LEGACY_ITEM_CUTOUT = RenderPipelineOverrider.of(RenderPipelines.ITEM_CUTOUT)
+            .withLocation(Animatium.location("pipeline/legacy_item_cutout"))
+            .withVertexShader(Animatium.location("core/legacy_item"))
+            .withShaderDefine("NO_CARDINAL_LIGHTING")
+            .build();
+
+    public static final RenderPipeline LEGACY_ITEM_TRANSLUCENT = RenderPipelineOverrider.of(RenderPipelines.ITEM_TRANSLUCENT)
+            .withLocation(Animatium.location("pipeline/legacy_item_translucent"))
+            .withVertexShader(Animatium.location("core/legacy_item"))
             .build();
 }

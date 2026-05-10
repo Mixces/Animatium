@@ -131,6 +131,7 @@ public enum Version {
         other.oldWaterOverlayOpacity = true;
         other.oldWaterColorFog = true;
         other.disableRandomBlockRotations = true;
+        other.legacyDiffuseLighting = true;
     }),
 
     V1_8((final AnimatiumConfig config) -> {
@@ -225,6 +226,7 @@ public enum Version {
         other.oldWaterOverlayOpacity = true;
         other.oldWaterColorFog = true;
         other.disableRandomBlockRotations = false;
+        other.legacyDiffuseLighting = true;
     }),
 
     V1_12((final AnimatiumConfig config) -> {
@@ -333,6 +335,7 @@ public enum Version {
         other.oldWaterOverlayOpacity = false;
         other.oldWaterColorFog = false;
         other.disableRandomBlockRotations = false;
+        other.legacyDiffuseLighting = false;
     });
 
     private final Consumer<AnimatiumConfig> applier;

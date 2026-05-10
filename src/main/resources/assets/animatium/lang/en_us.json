@@ -243,6 +243,8 @@
 	"animatium.enum.VoidFogSetting.OFF": "Off",
 	"animatium.disableRandomBlockRotations": "[1.7] Disable Random Block Rotations",
 	"animatium.disableRandomBlockRotations.description": "Enable/disable random block model rotations like in <=1.7.x.",
+	"animatium.legacyDiffuseLighting": "[1.15.2] Legacy Diffuse Lighting",
+	"animatium.legacyDiffuseLighting.description": "Use the default diffuse lighting vectors for everything like it was in <=1.15.2.\n\nREQUIRES RESTART",
 	"animatium.category.other.group.sky": "Sky",
 	"animatium.blueVoidSky": "[1.13] Blue void sky-half",
 	"animatium.blueVoidSky.description": "Brings back the forgotten blue void part of the sky. (Fixes MC-257056)",
