@@ -60,5 +60,6 @@ public class AnimatiumPipelines {
     public static final RenderPipeline LEGACY_ITEM_TRANSLUCENT = RenderPipelineOverrider.of(RenderPipelines.ITEM_TRANSLUCENT)
             .withLocation(Animatium.location("pipeline/legacy_item_translucent"))
             .withVertexShader(Animatium.location("core/legacy_item"))
+            .withShaderDefine("NO_CARDINAL_LIGHTING")
             .build();
 }
