@@ -34,21 +34,22 @@ import net.minecraft.client.resources.metadata.texture.TextureMetadataSection;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 // LoadingOverlay#LogoTexture but customizable
 public class LegacyLogoTexture extends ReloadableTexture {
-	public LegacyLogoTexture(final Identifier identifier) {
-		super(identifier);
-	}
+    public LegacyLogoTexture(final Identifier identifier) {
+        super(identifier);
+    }
 
-	@Override
-	public @NotNull TextureContents loadContents(final ResourceManager resourceManager) throws IOException {
-		try (final InputStream inputStream = Minecraft.getInstance().getResourceManager().open(this.resourceId())) {
-			// TODO: Get real metadata file
-			return new TextureContents(NativeImage.read(inputStream), new TextureMetadataSection(TextureMetadataSection.DEFAULT_BLUR, TextureMetadataSection.DEFAULT_CLAMP, MipmapStrategy.AUTO, TextureMetadataSection.DEFAULT_ALPHA_CUTOFF_BIAS));
-		}
-	}
+    @Override
+    public @NotNull TextureContents loadContents(final @NonNull ResourceManager resourceManager) throws IOException {
+        try (final InputStream inputStream = Minecraft.getInstance().getResourceManager().open(this.resourceId())) {
+            // TODO: Get real metadata file
+            return new TextureContents(NativeImage.read(inputStream), new TextureMetadataSection(TextureMetadataSection.DEFAULT_BLUR, TextureMetadataSection.DEFAULT_CLAMP, MipmapStrategy.AUTO, TextureMetadataSection.DEFAULT_ALPHA_CUTOFF_BIAS));
+        }
+    }
 }

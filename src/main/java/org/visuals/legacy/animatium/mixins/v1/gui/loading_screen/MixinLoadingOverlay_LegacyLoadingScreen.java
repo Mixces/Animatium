@@ -52,12 +52,12 @@ public abstract class MixinLoadingOverlay_LegacyLoadingScreen {
     private static final Identifier animatium$MOJANG_LOGO = Identifier.withDefaultNamespace("textures/gui/title/mojang.png");
 
     @Inject(method = "registerTextures", at = @At("TAIL"))
-    private static void animatium$loadTextures(TextureManager textureManager, CallbackInfo ci) {
+    private static void animatium$loadTextures(final TextureManager textureManager, final CallbackInfo ci) {
         textureManager.registerAndLoad(animatium$MOJANG_LOGO, new LegacyLogoTexture(animatium$MOJANG_LOGO));
     }
 
     @WrapOperation(method = "extractRenderState", at = @At(value = "INVOKE", target = "Ljava/util/function/IntSupplier;getAsInt()I"))
-    private int animatium$replaceBackgroundColor(IntSupplier instance, Operation<Integer> original) {
+    private int animatium$replaceBackgroundColor(final IntSupplier instance, final Operation<Integer> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.legacyLoadingScreen) {
             return ARGB.white(1.0F);
         } else {
@@ -66,7 +66,7 @@ public abstract class MixinLoadingOverlay_LegacyLoadingScreen {
     }
 
     @WrapOperation(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/LoadingOverlay;replaceAlpha(II)I"))
-    private int animatium$disableFade(int color, int alpha, Operation<Integer> original) {
+    private int animatium$disableFade(final int color, final int alpha, final Operation<Integer> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.legacyLoadingScreen) {
             return color;
         } else {
@@ -75,22 +75,22 @@ public abstract class MixinLoadingOverlay_LegacyLoadingScreen {
     }
 
     @WrapOperation(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIIIIII)V", ordinal = 0))
-    private void animatium$changeLogo(GuiGraphicsExtractor instance, RenderPipeline pipeline, Identifier atlas, int x, int y, float u, float v, int width, int height, int uWidth, int vHeight, int textureWidth, int textureHeight, int color, Operation<Void> original) {
+    private void animatium$changeLogo(final GuiGraphicsExtractor instance, final RenderPipeline renderPipeline, final Identifier texture, final int x, final int y, final float u, final float v, final int width, final int height, final int srcWidth, final int srcHeight, final int textureWidth, final int textureHeight, final int color, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.legacyLoadingScreen) {
             final int size = 256;
             instance.blit(RenderPipelines.GUI_TEXTURED, animatium$MOJANG_LOGO, (instance.guiWidth() - size) / 2, (instance.guiHeight() - size) / 2, 0, 0, size, size, size, size, size, size);
         } else {
-            original.call(instance, pipeline, atlas, x, y, u, v, width, height, uWidth, vHeight, textureWidth, textureHeight, color);
+            original.call(instance, renderPipeline, texture, x, y, u, v, width, height, srcWidth, srcHeight, textureWidth, textureHeight, color);
         }
     }
 
     @WrapWithCondition(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIIIIII)V", ordinal = 1))
-    private boolean animatium$disableSecondLogoDraw(GuiGraphicsExtractor instance, RenderPipeline pipeline, Identifier atlas, int x, int y, float u, float v, int width, int height, int uWidth, int vHeight, int textureWidth, int textureHeight, int color) {
+    private boolean animatium$disableSecondLogoDraw(final GuiGraphicsExtractor instance, final RenderPipeline renderPipeline, final Identifier texture, final int x, final int y, final float u, final float v, final int width, final int height, final int srcWidth, final int srcHeight, final int textureWidth, final int textureHeight, final int color) {
         return !Animatium.isEnabled() || !AnimatiumConfig.instance().screen.legacyLoadingScreen;
     }
 
     @WrapWithCondition(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/LoadingOverlay;extractProgressBar(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIIIF)V"))
-    private boolean animatium$disableProgressBar(LoadingOverlay instance, GuiGraphicsExtractor guiGraphics, int minX, int minY, int maxX, int maxY, float partialTick) {
+    private boolean animatium$disableProgressBar(final LoadingOverlay instance, final GuiGraphicsExtractor graphics, final int x0, final int y0, final int x1, final int y1, final float fade) {
         return !Animatium.isEnabled() || !AnimatiumConfig.instance().screen.legacyLoadingScreen;
     }
 }

@@ -88,7 +88,7 @@ public class SkyRendererUtility {
                     .withShaderDefine("PLANAR_FOG")
                     .build());
 
-    private static final Function<Float, Geometry> VOID_BOX_GEOMETRY = offset -> Geometry.compile(VertexLayouts.POSITIONED_COLOR_QUAD, 20, vertexConsumer -> {
+    private static final Function<Float, Geometry> VOID_BOX_GEOMETRY = offset -> Geometry.Indexed.compile(VertexLayouts.POSITIONED_COLOR_QUAD, 20, vertexConsumer -> {
         final int color = ARGB.opaque(0);
 
         // Left
@@ -140,7 +140,7 @@ public class SkyRendererUtility {
     public void renderBlueVoid(final int skyColor, final double depth) {
         try (final Renderer renderer = Renderer.of(() -> "Blue void sky disc")) {
             renderer.setPipeline(getLegacySkyPipeline(AnimatiumConfig.instance().other.planarSkyFog));
-            renderer.setup(new Geometry(VertexLayouts.POSITIONED_QUAD, vertexBuffer, indexCount, true));
+            renderer.setup(new Geometry.Indexed(VertexLayouts.POSITIONED_QUAD, vertexBuffer, indexCount, true));
             renderer.setUniform(DynamicTransforms.KEY, DynamicTransforms.builder()
                     .withModelViewMatrix(RenderSystem.getModelViewMatrixCopy()
                             .translate(0.0F, AnimatiumConfig.instance().extras.dontMoveBlueVoid ? 12.0F : -((float) (depth - 16.0)), 0.0F))

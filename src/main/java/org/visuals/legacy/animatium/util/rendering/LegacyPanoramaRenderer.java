@@ -64,7 +64,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
     private static final Vector4f CLEAR_COLOR = new Vector4f(0.0F, 0.0F, 0.0F, 1.0F);
     private static final Identifier CUBE_MAP_LOCATION = Identifier.withDefaultNamespace("textures/gui/title/background/panorama");
     private static final Matrix4f CUBE_MAP_PROJECTION = new Matrix4f().setPerspective(Utils.toRadians(120.0F), 1.0F, 0.05F, 10.0F);
-    private static final Geometry CUBE_MAP_GEOMETRY = Geometry.compilePersistent(VertexLayouts.POSITIONED_QUAD, 24, vertexConsumer -> {
+    private static final Geometry CUBE_MAP_GEOMETRY = Geometry.Indexed.compilePersistent(VertexLayouts.POSITIONED_QUAD, 24, vertexConsumer -> {
         for (int panoramaIdx = 0; panoramaIdx < 6; panoramaIdx++) {
             final Matrix4f pose = new Matrix4f();
             switch (panoramaIdx) {
@@ -118,7 +118,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
         try (final Renderer renderer = Renderer.of(() -> "Legacy Panorama Cubemap", this.panoramaTarget, VIEWPORT)) {
             renderer.setPipeline(AnimatiumPipelines.LEGACY_PANORAMA_1);
             renderer.setup(CUBE_MAP_GEOMETRY);
-            renderer.setTexture(0, CUBE_MAP_LOCATION);
+            renderer.setTexture("Sampler0", CUBE_MAP_LOCATION);
             renderer.setProjectionMatrix(CUBE_MAP_PROJECTION);
             for (int layer = 0; layer < SAMPLES; layer++) {
                 final float x = (layer % 8 / 8.0F - 0.5F) / SAMPLES;
@@ -148,7 +148,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
             try (final Renderer renderer = Renderer.of(() -> "Legacy Panorama Blur", this.panoramaTarget, VIEWPORT)) {
                 renderer.setPipeline(AnimatiumPipelines.LEGACY_PANORAMA_BLUR);
                 renderer.setup(Geometry.texturedScreenQuad(pose, width, height));
-                renderer.setTexture(0, this.backgroundTextureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
+                renderer.setTexture("Sampler0", this.backgroundTextureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
                 renderer.drawGui();
             }
         }

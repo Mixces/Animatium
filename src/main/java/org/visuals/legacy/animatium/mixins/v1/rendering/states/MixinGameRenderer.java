@@ -49,7 +49,7 @@ public abstract class MixinGameRenderer {
     private Minecraft minecraft;
 
     @Inject(method = "extractCamera", at = @At("TAIL"))
-    private void animatium$setupCameraState(CallbackInfo ci, @Local CameraRenderState cameraRenderState) {
+    private void animatium$setupCameraState(final CallbackInfo ci, @Local(name = "cameraState") final CameraRenderState cameraRenderState) {
         cameraRenderState.animatium$setPartialTickTime(this.mainCamera.getCameraEntityPartialTicks(this.minecraft.getDeltaTracker()));
         cameraRenderState.animatium$setOldEyeHeight(((CameraAccessor) this.mainCamera).animatium$getOldEyeHeight());
         cameraRenderState.animatium$setEyeHeight(((CameraAccessor) this.mainCamera).animatium$getEyeHeight());

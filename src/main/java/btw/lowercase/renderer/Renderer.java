@@ -28,6 +28,7 @@ package btw.lowercase.renderer;
 import btw.lowercase.renderer.buffer.DynamicTransforms;
 import btw.lowercase.renderer.buffer.Geometry;
 import btw.lowercase.renderer.texture.TextureAndSampler;
+import btw.lowercase.renderer.vertex.VertexLayout;
 import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.BindGroupLayout;
@@ -86,6 +87,26 @@ public class Renderer implements AutoCloseable {
         return new Renderer(descriptor);
     }
 
+    public static Renderer of(final Supplier<String> label, final GpuTextureView colorTextureView, @Nullable final GpuTextureView depthTextureView, final RenderPass.RenderArea renderArea) {
+        final RenderPassDescriptor descriptor = RenderPassDescriptor.create(label);
+
+        descriptor.withColorAttachment(colorTextureView);
+        if (depthTextureView != null) {
+            descriptor.withDepthAttachment(depthTextureView);
+        }
+
+        descriptor.withRenderArea(renderArea);
+        return of(descriptor);
+    }
+
+    public static Renderer of(final Supplier<String> label, final GpuTextureView colorTextureView, @Nullable final GpuTextureView depthTextureView) {
+        return of(label, colorTextureView, depthTextureView, new RenderPass.RenderArea(0, 0, colorTextureView.getWidth(0), colorTextureView.getHeight(0)));
+    }
+
+    public static Renderer of(final Supplier<String> label, final GpuTextureView colorTextureView) {
+        return of(label, colorTextureView, null);
+    }
+
     public static Renderer of(final Supplier<String> label, final RenderTarget renderTarget, final RenderPass.RenderArea renderArea) {
         final RenderPassDescriptor descriptor = RenderPassDescriptor.create(label);
 
@@ -128,8 +149,15 @@ public class Renderer implements AutoCloseable {
     }
 
     public void setup(final Geometry geometry) {
-        if (this.pipeline == null || this.pipeline.getVertexFormatBinding(0) != geometry.vertexLayout().vertexFormat() || this.pipeline.getPrimitiveTopology() != geometry.vertexLayout().primitiveTopology()) {
-            throw new RuntimeException("Cannot setup renderer with geometry of mismatching pipelines!");
+        if (this.pipeline == null) {
+            throw new RuntimeException("Cannot setup renderer when pipeline is not set!");
+        }
+
+        if (this.geometry instanceof Geometry.Indexed indexed) {
+            final VertexLayout vertexLayout = indexed.vertexLayout();
+            if (this.pipeline.getVertexFormatBinding(0) != vertexLayout.vertexFormat() || this.pipeline.getPrimitiveTopology() != vertexLayout.primitiveTopology()) {
+                throw new RuntimeException("Cannot setup renderer with geometry of mismatching pipelines!");
+            }
         }
 
         if (this.geometry != null && this.geometry != geometry && !this.geometry.persistent()) {
@@ -140,22 +168,22 @@ public class Renderer implements AutoCloseable {
         this.setup = true;
     }
 
-    public void setTexture(final int id, final TextureAndSampler textureAndSampler) {
-        this.textures.put("Sampler" + id, textureAndSampler);
+    public void setTexture(final String name, final TextureAndSampler textureAndSampler) {
+        this.textures.put(name, textureAndSampler);
     }
 
-    public void setTexture(final int id, final GpuTextureView textureView, final GpuSampler sampler) {
-        this.setTexture(id, new TextureAndSampler(textureView, sampler));
+    public void setTexture(final String name, final GpuTextureView textureView, final GpuSampler sampler) {
+        this.setTexture(name, new TextureAndSampler(textureView, sampler));
     }
 
-    public void setTexture(final int id, final Identifier location) {
-        this.setTexture(id, TextureAndSampler.get(location));
+    public void setTexture(final String name, final Identifier location) {
+        this.setTexture(name, TextureAndSampler.get(location));
     }
 
     public void setTextures(final TextureSetup setup) {
-        this.setTexture(0, TextureAndSampler.get(0, setup));
-        this.setTexture(1, TextureAndSampler.get(1, setup));
-        this.setTexture(2, TextureAndSampler.get(2, setup));
+        this.setTexture("Sampler0", TextureAndSampler.get(0, setup));
+        this.setTexture("Sampler1", TextureAndSampler.get(1, setup));
+        this.setTexture("Sampler2", TextureAndSampler.get(2, setup));
     }
 
     public void setUniform(final String name, final GpuBufferSlice data) {
@@ -185,8 +213,6 @@ public class Renderer implements AutoCloseable {
             final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(this.pipeline.getPrimitiveTopology());
             try (final RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(this.descriptor)) {
                 pass.setPipeline(this.pipeline);
-                pass.setVertexBuffer(0, this.geometry.vertexBuffer().slice());
-                pass.setIndexBuffer(autoStorageIndexBuffer.getBuffer(this.geometry.indexCount()), autoStorageIndexBuffer.type());
 
                 final List<BindGroupLayout> bindGroupLayouts = this.pipeline.getBindGroupLayouts();
                 final List<String> descriptions = BindGroupLayout.flattenUniforms(bindGroupLayouts)
@@ -216,7 +242,15 @@ public class Renderer implements AutoCloseable {
                     }
                 }
 
-                pass.drawIndexed(0, 0, this.geometry.indexCount(), 1);
+                if (this.geometry instanceof Geometry.Indexed indexed) {
+                    pass.setVertexBuffer(0, indexed.vertexBuffer().slice());
+                    pass.setIndexBuffer(autoStorageIndexBuffer.getBuffer(indexed.indexCount()), autoStorageIndexBuffer.type());
+                    pass.drawIndexed(0, 0, indexed.indexCount(), 1);
+                } else if (this.geometry instanceof Geometry.Basic(int firstVertex, int vertexCount)) {
+                    pass.draw(firstVertex, vertexCount);
+                } else {
+                    throw new RuntimeException("Cannot draw with unknown geometry");
+                }
             }
 
             if (this.projectionMatrix != null) {

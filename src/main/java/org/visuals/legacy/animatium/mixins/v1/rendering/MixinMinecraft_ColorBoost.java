@@ -25,25 +25,25 @@
 
 package org.visuals.legacy.animatium.mixins.v1.rendering;
 
+import btw.lowercase.renderer.Renderer;
+import btw.lowercase.renderer.buffer.Geometry;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.mojang.blaze3d.PrimitiveTopology;
-import com.mojang.blaze3d.pipeline.BindGroupLayout;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.systems.*;
+import com.mojang.blaze3d.systems.CommandEncoder;
+import com.mojang.blaze3d.systems.GpuSurface;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.RenderPipelines;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.util.rendering.AnimatiumPipelines;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft_ColorBoost {
@@ -56,28 +56,16 @@ public abstract class MixinMinecraft_ColorBoost {
     public GameRenderer gameRenderer;
 
     @Unique
-    private static final RenderPipeline animatium$boostPipeline = RenderPipelines.register(
-            RenderPipeline.builder()
-                    .withLocation(Animatium.location("pipeline/colorboost"))
-                    .withVertexShader("core/screenquad")
-                    .withFragmentShader(Animatium.location("core/colorboost"))
-                    .withBindGroupLayout(BindGroupLayout.builder().withSampler("Sampler0").build())
-                    .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
-                    .build()
-    );
+    private static final Geometry.Basic animatium$boostGeometry = new Geometry.Basic(0, 3);
 
     @WrapOperation(method = "renderFrame", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/GpuSurface;blitFromTexture(Lcom/mojang/blaze3d/systems/CommandEncoder;Lcom/mojang/blaze3d/textures/GpuTextureView;)V"))
     private void animatium$colorBoost(final GpuSurface instance, final CommandEncoder commandEncoder, final GpuTextureView colorAttachment, final Operation<Void> original) {
         if (AnimatiumConfig.instance().extras.colorBoost && this.gui.screen() == null) {
-            final RenderPassDescriptor descriptor = RenderPassDescriptor.create(() -> "Color boost render target blit")
-                    .withColorAttachment(colorAttachment)
-                    .withDepthAttachment(this.gameRenderer.mainRenderTarget().getDepthTextureView())
-                    .withRenderArea(new RenderPass.RenderArea(0, 0, colorAttachment.getWidth(0), colorAttachment.getHeight(0)));
-            try (final RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(descriptor)) {
-                renderPass.setPipeline(animatium$boostPipeline);
-                RenderSystem.bindDefaultUniforms(renderPass);
-                renderPass.bindTexture("Sampler0", colorAttachment, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST));
-                renderPass.draw(0, 3);
+            try (final Renderer renderer = Renderer.of(() -> "Color Boost Blit", colorAttachment, this.gameRenderer.mainRenderTarget().getDepthTextureView())) {
+                renderer.setPipeline(AnimatiumPipelines.COLOR_BOOST_BLIT);
+                renderer.setTexture("Sampler0", colorAttachment, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST));
+                renderer.setup(animatium$boostGeometry);
+                renderer.draw();
             }
         }
 

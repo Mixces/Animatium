@@ -51,7 +51,7 @@ public abstract class MixinLevelRenderer_BlueVoidDisc {
     }
 
     @Inject(method = "close", at = @At("TAIL"))
-    private void animatium$closeSkyRenderUtility(CallbackInfo ci) {
+    private void animatium$closeSkyRenderUtility(final CallbackInfo ci) {
         SkyRendererUtility.close();
     }
 }

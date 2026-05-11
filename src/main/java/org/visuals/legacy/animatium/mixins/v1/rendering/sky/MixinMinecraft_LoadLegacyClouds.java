@@ -40,9 +40,9 @@ import org.visuals.legacy.animatium.util.rendering.LegacyCloudRenderer;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft_LoadLegacyClouds {
-	@Shadow
-	@Final
-	private ReloadableResourceManager resourceManager;
+    @Shadow
+    @Final
+    private ReloadableResourceManager resourceManager;
 
     @Definition(id = "resourceManager", field = "Lnet/minecraft/client/Minecraft;resourceManager:Lnet/minecraft/server/packs/resources/ReloadableResourceManager;")
     @Definition(id = "registerReloadListener", method = "Lnet/minecraft/server/packs/resources/ReloadableResourceManager;registerReloadListener(Lnet/minecraft/server/packs/resources/PreparableReloadListener;)V")
@@ -50,7 +50,7 @@ public abstract class MixinMinecraft_LoadLegacyClouds {
     @Definition(id = "cloudRenderer", method = "Lnet/minecraft/client/renderer/LevelRenderer;cloudRenderer()Lnet/minecraft/client/renderer/CloudRenderer;")
     @Expression("this.resourceManager.registerReloadListener(this.levelRenderer.cloudRenderer())")
     @Inject(method = "<init>", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.AFTER))
-    private void animatium$loadLegacyClouds(GameConfig gameConfig, CallbackInfo ci) {
-		this.resourceManager.registerReloadListener(LegacyCloudRenderer.INSTANCE);
-	}
+    private void animatium$loadLegacyClouds(final GameConfig gameConfig, final CallbackInfo ci) {
+        this.resourceManager.registerReloadListener(LegacyCloudRenderer.INSTANCE);
+    }
 }

@@ -77,8 +77,8 @@ public abstract class MixinItemStackRenderLayerState {
         final boolean glintDropped = !AnimatiumConfig.instance().items.glintOnItemDrops2D;
         final boolean glintFramed = !AnimatiumConfig.instance().items.glintOnItemFramed2D;
         if (Animatium.isEnabled() &&
-                (glintDropped && itemStackRenderState.displayContext == ItemDisplayContext.GROUND) ||
-                (glintFramed && itemStackRenderState.displayContext == ItemDisplayContext.FIXED)) {
+                (glintDropped && this.itemStackRenderState.displayContext == ItemDisplayContext.GROUND) ||
+                (glintFramed && this.itemStackRenderState.displayContext == ItemDisplayContext.FIXED)) {
             return ItemStackRenderState.FoilType.NONE;
         } else {
             return foilType;
@@ -89,7 +89,7 @@ public abstract class MixinItemStackRenderLayerState {
     @Inject(method = "applyTransform", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/cuboid/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack$Pose;)V"))
     private void animatium$itemPositions(final PoseStack.Pose localPose, final CallbackInfo ci) {
         if (Animatium.isEnabled()) {
-            final ItemStack stack = itemStackRenderState.animatium$getItemStack();
+            final ItemStack stack = this.itemStackRenderState.animatium$getItemStack();
             if (!stack.isEmpty()) {
                 final ItemDisplayContext itemDisplayContext = this.itemStackRenderState.displayContext;
                 final boolean isGui = itemDisplayContext == ItemDisplayContext.GUI;

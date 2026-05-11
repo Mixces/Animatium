@@ -39,10 +39,9 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.function.Consumer;
 
-public record Geometry(VertexLayout vertexLayout, GpuBuffer vertexBuffer, int indexCount,
-                       boolean persistent) implements AutoCloseable {
-    public static Geometry texturedScreenQuad(final Matrix3x2f pose, final int width, final int height) {
-        return compile(VertexLayouts.TEXTURED_QUAD, 4, vertexConsumer -> {
+public interface Geometry extends AutoCloseable {
+    static Indexed texturedScreenQuad(final Matrix3x2f pose, final int width, final int height) {
+        return Indexed.compile(VertexLayouts.TEXTURED_QUAD, 4, vertexConsumer -> {
             vertexConsumer.addVertexWith2DPose(pose, width, height).setUv(0.0F, 1.0F);
             vertexConsumer.addVertexWith2DPose(pose, width, 0.0F).setUv(1.0F, 1.0F);
             vertexConsumer.addVertexWith2DPose(pose, 0.0F, 0.0F).setUv(1.0F, 0.0F);
@@ -50,28 +49,46 @@ public record Geometry(VertexLayout vertexLayout, GpuBuffer vertexBuffer, int in
         });
     }
 
-    private static Geometry compile(final @NonNull VertexLayout vertexLayout, final int vertexCount, final Consumer<VertexConsumer> vertexConsumer, final boolean persistent) {
-        try (final ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(vertexLayout.vertexFormat().getVertexSize() * vertexCount)) {
-            final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, vertexLayout.primitiveTopology(), vertexLayout.vertexFormat());
-            vertexConsumer.accept(builder);
-            try (final MeshData meshData = builder.buildOrThrow()) {
-                final GpuDevice device = RenderSystem.getDevice();
-                final GpuBuffer vertexBuffer = device.createBuffer(() -> "Vertex buffer for " + vertexLayout.vertexFormat(), GpuBuffer.USAGE_VERTEX, meshData.vertexBuffer());
-                return new Geometry(vertexLayout, vertexBuffer, meshData.drawState().indexCount(), persistent);
-            }
+    boolean persistent();
+
+    void close();
+
+    record Basic(int firstVertex, int vertexCount) implements Geometry {
+        @Override
+        public boolean persistent() {
+            return true;
+        }
+
+        @Override
+        public void close() {
         }
     }
 
-    public static Geometry compile(final VertexLayout vertexLayout, final int vertexCount, final Consumer<VertexConsumer> vertexConsumer) {
-        return compile(vertexLayout, vertexCount, vertexConsumer, false);
-    }
+    record Indexed(VertexLayout vertexLayout, GpuBuffer vertexBuffer, int indexCount,
+                   boolean persistent) implements Geometry {
+        private static Indexed compile(final @NonNull VertexLayout vertexLayout, final int vertexCount, final Consumer<VertexConsumer> vertexConsumer, final boolean persistent) {
+            try (final ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(vertexLayout.vertexFormat().getVertexSize() * vertexCount)) {
+                final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, vertexLayout.primitiveTopology(), vertexLayout.vertexFormat());
+                vertexConsumer.accept(builder);
+                try (final MeshData meshData = builder.buildOrThrow()) {
+                    final GpuDevice device = RenderSystem.getDevice();
+                    final GpuBuffer vertexBuffer = device.createBuffer(() -> "Vertex buffer for " + vertexLayout.vertexFormat(), GpuBuffer.USAGE_VERTEX, meshData.vertexBuffer());
+                    return new Indexed(vertexLayout, vertexBuffer, meshData.drawState().indexCount(), persistent);
+                }
+            }
+        }
 
-    public static Geometry compilePersistent(final VertexLayout vertexLayout, final int vertexCount, final Consumer<VertexConsumer> vertexConsumer) {
-        return compile(vertexLayout, vertexCount, vertexConsumer, true);
-    }
+        public static Indexed compile(final VertexLayout vertexLayout, final int vertexCount, final Consumer<VertexConsumer> vertexConsumer) {
+            return compile(vertexLayout, vertexCount, vertexConsumer, false);
+        }
 
-    @Override
-    public void close() {
-        this.vertexBuffer.close();
+        public static Indexed compilePersistent(final VertexLayout vertexLayout, final int vertexCount, final Consumer<VertexConsumer> vertexConsumer) {
+            return compile(vertexLayout, vertexCount, vertexConsumer, true);
+        }
+
+        @Override
+        public void close() {
+            this.vertexBuffer.close();
+        }
     }
 }

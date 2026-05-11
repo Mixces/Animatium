@@ -27,12 +27,14 @@ package org.visuals.legacy.animatium.util.rendering;
 
 import com.mojang.blaze3d.GpuFormat;
 import com.mojang.blaze3d.PrimitiveTopology;
+import com.mojang.blaze3d.pipeline.BindGroupLayout;
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.BlendFactor;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.client.renderer.BindGroupLayouts;
+import net.minecraft.client.renderer.RenderPipelines;
 import org.visuals.legacy.animatium.Animatium;
 
 import java.util.Optional;
@@ -56,21 +58,30 @@ public class AnimatiumPipelines {
             .withVertexBinding(0, DefaultVertexFormat.POSITION)
             .buildSnippet();
 
-    public static final RenderPipeline LEGACY_PANORAMA_1 = RenderPipeline.builder(LEGACY_PANORAMA_SNIPPET)
+    public static final RenderPipeline LEGACY_PANORAMA_1 = RenderPipelines.register(RenderPipeline.builder(LEGACY_PANORAMA_SNIPPET)
             .withLocation(Animatium.location("pipeline/legacy_panorama_1"))
             .withColorTargetState(new ColorTargetState(Optional.of(PANORAMA_BLEND), GpuFormat.RGBA8_UNORM, ColorTargetState.WRITE_ALL))
-            .build();
+            .build());
 
-    public static final RenderPipeline LEGACY_PANORAMA_2 = RenderPipeline.builder(LEGACY_PANORAMA_SNIPPET)
+    public static final RenderPipeline LEGACY_PANORAMA_2 = RenderPipelines.register(RenderPipeline.builder(LEGACY_PANORAMA_SNIPPET)
             .withLocation(Animatium.location("pipeline/legacy_panorama_2"))
             .withColorTargetState(new ColorTargetState(Optional.of(PANORAMA_BLEND), GpuFormat.RGBA8_UNORM, ColorTargetState.WRITE_COLOR))
-            .build();
+            .build());
 
-    public static final RenderPipeline LEGACY_PANORAMA_BLUR = RenderPipeline.builder(TEXTURED_QUAD)
+    public static final RenderPipeline LEGACY_PANORAMA_BLUR = RenderPipelines.register(RenderPipeline.builder(TEXTURED_QUAD)
             .withLocation(Animatium.location("pipeline/legacy_panorama_blur"))
             .withVertexShader(Animatium.location("core/legacy_panorama_blur"))
             .withFragmentShader(Animatium.location("core/legacy_panorama_blur"))
             .withColorTargetState(new ColorTargetState(Optional.of(PANORAMA_BLEND), GpuFormat.RGBA8_UNORM, ColorTargetState.WRITE_COLOR))
             .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX)
-            .build();
+            .build());
+
+    // Color Boost
+    public static final RenderPipeline COLOR_BOOST_BLIT = RenderPipelines.register(RenderPipeline.builder()
+            .withLocation(Animatium.location("pipeline/colorboost"))
+            .withVertexShader("core/screenquad")
+            .withFragmentShader(Animatium.location("core/colorboost"))
+            .withBindGroupLayout(BindGroupLayout.builder().withSampler("Sampler0").build())
+            .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
+            .build());
 }
