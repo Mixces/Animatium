@@ -33,6 +33,7 @@ import net.minecraft.client.renderer.state.LightmapRenderState;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -47,10 +48,13 @@ public abstract class MixinLightmap_LegacyLightmap {
     @Final
     private GpuTextureView textureView;
 
+    @Unique
+    private final LegacyLightmapRenderer animatium$renderer = new LegacyLightmapRenderer();
+
     @WrapMethod(method = "render")
     private void animatium$legacyLightmap(final LightmapRenderState renderState, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.legacyLightmap) {
-            LegacyLightmapRenderer.INSTANCE.render(((LightmapStateExtension) renderState).animatium$getState(), this.textureView);
+            animatium$renderer.render(((LightmapStateExtension) renderState).animatium$getState(), this.textureView);
         } else {
             original.call(renderState);
         }
@@ -58,6 +62,6 @@ public abstract class MixinLightmap_LegacyLightmap {
 
     @Inject(method = "close", at = @At("TAIL"))
     private void animatium$legacyLightmap$close(final CallbackInfo ci) {
-        LegacyLightmapRenderer.INSTANCE.close();
+        animatium$renderer.close();
     }
 }

@@ -5,9 +5,9 @@ layout(std140) uniform LightmapInfo {
     float SkyFlicker;
     float BlockFlicker;
     float SkyDarkness;
-    int UseBrightLightmap;
     float NightVisionScale;
     float Gamma;
+    int UseBrightLightmap;
 };
 
 in vec2 texCoord;

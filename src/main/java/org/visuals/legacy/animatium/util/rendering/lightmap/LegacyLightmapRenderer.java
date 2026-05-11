@@ -44,12 +44,10 @@ public final class LegacyLightmapRenderer {
             .putFloat() // SkyFlicker
             .putFloat() // BlockFlicker
             .putFloat() // SkyDarkness
-            .putInt() // UseBrightLightmap
             .putFloat() // NightVisionScale
             .putFloat() // Gamma
+            .putInt() // UseBrightLightmap
             .get();
-
-    public static final LegacyLightmapRenderer INSTANCE = new LegacyLightmapRenderer();
 
     private final MappableRingBuffer ubo = new MappableRingBuffer(() -> "Legacy Lightmap UBO", GpuBuffer.USAGE_UNIFORM | GpuBuffer.USAGE_MAP_WRITE, LIGHTMAP_UBO_SIZE);
 
@@ -63,9 +61,9 @@ public final class LegacyLightmapRenderer {
                         .putFloat(state.skyFlicker)
                         .putFloat(state.blockFlicker)
                         .putFloat(state.skyDarkness)
-                        .putInt(state.useBrightLightmap ? 1 : 0)
                         .putFloat(state.nightVisionScale)
-                        .putFloat(state.gamma);
+                        .putFloat(state.gamma)
+                        .putInt(state.useBrightLightmap ? 1 : 0);
             }
 
             try (final Renderer renderer = Renderer.of(() -> "Legacy Lightmap Update", textureView)) {

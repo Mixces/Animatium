@@ -57,12 +57,12 @@ public class LegacyLightmapExtractor {
                 state.skyFlicker = level.getSkyFlashTime() > 0 ? 1.0F : state.skyDarken * 0.95F + 0.05F;
                 state.blockFlicker = this.blockLightRedFlickerTotal + 1.5F;
                 state.skyDarkness = minecraft.gameRenderer.bossOverlayWorldDarkening(tickDelta);
-                state.useBrightLightmap = ClientLevel.END.equals(level.dimension());
                 if (player.hasEffect(MobEffects.NIGHT_VISION)) {
                     state.nightVisionScale = GameRenderer.nightVisionScale(player, tickDelta);
                 }
 
                 state.gamma = minecraft.options.gamma().get().floatValue();
+                state.useBrightLightmap = ClientLevel.END.equals(level.dimension());
                 profiler.pop();
                 this.needsUpdate = false;
             }
