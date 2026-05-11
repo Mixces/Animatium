@@ -46,17 +46,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
-import org.visuals.legacy.animatium.util.states.ItemUtilityRenderState;
 
 @Mixin(ItemModelResolver.class)
 public abstract class MixinItemModelResolver {
     @Inject(method = "appendItemLayers", at = @At("HEAD"))
-    private void animatium$storeItemStack(final ItemStackRenderState itemStackRenderState, final ItemStack itemStack, final ItemDisplayContext itemDisplayContext, final Level level, final ItemOwner itemOwner, final int i, final CallbackInfo ci) {
-        itemStackRenderState.animatium$setItemStack(itemStack);
+    private void animatium$storeItemStack(final ItemStackRenderState output, final ItemStack item, final ItemDisplayContext displayContext, final Level level, final ItemOwner owner, final int seed, final CallbackInfo ci) {
+        output.animatium$setItemStack(item);
     }
 
     @WrapOperation(method = "appendItemLayers", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;get(Lnet/minecraft/core/component/DataComponentType;)Ljava/lang/Object;"))
-    private Object animatium$stickModelWhenCastInThirdperson(
+    private Object animatium$stickModelWhenCastInThirdPerson(
             final ItemStack instance,
             final DataComponentType<?> dataComponentType,
             final Operation<Object> original,
@@ -65,7 +64,7 @@ public abstract class MixinItemModelResolver {
             @Local(argsOnly = true) final ItemStack itemStack
     ) {
         final LivingEntity livingEntity = itemOwner == null ? null : itemOwner.asLivingEntity();
-		// TODO: Fix
+        // TODO: Fix
         if (Animatium.isEnabled() &&
                 AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersion.V1_7 &&
                 itemStack.getItem() == Items.FISHING_ROD &&

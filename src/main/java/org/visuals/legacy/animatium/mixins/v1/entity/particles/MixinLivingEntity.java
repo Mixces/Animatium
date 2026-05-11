@@ -48,6 +48,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.util.Utils;
 
 import java.util.Map;
 
@@ -57,29 +58,33 @@ public abstract class MixinLivingEntity extends Entity {
     @Final
     private Map<Holder<MobEffect>, MobEffectInstance> activeEffects;
 
-    public MixinLivingEntity(EntityType<?> entityType, Level level) {
+    public MixinLivingEntity(final EntityType<?> entityType, final Level level) {
         super(entityType, level);
     }
 
     @WrapWithCondition(method = "tickEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))
-    private boolean animatium$hideFirstPersonParticles(Level instance, ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+    private boolean animatium$hideFirstPersonParticles(final Level instance, final ParticleOptions particle, final double x, final double y, final double z, final double xd, final double yd, final double zd) {
         final Minecraft client = Minecraft.getInstance();
-        return !Animatium.isEnabled() || !AnimatiumConfig.instance().extras.disableFirstPersonParticles || this.getId() != client.player.getId() || !client.options.getCameraType().isFirstPerson();
+        return !Animatium.isEnabled() || !AnimatiumConfig.instance().extras.disableFirstPersonParticles || !Utils.isSelf(this) || !client.options.getCameraType().isFirstPerson();
     }
 
     @WrapOperation(method = "tickEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))
-    private void animatium$blendPotionParticleColors(Level instance, ParticleOptions particle, double x, double y, double z, double r, double g, double b, Operation<Void> original, @Local boolean hasAmbience) {
+    private void animatium$blendPotionParticleColors(final Level instance, final ParticleOptions particle, final double x, final double y, final double z, final double xd, final double yd, final double zd, final Operation<Void> original, @Local(name = "isAmbient") final boolean hasAmbience) {
+        ParticleOptions options = particle;
+        double red = xd;
+        double green = yd;
+        double blue = zd;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.restoreParticleBlending) {
             // TODO/NOTE: come back and check if activeEffects is empty, return 0xFF385DC6 else return color.orElse(0), if color == 0, don't render
             //            ONLY if people notice the smallllll issue currently/care
             final int color = PotionContents.getColorOptional(this.activeEffects.values()).orElse(0xFF385DC6);
-            particle = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, ARGB.color(hasAmbience ? 0.15F : 1.0F, color));
-            r = ARGB.redFloat(color);
-            g = ARGB.greenFloat(color);
-            b = ARGB.blueFloat(color);
+            options = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, ARGB.color(hasAmbience ? 0.15F : 1.0F, color));
+            red = ARGB.redFloat(color);
+            green = ARGB.greenFloat(color);
+            blue = ARGB.blueFloat(color);
         }
 
-        original.call(instance, particle, x, y, z, r, g, b);
+        original.call(instance, options, x, y, z, red, green, blue);
     }
 }
 

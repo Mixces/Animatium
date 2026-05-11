@@ -35,9 +35,9 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(TextureTransform.class)
-public abstract class MixinTextureTransform {
+public abstract class MixinTextureTransform_GlintSpeeds {
     @ModifyExpressionValue(method = "setupGlintTexturing", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/state/OptionsRenderState;glintSpeed:D", opcode = Opcodes.GETFIELD))
-    private static double animatium$forceMaxGlintSpeed(double original) {
+    private static double animatium$forceMaxGlintSpeed(final double original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.maxGlintProperties) {
             // 100% glint speed
             return 1.0D;
@@ -47,8 +47,8 @@ public abstract class MixinTextureTransform {
     }
 
     @ModifyExpressionValue(method = "setupGlintTexturing", at = @At(value = "CONSTANT", args = "doubleValue=8.0"))
-    private static double animatium$glintSpeed(double original, @Local(argsOnly = true) float f) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.legacyGlintSpeed && f == 8.0F) {
+    private static double animatium$glintSpeed(final double original, @Local(argsOnly = true) final float scale) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.legacyGlintSpeed && scale == 8.0F) {
             // Value taken from 1.8
             return 1.0D;
         } else {
@@ -57,8 +57,8 @@ public abstract class MixinTextureTransform {
     }
 
     @ModifyExpressionValue(method = "setupGlintTexturing", at = @At(value = "CONSTANT", args = "floatValue=110000.0"))
-    private static float animatium$glintSpeed$horizontal(float original, @Local(argsOnly = true) float f) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.legacyGlintSpeed && f == 8.0F) {
+    private static float animatium$glintSpeed$horizontal(final float original, @Local(argsOnly = true) final float scale) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.legacyGlintSpeed && scale == 8.0F) {
             // Value taken from 1.7/1.8
             return 4873.0F;
         } else {
@@ -67,8 +67,8 @@ public abstract class MixinTextureTransform {
     }
 
     @ModifyExpressionValue(method = "setupGlintTexturing", at = @At(value = "CONSTANT", args = "floatValue=30000.0"))
-    private static float animatium$glintSpeed$diagonal(float original, @Local(argsOnly = true) float f) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.legacyGlintSpeed && f == 8.0F) {
+    private static float animatium$glintSpeed$diagonal(final float original, @Local(argsOnly = true) final float scale) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.legacyGlintSpeed && scale == 8.0F) {
             // Value taken from 1.7/1.8
             return 3000.0F;
         } else {

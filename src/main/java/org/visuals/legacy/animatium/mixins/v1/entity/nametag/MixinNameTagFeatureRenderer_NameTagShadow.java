@@ -23,25 +23,19 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.glint;
+package org.visuals.legacy.animatium.mixins.v1.entity.nametag;
 
-import net.minecraft.client.renderer.feature.ItemFeatureRenderer;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.resources.Identifier;
+import net.minecraft.client.renderer.feature.NameTagFeatureRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(TextureManager.class)
-public abstract class MixinTextureManager {
-    @ModifyVariable(method = "getTexture", at = @At("HEAD"), argsOnly = true)
-    private Identifier animatium$useItemGlint(Identifier original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.itemGlintOnEntity && original == ItemFeatureRenderer.ENCHANTED_GLINT_ARMOR) {
-            return ItemFeatureRenderer.ENCHANTED_GLINT_ITEM;
-        } else {
-            return original;
-        }
+@Mixin(NameTagFeatureRenderer.class)
+public abstract class MixinNameTagFeatureRenderer_NameTagShadow {
+    @ModifyArg(method = "prepareText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Font;prepareText(Lnet/minecraft/util/FormattedCharSequence;FFIZZI)Lnet/minecraft/client/gui/Font$PreparedText;"), index = 4)
+    private static boolean animatium$nameTagTextShadow(final boolean shadow) {
+        return (Animatium.isEnabled() && AnimatiumConfig.instance().extras.nameTagTextShadow) || shadow;
     }
 }

@@ -43,7 +43,7 @@ import org.visuals.legacy.animatium.util.ItemUtils;
 import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
 @Mixin(GuiGraphicsExtractor.class)
-public abstract class MixinGuiGraphics {
+public abstract class MixinGuiGraphics_ToolTipItemBar {
     @WrapOperation(method = "tooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/tooltip/TooltipRenderUtil;extractTooltipBackground(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIIILnet/minecraft/resources/Identifier;)V"))
     private void animatium$tooltipStyleRendering(GuiGraphicsExtractor guiGraphics, int x, int y, int width, int height, Identifier sprite, Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.tooltipStyleRendering) {

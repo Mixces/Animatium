@@ -38,7 +38,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 @Mixin(ClientPacketListener.class)
 public abstract class MixinClientPacketListener_DontCloseChat {
     @WrapWithCondition(method = "handleContainerClose", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;clientSideCloseContainer()V"))
-    private boolean animatium$dontCloseChat(LocalPlayer instance) {
+    private boolean animatium$dontCloseChat(final LocalPlayer instance) {
         return !Animatium.isEnabled() || !AnimatiumConfig.instance().extras.dontCloseChat || !(Minecraft.getInstance().gui.screen() instanceof ChatScreen);
     }
 }

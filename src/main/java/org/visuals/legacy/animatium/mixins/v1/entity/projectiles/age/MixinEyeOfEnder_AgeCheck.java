@@ -23,25 +23,26 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.nametag;
+package org.visuals.legacy.animatium.mixins.v1.entity.projectiles.age;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.renderer.SubmitNodeCollection;
-import net.minecraft.client.renderer.state.OptionsRenderState;
+import net.minecraft.world.entity.projectile.EyeOfEnder;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(SubmitNodeCollection.class)
-public abstract class MixinSubmitNodeCollection {
-    @WrapOperation(method = "submitNameTag", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/state/OptionsRenderState;getBackgroundOpacity(F)F"))
-    private float animatium$nameTagBackground(OptionsRenderState instance, float defaultOpacity, Operation<Float> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.hideNameTagBackground) {
-            return 0F;
+@Mixin(EyeOfEnder.class)
+public abstract class MixinEyeOfEnder_AgeCheck {
+    @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/projectile/EyeOfEnder;tickCount:I", opcode = Opcodes.GETFIELD))
+    private int animatium$projectileAgeCheck(final EyeOfEnder instance, final Operation<Integer> original) {
+        final int originalTick = original.call(instance);
+        if (Animatium.isEnabled() && !AnimatiumConfig.instance().other.projectileAgeCheck) {
+            return originalTick + 2;
         } else {
-            return original.call(instance, defaultOpacity);
+            return originalTick;
         }
     }
 }

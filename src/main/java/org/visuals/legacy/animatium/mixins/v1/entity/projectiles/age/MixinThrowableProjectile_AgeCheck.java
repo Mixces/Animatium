@@ -35,9 +35,9 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(ThrowableProjectile.class)
-public abstract class MixinThrowableProjectile {
+public abstract class MixinThrowableProjectile_AgeCheck {
     @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/projectile/ThrowableProjectile;tickCount:I"))
-    private int animatium$projectileAgeCheck(ThrowableProjectile instance, Operation<Integer> original) {
+    private int animatium$projectileAgeCheck(final ThrowableProjectile instance, final Operation<Integer> original) {
         final int originalTick = original.call(instance);
         if (Animatium.isEnabled() && !AnimatiumConfig.instance().other.projectileAgeCheck) {
             return originalTick + 2;

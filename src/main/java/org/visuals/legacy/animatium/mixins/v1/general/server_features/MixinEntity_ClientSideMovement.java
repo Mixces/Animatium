@@ -37,7 +37,7 @@ import org.visuals.legacy.animatium.util.enums.ServerFeature;
 @Mixin(Entity.class)
 public abstract class MixinEntity_ClientSideMovement {
     @Inject(method = "isLocalInstanceAuthoritative", at = @At("HEAD"), cancellable = true)
-    private void animatium$clientSideEntityMovement(CallbackInfoReturnable<Boolean> cir) {
+    private void animatium$clientSideEntityMovement(final CallbackInfoReturnable<Boolean> cir) {
         if (Animatium.hasServerFeature(ServerFeature.CLIENTSIDE_ENTITIES) && !(((Entity) (Object) this) instanceof Player)) {
             cir.setReturnValue(true);
         }

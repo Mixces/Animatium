@@ -23,19 +23,25 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.nametag;
+package org.visuals.legacy.animatium.mixins.v1.entity.glint;
 
-import net.minecraft.client.renderer.feature.NameTagFeatureRenderer;
+import net.minecraft.client.renderer.feature.ItemFeatureRenderer;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(NameTagFeatureRenderer.class)
-public abstract class MixinNameTagFeatureRenderer {
-    @ModifyArg(method = "prepareText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Font;prepareText(Lnet/minecraft/util/FormattedCharSequence;FFIZZI)Lnet/minecraft/client/gui/Font$PreparedText;"), index = 4)
-    private static boolean animatium$nameTagTextShadow(boolean shadow) {
-        return (Animatium.isEnabled() && AnimatiumConfig.instance().extras.nameTagTextShadow) || shadow;
+@Mixin(TextureManager.class)
+public abstract class MixinTextureManager_ArmorItemGlint {
+    @ModifyVariable(method = "getTexture", at = @At("HEAD"), argsOnly = true)
+    private Identifier animatium$useItemGlint(final Identifier value) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.itemGlintOnEntity && value == ItemFeatureRenderer.ENCHANTED_GLINT_ARMOR) {
+            return ItemFeatureRenderer.ENCHANTED_GLINT_ITEM;
+        } else {
+            return value;
+        }
     }
 }

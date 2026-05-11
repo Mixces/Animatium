@@ -37,7 +37,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 @Mixin(RecipeBookComponent.class)
 public abstract class MixinRecipeBookComponent_HideRecipeBookUI {
     @WrapOperation(method = "isVisible", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;visible:Z", opcode = Opcodes.GETFIELD))
-    private boolean animatium$recipeBook(RecipeBookComponent<?> instance, Operation<Boolean> original) {
+    private boolean animatium$recipeBook(final RecipeBookComponent<?> instance, final Operation<Boolean> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.hideRecipeBook) {
             return false;
         } else {

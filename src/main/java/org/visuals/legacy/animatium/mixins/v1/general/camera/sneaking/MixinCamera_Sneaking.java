@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.general.camera;
+package org.visuals.legacy.animatium.mixins.v1.general.camera.sneaking;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -32,7 +32,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.ClipContext;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -43,11 +42,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.mixins.accessor.PlayerAccessor;
-import org.visuals.legacy.animatium.util.enums.CameraVersion;
 import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 
 @Mixin(Camera.class)
-public abstract class MixinCamera {
+public abstract class MixinCamera_Sneaking {
     @Shadow
     private float eyeHeightOld;
 
@@ -56,12 +54,6 @@ public abstract class MixinCamera {
 
     @Shadow
     private Entity entity;
-
-    @Shadow
-    private boolean detached;
-
-    @Shadow
-    protected abstract void move(float zoom, float dy, float dx);
 
     @Inject(method = "alignWithEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setRotation(FF)V", shift = At.Shift.AFTER))
     private void animatium$removeSmoothSneaking(final CallbackInfo ci) {
@@ -94,35 +86,6 @@ public abstract class MixinCamera {
         }
 
         original.call(instance, value);
-    }
-
-    @WrapOperation(method = "getMaxZoom", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/ClipContext$Block;VISUAL:Lnet/minecraft/world/level/ClipContext$Block;", opcode = Opcodes.GETSTATIC))
-    private ClipContext.Block animatium$cameraTransparentPassthrough(final Operation<ClipContext.Block> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.disableCameraTransparentPassthrough) {
-            return ClipContext.Block.OUTLINE;
-        } else {
-            return original.call();
-        }
-    }
-
-    @Inject(method = "alignWithEntity", at = @At(value = "TAIL"))
-    private void animatium$oldCameraVersion(final float partialTicks, final CallbackInfo ci) {
-        // TODO: Fix bed/sleeping position
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.cameraVersion != CameraVersion.VANILLA && !this.detached && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
-            final int ordinal = AnimatiumConfig.instance().screen.cameraVersion.ordinal();
-            if (ordinal <= CameraVersion.V1_14_V1_14_3.ordinal()) {
-                // <= 1.14.3
-                this.move(-0.05000000074505806F, 0.0F, 0.0F);
-                // <= 1.13.2
-                if (ordinal <= CameraVersion.V1_9_V1_13_2.ordinal()) {
-                    this.move(0.1F, 0.0F, 0.0F);
-                    // <= 1.8
-                    if (ordinal == CameraVersion.V1_8.ordinal()) {
-                        this.move(-0.15F, 0, 0); // unfixing parallax
-                    }
-                }
-            }
-        }
     }
 
     @Unique

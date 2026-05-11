@@ -36,7 +36,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft_DisconnectToTitleScreen {
     @WrapOperation(method = "disconnectFromWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;isLocalServer()Z"))
-    private boolean animatium$disconnectServerToTitleScreen(Minecraft instance, Operation<Boolean> original) {
+    private boolean animatium$disconnectServerToTitleScreen(final Minecraft instance, final Operation<Boolean> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.disconnectServerToTitleScreen) {
             return true;
         } else {

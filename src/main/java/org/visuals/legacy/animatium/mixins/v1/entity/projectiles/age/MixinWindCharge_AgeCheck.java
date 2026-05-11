@@ -27,17 +27,17 @@ package org.visuals.legacy.animatium.mixins.v1.entity.projectiles.age;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.world.entity.projectile.EyeOfEnder;
+import net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.WindCharge;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(EyeOfEnder.class)
-public abstract class MixinEyeOfEnder {
-    @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/projectile/EyeOfEnder;tickCount:I", opcode = Opcodes.GETFIELD))
-    private int animatium$projectileAgeCheck(EyeOfEnder instance, Operation<Integer> original) {
+@Mixin(WindCharge.class)
+public abstract class MixinWindCharge_AgeCheck {
+    @WrapOperation(method = "shouldRenderAtSqrDistance", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/projectile/hurtingprojectile/windcharge/WindCharge;tickCount:I"))
+    private int animatium$projectileAgeCheck(final WindCharge instance, final Operation<Integer> original) {
         final int originalTick = original.call(instance);
         if (Animatium.isEnabled() && !AnimatiumConfig.instance().other.projectileAgeCheck) {
             return originalTick + 2;

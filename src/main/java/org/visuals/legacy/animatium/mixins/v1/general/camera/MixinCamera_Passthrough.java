@@ -23,26 +23,26 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.nametag;
+package org.visuals.legacy.animatium.mixins.v1.general.camera;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.client.Camera;
+import net.minecraft.world.level.ClipContext;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(LivingEntityRenderer.class)
-public abstract class MixinLivingEntityRenderer {
-    @WrapOperation(method = "shouldShowName(Lnet/minecraft/world/entity/LivingEntity;D)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;getCameraEntity()Lnet/minecraft/world/entity/Entity;"))
-    private Entity animatium$nameTagInThirdPerson(Minecraft instance, Operation<Entity> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.showNameTagInThirdPerson) {
-            return null;
+@Mixin(Camera.class)
+public abstract class MixinCamera_Passthrough {
+    @WrapOperation(method = "getMaxZoom", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/ClipContext$Block;VISUAL:Lnet/minecraft/world/level/ClipContext$Block;", opcode = Opcodes.GETSTATIC))
+    private ClipContext.Block animatium$cameraTransparentPassthrough(final Operation<ClipContext.Block> original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.disableCameraTransparentPassthrough) {
+            return ClipContext.Block.OUTLINE;
         } else {
-            return original.call(instance);
+            return original.call();
         }
     }
 }

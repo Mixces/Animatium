@@ -42,9 +42,9 @@ import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 
 @Mixin(FlameFeatureRenderer.class)
-public abstract class MixinFlameFeatureRenderer {
+public abstract class MixinFlameFeatureRenderer_OldFlameDimensions {
     @ModifyExpressionValue(method = "prepare", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;boundingBoxWidth:F", opcode = Opcodes.GETFIELD))
-    private float animatium$flameWidth(float original, @Local(name = "state") EntityRenderState entityRenderState) {
+    private float animatium$flameWidth(final float original, @Local(name = "state") final EntityRenderState entityRenderState) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.flameDimensions && entityRenderState instanceof AvatarRenderState) {
             return 0.6F;
         } else {
@@ -53,7 +53,7 @@ public abstract class MixinFlameFeatureRenderer {
     }
 
     @ModifyExpressionValue(method = "prepare", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;boundingBoxHeight:F", opcode = Opcodes.GETFIELD))
-    private float animatium$flameHeight(float original, @Local(name = "state") EntityRenderState entityRenderState) {
+    private float animatium$flameHeight(final float original, @Local(name = "state") final EntityRenderState entityRenderState) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.flameDimensions && entityRenderState instanceof AvatarRenderState) {
             return 1.8F;
         } else {
@@ -62,20 +62,24 @@ public abstract class MixinFlameFeatureRenderer {
     }
 
     @ModifyArg(method = "prepare", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack$Pose;translate(FFF)Lorg/joml/Matrix4f;", ordinal = 0), index = 1)
-    private float animatium$flameOffset(float original, @Local(name = "state") EntityRenderState entityRenderState) {
+    private float animatium$flameOffset(final float original, @Local(name = "state") final EntityRenderState entityRenderState) {
         final Camera camera = Minecraft.getInstance().getEntityRenderDispatcher().camera;
         if (Animatium.isEnabled() && entityRenderState instanceof AvatarRenderState avatarRenderState && camera != null && camera.entity().getId() == avatarRenderState.id) {
             final boolean shouldSyncPlayerModelWithEyeHeight = AnimatiumConfig.instance().movement.sneakAnimation == SneakAnimationSetting.V1_7;
+
+            float value = original;
             if (shouldSyncPlayerModelWithEyeHeight) {
                 final float cameraLerpValue = Utils.lerpCameraPosition(camera);
-                original = (avatarRenderState.eyeHeight * avatarRenderState.scale) - cameraLerpValue;
+                value = (avatarRenderState.eyeHeight * avatarRenderState.scale) - cameraLerpValue;
             }
 
             if (AnimatiumConfig.instance().other.flameOffset) {
-                original += ((shouldSyncPlayerModelWithEyeHeight && avatarRenderState.isCrouching ? 0.140625F : 0.296875F) * avatarRenderState.scale);
+                value += ((shouldSyncPlayerModelWithEyeHeight && avatarRenderState.isCrouching ? 0.140625F : 0.296875F) * avatarRenderState.scale);
             }
-        }
 
-        return original;
+            return value;
+        } else {
+            return original;
+        }
     }
 }

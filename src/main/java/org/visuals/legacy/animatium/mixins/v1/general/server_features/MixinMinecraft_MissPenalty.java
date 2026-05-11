@@ -54,14 +54,14 @@ public abstract class MixinMinecraft_MissPenalty {
     public LocalPlayer player;
 
     @Inject(method = "startAttack", at = @At(value = "RETURN", ordinal = 0))
-    private void animatium$fakeMissPenaltySwing(CallbackInfoReturnable<Boolean> cir) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.fakeMissPenaltySwing && player != null) {
+    private void animatium$fakeMissPenaltySwing(final CallbackInfoReturnable<Boolean> cir) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.fakeMissPenaltySwing && this.player != null) {
             Utils.fakeHandSwing(player, InteractionHand.MAIN_HAND);
         }
     }
 
     @WrapOperation(method = "startAttack", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 0, opcode = Opcodes.GETFIELD))
-    private int animatium$disableSwingMissPenalty(Minecraft instance, Operation<Integer> original) {
+    private int animatium$disableSwingMissPenalty(final Minecraft instance, final Operation<Integer> original) {
         if (Animatium.hasServerFeature(ServerFeature.MISS_PENALTY) && (this.hitResult != null && this.hitResult.getType() != HitResult.Type.BLOCK)) {
             return 0;
         } else {

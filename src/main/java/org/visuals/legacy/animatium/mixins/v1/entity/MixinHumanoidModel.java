@@ -136,19 +136,19 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
             final boolean isRightArmPose = humanoidRenderState.rightArmPose == HumanoidModel.ArmPose.BOW_AND_ARROW;
             if (isLeftArmPose || isRightArmPose) {
                 if (isLeftArmPose) {
-                    leftArm.zRot = 0.0F;
-                    rightArm.yRot = -0.1F + head.yRot - 0.4F;
-                    leftArm.yRot = 0.1F + head.yRot;
+                    this.leftArm.zRot = 0.0F;
+                    this.rightArm.yRot = -0.1F + this.head.yRot - 0.4F;
+                    this.leftArm.yRot = 0.1F + this.head.yRot;
                 }
 
                 if (isRightArmPose) {
-                    rightArm.zRot = 0.0F;
-                    rightArm.yRot = -0.1F + head.yRot;
-                    leftArm.yRot = 0.1F + head.yRot + 0.4F;
+                    this.rightArm.zRot = 0.0F;
+                    this.rightArm.yRot = -0.1F + this.head.yRot;
+                    this.leftArm.yRot = 0.1F + this.head.yRot + 0.4F;
                 }
 
-                rightArm.xRot = (float) (-Math.PI / 2) + head.xRot;
-                leftArm.xRot = (float) (-Math.PI / 2) + head.xRot;
+                this.rightArm.xRot = (float) (-Math.PI / 2) + this.head.xRot;
+                this.leftArm.xRot = (float) (-Math.PI / 2) + this.head.xRot;
             }
         }
     }

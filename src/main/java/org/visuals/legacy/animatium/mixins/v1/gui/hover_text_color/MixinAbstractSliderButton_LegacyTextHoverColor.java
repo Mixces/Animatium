@@ -42,7 +42,7 @@ public abstract class MixinAbstractSliderButton_LegacyTextHoverColor extends Abs
     }
 
     @WrapOperation(method = "extractWidgetRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/AbstractSliderButton;getMessage()Lnet/minecraft/network/chat/Component;"))
-    private Component animatium$renderWidget$old$textColor(AbstractSliderButton instance, Operation<Component> original) {
+    private Component animatium$renderWidget$old$textColor(final AbstractSliderButton instance, final Operation<Component> original) {
         final Component component = original.call(instance);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.legacyWidgetHoverTextColor) {
             return component.copy().withColor(!this.active ? 0xA0A0A0 : (this.isHoveredOrFocused() ? 0xFFFFA0 : 0xE0E0E0));

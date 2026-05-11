@@ -43,7 +43,7 @@ public abstract class MixinLivingEntity_ViewBobbingTilt implements ViewBobbingSt
     private float animatium$previousBobbingTilt = 0.0F;
 
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;tickEffects()V", shift = At.Shift.BEFORE))
-    private void animatium$updatePreviousBobbingTiltValue(CallbackInfo ci) {
+    private void animatium$updatePreviousBobbingTiltValue(final CallbackInfo ci) {
         if (AnimatiumConfig.instance().fixes.fixVerticalBobbingTilt) {
             this.animatium$previousBobbingTilt = this.animatium$bobbingTilt;
         }
