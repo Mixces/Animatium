@@ -39,6 +39,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
@@ -87,10 +88,9 @@ public abstract class MixinAvatarRenderer_HeldItemArmLogic<AvatarLikeEntity exte
 
         int overlay = packedOverlay;
         if (Animatium.isEnabled() && avatarRenderState != null) {
-            // TODO 3.3:
-            // if (AnimatiumConfig.instance().extras.damageTintItems) {
-            // 	overlay = OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(avatarRenderState.hasRedOverlay));
-            // }
+            if (AnimatiumConfig.instance().extras.damageTintItems) {
+                overlay = OverlayTexture.pack(0, OverlayTexture.v(avatarRenderState.hasRedOverlay));
+            }
 
             if (AnimatiumConfig.instance().extras.showArmWhileInvisible) {
                 final Player player = Minecraft.getInstance().player;

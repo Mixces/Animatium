@@ -41,152 +41,153 @@ import java.util.List;
 
 @UtilityClass
 public class ItemUtils {
-	public boolean isSwordItem(final ItemStack stack) {
-		return stack.is(ItemTags.SWORDS);
-	}
+    public boolean isSwordItem(final ItemStack stack) {
+        return stack.is(ItemTags.SWORDS);
+    }
 
-	public boolean isAxeItem(final ItemStack stack) {
-		return stack.getItem() instanceof AxeItem || stack.is(ItemTags.AXES);
-	}
+    public boolean isAxeItem(final ItemStack stack) {
+        return stack.getItem() instanceof AxeItem || stack.is(ItemTags.AXES);
+    }
 
-	public boolean isPickaxeItem(final ItemStack stack) {
-		return stack.is(ItemTags.PICKAXES);
-	}
+    public boolean isPickaxeItem(final ItemStack stack) {
+        return stack.is(ItemTags.PICKAXES);
+    }
 
-	public boolean isShovelItem(final ItemStack stack) {
-		return stack.getItem() instanceof ShovelItem || stack.is(ItemTags.SHOVELS);
-	}
+    public boolean isShovelItem(final ItemStack stack) {
+        return stack.getItem() instanceof ShovelItem || stack.is(ItemTags.SHOVELS);
+    }
 
-	public boolean isHoeItem(final ItemStack stack) {
-		return stack.getItem() instanceof HoeItem || stack.is(ItemTags.HOES);
-	}
+    public boolean isHoeItem(final ItemStack stack) {
+        return stack.getItem() instanceof HoeItem || stack.is(ItemTags.HOES);
+    }
 
-	public boolean isDiggerItem(final ItemStack stack) {
-		return isAxeItem(stack) || isPickaxeItem(stack) || isShovelItem(stack) || isHoeItem(stack);
-	}
+    public boolean isDiggerItem(final ItemStack stack) {
+        return isAxeItem(stack) || isPickaxeItem(stack) || isShovelItem(stack) || isHoeItem(stack);
+    }
 
-	public boolean isShieldItem(final ItemStack stack) {
-		return stack.getItem() instanceof ShieldItem || stack.is(Items.SHIELD);
-	}
+    public boolean isShieldItem(final ItemStack stack) {
+        return stack.getItem() instanceof ShieldItem || stack.is(Items.SHIELD);
+    }
 
-	public boolean isFishingRodItem(final ItemStack stack) {
-		final Item item = stack.getItem();
-		return item instanceof FishingRodItem || item instanceof FoodOnAStickItem<?>;
-	}
+    public boolean isFishingRodItem(final ItemStack stack) {
+        final Item item = stack.getItem();
+        return item instanceof FishingRodItem || item instanceof FoodOnAStickItem<?>;
+    }
 
-	public boolean isRangedWeaponItem(final ItemStack stack) {
-		return stack.getItem() instanceof ProjectileWeaponItem;
-	}
+    public boolean isRangedWeaponItem(final ItemStack stack) {
+        return stack.getItem() instanceof ProjectileWeaponItem;
+    }
 
-	public boolean isHandheldItem(final ItemStack stack) {
-		return isDiggerItem(stack) ||
-				isSwordItem(stack) ||
-				isFishingRodItem(stack) ||
-				List.of(Items.MACE, Items.TRIDENT, Items.STICK, Items.BREEZE_ROD, Items.BLAZE_ROD).contains(stack.getItem());
-	}
+    public boolean isHandheldItem(final ItemStack stack) {
+        return isDiggerItem(stack) ||
+                isSwordItem(stack) ||
+                isFishingRodItem(stack) ||
+                List.of(Items.MACE, Items.TRIDENT, Items.STICK, Items.BREEZE_ROD, Items.BLAZE_ROD).contains(stack.getItem());
+    }
 
-	public boolean isThinBlockItem(final ItemStack stack) {
-		final Block block = Block.byItem(stack.getItem());
-		return block instanceof CarpetBlock ||
-				block instanceof TrapDoorBlock ||
-				block instanceof PressurePlateBlock ||
-				block instanceof SnowLayerBlock ||
-				block instanceof DaylightDetectorBlock;
-	}
+    public boolean isThinBlockItem(final ItemStack stack) {
+        final Block block = Block.byItem(stack.getItem());
+        return block instanceof CarpetBlock ||
+                block instanceof TrapDoorBlock ||
+                block instanceof PressurePlateBlock ||
+                block instanceof SnowLayerBlock ||
+                block instanceof DaylightDetectorBlock;
+    }
 
-	public boolean isSkullBlock(final ItemStack stack) {
-		return Block.byItem(stack.getItem()) instanceof SkullBlock;
-	}
+    public boolean isSkullBlock(final ItemStack stack) {
+        return Block.byItem(stack.getItem()) instanceof SkullBlock;
+    }
 
-	public boolean isBlockItemBlacklisted(final ItemStack stack) {
-		final Block block = Block.byItem(stack.getItem());
-		return block instanceof BannerBlock ||
-				block instanceof RodBlock ||
-				block instanceof BedBlock ||
-				(isSkullBlock(stack) && !AnimatiumConfig.instance().items.mobHeadIcons);
-	}
+    public boolean isBlockItemBlacklisted(final ItemStack stack) {
+        final Block block = Block.byItem(stack.getItem());
+        return block instanceof BannerBlock ||
+                block instanceof RodBlock ||
+                block instanceof BedBlock ||
+                (isSkullBlock(stack) && !AnimatiumConfig.instance().items.mobHeadIcons);
+    }
 
-	public boolean isItemBlacklisted(final ItemStack stack) {
-		return isShieldItem(stack) ||
-				isBlockItemBlacklisted(stack) ||
-				stack.is(Items.CROSSBOW);
-	}
+    public boolean isItemBlacklisted(final ItemStack stack) {
+        return isShieldItem(stack) ||
+                isBlockItemBlacklisted(stack) ||
+                stack.is(Items.CROSSBOW) ||
+                stack.is(ItemTags.SPEARS);
+    }
 
-	public boolean isSwingItemBlacklisted(final ItemStack stack) {
-		final Item item = stack.getItem();
-		return item instanceof ProjectileItem ||
-				item instanceof BucketItem ||
-				item instanceof ShearsItem ||
-				item instanceof EnderpearlItem;
-	}
+    public boolean isSwingItemBlacklisted(final ItemStack stack) {
+        final Item item = stack.getItem();
+        return item instanceof ProjectileItem ||
+                item instanceof BucketItem ||
+                item instanceof ShearsItem ||
+                item instanceof EnderpearlItem;
+    }
 
-	public boolean isBlock3d(final ItemStack stack, final boolean usesBlockLight) {
-		return stack.getItem() instanceof BlockItem && usesBlockLight;
-	}
+    public boolean isBlock3d(final ItemStack stack, final boolean usesBlockLight) {
+        return stack.getItem() instanceof BlockItem && usesBlockLight;
+    }
 
-	public void applyLegacyFirstPersonTransforms(final PoseStack poseStack, final int direction, final Runnable runnable) {
-		poseStack.mulPose(Axis.YP.rotationDegrees(direction * 45.0F));
-		poseStack.scale(0.4F, 0.4F, 0.4F);
-		runnable.run();
-		poseStack.scale(1 / 0.4F, 1 / 0.4F, 1 / 0.4F);
-		poseStack.mulPose(Axis.YP.rotationDegrees(direction * -45.0F));
-	}
+    public void applyLegacyFirstPersonTransforms(final PoseStack poseStack, final int direction, final Runnable runnable) {
+        poseStack.mulPose(Axis.YP.rotationDegrees(direction * 45.0F));
+        poseStack.scale(0.4F, 0.4F, 0.4F);
+        runnable.run();
+        poseStack.scale(1 / 0.4F, 1 / 0.4F, 1 / 0.4F);
+        poseStack.mulPose(Axis.YP.rotationDegrees(direction * -45.0F));
+    }
 
-	public boolean shouldApplyItemPositionsInThirdPerson(final ArmedEntityRenderState armedEntityRenderState) {
-		if (AnimatiumConfig.instance().items.itemPositionsInThirdPerson) {
-			return true;
-		} else {
-			return AnimatiumConfig.instance().other.thirdPersonSwordBlockingPosition && Utils.isBlockingArm(armedEntityRenderState.mainArm, armedEntityRenderState);
-		}
-	}
+    public boolean shouldApplyItemPositionsInThirdPerson(final ArmedEntityRenderState armedEntityRenderState) {
+        if (AnimatiumConfig.instance().items.itemPositionsInThirdPerson) {
+            return true;
+        } else {
+            return AnimatiumConfig.instance().other.thirdPersonSwordBlockingPosition && Utils.isBlockingArm(armedEntityRenderState.mainArm, armedEntityRenderState);
+        }
+    }
 
-	public int getLegacyDurabilityColorValue(final ItemStack stack) {
-		final double value = (255.0 - (double) stack.getDamageValue() * 255.0 / (double) stack.getMaxDamage());
-		if (!Double.isNaN(value)) {
-			return (int) Math.round(value);
-		} else {
-			return 0;
-		}
-	}
+    public int getLegacyDurabilityColorValue(final ItemStack stack) {
+        final double value = (255.0 - (double) stack.getDamageValue() * 255.0 / (double) stack.getMaxDamage());
+        if (!Double.isNaN(value)) {
+            return (int) Math.round(value);
+        } else {
+            return 0;
+        }
+    }
 
-	public Rarity getLegacyItemRarity(final ItemStack stack) {
-		final Item item = stack.getItem();
-		if (List.of(Items.GOLDEN_APPLE, Items.END_CRYSTAL).contains(item)) {
-			return Rarity.RARE;
-		} else if (List.of(Items.NETHER_STAR, Items.ELYTRA, Items.DRAGON_HEAD).contains(item)) {
-			return Rarity.UNCOMMON;
-		} else if (item == Items.ENCHANTED_GOLDEN_APPLE) {
-			return Rarity.EPIC;
-		} else if (item == Items.TRIDENT) {
-			return Rarity.COMMON;
-		} else {
-			return stack.getRarity();
-		}
-	}
+    public Rarity getLegacyItemRarity(final ItemStack stack) {
+        final Item item = stack.getItem();
+        if (List.of(Items.GOLDEN_APPLE, Items.END_CRYSTAL).contains(item)) {
+            return Rarity.RARE;
+        } else if (List.of(Items.NETHER_STAR, Items.ELYTRA, Items.DRAGON_HEAD).contains(item)) {
+            return Rarity.UNCOMMON;
+        } else if (item == Items.ENCHANTED_GOLDEN_APPLE) {
+            return Rarity.EPIC;
+        } else if (item == Items.TRIDENT) {
+            return Rarity.COMMON;
+        } else {
+            return stack.getRarity();
+        }
+    }
 
-	public static @Nullable Identifier getMobHeadLocation(final Item item) {
-		final Block block = Block.byItem(item);
-		if (block == Blocks.AIR || !(block instanceof SkullBlock skullBlock && skullBlock.getType() instanceof SkullBlock.Types types)) {
-			return null;
-		} else {
-			return switch (types) {
-				case CREEPER -> Animatium.location("creeper_skull");
-				case DRAGON -> Animatium.location("dragon_skull");
-				case PIGLIN -> Animatium.location("piglin_skull");
-				case PLAYER -> Animatium.location("player_skull");
-				case SKELETON -> Animatium.location("skeleton_skull");
-				case WITHER_SKELETON -> Animatium.location("wither_skeleton_skull");
-				case ZOMBIE -> Animatium.location("zombie_skull");
-			};
-		}
-	}
+    public static @Nullable Identifier getMobHeadLocation(final Item item) {
+        final Block block = Block.byItem(item);
+        if (block == Blocks.AIR || !(block instanceof SkullBlock skullBlock && skullBlock.getType() instanceof SkullBlock.Types types)) {
+            return null;
+        } else {
+            return switch (types) {
+                case CREEPER -> Animatium.location("creeper_skull");
+                case DRAGON -> Animatium.location("dragon_skull");
+                case PIGLIN -> Animatium.location("piglin_skull");
+                case PLAYER -> Animatium.location("player_skull");
+                case SKELETON -> Animatium.location("skeleton_skull");
+                case WITHER_SKELETON -> Animatium.location("wither_skeleton_skull");
+                case ZOMBIE -> Animatium.location("zombie_skull");
+            };
+        }
+    }
 
-	// TODO/NOTE: Might need rework? as vanilla now has the fix as of 1.21.11+ but doesn't seem fully the same/accurate
-	public boolean shouldInstantlyReplaceVisibleItem1_8(final ItemStack prevStack, final ItemStack currentStack) {
-		// TODO/NOTE: Apparently 1.7 doesn't do any special checks inside the inventory
-		final boolean itemsMatch = ItemStack.isSameItem(prevStack, currentStack);
-		final boolean durabilityMatch = prevStack.getDamageValue() == currentStack.getDamageValue();
-		final boolean countMatch = prevStack.getCount() == currentStack.getCount();
-		return (itemsMatch && (!durabilityMatch || !countMatch));
-	}
+    // TODO/NOTE: Might need rework? as vanilla now has the fix as of 1.21.11+ but doesn't seem fully the same/accurate
+    public boolean shouldInstantlyReplaceVisibleItem1_8(final ItemStack prevStack, final ItemStack currentStack) {
+        // TODO/NOTE: Apparently 1.7 doesn't do any special checks inside the inventory
+        final boolean itemsMatch = ItemStack.isSameItem(prevStack, currentStack);
+        final boolean durabilityMatch = prevStack.getDamageValue() == currentStack.getDamageValue();
+        final boolean countMatch = prevStack.getCount() == currentStack.getCount();
+        return (itemsMatch && (!durabilityMatch || !countMatch));
+    }
 }

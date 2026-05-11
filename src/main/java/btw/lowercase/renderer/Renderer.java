@@ -239,8 +239,11 @@ public class Renderer implements AutoCloseable {
     public void close() {
         this.textures.clear();
         this.uniforms.clear();
-        if (this.geometry != null && !this.geometry.persistent()) {
-            this.geometry.close();
+        if (this.geometry != null) {
+            if (!this.geometry.persistent()) {
+                this.geometry.close();
+            }
+
             this.geometry = null;
         }
 

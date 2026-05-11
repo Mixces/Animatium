@@ -46,10 +46,10 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @IfModAbsent("ichor")
 @Mixin(EquipmentLayerRenderer.class)
-public abstract class MixinEquipmentLayerRenderer {
+public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
     @WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/Identifier;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorCutoutNoCull(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
     private RenderType animatium$renderLayerArmorTint(final Identifier texture, final Operation<RenderType> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.entityArmorHurtTint) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.damageTintArmor) {
             return RenderTypes.entityCutoutZOffset(texture);
         } else {
             return original.call(texture);
@@ -58,7 +58,7 @@ public abstract class MixinEquipmentLayerRenderer {
 
     @WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/Identifier;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/Sheets;armorTrimsSheet(Z)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
     private RenderType animatium$renderLayerArmorTrimTint(final boolean decal, final Operation<RenderType> original, @Local(name = "sprite") final TextureAtlasSprite textureAtlasSprite) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.entityArmorHurtTint) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.damageTintArmor) {
             return RenderTypes.entityCutoutZOffset(textureAtlasSprite.atlasLocation());
         } else {
             return original.call(decal);
@@ -77,8 +77,8 @@ public abstract class MixinEquipmentLayerRenderer {
 
     @Unique
     private int animatium$getPackUv(final int original, final EntityRenderState entityRenderState) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.entityArmorHurtTint && entityRenderState instanceof LivingEntityRenderState livingEntityRenderState) {
-            return OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(livingEntityRenderState.hasRedOverlay));
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.damageTintArmor && entityRenderState instanceof LivingEntityRenderState livingEntityRenderState) {
+            return OverlayTexture.pack(0, OverlayTexture.v(livingEntityRenderState.hasRedOverlay));
         } else {
             return original;
         }

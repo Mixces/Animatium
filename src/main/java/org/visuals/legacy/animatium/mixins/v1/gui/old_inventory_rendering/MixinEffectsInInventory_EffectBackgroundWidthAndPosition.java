@@ -44,7 +44,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.mixins.accessor.AbstractRecipeBookScreenAccessor;
 
 @Mixin(EffectsInInventory.class)
-public abstract class MixinEffectsInInventory {
+public abstract class MixinEffectsInInventory_EffectBackgroundWidthAndPosition {
     @Shadow
     @Final
     private AbstractContainerScreen<?> screen;

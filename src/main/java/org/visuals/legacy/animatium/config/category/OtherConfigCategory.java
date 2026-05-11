@@ -45,7 +45,7 @@ public class OtherConfigCategory extends Category {
     public boolean disableInventoryEntityScissor = false;
     public boolean blockOutlineRendering = false;
     public boolean disableModelWhilstSleeping = false;
-    public boolean entityArmorHurtTint = false;
+    public boolean damageTintArmor = false;
     public boolean itemGlintOnEntity = false;
     public boolean maxGlintProperties = false;
     public boolean restoreParticleBlending = false;
@@ -87,7 +87,7 @@ public class OtherConfigCategory extends Category {
         bundle.booleanEntry("blockOutlineRendering");
         bundle.booleanEntry("disableModelWhilstSleeping");
         if (!Mods.HAS_LUNAR_CLIENT) {
-            bundle.booleanEntry("entityArmorHurtTint");
+            bundle.booleanEntry("damageTintArmor");
         }
 
         bundle.booleanEntry("itemGlintOnEntity");

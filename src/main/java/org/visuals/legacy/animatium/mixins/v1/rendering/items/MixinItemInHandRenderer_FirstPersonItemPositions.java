@@ -60,8 +60,9 @@ import org.visuals.legacy.animatium.util.ItemUtils;
 import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
 
+// TODO/NOTE: Why 500?
 @Mixin(value = ItemInHandRenderer.class, priority = 500)
-public abstract class MixinItemInHandRenderer {
+public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
     @Shadow
     private float mainHandHeight;
 

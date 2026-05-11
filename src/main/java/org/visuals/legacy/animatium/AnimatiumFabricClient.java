@@ -30,13 +30,14 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.networking.v1.*;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import org.visuals.legacy.animatium.command.AnimatiumCommand;
 import org.visuals.legacy.animatium.packet.InfoPayloadPacket;
 import org.visuals.legacy.animatium.packet.SetServerFeaturesPayloadPacket;
+import org.visuals.legacy.animatium.util.AnimatiumKeybinds;
 
 import java.util.List;
 
@@ -49,11 +50,12 @@ public final class AnimatiumFabricClient implements ClientModInitializer {
 
         final List<String> packs = List.of("classic_textures", "classic_panorama", "classic_water");
         for (final String pack : packs) {
-            ResourceManagerHelper.registerBuiltinResourcePack(Animatium.location(pack), modContainer, ResourcePackActivationType.NORMAL);
+            ResourceLoader.registerBuiltinPack(Animatium.location(pack), modContainer, PackActivationType.NORMAL);
         }
 
         // TODO 26.2: ModelLoadingPlugin.register(context -> context.addModel(AnimatiumConstants.FAST_GRASS_MODEL_KEY, SimpleUnbakedExtraModel.blockStateModel(AnimatiumConstants.FAST_GRASS_MODEL_LOCATION)));
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) -> dispatcher.register(AnimatiumCommand.create()));
+        AnimatiumKeybinds.register();
         this.registerPayloads();
     }
 

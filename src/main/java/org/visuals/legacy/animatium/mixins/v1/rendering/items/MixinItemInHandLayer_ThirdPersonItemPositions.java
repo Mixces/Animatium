@@ -51,7 +51,7 @@ import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
 
 @Mixin(ItemInHandLayer.class)
-public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState> {
+public abstract class MixinItemInHandLayer_ThirdPersonItemPositions<S extends ArmedEntityRenderState> {
     @ModifyArgs(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V"))
     private void animatium$oldTransformTranslation(final Args args, @Local(argsOnly = true) final S armedEntityRenderState, @Local(argsOnly = true) final HumanoidArm arm) {
         final ItemStack stack = armedEntityRenderState.animatium$getItemHeldByArm(arm);

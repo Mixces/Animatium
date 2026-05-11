@@ -37,7 +37,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 @Mixin(HumanoidMobRenderer.class)
 public abstract class MixinHumanoidMobRenderer_FixDoubleUsage {
     @WrapOperation(method = "extractHumanoidRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isUsingItem()Z"))
-    private static boolean animatium$fixDoubleBlockingVisual(LivingEntity instance, Operation<Boolean> original) {
+    private static boolean animatium$fixDoubleBlockingVisual(final LivingEntity instance, final Operation<Boolean> original) {
         final boolean value = original.call(instance);
         if (AnimatiumConfig.instance().fixes.fixDoubleUsageVisual) {
             return value && Minecraft.getInstance().options.keyUse.isDown();

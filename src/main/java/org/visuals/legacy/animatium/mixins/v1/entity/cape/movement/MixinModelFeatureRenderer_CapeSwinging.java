@@ -23,27 +23,23 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.items;
+package org.visuals.legacy.animatium.mixins.v1.entity.cape.movement;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.renderer.ItemInHandRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.world.entity.LivingEntity;
-import org.objectweb.asm.Opcodes;
+import net.minecraft.client.model.player.PlayerCapeModel;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(ItemInHandRenderer.class)
-public abstract class MixinItemInHandRenderer_DamageTintItems {
-    @ModifyExpressionValue(method = "renderItem", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/texture/OverlayTexture;NO_OVERLAY:I", opcode = Opcodes.GETSTATIC))
-    private int animatium$damageTintItems(final int original, @Local(argsOnly = true) final LivingEntity livingEntity) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.damageTintItems) {
-            return OverlayTexture.pack(0, OverlayTexture.v(livingEntity.hurtTime > 0 || livingEntity.deathTime > 0));
-        } else {
-            return original;
+@Mixin(ModelFeatureRenderer.class)
+public abstract class MixinModelFeatureRenderer_CapeSwinging {
+    @Inject(method = "prepareModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/Model;setupAnim(Ljava/lang/Object;)V", shift = At.Shift.AFTER))
+    private <S> void animatium$capeSwingRotation(final ModelFeatureRenderer.Submit<S> submit, final CallbackInfo ci) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.disableCapeSwingRotation && submit.model() instanceof PlayerCapeModel playerCapeModel) {
+            playerCapeModel.body.yRot = 0;
         }
     }
 }

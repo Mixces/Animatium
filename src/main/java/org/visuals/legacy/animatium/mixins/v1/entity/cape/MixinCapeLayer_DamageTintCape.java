@@ -23,23 +23,25 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.armor_hurt;
+package org.visuals.legacy.animatium.mixins.v1.entity.cape;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.client.renderer.entity.layers.CapeLayer;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.ARGB;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(OverlayTexture.class)
-public abstract class MixinOverlayTexture {
-    @ModifyExpressionValue(method = "<init>", at = @At(value = "CONSTANT", args = "intValue=-1291911168"))
-    private int animatium$deepRedHurtTint(final int original) {
-        if (Animatium.isEnabled()) {
-            final float alpha = AnimatiumConfig.instance().extras.deepRedHurtTint ? 128.0F : ARGB.alphaFloat(original);
-            return ARGB.color(alpha, ARGB.opaque(original));
+@Mixin(CapeLayer.class)
+public abstract class MixinCapeLayer_DamageTintCape {
+    @ModifyExpressionValue(method = "submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/client/renderer/entity/state/AvatarRenderState;FF)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/texture/OverlayTexture;NO_OVERLAY:I", opcode = Opcodes.GETSTATIC))
+    private int animatium$damageTintItems(final int original, @Local(argsOnly = true) final AvatarRenderState state) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.damageTintCape) {
+            return OverlayTexture.pack(0, OverlayTexture.v(state.hasRedOverlay));
         } else {
             return original;
         }
