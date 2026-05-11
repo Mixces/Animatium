@@ -117,7 +117,6 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
     private void renderCubeMap(final float xRot, final float yRot) {
         try (final Renderer renderer = Renderer.of(() -> "Legacy Panorama Cubemap", this.panoramaTarget, VIEWPORT)) {
             renderer.setPipeline(AnimatiumPipelines.LEGACY_PANORAMA_1);
-            renderer.setup(CUBE_MAP_GEOMETRY);
             renderer.setTexture("Sampler0", CUBE_MAP_LOCATION);
             renderer.setProjectionMatrix(CUBE_MAP_PROJECTION);
             for (int layer = 0; layer < SAMPLES; layer++) {
@@ -134,7 +133,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
                         .withModelViewMatrix(modelViewMatrix)
                         .withShaderColor(color)
                         .build());
-                renderer.draw();
+                renderer.draw(CUBE_MAP_GEOMETRY);
                 if (layer == 0) {
                     renderer.setPipeline(AnimatiumPipelines.LEGACY_PANORAMA_2);
                 }
@@ -147,9 +146,8 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
             RenderUtils.copyTextureToTexture(Objects.requireNonNull(this.panoramaTarget.getColorTexture()), this.backgroundTexture);
             try (final Renderer renderer = Renderer.of(() -> "Legacy Panorama Blur", this.panoramaTarget, VIEWPORT)) {
                 renderer.setPipeline(AnimatiumPipelines.LEGACY_PANORAMA_BLUR);
-                renderer.setup(Geometry.texturedScreenQuad(pose, width, height));
                 renderer.setTexture("Sampler0", this.backgroundTextureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
-                renderer.drawGui();
+                renderer.drawGui(Geometry.texturedScreenQuad(pose, width, height));
             }
         }
     }

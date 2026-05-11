@@ -28,7 +28,6 @@ package btw.lowercase.renderer;
 import btw.lowercase.renderer.buffer.DynamicTransforms;
 import btw.lowercase.renderer.buffer.Geometry;
 import btw.lowercase.renderer.texture.TextureAndSampler;
-import btw.lowercase.renderer.vertex.VertexLayout;
 import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
@@ -72,9 +71,6 @@ public class Renderer implements AutoCloseable {
 
     // Internal
     private ProjectionMatrixBuffer projectionMatrixBuffer;
-    private Geometry geometry = null;
-    @Getter
-    private boolean setup = false;
 
     private Renderer(final RenderPassDescriptor descriptor) {
         this.name = descriptor.label();
@@ -146,26 +142,6 @@ public class Renderer implements AutoCloseable {
         this.setPipeline(pipeline, irisPipeline);
     }
 
-    public void setup(final Geometry geometry) {
-        if (this.pipeline == null) {
-            throw new RuntimeException("Cannot setup renderer when pipeline is not set!");
-        }
-
-        if (this.geometry instanceof Geometry.Indexed indexed) {
-            final VertexLayout vertexLayout = indexed.vertexLayout();
-            if (this.pipeline.getVertexFormatBinding(0) != vertexLayout.vertexFormat() || this.pipeline.getPrimitiveTopology() != vertexLayout.primitiveTopology()) {
-                throw new RuntimeException("Cannot setup renderer with geometry of mismatching pipelines!");
-            }
-        }
-
-        if (this.geometry != null && this.geometry != geometry && !this.geometry.persistent()) {
-            this.geometry.close();
-        }
-
-        this.geometry = geometry;
-        this.setup = true;
-    }
-
     public void setTexture(final String name, final TextureAndSampler textureAndSampler) {
         this.textures.put(name, textureAndSampler);
     }
@@ -200,10 +176,8 @@ public class Renderer implements AutoCloseable {
         this.projectionMatrix = matrix4f;
     }
 
-    public void draw() {
-        if (!this.setup) {
-            throw new RuntimeException("Cannot draw because renderer has not been setup yet!");
-        } else if (this.pipeline == null) {
+    public void draw(final Geometry geometry) {
+        if (this.pipeline == null) {
             throw new RuntimeException("Cannot draw without a pipeline bound!");
         } else {
             if (this.projectionMatrixBuffer != null && this.projectionMatrix != null) {
@@ -252,15 +226,19 @@ public class Renderer implements AutoCloseable {
                     }
                 }
 
-                if (this.geometry instanceof Geometry.Indexed indexed) {
+                if (geometry instanceof Geometry.Indexed indexed) {
                     pass.setVertexBuffer(0, indexed.vertexBuffer().slice());
                     pass.setIndexBuffer(autoStorageIndexBuffer.getBuffer(indexed.indexCount()), autoStorageIndexBuffer.type());
                     pass.drawIndexed(0, 0, indexed.indexCount(), 1);
-                } else if (this.geometry instanceof Geometry.Basic(int firstVertex, int vertexCount)) {
+                } else if (geometry instanceof Geometry.Basic(int firstVertex, int vertexCount)) {
                     pass.draw(firstVertex, vertexCount);
                 } else {
                     throw new RuntimeException("Cannot draw with unknown geometry");
                 }
+            }
+
+            if (!geometry.persistent()) {
+                geometry.close();
             }
 
             if (this.projectionMatrixBuffer != null && this.projectionMatrix != null) {
@@ -269,13 +247,13 @@ public class Renderer implements AutoCloseable {
         }
     }
 
-    public void drawGui() {
+    public void drawGui(final Geometry geometry) {
         final Window window = Minecraft.getInstance().getWindow();
         this.projectionMatrix = new Matrix4f().setOrtho(0.0F, (float) window.getWidth() / (float) window.getGuiScale(), (float) window.getHeight() / (float) window.getGuiScale(), 0.0F, 1000.0F, 11000.0F, RenderSystem.getDevice().getDeviceInfo().isZZeroToOne());
         this.setUniform(DynamicTransforms.KEY, DynamicTransforms.builder()
                 .withModelViewMatrix(new Matrix4f().setTranslation(0.0F, 0.0F, -11000.0F))
                 .build());
-        this.draw();
+        this.draw(geometry);
         RenderSystem.restoreProjectionMatrix();
     }
 
@@ -283,14 +261,6 @@ public class Renderer implements AutoCloseable {
     public void close() {
         this.textures.clear();
         this.uniforms.clear();
-        if (this.geometry != null) {
-            if (!this.geometry.persistent()) {
-                this.geometry.close();
-            }
-
-            this.geometry = null;
-        }
-
         if (this.projectionMatrixBuffer != null) {
             this.projectionMatrixBuffer.close();
             this.projectionMatrixBuffer = null;

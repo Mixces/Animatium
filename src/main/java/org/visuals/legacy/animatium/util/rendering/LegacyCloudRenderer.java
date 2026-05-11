@@ -97,6 +97,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
     private CloudRenderer.TextureData textureData;
     private GpuBuffer vertexBuffer = null;
     private int indexCount = 0;
+    private Geometry.Indexed geometry = null;
 
     private void setupMesh(RenderPipeline pipeline, int cellX, int cellZ, CloudStatus cloudStatus, CloudRenderer.RelativeCameraPos relativeCameraPos) {
         final int colorA = ARGB.colorFromFloat(0.8F, 0.7F, 0.7F, 0.7F);
@@ -121,6 +122,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
                     }
 
                     this.vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "Cloud vertex buffer", GpuBuffer.USAGE_VERTEX | GpuBuffer.USAGE_COPY_DST, meshData.vertexBuffer());
+                    this.geometry = new Geometry.Indexed(VertexLayouts.POSITIONED_COLOR_QUAD, this.vertexBuffer, this.indexCount, true);
                 }
             }
         }
@@ -278,12 +280,11 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
 
         try (final Renderer renderer = Renderer.of(() -> "Legacy Clouds", cloudsTarget)) {
             renderer.setPipeline(pipeline);
-            renderer.setup(new Geometry.Indexed(VertexLayouts.POSITIONED_COLOR_QUAD, this.vertexBuffer, this.indexCount, true));
             renderer.setUniform(DynamicTransforms.KEY, DynamicTransforms.builder()
                     .withShaderColor(ARGB.color(1.0F, color))
                     .withModelOffset(offset)
                     .build());
-            renderer.draw();
+            renderer.draw(this.geometry);
         }
     }
 

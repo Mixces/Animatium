@@ -28,7 +28,6 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.sky.the_void;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.SkyRenderer;
 import net.minecraft.client.renderer.state.level.SkyRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.rendering.SkyRendererUtility;
+import org.visuals.legacy.animatium.util.rendering.LegacySkyRenderer;
 
 @Mixin(LevelRenderer.class)
 public abstract class MixinLevelRenderer_VoidBox {
@@ -46,7 +45,7 @@ public abstract class MixinLevelRenderer_VoidBox {
             final Minecraft minecraft = Minecraft.getInstance();
             final float tickDelta = minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true);
             assert minecraft.level != null;
-            SkyRendererUtility.renderVoidBox(SkyRendererUtility.getHorizonEyeHeight(minecraft.level, tickDelta));
+            LegacySkyRenderer.renderVoidBox(LegacySkyRenderer.getHorizonEyeHeight(minecraft.level, tickDelta));
         }
     }
 }

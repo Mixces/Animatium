@@ -76,6 +76,43 @@ public class AnimatiumPipelines {
             .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX)
             .build());
 
+    // Sky
+    public static final RenderPipeline.Snippet VOID_BOX_SNIPPET =
+            RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
+                    .withVertexShader("core/position_color")
+                    .withFragmentShader("core/position_color")
+                    .withDepthStencilState(RenderUtils.NO_DEPTH_WRITE)
+                    .withBindGroupLayout(BindGroupLayouts.GLOBALS)
+                    .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
+                    .withPrimitiveTopology(PrimitiveTopology.QUADS)
+                    .buildSnippet();
+
+    public static final RenderPipeline VOID_BOX =
+            RenderPipelines.register(RenderPipeline.builder(VOID_BOX_SNIPPET)
+                    .withLocation(Animatium.location("pipeline/void_box"))
+                    .build());
+
+    public static final RenderPipeline.Snippet LEGACY_SKY_SNIPPET =
+            RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
+                    .withLocation(Animatium.location("pipeline/legacy_sky"))
+                    .withVertexShader(Animatium.location("core/legacy_sky"))
+                    .withFragmentShader(Animatium.location("core/legacy_sky"))
+                    .withDepthStencilState(RenderUtils.NO_DEPTH_WRITE)
+                    .withVertexBinding(0, DefaultVertexFormat.POSITION)
+                    .withPrimitiveTopology(PrimitiveTopology.QUADS)
+                    .buildSnippet();
+
+    public static final RenderPipeline LEGACY_SKY =
+            RenderPipelines.register(RenderPipeline.builder(LEGACY_SKY_SNIPPET)
+                    .withLocation(Animatium.location("pipeline/legacy_sky"))
+                    .build());
+
+    public static final RenderPipeline LEGACY_SKY_PLANAR_FOG =
+            RenderPipelines.register(RenderPipeline.builder(LEGACY_SKY_SNIPPET)
+                    .withLocation(Animatium.location("pipeline/legacy_sky_planar_fog"))
+                    .withShaderDefine("PLANAR_FOG")
+                    .build());
+
     // Color Boost
     public static final RenderPipeline COLOR_BOOST_BLIT = RenderPipelines.register(RenderPipeline.builder()
             .withLocation(Animatium.location("pipeline/colorboost"))

@@ -29,65 +29,20 @@ import btw.lowercase.renderer.Renderer;
 import btw.lowercase.renderer.buffer.DynamicTransforms;
 import btw.lowercase.renderer.buffer.Geometry;
 import btw.lowercase.renderer.vertex.VertexLayouts;
-import com.mojang.blaze3d.PrimitiveTopology;
-import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
-import lombok.experimental.UtilityClass;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.BindGroupLayouts;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.ARGB;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector4f;
-import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.compatibility.IrisPipeline;
 import org.visuals.legacy.animatium.util.compatibility.IrisUtil;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 
-@UtilityClass
-public class SkyRendererUtility {
-    public final RenderPipeline.Snippet VOID_BOX_SNIPPET =
-            RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
-                    .withVertexShader("core/position_color")
-                    .withFragmentShader("core/position_color")
-                    .withDepthStencilState(RenderUtils.NO_DEPTH_WRITE)
-                    .withBindGroupLayout(BindGroupLayouts.GLOBALS)
-                    .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
-                    .withPrimitiveTopology(PrimitiveTopology.QUADS)
-                    .buildSnippet();
-
-    public final RenderPipeline VOID_BOX_PIPELINE =
-            RenderPipelines.register(RenderPipeline.builder(VOID_BOX_SNIPPET)
-                    .withLocation(Animatium.location("pipeline/void_box"))
-                    .build());
-
-    private final RenderPipeline.Snippet LEGACY_SKY_PIPELINE_SNIPPET =
-            RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
-                    .withLocation(Animatium.location("pipeline/legacy_sky"))
-                    .withVertexShader(Animatium.location("core/legacy_sky"))
-                    .withFragmentShader(Animatium.location("core/legacy_sky"))
-                    .withDepthStencilState(RenderUtils.NO_DEPTH_WRITE)
-                    .withVertexBinding(0, DefaultVertexFormat.POSITION)
-                    .withPrimitiveTopology(PrimitiveTopology.QUADS)
-                    .buildSnippet();
-
-    public final RenderPipeline LEGACY_SKY_PIPELINE =
-            RenderPipelines.register(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
-                    .withLocation(Animatium.location("pipeline/legacy_sky"))
-                    .build());
-
-    public final RenderPipeline LEGACY_SKY_PLANAR_FOG_PIPELINE =
-            RenderPipelines.register(RenderPipeline.builder(LEGACY_SKY_PIPELINE_SNIPPET)
-                    .withLocation(Animatium.location("pipeline/legacy_sky_planar_fog"))
-                    .withShaderDefine("PLANAR_FOG")
-                    .build());
-
+public final class LegacySkyRenderer {
     private static final Function<Float, Geometry> VOID_BOX_GEOMETRY = offset -> Geometry.Indexed.compile(VertexLayouts.POSITIONED_COLOR_QUAD, 20, vertexConsumer -> {
         final int color = ARGB.opaque(0);
 
@@ -122,44 +77,42 @@ public class SkyRendererUtility {
         vertexConsumer.addVertex(1.0F, -1.0F, -1.0F).setColor(color);
     });
 
-    private GpuBuffer vertexBuffer = initializeSky(vertexConsumer -> buildSkyHalf(vertexConsumer, -16.0F, true));
-    private int indexCount = -1;
+    public static final Geometry.Indexed TOP_GEOMETRY = Geometry.Indexed.compilePersistent(VertexLayouts.POSITIONED_QUAD, 676, vertexConsumer -> buildSkyHalf(vertexConsumer, 16.0F, false));
+    public static final Geometry.Indexed BOTTOM_GEOMETRY = Geometry.Indexed.compilePersistent(VertexLayouts.POSITIONED_QUAD, 676, vertexConsumer -> buildSkyHalf(vertexConsumer, -16.0F, true));
 
     static {
-        IrisUtil.assignPipeline(IrisPipeline.SKY_BASIC, LEGACY_SKY_PIPELINE, LEGACY_SKY_PLANAR_FOG_PIPELINE);
+        IrisUtil.assignPipeline(IrisPipeline.SKY_BASIC, AnimatiumPipelines.LEGACY_SKY, AnimatiumPipelines.LEGACY_SKY_PLANAR_FOG);
     }
 
-    public RenderPipeline getLegacySkyPipeline(final boolean planar) {
-        return planar ? LEGACY_SKY_PLANAR_FOG_PIPELINE : LEGACY_SKY_PIPELINE;
+    public static RenderPipeline getLegacySkyPipeline(final boolean planar) {
+        return planar ? AnimatiumPipelines.LEGACY_SKY_PLANAR_FOG : AnimatiumPipelines.LEGACY_SKY;
     }
 
-    public GpuBuffer getGpuBuffer() {
-        return vertexBuffer;
-    }
-
-    public void renderBlueVoid(final int skyColor, final double depth) {
+    public static void renderBlueVoid(final int skyColor, final double depth) {
         try (final Renderer renderer = Renderer.of(() -> "Blue void sky disc")) {
             renderer.setPipeline(getLegacySkyPipeline(AnimatiumConfig.instance().other.planarSkyFog));
-            renderer.setup(new Geometry.Indexed(VertexLayouts.POSITIONED_QUAD, vertexBuffer, indexCount, true));
             renderer.setUniform(DynamicTransforms.KEY, DynamicTransforms.builder()
                     .withModelViewMatrix(RenderSystem.getModelViewMatrixCopy()
                             .translate(0.0F, AnimatiumConfig.instance().extras.dontMoveBlueVoid ? 12.0F : -((float) (depth - 16.0)), 0.0F))
                     .withShaderColor(new Vector4f(ARGB.redFloat(skyColor) * 0.2F + 0.04F, ARGB.greenFloat(skyColor) * 0.2F + 0.04F, ARGB.blueFloat(skyColor) * 0.6F + 0.1F, 1.0F))
                     .build());
-            renderer.draw();
+            renderer.draw(BOTTOM_GEOMETRY);
         }
+    }
+
+    public static double getHorizonEyeHeight(final ClientLevel level, final float tickDelta) {
+        return Minecraft.getInstance().player.getEyePosition(tickDelta).y - level.getLevelData().getHorizonHeight(level);
     }
 
     // TODO/NOTE: Figure out why its rendering differently than in 18w07a (last snapshot to have it)
-    public void renderVoidBox(final double depth) {
+    public static void renderVoidBox(final double depth) {
         try (final Renderer renderer = Renderer.of(() -> "Player Void Box")) {
-            renderer.setPipeline(VOID_BOX_PIPELINE);
-            renderer.setup(VOID_BOX_GEOMETRY.apply(-((float) (depth + 65.0))));
-            renderer.draw();
+            renderer.setPipeline(AnimatiumPipelines.VOID_BOX);
+            renderer.draw(VOID_BOX_GEOMETRY.apply(-((float) (depth + 65.0))));
         }
     }
 
-    public void buildSkyHalf(final VertexConsumer vertexConsumer, final float y, final boolean bottom) {
+    private static void buildSkyHalf(final VertexConsumer vertexConsumer, final float y, final boolean bottom) {
         final int width = 64;
         for (int k = -384; k <= 384; k += width) {
             for (int l = -384; l <= 384; l += width) {
@@ -180,27 +133,8 @@ public class SkyRendererUtility {
         }
     }
 
-    public @Nullable GpuBuffer initializeSky(final Consumer<VertexConsumer> vertexConsumer) {
-        try (final ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(8112)) {
-            final BufferBuilder builder = VertexLayouts.POSITIONED_QUAD.buffer(byteBufferBuilder);
-            vertexConsumer.accept(builder);
-            try (final MeshData meshData = builder.buildOrThrow()) {
-                indexCount = meshData.drawState().indexCount();
-                return RenderSystem.getDevice().createBuffer(() -> "Sky vertex buffer", GpuBuffer.USAGE_VERTEX, meshData.vertexBuffer());
-            } catch (final Exception ignored) {
-                return null;
-            }
-        }
-    }
-
-    public double getHorizonEyeHeight(final ClientLevel level, final float tickDelta) {
-        return Minecraft.getInstance().player.getEyePosition(tickDelta).y - level.getLevelData().getHorizonHeight(level);
-    }
-
-    public void close() {
-        if (vertexBuffer != null) {
-            vertexBuffer.close();
-            vertexBuffer = null;
-        }
+    public static void close() {
+        TOP_GEOMETRY.close();
+        BOTTOM_GEOMETRY.close();
     }
 }

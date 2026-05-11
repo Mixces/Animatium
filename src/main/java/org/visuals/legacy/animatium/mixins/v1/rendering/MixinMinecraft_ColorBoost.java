@@ -64,8 +64,7 @@ public abstract class MixinMinecraft_ColorBoost {
             try (final Renderer renderer = Renderer.of(() -> "Color Boost Blit", colorAttachment, this.gameRenderer.mainRenderTarget().getDepthTextureView())) {
                 renderer.setPipeline(AnimatiumPipelines.COLOR_BOOST_BLIT);
                 renderer.setTexture("Sampler0", colorAttachment, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST));
-                renderer.setup(animatium$boostGeometry);
-                renderer.draw();
+                renderer.draw(animatium$boostGeometry);
             }
         }
 

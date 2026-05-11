@@ -69,8 +69,7 @@ public final class LegacyLightmapRenderer {
             try (final Renderer renderer = Renderer.of(() -> "Legacy Lightmap Update", textureView)) {
                 renderer.setPipeline(AnimatiumPipelines.LEGACY_LIGHTMAP);
                 renderer.setUniform("LightmapInfo", this.ubo.currentBuffer());
-                renderer.setup(BASE_GEOMETRY);
-                renderer.draw();
+                renderer.draw(BASE_GEOMETRY);
             }
 
             this.ubo.rotate();

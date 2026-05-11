@@ -28,7 +28,6 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.fog;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.PrimitiveTopology;
-import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.RenderPass;
@@ -41,19 +40,19 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.rendering.SkyRendererUtility;
+import org.visuals.legacy.animatium.util.rendering.AnimatiumPipelines;
+import org.visuals.legacy.animatium.util.rendering.LegacySkyRenderer;
 
 @Mixin(SkyRenderer.class)
 public abstract class MixinSkyRenderer_PlanarFogSky {
-    @Unique
-    private static GpuBuffer animatium$topSkyBuffer = null;
-
     @Unique
     private static RenderSystem.AutoStorageIndexBuffer animatium$skyIndexBuffer;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void animatium$initSkyRenderer(final CallbackInfo ci) {
-        animatium$topSkyBuffer = SkyRendererUtility.initializeSky((builder) -> SkyRendererUtility.buildSkyHalf(builder, 16.0F, false));
+        // Load them before anything (Static Variables don't load until used, which would cause a issue in the RenderPass)
+        LegacySkyRenderer.TOP_GEOMETRY.vertexBuffer();
+        LegacySkyRenderer.BOTTOM_GEOMETRY.vertexBuffer();
         animatium$skyIndexBuffer = RenderSystem.getSequentialBuffer(PrimitiveTopology.QUADS);
     }
 
@@ -61,7 +60,7 @@ public abstract class MixinSkyRenderer_PlanarFogSky {
     private void animatium$planarFogPipeline$skyDisc(final RenderPass instance, final RenderPipeline renderPipeline, final Operation<Void> original) {
         RenderPipeline pipeline = renderPipeline;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
-            pipeline = SkyRendererUtility.LEGACY_SKY_PLANAR_FOG_PIPELINE;
+            pipeline = AnimatiumPipelines.LEGACY_SKY_PLANAR_FOG;
         }
 
         original.call(instance, pipeline);
@@ -71,7 +70,7 @@ public abstract class MixinSkyRenderer_PlanarFogSky {
     private void animatium$planarFogPipeline$skyDisc$vertexBuffer(final RenderPass instance, final int slot, final GpuBufferSlice vertexBuffer, final Operation<Void> original) {
         GpuBufferSlice buffer = vertexBuffer;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
-            buffer = animatium$topSkyBuffer.slice();
+            buffer = LegacySkyRenderer.TOP_GEOMETRY.vertexBuffer().slice();
             instance.setIndexBuffer(animatium$skyIndexBuffer.getBuffer(6), animatium$skyIndexBuffer.type());
         }
 
@@ -82,7 +81,7 @@ public abstract class MixinSkyRenderer_PlanarFogSky {
     private void animatium$planarFogPipeline$darkSkyDisc(final RenderPass instance, final RenderPipeline renderPipeline, final Operation<Void> original) {
         RenderPipeline pipeline = renderPipeline;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
-            pipeline = SkyRendererUtility.LEGACY_SKY_PLANAR_FOG_PIPELINE;
+            pipeline = AnimatiumPipelines.LEGACY_SKY_PLANAR_FOG;
         }
 
         original.call(instance, pipeline);
@@ -101,7 +100,7 @@ public abstract class MixinSkyRenderer_PlanarFogSky {
     private void animatium$planarFogPipeline$darkSkyDisc$vertexBuffer(final RenderPass instance, final int slot, final GpuBufferSlice vertexBuffer, final Operation<Void> original) {
         GpuBufferSlice buffer = vertexBuffer;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
-            buffer = SkyRendererUtility.getGpuBuffer().slice();
+            buffer = LegacySkyRenderer.BOTTOM_GEOMETRY.vertexBuffer().slice();
             instance.setIndexBuffer(animatium$skyIndexBuffer.getBuffer(6), animatium$skyIndexBuffer.type());
         }
 
