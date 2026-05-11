@@ -179,6 +179,8 @@ public class Renderer implements AutoCloseable {
     public void draw(final Geometry geometry) {
         if (this.pipeline == null) {
             throw new RuntimeException("Cannot draw without a pipeline bound!");
+        } else if (geometry.isClosed()) {
+            throw new RuntimeException("Cannot draw! The geometry provided has already been closed!");
         } else {
             if (this.projectionMatrixBuffer != null && this.projectionMatrix != null) {
                 final int properties = this.projectionMatrix.properties();

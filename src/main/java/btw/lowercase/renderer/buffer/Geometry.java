@@ -51,12 +51,19 @@ public interface Geometry extends AutoCloseable {
 
     boolean persistent();
 
+    boolean isClosed();
+
     void close();
 
     record Basic(int firstVertex, int vertexCount) implements Geometry {
         @Override
         public boolean persistent() {
             return true;
+        }
+
+        @Override
+        public boolean isClosed() {
+            return false;
         }
 
         @Override
@@ -84,6 +91,11 @@ public interface Geometry extends AutoCloseable {
 
         public static Indexed compilePersistent(final VertexLayout vertexLayout, final int vertexCount, final Consumer<VertexConsumer> vertexConsumer) {
             return compile(vertexLayout, vertexCount, vertexConsumer, true);
+        }
+
+        @Override
+        public boolean isClosed() {
+            return this.vertexBuffer.isClosed();
         }
 
         @Override
