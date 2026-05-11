@@ -29,45 +29,41 @@ import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.platform.CompareOp;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuTexture;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import lombok.experimental.UtilityClass;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.world.phys.AABB;
 import org.joml.Matrix3x2fStack;
 
-@UtilityClass
-public class RenderUtils {
+public final class RenderUtils {
     public static final DepthStencilState NO_DEPTH_WRITE = new DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false);
 
     public static void copyTextureToTexture(final GpuTexture source, final GpuTexture destination) {
         RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(source, destination, 0, 0, 0, 0, 0, source.getWidth(0), source.getHeight(0));
     }
 
-    public void fillVerticalLine(GuiGraphicsExtractor context, int x, int y, int length, int color) {
+    public static void fillVerticalLine(final GuiGraphicsExtractor context, final int x, final int y, final int length, final int color) {
         context.fill(x, y, x + 1, y + length, color);
     }
 
-    public void fillVerticalGradientLine(GuiGraphicsExtractor context, int x, int y, int length, int startColor, int endColor) {
+    public static void fillVerticalGradientLine(final GuiGraphicsExtractor context, final int x, final int y, final int length, final int startColor, final int endColor) {
         context.fillGradient(x, y, x + 1, y + length, startColor, endColor);
     }
 
-    public void fillHorizontalLine(GuiGraphicsExtractor context, int x, int y, int length, int color) {
+    public static void fillHorizontalLine(final GuiGraphicsExtractor context, final int x, final int y, final int length, final int color) {
         context.fill(x, y, x + length, y + 1, color);
     }
 
-    public void fillRectangle(GuiGraphicsExtractor context, int x, int y, int width, int height, int color) {
+    public static void fillRectangle(final GuiGraphicsExtractor context, final int x, final int y, final int width, final int height, final int color) {
         context.fill(x, y, x + width, y + height, color);
     }
 
-    public void fillFrameGradient(GuiGraphicsExtractor guiGraphics, int x, int y, int width, int height, int startColor, int endColor) {
+    public static void fillFrameGradient(final GuiGraphicsExtractor guiGraphics, final int x, final int y, final int width, final int height, final int startColor, final int endColor) {
         fillVerticalGradientLine(guiGraphics, x, y, height - 2, startColor, endColor);
         fillVerticalGradientLine(guiGraphics, x + width - 1, y, height - 2, startColor, endColor);
         fillHorizontalLine(guiGraphics, x, y - 1, width, startColor);
         fillHorizontalLine(guiGraphics, x, y - 1 + height - 1, width, endColor);
     }
 
-    public void drawScaledText(GuiGraphicsExtractor guiGraphics, Font font, String text, int x, int y, float scale) {
+    public static void drawScaledText(final GuiGraphicsExtractor guiGraphics, final Font font, final String text, final int x, final int y, final float scale) {
         final Matrix3x2fStack stack = guiGraphics.pose();
         stack.pushMatrix();
         final float originX = stack.m20;
@@ -77,50 +73,5 @@ public class RenderUtils {
         stack.setTranslation(originX, originY);
         guiGraphics.centeredText(font, text, (int) (x / scale), (int) (y / scale), 0xFFFFFFFF);
         stack.popMatrix();
-    }
-
-    public void box(VertexConsumer vertexConsumer, AABB aabb) {
-        final float minX = (float) aabb.minX;
-        final float minY = (float) aabb.minY;
-        final float minZ = (float) aabb.minZ;
-        final float maxX = (float) aabb.maxX;
-        final float maxY = (float) aabb.maxY;
-        final float maxZ = (float) aabb.maxZ;
-
-        // (+y)
-        vertexConsumer.addVertex(minX, maxY, minZ);
-        vertexConsumer.addVertex(maxX, maxY, minZ);
-        vertexConsumer.addVertex(maxX, maxY, maxZ);
-        vertexConsumer.addVertex(minX, maxY, maxZ);
-
-        // (-y)
-        vertexConsumer.addVertex(minX, minY, minZ);
-        vertexConsumer.addVertex(minX, minY, maxZ);
-        vertexConsumer.addVertex(maxX, minY, maxZ);
-        vertexConsumer.addVertex(maxX, minY, minZ);
-
-        // (-z)
-        vertexConsumer.addVertex(minX, minY, minZ);
-        vertexConsumer.addVertex(maxX, minY, minZ);
-        vertexConsumer.addVertex(maxX, maxY, minZ);
-        vertexConsumer.addVertex(minX, maxY, minZ);
-
-        // (+z)
-        vertexConsumer.addVertex(minX, minY, maxZ);
-        vertexConsumer.addVertex(minX, maxY, maxZ);
-        vertexConsumer.addVertex(maxX, maxY, maxZ);
-        vertexConsumer.addVertex(maxX, minY, maxZ);
-
-        // (-x)
-        vertexConsumer.addVertex(minX, minY, minZ);
-        vertexConsumer.addVertex(minX, maxY, minZ);
-        vertexConsumer.addVertex(minX, maxY, maxZ);
-        vertexConsumer.addVertex(minX, minY, maxZ);
-
-        // (+x)
-        vertexConsumer.addVertex(maxX, minY, minZ);
-        vertexConsumer.addVertex(maxX, minY, maxZ);
-        vertexConsumer.addVertex(maxX, maxY, maxZ);
-        vertexConsumer.addVertex(maxX, maxY, minZ);
     }
 }

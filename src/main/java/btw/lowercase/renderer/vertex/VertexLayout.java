@@ -27,12 +27,18 @@ package btw.lowercase.renderer.vertex;
 
 import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
 
 public record VertexLayout(@NonNull VertexFormat vertexFormat, @NonNull PrimitiveTopology primitiveTopology) {
+    public BufferBuilder buffer(final ByteBufferBuilder byteBufferBuilder) {
+        return new BufferBuilder(byteBufferBuilder, this.primitiveTopology, this.vertexFormat);
+    }
+
     public static VertexLayout of(final RenderPipeline pipeline) {
         return new VertexLayout(Objects.requireNonNull(pipeline.getVertexFormatBinding(0)), pipeline.getPrimitiveTopology());
     }

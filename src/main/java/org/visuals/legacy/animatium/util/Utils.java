@@ -68,7 +68,7 @@ public class Utils {
     }
 
     public VoxelShape expandVoxelShape(final VoxelShape shape, final float value) {
-        AtomicReference<VoxelShape> voxelShape = new AtomicReference<>(Shapes.empty());
+        final AtomicReference<VoxelShape> voxelShape = new AtomicReference<>(Shapes.empty());
         shape.toAabbs().forEach((aabb) -> voxelShape.set(Shapes.join(voxelShape.get(), Shapes.create(aabb.inflate(value)), BooleanOp.OR)));
         return voxelShape.get();
     }
@@ -114,15 +114,13 @@ public class Utils {
     }
 
     // Sends necessary swing packets, without playing the player hand swing animation
-    public void sendSwingPacket(final Player player, final InteractionHand hand) {
+    public void sendSwingPacket(final LocalPlayer player, final InteractionHand hand) {
         if (isNotSwinging(player) && player.level() instanceof ServerLevel serverLevel) {
             final int swingHand = hand == InteractionHand.MAIN_HAND ? ClientboundAnimatePacket.SWING_MAIN_HAND : ClientboundAnimatePacket.SWING_OFF_HAND;
             serverLevel.getChunkSource().sendToTrackingPlayers(player, new ClientboundAnimatePacket(player, swingHand));
         }
 
-        if (player instanceof LocalPlayer localPlayer) {
-            localPlayer.connection.send(new ServerboundSwingPacket(hand));
-        }
+        player.connection.send(new ServerboundSwingPacket(hand));
     }
 
     public boolean isNotSwinging(final Player player) {

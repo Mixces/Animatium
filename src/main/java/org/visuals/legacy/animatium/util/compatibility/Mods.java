@@ -25,12 +25,10 @@
 
 package org.visuals.legacy.animatium.util.compatibility;
 
-import lombok.experimental.UtilityClass;
 import net.fabricmc.loader.api.FabricLoader;
 
-@UtilityClass
-public class Mods {
-    public final boolean HAS_VIAFABRICPLUS = FabricLoader.getInstance().isModLoaded("viafabricplus");
-    public final boolean HAS_SODIUM_EXTRAS = FabricLoader.getInstance().isModLoaded("sodium-extra");
-    public final boolean HAS_LUNAR_CLIENT = FabricLoader.getInstance().isModLoaded("ichor");
+public final class Mods {
+    public static final boolean HAS_VIAFABRICPLUS = FabricLoader.getInstance().isModLoaded("viafabricplus");
+    public static final boolean HAS_SODIUM_EXTRAS = FabricLoader.getInstance().isModLoaded("sodium-extra");
+    public static final boolean HAS_LUNAR_CLIENT = FabricLoader.getInstance().isModLoaded("ichor");
 }

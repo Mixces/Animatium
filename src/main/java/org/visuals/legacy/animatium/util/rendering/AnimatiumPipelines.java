@@ -33,7 +33,6 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.BlendFactor;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.client.renderer.BindGroupLayouts;
-import net.minecraft.client.renderer.RenderPipelines;
 import org.visuals.legacy.animatium.Animatium;
 
 import java.util.Optional;
@@ -73,18 +72,5 @@ public class AnimatiumPipelines {
             .withFragmentShader(Animatium.location("core/legacy_panorama_blur"))
             .withColorTargetState(new ColorTargetState(Optional.of(PANORAMA_BLEND), GpuFormat.RGBA8_UNORM, ColorTargetState.WRITE_COLOR))
             .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX)
-            .build();
-
-    // Items
-    public static final RenderPipeline LEGACY_ITEM_CUTOUT = RenderPipelineOverrider.of(RenderPipelines.ITEM_CUTOUT)
-            .withLocation(Animatium.location("pipeline/legacy_item_cutout"))
-            .withVertexShader(Animatium.location("core/legacy_item"))
-            .withShaderDefine("NO_CARDINAL_LIGHTING")
-            .build();
-
-    public static final RenderPipeline LEGACY_ITEM_TRANSLUCENT = RenderPipelineOverrider.of(RenderPipelines.ITEM_TRANSLUCENT)
-            .withLocation(Animatium.location("pipeline/legacy_item_translucent"))
-            .withVertexShader(Animatium.location("core/legacy_item"))
-            .withShaderDefine("NO_CARDINAL_LIGHTING")
             .build();
 }

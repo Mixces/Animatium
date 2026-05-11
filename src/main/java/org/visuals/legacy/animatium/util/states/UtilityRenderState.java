@@ -30,15 +30,9 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
 
 public interface UtilityRenderState {
-    // TODO/REMOVE 1.21.11
     default ItemStack animatium$getItemHeldByArm(final HumanoidArm humanoidArm) {
         throw new UnsupportedOperationException();
     }
-
-    default void animatium$setItemHeldByArm(final HumanoidArm arm, final ItemStack itemStack) {
-        throw new UnsupportedOperationException();
-    }
-    // TODO/REMOVE 1.21.11
 
     default boolean animatium$isFishing() {
         throw new UnsupportedOperationException();
@@ -55,12 +49,12 @@ public interface UtilityRenderState {
     default void animatium$setSleeping() {
         throw new UnsupportedOperationException();
     }
-	
-	default EntityDimensions animatium$getStandingDimensions() {
+
+    default EntityDimensions animatium$getStandingDimensions() {
         throw new UnsupportedOperationException();
     }
 
-	default void animatium$setStandingDimensions(final EntityDimensions entityDimensions) {
+    default void animatium$setStandingDimensions(final EntityDimensions entityDimensions) {
         throw new UnsupportedOperationException();
     }
 }

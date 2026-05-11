@@ -182,7 +182,7 @@ public class SkyRendererUtility {
 
     public @Nullable GpuBuffer initializeSky(final Consumer<VertexConsumer> vertexConsumer) {
         try (final ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(8112)) {
-            final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, PrimitiveTopology.QUADS, DefaultVertexFormat.POSITION);
+            final BufferBuilder builder = VertexLayouts.POSITIONED_QUAD.buffer(byteBufferBuilder);
             vertexConsumer.accept(builder);
             try (final MeshData meshData = builder.buildOrThrow()) {
                 indexCount = meshData.drawState().indexCount();
