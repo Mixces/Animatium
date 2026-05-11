@@ -45,7 +45,6 @@ public final class LegacyLightmapRenderer {
             .putFloat() // BlockFlicker
             .putFloat() // SkyDarkness
             .putInt() // UseBrightLightmap
-            .putInt() // HasNightVision
             .putFloat() // NightVisionScale
             .putFloat() // Gamma
             .get();
@@ -65,7 +64,6 @@ public final class LegacyLightmapRenderer {
                         .putFloat(state.blockFlicker)
                         .putFloat(state.skyDarkness)
                         .putInt(state.useBrightLightmap ? 1 : 0)
-                        .putInt(state.hasNightVision ? 1 : 0)
                         .putFloat(state.nightVisionScale)
                         .putFloat(state.gamma);
             }

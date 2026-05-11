@@ -6,7 +6,6 @@ layout(std140) uniform LightmapInfo {
     float BlockFlicker;
     float SkyDarkness;
     int UseBrightLightmap;
-    int HasNightVision;
     float NightVisionScale;
     float Gamma;
 };
@@ -50,7 +49,7 @@ void main() {
     }
 
     // TODO: Figure out why lightmap goes full white (this code is correct and when night-vision starts fading. it shows the right lightmap behind the white while flashing)
-    if (HasNightVision == 1) {
+    if (NightVisionScale > 0.0) {
         float scale = 1.0F / max(color.x, max(color.y, color.z));
         color = mix(color, color * scale, NightVisionScale);
     }

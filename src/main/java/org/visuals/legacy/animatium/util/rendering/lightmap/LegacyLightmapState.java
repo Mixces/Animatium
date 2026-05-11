@@ -32,7 +32,6 @@ public class LegacyLightmapState {
     public float blockFlicker;
     public float skyDarkness;
     public boolean useBrightLightmap;
-    public boolean hasNightVision;
     public float nightVisionScale;
     public float gamma;
 }

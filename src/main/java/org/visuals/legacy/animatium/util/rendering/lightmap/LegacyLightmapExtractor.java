@@ -59,7 +59,6 @@ public class LegacyLightmapExtractor {
                 state.skyDarkness = minecraft.gameRenderer.bossOverlayWorldDarkening(tickDelta);
                 state.useBrightLightmap = ClientLevel.END.equals(level.dimension());
                 if (player.hasEffect(MobEffects.NIGHT_VISION)) {
-                    state.hasNightVision = true;
                     state.nightVisionScale = GameRenderer.nightVisionScale(player, tickDelta);
                 }
 
