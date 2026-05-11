@@ -35,7 +35,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 @Mixin(AtmosphericFogEnvironment.class)
 public abstract class MixinAtmosphericFogEnvironment_OldRenderDistance {
     @ModifyExpressionValue(method = "getBaseColor", at = @At(value = "CONSTANT", args = "floatValue=32.0"))
-    private float animatium$voidFog$useOldRenderDistanceCalculation(float original) {
+    private float animatium$voidFog$useOldRenderDistanceCalculation(final float original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidFog.hasFog()) {
             return 16.0F;
         } else {

@@ -42,7 +42,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 @Mixin(Hud.class)
 public abstract class MixinHud {
     @WrapOperation(method = "extractCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/CameraType;isFirstPerson()Z"))
-    private boolean animatium$crosshairInThirdPerson(CameraType instance, Operation<Boolean> original) {
+    private boolean animatium$crosshairInThirdPerson(final CameraType instance, final Operation<Boolean> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.crosshairInThirdPerson) {
             return true;
         } else {
@@ -60,7 +60,7 @@ public abstract class MixinHud {
     }
 
     @WrapWithCondition(method = "extractHearts", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Hud;extractHeart(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/gui/Hud$HeartType;IIZZZ)V"))
-    private boolean animatium$heartFlash(Hud instance, GuiGraphicsExtractor guiGraphics, Hud.HeartType type, int x, int y, boolean hardcore, boolean blinking, boolean half) {
-        return !Animatium.isEnabled() || !AnimatiumConfig.instance().screen.disableHeartFlash || !blinking || type == Hud.HeartType.CONTAINER;
+    private boolean animatium$heartFlash(final Hud instance, final GuiGraphicsExtractor graphics, final Hud.HeartType type, final int xo, final int yo, final boolean isHardcore, final boolean blinks, final boolean half) {
+        return !Animatium.isEnabled() || !AnimatiumConfig.instance().screen.disableHeartFlash || !blinks || type == Hud.HeartType.CONTAINER;
     }
 }

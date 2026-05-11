@@ -34,8 +34,11 @@ import net.minecraft.client.gui.screens.LoadingOverlay;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.resources.ReloadInstance;
 import net.minecraft.util.ARGB;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -48,6 +51,10 @@ import java.util.function.IntSupplier;
 
 @Mixin(LoadingOverlay.class)
 public abstract class MixinLoadingOverlay_LegacyLoadingScreen {
+    @Shadow
+    @Final
+    private ReloadInstance reload;
+
     @Unique
     private static final Identifier animatium$MOJANG_LOGO = Identifier.withDefaultNamespace("textures/gui/title/mojang.png");
 
@@ -60,6 +67,16 @@ public abstract class MixinLoadingOverlay_LegacyLoadingScreen {
     private int animatium$replaceBackgroundColor(final IntSupplier instance, final Operation<Integer> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.legacyLoadingScreen) {
             return ARGB.white(1.0F);
+        } else {
+            return original.call(instance);
+        }
+    }
+
+    // TODO/NOTE: It still doesn't feel instant, as the debug hud renders before the title screen does meaning theres still some time inbetween
+    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/LoadingOverlay;isReadyToFadeOut()Z"))
+    private boolean animatium$instantFadeOut(final LoadingOverlay instance, final Operation<Boolean> original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.legacyLoadingScreen && this.reload.isDone()) {
+            return true;
         } else {
             return original.call(instance);
         }

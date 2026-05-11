@@ -40,7 +40,7 @@ public abstract class MixinFontPreparedTextBuilder_FixStrikethroughStyle {
     private static final float animatium$strikethroughOffset = 0.5F;
 
     @ModifyArg(method = "accept(ILnet/minecraft/network/chat/Style;Lnet/minecraft/client/gui/font/glyphs/BakedGlyph;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/font/glyphs/EffectGlyph;createEffect(FFFFFIIF)Lnet/minecraft/client/gui/font/TextRenderable;", ordinal = 0), index = 1)
-    private float animatium$fixTextStrikethroughStyle$minY(float minY) {
+    private float animatium$fixTextStrikethroughStyle$minY(final float minY) {
         if (AnimatiumConfig.instance().fixes.fixTextStrikethroughStyle) {
             return minY - animatium$strikethroughOffset;
         } else {
@@ -49,7 +49,7 @@ public abstract class MixinFontPreparedTextBuilder_FixStrikethroughStyle {
     }
 
     @ModifyArg(method = "accept(ILnet/minecraft/network/chat/Style;Lnet/minecraft/client/gui/font/glyphs/BakedGlyph;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/font/glyphs/EffectGlyph;createEffect(FFFFFIIF)Lnet/minecraft/client/gui/font/TextRenderable;", ordinal = 0), index = 3)
-    private float animatium$fixTextStrikethroughStyle$maxY(float maxY) {
+    private float animatium$fixTextStrikethroughStyle$maxY(final float maxY) {
         if (AnimatiumConfig.instance().fixes.fixTextStrikethroughStyle) {
             return maxY - animatium$strikethroughOffset;
         } else {

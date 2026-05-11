@@ -37,7 +37,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 @Mixin(ClientLevel.ClientLevelData.class)
 public abstract class MixinClientLevel_ClientLevelData_OldMinY {
     @WrapOperation(method = "getHorizonHeight", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/LevelHeightAccessor;getMinY()I"))
-    private int animatium$skyHorizonHeight(LevelHeightAccessor instance, Operation<Integer> original) {
+    private int animatium$skyHorizonHeight(final LevelHeightAccessor instance, final Operation<Integer> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldY0Height) {
             return 0;
         } else {

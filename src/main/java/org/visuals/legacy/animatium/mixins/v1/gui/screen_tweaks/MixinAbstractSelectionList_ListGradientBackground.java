@@ -38,15 +38,15 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(AbstractSelectionList.class)
 public abstract class MixinAbstractSelectionList_ListGradientBackground extends AbstractContainerWidget {
-    public MixinAbstractSelectionList_ListGradientBackground(int x, int y, int width, int height, Component message, ScrollbarSettings scrollbarSettings) {
+    public MixinAbstractSelectionList_ListGradientBackground(final int x, final int y, final int width, final int height, final Component message, final ScrollbarSettings scrollbarSettings) {
         super(x, y, width, height, message, scrollbarSettings);
     }
 
     @Inject(method = "extractListBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIII)V", shift = At.Shift.AFTER))
-    private void animatium$renderListBackgroundGradient(GuiGraphicsExtractor guiGraphics, CallbackInfo ci) {
+    private void animatium$renderListBackgroundGradient(final GuiGraphicsExtractor graphics, final CallbackInfo ci) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.listBackgroundGradient) {
-            guiGraphics.fillGradient(this.getX(), this.getY(), this.getRight(), this.getY() + 4, -16777216, 0);
-            guiGraphics.fillGradient(this.getX(), this.getBottom() - 4, this.getRight(), this.getBottom(), 0, -16777216);
+            graphics.fillGradient(this.getX(), this.getY(), this.getRight(), this.getY() + 4, -16777216, 0);
+            graphics.fillGradient(this.getX(), this.getBottom() - 4, this.getRight(), this.getBottom(), 0, -16777216);
         }
     }
 }

@@ -17,6 +17,8 @@
         - Full Width Inventory Status-Effects Background
     - Other
         - Legacy Diffuse Lighting
+    - Fixes
+        - Instant Bed
     - Extras:
         - Damage Tint Items (From Animatium Legacy)
         - Damage Tint Cape (From Animatium Legacy)

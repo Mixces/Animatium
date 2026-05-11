@@ -44,12 +44,12 @@ public abstract class MixinMinecraft_LoadOverlayTextures {
     private TextureManager textureManager;
 
     @WrapWithCondition(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/LoadingOverlay;registerTextures(Lnet/minecraft/client/renderer/texture/TextureManager;)V"))
-    private boolean animatium$disableVanillaLoading(TextureManager textureManager) {
+    private boolean animatium$disableVanillaLoading(final TextureManager textureManager) {
         return false;
     }
 
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/resources/ReloadableResourceManager;createReload(Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/concurrent/CompletableFuture;Ljava/util/List;)Lnet/minecraft/server/packs/resources/ReloadInstance;", shift = At.Shift.AFTER))
-    private void animatium$loadOverlayTextures(GameConfig gameConfig, CallbackInfo ci) {
+    private void animatium$loadOverlayTextures(final GameConfig gameConfig, final CallbackInfo ci) {
         LoadingOverlay.registerTextures(this.textureManager);
     }
 }

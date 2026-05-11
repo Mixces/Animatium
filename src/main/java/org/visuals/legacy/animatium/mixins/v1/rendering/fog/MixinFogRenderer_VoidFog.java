@@ -50,7 +50,7 @@ public abstract class MixinFogRenderer_VoidFog {
     @Definition(id = "renderDistance", local = @Local(type = int.class, argsOnly = true))
     @Expression("(float) (renderDistance * 16)")
     @ModifyExpressionValue(method = "setupFog", at = @At("MIXINEXTRAS:EXPRESSION"))
-    private float animatium$voidFog(float original, Camera camera, int renderDistance, DeltaTracker deltaTracker, float darkenWorldAmount, ClientLevel clientLevel) {
+    private float animatium$voidFog(final float original, final Camera camera, final int renderDistance, final DeltaTracker deltaTracker, final float darkenWorldAmount, final ClientLevel clientLevel) {
         final Entity entity = camera.entity();
         final boolean isVoidFogAllowed = entity instanceof Player player && !(player.isCreative() || player.isSpectator());
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidFog.hasFog() && Utils.hasFog1_7(clientLevel) && isVoidFogAllowed) {

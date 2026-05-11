@@ -38,9 +38,9 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.ItemUtils;
 
 @Mixin(Item.class)
-public abstract class MixinItem {
+public abstract class MixinItem_DurabilityBarColor {
     @Inject(method = "getBarColor", at = @At("HEAD"), cancellable = true)
-    private void animatium$durabilityBarColors(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
+    private void animatium$durabilityBarColors(final ItemStack stack, final CallbackInfoReturnable<Integer> cir) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.durabilityBarColors && !((Item) (Object) this instanceof BundleItem)) {
             final int value = ItemUtils.getLegacyDurabilityColorValue(stack);
             cir.setReturnValue(ARGB.color(255 - value, value, 0));
