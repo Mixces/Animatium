@@ -25,3 +25,5 @@ accessible method net/minecraft/client/renderer/CloudRenderer isNorthEmpty (J)Z
 accessible method net/minecraft/client/renderer/CloudRenderer isSouthEmpty (J)Z
 accessible method net/minecraft/client/renderer/CloudRenderer isWestEmpty (J)Z
 accessible method net/minecraft/client/renderer/CloudRenderer isEastEmpty (J)Z
+
+accessible method net/minecraft/client/multiplayer/ClientLevel getSkyFlashTime ()I

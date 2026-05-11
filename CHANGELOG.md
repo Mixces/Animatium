@@ -4,6 +4,8 @@
 
 - Reworked a lot of code
 - Config setting names are more generalized
+- Scrapped the config data packet idea (no replacement)
+- New secret that'll pop up when it's my birthday
 
 ## New
 
@@ -37,5 +39,6 @@
 - Fixed "Long Unsneak" setting affecting vanilla sneaking when disabled
 - Fixed disabled widget text colors when using "Old Widget Hover Text Colors"
 - Fixed jittering when sneaking on slime blocks when "Bring back bobbing tilt" is enabled
-- Damage tint now affects blocks/items equipped in the head slot
 - Fixed mod not "requiring" YACL on launch
+- Fixed potential crash when using the 1.7 sneak animation
+- Fixed Damage tint not affecting blocks/items equipped in the head slot when they should be

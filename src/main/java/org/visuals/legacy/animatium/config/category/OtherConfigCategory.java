@@ -60,6 +60,7 @@ public class OtherConfigCategory extends Category {
     public boolean oldWaterColorFog = false;
     public boolean disableRandomBlockRotations = false;
     public boolean legacyDiffuseLighting = false;
+    public boolean legacyLightmap = false;
     public VoidFogSetting voidFog = VoidFogSetting.OFF;
 
     public static ConfigCategory create(final OtherConfigCategory defaults, final OtherConfigCategory config) {
@@ -104,6 +105,7 @@ public class OtherConfigCategory extends Category {
         bundle.booleanEntry("oldWaterColorFog");
         bundle.booleanEntry("disableRandomBlockRotations");
         bundle.booleanEntry("legacyDiffuseLighting");
+        bundle.booleanEntry("legacyLightmap");
         bundle.enumEntry("voidFog", VoidFogSetting.class);
 
         return bundle;

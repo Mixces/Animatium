@@ -23,28 +23,26 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.packet;
+package org.visuals.legacy.animatium.mixins.v1.rendering.lighting;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.visuals.legacy.animatium.Animatium;
+import net.minecraft.client.renderer.state.LightmapRenderState;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.visuals.legacy.animatium.util.rendering.lightmap.LegacyLightmapState;
+import org.visuals.legacy.animatium.util.rendering.lightmap.LightmapStateExtension;
 
-import java.util.Optional;
+@Mixin(LightmapRenderState.class)
+public abstract class MixinLightmapRenderState_StoreLegacy implements LightmapStateExtension {
+    @Unique
+    private LegacyLightmapState animatium$legacyState;
 
-public record InfoPayloadPacket(double version, @Nullable String developmentVersion) implements CustomPacketPayload {
-    public static final StreamCodec<FriendlyByteBuf, InfoPayloadPacket> CODEC = CustomPacketPayload.codec(InfoPayloadPacket::write, null);
-    public static final CustomPacketPayload.Type<InfoPayloadPacket> PAYLOAD_ID = new CustomPacketPayload.Type<>(Animatium.location("info"));
-
-    private void write(final FriendlyByteBuf buffer) {
-        buffer.writeDouble(version);
-        buffer.writeOptional(Optional.ofNullable(developmentVersion), FriendlyByteBuf::writeUtf);
+    @Override
+    public LegacyLightmapState animatium$getState() {
+        return this.animatium$legacyState;
     }
 
     @Override
-    public @NotNull Type<? extends CustomPacketPayload> type() {
-        return PAYLOAD_ID;
+    public void animatium$setState(final LegacyLightmapState state) {
+        this.animatium$legacyState = state;
     }
 }

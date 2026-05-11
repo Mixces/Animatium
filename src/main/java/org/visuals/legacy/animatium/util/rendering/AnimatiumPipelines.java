@@ -84,4 +84,13 @@ public class AnimatiumPipelines {
             .withBindGroupLayout(BindGroupLayout.builder().withSampler("Sampler0").build())
             .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
             .build());
+
+    // Lighting
+    public static final RenderPipeline LEGACY_LIGHTMAP = RenderPipelines.register(RenderPipeline.builder()
+            .withLocation(Animatium.location("pipeline/colorboost"))
+            .withVertexShader("core/screenquad")
+            .withFragmentShader(Animatium.location("core/legacy_lightmap"))
+            .withBindGroupLayout(BindGroupLayouts.LIGHTMAP_INFO)
+            .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
+            .build());
 }

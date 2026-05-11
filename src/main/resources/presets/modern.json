@@ -89,6 +89,7 @@
 		"oldWaterOverlayOpacity": false,
 		"oldWaterColorFog": false,
 		"disableRandomBlockRotations": false,
-		"legacyDiffuseLighting": false
+		"legacyDiffuseLighting": false,
+		"legacyLightmap": false
 	}
 }

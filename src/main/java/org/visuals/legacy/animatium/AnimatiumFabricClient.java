@@ -67,7 +67,6 @@ public final class AnimatiumFabricClient implements ClientModInitializer {
         ClientPlayConnectionEvents.JOIN.register((listener, sender, client) -> {
             if (!client.isLocalServer()) {
                 sender.sendPacket(AnimatiumConstants.getInfoPayload());
-                // TODO 3.3: sender.sendPacket(new ConfigDataPayloadPacket());
             }
         });
 
@@ -84,6 +83,5 @@ public final class AnimatiumFabricClient implements ClientModInitializer {
         }));
 
         PayloadTypeRegistry.serverboundPlay().register(InfoPayloadPacket.PAYLOAD_ID, InfoPayloadPacket.CODEC);
-        // TODO 3.3: PayloadTypeRegistry.playC2S().register(ConfigDataPayloadPacket.PAYLOAD_ID, ConfigDataPayloadPacket.CODEC);
     }
 }

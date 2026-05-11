@@ -30,6 +30,7 @@ import btw.lowercase.renderer.buffer.Geometry;
 import btw.lowercase.renderer.texture.TextureAndSampler;
 import btw.lowercase.renderer.vertex.VertexLayout;
 import com.mojang.blaze3d.ProjectionType;
+import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.BindGroupLayout;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -41,7 +42,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuSampler;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.ProjectionMatrixBuffer;
@@ -68,7 +68,6 @@ public class Renderer implements AutoCloseable {
     @Getter
     private RenderPipeline pipeline = null;
     @Getter
-    @Setter
     private @Nullable Matrix4f projectionMatrix;
 
     // Internal
@@ -80,7 +79,6 @@ public class Renderer implements AutoCloseable {
     private Renderer(final RenderPassDescriptor descriptor) {
         this.name = descriptor.label();
         this.descriptor = descriptor;
-        this.projectionMatrixBuffer = new ProjectionMatrixBuffer("Immediate Projection Buffer for " + this.name);
     }
 
     public static Renderer of(final RenderPassDescriptor descriptor) {
@@ -190,13 +188,25 @@ public class Renderer implements AutoCloseable {
         this.uniforms.put(name, data);
     }
 
+    public void setUniform(final String name, final GpuBuffer data) {
+        this.setUniform(name, data.slice());
+    }
+
+    public void setProjectionMatrix(final Matrix4f matrix4f) {
+        if (this.projectionMatrixBuffer == null) {
+            this.projectionMatrixBuffer = new ProjectionMatrixBuffer("Immediate Projection Buffer for " + this.name);
+        }
+
+        this.projectionMatrix = matrix4f;
+    }
+
     public void draw() {
         if (!this.setup) {
             throw new RuntimeException("Cannot draw because renderer has not been setup yet!");
         } else if (this.pipeline == null) {
             throw new RuntimeException("Cannot draw without a pipeline bound!");
         } else {
-            if (this.projectionMatrix != null) {
+            if (this.projectionMatrixBuffer != null && this.projectionMatrix != null) {
                 final int properties = this.projectionMatrix.properties();
                 ProjectionType projectionType;
                 if ((properties & Matrix4f.PROPERTY_PERSPECTIVE) != 0) {
@@ -253,7 +263,7 @@ public class Renderer implements AutoCloseable {
                 }
             }
 
-            if (this.projectionMatrix != null) {
+            if (this.projectionMatrixBuffer != null && this.projectionMatrix != null) {
                 RenderSystem.restoreProjectionMatrix();
             }
         }

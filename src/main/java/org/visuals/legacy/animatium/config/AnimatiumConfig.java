@@ -27,7 +27,6 @@ package org.visuals.legacy.animatium.config;
 
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
-import dev.isxander.yacl3.config.v2.api.ConfigSerializer;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import dev.isxander.yacl3.platform.YACLPlatform;
@@ -74,15 +73,7 @@ public final class AnimatiumConfig {
             builder.category(FixesConfigCategory.create(defaults.fixes, config.fixes));
             builder.category(OtherConfigCategory.create(defaults.other, config.other));
             builder.category(ExtrasConfigCategory.create(defaults.extras, config.extras));
-            builder.save(() -> {
-                CONFIG.save();
-
-                // TODO:
-                // final Minecraft minecraft = Minecraft.getInstance();
-                // if (minecraft.getConnection() != null && !minecraft.isLocalServer()) {
-                //     ClientPlayNetworking.send(new ConfigDataPayloadPacket());
-                // }
-            });
+            builder.save(CONFIG::save);
             return builder;
         }).generateScreen(parent);
     }
@@ -117,9 +108,5 @@ public final class AnimatiumConfig {
 
     public static AnimatiumConfig instance() {
         return CONFIG.instance();
-    }
-
-    public static ConfigSerializer<AnimatiumConfig> serializer() {
-        return CONFIG.serializer();
     }
 }

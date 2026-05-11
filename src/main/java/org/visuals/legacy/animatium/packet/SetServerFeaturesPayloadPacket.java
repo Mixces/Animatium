@@ -36,31 +36,31 @@ import java.util.BitSet;
 import java.util.EnumSet;
 
 public record SetServerFeaturesPayloadPacket(EnumSet<ServerFeature> features) implements CustomPacketPayload {
-	public static final StreamCodec<FriendlyByteBuf, SetServerFeaturesPayloadPacket> CODEC = CustomPacketPayload.codec(null, SetServerFeaturesPayloadPacket::read);
-	public static final Type<SetServerFeaturesPayloadPacket> PAYLOAD_ID = new Type<>(Animatium.location("set_server_features"));
+    public static final StreamCodec<FriendlyByteBuf, SetServerFeaturesPayloadPacket> CODEC = CustomPacketPayload.codec(null, SetServerFeaturesPayloadPacket::read);
+    public static final Type<SetServerFeaturesPayloadPacket> PAYLOAD_ID = new Type<>(Animatium.location("set_server_features"));
 
-	private static SetServerFeaturesPayloadPacket read(FriendlyByteBuf buffer) {
-		final int count = buffer.readableBytes();
+    private static SetServerFeaturesPayloadPacket read(final FriendlyByteBuf buffer) {
+        final int count = buffer.readableBytes();
 
-		final byte[] bytes = new byte[count];
-		buffer.readBytes(bytes);
-		final BitSet bitSet = BitSet.valueOf(bytes);
+        final byte[] bytes = new byte[count];
+        buffer.readBytes(bytes);
+        final BitSet bitSet = BitSet.valueOf(bytes);
 
-		final EnumSet<ServerFeature> features = EnumSet.noneOf(ServerFeature.class);
-		for (int i = 0; i < ServerFeature.VALUES.length; ++i) {
-			if (bitSet.get(i)) {
-				final ServerFeature feature = ServerFeature.byId(i);
-				if (feature != null) {
-					features.add(feature);
-				}
-			}
-		}
+        final EnumSet<ServerFeature> features = EnumSet.noneOf(ServerFeature.class);
+        for (int i = 0; i < ServerFeature.VALUES.length; ++i) {
+            if (bitSet.get(i)) {
+                final ServerFeature feature = ServerFeature.byId(i);
+                if (feature != null) {
+                    features.add(feature);
+                }
+            }
+        }
 
-		return new SetServerFeaturesPayloadPacket(features);
-	}
+        return new SetServerFeaturesPayloadPacket(features);
+    }
 
-	@Override
-	public @NotNull Type<? extends CustomPacketPayload> type() {
-		return PAYLOAD_ID;
-	}
+    @Override
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return PAYLOAD_ID;
+    }
 }
