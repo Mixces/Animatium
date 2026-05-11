@@ -72,12 +72,6 @@ public record Geometry(VertexLayout vertexLayout, GpuBuffer vertexBuffer, int in
 
     @Override
     public void close() {
-        if (!this.persistent) {
-            this.forceClose();
-        }
-    }
-
-    public void forceClose() {
         this.vertexBuffer.close();
     }
 }

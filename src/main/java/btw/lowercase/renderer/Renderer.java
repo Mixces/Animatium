@@ -132,7 +132,7 @@ public class Renderer implements AutoCloseable {
             throw new RuntimeException("Cannot setup renderer with geometry of mismatching pipelines!");
         }
 
-        if (this.geometry != null && this.geometry != geometry) {
+        if (this.geometry != null && this.geometry != geometry && !this.geometry.persistent()) {
             this.geometry.close();
         }
 
@@ -193,18 +193,16 @@ public class Renderer implements AutoCloseable {
                         .stream()
                         .map(BindGroupLayout.UniformDescription::name)
                         .toList();
-                if (descriptions.contains("Globals")) {
-                    RenderSystem.bindDefaultUniforms(pass);
-                }
 
+                RenderSystem.bindDefaultUniforms(pass);
+                pass.setUniform(DynamicTransforms.KEY, dynamicTransforms);
                 for (final Map.Entry<String, GpuBufferSlice> uniform : this.uniforms.entrySet()) {
                     final String name = uniform.getKey();
-                    if (descriptions.contains(name)) {
-                        if (DynamicTransforms.KEY.equals(name)) { // Special Handling
-                            pass.setUniform(DynamicTransforms.KEY, dynamicTransforms);
-                            continue;
-                        }
+                    if (DynamicTransforms.KEY.equals(name)) {
+                        continue; // Special Handling Above
+                    }
 
+                    if (descriptions.contains(name)) {
                         pass.setUniform(uniform.getKey(), uniform.getValue());
                     }
                 }
@@ -241,7 +239,7 @@ public class Renderer implements AutoCloseable {
     public void close() {
         this.textures.clear();
         this.uniforms.clear();
-        if (this.geometry != null) {
+        if (this.geometry != null && !this.geometry.persistent()) {
             this.geometry.close();
             this.geometry = null;
         }

@@ -37,6 +37,7 @@ import com.mojang.blaze3d.vertex.*;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.BindGroupLayouts;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.Nullable;
@@ -56,6 +57,7 @@ public class SkyRendererUtility {
                     .withVertexShader("core/position_color")
                     .withFragmentShader("core/position_color")
                     .withDepthStencilState(RenderUtils.NO_DEPTH_WRITE)
+                    .withBindGroupLayout(BindGroupLayouts.GLOBALS)
                     .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
                     .withPrimitiveTopology(PrimitiveTopology.QUADS)
                     .buildSnippet();

@@ -156,7 +156,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
 
     @Override
     public void close() {
-        CUBE_MAP_GEOMETRY.forceClose();
+        CUBE_MAP_GEOMETRY.close();
         this.backgroundTextureView.close();
         this.backgroundTexture.close();
         this.panoramaTarget.destroyBuffers();

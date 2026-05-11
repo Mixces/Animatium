@@ -27,9 +27,14 @@ package btw.lowercase.renderer.vertex;
 
 import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 
 public class VertexLayouts {
-    public static final VertexLayout POSITIONED_QUAD = new VertexLayout(DefaultVertexFormat.POSITION, PrimitiveTopology.QUADS);
-    public static final VertexLayout POSITIONED_COLOR_QUAD = new VertexLayout(DefaultVertexFormat.POSITION_COLOR, PrimitiveTopology.QUADS);
-    public static final VertexLayout TEXTURED_QUAD = new VertexLayout(DefaultVertexFormat.POSITION_TEX, PrimitiveTopology.QUADS);
+    public static final VertexLayout POSITIONED_QUAD = quads(DefaultVertexFormat.POSITION);
+    public static final VertexLayout POSITIONED_COLOR_QUAD = quads(DefaultVertexFormat.POSITION_COLOR);
+    public static final VertexLayout TEXTURED_QUAD = quads(DefaultVertexFormat.POSITION_TEX);
+
+    private static VertexLayout quads(final VertexFormat vertexFormat) {
+        return new VertexLayout(vertexFormat, PrimitiveTopology.QUADS);
+    }
 }
