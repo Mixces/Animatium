@@ -25,326 +25,46 @@
 
 package org.visuals.legacy.animatium.util.config;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.Strictness;
 import net.minecraft.client.GraphicsPreset;
 import net.minecraft.client.Minecraft;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.config.category.ItemsConfigCategory;
-import org.visuals.legacy.animatium.config.category.MovementConfigCategory;
-import org.visuals.legacy.animatium.config.category.OtherConfigCategory;
-import org.visuals.legacy.animatium.config.category.ScreenConfigCategory;
-import org.visuals.legacy.animatium.util.enums.CameraVersion;
-import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
-import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
-import org.visuals.legacy.animatium.util.enums.VoidFogSetting;
 
-import java.util.function.Consumer;
+import java.io.InputStreamReader;
+import java.util.Objects;
 
 public enum Version {
-    V1_7((final AnimatiumConfig config) -> {
-        final MovementConfigCategory movement = config.movement;
-        movement.sneakAnimation = SneakAnimationSetting.V1_7;
-        movement.longUnsneak = true;
-        movement.oldCapeMovement = true;
-        movement.disableCapeLean = false;
-        movement.disableCapeSwingRotation = true;
-        movement.capeChestplateTranslation = true;
-        movement.capeSneakPosition = true;
-        movement.rotateBackwardsWalking = true;
-        movement.uncapBlockingHeadRotation = true;
-        movement.disableHeadRotationInterpolation = true;
-        movement.handViewBobbingMovement = true;
-        movement.deathLimbs = true;
-        movement.bowArmMovement = true;
-        movement.legacyDamageTilt = true;
-        movement.offsetHurtTime = true;
+    V1_7(() -> {
+        load("1_7");
 
-        final ItemsConfigCategory items = config.items;
-        items.thinFishingRodLineThickness = false;
-        items.legacyGlintSpeed = true;
-        items.glintOnItemDrops2D = true;
-        items.glintOnItemFramed2D = true;
-        items.itemDropsFaceCamera = true;
-        items.itemDropsFaceCameraRotationFix = false;
-        items.itemDrops2D = true;
-        items.itemFramed2D = true;
-        items.itemColors2D = true;
-        items.itemPositions = true;
-        items.itemPositionsInThirdPerson = true;
-        items.thinBlockPositions = true;
-        items.skullPosition = true;
-        items.fishingRodVersion = FishingRodVersion.V1_7;
-        items.itemUsageSwinging = true;
-        items.disableSwingOnUse = true;
-        items.disableSwingOnDrop = true;
-        items.disableSwingOnEntityInteract = true;
-        items.disableItemUsingTextureInGUI = true;
-        items.durabilityBarColors = true;
-        items.legacyItemRarities = true;
-        items.heldItemVisibilityInBoat = true;
-        items.itemPickupPosition = true;
-        items.mobHeadIcons = true;
-        items.eggSnowballParticles = true;
-
-        final ScreenConfigCategory screen = config.screen;
-        screen.crosshairInThirdPerson = true;
-        screen.disableHeartFlash = true;
-        screen.centerScrollableListWidgets = true;
-        screen.listWidgetSelectedBorderColor = true;
-        screen.legacyWidgetHoverTextColor = true;
-        screen.disableDebugHudBackground = true;
-        screen.debugHudTextShadow = true;
-        screen.disableCameraTransparentPassthrough = true;
-        screen.tooltipStyleRendering = true;
-        screen.slotHoverStyleRendering = true;
-        screen.listBackgroundGradient = true;
-        screen.inventoryEffectsPosition = true;
-        screen.fullWidthInventoryEffects = true;
-        screen.panoramaRendering = true;
-        screen.legacyLoadingScreen = true;
-        screen.oldChatPosition = true;
-        screen.oldCrosshairPosition = true;
-        screen.disconnectServerToTitleScreen = true;
-        screen.cameraVersion = CameraVersion.V1_8;
-
-        final OtherConfigCategory other = config.other;
-        other.blueVoidSky = true;
-        other.planarSkyFog = true;
-        other.cloudHeight = true;
-        other.playerVoidBox = true;
-        other.thirdPersonSwordBlockingPosition = true;
-        other.lockBlockingArmRotation = true;
-        other.projectileAgeCheck = true; // TODO/CHECK
-        other.blockMiningProgress = true;
-        other.disableInventoryEntityScissor = true;
-        other.blockOutlineRendering = true;
-        other.disableModelWhilstSleeping = true;
-        other.entityArmorHurtTint = true;
-        other.itemGlintOnEntity = true;
-        other.maxGlintProperties = true;
-        other.restoreParticleBlending = true;
-        other.heldItemArmLogic = false;
-        other.flameDimensions = true;
-        other.flameOffset = true;
-        other.persistentBlockOutline = true;
-        other.oldCloudRendering = true;
-        other.fastGrass = GraphicsPreset.FAST.equals(Minecraft.getInstance().options.graphicsPreset().get());
-        other.oldWaterOverlayOpacity = true;
-        other.oldWaterColorFog = true;
-        other.disableRandomBlockRotations = true;
-        other.legacyDiffuseLighting = true;
+        // Dynamic Fields
+        final AnimatiumConfig config = AnimatiumConfig.instance();
+        config.other.fastGrass = GraphicsPreset.FAST.equals(Minecraft.getInstance().options.graphicsPreset().get());
     }),
+    V1_8(() -> load("1_8")),
+    MODERN(() -> load("modern"));
 
-    V1_8((final AnimatiumConfig config) -> {
-        final MovementConfigCategory movement = config.movement;
-        movement.sneakAnimation = SneakAnimationSetting.V1_8;
-        movement.longUnsneak = false; // I think it's false?
-        movement.oldCapeMovement = true;
-        movement.disableCapeLean = false;
-        movement.disableCapeSwingRotation = true;
-        movement.capeChestplateTranslation = false;
-        movement.capeSneakPosition = false;
-        movement.rotateBackwardsWalking = true;
-        movement.uncapBlockingHeadRotation = true;
-        movement.disableHeadRotationInterpolation = false;
-        movement.handViewBobbingMovement = true;
-        movement.deathLimbs = true;
-        movement.bowArmMovement = false;
-        movement.legacyDamageTilt = true;
-        movement.offsetHurtTime = false;
+    private static final Gson GSON = new GsonBuilder().setStrictness(Strictness.LENIENT).create();
+    private final Runnable applier;
 
-        final ItemsConfigCategory items = config.items;
-        items.thinFishingRodLineThickness = false;
-        items.legacyGlintSpeed = true;
-        items.glintOnItemDrops2D = false;
-        items.glintOnItemFramed2D = false;
-        items.itemDropsFaceCamera = false;
-        items.itemDropsFaceCameraRotationFix = false;
-        items.itemDrops2D = false;
-        items.itemFramed2D = false;
-        items.itemColors2D = false;
-        items.itemPositions = false;
-        items.itemPositionsInThirdPerson = false;
-        items.thinBlockPositions = false;
-        items.skullPosition = true;
-        items.fishingRodVersion = FishingRodVersion.V1_8;
-        items.itemUsageSwinging = false;
-        items.disableSwingOnUse = true;
-        items.disableSwingOnDrop = true;
-        items.disableSwingOnEntityInteract = true;
-        items.disableItemUsingTextureInGUI = true;
-        items.durabilityBarColors = true;
-        items.legacyItemRarities = true;
-        items.heldItemVisibilityInBoat = true;
-        items.itemPickupPosition = false;
-        items.mobHeadIcons = false;
-        items.eggSnowballParticles = false;
-
-        final ScreenConfigCategory screen = config.screen;
-        screen.crosshairInThirdPerson = true;
-        screen.disableHeartFlash = false;
-        screen.centerScrollableListWidgets = false;
-        screen.listWidgetSelectedBorderColor = true;
-        screen.legacyWidgetHoverTextColor = true;
-        screen.disableDebugHudBackground = false;
-        screen.debugHudTextShadow = false;
-        screen.disableCameraTransparentPassthrough = true;
-        screen.tooltipStyleRendering = true;
-        screen.slotHoverStyleRendering = true;
-        screen.listBackgroundGradient = true;
-        screen.inventoryEffectsPosition = true;
-        screen.fullWidthInventoryEffects = true;
-        screen.panoramaRendering = true;
-        screen.legacyLoadingScreen = true;
-        screen.oldChatPosition = true;
-        screen.oldCrosshairPosition = true;
-        screen.disconnectServerToTitleScreen = false;
-        screen.cameraVersion = CameraVersion.V1_8;
-
-        final OtherConfigCategory other = config.other;
-        other.blueVoidSky = true;
-        other.planarSkyFog = true;
-        other.cloudHeight = true;
-        other.playerVoidBox = true;
-        other.thirdPersonSwordBlockingPosition = false;
-        other.lockBlockingArmRotation = true;
-        other.projectileAgeCheck = true; // TODO/CHECK
-        other.blockMiningProgress = true;
-        other.disableInventoryEntityScissor = true;
-        other.blockOutlineRendering = true;
-        other.disableModelWhilstSleeping = true;
-        other.entityArmorHurtTint = false;
-        other.itemGlintOnEntity = true;
-        other.maxGlintProperties = true;
-        other.restoreParticleBlending = true;
-        other.heldItemArmLogic = true;
-        other.flameDimensions = true;
-        other.flameOffset = false;
-        other.persistentBlockOutline = false;
-        other.oldCloudRendering = true;
-        other.fastGrass = false;
-        other.voidFog = VoidFogSetting.OFF;
-        other.oldWaterOverlayOpacity = true;
-        other.oldWaterColorFog = true;
-        other.disableRandomBlockRotations = false;
-        other.legacyDiffuseLighting = true;
-    }),
-
-    V1_12((final AnimatiumConfig config) -> {
-        final MovementConfigCategory movement = config.movement;
-        // TODO
-
-        final ItemsConfigCategory items = config.items;
-        // TODO
-
-        final ScreenConfigCategory screen = config.screen;
-        // TODO
-
-        final OtherConfigCategory other = config.other;
-        // TODO
-    }),
-
-    MODERN((final AnimatiumConfig config) -> {
-        final MovementConfigCategory movement = config.movement;
-        movement.sneakAnimation = SneakAnimationSetting.VANILLA;
-        movement.longUnsneak = true;
-        movement.oldCapeMovement = false;
-        movement.disableCapeLean = false;
-        movement.disableCapeSwingRotation = false;
-        movement.capeChestplateTranslation = false;
-        movement.capeSneakPosition = false;
-        movement.rotateBackwardsWalking = false;
-        movement.uncapBlockingHeadRotation = false;
-        movement.disableHeadRotationInterpolation = false;
-        movement.handViewBobbingMovement = false;
-        movement.deathLimbs = false;
-        movement.bowArmMovement = false;
-        movement.legacyDamageTilt = false;
-        movement.offsetHurtTime = false;
-
-        final ItemsConfigCategory items = config.items;
-        items.thinFishingRodLineThickness = false;
-        items.legacyGlintSpeed = false;
-        items.glintOnItemDrops2D = false;
-        items.glintOnItemFramed2D = false;
-        items.itemDropsFaceCamera = false;
-        items.itemDropsFaceCameraRotationFix = false;
-        items.itemDrops2D = false;
-        items.itemFramed2D = false;
-        items.itemColors2D = false;
-        items.itemPositions = false;
-        items.itemPositionsInThirdPerson = false;
-        items.thinBlockPositions = false;
-        items.skullPosition = false;
-        items.fishingRodVersion = FishingRodVersion.VANILLA;
-        items.itemUsageSwinging = false;
-        items.disableSwingOnUse = false;
-        items.disableSwingOnDrop = false;
-        items.disableSwingOnEntityInteract = false;
-        items.disableItemUsingTextureInGUI = false;
-        items.durabilityBarColors = false;
-        items.legacyItemRarities = false;
-        items.heldItemVisibilityInBoat = false;
-        items.itemPickupPosition = false;
-        items.mobHeadIcons = false;
-        items.eggSnowballParticles = false;
-
-        final ScreenConfigCategory screen = config.screen;
-        screen.crosshairInThirdPerson = false;
-        screen.disableHeartFlash = false;
-        screen.centerScrollableListWidgets = false;
-        screen.listWidgetSelectedBorderColor = false;
-        screen.legacyWidgetHoverTextColor = false;
-        screen.disableDebugHudBackground = false;
-        screen.debugHudTextShadow = false;
-        screen.disableCameraTransparentPassthrough = false;
-        screen.tooltipStyleRendering = false;
-        screen.slotHoverStyleRendering = false;
-        screen.listBackgroundGradient = false;
-        screen.inventoryEffectsPosition = false;
-        screen.fullWidthInventoryEffects = false;
-        screen.panoramaRendering = false;
-        screen.legacyLoadingScreen = false;
-        screen.oldChatPosition = false;
-        screen.oldCrosshairPosition = false;
-        screen.disconnectServerToTitleScreen = false;
-        screen.cameraVersion = CameraVersion.VANILLA;
-
-        final OtherConfigCategory other = config.other;
-        other.blueVoidSky = false;
-        other.planarSkyFog = false;
-        other.cloudHeight = false;
-        other.playerVoidBox = false;
-        other.thirdPersonSwordBlockingPosition = false;
-        other.lockBlockingArmRotation = false;
-        other.projectileAgeCheck = false; // TODO/CHECK
-        other.blockMiningProgress = false;
-        other.disableInventoryEntityScissor = false;
-        other.blockOutlineRendering = false;
-        other.disableModelWhilstSleeping = false;
-        other.entityArmorHurtTint = false;
-        other.itemGlintOnEntity = false;
-        other.maxGlintProperties = false;
-        other.restoreParticleBlending = false;
-        other.heldItemArmLogic = false;
-        other.flameDimensions = false;
-        other.flameOffset = false;
-        other.persistentBlockOutline = false;
-        other.oldCloudRendering = false;
-        other.fastGrass = false;
-        other.voidFog = VoidFogSetting.OFF;
-        other.oldWaterOverlayOpacity = false;
-        other.oldWaterColorFog = false;
-        other.disableRandomBlockRotations = false;
-        other.legacyDiffuseLighting = false;
-    });
-
-    private final Consumer<AnimatiumConfig> applier;
-
-    Version(final Consumer<AnimatiumConfig> applier) {
+    Version(final Runnable applier) {
         this.applier = applier;
     }
 
-    public void apply(final AnimatiumConfig config) {
-        this.applier.accept(config);
+    public void apply() {
+        this.applier.run();
+    }
+
+    private static void load(final String name) {
+        try {
+            final InputStreamReader reader = new InputStreamReader(Objects.requireNonNull(AnimatiumConfig.class.getResourceAsStream("presets/" + name + ".json")));
+            final JsonObject object = GSON.fromJson(reader.readAllAsString(), JsonObject.class);
+            // TODO
+        } catch (final Exception exception) {
+            exception.printStackTrace();
+        }
     }
 }

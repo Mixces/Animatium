@@ -27,6 +27,7 @@ package org.visuals.legacy.animatium.config;
 
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
+import dev.isxander.yacl3.config.v2.api.ConfigSerializer;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import dev.isxander.yacl3.platform.YACLPlatform;
@@ -116,5 +117,9 @@ public final class AnimatiumConfig {
 
     public static AnimatiumConfig instance() {
         return CONFIG.instance();
+    }
+
+    public static ConfigSerializer<AnimatiumConfig> serializer() {
+        return CONFIG.serializer();
     }
 }

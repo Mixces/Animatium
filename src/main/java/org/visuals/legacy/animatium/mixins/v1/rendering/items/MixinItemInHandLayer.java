@@ -53,30 +53,30 @@ import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
 @Mixin(ItemInHandLayer.class)
 public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState> {
     @ModifyArgs(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V"))
-    private void animatium$oldTransformTranslation(Args args, @Local(argsOnly = true) S armedEntityRenderState, @Local(argsOnly = true) HumanoidArm humanoidArm) {
-        final ItemStack stack = armedEntityRenderState.animatium$getItemHeldByArm(humanoidArm);
+    private void animatium$oldTransformTranslation(final Args args, @Local(argsOnly = true) final S armedEntityRenderState, @Local(argsOnly = true) final HumanoidArm arm) {
+        final ItemStack stack = armedEntityRenderState.animatium$getItemHeldByArm(arm);
         if (Animatium.isEnabled() && ItemUtils.shouldApplyItemPositionsInThirdPerson(armedEntityRenderState) && !ItemUtils.isItemBlacklisted(stack)) {
             args.setAll((float) args.get(0) * -1.0F, 0.4375F, (float) args.get(2) / 10 * -1.0F);
         }
     }
 
     @WrapWithCondition(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lorg/joml/Quaternionfc;)V"))
-    private boolean animatium$removeTransformMultiply(PoseStack instance, Quaternionfc quaternionfc, @Local(argsOnly = true) S armedEntityRenderState, @Local(argsOnly = true) HumanoidArm humanoidArm) {
-        final ItemStack stack = armedEntityRenderState.animatium$getItemHeldByArm(humanoidArm);
+    private boolean animatium$removeTransformMultiply(final PoseStack instance, final Quaternionfc by, @Local(argsOnly = true) final S armedEntityRenderState, @Local(argsOnly = true) final HumanoidArm arm) {
+        final ItemStack stack = armedEntityRenderState.animatium$getItemHeldByArm(arm);
         return !Animatium.isEnabled() || !ItemUtils.shouldApplyItemPositionsInThirdPerson(armedEntityRenderState) || ItemUtils.isItemBlacklisted(stack);
     }
 
     @Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/item/ItemStackRenderState;submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V"))
-    private void animatium$itemPositionsThird(S armedEntityRenderState, ItemStackRenderState itemStackRenderState, ItemStack item, HumanoidArm humanoidArm, PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, CallbackInfo ci) {
-        if (Animatium.isEnabled() && ItemUtils.shouldApplyItemPositionsInThirdPerson(armedEntityRenderState)) {
-            final int direction = Utils.getArmMultiplier(humanoidArm);
-            final ItemStack stack = armedEntityRenderState.animatium$getItemHeldByArm(humanoidArm);
+    private void animatium$itemPositionsThird(final S state, final ItemStackRenderState item, final ItemStack itemStack, final HumanoidArm arm, final PoseStack poseStack, final SubmitNodeCollector submitNodeCollector, final int lightCoords, final CallbackInfo ci) {
+        if (Animatium.isEnabled() && ItemUtils.shouldApplyItemPositionsInThirdPerson(state)) {
+            final int direction = Utils.getArmMultiplier(arm);
+            final ItemStack stack = state.animatium$getItemHeldByArm(arm);
             if (!stack.isEmpty() && !ItemUtils.isItemBlacklisted(stack)) {
                 final boolean isStickRod = Animatium.isEnabled() &&
                         AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersion.V1_7 &&
                         stack.is(Items.FISHING_ROD) &&
-                        (armedEntityRenderState instanceof AvatarRenderState && armedEntityRenderState.animatium$isFishing());
-                final boolean usesBlockLight = itemStackRenderState.usesBlockLight();
+                        (state instanceof AvatarRenderState && state.animatium$isFishing());
+                final boolean usesBlockLight = item.usesBlockLight();
                 if (ItemUtils.isBlock3d(stack, usesBlockLight)) {
                     final float scale = 0.375F;
                     poseStack.translate(0.0F, 0.1875F, -0.3125F);
@@ -100,7 +100,7 @@ public abstract class MixinItemInHandLayer<S extends ArmedEntityRenderState> {
                         poseStack.translate(0.0F, -0.125F, 0.0F);
                     }
 
-                    if (Utils.isBlockingArm(humanoidArm, armedEntityRenderState)) {
+                    if (Utils.isBlockingArm(arm, state)) {
                         poseStack.translate(direction * 0.05F, 0.0F, -0.1F);
                         poseStack.mulPose(Axis.YP.rotationDegrees(direction * -50.0F));
                         poseStack.mulPose(Axis.XP.rotationDegrees(-10.0F));

@@ -40,7 +40,6 @@ public class ItemsConfigCategory extends Category {
     public boolean itemDropsFaceCameraRotationFix = false;
     public boolean itemDrops2D = false;
     public boolean itemFramed2D = false;
-    public boolean itemColors2D = false;
     // (Items) Transformations
     public boolean itemPositions = false;
     public boolean itemPositionsInThirdPerson = false;
@@ -81,8 +80,7 @@ public class ItemsConfigCategory extends Category {
                 .booleanEntry("itemDropsFaceCamera")
                 .booleanEntry("itemDropsFaceCameraRotationFix")
                 .booleanEntry("itemDrops2D")
-                .booleanEntry("itemFramed2D")
-                .booleanEntry("itemColors2D"));
+                .booleanEntry("itemFramed2D"));
 
         bundle.group((EntryBundle.Group) new EntryBundle.Group("transformations")
                 .booleanEntry("itemPositions")

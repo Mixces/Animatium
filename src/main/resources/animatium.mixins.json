@@ -27,7 +27,6 @@
 		"v1.entity.items.MixinHumanoidMobRenderer_FixDoubleUsage",
 		"v1.entity.items.MixinItemInHandRenderer_DamageTintItems",
 		"v1.entity.items.MixinItemInHandRenderer_HeldItemArmLogic",
-		"v1.entity.items.MixinRenderType_ItemColors2D",
 		"v1.entity.nametag.MixinLivingEntityRenderer",
 		"v1.entity.nametag.MixinNameTagFeatureRenderer",
 		"v1.entity.nametag.MixinSubmitNodeCollection",

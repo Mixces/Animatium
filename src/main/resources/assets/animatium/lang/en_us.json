@@ -119,8 +119,6 @@
 	"animatium.itemDrops2D.description": "Makes item entities render 2D when it's an item (not blocks).",
 	"animatium.itemFramed2D": "[1.7] Make framed items 2D",
 	"animatium.itemFramed2D.description": "Makes framed items render 2D (not blocks).",
-	"animatium.itemColors2D": "[1.7] Bring back the old 2D item color",
-	"animatium.itemColors2D.description": "Restores the old color of 2D items by swapping the Y and Z components of the vertex normal.",
 	"animatium.category.items.group.transformations": "Item Transformations",
 	"animatium.itemPositions": "[1.7] Modify/Tilt The First-Person Held Item's Position",
 	"animatium.itemPositions.description": "Tilts the first-person held item position to make held items look like they did in <=1.7.x.",
