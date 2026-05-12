@@ -25,6 +25,7 @@
 
 package org.visuals.legacy.animatium.util.rendering.lighting.lightmap;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -35,6 +36,7 @@ import net.minecraft.util.profiling.Profiler;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.Level;
+import org.visuals.legacy.animatium.AnimatiumConstants;
 
 public class LegacyLightmapExtractor {
     private boolean needsUpdate;
@@ -54,8 +56,8 @@ public class LegacyLightmapExtractor {
                 final ProfilerFiller profiler = Profiler.get();
                 profiler.push("lightmap");
                 state.skyDarken = getSkyDarken(level);
-                state.skyFlicker = level.getSkyFlashTime() > 0 ? 1.0F : state.skyDarken * 0.95F + 0.05F;
-                state.blockFlicker = this.blockLightRed * 0.1F + 1.5F;
+                state.skyFlicker = state.skyDarken * 0.95F + 0.05F;
+                state.blockFlicker = this.blockLightRed;
                 state.skyDarkness = minecraft.gameRenderer.bossOverlayWorldDarkening(tickDelta);
                 if (player.hasEffect(MobEffects.NIGHT_VISION)) {
                     state.nightVisionScale = GameRenderer.nightVisionScale(player, tickDelta);
@@ -63,6 +65,18 @@ public class LegacyLightmapExtractor {
 
                 state.gamma = minecraft.options.gamma().get().floatValue();
                 state.useBrightLightmap = ClientLevel.END.equals(level.dimension());
+
+                if (AnimatiumConstants.IS_DEVELOPMENT && InputConstants.isKeyDown(minecraft.getWindow(), InputConstants.KEY_O)) {
+                    System.out.println("-----------------------------");
+                    System.out.println("skyDarken: " + state.skyDarken);
+                    System.out.println("skyFlicker: " + state.skyFlicker);
+                    System.out.println("blockFlicker: " + state.blockFlicker);
+                    System.out.println("skyDarkness: " + state.skyDarkness);
+                    System.out.println("nightVisionScale: " + state.nightVisionScale);
+                    System.out.println("gamma: " + state.gamma);
+                    System.out.println("useBrightLightmap: " + state.useBrightLightmap);
+                }
+
                 profiler.pop();
                 this.needsUpdate = false;
             }
