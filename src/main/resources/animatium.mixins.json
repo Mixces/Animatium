@@ -35,7 +35,7 @@
 		"v1.entity.nametag.MixinNameTagFeatureRenderer_NameTagShadow",
 		"v1.entity.nametag.MixinSubmitNodeCollection_NameTagBackground",
 		"v1.entity.particles.MixinItemPickupParticle_LegacyPickupPosition",
-		"v1.entity.particles.MixinLivingEntity",
+		"v1.entity.particles.MixinLivingEntity_Particles",
 		"v1.entity.particles.MixinParticle",
 		"v1.entity.particles.MixinPlayer_AlwaysSharpParticles",
 		"v1.entity.projectiles.MixinThrownEgg_SnowballParticles",

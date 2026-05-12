@@ -53,12 +53,12 @@ import org.visuals.legacy.animatium.util.Utils;
 import java.util.Map;
 
 @Mixin(LivingEntity.class)
-public abstract class MixinLivingEntity extends Entity {
+public abstract class MixinLivingEntity_Particles extends Entity {
     @Shadow
     @Final
     private Map<Holder<MobEffect>, MobEffectInstance> activeEffects;
 
-    public MixinLivingEntity(final EntityType<?> entityType, final Level level) {
+    public MixinLivingEntity_Particles(final EntityType<?> entityType, final Level level) {
         super(entityType, level);
     }
 
@@ -75,9 +75,17 @@ public abstract class MixinLivingEntity extends Entity {
         double green = yd;
         double blue = zd;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.restoreParticleBlending) {
-            // TODO/NOTE: come back and check if activeEffects is empty, return 0xFF385DC6 else return color.orElse(0), if color == 0, don't render
-            //            ONLY if people notice the smallllll issue currently/care
-            final int color = PotionContents.getColorOptional(this.activeEffects.values()).orElse(0xFF385DC6);
+            int color;
+            if (this.activeEffects.isEmpty()) {
+                color = 0xFF385DC6;
+            } else {
+                color = PotionContents.getColorOptional(this.activeEffects.values()).orElse(0);
+            }
+
+            if (color == 0) {
+                return; // Not potion particles are visible
+            }
+
             options = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, ARGB.color(hasAmbience ? 0.15F : 1.0F, color));
             red = ARGB.redFloat(color);
             green = ARGB.greenFloat(color);
