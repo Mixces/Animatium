@@ -15,17 +15,13 @@ in vec2 texCoord;
 out vec4 fragColor;
 
 float getBrightness(int index) {
-    float value = 1.0F - float(index) / 15.0F;
-    return (1.0F - value) / (value * 3.0F + 1.0F) + 0.0F;
+    float value = 1.0 - float(index) / 15.0;
+    return (1.0 - value) / (value * 3.0 + 1.0) + 0.0;
 }
 
 float notGamma(float value) {
-    float inverted = 1.0F - value;
-    return 1.0F - inverted * inverted * inverted * inverted;
-}
-
-vec3 clampColor(vec3 color) {
-    return vec3(clamp(color.x, 0.0F, 1.0F), clamp(color.y, 0.0F, 1.0F), clamp(color.z, 0.0F, 1.0F));
+    float inverted = 1.0 - value;
+    return 1.0 - inverted * inverted * inverted * inverted;
 }
 
 void main() {
@@ -39,7 +35,7 @@ void main() {
     vec3 color = vec3(skyV + blockLight, skyV + blockVA, skyLight + blockVB);
     color *= vec3(0.96F);
     color += vec3(0.03F, 0.03F, 0.03F);
-    if (SkyDarkness > 0.0F) {
+    if (SkyDarkness > 0.0) {
         color = mix(color, color * vec3(0.7F, 0.6F, 0.6F), SkyDarkness);
     }
 
@@ -48,15 +44,13 @@ void main() {
         color = vec3(0.22F + blockLight * 0.75F, 0.28F + blockVA * 0.75F, 0.25F + blockVB * 0.75F);
     }
 
-    // TODO: Figure out why lightmap goes full white (this code is correct and when night-vision starts fading. it shows the right lightmap behind the white while flashing)
     if (NightVisionScale > 0.0) {
-        float scale = 1.0F / max(color.x, max(color.y, color.z));
-        color = mix(color, color * scale, NightVisionScale);
+        color *= mix(1.0, 1.0 / min(min(color.r, color.g), color.b), NightVisionScale);
     }
 
-    color = min(color, vec3(1.0F));
-    color = mix(color, vec3(notGamma(color.x), notGamma(color.y), notGamma(color.z)), Gamma);
-    color = mix(color, vec3(0.75F), 0.04F);
-    color = clampColor(color);
-    fragColor = vec4(color.rgb, 1.0);
+    color = min(color, vec3(1.0));
+    color = mix(color, vec3(notGamma(color.r), notGamma(color.g), notGamma(color.b)), Gamma);
+    color = color * 0.96F + 0.03F;
+    color = clamp(color, 0.0, 1.0);
+    fragColor = vec4(color, 1.0);
 }

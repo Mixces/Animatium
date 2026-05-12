@@ -25,6 +25,7 @@
 
 package org.visuals.legacy.animatium.mixins.v1.rendering.lighting;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.client.Minecraft;
@@ -54,6 +55,15 @@ public abstract class MixinLightmapRenderStateExtractor_LegacyLightmap {
 
     @Unique
     private final LegacyLightmapExtractor animatium$extractor = new LegacyLightmapExtractor();
+
+    @ModifyExpressionValue(method = "tick", at = @At(value = "CONSTANT", args = "floatValue=0.1"))
+    private float animatium$legacyLightmap$changeFlickerDifference(final float original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.legacyLightmap) {
+            return 0.0F;
+        } else {
+            return original;
+        }
+    }
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void animatium$legacyLightmap$tick(final CallbackInfo ci) {
