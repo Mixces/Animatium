@@ -1,4 +1,5 @@
 #version 330
+precision highp float;
 
 layout(std140) uniform LightmapInfo {
     float SkyDarken;
@@ -15,7 +16,7 @@ out vec4 fragColor;
 
 float getBrightness(int index) {
     float value = 1.0 - float(index) / 15.0;
-    return (1.0 - value) / (value * 3.0 + 1.0) + 0.0;
+    return (1.0 - value) / (value * 3.0 + 1.0);
 }
 
 vec3 notGamma(vec3 value) {
@@ -31,7 +32,9 @@ void main() {
     float blockVA = blockLight * ((blockLight * 0.6 + 0.4) * 0.6 + 0.4);
     float blockVB = blockLight * (blockLight * blockLight * 0.6 + 0.4);
 
-    vec3 color = (vec3(skyV + blockLight, skyV + blockVA, skyLight + blockVB) * 0.96) + 0.03;
+    vec3 color = vec3(skyV + blockLight, skyV + blockVA, skyLight + blockVB);
+    color *= 0.96;
+    color += 0.03;
     if (SkyDarkness > 0.0) {
         color = mix(color, color * vec3(0.7, 0.6, 0.6), SkyDarkness);
     }

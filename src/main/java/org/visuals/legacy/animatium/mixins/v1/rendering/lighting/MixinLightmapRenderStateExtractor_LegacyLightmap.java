@@ -59,7 +59,7 @@ public abstract class MixinLightmapRenderStateExtractor_LegacyLightmap {
     @ModifyExpressionValue(method = "tick", at = @At(value = "CONSTANT", args = "floatValue=0.1"))
     private float animatium$legacyLightmap$changeFlickerDifference(final float original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.legacyLightmap) {
-            return 0.0F;
+            return 1.0F;
         } else {
             return original;
         }
