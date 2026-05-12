@@ -30,6 +30,7 @@ import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.util.compatibility.Mods;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.VoidFogSetting;
+import org.visuals.legacy.animatium.util.rendering.lighting.LegacyDiffuseLighting;
 
 public class OtherConfigCategory extends Category {
     // Sky
@@ -104,7 +105,7 @@ public class OtherConfigCategory extends Category {
         bundle.booleanEntry("oldWaterOverlayOpacity");
         bundle.booleanEntry("oldWaterColorFog");
         bundle.booleanEntry("disableRandomBlockRotations");
-        bundle.booleanEntry("legacyDiffuseLighting");
+        bundle.booleanEntry("legacyDiffuseLighting", (option, value) -> LegacyDiffuseLighting.refresh());
         bundle.booleanEntry("legacyLightmap");
         bundle.enumEntry("voidFog", VoidFogSetting.class);
 

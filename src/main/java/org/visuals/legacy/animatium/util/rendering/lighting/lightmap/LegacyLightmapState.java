@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering.lightmap;
+package org.visuals.legacy.animatium.util.rendering.lighting.lightmap;
 
 public class LegacyLightmapState {
     public boolean needsUpdate;

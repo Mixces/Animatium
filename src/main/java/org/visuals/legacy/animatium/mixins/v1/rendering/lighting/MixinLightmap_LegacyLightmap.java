@@ -39,8 +39,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.rendering.lightmap.LegacyLightmapRenderer;
-import org.visuals.legacy.animatium.util.rendering.lightmap.LightmapStateExtension;
+import org.visuals.legacy.animatium.util.rendering.lighting.lightmap.LegacyLightmapRenderer;
+import org.visuals.legacy.animatium.util.rendering.lighting.lightmap.LightmapStateExtension;
 
 @Mixin(Lightmap.class)
 public abstract class MixinLightmap_LegacyLightmap {

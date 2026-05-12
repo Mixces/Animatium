@@ -1,0 +1,66 @@
+/**
+ * Animatium
+ * The all-you-could-want legacy animations mod for modern minecraft versions.
+ * Brings back animations from the 1.7/1.8 era and more.
+ * <p>
+ * Copyright (C) 2024-2025 lowercasebtw
+ * Copyright (C) 2024-2025 mixces
+ * Copyright (C) 2024-2025 Contributors to the project retain their copyright
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
+ */
+
+package org.visuals.legacy.animatium.util.rendering.lighting;
+
+import com.mojang.blaze3d.platform.Lighting;
+import lombok.Setter;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
+import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
+
+import java.util.function.BiConsumer;
+
+public final class LegacyDiffuseLighting {
+    private static final Vector3fc DIFFUSE_LIGHT_0 = (new Vector3f(0.2F, 1.0F, -0.7F)).normalize();
+    private static final Vector3fc DIFFUSE_LIGHT_1 = (new Vector3f(-0.2F, 1.0F, 0.7F)).normalize();
+
+    private static final Vector3fc INVENTORY_DIFFUSE_LIGHT_0 = (new Vector3f(0.2F, -1.0F, 1.0F)).normalize();
+    private static final Vector3fc INVENTORY_DIFFUSE_LIGHT_1 = (new Vector3f(-0.2F, -1.0F, 0.0F)).normalize();
+
+    @Setter
+    private static Matrix4f item3dPose = null;
+    @Setter
+    private static BiConsumer<Lighting.Entry, Lights> updateLightingInvoker;
+
+    public static void refresh() {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.legacyDiffuseLighting) {
+            final Lights lights = new Lights(item3dPose.transformDirection(DIFFUSE_LIGHT_0, new Vector3f()), item3dPose.transformDirection(DIFFUSE_LIGHT_1, new Vector3f()));
+            updateLightingInvoker.accept(Lighting.Entry.ENTITY_IN_UI, lights);
+            updateLightingInvoker.accept(Lighting.Entry.PLAYER_SKIN, lights);
+        } else {
+            // Vanilla Values (TODO/NOTE, Possibly a nicer way to do this?)
+            updateLightingInvoker.accept(Lighting.Entry.ENTITY_IN_UI, new Lights(INVENTORY_DIFFUSE_LIGHT_0, INVENTORY_DIFFUSE_LIGHT_1));
+
+            final Matrix4f playerSkinPose = new Matrix4f();
+            updateLightingInvoker.accept(Lighting.Entry.PLAYER_SKIN, new Lights(playerSkinPose.transformDirection(INVENTORY_DIFFUSE_LIGHT_0, new Vector3f()), playerSkinPose.transformDirection(INVENTORY_DIFFUSE_LIGHT_1, new Vector3f())));
+        }
+    }
+
+    public record Lights(Vector3fc light0, Vector3fc light1) {
+    }
+}

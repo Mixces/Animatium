@@ -26,15 +26,20 @@
 package org.visuals.legacy.animatium.mixins.v1.rendering.lighting;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.platform.Lighting;
+import org.joml.Matrix4f;
 import org.joml.Vector3fc;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.util.rendering.lighting.LegacyDiffuseLighting;
 
 @Mixin(Lighting.class)
 public abstract class MixinLighting_LegacyDiffuseLighting {
@@ -46,24 +51,20 @@ public abstract class MixinLighting_LegacyDiffuseLighting {
     @Final
     private static Vector3fc DIFFUSE_LIGHT_1;
 
-    @ModifyExpressionValue(method = "<init>", at = @At(value = "FIELD", target = "Lcom/mojang/blaze3d/platform/Lighting;INVENTORY_DIFFUSE_LIGHT_0:Lorg/joml/Vector3fc;", opcode = Opcodes.GETSTATIC))
-    private Vector3fc animatium$legacyDiffuseLighting$useDiffuse0Inventory(final Vector3fc original) {
+    @Shadow
+    protected abstract void updateBuffer(final Lighting.Entry entry, final Vector3fc light0, final Vector3fc light1);
+
+    // Use old "setupGui3DDiffuseLighting" calculation w/ normal diffuse lighting
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void animatium$legacyDiffuseLighting(final CallbackInfo ci, @Local(name = "item3DPose") final Matrix4f item3DPose) {
+        LegacyDiffuseLighting.setItem3dPose(item3DPose);
+        LegacyDiffuseLighting.setUpdateLightingInvoker((entry, lights) -> this.updateBuffer(entry, lights.light0(), lights.light1()));
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.legacyDiffuseLighting) {
-            return DIFFUSE_LIGHT_0;
-        } else {
-            return original;
+            LegacyDiffuseLighting.refresh();
         }
     }
 
-    @ModifyExpressionValue(method = "<init>", at = @At(value = "FIELD", target = "Lcom/mojang/blaze3d/platform/Lighting;INVENTORY_DIFFUSE_LIGHT_1:Lorg/joml/Vector3fc;", opcode = Opcodes.GETSTATIC))
-    private Vector3fc animatium$legacyDiffuseLighting$useDiffuse1Inventory(final Vector3fc original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.legacyDiffuseLighting) {
-            return DIFFUSE_LIGHT_1;
-        } else {
-            return original;
-        }
-    }
-
+    // Use normal light in nether
     @ModifyExpressionValue(method = "updateLevel", at = @At(value = "FIELD", target = "Lcom/mojang/blaze3d/platform/Lighting;NETHER_DIFFUSE_LIGHT_0:Lorg/joml/Vector3fc;", opcode = Opcodes.GETSTATIC))
     private Vector3fc animatium$legacyDiffuseLighting$useDiffuse0Nether(final Vector3fc original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.legacyDiffuseLighting) {

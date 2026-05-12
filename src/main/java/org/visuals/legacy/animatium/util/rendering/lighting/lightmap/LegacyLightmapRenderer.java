@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering.lightmap;
+package org.visuals.legacy.animatium.util.rendering.lighting.lightmap;
 
 import btw.lowercase.renderer.Renderer;
 import btw.lowercase.renderer.buffer.Geometry;
