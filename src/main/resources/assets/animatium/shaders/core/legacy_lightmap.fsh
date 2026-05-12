@@ -28,20 +28,17 @@ void main() {
     float skyLight = getBrightness(min(int(texCoord.y * 16), 15)) * SkyFlicker;
     float blockLight = getBrightness(min(int(texCoord.x * 16), 15)) * BlockFlicker;
 
-    float skyV = skyLight * (SkyDarken * 0.65F + 0.35F);
-    float blockVA = blockLight * ((blockLight * 0.6F + 0.4F) * 0.6F + 0.4F);
-    float blockVB = blockLight * (blockLight * blockLight * 0.6F + 0.4F);
+    float skyV = skyLight * (SkyDarken * 0.65 + 0.35);
+    float blockVA = blockLight * ((blockLight * 0.6 + 0.4) * 0.6 + 0.4);
+    float blockVB = blockLight * (blockLight * blockLight * 0.6 + 0.4);
 
-    vec3 color = vec3(skyV + blockLight, skyV + blockVA, skyLight + blockVB);
-    color *= vec3(0.96F);
-    color += vec3(0.03F, 0.03F, 0.03F);
+    vec3 color = (vec3(skyV + blockLight, skyV + blockVA, skyLight + blockVB) * 0.96) + 0.03;
     if (SkyDarkness > 0.0) {
-        color = mix(color, color * vec3(0.7F, 0.6F, 0.6F), SkyDarkness);
+        color = mix(color, color * vec3(0.7, 0.6, 0.6), SkyDarkness);
     }
 
-    // TODO: Double check if correct, should be
     if (UseBrightLightmap == 1) {
-        color = vec3(0.22F + blockLight * 0.75F, 0.28F + blockVA * 0.75F, 0.25F + blockVB * 0.75F);
+        color = vec3(0.22 + blockLight * 0.75, 0.28 + blockVA * 0.75, 0.25 + blockVB * 0.75);
     }
 
     if (NightVisionScale > 0.0) {
@@ -50,7 +47,7 @@ void main() {
 
     color = min(color, vec3(1.0));
     color = mix(color, vec3(notGamma(color.r), notGamma(color.g), notGamma(color.b)), Gamma);
-    color = color * 0.96F + 0.03F;
+    color = color * 0.96 + 0.03;
     color = clamp(color, 0.0, 1.0);
     fragColor = vec4(color, 1.0);
 }
