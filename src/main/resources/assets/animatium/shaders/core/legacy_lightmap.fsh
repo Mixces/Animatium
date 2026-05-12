@@ -11,7 +11,6 @@ layout(std140) uniform LightmapInfo {
 };
 
 in vec2 texCoord;
-
 out vec4 fragColor;
 
 float getBrightness(int index) {
@@ -45,9 +44,10 @@ void main() {
         color *= mix(1.0, 1.0 / min(min(color.r, color.g), color.b), NightVisionScale);
     }
 
-    color = min(color, vec3(1.0));
+    color = min(color, 1.0);
     color = mix(color, notGamma(color), Gamma);
-    color = color * 0.96 + 0.03;
+    color = mix(color, vec3(0.75), 0.04);
     color = clamp(color, 0.0, 1.0);
-    fragColor = vec4(color, 1.0);
+    color *= 255.0;
+    fragColor = vec4(vec3(ivec3(color) / 255.0), 1.0);
 }
