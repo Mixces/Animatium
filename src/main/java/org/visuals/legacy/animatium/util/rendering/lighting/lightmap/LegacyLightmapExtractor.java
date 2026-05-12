@@ -79,7 +79,7 @@ public class LegacyLightmapExtractor {
     }
 
     private float getTimeOfDay(final ClientLevel level, final float tickDelta) {
-        long dayTime = level.getOverworldClockTime();
+        long dayTime = level.getDefaultClockTime();
         if (dayTime == 0) {
             dayTime = 1; // 1.8 never lets the tick time be 0
         }
