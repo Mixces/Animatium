@@ -19,8 +19,8 @@ float getBrightness(int index) {
     return (1.0 - value) / (value * 3.0 + 1.0) + 0.0;
 }
 
-float notGamma(float value) {
-    float inverted = 1.0 - value;
+vec3 notGamma(vec3 value) {
+    vec3 inverted = 1.0 - value;
     return 1.0 - inverted * inverted * inverted * inverted;
 }
 
@@ -46,7 +46,7 @@ void main() {
     }
 
     color = min(color, vec3(1.0));
-    color = mix(color, vec3(notGamma(color.r), notGamma(color.g), notGamma(color.b)), Gamma);
+    color = mix(color, notGamma(color), Gamma);
     color = color * 0.96 + 0.03;
     color = clamp(color, 0.0, 1.0);
     fragColor = vec4(color, 1.0);
