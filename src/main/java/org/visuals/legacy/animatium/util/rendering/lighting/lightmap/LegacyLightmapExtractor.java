@@ -53,7 +53,7 @@ public class LegacyLightmapExtractor {
             if (level != null && player != null) {
                 final ProfilerFiller profiler = Profiler.get();
                 profiler.push("lightmap");
-                state.skyDarken = getSkyDarken(level, tickDelta);
+                state.skyDarken = getSkyDarken(level);
                 state.skyFlicker = level.getSkyFlashTime() > 0 ? 1.0F : state.skyDarken * 0.95F + 0.05F;
                 state.blockFlicker = this.blockLightRed * 0.1F + 1.5F;
                 state.skyDarkness = minecraft.gameRenderer.bossOverlayWorldDarkening(tickDelta);
@@ -69,18 +69,8 @@ public class LegacyLightmapExtractor {
         }
     }
 
-    private float getSkyDarken(final ClientLevel level, final float tickDelta) {
-        final float time = getTimeOfDay(level);
-        float value = 1.0F - (Mth.cos(time * (float) (Math.PI * 2)) * 2.0F + 0.2F);
-        value = Mth.clamp(value, 0.0F, 1.0F);
-        value = 1.0F - value;
-        value *= 1.0F - level.getRainLevel(tickDelta) * 5.0F / 16.0F;
-        value *= 1.0F - level.getThunderLevel(tickDelta) * 5.0F / 16.0F;
-        return value * 0.8F + 0.2F;
-    }
-
-    private float getTimeOfDay(final ClientLevel level) {
-        long fixedTime = level.getOverworldClockTime();
+    private float getSkyDarken(final ClientLevel level) {
+        long fixedTime = level.getDefaultClockTime();
         if (level.dimensionType().hasFixedTime()) {
             final ResourceKey<Level> dimension = level.dimension();
             if (Level.NETHER.equals(dimension)) {
@@ -92,6 +82,11 @@ public class LegacyLightmapExtractor {
 
         final double frac = Mth.frac(fixedTime / 24000.0 - 0.25);
         final double mul = 0.5 - Math.cos(frac * Math.PI) / 2.0;
-        return (float) (frac * 2.0 + mul) / 3.0F;
+        final float time = (float) (frac * 2.0 + mul) / 3.0F;
+
+        float value = 1.0F - Mth.clamp(1.0F - (Mth.cos(time * (float) (Math.PI * 2)) * 2.0F + 0.2F), 0.0F, 1.0F);
+        value *= 1.0F - level.getRainLevel(1.0F) * 5.0F / 16.0F;
+        value *= 1.0F - level.getThunderLevel(1.0F) * 5.0F / 16.0F;
+        return value * 0.8F + 0.2F;
     }
 }
