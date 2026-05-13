@@ -244,12 +244,11 @@ public class Renderer implements AutoCloseable {
 
     public void drawGui(final Geometry geometry) {
         final Window window = Minecraft.getInstance().getWindow();
-        this.projectionMatrix = new Matrix4f().setOrtho(0.0F, (float) window.getWidth() / (float) window.getGuiScale(), (float) window.getHeight() / (float) window.getGuiScale(), 0.0F, 1000.0F, 11000.0F, RenderSystem.getDevice().getDeviceInfo().isZZeroToOne());
+        this.setProjectionMatrix(new Matrix4f().setOrtho(0.0F, (float) window.getWidth() / (float) window.getGuiScale(), (float) window.getHeight() / (float) window.getGuiScale(), 0.0F, 1000.0F, 11000.0F, RenderSystem.getDevice().getDeviceInfo().isZZeroToOne()));
         this.setUniform(DynamicTransforms.KEY, DynamicTransforms.builder()
                 .withModelViewMatrix(new Matrix4f().setTranslation(0.0F, 0.0F, -11000.0F))
                 .build());
         this.draw(geometry);
-        RenderSystem.restoreProjectionMatrix();
     }
 
     @Override

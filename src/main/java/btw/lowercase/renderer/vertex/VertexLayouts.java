@@ -32,7 +32,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 public class VertexLayouts {
     public static final VertexLayout POSITIONED_QUAD = quads(DefaultVertexFormat.POSITION);
     public static final VertexLayout POSITIONED_COLOR_QUAD = quads(DefaultVertexFormat.POSITION_COLOR);
-    public static final VertexLayout TEXTURED_QUAD = quads(DefaultVertexFormat.POSITION_TEX);
+    public static final VertexLayout POSITION_TEX_QUAD = quads(DefaultVertexFormat.POSITION_TEX);
 
     private static VertexLayout quads(final VertexFormat vertexFormat) {
         return new VertexLayout(vertexFormat, PrimitiveTopology.QUADS);

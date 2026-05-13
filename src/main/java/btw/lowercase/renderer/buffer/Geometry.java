@@ -42,7 +42,7 @@ import java.util.function.Consumer;
 
 public interface Geometry extends AutoCloseable {
     static Indexed texturedScreenQuad(final Matrix3x2f pose, final int width, final int height) {
-        return Indexed.compile(VertexLayouts.TEXTURED_QUAD, 4, vertexConsumer -> {
+        return Indexed.compile(VertexLayouts.POSITION_TEX_QUAD, 4, vertexConsumer -> {
             vertexConsumer.addVertexWith2DPose(pose, width, height).setUv(0.0F, 1.0F);
             vertexConsumer.addVertexWith2DPose(pose, width, 0.0F).setUv(1.0F, 1.0F);
             vertexConsumer.addVertexWith2DPose(pose, 0.0F, 0.0F).setUv(1.0F, 0.0F);
@@ -89,7 +89,7 @@ public interface Geometry extends AutoCloseable {
                    boolean persistent) implements Geometry {
         private static Indexed compile(final @NonNull VertexLayout vertexLayout, final int vertexCount, final Consumer<VertexConsumer> vertexConsumer, final boolean persistent) {
             try (final ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(vertexLayout.vertexFormat().getVertexSize() * vertexCount)) {
-                final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, vertexLayout.primitiveTopology(), vertexLayout.vertexFormat());
+                final BufferBuilder builder = vertexLayout.buffer(byteBufferBuilder);
                 vertexConsumer.accept(builder);
                 try (final MeshData meshData = builder.buildOrThrow()) {
                     final GpuDevice device = RenderSystem.getDevice();
