@@ -84,6 +84,9 @@ public final class LegacySkyRenderer {
         IrisUtil.assignPipeline(IrisPipeline.SKY_BASIC, AnimatiumPipelines.LEGACY_SKY, AnimatiumPipelines.LEGACY_SKY_PLANAR_FOG);
     }
 
+    LegacySkyRenderer() {
+    }
+
     public static RenderPipeline getLegacySkyPipeline(final boolean planar) {
         return planar ? AnimatiumPipelines.LEGACY_SKY_PLANAR_FOG : AnimatiumPipelines.LEGACY_SKY;
     }

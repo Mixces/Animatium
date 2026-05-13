@@ -68,13 +68,11 @@ public abstract class MixinSkyRenderer_PlanarFogSky {
 
     @WrapOperation(method = "renderSkyDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setVertexBuffer(ILcom/mojang/blaze3d/buffers/GpuBufferSlice;)V", ordinal = 0))
     private void animatium$planarFogPipeline$skyDisc$vertexBuffer(final RenderPass instance, final int slot, final GpuBufferSlice vertexBuffer, final Operation<Void> original) {
-        GpuBufferSlice buffer = vertexBuffer;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
-            buffer = LegacySkyRenderer.TOP_GEOMETRY.vertexBuffer().slice();
-            instance.setIndexBuffer(animatium$skyIndexBuffer.getBuffer(6), animatium$skyIndexBuffer.type());
+            LegacySkyRenderer.TOP_GEOMETRY.bind(instance, animatium$skyIndexBuffer);
+        } else {
+            original.call(instance, slot, vertexBuffer);
         }
-
-        original.call(instance, slot, buffer);
     }
 
     @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setPipeline(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V"))
@@ -87,32 +85,30 @@ public abstract class MixinSkyRenderer_PlanarFogSky {
         original.call(instance, pipeline);
     }
 
-    @WrapOperation(method = "renderSkyDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;draw(II)V", ordinal = 0))
-    private void animatium$planarFogPipeline$skyDisc$draw(final RenderPass instance, final int firstVertex, final int vertexCount, final Operation<Void> original) {
+    @WrapOperation(method = "renderSkyDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;draw(IIII)V", ordinal = 0))
+    private void animatium$planarFogPipeline$skyDisc$draw(final RenderPass instance, final int vertexCount, final int instanceCount, final int firstVertex, final int firstInstance, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
-            instance.drawIndexed(0, 0, 1014, 1);
+            LegacySkyRenderer.TOP_GEOMETRY.draw(instance);
         } else {
-            original.call(instance, firstVertex, vertexCount);
+            original.call(instance, vertexCount, instanceCount, firstVertex, firstInstance);
         }
     }
 
     @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setVertexBuffer(ILcom/mojang/blaze3d/buffers/GpuBufferSlice;)V", ordinal = 0))
     private void animatium$planarFogPipeline$darkSkyDisc$vertexBuffer(final RenderPass instance, final int slot, final GpuBufferSlice vertexBuffer, final Operation<Void> original) {
-        GpuBufferSlice buffer = vertexBuffer;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
-            buffer = LegacySkyRenderer.BOTTOM_GEOMETRY.vertexBuffer().slice();
-            instance.setIndexBuffer(animatium$skyIndexBuffer.getBuffer(6), animatium$skyIndexBuffer.type());
+            LegacySkyRenderer.BOTTOM_GEOMETRY.bind(instance, animatium$skyIndexBuffer);
+        } else {
+            original.call(instance, slot, vertexBuffer);
         }
-
-        original.call(instance, slot, buffer);
     }
 
-    @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;draw(II)V", ordinal = 0))
-    private void animatium$planarFogPipeline$darkSkyDisc$draw(final RenderPass instance, final int firstVertex, final int vertexCount, final Operation<Void> original) {
+    @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;draw(IIII)V", ordinal = 0))
+    private void animatium$planarFogPipeline$darkSkyDisc$draw(final RenderPass instance, final int vertexCount, final int instanceCount, final int firstVertex, final int firstInstance, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
-            instance.drawIndexed(0, 0, 1014, 1);
+            LegacySkyRenderer.BOTTOM_GEOMETRY.draw(instance);
         } else {
-            original.call(instance, firstVertex, vertexCount);
+            original.call(instance, vertexCount, instanceCount, firstVertex, firstInstance);
         }
     }
 }

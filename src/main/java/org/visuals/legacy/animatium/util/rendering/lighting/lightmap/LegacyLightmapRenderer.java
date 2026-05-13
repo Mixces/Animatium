@@ -41,9 +41,8 @@ public final class LegacyLightmapRenderer {
     private static final Geometry.Basic BASE_GEOMETRY = new Geometry.Basic(0, 3);
     private static final int LIGHTMAP_UBO_SIZE = new Std140SizeCalculator()
             .putFloat() // SkyDarken
-            .putFloat() // SkyFlicker
-            .putFloat() // BlockFlicker
             .putFloat() // SkyDarkness
+            .putFloat() // BlockLightRed
             .putFloat() // NightVisionScale
             .putFloat() // Gamma
             .putInt() // UseBrightLightmap
@@ -58,9 +57,8 @@ public final class LegacyLightmapRenderer {
             try (final GpuBufferSlice.MappedView mappedView = this.ubo.currentBuffer().map(false, true)) {
                 Std140Builder.intoBuffer(mappedView.data())
                         .putFloat(state.skyDarken)
-                        .putFloat(state.skyFlicker)
-                        .putFloat(state.blockFlicker)
                         .putFloat(state.skyDarkness)
+                        .putFloat(state.blockLightRed)
                         .putFloat(state.nightVisionScale)
                         .putFloat(state.gamma)
                         .putInt(state.useBrightLightmap ? 1 : 0);

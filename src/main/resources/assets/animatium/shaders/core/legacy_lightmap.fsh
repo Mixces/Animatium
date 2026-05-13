@@ -3,9 +3,8 @@ precision highp float;
 
 layout(std140) uniform LightmapInfo {
     float SkyDarken;
-    float SkyFlicker;
-    float BlockFlicker;
     float SkyDarkness;
+    float BlockLightRed;
     float NightVisionScale;
     float Gamma;
     int UseBrightLightmap;
@@ -25,8 +24,8 @@ vec3 notGamma(vec3 value) {
 }
 
 void main() {
-    float skyLight = getBrightness(min(int(texCoord.y * 16), 15)) * SkyFlicker;
-    float blockLight = getBrightness(min(int(texCoord.x * 16), 15)) * (BlockFlicker * 0.1 + 1.5);
+    float skyLight = getBrightness(min(int(texCoord.y * 16), 15)) * (SkyDarken * 0.95F + 0.05F);
+    float blockLight = getBrightness(min(int(texCoord.x * 16), 15)) * (BlockLightRed * 0.1 + 1.5);
 
     float skyV = skyLight * (SkyDarken * 0.65 + 0.35);
     float blockVA = blockLight * ((blockLight * 0.6 + 0.4) * 0.6 + 0.4);

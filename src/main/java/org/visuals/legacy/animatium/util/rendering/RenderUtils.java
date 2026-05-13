@@ -36,6 +36,9 @@ import org.joml.Matrix3x2fStack;
 public final class RenderUtils {
     public static final DepthStencilState NO_DEPTH_WRITE = new DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false);
 
+    RenderUtils() {
+    }
+
     public static void copyTextureToTexture(final GpuTexture source, final GpuTexture destination) {
         RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(source, destination, 0, 0, 0, 0, 0, source.getWidth(0), source.getHeight(0));
     }

@@ -47,6 +47,9 @@ public final class LegacyDiffuseLighting {
     @Setter
     private static BiConsumer<Lighting.Entry, Lights> updateLightingInvoker;
 
+    LegacyDiffuseLighting() {
+    }
+
     public static void refresh() {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.legacyDiffuseLighting) {
             final Lights lights = new Lights(item3dPose.transformDirection(DIFFUSE_LIGHT_0, new Vector3f()), item3dPose.transformDirection(DIFFUSE_LIGHT_1, new Vector3f()));

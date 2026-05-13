@@ -90,6 +90,7 @@
 		"oldWaterColorFog": true,
 		"disableRandomBlockRotations": false,
 		"legacyDiffuseLighting": true,
-		"legacyLightmap": true
+		"legacyLightmap": true,
+		"legacyFogDarkness": true
 	}
 }

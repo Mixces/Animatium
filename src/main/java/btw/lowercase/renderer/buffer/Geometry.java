@@ -29,6 +29,7 @@ import btw.lowercase.renderer.vertex.VertexLayout;
 import btw.lowercase.renderer.vertex.VertexLayouts;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.systems.GpuDevice;
+import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
@@ -49,6 +50,10 @@ public interface Geometry extends AutoCloseable {
         });
     }
 
+    void bind(final RenderPass pass, final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer);
+
+    void draw(final RenderPass pass);
+
     boolean persistent();
 
     boolean isClosed();
@@ -56,6 +61,15 @@ public interface Geometry extends AutoCloseable {
     void close();
 
     record Basic(int firstVertex, int vertexCount) implements Geometry {
+        @Override
+        public void bind(final RenderPass pass, final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer) {
+        }
+
+        @Override
+        public void draw(final RenderPass pass) {
+            pass.draw(this.vertexCount, 1, this.firstVertex, 0);
+        }
+
         @Override
         public boolean persistent() {
             return true;
@@ -91,6 +105,17 @@ public interface Geometry extends AutoCloseable {
 
         public static Indexed compilePersistent(final VertexLayout vertexLayout, final int vertexCount, final Consumer<VertexConsumer> vertexConsumer) {
             return compile(vertexLayout, vertexCount, vertexConsumer, true);
+        }
+
+        @Override
+        public void bind(final RenderPass pass, final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer) {
+            pass.setVertexBuffer(0, this.vertexBuffer.slice());
+            pass.setIndexBuffer(autoStorageIndexBuffer.getBuffer(this.indexCount), autoStorageIndexBuffer.type());
+        }
+
+        @Override
+        public void draw(final RenderPass pass) {
+            pass.drawIndexed(this.indexCount, 1, 0, 0, 0);
         }
 
         @Override

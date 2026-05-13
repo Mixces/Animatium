@@ -148,11 +148,11 @@ dependencies {
 //    modImplementation(fabricApi.module("fabric-model-loading-api-v1", deps.fabricApiVersion))
     modImplementation(fabricApi.module("fabric-transitive-access-wideners-v1", deps.fabricApiVersion)) // TEMP 26.2
 
-    optionalProp("deps.modmenu_version") { prop ->
-        modImplementation("com.terraformersmc:modmenu:$prop") {
-            exclude(group="net.fabricmc.fabric-api")
-        }
-    }
+//    optionalProp("deps.modmenu_version") { prop ->
+//        modImplementation("com.terraformersmc:modmenu:$prop") {
+//            exclude(group="net.fabricmc.fabric-api")
+//        }
+//    }
 
     optionalProp("deps.yacl_version") { prop ->
         modImplementation("dev.isxander:yet-another-config-lib:$prop") {

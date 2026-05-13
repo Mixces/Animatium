@@ -36,7 +36,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.Level;
 
-public class LegacyLightmapExtractor {
+public final class LegacyLightmapExtractor {
     private boolean needsUpdate;
     private float blockLightRed;
 
@@ -54,8 +54,7 @@ public class LegacyLightmapExtractor {
                 final ProfilerFiller profiler = Profiler.get();
                 profiler.push("lightmap");
                 state.skyDarken = getSkyDarken(level);
-                state.skyFlicker = state.skyDarken * 0.95F + 0.05F;
-                state.blockFlicker = this.blockLightRed;
+                state.blockLightRed = this.blockLightRed;
                 state.skyDarkness = minecraft.gameRenderer.bossOverlayWorldDarkening(tickDelta);
                 if (player.hasEffect(MobEffects.NIGHT_VISION)) {
                     state.nightVisionScale = GameRenderer.nightVisionScale(player, tickDelta);

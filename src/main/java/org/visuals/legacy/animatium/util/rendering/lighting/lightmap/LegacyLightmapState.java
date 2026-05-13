@@ -28,9 +28,8 @@ package org.visuals.legacy.animatium.util.rendering.lighting.lightmap;
 public class LegacyLightmapState {
     public boolean needsUpdate;
     public float skyDarken;
-    public float skyFlicker;
-    public float blockFlicker;
     public float skyDarkness;
+    public float blockLightRed;
     public float nightVisionScale;
     public float gamma;
     public boolean useBrightLightmap;

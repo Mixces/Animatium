@@ -25,14 +25,13 @@
 
 package org.visuals.legacy.animatium.config;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
 import dev.kikugie.fletching_table.annotation.fabric.Entrypoint;
 
+// TODO 26.2
 @Entrypoint("modmenu")
-public class ModMenuIntegration implements ModMenuApi {
-    @Override
-    public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return AnimatiumConfig::getConfigScreen;
-    }
+public class ModMenuIntegration /*implements ModMenuApi*/ {
+//    @Override
+//    public ConfigScreenFactory<?> getModConfigScreenFactory() {
+//        return AnimatiumConfig::getConfigScreen;
+//    }
 }

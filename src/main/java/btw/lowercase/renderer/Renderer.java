@@ -228,15 +228,8 @@ public class Renderer implements AutoCloseable {
                     }
                 }
 
-                if (geometry instanceof Geometry.Indexed indexed) {
-                    pass.setVertexBuffer(0, indexed.vertexBuffer().slice());
-                    pass.setIndexBuffer(autoStorageIndexBuffer.getBuffer(indexed.indexCount()), autoStorageIndexBuffer.type());
-                    pass.drawIndexed(0, 0, indexed.indexCount(), 1);
-                } else if (geometry instanceof Geometry.Basic(int firstVertex, int vertexCount)) {
-                    pass.draw(firstVertex, vertexCount);
-                } else {
-                    throw new RuntimeException("Cannot draw with unknown geometry");
-                }
+                geometry.bind(pass, autoStorageIndexBuffer);
+                geometry.draw(pass);
             }
 
             if (!geometry.persistent()) {
