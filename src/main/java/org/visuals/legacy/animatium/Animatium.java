@@ -89,7 +89,7 @@ public final class Animatium {
             ConfigUtil.load();
             System.err.println("Successfully loaded the animatium utility config!");
         } catch (Exception ignored) {
-            enabled = ConfigUtil.bool("enabled");
+            enabled = ConfigUtil.getBoolean("enabled");
             System.err.println("Failed to load animatium utility config, defaulting...");
         }
 

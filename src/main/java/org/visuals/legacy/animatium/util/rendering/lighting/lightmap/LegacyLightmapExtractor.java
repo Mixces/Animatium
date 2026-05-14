@@ -77,7 +77,7 @@ public final class LegacyLightmapExtractor {
         return value * 0.8F + 0.2F;
     }
 
-    private float getTimeOfDay(final ClientLevel level, final float tickDelta) {
+    private double getTimeOfDay(final ClientLevel level, final float tickDelta) {
         long dayTime = level.getDefaultClockTime();
         if (dayTime == 0) {
             dayTime = 1; // 1.8 never lets the tick time be 0
@@ -92,18 +92,18 @@ public final class LegacyLightmapExtractor {
             }
         }
 
-        final int time = (int) (dayTime % 24000L);
-        float frac = ((float) time + tickDelta) / 24000.0F - 0.25F;
-        if (frac < 0.0F) {
+        final int time = Math.toIntExact(dayTime % 24000L);
+        double frac = (time + tickDelta) / 24000.0 - 0.25;
+        if (frac < 0.0) {
             ++frac;
         }
 
-        if (frac > 1.0F) {
+        if (frac > 1.0) {
             --frac;
         }
 
-        final float mul = 1.0F - (float) ((Math.cos((double) frac * Math.PI) + 1.0) / 2.0);
-        frac += (mul - frac) / 3.0F;
+        final double mul = 1.0 - ((Math.cos(frac * Math.PI) + 1.0) / 2.0);
+        frac += (mul - frac) / 3.0;
         return frac;
     }
 }

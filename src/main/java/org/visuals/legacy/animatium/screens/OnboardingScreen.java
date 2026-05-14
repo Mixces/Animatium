@@ -42,20 +42,22 @@ import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
 public class OnboardingScreen extends Screen {
     private final Screen original;
+    private final boolean accessedViaCommands;
     private Version version = Version.MODERN;
 
     private Button v1_7Button = null;
     private Button v1_8Button = null;
     private Button modernButton = null;
 
-    public OnboardingScreen(final Screen original) {
+    public OnboardingScreen(final Screen original, final boolean accessedViaCommands) {
         super(Component.literal("Onboarding"));
         this.original = original;
+        this.accessedViaCommands = accessedViaCommands;
     }
 
     @Override
     protected void init() {
-        if (!ConfigUtil.bool("onboarding")) {
+        if (!ConfigUtil.getBoolean("onboarding")) {
             this.minecraft.gui.setScreen(this.original);
             return;
         }
@@ -63,6 +65,8 @@ public class OnboardingScreen extends Screen {
         if (this.original != null) {
             this.original.init(this.width, this.height);
         }
+
+        this.version = ConfigUtil.getEnum("version", Version.MODERN);
 
         final int buttonWidth = 100;
         this.v1_7Button = this.addRenderableWidget(Button.builder(Component.literal("1.7"), button -> this.version = Version.V1_7)
@@ -78,6 +82,7 @@ public class OnboardingScreen extends Screen {
 
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> {
             ConfigUtil.put("onboarding", false);
+            ConfigUtil.put("version", this.version.name());
             this.version.apply();
             AnimatiumConfig.save();
             this.minecraft.gui.setScreen(this.original);
@@ -96,9 +101,12 @@ public class OnboardingScreen extends Screen {
         RenderUtils.drawScaledText(graphics, this.font, "Welcome to Animatium Onboarding!", this.width / 2, this.height / 4, 2.0F);
         graphics.centeredText(this.font, "Hello! Thank you for downloading Animatium!", this.width / 2, (int) (this.height / 2.8), 0xFFD6D6D6);
         graphics.centeredText(this.font, "Please select the version of visuals you would like to use!", this.width / 2, (int) (this.height / 2.4), 0xFFD6D6D6);
-
-        graphics.centeredText(this.font, "NOTE: If you have already went through this,", this.width / 2, (int) (this.height / 1.4F), 0xFFFFA600);
-        graphics.centeredText(this.font, "ask for help in the discord before continuing!", this.width / 2, (int) (this.height / 1.3F), 0xFFFFA600);
+        if (!accessedViaCommands) {
+            graphics.centeredText(this.font, "NOTE: If you have already went through this,", this.width / 2, (int) (this.height / 1.4F), 0xFFFFA600);
+            graphics.centeredText(this.font, "ask for help in the discord before continuing!", this.width / 2, (int) (this.height / 1.3F), 0xFFFFA600);
+        } else {
+            graphics.centeredText(this.font, "Current saved version: " + ConfigUtil.getEnum("version", this.version), this.width / 2, (int) (this.height / 1.3F), ARGB.white(0.625F));
+        }
     }
 
     @Override
@@ -120,18 +128,20 @@ public class OnboardingScreen extends Screen {
         }
     }
 
-    private void updateVersionButtonMessage(final Button button) {
-        button.setMessage(button.getMessage().copy().withColor(button.isActive() ? ARGB.white(1.0F) : 0xFFFFFFA0));
+    private void updateVersionButtonMessage(final Button button, final Version version) {
+        button.setMessage(button.getMessage()
+                .copy()
+                .withColor(button.isActive() ? (version == this.version ? ARGB.color(1.0F, 0x00FF00) : ARGB.white(1.0F)) : 0xFFFFFFA0));
     }
 
     private void updateVersionButtonState() {
         this.v1_7Button.active = this.version != Version.V1_7;
-        this.updateVersionButtonMessage(this.v1_7Button);
+        this.updateVersionButtonMessage(this.v1_7Button, Version.V1_7);
 
         this.v1_8Button.active = this.version != Version.V1_8;
-        this.updateVersionButtonMessage(this.v1_8Button);
+        this.updateVersionButtonMessage(this.v1_8Button, Version.V1_8);
 
         this.modernButton.active = this.version != Version.MODERN;
-        this.updateVersionButtonMessage(this.modernButton);
+        this.updateVersionButtonMessage(this.modernButton, Version.MODERN);
     }
 }
