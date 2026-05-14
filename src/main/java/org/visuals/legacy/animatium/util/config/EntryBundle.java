@@ -88,8 +88,8 @@ public class EntryBundle extends Bundle {
     }
 
     @Override
-    public <S extends Enum<S>> EntryBundle enumEntry(final String name, final Class<S> enumClass) {
-        this.entries.add(new EnumEntry<>(name, enumClass));
+    public <S extends Enum<S>> EntryBundle enumEntry(final String name, final Class<S> enumClazz) {
+        this.entries.add(new EnumEntry<>(name, enumClazz));
         return this;
     }
 

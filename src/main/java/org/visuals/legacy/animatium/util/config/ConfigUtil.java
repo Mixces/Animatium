@@ -37,15 +37,19 @@ import java.nio.file.Files;
 
 @UtilityClass
 public class ConfigUtil {
+    public static final String ENABLED_KEY = "enabled";
+    public static final String ONBOARDING_KEY = "onboarding";
+    public static final String VERSION_KEY = "version";
+
     private final Gson GSON = new GsonBuilder().setStrictness(Strictness.LENIENT).create();
     private final File CONFIG_FILE = new File(FabricLoader.getInstance().getGameDir().toFile(), "animatium_utility.json");
     private JsonObject data = new JsonObject();
 
     static {
         // Defaults
-        data.addProperty("enabled", true);
-        data.addProperty("onboarding", true);
-        data.addProperty("version", Version.MODERN.name());
+        data.addProperty(ENABLED_KEY, true);
+        data.addProperty(ONBOARDING_KEY, true);
+        data.addProperty(VERSION_KEY, Version.MODERN.name());
     }
 
     public void load() throws Exception {

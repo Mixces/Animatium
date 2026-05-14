@@ -44,7 +44,7 @@ public abstract class MixinGui_OnboardingScreen {
     @Expression("@(this).screen = guiScreen")
     @ModifyVariable(method = "setScreen", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.BEFORE), argsOnly = true)
     private Screen animatium$showOnboarding(final Screen value) {
-        if (value instanceof TitleScreen titleScreen && ConfigUtil.getBoolean("onboarding")) {
+        if (value instanceof TitleScreen titleScreen && ConfigUtil.getBoolean(ConfigUtil.ONBOARDING_KEY)) {
             return new OnboardingScreen(titleScreen, false);
         } else {
             return value;

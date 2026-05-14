@@ -57,7 +57,7 @@ public class OnboardingScreen extends Screen {
 
     @Override
     protected void init() {
-        if (!ConfigUtil.getBoolean("onboarding")) {
+        if (!ConfigUtil.getBoolean(ConfigUtil.ONBOARDING_KEY) && !this.accessedViaCommands) {
             this.minecraft.gui.setScreen(this.original);
             return;
         }
@@ -66,7 +66,7 @@ public class OnboardingScreen extends Screen {
             this.original.init(this.width, this.height);
         }
 
-        this.version = ConfigUtil.getEnum("version", Version.MODERN);
+        this.version = ConfigUtil.getEnum(ConfigUtil.VERSION_KEY, Version.MODERN);
 
         final int buttonWidth = 100;
         this.v1_7Button = this.addRenderableWidget(Button.builder(Component.literal("1.7"), button -> this.version = Version.V1_7)
@@ -81,8 +81,8 @@ public class OnboardingScreen extends Screen {
         this.updateVersionButtonState();
 
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> {
-            ConfigUtil.put("onboarding", false);
-            ConfigUtil.put("version", this.version.name());
+            ConfigUtil.put(ConfigUtil.ONBOARDING_KEY, false);
+            ConfigUtil.put(ConfigUtil.VERSION_KEY, this.version.name());
             this.version.apply();
             AnimatiumConfig.save();
             this.minecraft.gui.setScreen(this.original);
@@ -95,7 +95,7 @@ public class OnboardingScreen extends Screen {
             this.original.extractRenderState(graphics, -999, -999, tickDelta);
         }
 
-        graphics.fill(0, 0, this.width, this.height, ARGB.color(0.72F, 0));
+        graphics.fill(0, 0, this.width, this.height, ARGB.color(this.accessedViaCommands ? 0.35F : 0.72F, 0));
         super.extractRenderState(graphics, mouseX, mouseY, tickDelta);
 
         RenderUtils.drawScaledText(graphics, this.font, "Welcome to Animatium Onboarding!", this.width / 2, this.height / 4, 2.0F);
@@ -105,7 +105,7 @@ public class OnboardingScreen extends Screen {
             graphics.centeredText(this.font, "NOTE: If you have already went through this,", this.width / 2, (int) (this.height / 1.4F), 0xFFFFA600);
             graphics.centeredText(this.font, "ask for help in the discord before continuing!", this.width / 2, (int) (this.height / 1.3F), 0xFFFFA600);
         } else {
-            graphics.centeredText(this.font, "Current saved version: " + ConfigUtil.getEnum("version", this.version), this.width / 2, (int) (this.height / 1.3F), ARGB.white(0.625F));
+            graphics.centeredText(this.font, "Current saved version: " + ConfigUtil.getEnum(ConfigUtil.VERSION_KEY, this.version), this.width / 2, (int) (this.height / 1.3F), ARGB.white(0.625F));
         }
     }
 
@@ -123,7 +123,7 @@ public class OnboardingScreen extends Screen {
     public void onClose() {
         // NOTE: Only allow escaping if you used the ``/animatium onboarding`` command
         if (this.original == null) {
-            ConfigUtil.put("onboarding", false);
+            ConfigUtil.put(ConfigUtil.ONBOARDING_KEY, false);
             super.onClose();
         }
     }

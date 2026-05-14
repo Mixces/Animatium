@@ -19,6 +19,8 @@
         - Full Width Inventory Status-Effects Background
     - Other
         - Legacy Diffuse Lighting
+        - Legacy Lightmap
+        - Legacy Fog Darkening
     - Fixes
         - Instant Bed
     - Extras:
@@ -42,3 +44,4 @@
 - Fixed mod not "requiring" YACL on launch
 - Fixed potential crash when using the 1.7 sneak animation
 - Fixed Damage tint not affecting blocks/items equipped in the head slot when they should be
+- Fixed onboarding showing if the screen was opened via commands and the game closed

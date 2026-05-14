@@ -36,6 +36,7 @@ import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
 import net.minecraft.network.protocol.game.ServerboundSwingPacket;
@@ -171,5 +172,10 @@ public class Utils {
             // Re-initialize the inventory, to reset the slot positions modified by "Old Crafting Slots Position"
             ((PlayerAccessor) player).animatium$setInventoryMenu(new InventoryMenu(player.getInventory(), !player.level().isClientSide(), player));
         }
+    }
+
+    public static boolean isSingleplayer() {
+        final IntegratedServer server = Minecraft.getInstance().getSingleplayerServer();
+        return server != null && server.isSingleplayer();
     }
 }

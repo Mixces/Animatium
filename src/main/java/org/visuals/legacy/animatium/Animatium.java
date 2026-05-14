@@ -37,6 +37,7 @@ import org.apache.logging.log4j.Logger;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.config.ConfigBundles;
 import org.visuals.legacy.animatium.util.AnimatiumDebugEntry;
+import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.config.ConfigUtil;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
@@ -53,11 +54,11 @@ public final class Animatium {
 
     public void setEnabled(final boolean enabled) {
         Animatium.enabled = enabled;
-        ConfigUtil.put("enabled", enabled);
+        ConfigUtil.put(ConfigUtil.ENABLED_KEY, enabled);
     }
 
     public boolean hasServerFeature(final ServerFeature feature) {
-        if (isSingleplayer()) {
+        if (Utils.isSingleplayer()) {
             for (final EntryBundle.Entry<?> entry : ConfigBundles.EXTRAS.entries()) {
                 if (entry.name.equals(feature.getName())) {
                     return (boolean) entry.value();
@@ -68,11 +69,6 @@ public final class Animatium {
         } else {
             return ENABLED_SERVER_FEATURES.contains(ServerFeature.ALL) || ENABLED_SERVER_FEATURES.contains(feature);
         }
-    }
-
-    private static boolean isSingleplayer() {
-        final IntegratedServer server = Minecraft.getInstance().getSingleplayerServer();
-        return server != null && server.isSingleplayer();
     }
 
     public Identifier location(final String path) {
@@ -89,7 +85,7 @@ public final class Animatium {
             ConfigUtil.load();
             System.err.println("Successfully loaded the animatium utility config!");
         } catch (Exception ignored) {
-            enabled = ConfigUtil.getBoolean("enabled");
+            enabled = ConfigUtil.getBoolean(ConfigUtil.ENABLED_KEY);
             System.err.println("Failed to load animatium utility config, defaulting...");
         }
 
