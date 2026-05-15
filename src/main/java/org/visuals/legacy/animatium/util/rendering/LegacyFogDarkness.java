@@ -33,19 +33,19 @@ import net.minecraft.world.level.LevelReader;
 public final class LegacyFogDarkness {
     public static final LegacyFogDarkness INSTANCE = new LegacyFogDarkness();
 
+    private float prevDarkness;
     private float darkness;
-    private float oldDarkness;
 
     LegacyFogDarkness() {
     }
 
     public void tick(final LevelReader reader, final Entity entity, final int viewDistance) {
-        this.oldDarkness = this.darkness;
+        this.prevDarkness = this.darkness;
         this.darkness = Mth.lerp(0.1F, this.darkness, Mth.lerp(getBrightness(reader, entity.blockPosition()), viewDistance / 32.0F, 1.0F));
     }
 
     public float getDarkness(final float tickDelta) {
-        return Mth.lerp(tickDelta, this.oldDarkness, this.darkness);
+        return Mth.lerp(tickDelta, this.prevDarkness, this.darkness);
     }
 
     private static float getBrightness(final LevelReader reader, final BlockPos blockPos) {

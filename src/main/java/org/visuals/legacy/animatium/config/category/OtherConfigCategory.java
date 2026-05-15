@@ -63,6 +63,7 @@ public class OtherConfigCategory extends Category {
     public boolean legacyDiffuseLighting = false;
     public boolean legacyLightmap = false;
     public boolean legacyFogDarkness = false;
+    public boolean legacySplashPosition = false;
     public VoidFogSetting voidFog = VoidFogSetting.OFF;
 
     public static ConfigCategory create(final OtherConfigCategory defaults, final OtherConfigCategory config) {
@@ -109,6 +110,7 @@ public class OtherConfigCategory extends Category {
         bundle.booleanEntry("legacyDiffuseLighting", (option, value) -> LegacyDiffuseLighting.refresh());
         bundle.booleanEntry("legacyLightmap");
         bundle.booleanEntry("legacyFogDarkness");
+        bundle.booleanEntry("legacySplashPosition");
         bundle.enumEntry("voidFog", VoidFogSetting.class);
 
         return bundle;

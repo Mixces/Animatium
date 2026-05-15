@@ -93,6 +93,7 @@
 		"v1.gui.screen_tweaks.MixinInventoryMenu_OldCraftingSlots",
 		"v1.gui.screen_tweaks.MixinInventoryScreen_ModifyTitlePosition",
 		"v1.gui.screen_tweaks.MixinPanorama_LegacyPanorama",
+		"v1.gui.screen_tweaks.MixinSplashRenderer_LegacySplashPosition",
 		"v1.gui.toasts.MixinRecipeToast_DisableToast",
 		"v1.gui.toasts.MixinToastManager_DisableToastSounds",
 		"v1.gui.toasts.MixinTutorialToast_DisableToast",

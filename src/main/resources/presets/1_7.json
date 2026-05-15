@@ -91,6 +91,7 @@
 		"disable_random_block_rotations": true,
 		"legacy_diffuse_lighting": true,
 		"legacy_lightmap": true,
-		"legacy_fog_darkness": true
+		"legacy_fog_darkness": true,
+		"legacy_splash_position": true
 	}
 }
