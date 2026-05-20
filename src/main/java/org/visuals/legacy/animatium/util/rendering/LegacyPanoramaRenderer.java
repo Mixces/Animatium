@@ -25,6 +25,7 @@
 
 package org.visuals.legacy.animatium.util.rendering;
 
+import btw.lowercase.renderer.RenderDescriptor;
 import btw.lowercase.renderer.Renderer;
 import btw.lowercase.renderer.buffer.DynamicTransforms;
 import btw.lowercase.renderer.buffer.Geometry;
@@ -33,7 +34,6 @@ import com.mojang.blaze3d.GpuFormat;
 import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.GpuDevice;
-import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuTexture;
@@ -60,7 +60,7 @@ import java.util.Objects;
 // Ported code of the old <=1.12.2 panorama renderer (w/ blur)
 public final class LegacyPanoramaRenderer implements AutoCloseable {
     private static final int SAMPLES = 64;
-    private static final RenderPass.RenderArea VIEWPORT = new RenderPass.RenderArea(0, 0, 256, 256);
+    private static final RenderDescriptor.Area VIEWPORT = new RenderDescriptor.Area(256, 256);
     private static final Vector4f CLEAR_COLOR = new Vector4f(0.0F, 0.0F, 0.0F, 1.0F);
     private static final Identifier CUBE_MAP_LOCATION = Identifier.withDefaultNamespace("textures/gui/title/background/panorama");
     private static final Matrix4f CUBE_MAP_PROJECTION = new Matrix4f().setPerspective(Utils.toRadians(120.0F), 1.0F, 0.05F, 10.0F);

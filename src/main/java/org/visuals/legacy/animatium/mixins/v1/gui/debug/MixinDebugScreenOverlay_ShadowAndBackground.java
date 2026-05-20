@@ -35,7 +35,7 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(DebugScreenOverlay.class)
-public abstract class MixinDebugScreenOverlay {
+public abstract class MixinDebugScreenOverlay_ShadowAndBackground {
     @WrapWithCondition(method = "extractLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;fill(IIIII)V"))
     private boolean animatium$removeDebugBackground(final GuiGraphicsExtractor instance, final int x0, final int y0, final int x1, final int y1, final int col) {
         return !Animatium.isEnabled() || !AnimatiumConfig.instance().screen.disableDebugHudBackground;

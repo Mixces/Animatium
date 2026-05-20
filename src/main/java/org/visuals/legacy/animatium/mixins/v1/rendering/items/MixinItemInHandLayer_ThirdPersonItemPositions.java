@@ -68,7 +68,7 @@ public abstract class MixinItemInHandLayer_ThirdPersonItemPositions<S extends Ar
 
     @Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/item/ItemStackRenderState;submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V"))
     private void animatium$itemPositionsThird(final S state, final ItemStackRenderState item, final ItemStack itemStack, final HumanoidArm arm, final PoseStack poseStack, final SubmitNodeCollector submitNodeCollector, final int lightCoords, final CallbackInfo ci) {
-        if (Animatium.isEnabled() && ItemUtils.shouldApplyItemPositionsInThirdPerson(state)) {
+        if (Animatium.isEnabled()) {
             final int direction = Utils.getArmMultiplier(arm);
             final ItemStack stack = state.animatium$getItemHeldByArm(arm);
             if (!stack.isEmpty() && !ItemUtils.isItemBlacklisted(stack)) {
@@ -76,90 +76,92 @@ public abstract class MixinItemInHandLayer_ThirdPersonItemPositions<S extends Ar
                         AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersion.V1_7 &&
                         stack.is(Items.FISHING_ROD) &&
                         (state instanceof AvatarRenderState && state.animatium$isFishing());
-                final boolean usesBlockLight = item.usesBlockLight();
-                if (ItemUtils.isBlock3d(stack, usesBlockLight)) {
-                    final float scale = 0.375F;
-                    poseStack.translate(0.0F, 0.1875F, -0.3125F);
-                    poseStack.mulPose(Axis.XP.rotationDegrees(20.0F));
-                    poseStack.mulPose(Axis.YP.rotationDegrees(direction * 45.0F));
-                    poseStack.scale(-scale, -scale, scale);
-                } else if (stack.is(Items.BOW)) {
-                    final float scale = 0.625F;
-                    poseStack.translate(direction * 0.0F, 0.125F, 0.3125F);
-                    poseStack.mulPose(Axis.YP.rotationDegrees(direction * -20.0F));
-                    poseStack.translate(direction * -0.0625F, 0.0F, 0.0F);
-                    poseStack.scale(scale, scale, scale);
-                    poseStack.mulPose(Axis.XP.rotationDegrees(180));
-                    poseStack.mulPose(Axis.XP.rotationDegrees(100.0F));
-                    poseStack.mulPose(Axis.YP.rotationDegrees(direction * -145.0F));
-                    poseStack.translate(-0.011765625F, 0.0F, 0.002125F);
-                } else if (ItemUtils.isHandheldItem(stack)) {
-                    final float scale = 0.625F;
-                    if (ItemUtils.isFishingRodItem(stack) && !isStickRod) {
-                        poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 180.0F));
-                        poseStack.translate(0.0F, -0.125F, 0.0F);
+                if (ItemUtils.shouldApplyItemPositionsInThirdPerson(state)) {
+                    final boolean usesBlockLight = item.usesBlockLight();
+                    if (ItemUtils.isBlock3d(stack, usesBlockLight)) {
+                        final float scale = 0.375F;
+                        poseStack.translate(0.0F, 0.1875F, -0.3125F);
+                        poseStack.mulPose(Axis.XP.rotationDegrees(20.0F));
+                        poseStack.mulPose(Axis.YP.rotationDegrees(direction * 45.0F));
+                        poseStack.scale(-scale, -scale, scale);
+                    } else if (stack.is(Items.BOW)) {
+                        final float scale = 0.625F;
+                        poseStack.translate(direction * 0.0F, 0.125F, 0.3125F);
+                        poseStack.mulPose(Axis.YP.rotationDegrees(direction * -20.0F));
+                        poseStack.translate(direction * -0.0625F, 0.0F, 0.0F);
+                        poseStack.scale(scale, scale, scale);
+                        poseStack.mulPose(Axis.XP.rotationDegrees(180));
+                        poseStack.mulPose(Axis.XP.rotationDegrees(100.0F));
+                        poseStack.mulPose(Axis.YP.rotationDegrees(direction * -145.0F));
+                        poseStack.translate(-0.011765625F, 0.0F, 0.002125F);
+                    } else if (ItemUtils.isHandheldItem(stack)) {
+                        final float scale = 0.625F;
+                        if (ItemUtils.isFishingRodItem(stack) && !isStickRod) {
+                            poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 180.0F));
+                            poseStack.translate(0.0F, -0.125F, 0.0F);
+                        }
+
+                        if (Utils.isBlockingArm(arm, state)) {
+                            poseStack.translate(direction * 0.05F, 0.0F, -0.1F);
+                            poseStack.mulPose(Axis.YP.rotationDegrees(direction * -50.0F));
+                            poseStack.mulPose(Axis.XP.rotationDegrees(-10.0F));
+                            poseStack.mulPose(Axis.ZP.rotationDegrees(direction * -60.0F));
+                        }
+
+                        poseStack.translate(direction * -0.0625F, 0.1875F, 0.0F);
+                        poseStack.scale(scale, scale, scale);
+                        poseStack.mulPose(Axis.XP.rotationDegrees(180));
+                        poseStack.mulPose(Axis.XP.rotationDegrees(100));
+                        poseStack.mulPose(Axis.YP.rotationDegrees(direction * -145));
+                        poseStack.translate(-0.011765625F, 0.0F, 0.002125F);
+                    } else {
+                        final float scale = 0.375F;
+                        poseStack.translate(direction * 0.25F, 0.1875F, -0.1875F);
+                        poseStack.scale(scale, scale, scale);
+                        poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 60.0F));
+                        poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
+                        poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 20.0F));
                     }
 
-                    if (Utils.isBlockingArm(arm, state)) {
-                        poseStack.translate(direction * 0.05F, 0.0F, -0.1F);
-                        poseStack.mulPose(Axis.YP.rotationDegrees(direction * -50.0F));
-                        poseStack.mulPose(Axis.XP.rotationDegrees(-10.0F));
-                        poseStack.mulPose(Axis.ZP.rotationDegrees(direction * -60.0F));
+                    if (!ItemUtils.isBlock3d(stack, usesBlockLight)) {
+                        poseStack.translate(0.0F, -0.3F, 0.0F);
+                        poseStack.scale(1.5F, 1.5F, 1.5F);
+                        poseStack.mulPose(Axis.YP.rotationDegrees(direction * 50.0F));
+                        poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 335.0F));
+                        poseStack.translate(direction * -0.9375F, -0.0625F, 0.0F);
+
+                        poseStack.mulPose(Axis.YP.rotationDegrees(direction * 180.0F));
+                        poseStack.translate(direction * -0.5F, 0.5F, 0.03125F);
                     }
 
-                    poseStack.translate(direction * -0.0625F, 0.1875F, 0.0F);
-                    poseStack.scale(scale, scale, scale);
-                    poseStack.mulPose(Axis.XP.rotationDegrees(180));
-                    poseStack.mulPose(Axis.XP.rotationDegrees(100));
-                    poseStack.mulPose(Axis.YP.rotationDegrees(direction * -145));
-                    poseStack.translate(-0.011765625F, 0.0F, 0.002125F);
-                } else {
-                    final float scale = 0.375F;
-                    poseStack.translate(direction * 0.25F, 0.1875F, -0.1875F);
-                    poseStack.scale(scale, scale, scale);
-                    poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 60.0F));
-                    poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
-                    poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 20.0F));
-                }
+                    if (ItemUtils.isBlock3d(stack, usesBlockLight)) {
+                        poseStack.scale(1 / 0.375F, 1 / 0.375F, 1 / 0.375F);
+                        poseStack.mulPose(Axis.YP.rotationDegrees(direction * -45.0F));
+                        poseStack.mulPose(Axis.XP.rotationDegrees(-75.0F));
+                        poseStack.translate(0.0F, -2.5F * 0.0625F, 0.0F);
+                    } else if (stack.is(Items.BOW)) {
+                        poseStack.scale(1 / 0.9F, 1 / 0.9F, 1 / 0.9F);
+                        poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 40.0F));
+                        poseStack.mulPose(Axis.YP.rotationDegrees(direction * -260.0F));
+                        poseStack.mulPose(Axis.XP.rotationDegrees(80.0F));
+                        poseStack.translate(direction * 0.0625F, 2.0F * 0.0625F, -2.5F * 0.0625F);
+                    } else if (ItemUtils.isHandheldItem(stack)) {
+                        final boolean isRod = ItemUtils.isFishingRodItem(stack) && !isStickRod;
+                        poseStack.scale(1 / 0.85F, 1 / 0.85F, 1 / 0.85F);
+                        poseStack.mulPose(Axis.ZP.rotationDegrees(direction * -55.0F));
+                        poseStack.mulPose(Axis.YP.rotationDegrees(direction * 90.0F));
+                        if (isRod) {
+                            poseStack.mulPose(Axis.YP.rotationDegrees(direction * -180.0F));
+                        }
 
-                if (!ItemUtils.isBlock3d(stack, usesBlockLight)) {
-                    poseStack.translate(0.0F, -0.3F, 0.0F);
-                    poseStack.scale(1.5F, 1.5F, 1.5F);
-                    poseStack.mulPose(Axis.YP.rotationDegrees(direction * 50.0F));
-                    poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 335.0F));
-                    poseStack.translate(direction * -0.9375F, -0.0625F, 0.0F);
-
-                    poseStack.mulPose(Axis.YP.rotationDegrees(direction * 180.0F));
-                    poseStack.translate(direction * -0.5F, 0.5F, 0.03125F);
-                }
-
-                if (ItemUtils.isBlock3d(stack, usesBlockLight)) {
-                    poseStack.scale(1 / 0.375F, 1 / 0.375F, 1 / 0.375F);
-                    poseStack.mulPose(Axis.YP.rotationDegrees(direction * -45.0F));
-                    poseStack.mulPose(Axis.XP.rotationDegrees(-75.0F));
-                    poseStack.translate(0.0F, -2.5F * 0.0625F, 0.0F);
-                } else if (stack.is(Items.BOW)) {
-                    poseStack.scale(1 / 0.9F, 1 / 0.9F, 1 / 0.9F);
-                    poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 40.0F));
-                    poseStack.mulPose(Axis.YP.rotationDegrees(direction * -260.0F));
-                    poseStack.mulPose(Axis.XP.rotationDegrees(80.0F));
-                    poseStack.translate(direction * 0.0625F, 2.0F * 0.0625F, -2.5F * 0.0625F);
-                } else if (ItemUtils.isHandheldItem(stack)) {
-                    final boolean isRod = ItemUtils.isFishingRodItem(stack) && !isStickRod;
-                    poseStack.scale(1 / 0.85F, 1 / 0.85F, 1 / 0.85F);
-                    poseStack.mulPose(Axis.ZP.rotationDegrees(direction * -55.0F));
-                    poseStack.mulPose(Axis.YP.rotationDegrees(direction * 90.0F));
-                    if (isRod) {
-                        poseStack.mulPose(Axis.YP.rotationDegrees(direction * -180.0F));
+                        poseStack.translate(0.0F, -4.0F * 0.0625F, -0.5F * 0.0625F);
+                        if (isRod) {
+                            poseStack.translate(0.0F, 0.0F, -2.0F * 0.0625F);
+                        }
+                    } else {
+                        poseStack.scale(1 / 0.55F, 1 / 0.55F, 1 / 0.55F);
+                        poseStack.translate(0.0F, -3.0F * 0.0625F, -1.0F * 0.0625F);
                     }
-
-                    poseStack.translate(0.0F, -4.0F * 0.0625F, -0.5F * 0.0625F);
-                    if (isRod) {
-                        poseStack.translate(0.0F, 0.0F, -2.0F * 0.0625F);
-                    }
-                } else {
-                    poseStack.scale(1 / 0.55F, 1 / 0.55F, 1 / 0.55F);
-                    poseStack.translate(0.0F, -3.0F * 0.0625F, -1.0F * 0.0625F);
                 }
             }
         }

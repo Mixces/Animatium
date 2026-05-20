@@ -83,8 +83,14 @@ public class OnboardingScreen extends Screen {
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> {
             ConfigUtil.put(ConfigUtil.ONBOARDING_KEY, false);
             ConfigUtil.put(ConfigUtil.VERSION_KEY, this.version.name());
+
             this.version.apply();
             AnimatiumConfig.save();
+
+            if (this.minecraft.player != null) {
+                this.minecraft.showDebugChat(Component.literal("Applied preset " + this.version.name() + "!").withColor(0xFF00FF00));
+            }
+
             this.minecraft.gui.setScreen(this.original);
         }).pos((this.width / 2) - (Button.DEFAULT_WIDTH / 2), (int) (this.height / 1.2F)).tooltip(Tooltip.create(Component.literal("WARNING! THIS WILL RESET ALL YOUR SETTINGS").withStyle(ChatFormatting.RED))).build());
     }

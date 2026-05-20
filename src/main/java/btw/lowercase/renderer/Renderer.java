@@ -36,7 +36,6 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderPass;
-import com.mojang.blaze3d.systems.RenderPassDescriptor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuSampler;
 import com.mojang.blaze3d.textures.GpuTextureView;
@@ -63,7 +62,7 @@ public class Renderer implements AutoCloseable {
     @Getter
     private final Supplier<String> name;
     @Getter
-    private final RenderPassDescriptor descriptor;
+    private final RenderDescriptor descriptor;
     @Getter
     private RenderPipeline pipeline = null;
     @Getter
@@ -72,53 +71,40 @@ public class Renderer implements AutoCloseable {
     // Internal
     private ProjectionMatrixBuffer projectionMatrixBuffer;
 
-    private Renderer(final RenderPassDescriptor descriptor) {
-        this.name = descriptor.label();
+    private Renderer(final RenderDescriptor descriptor) {
+        this.name = descriptor.name();
         this.descriptor = descriptor;
     }
 
-    public static Renderer of(final RenderPassDescriptor descriptor) {
+    public static Renderer of(final RenderDescriptor descriptor) {
         return new Renderer(descriptor);
     }
 
-    public static Renderer of(final Supplier<String> label, final GpuTextureView colorTextureView, @Nullable final GpuTextureView depthTextureView, final RenderPass.RenderArea renderArea) {
-        final RenderPassDescriptor descriptor = RenderPassDescriptor.create(label);
-
-        descriptor.withColorAttachment(colorTextureView);
-        if (depthTextureView != null) {
-            descriptor.withDepthAttachment(depthTextureView);
-        }
-
-        descriptor.withRenderArea(renderArea);
-        return of(descriptor);
+    public static Renderer of(final Supplier<String> label, final GpuTextureView colorTextureView, @Nullable final GpuTextureView depthTextureView, final RenderDescriptor.Area area) {
+        return of(RenderDescriptor.builder(label)
+                .withColorTexture(colorTextureView)
+                .withDepthTexture(depthTextureView)
+                .withArea(area)
+                .build());
     }
 
     public static Renderer of(final Supplier<String> label, final GpuTextureView colorTextureView, @Nullable final GpuTextureView depthTextureView) {
-        return of(label, colorTextureView, depthTextureView, new RenderPass.RenderArea(0, 0, colorTextureView.getWidth(0), colorTextureView.getHeight(0)));
+        return of(label, colorTextureView, depthTextureView, new RenderDescriptor.Area(colorTextureView));
     }
 
     public static Renderer of(final Supplier<String> label, final GpuTextureView colorTextureView) {
         return of(label, colorTextureView, null);
     }
 
-    public static Renderer of(final Supplier<String> label, final RenderTarget renderTarget, final RenderPass.RenderArea renderArea) {
-        final RenderPassDescriptor descriptor = RenderPassDescriptor.create(label);
-
-        final GpuTextureView colorTextureView = RenderSystem.outputColorTextureOverride != null ? RenderSystem.outputColorTextureOverride : renderTarget.getColorTextureView();
-        assert colorTextureView != null;
-        descriptor.withColorAttachment(colorTextureView);
-        if (renderTarget.useDepth) {
-            final GpuTextureView depthTextureView = RenderSystem.outputDepthTextureOverride != null ? RenderSystem.outputDepthTextureOverride : renderTarget.getDepthTextureView();
-            assert depthTextureView != null;
-            descriptor.withDepthAttachment(depthTextureView);
-        }
-
-        descriptor.withRenderArea(renderArea);
-        return of(descriptor);
+    public static Renderer of(final Supplier<String> label, final RenderTarget renderTarget, final RenderDescriptor.Area area) {
+        return of(RenderDescriptor.builder(label)
+                .withRenderTarget(renderTarget, false)
+                .withArea(area)
+                .build());
     }
 
     public static Renderer of(final Supplier<String> label, final RenderTarget renderTarget) {
-        return of(label, renderTarget, new RenderPass.RenderArea(0, 0, renderTarget.width, renderTarget.height));
+        return of(label, renderTarget, new RenderDescriptor.Area(renderTarget));
     }
 
     public static Renderer of(final Supplier<String> label) {
@@ -197,7 +183,7 @@ public class Renderer implements AutoCloseable {
 
             final GpuBufferSlice dynamicTransforms = this.uniforms.getOrDefault(DynamicTransforms.KEY, DynamicTransforms.builder().build());
             final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(this.pipeline.getPrimitiveTopology());
-            try (final RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(this.descriptor)) {
+            try (final RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(this.descriptor.vanilla())) {
                 pass.setPipeline(this.pipeline);
 
                 final List<BindGroupLayout> bindGroupLayouts = this.pipeline.getBindGroupLayouts();

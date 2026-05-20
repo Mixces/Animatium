@@ -6,13 +6,18 @@
 - Config setting names are more generalized
 - Scrapped the config data packet idea (no replacement)
 - New secret that'll pop up when it's my birthday
+- Decouple Fishing Rod Version from Item Positions setting
+- Added chat message when setting your preset/onboarding version!
+- Your onboarding/preset version will now be remembered
 
 ## New
 
 - New Configuration Screen
     - Does not replace the old config screen
     - Is accessed via '\' by default, rebindable in settings
-    - Is a simple interface with simple settings accommodated to those who expect settings to be named like in "Animatium Legacy"
+    - Is a simple interface with simple settings accommodated to those who expect settings to be named like in
+      "Animatium Legacy"
+
 - New Settings
     - Screen
         - Legacy Panorama Rendering
@@ -35,6 +40,9 @@
     - Disable Modern Combat Particles
     - Disable Entity Glow Outline
     - Item Colors 2D
+
+These were reasons as to why these were removed, in which being some were very much disliked and some can be done easily
+with a resource pack.
 
 ## Fixes
 

@@ -40,7 +40,7 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(Hud.class)
-public abstract class MixinHud {
+public abstract class MixinHud_CrosshairAndHearts {
     @WrapOperation(method = "extractCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/CameraType;isFirstPerson()Z"))
     private boolean animatium$crosshairInThirdPerson(final CameraType instance, final Operation<Boolean> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.crosshairInThirdPerson) {

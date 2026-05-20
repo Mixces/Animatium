@@ -64,7 +64,7 @@ public abstract class MixinItemModelResolver {
             @Local(argsOnly = true) final ItemStack itemStack
     ) {
         final LivingEntity livingEntity = itemOwner == null ? null : itemOwner.asLivingEntity();
-        // TODO: Fix
+        // TODO/FIX
         if (Animatium.isEnabled() &&
                 AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersion.V1_7 &&
                 itemStack.getItem() == Items.FISHING_ROD &&
