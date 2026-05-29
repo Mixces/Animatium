@@ -26,14 +26,14 @@
 package org.visuals.legacy.animatium.util.compatibility;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 public final class IrisUtil {
-    private static final Map<RenderPipeline, IrisPipeline> pipelineCache = new HashMap<>();
+    private static final Map<RenderPipeline, IrisPipeline> pipelineCache = new Object2ObjectOpenHashMap<>();
     private static Object IRIS_INSTANCE = null;
     private static Method IRIS_ASSIGN_PIPELINE_METHOD = null;
 

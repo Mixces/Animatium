@@ -32,16 +32,16 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import org.jspecify.annotations.Nullable;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public record RenderDescriptor(Supplier<String> name, GpuTextureView colorTexture,
-                               @Nullable GpuTextureView depthTexture, Area area) {
+public record RenderDescriptor(Supplier<String> name,
+                               GpuTextureView colorTexture, @Nullable GpuTextureView depthTexture,
+                               Area area) {
     public static Builder builder(final Supplier<String> name) {
         return new Builder(name);
     }
 
-    public RenderPassDescriptor vanilla() {
+    public RenderPass createPass() {
         final RenderPassDescriptor descriptor = RenderPassDescriptor.create(this.name);
         descriptor.withColorAttachment(this.colorTexture);
         if (this.depthTexture != null) {
@@ -49,13 +49,7 @@ public record RenderDescriptor(Supplier<String> name, GpuTextureView colorTextur
         }
 
         descriptor.withRenderArea(this.area.vanilla());
-        return descriptor;
-    }
-
-    public void render(final Consumer<Renderer> pass) {
-        try (final Renderer renderer = Renderer.of(this)) {
-            pass.accept(renderer);
-        }
+        return RenderSystem.getDevice().createCommandEncoder().createRenderPass(descriptor);
     }
 
     public record Area(int x, int y, int width, int height) {
@@ -94,8 +88,8 @@ public record RenderDescriptor(Supplier<String> name, GpuTextureView colorTextur
                     this.colorTexture = RenderSystem.outputColorTextureOverride;
                 }
 
-                if (RenderSystem.outputDepthTextureOverride != null && renderTarget.useDepth) {
-                    this.depthTexture = RenderSystem.outputDepthTextureOverride;
+                if (RenderSystem.outputDepthTextureOverride != null) {
+                    this.depthTexture = renderTarget.useDepth ? RenderSystem.outputDepthTextureOverride : null;
                 }
             }
 

@@ -39,6 +39,7 @@ import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuSampler;
 import com.mojang.blaze3d.textures.GpuTextureView;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.TextureSetup;
@@ -49,15 +50,14 @@ import org.joml.Matrix4f;
 import org.visuals.legacy.animatium.util.compatibility.IrisPipeline;
 import org.visuals.legacy.animatium.util.compatibility.IrisUtil;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class Renderer implements AutoCloseable {
+public final class Renderer implements AutoCloseable {
     // Data
-    private final Map<String, TextureAndSampler> textures = new HashMap<>();
-    private final Map<String, GpuBufferSlice> uniforms = new HashMap<>();
+    private final Map<String, TextureAndSampler> textures = new Object2ObjectOpenHashMap<>();
+    private final Map<String, GpuBufferSlice> uniforms = new Object2ObjectOpenHashMap<>();
 
     @Getter
     private final Supplier<String> name;
@@ -183,7 +183,7 @@ public class Renderer implements AutoCloseable {
 
             final GpuBufferSlice dynamicTransforms = this.uniforms.getOrDefault(DynamicTransforms.KEY, DynamicTransforms.builder().build());
             final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(this.pipeline.getPrimitiveTopology());
-            try (final RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(this.descriptor.vanilla())) {
+            try (final RenderPass pass = this.descriptor.createPass()) {
                 pass.setPipeline(this.pipeline);
 
                 final List<BindGroupLayout> bindGroupLayouts = this.pipeline.getBindGroupLayouts();

@@ -107,7 +107,7 @@ public class OnboardingScreen extends Screen {
         RenderUtils.drawScaledText(graphics, this.font, "Welcome to Animatium Onboarding!", this.width / 2, this.height / 4, 2.0F);
         graphics.centeredText(this.font, "Hello! Thank you for downloading Animatium!", this.width / 2, (int) (this.height / 2.8), 0xFFD6D6D6);
         graphics.centeredText(this.font, "Please select the version of visuals you would like to use!", this.width / 2, (int) (this.height / 2.4), 0xFFD6D6D6);
-        if (!accessedViaCommands) {
+        if (!this.accessedViaCommands) {
             graphics.centeredText(this.font, "NOTE: If you have already went through this,", this.width / 2, (int) (this.height / 1.4F), 0xFFFFA600);
             graphics.centeredText(this.font, "ask for help in the discord before continuing!", this.width / 2, (int) (this.height / 1.3F), 0xFFFFA600);
         } else {
