@@ -102,7 +102,7 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
     }
 
     @WrapOperation(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V", ordinal = 1))
-    private void animatium$postBowTransform(final PoseStack instance, final float xScale, final float yScale, final float zScale, final Operation<Void> original, @Local(argsOnly = true) AbstractClientPlayer player, @Local(argsOnly = true) final InteractionHand hand) {
+    private void animatium$postBowTransform(final PoseStack instance, final float xScale, final float yScale, final float zScale, final Operation<Void> original, final @Local(argsOnly = true) AbstractClientPlayer player, final @Local(argsOnly = true) InteractionHand hand) {
         final int direction = Utils.getHandMultiplier(player, hand);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemPositions) {
             instance.mulPose(Axis.ZP.rotationDegrees(direction * -335));
@@ -121,8 +121,8 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
     @Definition(id = "ShieldItem", type = ShieldItem.class)
     @Expression("item.getItem() instanceof ShieldItem")
     @ModifyExpressionValue(method = "submitArmWithItem", at = @At("MIXINEXTRAS:EXPRESSION"))
-    private boolean animatium$oldFirstPersonSwordBlock(final boolean original, @Local(argsOnly = true) final AbstractClientPlayer player, @Local(argsOnly = true) final InteractionHand hand, @Local(argsOnly = true) final ItemStack stack, @Local(argsOnly = true) final PoseStack poseStack) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemPositions && !(stack.getItem() instanceof ShieldItem)) {
+    private boolean animatium$oldFirstPersonSwordBlock(final boolean original, final @Local(argsOnly = true) AbstractClientPlayer player, final @Local(argsOnly = true) InteractionHand hand, final @Local(argsOnly = true) ItemStack itemStack, final @Local(argsOnly = true) PoseStack poseStack) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemPositions && !(itemStack.getItem() instanceof ShieldItem)) {
             final int direction = Utils.getHandMultiplier(player, hand);
             // We do this to fix a rounding error in Mojangs code.
             ItemUtils.applyLegacyFirstPersonTransforms(poseStack, direction, () -> {
@@ -138,10 +138,10 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
     }
 
     @Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V"))
-    private void animatium$itemPositions(final AbstractClientPlayer player, final float partialTick, final float pitch, final InteractionHand hand, final float swingProgress, final ItemStack item, final float equippedProgress, final PoseStack poseStack, final SubmitNodeCollector nodeCollector, final int packedLight, final CallbackInfo ci) {
+    private void animatium$itemPositions(final AbstractClientPlayer player, final float tickDelta, final float pitch, final InteractionHand hand, final float swingProgress, final ItemStack itemStack, final float equippedProgress, final PoseStack poseStack, final SubmitNodeCollector submitNodeCollector, final int lightCoords, final CallbackInfo ci) {
         final int direction = Utils.getHandMultiplier(player, hand);
         if (Animatium.isEnabled()) {
-            if (AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersion.V1_7 && ItemUtils.isFishingRodItem(item)) {
+            if (AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersion.V1_7 && ItemUtils.isFishingRodItem(itemStack)) {
                 poseStack.mulPose(Axis.YP.rotationDegrees(direction * 180.0F));
             }
 
@@ -149,13 +149,13 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
             final ItemStackRenderState itemStackRenderState = new ItemStackRenderState();
             itemModelResolver.updateForTopItem(
                     itemStackRenderState,
-                    item,
+                    itemStack,
                     displayContext,
                     player.level(),
                     player,
-                    packedLight
+                    lightCoords
             ); // TODO/NOTE: Might be wrong
-            if (AnimatiumConfig.instance().items.itemPositions && !ItemUtils.isBlock3d(item, itemStackRenderState.usesBlockLight()) && !ItemUtils.isItemBlacklisted(item)) {
+            if (AnimatiumConfig.instance().items.itemPositions && !ItemUtils.isBlock3d(itemStack, itemStackRenderState.usesBlockLight()) && !ItemUtils.isItemBlacklisted(itemStack)) {
                 final float angle = Utils.toRadians(25);
 
                 poseStack.scale(0.6F, 0.6F, 0.6F);
@@ -169,7 +169,7 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
                 poseStack.translate(direction * -1.13 * 0.0625F, -3.2 * 0.0625F, -1.13 * 0.0625F);
             }
 
-            if (AnimatiumConfig.instance().items.skullPosition && ItemUtils.isSkullBlock(item) && !AnimatiumConfig.instance().items.mobHeadIcons) {
+            if (AnimatiumConfig.instance().items.skullPosition && ItemUtils.isSkullBlock(itemStack) && !AnimatiumConfig.instance().items.mobHeadIcons) {
                 poseStack.mulPose(Axis.YP.rotationDegrees(45.0F));
                 poseStack.scale(0.4F, 0.4F, 0.4F);
 
@@ -187,7 +187,7 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
                     from = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/ItemUseAnimation;"),
                     to = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;applyItemArmTransform(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/HumanoidArm;F)V", ordinal = 4)
             ))
-    private void animatium$itemUsageSwinging(final AbstractClientPlayer player, final float partialTick, final float pitch, final InteractionHand hand, final float swingProgress, final ItemStack item, final float equippedProgress, final PoseStack poseStack, final SubmitNodeCollector nodeCollector, final int packedLight, final CallbackInfo ci, @Local HumanoidArm arm) {
+    private void animatium$itemUsageSwinging(final AbstractClientPlayer player, final float tickDelta, final float pitch, final InteractionHand hand, final float swingProgress, final ItemStack itemStack, final float equippedProgress, final PoseStack poseStack, final SubmitNodeCollector submitNodeCollector, final int lightCoords, final CallbackInfo ci, final @Local(name = "arm") HumanoidArm arm) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemUsageSwinging) {
             this.applyItemArmAttackTransform(poseStack, arm, swingProgress);
         }
@@ -199,12 +199,12 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getOffhandItem()Lnet/minecraft/world/item/ItemStack;"))
-    private void animatium$createCopyStack(final CallbackInfo ci, @Local(name = "player") final LocalPlayer localPlayer, @Local(name = "nextMainHand") final ItemStack itemStack, @Share("copyStack") final LocalRef<ItemStack> copyStack) {
+    private void animatium$createCopyStack(final CallbackInfo ci, @Local(name = "player") final LocalPlayer player, @Local(name = "nextMainHand") final ItemStack nextMainHand, @Share("copyStack") final LocalRef<ItemStack> copyStack) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
             // Initialize our copied stack
-            copyStack.set(itemStack.copy());
+            copyStack.set(nextMainHand.copy());
 
-            final boolean slotsMatch = this.animatium$currentSlot == localPlayer.getInventory().getSelectedSlot();
+            final boolean slotsMatch = this.animatium$currentSlot == player.getInventory().getSelectedSlot();
 
             // Equip logic fix
             final boolean shouldSwap1_8 = ItemUtils.shouldInstantlyReplaceVisibleItem1_8(this.animatium$mainHandItem, copyStack.get());
@@ -218,30 +218,30 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
         }
     }
 
-    @WrapOperation(method = "synchronizeVisibleHandItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;shouldInstantlyReplaceVisibleItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z", ordinal = 0))
-    private boolean animatium$fixEquipAnimationItemCheck2(final ItemInHandRenderer instance, final ItemStack itemStack, final ItemStack itemStack2, final Operation<Boolean> original) {
-        final boolean value = original.call(instance, itemStack, itemStack2);
+    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;shouldInstantlyReplaceVisibleItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z", ordinal = 0))
+    private boolean animatium$fixEquipAnimationItemCheck2(final ItemInHandRenderer instance, final ItemStack currentlyVisibleItem, final ItemStack expectedItem, final Operation<Boolean> original) {
+        final boolean value = original.call(instance, currentlyVisibleItem, expectedItem);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
             // Apply our equip logic fix to offhand items
             final boolean slotsMatch = this.animatium$currentSlot == this.minecraft.player.getInventory().getSelectedSlot();
-            return (slotsMatch && ItemUtils.shouldInstantlyReplaceVisibleItem1_8(itemStack, itemStack2)) || value;
+            return (slotsMatch && ItemUtils.shouldInstantlyReplaceVisibleItem1_8(currentlyVisibleItem, expectedItem)) || value;
         } else {
             return value;
         }
     }
 
-    @WrapOperation(method = "synchronizeVisibleHandItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;shouldInstantlyReplaceVisibleItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z", ordinal = 1))
-    private boolean animatium$fixEquipAnimationItemCheck(final ItemInHandRenderer instance, final ItemStack itemStack, final ItemStack itemStack2, final Operation<Boolean> original) {
-        final boolean value = original.call(instance, itemStack, itemStack2);
+    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;shouldInstantlyReplaceVisibleItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z", ordinal = 1))
+    private boolean animatium$fixEquipAnimationItemCheck(final ItemInHandRenderer instance, final ItemStack currentlyVisibleItem, final ItemStack expectedItem, final Operation<Boolean> original) {
+        final boolean value = original.call(instance, currentlyVisibleItem, expectedItem);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
             // Apply our equip logic fix to offhand items
-            return ItemUtils.shouldInstantlyReplaceVisibleItem1_8(itemStack, itemStack2) || value;
+            return ItemUtils.shouldInstantlyReplaceVisibleItem1_8(currentlyVisibleItem, expectedItem) || value;
         } else {
             return value;
         }
     }
 
-    @ModifyExpressionValue(method = "synchronizeVisibleHandItems", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;mainHandItem:Lnet/minecraft/world/item/ItemStack;"))
+    @ModifyExpressionValue(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;mainHandItem:Lnet/minecraft/world/item/ItemStack;"))
     private ItemStack animatium$useCopyStackField(final ItemStack original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
             // Use the copy stack field for the stack comparison
@@ -252,17 +252,17 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
     }
 
     @ModifyVariable(method = "tick", at = @At(value = "LOAD", ordinal = 2), name = "nextMainHand")
-    private ItemStack animatium$useLocalCopyStack(final ItemStack original, @Share("copyStack") LocalRef<ItemStack> copyStack) {
+    private ItemStack animatium$useLocalCopyStack(final ItemStack nextMainHand, final @Share("copyStack") LocalRef<ItemStack> copyStack) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
             // Use the local copied stack for the stack comparison
             return copyStack.get();
         } else {
-            return original;
+            return nextMainHand;
         }
     }
 
     @Inject(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;mainHandHeight:F", ordinal = 4))
-    private void animatium$setCurrentSlotAndCopyStack(final CallbackInfo ci, @Share("copyStack") LocalRef<ItemStack> copyStack) {
+    private void animatium$setCurrentSlotAndCopyStack(final CallbackInfo ci, final @Share("copyStack") LocalRef<ItemStack> copyStack) {
         final LocalPlayer localPlayer = this.minecraft.player;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck && localPlayer != null && this.mainHandHeight < 0.1F) {
             // Update our copied stack

@@ -99,7 +99,6 @@
 		"v1.gui.toasts.MixinTutorialToast_DisableToast",
 		"v1.rendering.MixinMinecraft_ColorBoost",
 		"v1.rendering.MixinScreenEffectRenderer_TextureOverlays",
-		"v1.rendering.blocks.MixinBedItem_InstantBed",
 		"v1.rendering.blocks.MixinBiomeSpecialEffects_DisableWaterBiomeTint",
 		"v1.rendering.blocks.MixinBlockStateModelSet_FastGrassSide",
 		"v1.rendering.blocks.MixinWeightedVariantsUnbaked_DisableRandomBlockRotations",

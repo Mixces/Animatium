@@ -46,7 +46,6 @@ public class FixesConfigCategory extends Category {
     public boolean fixItemUsageVisualInGUI = true;
     public boolean fixDoubleUsageVisual = true;
     public boolean oldSkyRenderingCheck = true;
-    public boolean instantBed = true;
 
     public static ConfigCategory create(final FixesConfigCategory defaults, final FixesConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
@@ -77,7 +76,6 @@ public class FixesConfigCategory extends Category {
         bundle.booleanEntry("fixItemUsageVisualInGUI");
         bundle.booleanEntry("fixDoubleUsageVisual");
         bundle.booleanEntry("oldSkyRenderingCheck");
-        bundle.booleanEntry("instantBed");
 
         return bundle;
     }

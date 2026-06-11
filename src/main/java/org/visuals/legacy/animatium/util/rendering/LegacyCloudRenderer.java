@@ -107,9 +107,8 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
                 if (meshData == null) {
                     if (this.geometry != null) {
                         this.geometry.close();
+                        this.geometry = null;
                     }
-
-                    this.geometry = null;
                 } else {
                     final int indexCount = meshData.drawState().indexCount();
                     if (this.geometry != null && this.geometry.vertexBuffer().size() >= meshData.vertexBuffer().remaining()) {

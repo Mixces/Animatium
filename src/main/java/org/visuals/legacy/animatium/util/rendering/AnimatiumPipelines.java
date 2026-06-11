@@ -82,7 +82,6 @@ public class AnimatiumPipelines {
                     .withVertexShader("core/position_color")
                     .withFragmentShader("core/position_color")
                     .withDepthStencilState(RenderUtils.NO_DEPTH_WRITE)
-                    .withBindGroupLayout(BindGroupLayouts.GLOBALS)
                     .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
                     .withPrimitiveTopology(PrimitiveTopology.QUADS)
                     .buildSnippet();

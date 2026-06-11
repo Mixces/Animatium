@@ -26,8 +26,6 @@
         - Legacy Diffuse Lighting
         - Legacy Lightmap
         - Legacy Fog Darkening
-    - Fixes
-        - Instant Bed
     - Extras:
         - Damage Tint Items (From Animatium Legacy)
         - Damage Tint Cape (From Animatium Legacy)
