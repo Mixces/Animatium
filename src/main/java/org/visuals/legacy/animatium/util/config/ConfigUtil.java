@@ -31,12 +31,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.Strictness;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.loader.api.FabricLoader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.nio.file.Files;
 
 @UtilityClass
 public class ConfigUtil {
+    private static final Logger LOGGER = LogManager.getLogger();
+
     public static final String ENABLED_KEY = "enabled";
     public static final String ONBOARDING_KEY = "onboarding";
     public static final String VERSION_KEY = "version";
@@ -104,7 +108,7 @@ public class ConfigUtil {
         }
 
         if (!success) {
-            System.err.println("Failed to save animatium utility config...");
+            LOGGER.error("Failed to save animatium utility config...");
         }
     }
 }

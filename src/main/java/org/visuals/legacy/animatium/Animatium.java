@@ -25,15 +25,13 @@
 
 package org.visuals.legacy.animatium;
 
+import com.mojang.logging.LogUtils;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import net.minecraft.SharedConstants;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenEntries;
-import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.resources.Identifier;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.config.ConfigBundles;
 import org.visuals.legacy.animatium.util.AnimatiumDebugEntry;
@@ -46,9 +44,9 @@ import java.util.EnumSet;
 
 @UtilityClass
 public final class Animatium {
+    private static final Logger LOGGER = LogUtils.getLogger();
     public static final EnumSet<ServerFeature> ENABLED_SERVER_FEATURES = EnumSet.noneOf(ServerFeature.class);
-    @Getter
-    private final Logger logger = LogManager.getLogger(Animatium.class);
+
     @Getter
     private boolean enabled = true;
 
@@ -83,10 +81,10 @@ public final class Animatium {
         AnimatiumConfig.load();
         try {
             ConfigUtil.load();
-            System.err.println("Successfully loaded the animatium utility config!");
+            LOGGER.error("Successfully loaded the animatium utility config!");
         } catch (Exception ignored) {
             enabled = ConfigUtil.getBoolean(ConfigUtil.ENABLED_KEY);
-            System.err.println("Failed to load animatium utility config, defaulting...");
+            LOGGER.error("Failed to load animatium utility config, defaulting...");
         }
 
         DebugScreenEntries.register(AnimatiumDebugEntry.GROUP, new AnimatiumDebugEntry());

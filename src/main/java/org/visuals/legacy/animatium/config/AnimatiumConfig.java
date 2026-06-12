@@ -25,6 +25,7 @@
 
 package org.visuals.legacy.animatium.config;
 
+import com.mojang.logging.LogUtils;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
@@ -33,6 +34,7 @@ import dev.isxander.yacl3.platform.YACLPlatform;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 import org.visuals.legacy.animatium.config.category.*;
 
 import java.io.File;
@@ -40,6 +42,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public final class AnimatiumConfig {
+    private static final Logger LOGGER = LogUtils.getLogger();
     private static final ConfigClassHandler<AnimatiumConfig> CONFIG = ConfigClassHandler.createBuilder(AnimatiumConfig.class)
             .serializer((config) -> GsonConfigSerializerBuilder.create(config)
                     .setPath(YACLPlatform.getConfigDir().resolve("animatium3.json"))
@@ -92,9 +95,9 @@ public final class AnimatiumConfig {
 
             try {
                 Files.move(oldFilePath, newFilePath);
-                System.out.println("Detected old animatium 3.0 config file, moved to new location!");
+                LOGGER.info("Detected old animatium 3.0 config file, moved to new location!");
             } catch (Exception exception) {
-                System.err.println("Failed to move old animatium config to new location!");
+                LOGGER.error("Failed to move old animatium config to new location!");
                 exception.printStackTrace();
             }
         }
