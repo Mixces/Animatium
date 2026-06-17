@@ -27,7 +27,6 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.fog;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.fog.FogRenderer;
@@ -42,8 +41,8 @@ import org.visuals.legacy.animatium.util.rendering.LegacyFogDarkness;
 @Mixin(FogRenderer.class)
 public abstract class MixinFogRenderer_Darkness {
     @WrapOperation(method = "computeFogColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/fog/environment/FogEnvironment;getBaseColor(Lnet/minecraft/client/multiplayer/ClientLevel;Lnet/minecraft/client/Camera;IF)I"))
-    private int animatium$fogDarkness(final FogEnvironment instance, final ClientLevel clientLevel, final Camera camera, final int i, final float f, final Operation<Integer> original, @Local(argsOnly = true, ordinal = 0) float tickDelta) {
-        final int color = original.call(instance, clientLevel, camera, i, f);
+    private int animatium$fogDarkness(final FogEnvironment instance, final ClientLevel level, final Camera camera, final int renderDistance, final float tickDelta, final Operation<Integer> original) {
+        final int color = original.call(instance, level, camera, renderDistance, tickDelta);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.legacyFogDarkness) {
             final float darkness = LegacyFogDarkness.INSTANCE.getDarkness(tickDelta);
             return ARGB.multiply(color, ARGB.colorFromFloat(1.0F, darkness, darkness, darkness));

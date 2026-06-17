@@ -12,12 +12,6 @@
 
 ## New
 
-- New Configuration Screen
-    - Does not replace the old config screen
-    - Is accessed via '\' by default, rebindable in settings
-    - Is a simple interface with simple settings accommodated to those who expect settings to be named like in
-      "Animatium Legacy"
-
 - New Settings
     - Screen
         - Legacy Panorama Rendering

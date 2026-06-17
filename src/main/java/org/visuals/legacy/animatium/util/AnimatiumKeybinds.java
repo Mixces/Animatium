@@ -25,28 +25,25 @@
 
 package org.visuals.legacy.animatium.util;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.glfw.GLFW;
 import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.screens.ModScreen;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+// TODO: Future
 public class AnimatiumKeybinds {
     private static final List<Binding> BINDINGS = new ArrayList<>();
     public static final KeyMapping.Category ANIMATIUM_CATEGORY = new KeyMapping.Category(Animatium.location("common"));
-    public static final KeyMapping MOD_SCREEN = create("Open Mod Configuration", GLFW.GLFW_KEY_BACKSLASH, client -> client.gui.setScreen(new ModScreen(client.gui.screen())));
+    // TODO: public static final KeyMapping MOD_SCREEN = create("Open Mod Configuration", GLFW.GLFW_KEY_BACKSLASH, client -> client.gui.setScreen(new ModScreen(client.gui.screen())));
 
     public static void register() {
-        ClientTickEvents.END_CLIENT_TICK.register(AnimatiumKeybinds::tick);
-        for (final Binding binding : BINDINGS) {
-            KeyMappingHelper.registerKeyMapping(binding.mapping);
-        }
+        // ClientTickEvents.END_CLIENT_TICK.register(AnimatiumKeybinds::tick);
+        // for (final Binding binding : BINDINGS) {
+        //     KeyMappingHelper.registerKeyMapping(binding.mapping);
+        // }
     }
 
     public static void tick(final Minecraft minecraft) {
