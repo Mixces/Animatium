@@ -26,7 +26,6 @@
 package org.visuals.legacy.animatium.util;
 
 import com.google.common.base.MoreObjects;
-import lombok.experimental.UtilityClass;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -62,50 +61,53 @@ import org.visuals.legacy.animatium.mixins.accessor.PlayerAccessor;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-@UtilityClass
-public class Utils {
-    public float toRadians(final float angle) {
+public final class Utils {
+    private Utils() {
+        throw new UnsupportedOperationException("Initialization of utility class is prohibited!");
+    }
+
+    public static float toRadians(final float angle) {
         return angle * Mth.DEG_TO_RAD;
     }
 
-    public VoxelShape expandVoxelShape(final VoxelShape shape, final float value) {
+    public static VoxelShape expandVoxelShape(final VoxelShape shape, final float value) {
         final AtomicReference<VoxelShape> voxelShape = new AtomicReference<>(Shapes.empty());
         shape.toAabbs().forEach((aabb) -> voxelShape.set(Shapes.join(voxelShape.get(), Shapes.create(aabb.inflate(value)), BooleanOp.OR)));
         return voxelShape.get();
     }
 
-    public float lerpCameraPosition(final Camera camera) {
+    public static float lerpCameraPosition(final Camera camera) {
         final CameraAccessor cameraAccessor = (CameraAccessor) camera;
         return Mth.lerp(camera.getCameraEntityPartialTicks(Minecraft.getInstance().getDeltaTracker()), cameraAccessor.animatium$getOldEyeHeight(), cameraAccessor.animatium$getEyeHeight());
     }
 
-    public float lerpCameraPosition(final CameraRenderState cameraRenderState) {
+    public static float lerpCameraPosition(final CameraRenderState cameraRenderState) {
         return Mth.lerp(cameraRenderState.animatium$getPartialTickTime(), cameraRenderState.animatium$getOldEyeHeight(), cameraRenderState.animatium$getEyeHeight());
     }
 
-    public int getHandMultiplier(final Player player) {
+    public static int getHandMultiplier(final Player player) {
         final InteractionHand hand = MoreObjects.firstNonNull(player.swingingArm, InteractionHand.MAIN_HAND);
         return (Minecraft.getInstance().options.getCameraType().isFirstPerson() ? 1 : -1) * getHandMultiplier(player, hand);
     }
 
-    public int getHandMultiplier(final Player player, final InteractionHand hand) {
+    public static int getHandMultiplier(final Player player, final InteractionHand hand) {
         return getArmMultiplier(hand == InteractionHand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite());
     }
 
-    public int getArmMultiplier(final HumanoidArm arm) {
+    public static int getArmMultiplier(final HumanoidArm arm) {
         return arm == HumanoidArm.RIGHT ? 1 : -1;
     }
 
-    public Vec3 getPosWithEyeHeight(final Player player, final float tickDelta, final double eyeHeight) {
+    public static Vec3 getPosWithEyeHeight(final Player player, final float tickDelta, final double eyeHeight) {
         return player.getPosition(tickDelta).add(0.0, eyeHeight, 0.0);
     }
 
-    public boolean isBlockingArm(final HumanoidArm arm, final ArmedEntityRenderState armedEntityState) {
+    public static boolean isBlockingArm(final HumanoidArm arm, final ArmedEntityRenderState armedEntityState) {
         return (arm == HumanoidArm.LEFT && armedEntityState.leftArmPose == HumanoidModel.ArmPose.BLOCK) ||
                 (arm == HumanoidArm.RIGHT && armedEntityState.rightArmPose == HumanoidModel.ArmPose.BLOCK);
     }
 
-    public void fakeHandSwing(final Player player, final InteractionHand hand) {
+    public static void fakeHandSwing(final Player player, final InteractionHand hand) {
         // Fake Swinging, Doesn't Send A Packet
         if (isNotSwinging(player)) {
             player.swingTime = -1;
@@ -115,7 +117,7 @@ public class Utils {
     }
 
     // Sends necessary swing packets, without playing the player hand swing animation
-    public void sendSwingPacket(final LocalPlayer player, final InteractionHand hand) {
+    public static void sendSwingPacket(final LocalPlayer player, final InteractionHand hand) {
         if (isNotSwinging(player) && player.level() instanceof ServerLevel serverLevel) {
             final int swingHand = hand == InteractionHand.MAIN_HAND ? ClientboundAnimatePacket.SWING_MAIN_HAND : ClientboundAnimatePacket.SWING_OFF_HAND;
             serverLevel.getChunkSource().sendToTrackingPlayers(player, new ClientboundAnimatePacket(player, swingHand));
@@ -124,11 +126,11 @@ public class Utils {
         player.connection.send(new ServerboundSwingPacket(hand));
     }
 
-    public boolean isNotSwinging(final Player player) {
+    public static boolean isNotSwinging(final Player player) {
         return !player.swinging || player.swingTime >= ((LivingEntityAccessor) player).animatium$getSwingDuration() / 2 || player.swingTime < 0;
     }
 
-    public void applySwingWhilstMining(final ClientLevel level, final Player player, final HitResult hitResult) {
+    public static void applySwingWhilstMining(final ClientLevel level, final Player player, final HitResult hitResult) {
         final InteractionHand activeHand = player.getUsedItemHand();
         final InteractionHand hand = AnimatiumConfig.instance().extras.offhandUsageSwinging ? activeHand : InteractionHand.MAIN_HAND;
         if (activeHand.equals(hand)) {
@@ -146,7 +148,7 @@ public class Utils {
         }
     }
 
-    public boolean hasFog1_7(final ClientLevel level) {
+    public static boolean hasFog1_7(final ClientLevel level) {
         final ClientLevelDataAccessor levelDataAccessor = (ClientLevelDataAccessor) level.getLevelData();
         return !levelDataAccessor.animatium$isFlatWorld() && !level.dimensionType().hasCeiling(); // "isDark" method from 1.7/1.8
     }
@@ -156,17 +158,17 @@ public class Utils {
      *
      * @return Entity id matches the client player id
      */
-    public boolean isSelf(final LivingEntityRenderState livingEntityRenderState) {
+    public static boolean isSelf(final LivingEntityRenderState livingEntityRenderState) {
         final Player player = Minecraft.getInstance().player;
         return player != null && livingEntityRenderState instanceof AvatarRenderState avatarRenderState && avatarRenderState.id == player.getId();
     }
 
-    public boolean isSelf(final Entity entity) {
+    public static boolean isSelf(final Entity entity) {
         final Player player = Minecraft.getInstance().player;
         return player != null && entity != null && entity.getId() == player.getId();
     }
 
-    public void reinitializeInventorySlots() {
+    public static void reinitializeInventorySlots() {
         final Player player = Minecraft.getInstance().player;
         if (player != null && !GameType.CREATIVE.equals(player.gameMode())) {
             // Re-initialize the inventory, to reset the slot positions modified by "Old Crafting Slots Position"

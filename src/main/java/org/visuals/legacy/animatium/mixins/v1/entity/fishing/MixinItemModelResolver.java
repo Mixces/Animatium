@@ -59,18 +59,18 @@ public abstract class MixinItemModelResolver {
             final ItemStack instance,
             final DataComponentType<?> dataComponentType,
             final Operation<Object> original,
-            @Local(argsOnly = true) final ItemDisplayContext displayContext,
-            @Local(argsOnly = true) final ItemOwner itemOwner,
-            @Local(argsOnly = true) final ItemStack itemStack
+            @Local(argsOnly = true, name = "displayContext") final ItemDisplayContext displayContext,
+            @Local(argsOnly = true, name = "owner") final ItemOwner owner,
+            @Local(argsOnly = true, name = "item") final ItemStack item
     ) {
-        final LivingEntity livingEntity = itemOwner == null ? null : itemOwner.asLivingEntity();
+        final LivingEntity livingEntity = owner == null ? null : owner.asLivingEntity();
         // TODO/FIX
         if (Animatium.isEnabled() &&
                 AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersionSetting.V1_7 &&
-                itemStack.getItem() == Items.FISHING_ROD &&
+                item.getItem() == Items.FISHING_ROD &&
                 (livingEntity instanceof Player player && player.fishing != null) &&
-                ((displayContext == ItemDisplayContext.THIRD_PERSON_LEFT_HAND && livingEntity.getOffhandItem() == itemStack) ||
-                        (displayContext == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND && livingEntity.getMainHandItem() == itemStack))) {
+                ((displayContext == ItemDisplayContext.THIRD_PERSON_LEFT_HAND && livingEntity.getOffhandItem() == item) ||
+                        (displayContext == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND && livingEntity.getMainHandItem() == item))) {
             return Identifier.withDefaultNamespace("stick");
         } else {
             return original.call(instance, dataComponentType);

@@ -38,12 +38,12 @@ import org.visuals.legacy.animatium.util.ItemUtils;
 
 @Mixin(IsUsingItem.class)
 public abstract class MixinIsUsingItem {
-	@ModifyReturnValue(method = "get", at = @At(value = "RETURN"))
-	private boolean animatium$getValue(boolean original, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) ItemDisplayContext displayContext) {
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().items.disableItemUsingTextureInGUI && ItemUtils.isRangedWeaponItem(stack) && displayContext == ItemDisplayContext.GUI) {
-			return false;
-		} else {
-			return original;
-		}
-	}
+    @ModifyReturnValue(method = "get", at = @At(value = "RETURN"))
+    private boolean animatium$getValue(final boolean original, @Local(argsOnly = true, name = "itemStack") final ItemStack itemStack, @Local(argsOnly = true, name = "displayContext") final ItemDisplayContext displayContext) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.disableItemUsingTextureInGUI && ItemUtils.isRangedWeaponItem(itemStack) && displayContext == ItemDisplayContext.GUI) {
+            return false;
+        } else {
+            return original;
+        }
+    }
 }

@@ -39,8 +39,8 @@ import org.visuals.legacy.animatium.util.enums.ServerFeature;
 @Mixin(FishingHookRenderer.class)
 public abstract class MixinFishingHookRenderer_HideFirstPersonBobber {
     @ModifyReturnValue(method = "shouldRender(Lnet/minecraft/world/entity/projectile/FishingHook;Lnet/minecraft/client/renderer/culling/Frustum;DDD)Z", at = @At("RETURN"))
-    private boolean animatium$hideBobberAttachedToSelf(final boolean original, @Local(argsOnly = true) final FishingHook fishingHook) {
-        if (Animatium.hasServerFeature(ServerFeature.HIDE_FIRSTPERSON_ROD_BOBBER) && fishingHook.getHookedIn() instanceof Entity entity && Utils.isSelf(entity)) {
+    private boolean animatium$hideBobberAttachedToSelf(final boolean original, @Local(argsOnly = true, name = "entity") final FishingHook entity) {
+        if (Animatium.hasServerFeature(ServerFeature.HIDE_FIRSTPERSON_ROD_BOBBER) && entity.getHookedIn() instanceof Entity hook && Utils.isSelf(hook)) {
             return false;
         } else {
             return original;

@@ -39,9 +39,9 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 @Mixin(ItemInHandRenderer.class)
 public abstract class MixinItemInHandRenderer_DamageTintItems {
     @ModifyExpressionValue(method = "renderItem", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/texture/OverlayTexture;NO_OVERLAY:I", opcode = Opcodes.GETSTATIC))
-    private int animatium$damageTintItems(final int original, @Local(argsOnly = true) final LivingEntity livingEntity) {
+    private int animatium$damageTintItems(final int original, @Local(argsOnly = true, name = "mob") final LivingEntity mob) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.damageTintItems) {
-            return OverlayTexture.pack(0, OverlayTexture.v(livingEntity.hurtTime > 0 || livingEntity.deathTime > 0));
+            return OverlayTexture.pack(0, OverlayTexture.v(mob.hurtTime > 0 || mob.deathTime > 0));
         } else {
             return original;
         }
