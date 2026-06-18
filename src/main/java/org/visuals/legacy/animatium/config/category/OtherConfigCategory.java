@@ -51,7 +51,7 @@ public final class OtherConfigCategory extends Category {
     public boolean blockOutlineRendering = false;
     public boolean disableModelWhilstSleeping = false;
     public boolean damageTintArmor = false;
-    public DamageTintSetting damageTintStyle = DamageTintSetting.MODERN;
+    public DamageTintSetting damageTintStyle = DamageTintSetting.VANILLA;
     public boolean itemGlintOnEntity = false;
     public boolean maxGlintProperties = false;
     public boolean restoreParticleBlending = false;

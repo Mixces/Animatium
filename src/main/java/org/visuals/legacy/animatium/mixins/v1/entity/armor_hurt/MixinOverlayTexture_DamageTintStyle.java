@@ -38,7 +38,7 @@ public abstract class MixinOverlayTexture_DamageTintStyle {
     @ModifyExpressionValue(method = "<init>", at = @At(value = "CONSTANT", args = "intValue=-1291911168"))
     private int animatium$deepRedHurtTint(final int original) {
         final DamageTintSetting style = AnimatiumConfig.instance().other.damageTintStyle;
-        if (Animatium.isEnabled() && style != DamageTintSetting.MODERN) {
+        if (Animatium.isEnabled() && style != DamageTintSetting.VANILLA) {
             return style.getColor(1.0F); // TODO/NOTE: Figure out in the future how to get entity brightness for proper 1.7
         } else {
             return original;

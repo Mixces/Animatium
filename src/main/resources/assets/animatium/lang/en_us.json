@@ -300,6 +300,12 @@
 	"animatium.hideRecipeBook.description": "Hides the recipe book from the inventory, including the button.",
 
 	"animatium.category.extras.group.damage_tint": "Damage Tint",
+	"animatium.damageTintStyle": "[*] Damage Tint Style",
+	"animatium.damageTintStyle.description": "Changes the hurt tint color to match what it was in the selected version.",
+	"animatium.enum.DamageTintSetting.VANILLA": "Vanilla",
+	"animatium.enum.DamageTintSetting.V1_7": "1.7",
+	"animatium.enum.DamageTintSetting.V1_8": "1.8",
+	"animatium.enum.DamageTintSetting.V1_8_ORANGE_MARSHALL": "1.8 (Orange Marshall)",
 	"animatium.damageTintItems": "[*] Damage Tint Items",
 	"animatium.damageTintItems.description": "Applies the damage hurt tint to your currently held item in first/third person.",
 	"animatium.damageTintCape": "[*] Damage Tint Cape",

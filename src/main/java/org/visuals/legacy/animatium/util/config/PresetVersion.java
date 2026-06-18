@@ -314,7 +314,7 @@ public enum PresetVersion {
         other.blockOutlineRendering = false;
         other.disableModelWhilstSleeping = false;
         other.damageTintArmor = false;
-        other.damageTintStyle = DamageTintSetting.MODERN;
+        other.damageTintStyle = DamageTintSetting.VANILLA;
         other.itemGlintOnEntity = false;
         other.maxGlintProperties = false;
         other.restoreParticleBlending = false;
