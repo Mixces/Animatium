@@ -102,8 +102,8 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
     }
 
     @WrapOperation(method = "setupAttackAnimation", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/model/geom/ModelPart;xRot:F", ordinal = 0))
-    public void animatium$fixMirrorArmSwing$field(final ModelPart instance, final float value, final Operation<Void> original, @Local(argsOnly = true) T renderState) {
-        if (AnimatiumConfig.instance().fixes.fixMirrorArmSwing && renderState.attackArm == HumanoidArm.LEFT) {
+    public void animatium$fixMirrorArmSwing$field(final ModelPart instance, final float value, final Operation<Void> original, @Local(argsOnly = true, name = "state") final T state) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixMirrorArmSwing && state.attackArm == HumanoidArm.LEFT) {
             this.rightArm.xRot -= this.body.yRot;
         } else {
             original.call(instance, value);
@@ -111,13 +111,12 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
     }
 
     @ModifyExpressionValue(method = "setupAttackAnimation", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;sin(D)F", ordinal = 5))
-    public float animatium$fixMirrorArmSwing$sin(final float original, @Local(argsOnly = true) T renderState) {
-        float newValue = original;
-        if (AnimatiumConfig.instance().fixes.fixMirrorArmSwing) {
-            newValue *= Utils.getArmMultiplier(renderState.attackArm);
+    public float animatium$fixMirrorArmSwing$sin(final float original, @Local(argsOnly = true, name = "state") final T state) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixMirrorArmSwing) {
+            return original * Utils.getArmMultiplier(state.attackArm);
+        } else {
+            return original;
         }
-
-        return newValue;
     }
 
     @WrapOperation(method = "poseBlockingArm", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F"))
@@ -130,10 +129,10 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
     }
 
     @Inject(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At(value = "CONSTANT", args = "floatValue=0.0", ordinal = 1))
-    private void animatium$bowArmMovement(final T humanoidRenderState, final CallbackInfo ci) {
+    private void animatium$bowArmMovement(final T state, final CallbackInfo ci) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.bowArmMovement) {
-            final boolean isLeftArmPose = humanoidRenderState.leftArmPose == HumanoidModel.ArmPose.BOW_AND_ARROW;
-            final boolean isRightArmPose = humanoidRenderState.rightArmPose == HumanoidModel.ArmPose.BOW_AND_ARROW;
+            final boolean isLeftArmPose = state.leftArmPose == HumanoidModel.ArmPose.BOW_AND_ARROW;
+            final boolean isRightArmPose = state.rightArmPose == HumanoidModel.ArmPose.BOW_AND_ARROW;
             if (isLeftArmPose || isRightArmPose) {
                 if (isLeftArmPose) {
                     this.leftArm.zRot = 0.0F;
@@ -167,6 +166,10 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
 
     @ModifyExpressionValue(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;isUsingItem:Z", ordinal = 0))
     private boolean animatium$fixOffHandUsingPose(final boolean original) {
-        return (!Animatium.isEnabled() || !AnimatiumConfig.instance().fixes.fixOffHandUsingPose) && original;
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixOffHandUsingPose) {
+            return false;
+        } else {
+            return original;
+        }
     }
 }

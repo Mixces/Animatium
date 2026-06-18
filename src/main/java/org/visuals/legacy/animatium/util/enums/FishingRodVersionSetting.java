@@ -25,7 +25,7 @@
 
 package org.visuals.legacy.animatium.util.enums;
 
-public enum FishingRodVersion {
+public enum FishingRodVersionSetting {
     V1_7,
     V1_8,
     V1_13,

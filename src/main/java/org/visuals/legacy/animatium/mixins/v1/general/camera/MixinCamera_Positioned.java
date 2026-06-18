@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.enums.CameraVersion;
+import org.visuals.legacy.animatium.util.enums.CameraVersionSetting;
 
 @Mixin(Camera.class)
 public abstract class MixinCamera_Positioned {
@@ -51,16 +51,16 @@ public abstract class MixinCamera_Positioned {
     @Inject(method = "alignWithEntity", at = @At(value = "TAIL"))
     private void animatium$cameraVersion(final float partialTicks, final CallbackInfo ci) {
         // TODO: Fix bed/sleeping position
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.cameraVersion != CameraVersion.VANILLA && !this.detached && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.cameraVersion != CameraVersionSetting.VANILLA && !this.detached && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
             final int ordinal = AnimatiumConfig.instance().screen.cameraVersion.ordinal();
-            if (ordinal <= CameraVersion.V1_14_V1_14_3.ordinal()) {
+            if (ordinal <= CameraVersionSetting.V1_14_TO_V1_14_3.ordinal()) {
                 // <= 1.14.3
                 this.move(-0.05000000074505806F, 0.0F, 0.0F);
                 // <= 1.13.2
-                if (ordinal <= CameraVersion.V1_9_V1_13_2.ordinal()) {
+                if (ordinal <= CameraVersionSetting.V1_9_TO_V1_13_2.ordinal()) {
                     this.move(0.1F, 0.0F, 0.0F);
                     // <= 1.8
-                    if (ordinal == CameraVersion.V1_8.ordinal()) {
+                    if (ordinal == CameraVersionSetting.V1_8.ordinal()) {
                         this.move(-0.15F, 0, 0); // unfixing parallax
                     }
                 }

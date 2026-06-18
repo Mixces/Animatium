@@ -41,14 +41,14 @@ public final class LegacyFogDarkness {
 
     public void tick(final LevelReader reader, final Entity entity, final int viewDistance) {
         this.prevDarkness = this.darkness;
-        this.darkness = Mth.lerp(0.1F, this.darkness, Mth.lerp(getBrightness(reader, entity.blockPosition()), viewDistance / 32.0F, 1.0F));
+        this.darkness = Mth.lerp(0.1F, this.darkness, Mth.lerp(this.getBrightness(reader, entity.blockPosition()), viewDistance / 32.0F, 1.0F));
     }
 
     public float getDarkness(final float tickDelta) {
         return Mth.lerp(tickDelta, this.prevDarkness, this.darkness);
     }
 
-    private static float getBrightness(final LevelReader reader, final BlockPos blockPos) {
+    private float getBrightness(final LevelReader reader, final BlockPos blockPos) {
         final float amount = reader.getMaxLocalRawBrightness(blockPos) / 15.0F;
         return Mth.lerp(reader.dimensionType().ambientLight(), amount / (4.0F - 3.0F * amount), 1.0F);
     }

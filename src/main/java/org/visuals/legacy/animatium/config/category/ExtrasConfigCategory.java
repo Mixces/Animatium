@@ -36,7 +36,7 @@ import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
 import java.util.Arrays;
 
-public class ExtrasConfigCategory extends Category {
+public final class ExtrasConfigCategory extends Category {
     public boolean minimalViewBobbing = false;
     public boolean showNameTagInThirdPerson = false;
     public boolean hideNameTagBackground = false;
@@ -47,12 +47,9 @@ public class ExtrasConfigCategory extends Category {
     public boolean alwaysSharpParticles = false;
     public boolean disableRecipeAndTutorialToasts = false;
     public boolean showArmWhileInvisible = false;
-    public boolean damageTintItems = false;
-    public boolean damageTintCape = false;
     public boolean fakeMissPenaltySwing = false;
     public boolean dontMoveBlueVoid = false;
     public boolean disableEntityDeathTopple = false;
-    public boolean deepRedHurtTint = false;
     public boolean disableParticlePhysics = false;
     public boolean disableFirstPersonParticles = false;
     public boolean dontClearChat = false;
@@ -61,12 +58,16 @@ public class ExtrasConfigCategory extends Category {
     public boolean colorBoost = false;
     public boolean alwaysBlockingHeadCap = false;
     public boolean hideRecipeBook = false;
+    public boolean legacyLoadingScreenProgressBar = false;
+    // Damage Tint
+    public boolean damageTintItems = false;
+    public boolean damageTintCape = false;
     // Item Swing
-    // TODO 3.3: public float itemSwingSpeed = 0.0F;
-    // TODO 3.3: public float hasteSwingSpeed = 0.0F;
-    // TODO 3.3: public float miningFatigueSwingSpeed = 0.0F;
-    // TODO 3.3: public boolean ignoreHasteSpeed = false;
-    // TODO 3.3: public boolean ignoreMiningFatigueSpeed = false;
+    public float itemSwingSpeed = 0.0F;
+    public float hasteSwingSpeed = 0.0F;
+    public float miningFatigueSwingSpeed = 0.0F;
+    public boolean ignoreHasteSpeed = false;
+    public boolean ignoreMiningFatigueSpeed = false;
     // Server Features (Singleplayer Only)
     public boolean miss_penalty = false;
     public boolean left_click_item_usage = false;
@@ -103,12 +104,9 @@ public class ExtrasConfigCategory extends Category {
 
         final Minecraft minecraft = Minecraft.getInstance();
         bundle.booleanEntry("showArmWhileInvisible");
-        bundle.booleanEntry("damageTintItems");
-        bundle.booleanEntry("damageTintCape");
         bundle.booleanEntry("fakeMissPenaltySwing");
         bundle.booleanEntry("dontMoveBlueVoid");
         bundle.booleanEntry("disableEntityDeathTopple");
-        bundle.booleanEntry("deepRedHurtTint", (option, event) -> ((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture()));
         bundle.booleanEntry("disableParticlePhysics");
         bundle.booleanEntry("disableFirstPersonParticles");
         bundle.booleanEntry("dontClearChat");
@@ -116,13 +114,20 @@ public class ExtrasConfigCategory extends Category {
         bundle.booleanEntry("oldWaterColorEffects", (option, event) -> minecraft.levelExtractor.allChanged());
         bundle.booleanEntry("colorBoost");
         bundle.booleanEntry("alwaysBlockingHeadCap");
+        bundle.booleanEntry("hideRecipeBook");
+        bundle.booleanEntry("legacyLoadingScreenProgressBar");
 
-//        bundle.group((EntryBundle.Group) new EntryBundle.Group("item_swing")
-        // TODO 3.3: .floatEntry("itemSwingSpeed", -1.0F, 1.0F, 0.1F)
-        // TODO 3.3: .floatEntry("hasteSwingSpeed", -1.0F, 1.0F, 0.1F)
-        // TODO 3.3: .floatEntry("miningFatigueSwingSpeed", -1.0F, 1.0F, 0.1F)
-        // TODO 3.3: .booleanEntry("ignoreHasteSpeed")
-        // TODO 3.3: .booleanEntry("ignoreMiningFatigueSpeed"));
+        // Damage Tint
+        bundle.group((EntryBundle.Group) new EntryBundle.Group("damage_tint")
+                .booleanEntry("damageTintItems")
+                .booleanEntry("damageTintCape"));
+
+        bundle.group((EntryBundle.Group) new EntryBundle.Group("item_swing")
+                .floatEntry("itemSwingSpeed", -1.0F, 1.0F, 0.1F)
+                .floatEntry("hasteSwingSpeed", -1.0F, 1.0F, 0.1F)
+                .floatEntry("miningFatigueSwingSpeed", -1.0F, 1.0F, 0.1F)
+                .booleanEntry("ignoreHasteSpeed")
+                .booleanEntry("ignoreMiningFatigueSpeed"));
 
         {
             final EntryBundle.Group serverFeatureGroup = new EntryBundle.Group("server_features");

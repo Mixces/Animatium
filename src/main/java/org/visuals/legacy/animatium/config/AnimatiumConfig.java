@@ -43,7 +43,7 @@ import java.nio.file.Path;
 
 public final class AnimatiumConfig {
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final ConfigClassHandler<AnimatiumConfig> CONFIG = ConfigClassHandler.createBuilder(AnimatiumConfig.class)
+    public static final ConfigClassHandler<AnimatiumConfig> HANDLER = ConfigClassHandler.createBuilder(AnimatiumConfig.class)
             .serializer((config) -> GsonConfigSerializerBuilder.create(config)
                     .setPath(YACLPlatform.getConfigDir().resolve("animatium3.json"))
                     .build()
@@ -68,7 +68,7 @@ public final class AnimatiumConfig {
     public ExtrasConfigCategory extras = new ExtrasConfigCategory();
 
     public static Screen getConfigScreen(@Nullable Screen parent) {
-        return YetAnotherConfigLib.create(CONFIG, (defaults, config, builder) -> {
+        return YetAnotherConfigLib.create(HANDLER, (defaults, config, builder) -> {
             builder.title(Component.translatable("animatium.title"));
             builder.category(MovementConfigCategory.create(defaults.movement, config.movement));
             builder.category(ScreenConfigCategory.create(defaults.screen, config.screen));
@@ -76,7 +76,7 @@ public final class AnimatiumConfig {
             builder.category(FixesConfigCategory.create(defaults.fixes, config.fixes));
             builder.category(OtherConfigCategory.create(defaults.other, config.other));
             builder.category(ExtrasConfigCategory.create(defaults.extras, config.extras));
-            builder.save(CONFIG::save);
+            builder.save(HANDLER::save);
             return builder;
         }).generateScreen(parent);
     }
@@ -102,14 +102,14 @@ public final class AnimatiumConfig {
             }
         }
 
-        CONFIG.load();
+        HANDLER.load();
     }
 
     public static void save() {
-        CONFIG.save();
+        HANDLER.save();
     }
 
     public static AnimatiumConfig instance() {
-        return CONFIG.instance();
+        return HANDLER.instance();
     }
 }

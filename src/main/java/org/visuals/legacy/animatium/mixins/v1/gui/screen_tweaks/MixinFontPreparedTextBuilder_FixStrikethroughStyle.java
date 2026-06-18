@@ -31,6 +31,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @IfModAbsent(value = "viafabricplus")
@@ -41,7 +42,7 @@ public abstract class MixinFontPreparedTextBuilder_FixStrikethroughStyle {
 
     @ModifyArg(method = "accept(ILnet/minecraft/network/chat/Style;Lnet/minecraft/client/gui/font/glyphs/BakedGlyph;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/font/glyphs/EffectGlyph;createEffect(FFFFFIIF)Lnet/minecraft/client/gui/font/TextRenderable;", ordinal = 0), index = 1)
     private float animatium$fixTextStrikethroughStyle$minY(final float minY) {
-        if (AnimatiumConfig.instance().fixes.fixTextStrikethroughStyle) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixTextStrikethroughStyle) {
             return minY - animatium$strikethroughOffset;
         } else {
             return minY;
@@ -50,7 +51,7 @@ public abstract class MixinFontPreparedTextBuilder_FixStrikethroughStyle {
 
     @ModifyArg(method = "accept(ILnet/minecraft/network/chat/Style;Lnet/minecraft/client/gui/font/glyphs/BakedGlyph;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/font/glyphs/EffectGlyph;createEffect(FFFFFIIF)Lnet/minecraft/client/gui/font/TextRenderable;", ordinal = 0), index = 3)
     private float animatium$fixTextStrikethroughStyle$maxY(final float maxY) {
-        if (AnimatiumConfig.instance().fixes.fixTextStrikethroughStyle) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixTextStrikethroughStyle) {
             return maxY - animatium$strikethroughOffset;
         } else {
             return maxY;

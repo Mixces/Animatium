@@ -46,7 +46,7 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.ItemUtils;
 import org.visuals.legacy.animatium.util.Utils;
-import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
+import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -98,14 +98,14 @@ public abstract class MixinItemStackRenderLayerState {
                 float x = this.itemTransform.translation().x();
                 float y = this.itemTransform.translation().y();
                 float z = this.itemTransform.translation().z();
-                if (AnimatiumConfig.instance().items.fishingRodVersion != FishingRodVersion.VANILLA && ItemUtils.isFishingRodItem(stack) && isFirstPerson) {
+                if (AnimatiumConfig.instance().items.fishingRodVersion != FishingRodVersionSetting.VANILLA && ItemUtils.isFishingRodItem(stack) && isFirstPerson) {
                     final int ordinal = AnimatiumConfig.instance().items.fishingRodVersion.ordinal();
-                    if (ordinal <= FishingRodVersion.V1_8.ordinal()) {
+                    if (ordinal <= FishingRodVersionSetting.V1_8.ordinal()) {
                         localPose.translate(0.070625F, 0.1F, 0.020625F);
                     }
 
                     localPose.translate(x, y, z);
-                    if (ordinal == FishingRodVersion.V1_7.ordinal()) {
+                    if (ordinal == FishingRodVersionSetting.V1_7.ordinal()) {
                         localPose.mulPose(Axis.YP.rotationDegrees(180).get(new Matrix4f()));
                     }
 

@@ -108,6 +108,6 @@ public abstract class MixinLoadingOverlay_LegacyLoadingScreen {
 
     @WrapWithCondition(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/LoadingOverlay;extractProgressBar(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIIIF)V"))
     private boolean animatium$disableProgressBar(final LoadingOverlay instance, final GuiGraphicsExtractor graphics, final int x0, final int y0, final int x1, final int y1, final float fade) {
-        return !Animatium.isEnabled() || !AnimatiumConfig.instance().screen.legacyLoadingScreen;
+        return !Animatium.isEnabled() || !AnimatiumConfig.instance().screen.legacyLoadingScreen || AnimatiumConfig.instance().extras.legacyLoadingScreenProgressBar;
     }
 }

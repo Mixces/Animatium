@@ -41,4 +41,6 @@ public abstract class Bundle {
     public abstract Bundle floatEntry(final String name, final float min, final float max, final float step);
 
     public abstract <S extends Enum<S>> Bundle enumEntry(final String name, final Class<S> enumClazz);
+
+    public abstract <S extends Enum<S>> Bundle enumEntry(final String name, final Class<S> enumClazz, final BiConsumer<Option<Enum<S>>, Enum<S>> listener);
 }

@@ -26,13 +26,17 @@
 package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
+import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.util.compatibility.Mods;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
+import org.visuals.legacy.animatium.util.enums.DamageTintSetting;
 import org.visuals.legacy.animatium.util.enums.VoidFogSetting;
 import org.visuals.legacy.animatium.util.rendering.lighting.LegacyDiffuseLighting;
 
-public class OtherConfigCategory extends Category {
+public final class OtherConfigCategory extends Category {
     // Sky
     public boolean blueVoidSky = false;
     public boolean planarSkyFog = false;
@@ -47,6 +51,7 @@ public class OtherConfigCategory extends Category {
     public boolean blockOutlineRendering = false;
     public boolean disableModelWhilstSleeping = false;
     public boolean damageTintArmor = false;
+    public DamageTintSetting damageTintStyle = DamageTintSetting.MODERN;
     public boolean itemGlintOnEntity = false;
     public boolean maxGlintProperties = false;
     public boolean restoreParticleBlending = false;
@@ -94,6 +99,7 @@ public class OtherConfigCategory extends Category {
             bundle.booleanEntry("damageTintArmor");
         }
 
+        bundle.enumEntry("damageTintStyle", DamageTintSetting.class, (option, event) -> ((GameRendererAccessor) Minecraft.getInstance().gameRenderer).animatium$setOverlayTexture(new OverlayTexture()));
         bundle.booleanEntry("itemGlintOnEntity");
         bundle.booleanEntry("maxGlintProperties");
         bundle.booleanEntry("restoreParticleBlending");

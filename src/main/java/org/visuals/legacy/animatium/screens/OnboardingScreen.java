@@ -35,15 +35,14 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import org.jspecify.annotations.NonNull;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.config.ConfigUtil;
-import org.visuals.legacy.animatium.util.config.Version;
+import org.visuals.legacy.animatium.util.config.PresetVersion;
 import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
 public class OnboardingScreen extends Screen {
     private final Screen original;
     private final boolean accessedViaCommands;
-    private Version version = Version.MODERN;
+    private PresetVersion presetVersion = PresetVersion.MODERN;
 
     private Button v1_7Button = null;
     private Button v1_8Button = null;
@@ -66,29 +65,27 @@ public class OnboardingScreen extends Screen {
             this.original.init(this.width, this.height);
         }
 
-        this.version = ConfigUtil.getEnum(ConfigUtil.VERSION_KEY, Version.MODERN);
+        this.presetVersion = ConfigUtil.getEnum(ConfigUtil.PRESET_VERSION_KEY, PresetVersion.MODERN);
 
         final int buttonWidth = 100;
-        this.v1_7Button = this.addRenderableWidget(Button.builder(Component.literal("1.7"), button -> this.version = Version.V1_7)
+        this.v1_7Button = this.addRenderableWidget(Button.builder(Component.literal("1.7"), button -> this.presetVersion = PresetVersion.V1_7)
                 .bounds(((this.width / 2) - (buttonWidth / 2) - (buttonWidth + Button.DEFAULT_SPACING)), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
                 .build());
-        this.v1_8Button = this.addRenderableWidget(Button.builder(Component.literal("1.8"), button -> this.version = Version.V1_8)
+        this.v1_8Button = this.addRenderableWidget(Button.builder(Component.literal("1.8"), button -> this.presetVersion = PresetVersion.V1_8)
                 .bounds((this.width / 2) - (buttonWidth / 2), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
                 .build());
-        this.modernButton = this.addRenderableWidget(Button.builder(Component.literal("Modern"), button -> this.version = Version.MODERN)
+        this.modernButton = this.addRenderableWidget(Button.builder(Component.literal("Modern"), button -> this.presetVersion = PresetVersion.MODERN)
                 .bounds(((this.width / 2) - (buttonWidth / 2) + (buttonWidth + Button.DEFAULT_SPACING)), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
                 .build());
         this.updateVersionButtonState();
 
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> {
             ConfigUtil.put(ConfigUtil.ONBOARDING_KEY, false);
-            ConfigUtil.put(ConfigUtil.VERSION_KEY, this.version.name());
+            ConfigUtil.put(ConfigUtil.PRESET_VERSION_KEY, this.presetVersion.name());
 
-            this.version.apply();
-            AnimatiumConfig.save();
-
+            this.presetVersion.apply();
             if (this.minecraft.player != null) {
-                this.minecraft.showDebugChat(Component.literal("Applied preset " + this.version.name() + "!").withColor(0xFF00FF00));
+                this.minecraft.showDebugChat(Component.literal("Applied preset " + this.presetVersion.name() + "!").withColor(0xFF00FF00));
             }
 
             this.minecraft.gui.setScreen(this.original);
@@ -111,7 +108,7 @@ public class OnboardingScreen extends Screen {
             graphics.centeredText(this.font, "NOTE: If you have already went through this,", this.width / 2, (int) (this.height / 1.4F), 0xFFFFA600);
             graphics.centeredText(this.font, "ask for help in the discord before continuing!", this.width / 2, (int) (this.height / 1.3F), 0xFFFFA600);
         } else {
-            graphics.centeredText(this.font, "Current saved version: " + ConfigUtil.getEnum(ConfigUtil.VERSION_KEY, this.version), this.width / 2, (int) (this.height / 1.3F), ARGB.white(0.625F));
+            graphics.centeredText(this.font, "Current saved version: " + ConfigUtil.getEnum(ConfigUtil.PRESET_VERSION_KEY, this.presetVersion), this.width / 2, (int) (this.height / 1.3F), ARGB.white(0.625F));
         }
     }
 
@@ -134,20 +131,20 @@ public class OnboardingScreen extends Screen {
         }
     }
 
-    private void updateVersionButtonMessage(final Button button, final Version version) {
+    private void updateVersionButtonMessage(final Button button, final PresetVersion presetVersion) {
         button.setMessage(button.getMessage()
                 .copy()
-                .withColor(button.isActive() ? (version == this.version ? ARGB.color(1.0F, 0x00FF00) : ARGB.white(1.0F)) : 0xFFFFFFA0));
+                .withColor(button.isActive() ? (presetVersion == this.presetVersion ? ARGB.color(1.0F, 0x00FF00) : ARGB.white(1.0F)) : 0xFFFFFFA0));
     }
 
     private void updateVersionButtonState() {
-        this.v1_7Button.active = this.version != Version.V1_7;
-        this.updateVersionButtonMessage(this.v1_7Button, Version.V1_7);
+        this.v1_7Button.active = this.presetVersion != PresetVersion.V1_7;
+        this.updateVersionButtonMessage(this.v1_7Button, PresetVersion.V1_7);
 
-        this.v1_8Button.active = this.version != Version.V1_8;
-        this.updateVersionButtonMessage(this.v1_8Button, Version.V1_8);
+        this.v1_8Button.active = this.presetVersion != PresetVersion.V1_8;
+        this.updateVersionButtonMessage(this.v1_8Button, PresetVersion.V1_8);
 
-        this.modernButton.active = this.version != Version.MODERN;
-        this.updateVersionButtonMessage(this.modernButton, Version.MODERN);
+        this.modernButton.active = this.presetVersion != PresetVersion.MODERN;
+        this.updateVersionButtonMessage(this.modernButton, PresetVersion.MODERN);
     }
 }

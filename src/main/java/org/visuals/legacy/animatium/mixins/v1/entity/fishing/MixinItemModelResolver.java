@@ -45,7 +45,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
+import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
 @Mixin(ItemModelResolver.class)
 public abstract class MixinItemModelResolver {
@@ -66,7 +66,7 @@ public abstract class MixinItemModelResolver {
         final LivingEntity livingEntity = itemOwner == null ? null : itemOwner.asLivingEntity();
         // TODO/FIX
         if (Animatium.isEnabled() &&
-                AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersion.V1_7 &&
+                AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersionSetting.V1_7 &&
                 itemStack.getItem() == Items.FISHING_ROD &&
                 (livingEntity instanceof Player player && player.fishing != null) &&
                 ((displayContext == ItemDisplayContext.THIRD_PERSON_LEFT_HAND && livingEntity.getOffhandItem() == itemStack) ||

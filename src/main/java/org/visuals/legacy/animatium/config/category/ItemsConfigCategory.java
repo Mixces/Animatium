@@ -28,9 +28,9 @@ package org.visuals.legacy.animatium.config.category;
 import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
-import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
+import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
-public class ItemsConfigCategory extends Category {
+public final class ItemsConfigCategory extends Category {
     // (Items) Enchantment Glint
     public boolean legacyGlintSpeed = false;
     public boolean glintOnItemDrops2D = false;
@@ -45,7 +45,7 @@ public class ItemsConfigCategory extends Category {
     public boolean itemPositionsInThirdPerson = false;
     public boolean thinBlockPositions = false;
     public boolean skullPosition = false;
-    public FishingRodVersion fishingRodVersion = FishingRodVersion.VANILLA;
+    public FishingRodVersionSetting fishingRodVersion = FishingRodVersionSetting.VANILLA;
     // (Items) Other
     public boolean thinFishingRodLineThickness = false;
     public boolean itemUsageSwinging = false;
@@ -53,6 +53,7 @@ public class ItemsConfigCategory extends Category {
     public boolean disableSwingOnDrop = false;
     public boolean disableSwingOnEntityInteract = false;
     public boolean disableItemUsingTextureInGUI = false;
+    public boolean equipAnimationItemCheck = false;
     public boolean durabilityBarColors = false;
     public boolean legacyItemRarities = false;
     public boolean heldItemVisibilityInBoat = false;
@@ -87,7 +88,7 @@ public class ItemsConfigCategory extends Category {
                 .booleanEntry("itemPositionsInThirdPerson")
                 .booleanEntry("thinBlockPositions")
                 .booleanEntry("skullPosition")
-                .enumEntry("fishingRodVersion", FishingRodVersion.class));
+                .enumEntry("fishingRodVersion", FishingRodVersionSetting.class));
 
         bundle.group((EntryBundle.Group) new EntryBundle.Group("other")
                 .booleanEntry("thinFishingRodLineThickness")
@@ -96,6 +97,7 @@ public class ItemsConfigCategory extends Category {
                 .booleanEntry("disableSwingOnDrop")
                 .booleanEntry("disableSwingOnEntityInteract")
                 .booleanEntry("disableItemUsingTextureInGUI")
+                .booleanEntry("equipAnimationItemCheck")
                 .booleanEntry("durabilityBarColors")
                 .booleanEntry("legacyItemRarities")
                 .booleanEntry("heldItemVisibilityInBoat")

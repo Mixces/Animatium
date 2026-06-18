@@ -36,7 +36,7 @@ import net.minecraft.world.level.block.*;
 import org.jetbrains.annotations.Nullable;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
+import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
 import java.util.List;
 
@@ -137,7 +137,7 @@ public class ItemUtils {
     public boolean shouldApplyItemPositionsInThirdPerson(final ArmedEntityRenderState armedEntityRenderState) {
         if (AnimatiumConfig.instance().items.itemPositionsInThirdPerson) {
             return true;
-        } else if (AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersion.V1_7) {
+        } else if (AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersionSetting.V1_7) {
             return isFishingRodItem(armedEntityRenderState.getMainHandItemStack());
         } else {
             return AnimatiumConfig.instance().other.thirdPersonSwordBlockingPosition && Utils.isBlockingArm(armedEntityRenderState.mainArm, armedEntityRenderState);

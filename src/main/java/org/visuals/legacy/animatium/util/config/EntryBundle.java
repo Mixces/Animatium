@@ -93,6 +93,12 @@ public class EntryBundle extends Bundle {
         return this;
     }
 
+    @Override
+    public <S extends Enum<S>> EntryBundle enumEntry(final String name, final Class<S> enumClazz, final BiConsumer<Option<Enum<S>>, Enum<S>> listener) {
+        this.entries.add(new EnumEntry<>(name, enumClazz, listener));
+        return this;
+    }
+
     public EntryBundle group(final Group group) {
         this.groups.add(group);
         group.category = this.category;
@@ -208,9 +214,13 @@ public class EntryBundle extends Bundle {
         @Getter
         private final Class<?> enumClass;
 
-        public EnumEntry(final String name, final Class<S> enumClass) {
-            super(name, Type.ENUM, null);
+        public EnumEntry(final String name, final Class<S> enumClass, final BiConsumer<Option<Enum<S>>, Enum<S>> listener) {
+            super(name, Type.ENUM, listener);
             this.enumClass = enumClass;
+        }
+
+        public EnumEntry(final String name, final Class<S> enumClass) {
+            this(name, enumClass, null);
         }
 
         @Override

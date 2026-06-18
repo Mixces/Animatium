@@ -33,6 +33,7 @@ import dev.isxander.yacl3.api.controller.ControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
+import lombok.Getter;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.AnimatiumConstants;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
@@ -42,6 +43,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public abstract class Category {
+    @Getter
     public enum OptionType {
         BOOLEAN(false),
         FLOAT(true),
@@ -51,10 +53,6 @@ public abstract class Category {
 
         OptionType(final boolean sliderCapable) {
             this.sliderCapable = sliderCapable;
-        }
-
-        public boolean isSliderCapable() {
-            return this.sliderCapable;
         }
     }
 
@@ -181,7 +179,7 @@ public abstract class Category {
         public Field currentField;
         public S defaultValue;
 
-        public static <T extends Category, S> Reference<S> get(String fieldName, T defaults, T current) {
+        public static <T extends Category, S> Reference<S> get(final String fieldName, final T defaults, final T current) {
             final Reference<S> reference = new Reference<>();
 
             final Class<?> defaultsClazz = defaults.getClass();

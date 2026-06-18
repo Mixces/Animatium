@@ -30,7 +30,7 @@ import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 
-public class MovementConfigCategory extends Category {
+public final class MovementConfigCategory extends Category {
     // (Movement) Cape
     public boolean oldCapeMovement = false;
     public boolean disableCapeLean = false;

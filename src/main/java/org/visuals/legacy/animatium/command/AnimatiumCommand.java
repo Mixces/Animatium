@@ -33,7 +33,6 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvent;
@@ -45,10 +44,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.screens.OnboardingScreen;
-import org.visuals.legacy.animatium.util.Utils;
-import org.visuals.legacy.animatium.util.config.ConfigUtil;
 
 import java.util.Calendar;
 import java.util.Random;
@@ -62,9 +58,9 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
         command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("onboarding").executes(Onboarding.UNIT));
 
         final Calendar calendar = Calendar.getInstance();
-//        if (calendar.get(Calendar.MONTH) == Calendar.SEPTEMBER && calendar.get(Calendar.DAY_OF_MONTH) == 6) {
-        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("birthday").executes(Birthday.UNIT));
-//        }
+        if (calendar.get(Calendar.MONTH) == Calendar.SEPTEMBER && calendar.get(Calendar.DAY_OF_MONTH) == 6) {
+            command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("birthday").executes(Birthday.UNIT));
+        }
 
         return command;
     }
@@ -80,13 +76,6 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static void reload() {
-        final Minecraft minecraft = Minecraft.getInstance();
-        minecraft.levelExtractor.allChanged();
-        ((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
-        Utils.reinitializeInventorySlots();
-    }
-
     private static class On implements Command<FabricClientCommandSource> {
         public static final On UNIT = new On();
 
@@ -98,7 +87,7 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
             } else {
                 source.sendFeedback(Component.literal("Mod enabled.").withStyle(ChatFormatting.GREEN));
                 Animatium.setEnabled(true);
-                reload();
+                Animatium.reload();
             }
 
             return Command.SINGLE_SUCCESS;
@@ -116,7 +105,7 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
             } else {
                 source.sendFeedback(Component.literal("Mod disabled.").withStyle(ChatFormatting.RED));
                 Animatium.setEnabled(false);
-                reload();
+                Animatium.reload();
             }
 
             return Command.SINGLE_SUCCESS;
@@ -130,7 +119,7 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
         public int run(final CommandContext<FabricClientCommandSource> context) {
             final FabricClientCommandSource source = context.getSource();
             source.sendFeedback(Component.literal("Mod reloaded.").withStyle(ChatFormatting.GREEN));
-            reload();
+            Animatium.reload();
             return Command.SINGLE_SUCCESS;
         }
     }

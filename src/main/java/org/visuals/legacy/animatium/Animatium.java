@@ -29,16 +29,20 @@ import com.mojang.logging.LogUtils;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import net.minecraft.SharedConstants;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenEntries;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.config.ConfigBundles;
+import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.util.AnimatiumDebugEntry;
 import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.config.ConfigUtil;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
+import org.visuals.legacy.animatium.util.rendering.lighting.LegacyDiffuseLighting;
 
 import java.util.EnumSet;
 
@@ -69,6 +73,14 @@ public final class Animatium {
         }
     }
 
+    public void reload() {
+        final Minecraft minecraft = Minecraft.getInstance();
+        minecraft.levelExtractor.allChanged();
+        LegacyDiffuseLighting.refresh();
+        ((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
+        Utils.reinitializeInventorySlots();
+    }
+
     public Identifier location(final String path) {
         return Identifier.fromNamespaceAndPath(AnimatiumConstants.MOD_ID, path);
     }
@@ -81,7 +93,7 @@ public final class Animatium {
         AnimatiumConfig.load();
         try {
             ConfigUtil.load();
-            LOGGER.error("Successfully loaded the animatium utility config!");
+            LOGGER.info("Successfully loaded the animatium utility config!");
         } catch (Exception ignored) {
             enabled = ConfigUtil.getBoolean(ConfigUtil.ENABLED_KEY);
             LOGGER.error("Failed to load animatium utility config, defaulting...");

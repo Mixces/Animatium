@@ -48,7 +48,7 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.ItemUtils;
 import org.visuals.legacy.animatium.util.Utils;
-import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
+import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
 @Mixin(ItemInHandLayer.class)
 public abstract class MixinItemInHandLayer_ThirdPersonItemPositions<S extends ArmedEntityRenderState> {
@@ -73,7 +73,7 @@ public abstract class MixinItemInHandLayer_ThirdPersonItemPositions<S extends Ar
             final ItemStack stack = state.animatium$getItemHeldByArm(arm);
             if (!stack.isEmpty() && !ItemUtils.isItemBlacklisted(stack)) {
                 final boolean isStickRod = Animatium.isEnabled() &&
-                        AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersion.V1_7 &&
+                        AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersionSetting.V1_7 &&
                         stack.is(Items.FISHING_ROD) &&
                         (state instanceof AvatarRenderState && state.animatium$isFishing());
                 if (ItemUtils.shouldApplyItemPositionsInThirdPerson(state)) {

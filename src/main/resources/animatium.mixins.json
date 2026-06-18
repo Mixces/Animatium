@@ -15,7 +15,7 @@
 		"v1.entity.MixinLivingEntityRenderer",
 		"v1.entity.armor_hurt.MixinCustomHeadLayer_DamageTintArmor",
 		"v1.entity.armor_hurt.MixinEquipmentLayerRenderer_DamageTintArmor",
-		"v1.entity.armor_hurt.MixinOverlayTexture_DeepRedHurtTint",
+		"v1.entity.armor_hurt.MixinOverlayTexture_DamageTintStyle",
 		"v1.entity.cape.MixinCapeLayer_DamageTintCape",
 		"v1.entity.cape.movement.MixinAvatarRenderer_CapeRotation",
 		"v1.entity.cape.movement.MixinCapeLayer_Position",

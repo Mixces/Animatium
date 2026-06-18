@@ -80,7 +80,7 @@ public abstract class MixinGameRenderer_ModifyViewBobbing {
 
     @Inject(method = "bobView", at = @At("TAIL"))
     private void animatium$fixVerticalBobbingTilt(final CameraRenderState cameraState, final PoseStack poseStack, final CallbackInfo ci) {
-        if (AnimatiumConfig.instance().fixes.fixVerticalBobbingTilt && this.minecraft.getCameraEntity() instanceof AbstractClientPlayer player) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixVerticalBobbingTilt && this.minecraft.getCameraEntity() instanceof AbstractClientPlayer player) {
             final float fallDist = Mth.lerp(cameraState.animatium$getPartialTickTime(), player.animatium$getPreviousBobbingTilt(), player.animatium$getBobbingTilt());
             poseStack.mulPose(Axis.XP.rotationDegrees(fallDist));
         }

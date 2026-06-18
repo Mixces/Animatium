@@ -29,10 +29,10 @@ import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
-import org.visuals.legacy.animatium.util.enums.CameraVersion;
+import org.visuals.legacy.animatium.util.enums.CameraVersionSetting;
 
-public class ScreenConfigCategory extends Category {
-    public CameraVersion cameraVersion = CameraVersion.VANILLA;
+public final class ScreenConfigCategory extends Category {
+    public CameraVersionSetting cameraVersion = CameraVersionSetting.VANILLA;
     public boolean crosshairInThirdPerson = false;
     public boolean disableHeartFlash = false;
     public boolean centerScrollableListWidgets = false;
@@ -64,7 +64,7 @@ public class ScreenConfigCategory extends Category {
     public EntryBundle bundle() {
         final EntryBundle bundle = new EntryBundle(this, "screen");
 
-        bundle.enumEntry("cameraVersion", CameraVersion.class);
+        bundle.enumEntry("cameraVersion", CameraVersionSetting.class);
         bundle.booleanEntry("crosshairInThirdPerson");
         bundle.booleanEntry("disableHeartFlash");
         bundle.booleanEntry("centerScrollableListWidgets");

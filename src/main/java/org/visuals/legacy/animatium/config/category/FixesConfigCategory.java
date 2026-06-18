@@ -30,13 +30,12 @@ import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.util.compatibility.Mods;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
 
-public class FixesConfigCategory extends Category {
+public final class FixesConfigCategory extends Category {
     public boolean fixSneakingFeetPosition = true;
     public boolean fixMirrorArmSwing = true;
     public boolean fixOffHandUsingPose = true;
     public boolean fixCastLineCheck = true;
     public boolean fixCastLineSwing = true;
-    public boolean fixEquipAnimationItemCheck = true;
     public boolean fixFireballClientsideVisual = true;
     public boolean fixTextStrikethroughStyle = true;
     public boolean fixHighAttackSpeedIndicator = true;
@@ -63,7 +62,6 @@ public class FixesConfigCategory extends Category {
         bundle.booleanEntry("fixOffHandUsingPose");
         bundle.booleanEntry("fixCastLineCheck");
         bundle.booleanEntry("fixCastLineSwing");
-        bundle.booleanEntry("fixEquipAnimationItemCheck");
         bundle.booleanEntry("fixFireballClientsideVisual");
         if (!Mods.HAS_VIAFABRICPLUS) {
             bundle.booleanEntry("fixTextStrikethroughStyle");

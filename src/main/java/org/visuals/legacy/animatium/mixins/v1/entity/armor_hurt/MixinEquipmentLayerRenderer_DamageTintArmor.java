@@ -66,13 +66,13 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
     }
 
     @ModifyArg(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/Identifier;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/OrderedSubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"), index = 5)
-    private <S> int animatium$modifyUVArmorTint(final int original, @Local(argsOnly = true) final S entityRenderState) {
-        return animatium$getPackUv(original, (EntityRenderState) entityRenderState);
+    private <S> int animatium$modifyUVArmorTint(final int original, @Local(argsOnly = true, name = "state") final S state) {
+        return animatium$getPackUv(original, (EntityRenderState) state);
     }
 
     @ModifyArg(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/Identifier;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/OrderedSubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"), index = 5)
-    private <S> int animatium$modifyUVTrimTint(final int original, @Local(argsOnly = true) final S entityRenderState) {
-        return animatium$getPackUv(original, (EntityRenderState) entityRenderState);
+    private <S> int animatium$modifyUVTrimTint(final int original, @Local(argsOnly = true, name = "state") final S state) {
+        return animatium$getPackUv(original, (EntityRenderState) state);
     }
 
     @Unique

@@ -43,7 +43,7 @@ public class ConfigUtil {
 
     public static final String ENABLED_KEY = "enabled";
     public static final String ONBOARDING_KEY = "onboarding";
-    public static final String VERSION_KEY = "version";
+    public static final String PRESET_VERSION_KEY = "preset_version";
 
     private final Gson GSON = new GsonBuilder().setStrictness(Strictness.LENIENT).create();
     private final File CONFIG_FILE = new File(FabricLoader.getInstance().getGameDir().toFile(), "animatium_utility.json");
@@ -53,7 +53,7 @@ public class ConfigUtil {
         // Defaults
         data.addProperty(ENABLED_KEY, true);
         data.addProperty(ONBOARDING_KEY, true);
-        data.addProperty(VERSION_KEY, Version.MODERN.name());
+        data.addProperty(PRESET_VERSION_KEY, PresetVersion.MODERN.name());
     }
 
     public void load() throws Exception {

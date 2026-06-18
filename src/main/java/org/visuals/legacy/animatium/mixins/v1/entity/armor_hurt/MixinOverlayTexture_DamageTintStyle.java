@@ -27,19 +27,19 @@ package org.visuals.legacy.animatium.mixins.v1.entity.armor_hurt;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.ARGB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.util.enums.DamageTintSetting;
 
 @Mixin(OverlayTexture.class)
-public abstract class MixinOverlayTexture_DeepRedHurtTint {
+public abstract class MixinOverlayTexture_DamageTintStyle {
     @ModifyExpressionValue(method = "<init>", at = @At(value = "CONSTANT", args = "intValue=-1291911168"))
     private int animatium$deepRedHurtTint(final int original) {
-        if (Animatium.isEnabled()) {
-            final float alpha = AnimatiumConfig.instance().extras.deepRedHurtTint ? 128.0F : ARGB.alphaFloat(original);
-            return ARGB.color(alpha, ARGB.opaque(original));
+        final DamageTintSetting style = AnimatiumConfig.instance().other.damageTintStyle;
+        if (Animatium.isEnabled() && style != DamageTintSetting.MODERN) {
+            return style.getColor(1.0F); // TODO/NOTE: Figure out in the future how to get entity brightness for proper 1.7
         } else {
             return original;
         }
