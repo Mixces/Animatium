@@ -25,10 +25,8 @@
 
 package org.visuals.legacy.animatium.util.rendering;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.LevelReader;
 
 public final class LegacyFogDarkness {
     public static final LegacyFogDarkness INSTANCE = new LegacyFogDarkness();
@@ -39,17 +37,12 @@ public final class LegacyFogDarkness {
     LegacyFogDarkness() {
     }
 
-    public void tick(final LevelReader reader, final Entity entity, final int viewDistance) {
+    public void tick(final Entity entity, final int viewDistance) {
         this.prevDarkness = this.darkness;
-        this.darkness = Mth.lerp(0.1F, this.darkness, Mth.lerp(this.getBrightness(reader, entity.blockPosition()), viewDistance / 32.0F, 1.0F));
+        this.darkness = Mth.lerp(0.1F, this.darkness, Mth.lerp(entity.getLightLevelDependentMagicValue(), viewDistance / 32.0F, 1.0F));
     }
 
     public float getDarkness(final float tickDelta) {
         return Mth.lerp(tickDelta, this.prevDarkness, this.darkness);
-    }
-
-    private float getBrightness(final LevelReader reader, final BlockPos blockPos) {
-        final float amount = reader.getMaxLocalRawBrightness(blockPos) / 15.0F;
-        return Mth.lerp(reader.dimensionType().ambientLight(), amount / (4.0F - 3.0F * amount), 1.0F);
     }
 }

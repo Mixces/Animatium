@@ -26,7 +26,6 @@
 package org.visuals.legacy.animatium.mixins.v1.rendering.fog;
 
 import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.state.GameRenderState;
 import net.minecraft.world.entity.Entity;
@@ -42,10 +41,6 @@ import org.visuals.legacy.animatium.util.rendering.LegacyFogDarkness;
 public abstract class MixinGameRenderer_TickDarkness {
     @Shadow
     @Final
-    private Minecraft minecraft;
-
-    @Shadow
-    @Final
     private Camera mainCamera;
 
     @Shadow
@@ -56,7 +51,7 @@ public abstract class MixinGameRenderer_TickDarkness {
     private void animatium$tickFogDarkness(final CallbackInfo ci) {
         final Entity entity = this.mainCamera.entity();
         if (entity != null) {
-            LegacyFogDarkness.INSTANCE.tick(this.minecraft.level, entity, this.gameRenderState.optionsRenderState.renderDistance);
+            LegacyFogDarkness.INSTANCE.tick(entity, this.gameRenderState.optionsRenderState.renderDistance);
         }
     }
 }

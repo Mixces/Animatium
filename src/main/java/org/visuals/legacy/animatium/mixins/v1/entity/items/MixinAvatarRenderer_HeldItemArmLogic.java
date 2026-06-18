@@ -28,7 +28,6 @@ package org.visuals.legacy.animatium.mixins.v1.entity.items;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.ClientAvatarEntity;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -45,7 +44,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.player.Player;
+import org.jspecify.annotations.NonNull;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -56,7 +55,7 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(AvatarRenderer.class)
-public abstract class MixinAvatarRenderer_HeldItemArmLogic<AvatarLikeEntity extends Avatar & ClientAvatarEntity> extends LivingEntityRenderer<AvatarLikeEntity, AvatarRenderState, PlayerModel> {
+public abstract class MixinAvatarRenderer_HeldItemArmLogic<AvatarLikeEntity extends Avatar & ClientAvatarEntity> extends LivingEntityRenderer<@NonNull AvatarLikeEntity, AvatarRenderState, PlayerModel> {
     @Unique
     private final ThreadLocal<AvatarRenderState> animatium$renderState = ThreadLocal.withInitial(() -> null);
 
@@ -65,19 +64,19 @@ public abstract class MixinAvatarRenderer_HeldItemArmLogic<AvatarLikeEntity exte
     }
 
     @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;F)V", at = @At("TAIL"))
-    private void animatium$storeAvatarState(final AvatarLikeEntity avatar, final AvatarRenderState avatarRenderState, final float tickDelta, final CallbackInfo ci) {
-        animatium$renderState.set(avatarRenderState);
+    private void animatium$storeAvatarState(final AvatarLikeEntity entity, final AvatarRenderState state, final float tickDelta, final CallbackInfo ci) {
+        animatium$renderState.set(state);
     }
 
     @Inject(method = "renderHand", at = @At(value = "FIELD", target = "Lnet/minecraft/client/model/geom/ModelPart;visible:Z", ordinal = 2, opcode = Opcodes.PUTFIELD))
-    private void animatium$heldItemArmLogic(final PoseStack poseStack, final SubmitNodeCollector nodeCollector, final int packedLight, final Identifier skinTexture, final ModelPart modelPart, final boolean renderSleeve, final CallbackInfo ci) {
+    private void animatium$heldItemArmLogic(final PoseStack poseStack, final SubmitNodeCollector submitNodeCollector, final int lightCoords, final Identifier skinTexture, final ModelPart arm, final boolean hasSleeve, final CallbackInfo ci) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.heldItemArmLogic) {
-            final HumanoidArm arm = modelPart == model.rightArm ? HumanoidArm.RIGHT : HumanoidArm.LEFT;
+            final HumanoidArm humanoidArm = arm == model.rightArm ? HumanoidArm.RIGHT : HumanoidArm.LEFT;
             final AvatarRenderState avatarRenderState = animatium$renderState.get();
-            if (avatarRenderState != null && (avatarRenderState.mainArm == arm ? avatarRenderState.rightArmPose : avatarRenderState.leftArmPose) == HumanoidModel.ArmPose.ITEM) {
+            if (avatarRenderState != null && (avatarRenderState.mainArm == humanoidArm ? avatarRenderState.rightArmPose : avatarRenderState.leftArmPose) == HumanoidModel.ArmPose.ITEM) {
                 // Adapted from the ITEM arm pose rotations in HumanoidModel#poseRightArm/poseLeftArm
-                modelPart.xRot = modelPart.xRot * 0.5F - (float) (Math.PI / 10);
-                modelPart.yRot = 0.0F;
+                arm.xRot = arm.xRot * 0.5F - (float) (Math.PI / 10);
+                arm.yRot = 0.0F;
             }
         }
     }
@@ -92,13 +91,10 @@ public abstract class MixinAvatarRenderer_HeldItemArmLogic<AvatarLikeEntity exte
                 overlay = OverlayTexture.pack(0, OverlayTexture.v(avatarRenderState.hasRedOverlay));
             }
 
-            if (AnimatiumConfig.instance().extras.showArmWhileInvisible) {
-                final Player player = Minecraft.getInstance().player;
-                if (player != null && player.isInvisible()) {
-                    final int color = ARGB.multiply(654311423, this.getModelTint(avatarRenderState));
-                    instance.submitModelPart(modelPart, poseStack, renderType, packedLight, overlay, textureAtlasSprite, color, null);
-                    return;
-                }
+            if (AnimatiumConfig.instance().extras.showArmWhileInvisible && avatarRenderState.isInvisible) {
+                final int color = ARGB.multiply(654311423, this.getModelTint(avatarRenderState));
+                instance.submitModelPart(modelPart, poseStack, renderType, packedLight, overlay, textureAtlasSprite, color, null);
+                return;
             }
         }
 
