@@ -110,4 +110,13 @@ public abstract class MixinLoadingOverlay_LegacyLoadingScreen {
     private boolean animatium$disableProgressBar(final LoadingOverlay instance, final GuiGraphicsExtractor graphics, final int x0, final int y0, final int x1, final int y1, final float fade) {
         return !Animatium.isEnabled() || !AnimatiumConfig.instance().screen.legacyLoadingScreen || AnimatiumConfig.instance().extras.legacyLoadingScreenProgressBar;
     }
+
+    @WrapOperation(method = "extractProgressBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/ARGB;color(IIII)I"))
+    private int animatium$blackProgressBar(final int alpha, final int red, final int green, final int blue, final Operation<Integer> original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.legacyLoadingScreen && AnimatiumConfig.instance().extras.legacyLoadingScreenProgressBar) {
+            return ARGB.color(alpha, 0, 0, 0);
+        } else {
+            return original.call(alpha, red, green, blue);
+        }
+    }
 }
