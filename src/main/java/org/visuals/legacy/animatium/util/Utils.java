@@ -47,6 +47,7 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -179,5 +180,14 @@ public final class Utils {
     public static boolean isSingleplayer() {
         final IntegratedServer server = Minecraft.getInstance().getSingleplayerServer();
         return server != null && server.isSingleplayer();
+    }
+
+    public static float getBrightness(final LevelReader reader, final BlockPos blockPos) {
+        final float amount = reader.getMaxLocalRawBrightness(blockPos) / 15.0F;
+        return Mth.lerp(reader.dimensionType().ambientLight(), amount / (4.0F - 3.0F * amount), 1.0F);
+    }
+
+    public static float getBrightness(final Entity entity) {
+        return getBrightness(entity.level(), entity.blockPosition()); // Older versions inspected from the foot position, not eye position
     }
 }
