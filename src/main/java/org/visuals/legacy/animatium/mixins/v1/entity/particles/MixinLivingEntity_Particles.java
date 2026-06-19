@@ -83,7 +83,7 @@ public abstract class MixinLivingEntity_Particles extends Entity {
             }
 
             if (color == 0) {
-                return; // Not potion particles are visible
+                return; // No potion particles are visible
             }
 
             options = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, ARGB.color(hasAmbience ? 0.15F : 1.0F, color));

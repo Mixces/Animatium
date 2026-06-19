@@ -48,7 +48,7 @@ public final class MovementConfigCategory extends Category {
     public boolean deathLimbs = false;
     public boolean bowArmMovement = false;
     public boolean legacyDamageTilt = false;
-    public boolean offsetHurtTime = false;
+    public boolean offsetHurtTiltTime = false;
 
     public static ConfigCategory create(final MovementConfigCategory defaults, final MovementConfigCategory config) {
         final ConfigCategory.Builder category = ConfigCategory.createBuilder();
@@ -79,7 +79,7 @@ public final class MovementConfigCategory extends Category {
                 .booleanEntry("deathLimbs")
                 .booleanEntry("bowArmMovement")
                 .booleanEntry("legacyDamageTilt")
-                .booleanEntry("offsetHurtTime"));
+                .booleanEntry("offsetHurtTiltTime"));
 
         return bundle;
     }

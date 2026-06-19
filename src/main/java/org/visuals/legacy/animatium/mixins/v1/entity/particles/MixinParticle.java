@@ -41,7 +41,7 @@ public abstract class MixinParticle {
     public abstract AABB getBoundingBox();
 
     @Shadow
-    public abstract void setBoundingBox(AABB aabb);
+    public abstract void setBoundingBox(final AABB bb);
 
     @Shadow
     protected abstract void setLocationFromBoundingbox();

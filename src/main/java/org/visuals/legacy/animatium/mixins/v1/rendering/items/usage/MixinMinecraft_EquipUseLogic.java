@@ -55,6 +55,8 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.ItemUtils;
 import org.visuals.legacy.animatium.util.Utils;
 
+import java.util.Objects;
+
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft_EquipUseLogic {
     @Shadow
@@ -151,7 +153,7 @@ public abstract class MixinMinecraft_EquipUseLogic {
         if (Animatium.isEnabled()
                 && AnimatiumConfig.instance().items.equipAnimationItemCheck
                 && !heldItem.isEmpty()
-                && (heldItem.getCount() != oldCount || this.player.hasInfiniteMaterials())) {
+                && (heldItem.getCount() != oldCount || Objects.requireNonNull(this.player).hasInfiniteMaterials())) {
             this.gameRenderer.itemInHandRenderer.itemUsed(hand);
         }
     }

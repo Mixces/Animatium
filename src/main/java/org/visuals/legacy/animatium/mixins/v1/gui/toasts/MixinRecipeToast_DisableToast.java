@@ -39,9 +39,9 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 @Mixin(RecipeToast.class)
 public abstract class MixinRecipeToast_DisableToast {
     @WrapMethod(method = "addOrUpdate")
-    private static void animatium$animatium$disableRecipeToast(ToastManager toastManager, RecipeDisplay recipeDisplay, Operation<Void> original) {
+    private static void animatium$animatium$disableRecipeToast(final ToastManager toastManager, final RecipeDisplay recipe, final Operation<Void> original) {
         if (!Animatium.isEnabled() || !AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts) {
-            original.call(toastManager, recipeDisplay);
+            original.call(toastManager, recipe);
         }
     }
 }

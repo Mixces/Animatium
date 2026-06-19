@@ -51,7 +51,7 @@ public abstract class MixinHud_CrosshairAndHearts {
     }
 
     @WrapWithCondition(method = "extractCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V", ordinal = 2))
-    private boolean animatium$fixHighAttackSpeedIndicator(final GuiGraphicsExtractor instance, final RenderPipeline pipeline, final Identifier sprite, final int x, final int y, final int width, final int height, @Local float attackStrengthScale) {
+    private boolean animatium$fixHighAttackSpeedIndicator(final GuiGraphicsExtractor instance, final RenderPipeline renderPipeline, final Identifier location, final int x, final int y, final int width, final int height, @Local(name = "attackStrengthScale") final float attackStrengthScale) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixHighAttackSpeedIndicator) {
             return (int) (attackStrengthScale * 17.0F) != 0;
         } else {

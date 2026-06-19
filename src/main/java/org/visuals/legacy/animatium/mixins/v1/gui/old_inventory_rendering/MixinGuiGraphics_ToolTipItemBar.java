@@ -45,30 +45,30 @@ import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 @Mixin(GuiGraphicsExtractor.class)
 public abstract class MixinGuiGraphics_ToolTipItemBar {
     @WrapOperation(method = "tooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/tooltip/TooltipRenderUtil;extractTooltipBackground(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIIILnet/minecraft/resources/Identifier;)V"))
-    private void animatium$tooltipStyleRendering(GuiGraphicsExtractor guiGraphics, int x, int y, int width, int height, Identifier sprite, Operation<Void> original) {
+    private void animatium$tooltipStyleRendering(final GuiGraphicsExtractor graphics, final int x, final int y, final int w, final int h, final Identifier style, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.tooltipStyleRendering) {
             int n = x - 3;
             int o = y - 3;
-            int p = width + 6;
-            int q = height + 6;
+            int p = w + 6;
+            int q = h + 6;
             // TODO/NOTE: Figure out good names for these variables LOL
             final int lineColor = -267386864;
-            RenderUtils.fillHorizontalLine(guiGraphics, n, o - 1, p, lineColor);
-            RenderUtils.fillHorizontalLine(guiGraphics, n, o + q, p, lineColor);
-            RenderUtils.fillRectangle(guiGraphics, n, o, p, q, lineColor);
-            RenderUtils.fillVerticalLine(guiGraphics, n - 1, o, q, lineColor);
-            RenderUtils.fillVerticalLine(guiGraphics, n + p, o, q, lineColor);
-            RenderUtils.fillFrameGradient(guiGraphics, n, o + 1, p, q, 0x505000FF, 0x5028007F);
+            RenderUtils.fillHorizontalLine(graphics, n, o - 1, p, lineColor);
+            RenderUtils.fillHorizontalLine(graphics, n, o + q, p, lineColor);
+            RenderUtils.fillRectangle(graphics, n, o, p, q, lineColor);
+            RenderUtils.fillVerticalLine(graphics, n - 1, o, q, lineColor);
+            RenderUtils.fillVerticalLine(graphics, n + p, o, q, lineColor);
+            RenderUtils.fillFrameGradient(graphics, n, o + 1, p, q, 0x505000FF, 0x5028007F);
         } else {
-            original.call(guiGraphics, x, y, width, height, sprite);
+            original.call(graphics, x, y, w, h, style);
         }
     }
 
     @Inject(method = "itemBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;fill(Lcom/mojang/blaze3d/pipeline/RenderPipeline;IIIII)V", ordinal = 0, shift = At.Shift.AFTER))
-    private void animatium$oldDurabilityBar(ItemStack stack, int x, int y, CallbackInfo ci, @Local(ordinal = 2) int i, @Local(ordinal = 3) int j) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.durabilityBarColors && !(stack.getItem() instanceof BundleItem)) {
-            final int color = ARGB.opaque(ARGB.color((255 - ItemUtils.getLegacyDurabilityColorValue(stack)) / 4, 64, 0));
-            RenderUtils.fillRectangle((GuiGraphicsExtractor) (Object) this, i, j, 12, 1, color);
+    private void animatium$oldDurabilityBar(final ItemStack itemStack, final int x, final int y, final CallbackInfo ci, @Local(name = "left") final int left, final @Local(name = "top") int top) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.durabilityBarColors && !(itemStack.getItem() instanceof BundleItem)) {
+            final int color = ARGB.opaque(ARGB.color((255 - ItemUtils.getLegacyDurabilityColorValue(itemStack)) / 4, 64, 0));
+            RenderUtils.fillRectangle((GuiGraphicsExtractor) (Object) this, left, top, 12, 1, color);
         }
     }
 }

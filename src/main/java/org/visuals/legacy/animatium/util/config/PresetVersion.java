@@ -53,7 +53,7 @@ public enum PresetVersion {
         movement.deathLimbs = true;
         movement.bowArmMovement = true;
         movement.legacyDamageTilt = true;
-        movement.offsetHurtTime = true;
+        movement.offsetHurtTiltTime = true;
 
         final ScreenConfigCategory screen = AnimatiumConfig.instance().screen;
         screen.crosshairInThirdPerson = true;
@@ -152,7 +152,7 @@ public enum PresetVersion {
         movement.deathLimbs = true;
         movement.bowArmMovement = false;
         movement.legacyDamageTilt = true;
-        movement.offsetHurtTime = false;
+        movement.offsetHurtTiltTime = false;
 
         final ScreenConfigCategory screen = AnimatiumConfig.instance().screen;
         screen.crosshairInThirdPerson = true;
@@ -251,7 +251,7 @@ public enum PresetVersion {
         movement.deathLimbs = false;
         movement.bowArmMovement = false;
         movement.legacyDamageTilt = false;
-        movement.offsetHurtTime = false;
+        movement.offsetHurtTiltTime = false;
 
         final ScreenConfigCategory screen = AnimatiumConfig.instance().screen;
         screen.crosshairInThirdPerson = false;

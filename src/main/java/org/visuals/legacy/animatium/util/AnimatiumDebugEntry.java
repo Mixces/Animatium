@@ -34,6 +34,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.AnimatiumConstants;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
@@ -43,32 +44,32 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class AnimatiumDebugEntry implements DebugScreenEntry {
-	public static final DebugEntryCategory CATEGORY = new DebugEntryCategory(Component.translatable("animatium.category.debug"), 9999.0F);
-	public static final Identifier GROUP = Animatium.location("debug");
+    public static final DebugEntryCategory CATEGORY = new DebugEntryCategory(Component.translatable("animatium.category.debug"), Float.MAX_VALUE);
+    public static final Identifier GROUP = Animatium.location("debug");
 
-	@Override
-	public void display(final DebugScreenDisplayer debugScreenDisplayer, final @Nullable Level level, final @Nullable LevelChunk levelChunk, final @Nullable LevelChunk levelChunk2) {
-		final List<String> list = new ArrayList<>();
-		list.add("Animatium " + AnimatiumConstants.VERSION + (AnimatiumConstants.IS_DEVELOPMENT ? " - Development Version (" + AnimatiumConstants.DEVELOPMENT_VERSION + ")" : ""));
-		if (!Animatium.ENABLED_SERVER_FEATURES.isEmpty()) {
-			list.add("Enabled Server Features:");
-			if (Animatium.hasServerFeature(ServerFeature.ALL)) {
-				Arrays.stream(ServerFeature.VALUES).forEach((feature) -> list.add(" - " + feature.getName()));
-			} else {
-				Animatium.ENABLED_SERVER_FEATURES.forEach((feature) -> list.add(" - " + feature.getName()));
-			}
-		}
+    @Override
+    public void display(final @NonNull DebugScreenDisplayer debugScreenDisplayer, final @Nullable Level level, final @Nullable LevelChunk levelChunk, final @Nullable LevelChunk levelChunk2) {
+        final List<String> list = new ArrayList<>();
+        list.add("Animatium " + AnimatiumConstants.VERSION + (AnimatiumConstants.IS_DEVELOPMENT ? " - Development Version (" + AnimatiumConstants.DEVELOPMENT_VERSION + ")" : ""));
+        if (!Animatium.ENABLED_SERVER_FEATURES.isEmpty()) {
+            list.add("Enabled Server Features:");
+            if (Animatium.hasServerFeature(ServerFeature.ALL)) {
+                Arrays.stream(ServerFeature.VALUES).forEach((feature) -> list.add(" - " + feature.getName()));
+            } else {
+                Animatium.ENABLED_SERVER_FEATURES.forEach((feature) -> list.add(" - " + feature.getName()));
+            }
+        }
 
-		debugScreenDisplayer.addToGroup(GROUP, list);
-	}
+        debugScreenDisplayer.addToGroup(GROUP, list);
+    }
 
-	@Override
-	public boolean isAllowed(final boolean allowed) {
-		return true;
-	}
+    @Override
+    public boolean isAllowed(final boolean allowed) {
+        return true;
+    }
 
-	@Override
-	public @NotNull DebugEntryCategory category() {
-		return CATEGORY;
-	}
+    @Override
+    public @NotNull DebugEntryCategory category() {
+        return CATEGORY;
+    }
 }

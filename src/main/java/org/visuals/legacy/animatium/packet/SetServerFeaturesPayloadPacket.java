@@ -47,9 +47,9 @@ public record SetServerFeaturesPayloadPacket(EnumSet<ServerFeature> features) im
         final BitSet bitSet = BitSet.valueOf(bytes);
 
         final EnumSet<ServerFeature> features = EnumSet.noneOf(ServerFeature.class);
-        for (int i = 0; i < ServerFeature.VALUES.length; ++i) {
-            if (bitSet.get(i)) {
-                final ServerFeature feature = ServerFeature.byId(i);
+        for (int index = 0; index < ServerFeature.VALUES.length; ++index) {
+            if (bitSet.get(index)) {
+                final ServerFeature feature = ServerFeature.byId(index);
                 if (feature != null) {
                     features.add(feature);
                 }

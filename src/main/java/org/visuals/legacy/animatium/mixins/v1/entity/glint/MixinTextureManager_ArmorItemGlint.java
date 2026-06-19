@@ -36,12 +36,12 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(TextureManager.class)
 public abstract class MixinTextureManager_ArmorItemGlint {
-    @ModifyVariable(method = "getTexture", at = @At("HEAD"), argsOnly = true)
-    private Identifier animatium$useItemGlint(final Identifier value) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.itemGlintOnEntity && value == ItemFeatureRenderer.ENCHANTED_GLINT_ARMOR) {
+    @ModifyVariable(method = "getTexture", at = @At("HEAD"), argsOnly = true, name = "location")
+    private Identifier animatium$useItemGlint(final Identifier location) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.itemGlintOnEntity && location == ItemFeatureRenderer.ENCHANTED_GLINT_ARMOR) {
             return ItemFeatureRenderer.ENCHANTED_GLINT_ITEM;
         } else {
-            return value;
+            return location;
         }
     }
 }

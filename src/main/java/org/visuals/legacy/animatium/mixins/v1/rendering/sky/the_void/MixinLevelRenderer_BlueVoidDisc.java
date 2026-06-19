@@ -41,11 +41,11 @@ import org.visuals.legacy.animatium.util.rendering.LegacySkyRenderer;
 @Mixin(LevelRenderer.class)
 public abstract class MixinLevelRenderer_BlueVoidDisc {
     @Inject(method = "lambda$addSkyPass$0", at = @At("TAIL"))
-    private static void animatium$blueVoidSky(final GpuBufferSlice skyFog, final SkyRenderState skyRenderState, final CallbackInfo ci) {
+    private static void animatium$blueVoidSky(final GpuBufferSlice skyFog, final SkyRenderState state, final CallbackInfo ci) {
         final Minecraft minecraft = Minecraft.getInstance();
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.blueVoidSky && skyRenderState.skybox != DimensionType.Skybox.END && minecraft.level != null && minecraft.player != null) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.blueVoidSky && state.skybox != DimensionType.Skybox.END && minecraft.level != null && minecraft.player != null) {
             final float tickDelta = minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true);
-            LegacySkyRenderer.renderBlueVoid(skyRenderState.skyColor, LegacySkyRenderer.getHorizonEyeHeight(minecraft.level, tickDelta));
+            LegacySkyRenderer.renderBlueVoid(state.skyColor, LegacySkyRenderer.getHorizonEyeHeight(minecraft.level, tickDelta));
         }
     }
 

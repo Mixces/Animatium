@@ -39,8 +39,8 @@ public record InfoPayloadPacket(double version, @Nullable String developmentVers
     public static final CustomPacketPayload.Type<InfoPayloadPacket> PAYLOAD_ID = new CustomPacketPayload.Type<>(Animatium.location("info"));
 
     private void write(final FriendlyByteBuf buffer) {
-        buffer.writeDouble(version);
-        buffer.writeOptional(Optional.ofNullable(developmentVersion), FriendlyByteBuf::writeUtf);
+        buffer.writeDouble(this.version);
+        buffer.writeOptional(Optional.ofNullable(this.developmentVersion), FriendlyByteBuf::writeUtf);
     }
 
     @Override

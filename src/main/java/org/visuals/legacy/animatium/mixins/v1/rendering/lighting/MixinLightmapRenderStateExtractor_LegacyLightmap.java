@@ -67,14 +67,14 @@ public abstract class MixinLightmapRenderStateExtractor_LegacyLightmap {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void animatium$legacyLightmap$tick(final CallbackInfo ci) {
-        animatium$extractor.tick(this.blockLightFlicker);
+        this.animatium$extractor.tick(this.blockLightFlicker);
     }
 
     @WrapMethod(method = "extract")
     private void animatium$legacyLightmap$extract(final LightmapRenderState renderState, final float tickDelta, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.legacyLightmap) {
             final LegacyLightmapState state = new LegacyLightmapState();
-            animatium$extractor.extract(this.minecraft, state, tickDelta);
+            this.animatium$extractor.extract(this.minecraft, state, tickDelta);
             ((LightmapStateExtension) renderState).animatium$setState(state);
         } else {
             original.call(renderState, tickDelta);

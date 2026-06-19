@@ -42,12 +42,12 @@ public abstract class MixinGui_OnboardingScreen {
     @Definition(id = "screen", field = "Lnet/minecraft/client/gui/Gui;screen:Lnet/minecraft/client/gui/screens/Screen;")
     @Definition(id = "guiScreen", local = @Local(type = Screen.class, argsOnly = true))
     @Expression("@(this).screen = guiScreen")
-    @ModifyVariable(method = "setScreen", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.BEFORE), argsOnly = true)
-    private Screen animatium$showOnboarding(final Screen value) {
-        if (value instanceof TitleScreen titleScreen && ConfigUtil.getBoolean(ConfigUtil.ONBOARDING_KEY)) {
+    @ModifyVariable(method = "setScreen", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.BEFORE), argsOnly = true, name = "screen")
+    private Screen animatium$showOnboarding(final Screen screen) {
+        if (screen instanceof TitleScreen titleScreen && ConfigUtil.getBoolean(ConfigUtil.ONBOARDING_KEY)) {
             return new OnboardingScreen(titleScreen, false);
         } else {
-            return value;
+            return screen;
         }
     }
 }

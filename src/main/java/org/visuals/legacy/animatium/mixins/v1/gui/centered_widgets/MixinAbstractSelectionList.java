@@ -40,7 +40,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 @Mixin(AbstractSelectionList.class)
 public abstract class MixinAbstractSelectionList<E extends AbstractSelectionList.Entry<E>> {
     @Inject(method = "extractItem", at = @At("HEAD"))
-    private void animatium$updateScroll(final GuiGraphicsExtractor graphics, final int mouseX, final int mouseY, final float a, final E entry, final CallbackInfo ci) {
+    private void animatium$updateScroll(final GuiGraphicsExtractor graphics, final int mouseX, final int mouseY, final float tickDelta, final E entry, final CallbackInfo ci) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.centerScrollableListWidgets) {
             ((AbstractScrollArea) (Object) this).refreshScrollAmount();
         }

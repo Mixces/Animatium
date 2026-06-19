@@ -71,7 +71,7 @@ public abstract class MixinGameRenderer_ModifyViewBobbing {
     @WrapOperation(method = "bobHurt", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/state/level/CameraEntityRenderState;hurtTime:F", opcode = Opcodes.GETFIELD))
     private float animatium$offsetHurtTime(final CameraEntityRenderState instance, final Operation<Float> original) {
         final float hurtTime = original.call(instance);
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.offsetHurtTime) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.offsetHurtTiltTime) {
             return Math.max(hurtTime - 1, 0);
         } else {
             return hurtTime;
