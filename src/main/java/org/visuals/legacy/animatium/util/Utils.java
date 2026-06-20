@@ -25,39 +25,17 @@
 
 package org.visuals.legacy.animatium.util;
 
-import com.google.common.base.MoreObjects;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
-import net.minecraft.client.renderer.entity.state.AvatarRenderState;
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.server.IntegratedServer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
-import net.minecraft.network.protocol.game.ServerboundSwingPacket;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.mixins.accessor.CameraAccessor;
 import org.visuals.legacy.animatium.mixins.accessor.ClientLevelDataAccessor;
-import org.visuals.legacy.animatium.mixins.accessor.LivingEntityAccessor;
 import org.visuals.legacy.animatium.mixins.accessor.PlayerAccessor;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -77,96 +55,9 @@ public final class Utils {
         return voxelShape.get();
     }
 
-    public static float lerpCameraPosition(final Camera camera) {
-        final CameraAccessor cameraAccessor = (CameraAccessor) camera;
-        return Mth.lerp(camera.getCameraEntityPartialTicks(Minecraft.getInstance().getDeltaTracker()), cameraAccessor.animatium$getOldEyeHeight(), cameraAccessor.animatium$getEyeHeight());
-    }
-
-    public static float lerpCameraPosition(final CameraRenderState cameraRenderState) {
-        return Mth.lerp(cameraRenderState.animatium$getPartialTickTime(), cameraRenderState.animatium$getOldEyeHeight(), cameraRenderState.animatium$getEyeHeight());
-    }
-
-    public static int getHandMultiplier(final Player player) {
-        final InteractionHand hand = MoreObjects.firstNonNull(player.swingingArm, InteractionHand.MAIN_HAND);
-        return (Minecraft.getInstance().options.getCameraType().isFirstPerson() ? 1 : -1) * getHandMultiplier(player, hand);
-    }
-
-    public static int getHandMultiplier(final Player player, final InteractionHand hand) {
-        return getArmMultiplier(hand == InteractionHand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite());
-    }
-
-    public static int getArmMultiplier(final HumanoidArm arm) {
-        return arm == HumanoidArm.RIGHT ? 1 : -1;
-    }
-
-    public static Vec3 getPosWithEyeHeight(final Player player, final float tickDelta, final double eyeHeight) {
-        return player.getPosition(tickDelta).add(0.0, eyeHeight, 0.0);
-    }
-
-    public static boolean isBlockingArm(final HumanoidArm arm, final ArmedEntityRenderState armedEntityState) {
-        return (arm == HumanoidArm.LEFT && armedEntityState.leftArmPose == HumanoidModel.ArmPose.BLOCK) ||
-                (arm == HumanoidArm.RIGHT && armedEntityState.rightArmPose == HumanoidModel.ArmPose.BLOCK);
-    }
-
-    public static void fakeHandSwing(final Player player, final InteractionHand hand) {
-        // Fake Swinging, Doesn't Send A Packet
-        if (isNotSwinging(player)) {
-            player.swingTime = -1;
-            player.swinging = true;
-            player.swingingArm = hand;
-        }
-    }
-
-    // Sends necessary swing packets, without playing the player hand swing animation
-    public static void sendSwingPacket(final LocalPlayer player, final InteractionHand hand) {
-        if (isNotSwinging(player) && player.level() instanceof ServerLevel serverLevel) {
-            final int swingHand = hand == InteractionHand.MAIN_HAND ? ClientboundAnimatePacket.SWING_MAIN_HAND : ClientboundAnimatePacket.SWING_OFF_HAND;
-            serverLevel.getChunkSource().sendToTrackingPlayers(player, new ClientboundAnimatePacket(player, swingHand));
-        }
-
-        player.connection.send(new ServerboundSwingPacket(hand));
-    }
-
-    public static boolean isNotSwinging(final Player player) {
-        return !player.swinging || player.swingTime >= ((LivingEntityAccessor) player).animatium$getSwingDuration() / 2 || player.swingTime < 0;
-    }
-
-    public static void applySwingWhilstMining(final ClientLevel level, final Player player, final HitResult hitResult) {
-        final InteractionHand activeHand = player.getUsedItemHand();
-        final InteractionHand hand = AnimatiumConfig.instance().extras.offhandUsageSwinging ? activeHand : InteractionHand.MAIN_HAND;
-        if (activeHand.equals(hand)) {
-            if (hitResult != null && hitResult.getType() == HitResult.Type.BLOCK) {
-                final BlockHitResult blockHitResult = (BlockHitResult) hitResult;
-                final BlockPos blockPos = blockHitResult.getBlockPos();
-                if (level != null && !level.getBlockState(blockPos).isAir()) {
-                    level.addBreakingBlockEffect(blockPos, blockHitResult.getDirection());
-                }
-            } else if (!AnimatiumConfig.instance().extras.alwaysUsageSwing) {
-                return;
-            }
-
-            fakeHandSwing(player, hand);
-        }
-    }
-
     public static boolean hasFog1_7(final ClientLevel level) {
         final ClientLevelDataAccessor levelDataAccessor = (ClientLevelDataAccessor) level.getLevelData();
         return !levelDataAccessor.animatium$isFlatWorld() && !level.dimensionType().hasCeiling(); // "isDark" method from 1.7/1.8
-    }
-
-    /**
-     * Can always safely assume that if this returns true, the provided render-state is AvatarRenderState
-     *
-     * @return Entity id matches the client player id
-     */
-    public static boolean isSelf(final LivingEntityRenderState livingEntityRenderState) {
-        final Player player = Minecraft.getInstance().player;
-        return player != null && livingEntityRenderState instanceof AvatarRenderState avatarRenderState && avatarRenderState.id == player.getId();
-    }
-
-    public static boolean isSelf(final Entity entity) {
-        final Player player = Minecraft.getInstance().player;
-        return player != null && entity != null && entity.getId() == player.getId();
     }
 
     public static void reinitializeInventorySlots() {
@@ -180,14 +71,5 @@ public final class Utils {
     public static boolean isSingleplayer() {
         final IntegratedServer server = Minecraft.getInstance().getSingleplayerServer();
         return server != null && server.isSingleplayer();
-    }
-
-    public static float getBrightness(final LevelReader reader, final BlockPos blockPos) {
-        final float amount = reader.getMaxLocalRawBrightness(blockPos) / 15.0F;
-        return Mth.lerp(reader.dimensionType().ambientLight(), amount / (4.0F - 3.0F * amount), 1.0F);
-    }
-
-    public static float getBrightness(final Entity entity) {
-        return getBrightness(entity.level(), entity.blockPosition()); // Older versions inspected from the foot position, not eye position
     }
 }

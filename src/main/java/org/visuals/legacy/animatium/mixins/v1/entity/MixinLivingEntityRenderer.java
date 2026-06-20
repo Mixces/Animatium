@@ -47,7 +47,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.CameraUtilKt;
+import org.visuals.legacy.animatium.util.EntityUtilKt;
 import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 
 @Mixin(LivingEntityRenderer.class)
@@ -58,12 +59,12 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
         if (Animatium.isEnabled()
                 && AnimatiumConfig.instance().movement.sneakAnimation == SneakAnimationSetting.V1_7
                 && livingEntityRenderState instanceof ArmedEntityRenderState armedEntityRenderState
-                && Utils.isSelf(armedEntityRenderState)
+                && EntityUtilKt.isSelf(armedEntityRenderState)
                 && !livingEntityRenderState.hasPose(Pose.SWIMMING) /* Disable Crawling/Swimming as it's wrong */
                 && (Minecraft.getInstance().gui.screen() == null /* Disable when in inventory/not in-game */)) {
             final EntityDimensions standingDimensions = armedEntityRenderState.animatium$getStandingDimensions();
             if (standingDimensions != null) {
-                final float cameraLerpValue = Utils.lerpCameraPosition(cameraRenderState);
+                final float cameraLerpValue = CameraUtilKt.lerpPosition(cameraRenderState);
                 poseStack.translate(0.0F, (standingDimensions.eyeHeight() * livingEntityRenderState.scale) - cameraLerpValue, 0.0F);
             }
         }
@@ -92,7 +93,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
         if (Animatium.isEnabled()
                 && AnimatiumConfig.instance().other.disableModelWhilstSleeping
                 && state instanceof ArmedEntityRenderState armedEntityRenderState
-                && Utils.isSelf(armedEntityRenderState)
+                && EntityUtilKt.isSelf(armedEntityRenderState)
                 && armedEntityRenderState.hasPose(Pose.SLEEPING)
                 && armedEntityRenderState.animatium$isSleeping()) {
             return;

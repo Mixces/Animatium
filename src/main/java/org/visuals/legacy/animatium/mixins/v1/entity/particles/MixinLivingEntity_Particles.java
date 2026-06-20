@@ -48,6 +48,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.util.EntityUtilKt;
 import org.visuals.legacy.animatium.util.Utils;
 
 import java.util.Map;
@@ -65,7 +66,7 @@ public abstract class MixinLivingEntity_Particles extends Entity {
     @WrapWithCondition(method = "tickEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))
     private boolean animatium$hideFirstPersonParticles(final Level instance, final ParticleOptions particle, final double x, final double y, final double z, final double xd, final double yd, final double zd) {
         final Minecraft client = Minecraft.getInstance();
-        return !Animatium.isEnabled() || !AnimatiumConfig.instance().extras.disableFirstPersonParticles || !Utils.isSelf(this) || !client.options.getCameraType().isFirstPerson();
+        return !Animatium.isEnabled() || !AnimatiumConfig.instance().extras.disableFirstPersonParticles || !EntityUtilKt.isSelf(this) || !client.options.getCameraType().isFirstPerson();
     }
 
     @WrapOperation(method = "tickEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))

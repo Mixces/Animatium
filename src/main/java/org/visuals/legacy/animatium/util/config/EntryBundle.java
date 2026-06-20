@@ -28,8 +28,6 @@ package org.visuals.legacy.animatium.util.config;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionGroup;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.config.category.Category;
 
@@ -41,10 +39,8 @@ import java.util.function.BiConsumer;
 public class EntryBundle extends Bundle {
     protected final List<Entry<?>> entries;
     protected final List<Group> groups;
-    @Getter
     private final String name;
     protected Class<? extends Category> categoryClass;
-    @Getter
     protected Category category;
 
     public EntryBundle(final Category category, final String name) {
@@ -99,6 +95,10 @@ public class EntryBundle extends Bundle {
         return this;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     public EntryBundle group(final Group group) {
         this.groups.add(group);
         group.category = this.category;
@@ -146,11 +146,16 @@ public class EntryBundle extends Bundle {
         }
     }
 
-    @AllArgsConstructor
     public abstract class Entry<T> {
         public final String name;
         public final Type type;
         public final BiConsumer<Option<T>, T> listener;
+
+        public Entry(final String name, final Type type, final BiConsumer<Option<T>, T> listener) {
+            this.name = name;
+            this.type = type;
+            this.listener = listener;
+        }
 
         public abstract Option<T> createOption(final Category defaults, final Category config);
 
@@ -184,7 +189,6 @@ public class EntryBundle extends Bundle {
         }
     }
 
-    @Getter
     private class FloatEntry extends Entry<Float> {
         private final float min;
         private final float max;
@@ -195,6 +199,18 @@ public class EntryBundle extends Bundle {
             this.min = min;
             this.max = max;
             this.step = step;
+        }
+
+        public float getMin() {
+            return this.min;
+        }
+
+        public float getMax() {
+            return this.max;
+        }
+
+        public float getStep() {
+            return this.step;
         }
 
         @Override
@@ -211,7 +227,6 @@ public class EntryBundle extends Bundle {
     }
 
     private class EnumEntry<S extends Enum<S>> extends Entry<Enum<S>> {
-        @Getter
         private final Class<?> enumClass;
 
         public EnumEntry(final String name, final Class<S> enumClass, final BiConsumer<Option<Enum<S>>, Enum<S>> listener) {
@@ -221,6 +236,10 @@ public class EntryBundle extends Bundle {
 
         public EnumEntry(final String name, final Class<S> enumClass) {
             this(name, enumClass, null);
+        }
+
+        public Class<?> getEnumClass() {
+            return this.enumClass;
         }
 
         @Override

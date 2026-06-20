@@ -23,26 +23,19 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium;
+package org.visuals.legacy.animatium.mixins.v1.entity.items;
 
-import lombok.experimental.UtilityClass;
-import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
-import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
-import net.minecraft.resources.Identifier;
-import org.visuals.legacy.animatium.packet.InfoPayloadPacket;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import net.minecraft.world.entity.LivingEntity;
+import org.spongepowered.asm.mixin.Mixin;
+import org.visuals.legacy.animatium.util.EntityUtilKt;
 
-@UtilityClass
-public class AnimatiumConstants {
-    public final String MOD_ID = "@MODID@";
-    @SuppressWarnings("DataFlowIssue")
-    public final Double VERSION = Double.parseDouble("@VERSION@");
-    public final String DEVELOPMENT_VERSION = "@COMMIT@";
-    public final boolean IS_DEVELOPMENT = Boolean.parseBoolean("@DEVELOPMENT@");
-
-    public final Identifier FAST_GRASS_MODEL_LOCATION = Animatium.location("block/fast_grass_block");
-    public final ExtraModelKey<BlockStateModel> FAST_GRASS_MODEL_KEY = ExtraModelKey.create(FAST_GRASS_MODEL_LOCATION::toString);
-
-    public InfoPayloadPacket getInfoPayload() {
-        return new InfoPayloadPacket(VERSION, IS_DEVELOPMENT ? DEVELOPMENT_VERSION : null);
+// TODO/FIX: Should not affect swing code, only visual, currently matches Legacy Animatium tho
+@Mixin(LivingEntity.class)
+public abstract class MixinLivingEntity_ItemSwing {
+    @WrapMethod(method = "getCurrentSwingDuration")
+    private int animatium$customSwingAnimationSpeed(final Operation<Integer> original) {
+        return EntityUtilKt.getItemSwingSpeed((LivingEntity) (Object) this, original.call());
     }
 }

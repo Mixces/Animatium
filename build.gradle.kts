@@ -46,8 +46,8 @@ class ModData {
 class Dependencies {
     val fabricLoaderVersion = property("deps.fabric_loader_version") as String?
     val fabricApiVersion = property("deps.fabric_api_version") as String?
+    val languageKotlinVersion = property("deps.language_kotlin_version") as String?
     val devAuthVersion = property("deps.devauth_version") as String?
-    val lombokVersion = property("deps.lombok_version") as String?
     val mixinConstraintsVersion = property("deps.mixinconstraints_version") as String?
     val mixinSquaredVersion = property("deps.mixinsquared_version") as String?
 }
@@ -131,18 +131,17 @@ dependencies {
         })
     }
 
-    compileOnly("org.projectlombok:lombok:${deps.lombokVersion}")
-    annotationProcessor("org.projectlombok:lombok:${deps.lombokVersion}")
     modRuntimeOnly("me.djtheredstoner:DevAuth-${loader.name}:${deps.devAuthVersion}")
-
-    include(implementation("com.moulberry:mixinconstraints:${deps.mixinConstraintsVersion}")!!)!!
+    include(implementation("com.moulberry:mixinconstraints:${deps.mixinConstraintsVersion}")!!)
     include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-${loader.name}:${deps.mixinSquaredVersion}")!!)!!)
+
     modImplementation("net.fabricmc:fabric-loader:${deps.fabricLoaderVersion}")!!
     modImplementation("net.fabricmc.fabric-api:fabric-api:${deps.fabricApiVersion}")
     optionalProp("deps.modmenu_version") { prop ->
         modImplementation("com.terraformersmc:modmenu:$prop")
     }
 
+    include(implementation("net.fabricmc:fabric-language-kotlin:${deps.languageKotlinVersion}")!!)
     optionalProp("deps.yacl_version") { prop ->
         modImplementation("dev.isxander:yet-another-config-lib:$prop")
     }

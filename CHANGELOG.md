@@ -2,7 +2,7 @@
 
 ## General
 
-- Reworked a lot of code
+- Reworked a lot of code & Moved a lot of it to Kotlin (kotlin da goat g)
 - Config setting names are more generalized
 - Scrapped the config data packet idea (no replacement)
 

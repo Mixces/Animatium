@@ -26,7 +26,6 @@
 package org.visuals.legacy.animatium.util.rendering.lighting;
 
 import com.mojang.blaze3d.platform.Lighting;
-import lombok.Setter;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
@@ -42,12 +41,18 @@ public final class LegacyDiffuseLighting {
     private static final Vector3fc INVENTORY_DIFFUSE_LIGHT_0 = (new Vector3f(0.2F, -1.0F, 1.0F)).normalize();
     private static final Vector3fc INVENTORY_DIFFUSE_LIGHT_1 = (new Vector3f(-0.2F, -1.0F, 0.0F)).normalize();
 
-    @Setter
     private static Matrix4f item3dPose = null;
-    @Setter
     private static BiConsumer<Lighting.Entry, Lights> updateLightingInvoker;
 
     LegacyDiffuseLighting() {
+    }
+
+    public static void setItem3dPose(final Matrix4f matrix4f) {
+        item3dPose = matrix4f;
+    }
+
+    public static void setUpdateLightingInvoker(final BiConsumer<Lighting.Entry, Lights> invoker) {
+        updateLightingInvoker = invoker;
     }
 
     public static void refresh() {

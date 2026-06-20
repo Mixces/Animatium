@@ -63,6 +63,7 @@ public final class ExtrasConfigCategory extends Category {
     public boolean damageTintItems = false;
     public boolean damageTintCape = false;
     // Item Swing
+    public boolean customSwingSpeed = false;
     public float itemSwingSpeed = 0.0F;
     public float hasteSwingSpeed = 0.0F;
     public float miningFatigueSwingSpeed = 0.0F;
@@ -123,9 +124,10 @@ public final class ExtrasConfigCategory extends Category {
                 .booleanEntry("damageTintCape"));
 
         bundle.group((EntryBundle.Group) new EntryBundle.Group("item_swing")
-                .floatEntry("itemSwingSpeed", -1.0F, 1.0F, 0.1F)
-                .floatEntry("hasteSwingSpeed", -1.0F, 1.0F, 0.1F)
-                .floatEntry("miningFatigueSwingSpeed", -1.0F, 1.0F, 0.1F)
+                .booleanEntry("customSwingSpeed")
+                .floatEntry("itemSwingSpeed", -2.0F, 1.0F, 0.1F)
+                .floatEntry("hasteSwingSpeed", -2.0F, 1.0F, 0.1F)
+                .floatEntry("miningFatigueSwingSpeed", -2.0F, 1.0F, 0.1F)
                 .booleanEntry("ignoreHasteSpeed")
                 .booleanEntry("ignoreMiningFatigueSpeed"));
 

@@ -33,7 +33,6 @@ import dev.isxander.yacl3.api.controller.ControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
-import lombok.Getter;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.AnimatiumConstants;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
@@ -43,7 +42,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public abstract class Category {
-    @Getter
     public enum OptionType {
         BOOLEAN(false),
         FLOAT(true),
@@ -91,7 +89,7 @@ public abstract class Category {
         }
 
         public <S> OptionBuilder<T> slider(final S min, final S max, final S step) {
-            if (this.type == null || !this.type.isSliderCapable()) {
+            if (this.type == null || !this.type.sliderCapable) {
                 throw new RuntimeException("Option doesn't allow slider.");
             } else {
                 this.slider = true;

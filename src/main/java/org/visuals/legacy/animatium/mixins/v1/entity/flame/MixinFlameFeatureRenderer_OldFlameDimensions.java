@@ -38,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.CameraUtilKt;
 import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 
 @Mixin(FlameFeatureRenderer.class)
@@ -69,7 +69,7 @@ public abstract class MixinFlameFeatureRenderer_OldFlameDimensions {
 
             float value = original;
             if (shouldSyncPlayerModelWithEyeHeight) {
-                final float cameraLerpValue = Utils.lerpCameraPosition(camera);
+                final float cameraLerpValue = CameraUtilKt.lerpPosition(camera);
                 value = (avatarRenderState.eyeHeight * avatarRenderState.scale) - cameraLerpValue;
             }
 

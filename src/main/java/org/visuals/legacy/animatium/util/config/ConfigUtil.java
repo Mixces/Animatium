@@ -29,7 +29,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.Strictness;
-import lombok.experimental.UtilityClass;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,17 +36,16 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.nio.file.Files;
 
-@UtilityClass
-public class ConfigUtil {
+public final class ConfigUtil {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static final String ENABLED_KEY = "enabled";
     public static final String ONBOARDING_KEY = "onboarding";
     public static final String PRESET_VERSION_KEY = "preset_version";
 
-    private final Gson GSON = new GsonBuilder().setStrictness(Strictness.LENIENT).create();
-    private final File CONFIG_FILE = new File(FabricLoader.getInstance().getGameDir().toFile(), "animatium_utility.json");
-    private JsonObject data = new JsonObject();
+    private static final Gson GSON = new GsonBuilder().setStrictness(Strictness.LENIENT).create();
+    private static final File CONFIG_FILE = new File(FabricLoader.getInstance().getGameDir().toFile(), "animatium_utility.json");
+    private static JsonObject data = new JsonObject();
 
     static {
         // Defaults
@@ -56,7 +54,7 @@ public class ConfigUtil {
         data.addProperty(PRESET_VERSION_KEY, PresetVersion.MODERN.name());
     }
 
-    public void load() throws Exception {
+    public static void load() throws Exception {
         if (CONFIG_FILE.exists()) {
             data = GSON.fromJson(Files.readString(CONFIG_FILE.toPath()), JsonObject.class);
         } else {
@@ -64,7 +62,7 @@ public class ConfigUtil {
         }
     }
 
-    public boolean getBoolean(final String key) {
+    public static boolean getBoolean(final String key) {
         if (data.has(key)) {
             return data.get(key).getAsBoolean();
         } else {
@@ -73,7 +71,7 @@ public class ConfigUtil {
         }
     }
 
-    public <T extends Enum<T>> T getEnum(final String key, final T fallback) {
+    public static <T extends Enum<T>> T getEnum(final String key, final T fallback) {
         try {
             return Enum.valueOf(fallback.getDeclaringClass(), data.get(key).getAsString());
         } catch (final Throwable ignored) {
@@ -83,17 +81,17 @@ public class ConfigUtil {
         return fallback;
     }
 
-    public void put(final String name, final boolean value) {
+    public static void put(final String name, final boolean value) {
         data.addProperty(name, value);
         save();
     }
 
-    public void put(final String name, final String value) {
+    public static void put(final String name, final String value) {
         data.addProperty(name, value);
         save();
     }
 
-    public void save() {
+    public static void save() {
         boolean success = true;
         try {
             if (!CONFIG_FILE.exists()) {

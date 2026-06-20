@@ -27,7 +27,7 @@ package org.visuals.legacy.animatium.util.rendering;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.EntityUtilKt;
 
 public final class LegacyFogDarkness {
     public static final LegacyFogDarkness INSTANCE = new LegacyFogDarkness();
@@ -40,7 +40,7 @@ public final class LegacyFogDarkness {
 
     public void tick(final Entity entity, final int viewDistance) {
         this.prevDarkness = this.darkness;
-        this.darkness = Mth.lerp(0.1F, this.darkness, Mth.lerp(Utils.getBrightness(entity), viewDistance / 32.0F, 1.0F));
+        this.darkness = Mth.lerp(0.1F, this.darkness, Mth.lerp(EntityUtilKt.getBrightness(entity), viewDistance / 32.0F, 1.0F));
     }
 
     public float getDarkness(final float tickDelta) {

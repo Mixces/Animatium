@@ -40,7 +40,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuSampler;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.ProjectionMatrixBuffer;
@@ -59,13 +58,9 @@ public final class Renderer implements AutoCloseable {
     private final Map<String, TextureAndSampler> textures = new Object2ObjectOpenHashMap<>();
     private final Map<String, GpuBufferSlice> uniforms = new Object2ObjectOpenHashMap<>();
 
-    @Getter
     private final Supplier<String> name;
-    @Getter
     private final RenderDescriptor descriptor;
-    @Getter
     private RenderPipeline pipeline = null;
-    @Getter
     private @Nullable Matrix4f projectionMatrix;
 
     // Internal
