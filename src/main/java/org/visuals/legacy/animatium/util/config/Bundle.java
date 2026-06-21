@@ -34,13 +34,29 @@ import java.util.function.BiConsumer;
 public abstract class Bundle {
     public abstract void install(final ConfigCategory.Builder builder, final Category defaults, final Category config);
 
-    public abstract Bundle booleanEntry(final String name);
-
     public abstract Bundle booleanEntry(final String name, final BiConsumer<Option<Boolean>, Boolean> listener);
 
-    public abstract Bundle floatEntry(final String name, final float min, final float max, final float step);
+    public Bundle booleanEntry(final String name) {
+        return this.booleanEntry(name, (opt, value) -> {
+        });
+    }
 
-    public abstract <S extends Enum<S>> Bundle enumEntry(final String name, final Class<S> enumClazz);
+    public abstract Bundle intRange(final String name, final int min, final int max, final int step);
+
+    public Bundle intRange(final String name, final int min, final int max) {
+        return this.intRange(name, min, max, 1);
+    }
+
+    public abstract Bundle floatRange(final String name, final float min, final float max, final float step);
+
+    public Bundle floatRange(final String name, final float min, final float max) {
+        return this.floatRange(name, min, max, 0.1F);
+    }
 
     public abstract <S extends Enum<S>> Bundle enumEntry(final String name, final Class<S> enumClazz, final BiConsumer<Option<Enum<S>>, Enum<S>> listener);
+
+    public <S extends Enum<S>> Bundle enumEntry(final String name, final Class<S> enumClazz) {
+        return this.enumEntry(name, enumClazz, (opt, value) -> {
+        });
+    }
 }

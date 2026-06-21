@@ -27,9 +27,7 @@ package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
-import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.util.compatibility.Mods;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
@@ -59,6 +57,8 @@ public final class ExtrasConfigCategory extends Category {
     public boolean alwaysBlockingHeadCap = false;
     public boolean hideRecipeBook = false;
     public boolean legacyLoadingScreenProgressBar = false;
+    public boolean damageBloodParticles = false;
+    public int bloodParticleMultiplier = 1;
     // Damage Tint
     public boolean damageTintItems = false;
     public boolean damageTintCape = false;
@@ -90,33 +90,34 @@ public final class ExtrasConfigCategory extends Category {
     @Override
     public EntryBundle bundle() {
         final EntryBundle bundle = new EntryBundle(this, "extras");
-
-        bundle.booleanEntry("minimalViewBobbing");
-        bundle.booleanEntry("showNameTagInThirdPerson");
-        bundle.booleanEntry("hideNameTagBackground");
-        bundle.booleanEntry("nameTagTextShadow");
-        bundle.booleanEntry("debugHudTextColor");
-        bundle.booleanEntry("offhandUsageSwinging");
-        bundle.booleanEntry("alwaysUsageSwing");
-        bundle.booleanEntry("alwaysSharpParticles");
+        bundle.booleanEntry("minimalViewBobbing")
+                .booleanEntry("showNameTagInThirdPerson")
+                .booleanEntry("hideNameTagBackground")
+                .booleanEntry("nameTagTextShadow")
+                .booleanEntry("debugHudTextColor")
+                .booleanEntry("offhandUsageSwinging")
+                .booleanEntry("alwaysUsageSwing")
+                .booleanEntry("alwaysSharpParticles");
         if (!Mods.HAS_SODIUM_EXTRAS) {
             bundle.booleanEntry("disableRecipeAndTutorialToasts");
         }
 
         final Minecraft minecraft = Minecraft.getInstance();
-        bundle.booleanEntry("showArmWhileInvisible");
-        bundle.booleanEntry("fakeMissPenaltySwing");
-        bundle.booleanEntry("dontMoveBlueVoid");
-        bundle.booleanEntry("disableEntityDeathTopple");
-        bundle.booleanEntry("disableParticlePhysics");
-        bundle.booleanEntry("disableFirstPersonParticles");
-        bundle.booleanEntry("dontClearChat");
-        bundle.booleanEntry("dontCloseChat");
-        bundle.booleanEntry("oldWaterColorEffects", (option, event) -> minecraft.levelExtractor.allChanged());
-        bundle.booleanEntry("colorBoost");
-        bundle.booleanEntry("alwaysBlockingHeadCap");
-        bundle.booleanEntry("hideRecipeBook");
-        bundle.booleanEntry("legacyLoadingScreenProgressBar");
+        bundle.booleanEntry("showArmWhileInvisible")
+                .booleanEntry("fakeMissPenaltySwing")
+                .booleanEntry("dontMoveBlueVoid")
+                .booleanEntry("disableEntityDeathTopple")
+                .booleanEntry("disableParticlePhysics")
+                .booleanEntry("disableFirstPersonParticles")
+                .booleanEntry("dontClearChat")
+                .booleanEntry("dontCloseChat")
+                .booleanEntry("oldWaterColorEffects", (option, event) -> minecraft.levelExtractor.allChanged())
+                .booleanEntry("colorBoost")
+                .booleanEntry("alwaysBlockingHeadCap")
+                .booleanEntry("hideRecipeBook")
+                .booleanEntry("legacyLoadingScreenProgressBar")
+                .booleanEntry("damageBloodParticles")
+                .intRange("bloodParticleMultiplier", 1, 40);
 
         // Damage Tint
         bundle.group((EntryBundle.Group) new EntryBundle.Group("damage_tint")
@@ -125,9 +126,9 @@ public final class ExtrasConfigCategory extends Category {
 
         bundle.group((EntryBundle.Group) new EntryBundle.Group("item_swing")
                 .booleanEntry("customSwingSpeed")
-                .floatEntry("itemSwingSpeed", -2.0F, 1.0F, 0.1F)
-                .floatEntry("hasteSwingSpeed", -2.0F, 1.0F, 0.1F)
-                .floatEntry("miningFatigueSwingSpeed", -2.0F, 1.0F, 0.1F)
+                .floatRange("itemSwingSpeed", -2.0F, 1.0F, 0.1F)
+                .floatRange("hasteSwingSpeed", -2.0F, 1.0F, 0.1F)
+                .floatRange("miningFatigueSwingSpeed", -2.0F, 1.0F, 0.1F)
                 .booleanEntry("ignoreHasteSpeed")
                 .booleanEntry("ignoreMiningFatigueSpeed"));
 

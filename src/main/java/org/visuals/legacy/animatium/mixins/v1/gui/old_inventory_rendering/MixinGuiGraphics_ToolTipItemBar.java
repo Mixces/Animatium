@@ -39,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.ItemUtils;
+import org.visuals.legacy.animatium.util.ItemUtilKt;
 import org.visuals.legacy.animatium.util.rendering.RenderUtils;
 
 @Mixin(GuiGraphicsExtractor.class)
@@ -67,7 +67,7 @@ public abstract class MixinGuiGraphics_ToolTipItemBar {
     @Inject(method = "itemBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;fill(Lcom/mojang/blaze3d/pipeline/RenderPipeline;IIIII)V", ordinal = 0, shift = At.Shift.AFTER))
     private void animatium$oldDurabilityBar(final ItemStack itemStack, final int x, final int y, final CallbackInfo ci, @Local(name = "left") final int left, final @Local(name = "top") int top) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.durabilityBarColors && !(itemStack.getItem() instanceof BundleItem)) {
-            final int color = ARGB.opaque(ARGB.color((255 - ItemUtils.getLegacyDurabilityColorValue(itemStack)) / 4, 64, 0));
+            final int color = ARGB.opaque(ARGB.color((255 - ItemUtilKt.getLegacyDurabilityColorValue(itemStack)) / 4, 64, 0));
             RenderUtils.fillRectangle((GuiGraphicsExtractor) (Object) this, left, top, 12, 1, color);
         }
     }

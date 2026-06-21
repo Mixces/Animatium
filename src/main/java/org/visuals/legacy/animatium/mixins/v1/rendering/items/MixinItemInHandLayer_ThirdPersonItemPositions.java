@@ -47,7 +47,7 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.EntityUtilKt;
-import org.visuals.legacy.animatium.util.ItemUtils;
+import org.visuals.legacy.animatium.util.ItemUtilKt;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
 @Mixin(ItemInHandLayer.class)
@@ -55,7 +55,7 @@ public abstract class MixinItemInHandLayer_ThirdPersonItemPositions<S extends Ar
     @ModifyArgs(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V"))
     private void animatium$oldTransformTranslation(final Args args, @Local(argsOnly = true, name = "state") final S state, @Local(argsOnly = true, name = "arm") final HumanoidArm arm) {
         final ItemStack stack = state.animatium$getItemHeldByArm(arm);
-        if (Animatium.isEnabled() && ItemUtils.shouldApplyItemPositionsInThirdPerson(state) && !ItemUtils.isItemBlacklisted(stack)) {
+        if (Animatium.isEnabled() && ItemUtilKt.shouldApplyItemPositionsInThirdPerson(state) && !ItemUtilKt.isItemBlacklisted(stack)) {
             args.setAll((float) args.get(0) * -1.0F, 0.4375F, (float) args.get(2) / 10 * -1.0F);
         }
     }
@@ -63,7 +63,7 @@ public abstract class MixinItemInHandLayer_ThirdPersonItemPositions<S extends Ar
     @WrapWithCondition(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lorg/joml/Quaternionfc;)V"))
     private boolean animatium$removeTransformMultiply(final PoseStack instance, final Quaternionfc by, @Local(argsOnly = true, name = "state") final S state, @Local(argsOnly = true, name = "arm") final HumanoidArm arm) {
         final ItemStack stack = state.animatium$getItemHeldByArm(arm);
-        return !Animatium.isEnabled() || !ItemUtils.shouldApplyItemPositionsInThirdPerson(state) || ItemUtils.isItemBlacklisted(stack);
+        return !Animatium.isEnabled() || !ItemUtilKt.shouldApplyItemPositionsInThirdPerson(state) || ItemUtilKt.isItemBlacklisted(stack);
     }
 
     @Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/item/ItemStackRenderState;submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V"))
@@ -71,14 +71,14 @@ public abstract class MixinItemInHandLayer_ThirdPersonItemPositions<S extends Ar
         if (Animatium.isEnabled()) {
             final int direction = EntityUtilKt.getArmMultiplier(arm);
             final ItemStack stack = state.animatium$getItemHeldByArm(arm);
-            if (!stack.isEmpty() && !ItemUtils.isItemBlacklisted(stack)) {
+            if (!stack.isEmpty() && !ItemUtilKt.isItemBlacklisted(stack)) {
                 final boolean isStickRod = Animatium.isEnabled() &&
                         AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersionSetting.V1_7 &&
                         stack.is(Items.FISHING_ROD) &&
                         (state instanceof AvatarRenderState && state.animatium$isFishing());
-                if (ItemUtils.shouldApplyItemPositionsInThirdPerson(state)) {
+                if (ItemUtilKt.shouldApplyItemPositionsInThirdPerson(state)) {
                     final boolean usesBlockLight = item.usesBlockLight();
-                    if (ItemUtils.isBlock3d(stack, usesBlockLight)) {
+                    if (ItemUtilKt.isBlock3d(stack, usesBlockLight)) {
                         final float scale = 0.375F;
                         poseStack.translate(0.0F, 0.1875F, -0.3125F);
                         poseStack.mulPose(Axis.XP.rotationDegrees(20.0F));
@@ -94,9 +94,9 @@ public abstract class MixinItemInHandLayer_ThirdPersonItemPositions<S extends Ar
                         poseStack.mulPose(Axis.XP.rotationDegrees(100.0F));
                         poseStack.mulPose(Axis.YP.rotationDegrees(direction * -145.0F));
                         poseStack.translate(-0.011765625F, 0.0F, 0.002125F);
-                    } else if (ItemUtils.isHandheldItem(stack)) {
+                    } else if (ItemUtilKt.isHandheldItem(stack)) {
                         final float scale = 0.625F;
-                        if (ItemUtils.isFishingRodItem(stack) && !isStickRod) {
+                        if (ItemUtilKt.isFishingRodItem(stack) && !isStickRod) {
                             poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 180.0F));
                             poseStack.translate(0.0F, -0.125F, 0.0F);
                         }
@@ -123,7 +123,7 @@ public abstract class MixinItemInHandLayer_ThirdPersonItemPositions<S extends Ar
                         poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 20.0F));
                     }
 
-                    if (!ItemUtils.isBlock3d(stack, usesBlockLight)) {
+                    if (!ItemUtilKt.isBlock3d(stack, usesBlockLight)) {
                         poseStack.translate(0.0F, -0.3F, 0.0F);
                         poseStack.scale(1.5F, 1.5F, 1.5F);
                         poseStack.mulPose(Axis.YP.rotationDegrees(direction * 50.0F));
@@ -134,7 +134,7 @@ public abstract class MixinItemInHandLayer_ThirdPersonItemPositions<S extends Ar
                         poseStack.translate(direction * -0.5F, 0.5F, 0.03125F);
                     }
 
-                    if (ItemUtils.isBlock3d(stack, usesBlockLight)) {
+                    if (ItemUtilKt.isBlock3d(stack, usesBlockLight)) {
                         poseStack.scale(1 / 0.375F, 1 / 0.375F, 1 / 0.375F);
                         poseStack.mulPose(Axis.YP.rotationDegrees(direction * -45.0F));
                         poseStack.mulPose(Axis.XP.rotationDegrees(-75.0F));
@@ -145,8 +145,8 @@ public abstract class MixinItemInHandLayer_ThirdPersonItemPositions<S extends Ar
                         poseStack.mulPose(Axis.YP.rotationDegrees(direction * -260.0F));
                         poseStack.mulPose(Axis.XP.rotationDegrees(80.0F));
                         poseStack.translate(direction * 0.0625F, 2.0F * 0.0625F, -2.5F * 0.0625F);
-                    } else if (ItemUtils.isHandheldItem(stack)) {
-                        final boolean isRod = ItemUtils.isFishingRodItem(stack) && !isStickRod;
+                    } else if (ItemUtilKt.isHandheldItem(stack)) {
+                        final boolean isRod = ItemUtilKt.isFishingRodItem(stack) && !isStickRod;
                         poseStack.scale(1 / 0.85F, 1 / 0.85F, 1 / 0.85F);
                         poseStack.mulPose(Axis.ZP.rotationDegrees(direction * -55.0F));
                         poseStack.mulPose(Axis.YP.rotationDegrees(direction * 90.0F));

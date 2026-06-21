@@ -44,7 +44,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.ItemUtils;
+import org.visuals.legacy.animatium.util.ItemUtilKt;
 import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
@@ -98,7 +98,7 @@ public abstract class MixinItemStackRenderLayerState {
                 float x = this.itemTransform.translation().x();
                 float y = this.itemTransform.translation().y();
                 float z = this.itemTransform.translation().z();
-                if (AnimatiumConfig.instance().items.fishingRodVersion != FishingRodVersionSetting.VANILLA && ItemUtils.isFishingRodItem(stack) && isFirstPerson) {
+                if (AnimatiumConfig.instance().items.fishingRodVersion != FishingRodVersionSetting.VANILLA && ItemUtilKt.isFishingRodItem(stack) && isFirstPerson) {
                     final int ordinal = AnimatiumConfig.instance().items.fishingRodVersion.ordinal();
                     if (ordinal <= FishingRodVersionSetting.V1_8.ordinal()) {
                         localPose.translate(0.070625F, 0.1F, 0.020625F);
@@ -112,7 +112,7 @@ public abstract class MixinItemStackRenderLayerState {
                     localPose.translate(-x, -y, -z);
                 }
 
-                if (AnimatiumConfig.instance().items.thinBlockPositions && ItemUtils.isThinBlockItem(stack)) {
+                if (AnimatiumConfig.instance().items.thinBlockPositions && ItemUtilKt.isThinBlockItem(stack)) {
                     if (isFirstPerson) {
                         localPose.translate(0.0F, -4.2F * 0.0625F, 0.0F);
                     } else if (isThirdPerson) {
@@ -121,7 +121,7 @@ public abstract class MixinItemStackRenderLayerState {
                 }
 
                 // TODO/NEED TO FIX
-                if (AnimatiumConfig.instance().items.skullPosition && ItemUtils.isSkullBlock(stack) && isGui && !AnimatiumConfig.instance().items.mobHeadIcons) {
+                if (AnimatiumConfig.instance().items.skullPosition && ItemUtilKt.isSkullBlock(stack) && isGui && !AnimatiumConfig.instance().items.mobHeadIcons) {
                     localPose.translate(x, y, z);
                     localPose.mulPose(Axis.XP.rotationDegrees(Utils.toRadians(this.itemTransform.rotation().x())).get(new Matrix4f()));
                     localPose.mulPose(Axis.YP.rotationDegrees(Utils.toRadians(this.itemTransform.rotation().y())).get(new Matrix4f()));

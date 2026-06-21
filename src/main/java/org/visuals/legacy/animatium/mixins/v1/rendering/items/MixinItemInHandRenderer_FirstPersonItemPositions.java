@@ -57,7 +57,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.EntityUtilKt;
-import org.visuals.legacy.animatium.util.ItemUtils;
+import org.visuals.legacy.animatium.util.ItemUtilKt;
 import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
@@ -128,7 +128,7 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemPositions && !(itemStack.getItem() instanceof ShieldItem)) {
             final int direction = EntityUtilKt.getHandMultiplier(player, hand);
             // We do this to fix a rounding error in Mojangs code.
-            ItemUtils.applyLegacyFirstPersonTransforms(poseStack, direction, () -> {
+            ItemUtilKt.applyLegacyFirstPersonTransforms(poseStack, direction, () -> {
                 poseStack.translate(direction * -0.5F, 0.2F, 0.0F);
                 poseStack.mulPose(Axis.YP.rotationDegrees(direction * 30.0F));
                 poseStack.mulPose(Axis.XP.rotationDegrees(-80.0F));
@@ -144,7 +144,7 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
     private void animatium$itemPositions(final AbstractClientPlayer player, final float tickDelta, final float pitch, final InteractionHand hand, final float swingProgress, final ItemStack itemStack, final float equippedProgress, final PoseStack poseStack, final SubmitNodeCollector submitNodeCollector, final int lightCoords, final CallbackInfo ci) {
         final int direction = EntityUtilKt.getHandMultiplier(player, hand);
         if (Animatium.isEnabled()) {
-            if (AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersionSetting.V1_7 && ItemUtils.isFishingRodItem(itemStack)) {
+            if (AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersionSetting.V1_7 && ItemUtilKt.isFishingRodItem(itemStack)) {
                 poseStack.mulPose(Axis.YP.rotationDegrees(direction * 180.0F));
             }
 
@@ -158,7 +158,7 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
                     player,
                     lightCoords
             ); // TODO/NOTE: Might be wrong
-            if (AnimatiumConfig.instance().items.itemPositions && !ItemUtils.isBlock3d(itemStack, itemStackRenderState.usesBlockLight()) && !ItemUtils.isItemBlacklisted(itemStack)) {
+            if (AnimatiumConfig.instance().items.itemPositions && !ItemUtilKt.isBlock3d(itemStack, itemStackRenderState.usesBlockLight()) && !ItemUtilKt.isItemBlacklisted(itemStack)) {
                 final float angle = Utils.toRadians(25);
 
                 poseStack.scale(0.6F, 0.6F, 0.6F);
@@ -172,7 +172,7 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
                 poseStack.translate(direction * -1.13 * 0.0625F, -3.2 * 0.0625F, -1.13 * 0.0625F);
             }
 
-            if (AnimatiumConfig.instance().items.skullPosition && ItemUtils.isSkullBlock(itemStack) && !AnimatiumConfig.instance().items.mobHeadIcons) {
+            if (AnimatiumConfig.instance().items.skullPosition && ItemUtilKt.isSkullBlock(itemStack) && !AnimatiumConfig.instance().items.mobHeadIcons) {
                 poseStack.mulPose(Axis.YP.rotationDegrees(45.0F));
                 poseStack.scale(0.4F, 0.4F, 0.4F);
 
@@ -210,7 +210,7 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
             final boolean slotsMatch = this.animatium$currentSlot == player.getInventory().getSelectedSlot();
 
             // Equip logic fix
-            final boolean shouldSwap1_8 = ItemUtils.shouldInstantlyReplaceVisibleItem1_8(this.animatium$mainHandItem, copyStack.get());
+            final boolean shouldSwap1_8 = ItemUtilKt.shouldInstantlyReplaceVisibleItem1_8(this.animatium$mainHandItem, copyStack.get());
 
             // Original equip logic
             final boolean shouldSwap = this.shouldInstantlyReplaceVisibleItem(this.animatium$mainHandItem, copyStack.get());
@@ -227,7 +227,7 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.equipAnimationItemCheck) {
             // Apply our equip logic fix to offhand items
             final boolean slotsMatch = this.animatium$currentSlot == this.minecraft.player.getInventory().getSelectedSlot();
-            return (slotsMatch && ItemUtils.shouldInstantlyReplaceVisibleItem1_8(currentlyVisibleItem, expectedItem)) || value;
+            return (slotsMatch && ItemUtilKt.shouldInstantlyReplaceVisibleItem1_8(currentlyVisibleItem, expectedItem)) || value;
         } else {
             return value;
         }
@@ -238,7 +238,7 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
         final boolean value = original.call(instance, currentlyVisibleItem, expectedItem);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.equipAnimationItemCheck) {
             // Apply our equip logic fix to offhand items
-            return ItemUtils.shouldInstantlyReplaceVisibleItem1_8(currentlyVisibleItem, expectedItem) || value;
+            return ItemUtilKt.shouldInstantlyReplaceVisibleItem1_8(currentlyVisibleItem, expectedItem) || value;
         } else {
             return value;
         }

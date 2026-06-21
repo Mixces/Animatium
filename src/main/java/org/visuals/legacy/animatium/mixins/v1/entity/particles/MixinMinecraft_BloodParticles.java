@@ -23,27 +23,33 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.rendering.items.usage;
+package org.visuals.legacy.animatium.mixins.v1.entity.particles;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.renderer.item.properties.conditional.IsUsingItem;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.ItemUtilKt;
+import org.visuals.legacy.animatium.particle.BloodParticle;
 
-@Mixin(IsUsingItem.class)
-public abstract class MixinIsUsingItem {
-    @ModifyReturnValue(method = "get", at = @At(value = "RETURN"))
-    private boolean animatium$getValue(final boolean original, @Local(argsOnly = true, name = "itemStack") final ItemStack itemStack, @Local(argsOnly = true, name = "displayContext") final ItemDisplayContext displayContext) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.disableItemUsingTextureInGUI && ItemUtilKt.isRangedWeaponItem(itemStack) && displayContext == ItemDisplayContext.GUI) {
-            return false;
-        } else {
-            return original;
+import java.util.Objects;
+
+@Mixin(Minecraft.class)
+public abstract class MixinMinecraft_BloodParticles {
+    @Shadow
+    @Nullable
+    public HitResult hitResult;
+
+    @Inject(method = "startAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;attack(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;)V", shift = At.Shift.AFTER))
+    private void animatium$bloodParticles(final CallbackInfoReturnable<Boolean> cir) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.damageBloodParticles && BloodParticle.canSpawn()) {
+            BloodParticle.spawn(Objects.requireNonNull(((EntityHitResult) this.hitResult)).getEntity());
         }
     }
 }

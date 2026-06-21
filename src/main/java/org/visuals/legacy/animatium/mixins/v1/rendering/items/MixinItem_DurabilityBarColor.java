@@ -35,14 +35,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.ItemUtils;
+import org.visuals.legacy.animatium.util.ItemUtilKt;
 
 @Mixin(Item.class)
 public abstract class MixinItem_DurabilityBarColor {
     @Inject(method = "getBarColor", at = @At("HEAD"), cancellable = true)
     private void animatium$durabilityBarColors(final ItemStack stack, final CallbackInfoReturnable<Integer> cir) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.durabilityBarColors && !((Item) (Object) this instanceof BundleItem)) {
-            final int value = ItemUtils.getLegacyDurabilityColorValue(stack);
+            final int value = ItemUtilKt.getLegacyDurabilityColorValue(stack);
             cir.setReturnValue(ARGB.color(255 - value, value, 0));
         }
     }

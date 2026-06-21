@@ -29,10 +29,7 @@ import dev.isxander.yacl3.api.Binding;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.StateManager;
-import dev.isxander.yacl3.api.controller.ControllerBuilder;
-import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
-import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
-import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
+import dev.isxander.yacl3.api.controller.*;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.AnimatiumConstants;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
@@ -44,6 +41,7 @@ import java.util.function.Function;
 public abstract class Category {
     public enum OptionType {
         BOOLEAN(false),
+        INT(true),
         FLOAT(true),
         ENUM(false);
 
@@ -113,8 +111,18 @@ public abstract class Category {
         public <CategoryLike extends Category, K> Option<K> build(final CategoryLike defaults, final CategoryLike current) {
             final Function<Option<K>, ControllerBuilder<K>> controllerBuilder = switch (this.type) {
                 case BOOLEAN -> (opt) ->
-                        (ControllerBuilder<K>) TickBoxControllerBuilder
-                                .create((Option<Boolean>) opt);
+                        (ControllerBuilder<K>) TickBoxControllerBuilder.create((Option<Boolean>) opt);
+
+                case INT -> (opt) -> {
+                    if (this.slider) {
+                        return (ControllerBuilder<K>) IntegerSliderControllerBuilder
+                                .create((Option<Integer>) opt)
+                                .range((int) this.min, (int) this.max)
+                                .step((int) this.step);
+                    } else {
+                        throw new RuntimeException("TODO: Int non-slider");
+                    }
+                };
 
                 case FLOAT -> (opt) -> {
                     if (this.slider) {

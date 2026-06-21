@@ -39,6 +39,7 @@ import net.fabricmc.loader.api.ModContainer;
 import org.visuals.legacy.animatium.command.AnimatiumCommand;
 import org.visuals.legacy.animatium.packet.InfoPayloadPacket;
 import org.visuals.legacy.animatium.packet.SetServerFeaturesPayloadPacket;
+import org.visuals.legacy.animatium.particle.AnimatiumParticlesKt;
 import org.visuals.legacy.animatium.util.AnimatiumKeybinds;
 
 import java.util.List;
@@ -58,6 +59,7 @@ public final class AnimatiumFabricClient implements ClientModInitializer {
         ModelLoadingPlugin.register(context -> context.addModel(AnimatiumConstants.FAST_GRASS_MODEL_KEY, SimpleUnbakedExtraModel.blockStateModel(AnimatiumConstants.FAST_GRASS_MODEL_LOCATION)));
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) -> dispatcher.register(AnimatiumCommand.create()));
         AnimatiumKeybinds.register();
+        AnimatiumParticlesKt.bootstrap();
         this.registerPayloads();
     }
 

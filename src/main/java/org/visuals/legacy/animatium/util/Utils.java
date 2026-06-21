@@ -55,6 +55,11 @@ public final class Utils {
         return voxelShape.get();
     }
 
+    public static boolean isSingleplayer() {
+        final IntegratedServer server = Minecraft.getInstance().getSingleplayerServer();
+        return server != null && server.isSingleplayer();
+    }
+
     public static boolean hasFog1_7(final ClientLevel level) {
         final ClientLevelDataAccessor levelDataAccessor = (ClientLevelDataAccessor) level.getLevelData();
         return !levelDataAccessor.animatium$isFlatWorld() && !level.dimensionType().hasCeiling(); // "isDark" method from 1.7/1.8
@@ -66,10 +71,5 @@ public final class Utils {
             // Re-initialize the inventory, to reset the slot positions modified by "Old Crafting Slots Position"
             ((PlayerAccessor) player).animatium$setInventoryMenu(new InventoryMenu(player.getInventory(), !player.level().isClientSide(), player));
         }
-    }
-
-    public static boolean isSingleplayer() {
-        final IntegratedServer server = Minecraft.getInstance().getSingleplayerServer();
-        return server != null && server.isSingleplayer();
     }
 }

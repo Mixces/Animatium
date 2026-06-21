@@ -33,14 +33,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.ItemUtils;
+import org.visuals.legacy.animatium.util.ItemUtilKt;
 
 @Mixin(ItemStack.class)
 public abstract class MixinItemStack_LegacyRarities {
     @WrapOperation(method = "getStyledHoverName", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getRarity()Lnet/minecraft/world/item/Rarity;"))
     private Rarity animatium$itemRarities$getFormattedName(final ItemStack instance, final Operation<Rarity> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.legacyItemRarities) {
-            return ItemUtils.getLegacyItemRarity((ItemStack) (Object) this);
+            return ItemUtilKt.getLegacyItemRarity((ItemStack) (Object) this);
         } else {
             return original.call(instance);
         }
@@ -49,7 +49,7 @@ public abstract class MixinItemStack_LegacyRarities {
     @WrapOperation(method = "getDisplayName", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getRarity()Lnet/minecraft/world/item/Rarity;"))
     private Rarity animatium$itemRarities$toHoverableText(final ItemStack instance, final Operation<Rarity> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.legacyItemRarities) {
-            return ItemUtils.getLegacyItemRarity((ItemStack) (Object) this);
+            return ItemUtilKt.getLegacyItemRarity((ItemStack) (Object) this);
         } else {
             return original.call(instance);
         }

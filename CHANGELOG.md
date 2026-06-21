@@ -45,6 +45,12 @@
             - Ignore Mining Fatigue Speed
         - Legacy Loading Progress Bar
             - Option to re-enable the loading screen progress bar when the "Legacy Loading Screen" setting is enabled.
+        - Blood Particles (Orange Marshall)
+            - The classic blood particles when hitting a entity from Orange Marshalls 1.8 mod "Vanilla Enhancements"
+            - Accompanied by a multiplier setting to adjust the amount of particles to show (5 * multiplier)
+                - (Min: 0, Max: 40, Step: 1)
+            - If Orange Marshall sees this and doesn't want me to include this feature in the mod,
+              I will gladly remove it upon request/contact.
 
 ## Removed
 
