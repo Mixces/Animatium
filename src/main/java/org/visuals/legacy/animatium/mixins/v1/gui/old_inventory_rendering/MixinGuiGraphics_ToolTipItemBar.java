@@ -39,8 +39,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.handler.rendering.RenderUtilsKt;
 import org.visuals.legacy.animatium.util.ItemUtilKt;
-import org.visuals.legacy.animatium.util.rendering.RenderUtilsKt;
 
 @Mixin(GuiGraphicsExtractor.class)
 public abstract class MixinGuiGraphics_ToolTipItemBar {

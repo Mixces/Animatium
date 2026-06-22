@@ -38,7 +38,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.rendering.ColorBoostRenderer;
+import org.visuals.legacy.animatium.handler.rendering.ColorBoostRenderer;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft_ColorBoost {

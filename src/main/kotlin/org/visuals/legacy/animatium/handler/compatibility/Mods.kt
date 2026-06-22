@@ -23,25 +23,15 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering
+package org.visuals.legacy.animatium.handler.compatibility
 
-import net.minecraft.util.Mth
-import net.minecraft.world.entity.Entity
-import org.visuals.legacy.animatium.util.getBrightness
+import net.fabricmc.loader.api.FabricLoader
 
-class LegacyFogDarkness {
-    companion object {
-        @JvmStatic
-        val instance = LegacyFogDarkness()
-    }
+@JvmField
+val HAS_VFP = FabricLoader.getInstance().isModLoaded("viafabricplus")
 
-    private var prevDarkness: Float = 0.0F
-    private var darkness: Float = 0.0F
+@JvmField
+val HAS_SODIUM_EXTRAS = FabricLoader.getInstance().isModLoaded("sodium-extra")
 
-    fun tick(entity: Entity, viewDistance: Int) {
-        this.prevDarkness = this.darkness
-        this.darkness = Mth.lerp(0.1F, this.darkness, Mth.lerp(entity.getBrightness(), viewDistance / 32.0F, 1.0F))
-    }
-
-    fun getDarkness(tickDelta: Float): Float = Mth.lerp(tickDelta, this.prevDarkness, this.darkness)
-}
+@JvmField
+val HAS_LUNAR_CLIENT = FabricLoader.getInstance().isModLoaded("ichor")

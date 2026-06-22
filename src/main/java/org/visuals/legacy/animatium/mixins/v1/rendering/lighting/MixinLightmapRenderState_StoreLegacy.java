@@ -28,8 +28,8 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.lighting;
 import net.minecraft.client.renderer.state.LightmapRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.visuals.legacy.animatium.util.rendering.lighting.lightmap.LegacyLightmapState;
-import org.visuals.legacy.animatium.util.rendering.lighting.lightmap.LightmapStateExtension;
+import org.visuals.legacy.animatium.handler.rendering.lighting.lightmap.LegacyLightmapState;
+import org.visuals.legacy.animatium.handler.rendering.lighting.lightmap.LightmapStateExtension;
 
 @Mixin(LightmapRenderState.class)
 public abstract class MixinLightmapRenderState_StoreLegacy implements LightmapStateExtension {

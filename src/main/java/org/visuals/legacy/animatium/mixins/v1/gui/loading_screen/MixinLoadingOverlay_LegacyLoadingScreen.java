@@ -45,7 +45,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.rendering.LegacyLogoTexture;
+import org.visuals.legacy.animatium.handler.rendering.LegacyLogoTexture;
 
 import java.util.function.IntSupplier;
 

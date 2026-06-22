@@ -23,10 +23,14 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering.lighting.lightmap
+package org.visuals.legacy.animatium.handler.rendering.lighting.lightmap
 
-interface LightmapStateExtension {
-    fun `animatium$getState`(): LegacyLightmapState
-
-    fun `animatium$setState`(state: LegacyLightmapState)
+class LegacyLightmapState {
+    var needsUpdate: Boolean = false
+    var skyDarken: Float = 0.0F
+    var skyDarkness: Float = 0.0F
+    var blockLightRed: Float = 0.0F
+    var nightVisionScale: Float = 0.0F
+    var gamma: Float = 0.0F
+    var useBrightLightmap: Boolean = false
 }

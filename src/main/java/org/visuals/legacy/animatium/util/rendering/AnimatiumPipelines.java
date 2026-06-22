@@ -36,6 +36,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.client.renderer.BindGroupLayouts;
 import net.minecraft.client.renderer.RenderPipelines;
 import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.handler.rendering.RenderUtilsKt;
 
 import java.util.Optional;
 

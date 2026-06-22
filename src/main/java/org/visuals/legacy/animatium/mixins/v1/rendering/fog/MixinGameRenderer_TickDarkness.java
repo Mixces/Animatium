@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.visuals.legacy.animatium.util.rendering.LegacyFogDarkness;
+import org.visuals.legacy.animatium.handler.rendering.LegacyFogDarkness;
 
 @Mixin(GameRenderer.class)
 public abstract class MixinGameRenderer_TickDarkness {

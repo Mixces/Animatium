@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering.lighting
+package org.visuals.legacy.animatium.handler.rendering.lighting
 
 import com.mojang.blaze3d.platform.Lighting
 import org.joml.Matrix4f

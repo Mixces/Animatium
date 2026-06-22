@@ -23,15 +23,10 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.compatibility
+package org.visuals.legacy.animatium.handler.rendering.lighting.lightmap
 
-import net.fabricmc.loader.api.FabricLoader
+interface LightmapStateExtension {
+    fun `animatium$getState`(): LegacyLightmapState
 
-@JvmField
-val HAS_VFP = FabricLoader.getInstance().isModLoaded("viafabricplus")
-
-@JvmField
-val HAS_SODIUM_EXTRAS = FabricLoader.getInstance().isModLoaded("sodium-extra")
-
-@JvmField
-val HAS_LUNAR_CLIENT = FabricLoader.getInstance().isModLoaded("ichor")
+    fun `animatium$setState`(state: LegacyLightmapState)
+}

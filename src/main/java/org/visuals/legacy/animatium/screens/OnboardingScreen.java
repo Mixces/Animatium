@@ -35,9 +35,9 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import org.jspecify.annotations.NonNull;
+import org.visuals.legacy.animatium.handler.rendering.RenderUtilsKt;
 import org.visuals.legacy.animatium.util.config.ConfigUtil;
 import org.visuals.legacy.animatium.util.config.PresetVersion;
-import org.visuals.legacy.animatium.util.rendering.RenderUtilsKt;
 
 public class OnboardingScreen extends Screen {
     private final Screen original;

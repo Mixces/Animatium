@@ -49,6 +49,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.visuals.legacy.animatium.handler.rendering.RenderUtilsKt;
 import org.visuals.legacy.animatium.renderer.DynamicTransforms;
 import org.visuals.legacy.animatium.renderer.RenderDescriptor;
 import org.visuals.legacy.animatium.renderer.buffer.Geometry;

@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util
+package org.visuals.legacy.animatium.handler
 
 import net.minecraft.client.gui.components.debug.DebugEntryCategory
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer
@@ -32,7 +32,6 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.chunk.LevelChunk
 import org.visuals.legacy.animatium.Animatium
-import org.visuals.legacy.animatium.Animatium.location
 import org.visuals.legacy.animatium.AnimatiumConstants
 import org.visuals.legacy.animatium.util.enums.ServerFeature
 import java.util.*
@@ -40,7 +39,7 @@ import java.util.*
 class AnimatiumDebugEntry : DebugScreenEntry {
     companion object {
         val CATEGORY = DebugEntryCategory(Component.translatable("animatium.category.debug"), Float.MAX_VALUE)
-        val GROUP = location("debug")
+        val GROUP = Animatium.location("debug")
     }
 
     override fun display(

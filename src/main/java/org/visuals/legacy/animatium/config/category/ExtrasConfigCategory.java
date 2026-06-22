@@ -28,8 +28,8 @@ package org.visuals.legacy.animatium.config.category;
 import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import org.visuals.legacy.animatium.util.compatibility.ModsKt;
 import org.visuals.legacy.animatium.config.bundle.EntryBundle;
+import org.visuals.legacy.animatium.handler.compatibility.ModsKt;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
 import java.util.Arrays;

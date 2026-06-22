@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering
+package org.visuals.legacy.animatium.handler.rendering
 
 import btw.lowercase.renderer.Renderer
 import com.mojang.blaze3d.systems.RenderSystem
@@ -38,6 +38,7 @@ import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry
 import org.visuals.legacy.animatium.renderer.vertex.VertexLayouts
 import org.visuals.legacy.animatium.util.compatibility.IrisPipeline
 import org.visuals.legacy.animatium.util.compatibility.IrisUtil
+import org.visuals.legacy.animatium.util.rendering.AnimatiumPipelines
 
 object LegacySkyRenderer {
     private val GET_VOID_BOX_GEOMETRY = { offset: Float ->

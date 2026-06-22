@@ -36,7 +36,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.rendering.LegacyFogDarkness;
+import org.visuals.legacy.animatium.handler.rendering.LegacyFogDarkness;
 
 @Mixin(FogRenderer.class)
 public abstract class MixinFogRenderer_Darkness {

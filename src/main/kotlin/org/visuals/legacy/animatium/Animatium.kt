@@ -34,12 +34,12 @@ import net.minecraft.resources.Identifier
 import org.visuals.legacy.animatium.config.AnimatiumConfig
 import org.visuals.legacy.animatium.config.bundle.ConfigBundles
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor
-import org.visuals.legacy.animatium.util.AnimatiumDebugEntry
+import org.visuals.legacy.animatium.handler.AnimatiumDebugEntry
 import org.visuals.legacy.animatium.util.config.ConfigUtil
 import org.visuals.legacy.animatium.util.enums.ServerFeature
 import org.visuals.legacy.animatium.util.isSingleplayer
 import org.visuals.legacy.animatium.util.reinitializeInventorySlots
-import org.visuals.legacy.animatium.util.rendering.lighting.LegacyDiffuseLighting
+import org.visuals.legacy.animatium.handler.rendering.lighting.LegacyDiffuseLighting
 import java.util.*
 
 object Animatium {

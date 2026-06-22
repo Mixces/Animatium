@@ -23,14 +23,28 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering.lighting.lightmap
+package org.visuals.legacy.animatium.handler.rendering
 
-class LegacyLightmapState {
-    var needsUpdate: Boolean = false
-    var skyDarken: Float = 0.0F
-    var skyDarkness: Float = 0.0F
-    var blockLightRed: Float = 0.0F
-    var nightVisionScale: Float = 0.0F
-    var gamma: Float = 0.0F
-    var useBrightLightmap: Boolean = false
+import btw.lowercase.renderer.Renderer
+import com.mojang.blaze3d.systems.RenderSystem
+import com.mojang.blaze3d.textures.FilterMode
+import com.mojang.blaze3d.textures.GpuTextureView
+import org.visuals.legacy.animatium.renderer.buffer.BasicGeometry
+import org.visuals.legacy.animatium.util.rendering.AnimatiumPipelines
+
+object ColorBoostRenderer {
+    private val GEOMETRY = BasicGeometry(0, 3)
+
+    @JvmStatic
+    fun render(colorAttachment: GpuTextureView, depthAttachment: GpuTextureView) {
+        Renderer.of({ "Color Boost Blit" }, colorAttachment, depthAttachment).use { renderer ->
+            renderer.setPipeline(AnimatiumPipelines.COLOR_BOOST_BLIT)
+            renderer.setTexture(
+                "Sampler0",
+                colorAttachment,
+                RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST)
+            )
+            renderer.draw(GEOMETRY)
+        }
+    }
 }

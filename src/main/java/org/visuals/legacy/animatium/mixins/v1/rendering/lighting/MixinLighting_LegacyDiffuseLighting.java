@@ -39,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.rendering.lighting.LegacyDiffuseLighting;
+import org.visuals.legacy.animatium.handler.rendering.lighting.LegacyDiffuseLighting;
 
 @Mixin(Lighting.class)
 public abstract class MixinLighting_LegacyDiffuseLighting {

@@ -23,27 +23,25 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering
+package org.visuals.legacy.animatium.handler.rendering
 
-import btw.lowercase.renderer.Renderer
-import com.mojang.blaze3d.systems.RenderSystem
-import com.mojang.blaze3d.textures.FilterMode
-import com.mojang.blaze3d.textures.GpuTextureView
-import org.visuals.legacy.animatium.renderer.buffer.BasicGeometry
+import net.minecraft.util.Mth
+import net.minecraft.world.entity.Entity
+import org.visuals.legacy.animatium.util.getBrightness
 
-object ColorBoostRenderer {
-    private val GEOMETRY = BasicGeometry(0, 3)
-
-    @JvmStatic
-    fun render(colorAttachment: GpuTextureView, depthAttachment: GpuTextureView) {
-        Renderer.of({ "Color Boost Blit" }, colorAttachment, depthAttachment).use { renderer ->
-            renderer.setPipeline(AnimatiumPipelines.COLOR_BOOST_BLIT)
-            renderer.setTexture(
-                "Sampler0",
-                colorAttachment,
-                RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST)
-            )
-            renderer.draw(GEOMETRY)
-        }
+class LegacyFogDarkness {
+    companion object {
+        @JvmStatic
+        val instance = LegacyFogDarkness()
     }
+
+    private var prevDarkness: Float = 0.0F
+    private var darkness: Float = 0.0F
+
+    fun tick(entity: Entity, viewDistance: Int) {
+        this.prevDarkness = this.darkness
+        this.darkness = Mth.lerp(0.1F, this.darkness, Mth.lerp(entity.getBrightness(), viewDistance / 32.0F, 1.0F))
+    }
+
+    fun getDarkness(tickDelta: Float): Float = Mth.lerp(tickDelta, this.prevDarkness, this.darkness)
 }
