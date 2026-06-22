@@ -49,7 +49,7 @@ fun ClientLevel.getLegacySkyDarken(): Float {
 fun ClientLevel.getTimeOfDay(tickDelta: Float): Double {
     var dayTime = this.defaultClockTime
     if (dayTime == 0L) {
-        dayTime = 1 // 1.8 never lets the tick time be 0
+        dayTime = 1L // 1.8 never lets the tick time be 0
     }
 
     if (this.dimensionType().hasFixedTime()) {

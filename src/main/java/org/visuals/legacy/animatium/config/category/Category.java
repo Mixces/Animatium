@@ -32,7 +32,7 @@ import dev.isxander.yacl3.api.StateManager;
 import dev.isxander.yacl3.api.controller.*;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.AnimatiumConstants;
-import org.visuals.legacy.animatium.util.config.EntryBundle;
+import org.visuals.legacy.animatium.config.bundle.EntryBundle;
 
 import java.lang.reflect.Field;
 import java.util.function.BiConsumer;

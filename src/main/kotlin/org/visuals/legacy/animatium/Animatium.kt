@@ -32,7 +32,7 @@ import net.minecraft.client.gui.components.debug.DebugScreenEntries
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.Identifier
 import org.visuals.legacy.animatium.config.AnimatiumConfig
-import org.visuals.legacy.animatium.config.ConfigBundles
+import org.visuals.legacy.animatium.config.bundle.ConfigBundles
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor
 import org.visuals.legacy.animatium.util.AnimatiumDebugEntry
 import org.visuals.legacy.animatium.util.config.ConfigUtil

@@ -31,7 +31,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.util.compatibility.ModsKt;
-import org.visuals.legacy.animatium.util.config.EntryBundle;
+import org.visuals.legacy.animatium.config.bundle.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.DamageTintSetting;
 import org.visuals.legacy.animatium.util.enums.VoidFogSetting;
 import org.visuals.legacy.animatium.util.rendering.lighting.LegacyDiffuseLighting;

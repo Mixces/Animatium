@@ -136,14 +136,14 @@ fun Entity?.isSelf(): Boolean {
     return player != null && this != null && this.id == player.id
 }
 
-fun getBrightness(reader: LevelReader, blockPos: BlockPos): Float {
-    val amount = reader.getMaxLocalRawBrightness(blockPos) / 15.0F
-    return Mth.lerp(reader.dimensionType().ambientLight(), amount / (4.0F - 3.0F * amount), 1.0F)
+fun LevelReader.getBrightness(blockPos: BlockPos): Float {
+    val amount = this.getMaxLocalRawBrightness(blockPos) / 15.0F
+    return Mth.lerp(this.dimensionType().ambientLight(), amount / (4.0F - 3.0F * amount), 1.0F)
 }
 
 fun Entity.getBrightness(): Float {
     // Older versions inspected from the foot position, not eye position
-    return getBrightness(this.level(), this.blockPosition())
+    return this.level().getBrightness(this.blockPosition())
 }
 
 /**

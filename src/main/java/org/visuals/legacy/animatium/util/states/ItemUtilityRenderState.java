@@ -33,5 +33,6 @@ public interface ItemUtilityRenderState {
     }
 
     default void animatium$setItemStack(final ItemStack itemStack) {
+        throw new UnsupportedOperationException();
     }
 }

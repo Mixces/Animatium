@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.particle
+package org.visuals.legacy.animatium.handler.particle
 
 import net.minecraft.client.Camera
 import net.minecraft.client.multiplayer.ClientLevel

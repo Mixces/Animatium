@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.particle
+package org.visuals.legacy.animatium.handler.particle
 
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.ClientLevel
@@ -39,6 +39,7 @@ import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.RedStoneWireBlock
 import net.minecraft.world.phys.EntityHitResult
 import org.visuals.legacy.animatium.config.AnimatiumConfig
+import org.visuals.legacy.animatium.handler.AnimatiumParticles
 
 // Credit to Orange Marshalls 1.8 Mod "Vanilla Enhancements"
 class BloodParticle(
@@ -99,7 +100,8 @@ class BloodParticle(
                 val velocityX = Math.random() * 2.0 - 1.3
                 val velocityY = Math.random() * 0.8
                 val velocityZ = Math.random() * 2.0 - 1.3
-                target.level().addParticle(BLOOD_PARTICLE_TYPE, x, y, z, velocityX, velocityY, velocityZ)
+                target.level()
+                    .addParticle(AnimatiumParticles.BLOOD_PARTICLE_TYPE, x, y, z, velocityX, velocityY, velocityZ)
             }
         }
     }

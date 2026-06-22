@@ -41,7 +41,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.UtilsKt;
+import org.visuals.legacy.animatium.util.LevelUtilKt;
 
 @Mixin(FogRenderer.class)
 public abstract class MixinFogRenderer_VoidFog {
@@ -53,7 +53,7 @@ public abstract class MixinFogRenderer_VoidFog {
     private float animatium$voidFog(final float original, final Camera camera, final int renderDistanceInChunks, final DeltaTracker deltaTracker, final float darkenWorldAmount, final ClientLevel level) {
         final Entity entity = camera.entity();
         final boolean isVoidFogAllowed = entity instanceof Player player && !(player.isCreative() || player.isSpectator());
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidFog.hasFog() && UtilsKt.hasVoidFog(level) && isVoidFogAllowed) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidFog.hasFog() && LevelUtilKt.hasVoidFog(level) && isVoidFogAllowed) {
             final double light = level.getLightEngine().getLayerListener(LightLayer.SKY).getLightValue(entity.blockPosition()) / 16.0;
             final double yOffset = (Mth.lerp(deltaTracker.getGameTimeDeltaPartialTick(true), entity.yo, entity.getY()) + 4.0) / 32.0;
             if (light + yOffset < 1.0) {

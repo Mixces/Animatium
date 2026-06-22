@@ -23,17 +23,17 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.config;
+package org.visuals.legacy.animatium.config.bundle;
 
-import org.visuals.legacy.animatium.util.config.EntryBundle;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 public final class ConfigBundles {
-	public static final EntryBundle MOVEMENT = AnimatiumConfig.instance().movement.bundle();
-	public static final EntryBundle ITEMS = AnimatiumConfig.instance().items.bundle();
-	public static final EntryBundle SCREEN = AnimatiumConfig.instance().screen.bundle();
-	public static final EntryBundle FIXES = AnimatiumConfig.instance().fixes.bundle();
-	public static final EntryBundle OTHER = AnimatiumConfig.instance().other.bundle();
-	public static final EntryBundle EXTRAS = AnimatiumConfig.instance().extras.bundle();
+    public static final EntryBundle MOVEMENT = AnimatiumConfig.instance().movement.bundle();
+    public static final EntryBundle ITEMS = AnimatiumConfig.instance().items.bundle();
+    public static final EntryBundle SCREEN = AnimatiumConfig.instance().screen.bundle();
+    public static final EntryBundle FIXES = AnimatiumConfig.instance().fixes.bundle();
+    public static final EntryBundle OTHER = AnimatiumConfig.instance().other.bundle();
+    public static final EntryBundle EXTRAS = AnimatiumConfig.instance().extras.bundle();
 
-	public static final EntryBundle[] ALL = new EntryBundle[]{MOVEMENT, ITEMS, SCREEN, FIXES, OTHER, EXTRAS};
+    public static final EntryBundle[] ALL = new EntryBundle[]{MOVEMENT, ITEMS, SCREEN, FIXES, OTHER, EXTRAS};
 }
