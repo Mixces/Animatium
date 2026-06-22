@@ -23,16 +23,14 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package btw.lowercase.renderer.vertex;
+package org.visuals.legacy.animatium.renderer.vertex
 
-import com.mojang.blaze3d.PrimitiveTopology;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import org.jspecify.annotations.NonNull;
+import com.mojang.blaze3d.PrimitiveTopology
+import com.mojang.blaze3d.vertex.BufferBuilder
+import com.mojang.blaze3d.vertex.ByteBufferBuilder
+import com.mojang.blaze3d.vertex.VertexFormat
 
-public record VertexLayout(@NonNull VertexFormat vertexFormat, @NonNull PrimitiveTopology primitiveTopology) {
-    public BufferBuilder buffer(final ByteBufferBuilder byteBufferBuilder) {
-        return new BufferBuilder(byteBufferBuilder, this.primitiveTopology, this.vertexFormat);
-    }
+data class VertexLayout(val vertexFormat: VertexFormat, val primitiveTopology: PrimitiveTopology) {
+    fun buffer(byteBufferBuilder: ByteBufferBuilder): BufferBuilder =
+        BufferBuilder(byteBufferBuilder, primitiveTopology, vertexFormat)
 }

@@ -26,9 +26,6 @@
 package org.visuals.legacy.animatium.util.rendering;
 
 import btw.lowercase.renderer.Renderer;
-import btw.lowercase.renderer.buffer.DynamicTransforms;
-import btw.lowercase.renderer.buffer.Geometry;
-import btw.lowercase.renderer.vertex.VertexLayouts;
 import com.mojang.blaze3d.GpuFormat;
 import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.buffers.GpuBuffer;
@@ -50,6 +47,9 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import org.jspecify.annotations.NonNull;
 import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.renderer.DynamicTransforms;
+import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry;
+import org.visuals.legacy.animatium.renderer.vertex.VertexLayouts;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -92,7 +92,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
     private int prevCellX = Integer.MIN_VALUE;
     private int prevCellZ = Integer.MIN_VALUE;
     private CloudRenderer.TextureData textureData;
-    private Geometry.Indexed geometry = null;
+    private IndexedGeometry geometry = null;
 
     private void setupMesh(final RenderPipeline pipeline, final int cellX, final int cellZ, final CloudStatus cloudStatus, final CloudRenderer.RelativeCameraPos relativeCameraPos) {
         final int colorA = ARGB.colorFromFloat(0.8F, 0.7F, 0.7F, 0.7F);
@@ -111,8 +111,8 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
                     }
                 } else {
                     final int indexCount = meshData.drawState().indexCount();
-                    if (this.geometry != null && this.geometry.vertexBuffer().size() >= meshData.vertexBuffer().remaining()) {
-                        RenderSystem.getDevice().createCommandEncoder().writeToBuffer(this.geometry.vertexBuffer().slice(), meshData.vertexBuffer());
+                    if (this.geometry != null && this.geometry.getVertexBuffer().size() >= meshData.vertexBuffer().remaining()) {
+                        RenderSystem.getDevice().createCommandEncoder().writeToBuffer(this.geometry.getVertexBuffer().slice(), meshData.vertexBuffer());
                     } else {
                         if (this.geometry != null) {
                             this.geometry.close();
@@ -120,7 +120,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
                         }
 
                         final GpuBuffer vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "Cloud vertex buffer", GpuBuffer.USAGE_VERTEX | GpuBuffer.USAGE_COPY_DST, meshData.vertexBuffer());
-                        this.geometry = new Geometry.Indexed(VertexLayouts.POSITIONED_COLOR_QUAD, vertexBuffer, indexCount, true);
+                        this.geometry = new IndexedGeometry(VertexLayouts.POSITIONED_COLOR_QUAD, vertexBuffer, indexCount, true);
                     }
                 }
             }
@@ -258,10 +258,10 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
                 this.setupMesh(pipeline, cellX, cellZ, cloudStatus, relativeCameraPos);
             }
 
-            if (this.geometry.indexCount() != 0) {
-                final float f5 = (float) (x - cellX * 12.0F);
-                final float f6 = (float) (z - cellZ * 12.0F);
-                final Vector3f offset = new Vector3f(-f5, offsetBottom, -f6);
+            if (this.geometry.getIndexCount() != 0) {
+                final float offsetX = (float) (x - cellX * 12.0F);
+                final float offsetZ = (float) (z - cellZ * 12.0F);
+                final Vector3f offset = new Vector3f(-offsetX, offsetBottom, -offsetZ);
                 if (pipeline != FLAT_CLOUDS) {
                     this.draw(CLOUDS_DEPTH_ONLY, offset, cloudColor);
                 }

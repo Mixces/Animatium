@@ -26,9 +26,6 @@
 package org.visuals.legacy.animatium.util.rendering
 
 import btw.lowercase.renderer.Renderer
-import btw.lowercase.renderer.buffer.DynamicTransforms
-import btw.lowercase.renderer.buffer.Geometry
-import btw.lowercase.renderer.vertex.VertexLayouts
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.VertexConsumer
 import net.minecraft.client.Minecraft
@@ -36,12 +33,15 @@ import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.util.ARGB
 import org.joml.Vector4f
 import org.visuals.legacy.animatium.config.AnimatiumConfig
+import org.visuals.legacy.animatium.renderer.DynamicTransforms
+import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry
+import org.visuals.legacy.animatium.renderer.vertex.VertexLayouts
 import org.visuals.legacy.animatium.util.compatibility.IrisPipeline
 import org.visuals.legacy.animatium.util.compatibility.IrisUtil
 
 object LegacySkyRenderer {
     private val GET_VOID_BOX_GEOMETRY = { offset: Float ->
-        Geometry.Indexed.compile(VertexLayouts.POSITIONED_COLOR_QUAD, 20) { vertexConsumer ->
+        IndexedGeometry.compile(VertexLayouts.POSITIONED_COLOR_QUAD, 20) { vertexConsumer ->
             val color = ARGB.opaque(0)
             vertexConsumer.apply {
                 // Left
@@ -78,8 +78,8 @@ object LegacySkyRenderer {
     }
 
     @JvmField
-    val TOP_GEOMETRY: Geometry.Indexed =
-        Geometry.Indexed.compilePersistent(VertexLayouts.POSITIONED_QUAD, 676) { vertexConsumer ->
+    val TOP_GEOMETRY: IndexedGeometry =
+        IndexedGeometry.compilePersistent(VertexLayouts.POSITIONED_QUAD, 676) { vertexConsumer ->
             buildSkyHalf(
                 vertexConsumer,
                 16.0F,
@@ -88,8 +88,8 @@ object LegacySkyRenderer {
         }
 
     @JvmField
-    val BOTTOM_GEOMETRY: Geometry.Indexed =
-        Geometry.Indexed.compilePersistent(VertexLayouts.POSITIONED_QUAD, 676) { vertexConsumer ->
+    val BOTTOM_GEOMETRY: IndexedGeometry =
+        IndexedGeometry.compilePersistent(VertexLayouts.POSITIONED_QUAD, 676) { vertexConsumer ->
             buildSkyHalf(
                 vertexConsumer,
                 -16.0F,

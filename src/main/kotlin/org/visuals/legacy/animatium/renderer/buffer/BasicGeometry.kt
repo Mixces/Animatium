@@ -23,32 +23,24 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium
+package org.visuals.legacy.animatium.renderer.buffer
 
-import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey
-import net.minecraft.client.renderer.block.dispatch.BlockStateModel
-import org.visuals.legacy.animatium.packet.InfoPayloadPacket
-import java.lang.Boolean.parseBoolean
-import java.lang.Double.parseDouble
+import com.mojang.blaze3d.systems.RenderPass
+import com.mojang.blaze3d.systems.RenderSystem
 
-object AnimatiumConstants {
-    const val MOD_ID = "@MODID@"
-    const val DEVELOPMENT_VERSION = "@COMMIT@"
+class BasicGeometry(val firstVertex: Int, val vertexCount: Int) : Geometry {
+    override fun bind(
+        pass: RenderPass,
+        autoStorageIndexBuffer: RenderSystem.AutoStorageIndexBuffer
+    ) {
+    }
 
-    @JvmField
-    val VERSION = parseDouble("@VERSION@")
+    override fun draw(pass: RenderPass) = pass.draw(vertexCount, 1, firstVertex, 0)
 
-    @JvmField
-    val IS_DEVELOPMENT = parseBoolean("@DEVELOPMENT@")
+    override fun persistent(): Boolean = true
 
-    @JvmField
-    val FAST_GRASS_MODEL_LOCATION = Animatium.location("block/fast_grass_block")
+    override fun isClosed(): Boolean = false
 
-    @JvmField
-    val FAST_GRASS_MODEL_KEY: ExtraModelKey<BlockStateModel> =
-        ExtraModelKey.create(FAST_GRASS_MODEL_LOCATION::toString)
-
-    @JvmStatic
-    fun getInfoPayload(): InfoPayloadPacket =
-        InfoPayloadPacket(VERSION, if (IS_DEVELOPMENT) DEVELOPMENT_VERSION else null)
+    override fun close() {
+    }
 }

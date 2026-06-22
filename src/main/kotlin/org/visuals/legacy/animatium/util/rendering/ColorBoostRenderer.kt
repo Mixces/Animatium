@@ -26,13 +26,13 @@
 package org.visuals.legacy.animatium.util.rendering
 
 import btw.lowercase.renderer.Renderer
-import btw.lowercase.renderer.buffer.Geometry
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.textures.FilterMode
 import com.mojang.blaze3d.textures.GpuTextureView
+import org.visuals.legacy.animatium.renderer.buffer.BasicGeometry
 
 object ColorBoostRenderer {
-    private val GEOMETRY = Geometry.Basic(0, 3)
+    private val GEOMETRY = BasicGeometry(0, 3)
 
     @JvmStatic
     fun render(colorAttachment: GpuTextureView, depthAttachment: GpuTextureView) {

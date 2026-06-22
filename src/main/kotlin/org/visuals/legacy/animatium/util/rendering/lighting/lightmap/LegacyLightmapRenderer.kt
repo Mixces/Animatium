@@ -26,18 +26,18 @@
 package org.visuals.legacy.animatium.util.rendering.lighting.lightmap
 
 import btw.lowercase.renderer.Renderer
-import btw.lowercase.renderer.buffer.Geometry
 import com.mojang.blaze3d.buffers.GpuBuffer
 import com.mojang.blaze3d.buffers.Std140Builder
 import com.mojang.blaze3d.buffers.Std140SizeCalculator
 import com.mojang.blaze3d.textures.GpuTextureView
 import net.minecraft.client.renderer.MappableRingBuffer
 import net.minecraft.util.profiling.Profiler
+import org.visuals.legacy.animatium.renderer.buffer.BasicGeometry
 import org.visuals.legacy.animatium.util.rendering.AnimatiumPipelines
 
 class LegacyLightmapRenderer : AutoCloseable {
     companion object {
-        private val BASE_GEOMETRY = Geometry.Basic(0, 3);
+        private val BASE_GEOMETRY = BasicGeometry(0, 3)
         private val LIGHTMAP_UBO_SIZE = Std140SizeCalculator()
             .putFloat() // SkyDarken
             .putFloat() // SkyDarkness

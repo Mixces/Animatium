@@ -51,8 +51,8 @@ public abstract class MixinSkyRenderer_PlanarFogSky {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void animatium$initSkyRenderer(final CallbackInfo ci) {
         // Load them before anything (Static Variables don't load until used, which would cause a issue in the RenderPass)
-        LegacySkyRenderer.TOP_GEOMETRY.vertexBuffer();
-        LegacySkyRenderer.BOTTOM_GEOMETRY.vertexBuffer();
+        LegacySkyRenderer.TOP_GEOMETRY.getVertexBuffer();
+        LegacySkyRenderer.BOTTOM_GEOMETRY.getVertexBuffer();
         animatium$skyIndexBuffer = RenderSystem.getSequentialBuffer(PrimitiveTopology.QUADS);
     }
 

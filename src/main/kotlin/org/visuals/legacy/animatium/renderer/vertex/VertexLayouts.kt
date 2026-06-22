@@ -23,18 +23,21 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package btw.lowercase.renderer.vertex;
+package org.visuals.legacy.animatium.renderer.vertex
 
-import com.mojang.blaze3d.PrimitiveTopology;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.PrimitiveTopology
+import com.mojang.blaze3d.vertex.DefaultVertexFormat
+import com.mojang.blaze3d.vertex.VertexFormat
 
-public class VertexLayouts {
-    public static final VertexLayout POSITIONED_QUAD = quads(DefaultVertexFormat.POSITION);
-    public static final VertexLayout POSITIONED_COLOR_QUAD = quads(DefaultVertexFormat.POSITION_COLOR);
-    public static final VertexLayout POSITION_TEX_QUAD = quads(DefaultVertexFormat.POSITION_TEX);
+object VertexLayouts {
+    @JvmField
+    val POSITIONED_QUAD: VertexLayout = quads(DefaultVertexFormat.POSITION)
 
-    private static VertexLayout quads(final VertexFormat vertexFormat) {
-        return new VertexLayout(vertexFormat, PrimitiveTopology.QUADS);
-    }
+    @JvmField
+    val POSITIONED_COLOR_QUAD: VertexLayout = quads(DefaultVertexFormat.POSITION_COLOR)
+
+    @JvmField
+    val POSITION_TEX_QUAD: VertexLayout = quads(DefaultVertexFormat.POSITION_TEX)
+
+    private fun quads(vertexFormat: VertexFormat): VertexLayout = VertexLayout(vertexFormat, PrimitiveTopology.QUADS)
 }

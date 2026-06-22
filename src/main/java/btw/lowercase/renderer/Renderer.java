@@ -25,9 +25,6 @@
 
 package btw.lowercase.renderer;
 
-import btw.lowercase.renderer.buffer.DynamicTransforms;
-import btw.lowercase.renderer.buffer.Geometry;
-import btw.lowercase.renderer.texture.TextureAndSampler;
 import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
@@ -46,6 +43,10 @@ import net.minecraft.client.renderer.ProjectionMatrixBuffer;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
+import org.visuals.legacy.animatium.renderer.DynamicTransforms;
+import org.visuals.legacy.animatium.renderer.RenderDescriptor;
+import org.visuals.legacy.animatium.renderer.buffer.Geometry;
+import org.visuals.legacy.animatium.renderer.texture.TextureAndSampler;
 import org.visuals.legacy.animatium.util.compatibility.IrisPipeline;
 import org.visuals.legacy.animatium.util.compatibility.IrisUtil;
 
@@ -67,7 +68,7 @@ public final class Renderer implements AutoCloseable {
     private ProjectionMatrixBuffer projectionMatrixBuffer;
 
     private Renderer(final RenderDescriptor descriptor) {
-        this.name = descriptor.name();
+        this.name = descriptor.getName();
         this.descriptor = descriptor;
     }
 
@@ -205,7 +206,7 @@ public final class Renderer implements AutoCloseable {
                     final String name = entry.getKey();
                     if (samplers.contains(name)) {
                         final TextureAndSampler textureAndSampler = entry.getValue();
-                        pass.bindTexture(name, textureAndSampler.textureView(), textureAndSampler.sampler());
+                        pass.bindTexture(name, textureAndSampler.getTextureView(), textureAndSampler.getSampler());
                     }
                 }
 

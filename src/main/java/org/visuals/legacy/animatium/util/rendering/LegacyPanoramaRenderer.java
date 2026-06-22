@@ -25,11 +25,7 @@
 
 package org.visuals.legacy.animatium.util.rendering;
 
-import btw.lowercase.renderer.RenderDescriptor;
 import btw.lowercase.renderer.Renderer;
-import btw.lowercase.renderer.buffer.DynamicTransforms;
-import btw.lowercase.renderer.buffer.Geometry;
-import btw.lowercase.renderer.vertex.VertexLayouts;
 import com.mojang.blaze3d.GpuFormat;
 import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -53,6 +49,11 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.visuals.legacy.animatium.renderer.DynamicTransforms;
+import org.visuals.legacy.animatium.renderer.RenderDescriptor;
+import org.visuals.legacy.animatium.renderer.buffer.Geometry;
+import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry;
+import org.visuals.legacy.animatium.renderer.vertex.VertexLayouts;
 import org.visuals.legacy.animatium.util.UtilsKt;
 
 import java.util.Objects;
@@ -64,7 +65,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
     private static final Vector4f CLEAR_COLOR = new Vector4f(0.0F, 0.0F, 0.0F, 1.0F);
     private static final Identifier CUBE_MAP_LOCATION = Identifier.withDefaultNamespace("textures/gui/title/background/panorama");
     private static final Matrix4f CUBE_MAP_PROJECTION = new Matrix4f().setPerspective(UtilsKt.toRadians(120.0F), 1.0F, 0.05F, 10.0F);
-    private static final Geometry CUBE_MAP_GEOMETRY = Geometry.Indexed.compilePersistent(VertexLayouts.POSITIONED_QUAD, 24, vertexConsumer -> {
+    private static final Geometry CUBE_MAP_GEOMETRY = IndexedGeometry.compilePersistent(VertexLayouts.POSITIONED_QUAD, 24, vertexConsumer -> {
         for (int panoramaIdx = 0; panoramaIdx < 6; panoramaIdx++) {
             final Matrix4f pose = new Matrix4f();
             switch (panoramaIdx) {
