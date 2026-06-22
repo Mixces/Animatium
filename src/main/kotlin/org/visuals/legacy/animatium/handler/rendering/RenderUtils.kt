@@ -25,15 +25,10 @@
 
 package org.visuals.legacy.animatium.handler.rendering
 
-import com.mojang.blaze3d.pipeline.DepthStencilState
-import com.mojang.blaze3d.platform.CompareOp
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.textures.GpuTexture
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor
-
-@JvmField
-val NO_DEPTH_WRITE = DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false)
 
 fun copyTextureToTexture(source: GpuTexture, destination: GpuTexture) =
     RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(

@@ -82,7 +82,7 @@ class AnimatiumFabricClient : ClientModInitializer {
         ClientConfigurationNetworking.registerGlobalReceiver(SetServerFeaturesPayloadPacket.ID) { payload, context ->
             context.client().schedule {
                 Animatium.ENABLED_SERVER_FEATURES.clear()
-                Animatium.ENABLED_SERVER_FEATURES.addAll(payload.features())
+                Animatium.ENABLED_SERVER_FEATURES.addAll(payload.features)
             }
         }
 
@@ -91,7 +91,7 @@ class AnimatiumFabricClient : ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(SetServerFeaturesPayloadPacket.ID) { payload, context ->
             context.client().schedule {
                 Animatium.ENABLED_SERVER_FEATURES.clear()
-                Animatium.ENABLED_SERVER_FEATURES.addAll(payload.features())
+                Animatium.ENABLED_SERVER_FEATURES.addAll(payload.features)
             }
         }
 

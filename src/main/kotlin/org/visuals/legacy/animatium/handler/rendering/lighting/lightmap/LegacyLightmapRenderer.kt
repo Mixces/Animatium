@@ -32,8 +32,8 @@ import com.mojang.blaze3d.buffers.Std140SizeCalculator
 import com.mojang.blaze3d.textures.GpuTextureView
 import net.minecraft.client.renderer.MappableRingBuffer
 import net.minecraft.util.profiling.Profiler
+import org.visuals.legacy.animatium.handler.rendering.AnimatiumPipelines
 import org.visuals.legacy.animatium.renderer.buffer.BasicGeometry
-import org.visuals.legacy.animatium.util.rendering.AnimatiumPipelines
 
 class LegacyLightmapRenderer : AutoCloseable {
     companion object {
