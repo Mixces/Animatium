@@ -37,7 +37,7 @@ class LegacyLightmapExtractor {
     private var blockLightRed: Float = 0.0F
 
     fun tick(blockLightFlicker: Float) {
-        this.blockLightRed += (blockLightFlicker - this.blockLightRed)
+        this.blockLightRed += blockLightFlicker - this.blockLightRed
         this.needsUpdate = true
     }
 
