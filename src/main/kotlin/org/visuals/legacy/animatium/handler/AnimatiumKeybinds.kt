@@ -43,14 +43,14 @@ object AnimatiumKeybinds {
         GLFW.GLFW_KEY_BACKSLASH
     ) { client -> AnimatiumConfig.getConfigScreen(client.gui.screen()) }
 
-    fun register() {
+    fun bootstrap() {
         ClientTickEvents.END_CLIENT_TICK.register { tick(it) }
         for (binding in REGISTRY) {
             KeyMappingHelper.registerKeyMapping(binding.mapping)
         }
     }
 
-    fun tick(minecraft: Minecraft) {
+    private fun tick(minecraft: Minecraft) {
         for (binding in REGISTRY) {
             if (binding.mapping.consumeClick()) {
                 minecraft.schedule {
@@ -60,7 +60,11 @@ object AnimatiumKeybinds {
         }
     }
 
-    private fun create(name: String, keybind: Int, onClick: Consumer<Minecraft>): KeyMapping {
+    private fun create(
+        name: String,
+        keybind: Int,
+        onClick: Consumer<Minecraft>
+    ): KeyMapping {
         val mapping = KeyMapping(name, keybind, ANIMATIUM_CATEGORY)
         REGISTRY.add(Binding(mapping, onClick))
         return mapping

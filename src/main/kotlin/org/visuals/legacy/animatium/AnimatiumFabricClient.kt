@@ -61,7 +61,7 @@ class AnimatiumFabricClient : ClientModInitializer {
 
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ -> dispatcher.register(AnimatiumCommand.create()) }
 
-        AnimatiumKeybinds.register()
+        AnimatiumKeybinds.bootstrap()
         AnimatiumParticles.bootstrap()
         this.registerPayloads()
     }
@@ -78,8 +78,8 @@ class AnimatiumFabricClient : ClientModInitializer {
         }
 
         PayloadTypeRegistry.clientboundConfiguration()
-            .register(SetServerFeaturesPayloadPacket.PAYLOAD_ID, SetServerFeaturesPayloadPacket.CODEC)
-        ClientConfigurationNetworking.registerGlobalReceiver(SetServerFeaturesPayloadPacket.PAYLOAD_ID) { payload, context ->
+            .register(SetServerFeaturesPayloadPacket.ID, SetServerFeaturesPayloadPacket.CODEC)
+        ClientConfigurationNetworking.registerGlobalReceiver(SetServerFeaturesPayloadPacket.ID) { payload, context ->
             context.client().schedule {
                 Animatium.ENABLED_SERVER_FEATURES.clear()
                 Animatium.ENABLED_SERVER_FEATURES.addAll(payload.features())
@@ -87,14 +87,14 @@ class AnimatiumFabricClient : ClientModInitializer {
         }
 
         PayloadTypeRegistry.clientboundPlay()
-            .register(SetServerFeaturesPayloadPacket.PAYLOAD_ID, SetServerFeaturesPayloadPacket.CODEC)
-        ClientPlayNetworking.registerGlobalReceiver(SetServerFeaturesPayloadPacket.PAYLOAD_ID) { payload, context ->
+            .register(SetServerFeaturesPayloadPacket.ID, SetServerFeaturesPayloadPacket.CODEC)
+        ClientPlayNetworking.registerGlobalReceiver(SetServerFeaturesPayloadPacket.ID) { payload, context ->
             context.client().schedule {
                 Animatium.ENABLED_SERVER_FEATURES.clear()
                 Animatium.ENABLED_SERVER_FEATURES.addAll(payload.features())
             }
         }
 
-        PayloadTypeRegistry.serverboundPlay().register(InfoPayloadPacket.PAYLOAD_ID, InfoPayloadPacket.CODEC)
+        PayloadTypeRegistry.serverboundPlay().register(InfoPayloadPacket.ID, InfoPayloadPacket.CODEC)
     }
 }
