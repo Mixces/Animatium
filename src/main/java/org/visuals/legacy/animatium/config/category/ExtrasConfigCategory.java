@@ -28,7 +28,7 @@ package org.visuals.legacy.animatium.config.category;
 import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import org.visuals.legacy.animatium.util.compatibility.Mods;
+import org.visuals.legacy.animatium.util.compatibility.ModsKt;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
@@ -98,7 +98,7 @@ public final class ExtrasConfigCategory extends Category {
                 .booleanEntry("offhandUsageSwinging")
                 .booleanEntry("alwaysUsageSwing")
                 .booleanEntry("alwaysSharpParticles");
-        if (!Mods.HAS_SODIUM_EXTRAS) {
+        if (!ModsKt.HAS_SODIUM_EXTRAS) {
             bundle.booleanEntry("disableRecipeAndTutorialToasts");
         }
 

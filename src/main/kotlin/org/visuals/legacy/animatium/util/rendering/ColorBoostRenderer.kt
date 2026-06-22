@@ -23,12 +23,27 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.compatibility;
+package org.visuals.legacy.animatium.util.rendering
 
-import net.fabricmc.loader.api.FabricLoader;
+import btw.lowercase.renderer.Renderer
+import btw.lowercase.renderer.buffer.Geometry
+import com.mojang.blaze3d.systems.RenderSystem
+import com.mojang.blaze3d.textures.FilterMode
+import com.mojang.blaze3d.textures.GpuTextureView
 
-public final class Mods {
-    public static final boolean HAS_VIAFABRICPLUS = FabricLoader.getInstance().isModLoaded("viafabricplus");
-    public static final boolean HAS_SODIUM_EXTRAS = FabricLoader.getInstance().isModLoaded("sodium-extra");
-    public static final boolean HAS_LUNAR_CLIENT = FabricLoader.getInstance().isModLoaded("ichor");
+object ColorBoostRenderer {
+    private val GEOMETRY = Geometry.Basic(0, 3)
+
+    @JvmStatic
+    fun render(colorAttachment: GpuTextureView, depthAttachment: GpuTextureView) {
+        Renderer.of({ "Color Boost Blit" }, colorAttachment, depthAttachment).use { renderer ->
+            renderer.setPipeline(AnimatiumPipelines.COLOR_BOOST_BLIT)
+            renderer.setTexture(
+                "Sampler0",
+                colorAttachment,
+                RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST)
+            )
+            renderer.draw(GEOMETRY)
+        }
+    }
 }

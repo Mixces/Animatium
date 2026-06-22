@@ -58,7 +58,7 @@ public abstract class MixinLighting_LegacyDiffuseLighting {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void animatium$legacyDiffuseLighting(final CallbackInfo ci, @Local(name = "item3DPose") final Matrix4f item3DPose) {
         LegacyDiffuseLighting.setItem3dPose(item3DPose);
-        LegacyDiffuseLighting.setUpdateLightingInvoker((entry, lights) -> this.updateBuffer(entry, lights.light0(), lights.light1()));
+        LegacyDiffuseLighting.setUpdateLightingInvoker((entry, lights) -> this.updateBuffer(entry, lights.light0, lights.light1));
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.legacyDiffuseLighting) {
             LegacyDiffuseLighting.refresh();
         }

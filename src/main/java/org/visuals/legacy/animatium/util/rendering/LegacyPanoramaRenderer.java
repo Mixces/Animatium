@@ -53,7 +53,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.UtilsKt;
 
 import java.util.Objects;
 
@@ -63,7 +63,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
     private static final RenderDescriptor.Area VIEWPORT = new RenderDescriptor.Area(256, 256);
     private static final Vector4f CLEAR_COLOR = new Vector4f(0.0F, 0.0F, 0.0F, 1.0F);
     private static final Identifier CUBE_MAP_LOCATION = Identifier.withDefaultNamespace("textures/gui/title/background/panorama");
-    private static final Matrix4f CUBE_MAP_PROJECTION = new Matrix4f().setPerspective(Utils.toRadians(120.0F), 1.0F, 0.05F, 10.0F);
+    private static final Matrix4f CUBE_MAP_PROJECTION = new Matrix4f().setPerspective(UtilsKt.toRadians(120.0F), 1.0F, 0.05F, 10.0F);
     private static final Geometry CUBE_MAP_GEOMETRY = Geometry.Indexed.compilePersistent(VertexLayouts.POSITIONED_QUAD, 24, vertexConsumer -> {
         for (int panoramaIdx = 0; panoramaIdx < 6; panoramaIdx++) {
             final Matrix4f pose = new Matrix4f();
@@ -123,11 +123,11 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
                 final float x = (layer % 8 / 8.0F - 0.5F) / SAMPLES;
                 final float y = ((float) layer / 8 / 8.0F - 0.5F) / SAMPLES;
                 final Matrix4f modelViewMatrix = new Matrix4f()
-                        .rotateX(Utils.toRadians(180.0F))
-                        .rotateZ(Utils.toRadians(90.0F))
+                        .rotateX(UtilsKt.toRadians(180.0F))
+                        .rotateZ(UtilsKt.toRadians(90.0F))
                         .translate(x, y, 0.0F)
-                        .rotateX(Utils.toRadians(xRot))
-                        .rotateY(Utils.toRadians(yRot));
+                        .rotateX(UtilsKt.toRadians(xRot))
+                        .rotateY(UtilsKt.toRadians(yRot));
                 final int color = ARGB.white(1.0F / (layer + 1.0F));
                 renderer.setUniform(DynamicTransforms.KEY, DynamicTransforms.builder()
                         .withModelViewMatrix(modelViewMatrix)
@@ -143,7 +143,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
 
     private void rotateAndBlurCubeMap(final Matrix3x2f pose, final int width, final int height) {
         for (int pass = 0; pass < 7; pass++) {
-            RenderUtils.copyTextureToTexture(Objects.requireNonNull(this.panoramaTarget.getColorTexture()), this.backgroundTexture);
+            RenderUtilsKt.copyTextureToTexture(Objects.requireNonNull(this.panoramaTarget.getColorTexture()), this.backgroundTexture);
             try (final Renderer renderer = Renderer.of(() -> "Legacy Panorama Blur", this.panoramaTarget, VIEWPORT)) {
                 renderer.setPipeline(AnimatiumPipelines.LEGACY_PANORAMA_BLUR);
                 renderer.setTexture("Sampler0", this.backgroundTextureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));

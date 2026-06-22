@@ -40,7 +40,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.ItemUtilKt;
-import org.visuals.legacy.animatium.util.rendering.RenderUtils;
+import org.visuals.legacy.animatium.util.rendering.RenderUtilsKt;
 
 @Mixin(GuiGraphicsExtractor.class)
 public abstract class MixinGuiGraphics_ToolTipItemBar {
@@ -53,12 +53,12 @@ public abstract class MixinGuiGraphics_ToolTipItemBar {
             int q = h + 6;
             // TODO/NOTE: Figure out good names for these variables LOL
             final int lineColor = -267386864;
-            RenderUtils.fillHorizontalLine(graphics, n, o - 1, p, lineColor);
-            RenderUtils.fillHorizontalLine(graphics, n, o + q, p, lineColor);
-            RenderUtils.fillRectangle(graphics, n, o, p, q, lineColor);
-            RenderUtils.fillVerticalLine(graphics, n - 1, o, q, lineColor);
-            RenderUtils.fillVerticalLine(graphics, n + p, o, q, lineColor);
-            RenderUtils.fillFrameGradient(graphics, n, o + 1, p, q, 0x505000FF, 0x5028007F);
+            RenderUtilsKt.fillHorizontalLine(graphics, n, o - 1, p, lineColor);
+            RenderUtilsKt.fillHorizontalLine(graphics, n, o + q, p, lineColor);
+            RenderUtilsKt.fillRectangle(graphics, n, o, p, q, lineColor);
+            RenderUtilsKt.fillVerticalLine(graphics, n - 1, o, q, lineColor);
+            RenderUtilsKt.fillVerticalLine(graphics, n + p, o, q, lineColor);
+            RenderUtilsKt.fillFrameGradient(graphics, n, o + 1, p, q, 0x505000FF, 0x5028007F);
         } else {
             original.call(graphics, x, y, w, h, style);
         }
@@ -68,7 +68,7 @@ public abstract class MixinGuiGraphics_ToolTipItemBar {
     private void animatium$oldDurabilityBar(final ItemStack itemStack, final int x, final int y, final CallbackInfo ci, @Local(name = "left") final int left, final @Local(name = "top") int top) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.durabilityBarColors && !(itemStack.getItem() instanceof BundleItem)) {
             final int color = ARGB.opaque(ARGB.color((255 - ItemUtilKt.getLegacyDurabilityColorValue(itemStack)) / 4, 64, 0));
-            RenderUtils.fillRectangle((GuiGraphicsExtractor) (Object) this, left, top, 12, 1, color);
+            RenderUtilsKt.fillRectangle((GuiGraphicsExtractor) (Object) this, left, top, 12, 1, color);
         }
     }
 }

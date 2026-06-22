@@ -44,7 +44,7 @@ public abstract class MixinFogRenderer_Darkness {
     private int animatium$fogDarkness(final FogEnvironment instance, final ClientLevel level, final Camera camera, final int renderDistance, final float tickDelta, final Operation<Integer> original) {
         final int color = original.call(instance, level, camera, renderDistance, tickDelta);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.legacyFogDarkness) {
-            final float darkness = LegacyFogDarkness.INSTANCE.getDarkness(tickDelta);
+            final float darkness = LegacyFogDarkness.getInstance().getDarkness(tickDelta);
             return ARGB.multiply(color, ARGB.colorFromFloat(1.0F, darkness, darkness, darkness));
         } else {
             return color;

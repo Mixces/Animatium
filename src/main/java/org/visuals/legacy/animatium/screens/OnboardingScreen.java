@@ -37,7 +37,7 @@ import net.minecraft.util.ARGB;
 import org.jspecify.annotations.NonNull;
 import org.visuals.legacy.animatium.util.config.ConfigUtil;
 import org.visuals.legacy.animatium.util.config.PresetVersion;
-import org.visuals.legacy.animatium.util.rendering.RenderUtils;
+import org.visuals.legacy.animatium.util.rendering.RenderUtilsKt;
 
 public class OnboardingScreen extends Screen {
     private final Screen original;
@@ -101,7 +101,7 @@ public class OnboardingScreen extends Screen {
         graphics.fill(0, 0, this.width, this.height, ARGB.color(this.accessedViaCommands ? 0.35F : 0.72F, 0));
         super.extractRenderState(graphics, mouseX, mouseY, tickDelta);
 
-        RenderUtils.drawScaledText(graphics, this.font, "Welcome to Animatium Onboarding!", this.width / 2, this.height / 4, 2.0F);
+        RenderUtilsKt.drawScaledText(graphics, this.font, "Welcome to Animatium Onboarding!", this.width / 2, this.height / 4, 2.0F);
         graphics.centeredText(this.font, "Hello! Thank you for downloading Animatium!", this.width / 2, (int) (this.height / 2.8), 0xFFD6D6D6);
         graphics.centeredText(this.font, "Please select the version of visuals you would like to use!", this.width / 2, (int) (this.height / 2.4), 0xFFD6D6D6);
         if (!this.accessedViaCommands) {

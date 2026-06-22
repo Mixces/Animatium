@@ -35,9 +35,10 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig
 import org.visuals.legacy.animatium.config.ConfigBundles
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor
 import org.visuals.legacy.animatium.util.AnimatiumDebugEntry
-import org.visuals.legacy.animatium.util.Utils
 import org.visuals.legacy.animatium.util.config.ConfigUtil
 import org.visuals.legacy.animatium.util.enums.ServerFeature
+import org.visuals.legacy.animatium.util.isSingleplayer
+import org.visuals.legacy.animatium.util.reinitializeInventorySlots
 import org.visuals.legacy.animatium.util.rendering.lighting.LegacyDiffuseLighting
 import java.util.*
 
@@ -55,13 +56,11 @@ object Animatium {
         }
 
     @JvmStatic
-    fun isEnabled(): Boolean {
-        return enabled
-    }
+    fun isEnabled(): Boolean = enabled
 
     @JvmStatic
     fun hasServerFeature(feature: ServerFeature): Boolean {
-        if (Utils.isSingleplayer()) {
+        if (isSingleplayer()) {
             for (entry in ConfigBundles.EXTRAS.entries()) {
                 if (entry.name.equals(feature.getName())) {
                     return entry.value() as Boolean
@@ -80,13 +79,11 @@ object Animatium {
         minecraft.levelExtractor.allChanged()
         LegacyDiffuseLighting.refresh()
         (minecraft.gameRenderer as GameRendererAccessor).`animatium$setOverlayTexture`(OverlayTexture())
-        Utils.reinitializeInventorySlots()
+        reinitializeInventorySlots()
     }
 
     @JvmStatic
-    fun location(path: String): Identifier {
-        return Identifier.fromNamespaceAndPath(AnimatiumConstants.MOD_ID, path)
-    }
+    fun location(path: String): Identifier = Identifier.fromNamespaceAndPath(AnimatiumConstants.MOD_ID, path)
 
     @JvmStatic
     fun initialize() {

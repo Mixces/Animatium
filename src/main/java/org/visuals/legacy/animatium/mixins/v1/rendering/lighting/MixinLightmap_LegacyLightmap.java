@@ -54,7 +54,7 @@ public abstract class MixinLightmap_LegacyLightmap {
     @WrapMethod(method = "render")
     private void animatium$legacyLightmap(final LightmapRenderState renderState, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.legacyLightmap) {
-            animatium$renderer.render(((LightmapStateExtension) renderState).animatium$getState(), this.textureView);
+            this.animatium$renderer.render(((LightmapStateExtension) renderState).animatium$getState(), this.textureView);
         } else {
             original.call(renderState);
         }
@@ -62,6 +62,6 @@ public abstract class MixinLightmap_LegacyLightmap {
 
     @Inject(method = "close", at = @At("TAIL"))
     private void animatium$legacyLightmap$close(final CallbackInfo ci) {
-        animatium$renderer.close();
+        this.animatium$renderer.close();
     }
 }

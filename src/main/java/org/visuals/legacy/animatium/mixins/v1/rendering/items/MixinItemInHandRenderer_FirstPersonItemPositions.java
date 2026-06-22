@@ -58,7 +58,6 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.EntityUtilKt;
 import org.visuals.legacy.animatium.util.ItemUtilKt;
-import org.visuals.legacy.animatium.util.Utils;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
 // TODO/NOTE: Why 500?
@@ -159,12 +158,12 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
                     lightCoords
             ); // TODO/NOTE: Might be wrong
             if (AnimatiumConfig.instance().items.itemPositions && !ItemUtilKt.isBlock3d(itemStack, itemStackRenderState.usesBlockLight()) && !ItemUtilKt.isItemBlacklisted(itemStack)) {
-                final float angle = Utils.toRadians(25);
+                final float radians = 0.4363323129985824F;
 
                 poseStack.scale(0.6F, 0.6F, 0.6F);
                 poseStack.mulPose(Axis.YP.rotationDegrees(direction * 275.0F));
                 poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 25.0F));
-                poseStack.translate(direction * (-0.2F * Math.sin(angle) + 0.4375F), -0.2F * Math.cos(angle) + 0.4375F, 0.03125F);
+                poseStack.translate(direction * (-0.2F * Math.sin(radians) + 0.4375F), -0.2F * Math.cos(radians) + 0.4375F, 0.03125F);
 
                 poseStack.scale(1 / 0.68F, 1 / 0.68F, 1 / 0.68F);
                 poseStack.mulPose(Axis.ZP.rotationDegrees(direction * -25.0F));

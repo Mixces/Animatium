@@ -49,7 +49,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.EntityUtilKt;
-import org.visuals.legacy.animatium.util.Utils;
 
 import java.util.Map;
 
@@ -70,11 +69,11 @@ public abstract class MixinLivingEntity_Particles extends Entity {
     }
 
     @WrapOperation(method = "tickEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))
-    private void animatium$blendPotionParticleColors(final Level instance, final ParticleOptions particle, final double x, final double y, final double z, final double xd, final double yd, final double zd, final Operation<Void> original, @Local(name = "isAmbient") final boolean hasAmbience) {
+    private void animatium$blendPotionParticleColors(final Level instance, final ParticleOptions particle, final double x, final double y, final double z, final double velocityX, final double velocityY, final double velocityZ, final Operation<Void> original, @Local(name = "isAmbient") final boolean hasAmbience) {
         ParticleOptions options = particle;
-        double red = xd;
-        double green = yd;
-        double blue = zd;
+        double red = velocityX;
+        double green = velocityY;
+        double blue = velocityZ;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.restoreParticleBlending) {
             int color;
             if (this.activeEffects.isEmpty()) {

@@ -77,23 +77,20 @@ class BloodParticle(
         @JvmStatic
         fun canSpawn(): Boolean {
             val minecraft = Minecraft.getInstance()
-
             val hitResult = minecraft.hitResult
             if (hitResult !is EntityHitResult) {
                 return false
-            }
-
-            if (!hitResult.entity.isAlive) {
+            } else if (!hitResult.entity.isAlive) {
                 return false
+            } else {
+                val netPlayerHandler = minecraft.gameMode ?: return false
+                return (netPlayerHandler.playerMode == GameType.SURVIVAL) or (netPlayerHandler.playerMode == GameType.CREATIVE)
             }
-
-            val netPlayerHandler = minecraft.gameMode ?: return false
-            return (netPlayerHandler.playerMode == GameType.SURVIVAL) or (netPlayerHandler.playerMode == GameType.CREATIVE)
         }
 
         @JvmStatic
-        fun spawn(entity: Entity) {
-            val eyePos = BlockPos.containing(entity.x, entity.y + 0.5, entity.z)
+        fun spawn(target: Entity) {
+            val eyePos = BlockPos.containing(target.x, target.y + 0.5, target.z)
             val count = 5 * AnimatiumConfig.instance().extras.bloodParticleMultiplier
             for (i in 0..<count) {
                 val x = eyePos.x.toDouble() + Math.random()
@@ -102,7 +99,7 @@ class BloodParticle(
                 val velocityX = Math.random() * 2.0 - 1.3
                 val velocityY = Math.random() * 0.8
                 val velocityZ = Math.random() * 2.0 - 1.3
-                entity.level().addParticle(BLOOD_PARTICLE_TYPE, x, y, z, velocityX, velocityY, velocityZ)
+                target.level().addParticle(BLOOD_PARTICLE_TYPE, x, y, z, velocityX, velocityY, velocityZ)
             }
         }
     }

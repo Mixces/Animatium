@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.UtilsKt;
 
 @Mixin(LevelRenderer.class)
 public abstract class MixinLevelRenderer_BlockOutlines {
@@ -52,7 +52,7 @@ public abstract class MixinLevelRenderer_BlockOutlines {
     private VoxelShape animatium$blockOutlineRendering(final BlockOutlineRenderState instance, final Operation<VoxelShape> original) {
         final VoxelShape shape = original.call(instance);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.blockOutlineRendering) {
-            return Utils.expandVoxelShape(shape, 0.0020000000949949026F); // Value sourced from older minecraft version
+            return UtilsKt.expandVoxelShape(shape, 0.0020000000949949026D); // Value sourced from older minecraft version
         } else {
             return shape;
         }

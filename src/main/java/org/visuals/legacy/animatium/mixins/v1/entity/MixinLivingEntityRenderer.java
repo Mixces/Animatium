@@ -64,7 +64,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
                 && (Minecraft.getInstance().gui.screen() == null /* Disable when in inventory/not in-game */)) {
             final EntityDimensions standingDimensions = armedEntityRenderState.animatium$getStandingDimensions();
             if (standingDimensions != null) {
-                final float cameraLerpValue = CameraUtilKt.lerpPosition(cameraRenderState);
+                final float cameraLerpValue = CameraUtilKt.getPositionLerped(cameraRenderState);
                 poseStack.translate(0.0F, (standingDimensions.eyeHeight() * livingEntityRenderState.scale) - cameraLerpValue, 0.0F);
             }
         }

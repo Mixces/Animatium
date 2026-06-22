@@ -69,7 +69,7 @@ public abstract class MixinFlameFeatureRenderer_OldFlameDimensions {
 
             float value = original;
             if (shouldSyncPlayerModelWithEyeHeight) {
-                final float cameraLerpValue = CameraUtilKt.lerpPosition(camera);
+                final float cameraLerpValue = CameraUtilKt.getPositionLerped(camera);
                 value = (avatarRenderState.eyeHeight * avatarRenderState.scale) - cameraLerpValue;
             }
 

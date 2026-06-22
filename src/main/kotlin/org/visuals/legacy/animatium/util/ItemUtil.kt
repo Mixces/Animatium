@@ -129,12 +129,12 @@ fun applyLegacyFirstPersonTransforms(poseStack: PoseStack, direction: Int, runna
 }
 
 fun shouldApplyItemPositionsInThirdPerson(armedEntityRenderState: ArmedEntityRenderState): Boolean {
-    if (AnimatiumConfig.instance().items.itemPositionsInThirdPerson) {
-        return true
+    return if (AnimatiumConfig.instance().items.itemPositionsInThirdPerson) {
+        true
     } else if (AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersionSetting.V1_7) {
-        return isFishingRodItem(armedEntityRenderState.mainHandItemStack)
+        isFishingRodItem(armedEntityRenderState.mainHandItemStack)
     } else {
-        return AnimatiumConfig.instance().other.thirdPersonSwordBlockingPosition && isBlockingArm(
+        AnimatiumConfig.instance().other.thirdPersonSwordBlockingPosition && isBlockingArm(
             armedEntityRenderState.mainArm,
             armedEntityRenderState
         )

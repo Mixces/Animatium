@@ -30,7 +30,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
-import org.visuals.legacy.animatium.util.compatibility.Mods;
+import org.visuals.legacy.animatium.util.compatibility.ModsKt;
 import org.visuals.legacy.animatium.util.config.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.DamageTintSetting;
 import org.visuals.legacy.animatium.util.enums.VoidFogSetting;
@@ -95,7 +95,7 @@ public final class OtherConfigCategory extends Category {
         bundle.booleanEntry("disableInventoryEntityScissor");
         bundle.booleanEntry("blockOutlineRendering");
         bundle.booleanEntry("disableModelWhilstSleeping");
-        if (!Mods.HAS_LUNAR_CLIENT) {
+        if (!ModsKt.HAS_LUNAR_CLIENT) {
             bundle.booleanEntry("damageTintArmor");
         }
 

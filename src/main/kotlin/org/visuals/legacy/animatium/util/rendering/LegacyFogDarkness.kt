@@ -23,14 +23,25 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering.lighting.lightmap;
+package org.visuals.legacy.animatium.util.rendering
 
-public class LegacyLightmapState {
-    public boolean needsUpdate;
-    public float skyDarken;
-    public float skyDarkness;
-    public float blockLightRed;
-    public float nightVisionScale;
-    public float gamma;
-    public boolean useBrightLightmap;
+import net.minecraft.util.Mth
+import net.minecraft.world.entity.Entity
+import org.visuals.legacy.animatium.util.getBrightness
+
+class LegacyFogDarkness {
+    companion object {
+        @JvmStatic
+        val instance = LegacyFogDarkness()
+    }
+
+    private var prevDarkness: Float = 0.0F
+    private var darkness: Float = 0.0F
+
+    fun tick(entity: Entity, viewDistance: Int) {
+        this.prevDarkness = this.darkness
+        this.darkness = Mth.lerp(0.1F, this.darkness, Mth.lerp(entity.getBrightness(), viewDistance / 32.0F, 1.0F))
+    }
+
+    fun getDarkness(tickDelta: Float): Float = Mth.lerp(tickDelta, this.prevDarkness, this.darkness)
 }

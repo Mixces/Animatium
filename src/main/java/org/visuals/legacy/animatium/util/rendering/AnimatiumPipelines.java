@@ -53,7 +53,7 @@ public class AnimatiumPipelines {
     public static final RenderPipeline.Snippet LEGACY_PANORAMA_SNIPPET = RenderPipeline.builder(TEXTURED_QUAD)
             .withVertexShader(Animatium.location("core/legacy_panorama"))
             .withFragmentShader(Animatium.location("core/legacy_panorama"))
-            .withDepthStencilState(RenderUtils.NO_DEPTH_WRITE)
+            .withDepthStencilState(RenderUtilsKt.NO_DEPTH_WRITE)
             .withCull(false)
             .withVertexBinding(0, DefaultVertexFormat.POSITION)
             .buildSnippet();
@@ -81,7 +81,7 @@ public class AnimatiumPipelines {
             RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
                     .withVertexShader("core/position_color")
                     .withFragmentShader("core/position_color")
-                    .withDepthStencilState(RenderUtils.NO_DEPTH_WRITE)
+                    .withDepthStencilState(RenderUtilsKt.NO_DEPTH_WRITE)
                     .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
                     .withPrimitiveTopology(PrimitiveTopology.QUADS)
                     .buildSnippet();
@@ -96,7 +96,7 @@ public class AnimatiumPipelines {
                     .withLocation(Animatium.location("pipeline/legacy_sky"))
                     .withVertexShader(Animatium.location("core/legacy_sky"))
                     .withFragmentShader(Animatium.location("core/legacy_sky"))
-                    .withDepthStencilState(RenderUtils.NO_DEPTH_WRITE)
+                    .withDepthStencilState(RenderUtilsKt.NO_DEPTH_WRITE)
                     .withVertexBinding(0, DefaultVertexFormat.POSITION)
                     .withPrimitiveTopology(PrimitiveTopology.QUADS)
                     .buildSnippet();

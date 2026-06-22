@@ -70,8 +70,8 @@ fun getArmMultiplier(arm: HumanoidArm): Int {
     return if (arm == HumanoidArm.RIGHT) 1 else -1
 }
 
-fun getPosWithEyeHeight(player: Player, tickDelta: Float, eyeHeight: Double): Vec3 {
-    return player.getPosition(tickDelta).add(0.0, eyeHeight, 0.0)
+fun Player.getPosWithEyeHeight(tickDelta: Float, eyeHeight: Double): Vec3 {
+    return this.getPosition(tickDelta).add(0.0, eyeHeight, 0.0)
 }
 
 fun isBlockingArm(arm: HumanoidArm, armedEntityState: ArmedEntityRenderState): Boolean {
@@ -79,29 +79,29 @@ fun isBlockingArm(arm: HumanoidArm, armedEntityState: ArmedEntityRenderState): B
             (arm == HumanoidArm.RIGHT && armedEntityState.rightArmPose == HumanoidModel.ArmPose.BLOCK)
 }
 
-fun fakeHandSwing(player: Player, hand: InteractionHand) {
+fun Player.fakeHandSwing(hand: InteractionHand) {
     // Fake Swinging, Doesn't Send A Packet
-    if (isNotSwinging(player)) {
-        player.swingTime = -1
-        player.swinging = true
-        player.swingingArm = hand
+    if (this.isNotSwinging()) {
+        this.swingTime = -1
+        this.swinging = true
+        this.swingingArm = hand
     }
 }
 
 // Sends necessary swing packets, without playing the player hand swing animation
-fun sendSwingPacket(player: LocalPlayer, hand: InteractionHand) {
-    val level = player.level()
-    if (isNotSwinging(player) && level is ServerLevel) {
+fun LocalPlayer.sendSwingPacket(hand: InteractionHand) {
+    val level = this.level()
+    if (this.isNotSwinging() && level is ServerLevel) {
         val swingHand =
             if (hand == InteractionHand.MAIN_HAND) ClientboundAnimatePacket.SWING_MAIN_HAND else ClientboundAnimatePacket.SWING_OFF_HAND
-        level.chunkSource.sendToTrackingPlayers(player, ClientboundAnimatePacket(player, swingHand))
+        level.chunkSource.sendToTrackingPlayers(this, ClientboundAnimatePacket(this, swingHand))
     }
 
-    player.connection.send(ServerboundSwingPacket(hand))
+    this.connection.send(ServerboundSwingPacket(hand))
 }
 
-fun isNotSwinging(player: Player): Boolean {
-    return !player.swinging || player.swingTime >= (player as LivingEntityAccessor).`animatium$getSwingDuration`() / 2 || player.swingTime < 0
+fun Player.isNotSwinging(): Boolean {
+    return !this.swinging || this.swingTime >= (this as LivingEntityAccessor).`animatium$getSwingDuration`() / 2 || this.swingTime < 0
 }
 
 fun applySwingWhilstMining(level: ClientLevel?, player: Player, hitResult: HitResult?) {
@@ -117,7 +117,7 @@ fun applySwingWhilstMining(level: ClientLevel?, player: Player, hitResult: HitRe
             return
         }
 
-        fakeHandSwing(player, hand)
+        player.fakeHandSwing(hand)
     }
 }
 
@@ -126,14 +126,14 @@ fun applySwingWhilstMining(level: ClientLevel?, player: Player, hitResult: HitRe
  *
  * @return Entity id matches the client player id
  */
-fun isSelf(livingEntityRenderState: LivingEntityRenderState): Boolean {
+fun LivingEntityRenderState.isSelf(): Boolean {
     val player = Minecraft.getInstance().player
-    return player != null && livingEntityRenderState is AvatarRenderState && livingEntityRenderState.id == player.id
+    return player != null && this is AvatarRenderState && this.id == player.id
 }
 
-fun isSelf(entity: Entity?): Boolean {
+fun Entity?.isSelf(): Boolean {
     val player = Minecraft.getInstance().player
-    return player != null && entity != null && entity.id == player.id
+    return player != null && this != null && this.id == player.id
 }
 
 fun getBrightness(reader: LevelReader, blockPos: BlockPos): Float {
@@ -141,32 +141,32 @@ fun getBrightness(reader: LevelReader, blockPos: BlockPos): Float {
     return Mth.lerp(reader.dimensionType().ambientLight(), amount / (4.0F - 3.0F * amount), 1.0F)
 }
 
-fun getBrightness(entity: Entity): Float {
+fun Entity.getBrightness(): Float {
     // Older versions inspected from the foot position, not eye position
-    return getBrightness(entity.level(), entity.blockPosition())
+    return getBrightness(this.level(), this.blockPosition())
 }
 
 /**
  * Code sourced from Animatium Legacy & Modified for Modern Use
  */
-fun getItemSwingSpeed(entity: LivingEntity, fallback: Int): Int {
+fun LivingEntity.getItemSwingSpeed(fallback: Int): Int {
     val extras = AnimatiumConfig.instance().extras
     if (Animatium.isEnabled() && extras.customSwingSpeed) {
-        val swingingHand = if (entity.swingingArm != null) entity.swingingArm!! else InteractionHand.MAIN_HAND
-        val stack = entity.getItemInHand(swingingHand)
+        val swingingHand = if (this.swingingArm != null) this.swingingArm!! else InteractionHand.MAIN_HAND
+        val stack = this.getItemInHand(swingingHand)
         val swingDuration = stack.swingAnimation.duration()
 
         val itemSwingSpeed = extras.itemSwingSpeed
         val hasteSwingSpeed = extras.hasteSwingSpeed
         val miningFatigueSwingSpeed = extras.miningFatigueSwingSpeed
         if (!(itemSwingSpeed == 0.0F && hasteSwingSpeed == 0.0F && miningFatigueSwingSpeed == 0.0F)) {
-            if (MobEffectUtil.hasDigSpeed(entity) && !extras.ignoreHasteSpeed) {
+            if (MobEffectUtil.hasDigSpeed(this) && !extras.ignoreHasteSpeed) {
                 val durationOffset =
-                    swingDuration - (1 + MobEffectUtil.getDigSpeedAmplification(entity))
+                    swingDuration - (1 + MobEffectUtil.getDigSpeedAmplification(this))
                 return max((durationOffset * exp(-hasteSwingSpeed)).toInt(), 1)
-            } else if (entity.hasEffect(MobEffects.MINING_FATIGUE) && !extras.ignoreMiningFatigueSpeed) {
+            } else if (this.hasEffect(MobEffects.MINING_FATIGUE) && !extras.ignoreMiningFatigueSpeed) {
                 val durationOffset =
-                    swingDuration + (1 + Objects.requireNonNull(entity.getEffect(MobEffects.MINING_FATIGUE))!!.amplifier) * 2
+                    swingDuration + (1 + Objects.requireNonNull(this.getEffect(MobEffects.MINING_FATIGUE))!!.amplifier) * 2
                 return max((durationOffset * exp(-miningFatigueSwingSpeed)).toInt(), 1)
             } else {
                 return max((swingDuration * exp(-itemSwingSpeed)).toInt(), 1)

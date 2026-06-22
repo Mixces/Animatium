@@ -45,7 +45,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.ItemUtilKt;
-import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.UtilsKt;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
 import java.util.List;
@@ -123,9 +123,9 @@ public abstract class MixinItemStackRenderLayerState {
                 // TODO/NEED TO FIX
                 if (AnimatiumConfig.instance().items.skullPosition && ItemUtilKt.isSkullBlock(stack) && isGui && !AnimatiumConfig.instance().items.mobHeadIcons) {
                     localPose.translate(x, y, z);
-                    localPose.mulPose(Axis.XP.rotationDegrees(Utils.toRadians(this.itemTransform.rotation().x())).get(new Matrix4f()));
-                    localPose.mulPose(Axis.YP.rotationDegrees(Utils.toRadians(this.itemTransform.rotation().y())).get(new Matrix4f()));
-                    localPose.mulPose(Axis.ZP.rotationDegrees(Utils.toRadians(this.itemTransform.rotation().x())).get(new Matrix4f()));
+                    localPose.mulPose(Axis.XP.rotationDegrees(UtilsKt.toRadians(this.itemTransform.rotation().x())).get(new Matrix4f()));
+                    localPose.mulPose(Axis.YP.rotationDegrees(UtilsKt.toRadians(this.itemTransform.rotation().y())).get(new Matrix4f()));
+                    localPose.mulPose(Axis.ZP.rotationDegrees(UtilsKt.toRadians(this.itemTransform.rotation().x())).get(new Matrix4f()));
                     localPose.scale(0.9F, 0.9F, 0.9F);
                     localPose.scale(this.itemTransform.scale().x(), this.itemTransform.scale().y(), this.itemTransform.scale().z());
                     animatium$doInverseTransformations(localPose);
@@ -137,9 +137,9 @@ public abstract class MixinItemStackRenderLayerState {
     @Unique
     private void animatium$doInverseTransformations(final PoseStack.Pose localPose) {
         localPose.scale(1 / this.itemTransform.scale().x(), 1 / this.itemTransform.scale().y(), 1 / this.itemTransform.scale().z());
-        localPose.mulPose(Axis.ZP.rotationDegrees(-Utils.toRadians(this.itemTransform.rotation().x())).get(new Matrix4f()));
-        localPose.mulPose(Axis.YP.rotationDegrees(-Utils.toRadians(this.itemTransform.rotation().y())).get(new Matrix4f()));
-        localPose.mulPose(Axis.XP.rotationDegrees(-Utils.toRadians(this.itemTransform.rotation().z())).get(new Matrix4f()));
+        localPose.mulPose(Axis.ZP.rotationDegrees(-UtilsKt.toRadians(this.itemTransform.rotation().x())).get(new Matrix4f()));
+        localPose.mulPose(Axis.YP.rotationDegrees(-UtilsKt.toRadians(this.itemTransform.rotation().y())).get(new Matrix4f()));
+        localPose.mulPose(Axis.XP.rotationDegrees(-UtilsKt.toRadians(this.itemTransform.rotation().z())).get(new Matrix4f()));
         localPose.translate(-this.itemTransform.translation().x(), -this.itemTransform.translation().y(), -this.itemTransform.translation().z());
     }
 

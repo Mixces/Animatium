@@ -31,19 +31,19 @@ import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.util.Mth
 import org.visuals.legacy.animatium.mixins.accessor.CameraAccessor
 
-fun lerpPosition(camera: Camera): Float {
-    val cameraAccessor = camera as CameraAccessor
+fun Camera.getPositionLerped(): Float {
+    val cameraAccessor = this as CameraAccessor
     return Mth.lerp(
-        camera.getCameraEntityPartialTicks(Minecraft.getInstance().deltaTracker),
+        this.getCameraEntityPartialTicks(Minecraft.getInstance().deltaTracker),
         cameraAccessor.`animatium$getOldEyeHeight`(),
         cameraAccessor.`animatium$getEyeHeight`()
     )
 }
 
-fun lerpPosition(cameraRenderState: CameraRenderState): Float {
+fun CameraRenderState.getPositionLerped(): Float {
     return Mth.lerp(
-        cameraRenderState.`animatium$getPartialTickTime`(),
-        cameraRenderState.`animatium$getOldEyeHeight`(),
-        cameraRenderState.`animatium$getEyeHeight`()
+        this.`animatium$getPartialTickTime`(),
+        this.`animatium$getOldEyeHeight`(),
+        this.`animatium$getEyeHeight`()
     )
 }
