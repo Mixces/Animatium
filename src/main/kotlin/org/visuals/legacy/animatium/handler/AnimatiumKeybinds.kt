@@ -41,7 +41,7 @@ object AnimatiumKeybinds {
     val CONFIG_SCREEN = create(
         "Open Mod Configuration",
         GLFW.GLFW_KEY_BACKSLASH
-    ) { client -> AnimatiumConfig.getConfigScreen(client.gui.screen()) }
+    ) { client -> client.gui.setScreen(AnimatiumConfig.getConfigScreen(client.gui.screen())) }
 
     fun bootstrap() {
         ClientTickEvents.END_CLIENT_TICK.register { tick(it) }

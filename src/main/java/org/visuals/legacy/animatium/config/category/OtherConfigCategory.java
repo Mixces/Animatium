@@ -27,14 +27,15 @@ package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
-import org.visuals.legacy.animatium.handler.compatibility.ModsKt;
-import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.config.bundle.EntryBundle;
+import org.visuals.legacy.animatium.handler.compatibility.ModsKt;
+import org.visuals.legacy.animatium.handler.rendering.lighting.LegacyDiffuseLighting;
+import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.util.enums.DamageTintSetting;
 import org.visuals.legacy.animatium.util.enums.VoidFogSetting;
-import org.visuals.legacy.animatium.handler.rendering.lighting.LegacyDiffuseLighting;
 
 public final class OtherConfigCategory extends Category {
     // Sky
@@ -99,7 +100,11 @@ public final class OtherConfigCategory extends Category {
             bundle.booleanEntry("damageTintArmor");
         }
 
-        bundle.enumEntry("damageTintStyle", DamageTintSetting.class, (option, event) -> ((GameRendererAccessor) Minecraft.getInstance().gameRenderer).animatium$setOverlayTexture(new OverlayTexture()));
+        bundle.enumEntry("damageTintStyle", DamageTintSetting.class, (option, event) -> {
+            final GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
+            gameRenderer.overlayTexture().close();
+            ((GameRendererAccessor) gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
+        });
         bundle.booleanEntry("itemGlintOnEntity");
         bundle.booleanEntry("maxGlintProperties");
         bundle.booleanEntry("restoreParticleBlending");
