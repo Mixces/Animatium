@@ -33,19 +33,20 @@ import org.visuals.legacy.animatium.config.category.Category;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 public class EntryBundle extends Bundle {
-    protected final List<Entry<?>> entries;
-    protected final List<Group> groups;
+    protected final Set<Entry<?>> entries;
+    protected final Set<Group> groups;
     private final String name;
     protected Class<? extends Category> categoryClass;
     protected Category category;
 
     public EntryBundle(final Category category, final String name) {
-        this.entries = new ArrayList<>();
-        this.groups = new ArrayList<>();
+        this.entries = new LinkedHashSet<>();
+        this.groups = new LinkedHashSet<>();
         this.category = category;
         this.categoryClass = category == null ? null : category.getClass();
         this.name = name;

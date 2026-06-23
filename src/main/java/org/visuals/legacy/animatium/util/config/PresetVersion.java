@@ -111,7 +111,7 @@ public enum PresetVersion {
         other.thirdPersonSwordBlockingPosition = true;
         other.lockBlockingArmRotation = true;
         other.projectileAgeCheck = true;
-        other.blockMiningProgress = true;
+        other.legacyBlockMiningProgress = true;
         other.disableInventoryEntityScissor = true;
         other.blockOutlineRendering = true;
         other.disableModelWhilstSleeping = true;
@@ -210,7 +210,7 @@ public enum PresetVersion {
         other.thirdPersonSwordBlockingPosition = false;
         other.lockBlockingArmRotation = true;
         other.projectileAgeCheck = true;
-        other.blockMiningProgress = true;
+        other.legacyBlockMiningProgress = true;
         other.disableInventoryEntityScissor = true;
         other.blockOutlineRendering = true;
         other.disableModelWhilstSleeping = true;
@@ -309,7 +309,7 @@ public enum PresetVersion {
         other.thirdPersonSwordBlockingPosition = false;
         other.lockBlockingArmRotation = false;
         other.projectileAgeCheck = false;
-        other.blockMiningProgress = false;
+        other.legacyBlockMiningProgress = false;
         other.disableInventoryEntityScissor = false;
         other.blockOutlineRendering = false;
         other.disableModelWhilstSleeping = false;

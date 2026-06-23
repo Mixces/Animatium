@@ -75,3 +75,4 @@ with a resource pack.
 - Fixed Damage tint not affecting blocks/items equipped in the head slot when they should be
 - Fixed onboarding showing if the screen was opened via commands and the game closed
 - Fixed "Hide Recipe Book" setting missing from config screen
+- Fixed "Old Block Mining Progress" doing nothing at all
