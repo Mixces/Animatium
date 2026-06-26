@@ -27,43 +27,33 @@ package org.visuals.legacy.animatium.renderer.uniform
 
 import org.joml.*
 
-interface UniformKey<T> {
+class UniformKey<T>(val name: String, val serializer: UniformSerializer<*>) {
     companion object {
         @JvmStatic
-        fun Integer(name: String): UniformKey<Int> = Impl(name, UniformSerializer.INTEGER)
+        fun Integer(name: String): UniformKey<Int> = UniformKey(name, UniformSerializer.INTEGER)
 
         @JvmStatic
-        fun Float(name: String): UniformKey<Float> = Impl(name, UniformSerializer.FLOAT)
+        fun Float(name: String): UniformKey<Float> = UniformKey(name, UniformSerializer.FLOAT)
 
         @JvmStatic
-        fun Matrix4f(name: String): UniformKey<Matrix4f> = Impl(name, UniformSerializer.MATRIX4F)
+        fun Matrix4f(name: String): UniformKey<Matrix4f> = UniformKey(name, UniformSerializer.MATRIX4F)
 
         @JvmStatic
-        fun Vector2f(name: String): UniformKey<Vector2f> = Impl(name, UniformSerializer.VECTOR2F)
+        fun Vector2f(name: String): UniformKey<Vector2f> = UniformKey(name, UniformSerializer.VECTOR2F)
 
         @JvmStatic
-        fun Vector2i(name: String): UniformKey<Vector2i> = Impl(name, UniformSerializer.VECTOR2I)
+        fun Vector2i(name: String): UniformKey<Vector2i> = UniformKey(name, UniformSerializer.VECTOR2I)
 
         @JvmStatic
-        fun Vector3f(name: String): UniformKey<Vector3f> = Impl(name, UniformSerializer.VECTOR3F)
+        fun Vector3f(name: String): UniformKey<Vector3f> = UniformKey(name, UniformSerializer.VECTOR3F)
 
         @JvmStatic
-        fun Vector3i(name: String): UniformKey<Vector3i> = Impl(name, UniformSerializer.VECTOR3I)
+        fun Vector3i(name: String): UniformKey<Vector3i> = UniformKey(name, UniformSerializer.VECTOR3I)
 
         @JvmStatic
-        fun Vector4f(name: String): UniformKey<Vector4f> = Impl(name, UniformSerializer.VECTOR4F)
+        fun Vector4f(name: String): UniformKey<Vector4f> = UniformKey(name, UniformSerializer.VECTOR4F)
 
         @JvmStatic
-        fun Vector4i(name: String): UniformKey<Vector4i> = Impl(name, UniformSerializer.VECTOR4I)
-    }
-
-    fun name(): String
-
-    fun serializer(): UniformSerializer<T>
-
-    private data class Impl<T>(val name: String, val serializer: UniformSerializer<T>) : UniformKey<T> {
-        override fun name(): String = this.name
-
-        override fun serializer(): UniformSerializer<T> = this.serializer
+        fun Vector4i(name: String): UniformKey<Vector4i> = UniformKey(name, UniformSerializer.VECTOR4I)
     }
 }

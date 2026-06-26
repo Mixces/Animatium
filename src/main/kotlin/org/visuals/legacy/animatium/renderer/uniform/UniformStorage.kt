@@ -26,28 +26,20 @@
 package org.visuals.legacy.animatium.renderer.uniform
 
 import com.mojang.blaze3d.buffers.GpuBuffer
+import com.mojang.blaze3d.buffers.GpuBufferSlice
 import com.mojang.blaze3d.buffers.Std140SizeCalculator
-import com.mojang.blaze3d.systems.CommandEncoder
 import com.mojang.blaze3d.systems.RenderSystem
-import org.lwjgl.system.MemoryStack
 
 class UniformStorage : AutoCloseable {
     private val name: String
-    private val ubo: GpuBuffer
     private val keys: MutableList<UniformKey<*>>
     private val values = LinkedHashMap<UniformKey<*>, Any?>()
     private val size: Int
 
-    private var dirty = true
     private var closed = false
 
     private constructor(name: String, keys: List<UniformKey<*>>, size: Int) {
         this.name = name
-        this.ubo = RenderSystem.getDevice().createBuffer(
-            { "Dynamic Uniform Storage (${this.name})" },
-            GpuBuffer.USAGE_UNIFORM or GpuBuffer.USAGE_COPY_DST,
-            size.toLong()
-        )
         this.keys = keys.toMutableList()
         this.size = size
         for (key in this.keys) {
@@ -63,14 +55,9 @@ class UniformStorage : AutoCloseable {
         if (this.closed) {
             throw RuntimeException("Cannot set value in uniform storage \"" + this.name + "\" as it has been closed!")
         } else if (!this.keys.contains(key)) {
-            throw UnsupportedOperationException("Uniform storage does not contain key '" + key.name() + "'!")
+            throw UnsupportedOperationException("Uniform storage does not contain key '" + key.name + "'!")
         } else {
-            val currentValue = this.values[key]
-            if (currentValue != values) {
-                this.dirty = true
-                this.values[key] = value
-            }
-
+            this.values[key] = value
             return this
         }
     }
@@ -82,40 +69,35 @@ class UniformStorage : AutoCloseable {
             this.values[key] as T?
         }
 
-    fun update(commandEncoder: CommandEncoder) {
+    fun upload(): GpuBufferSlice {
         if (this.closed) {
             throw RuntimeException("Cannot update uniform storage \"" + this.name + "\" as it has been closed!")
-        } else if (this.dirty) {
-            val slice = this.ubo.slice()
-            MemoryStack.stackPush().use { stack ->
-                val buffer = stack.malloc(this.size)
+        } else {
+            val device = RenderSystem.getDevice()
+            val transientMemory = device.createCommandEncoder().transientMemory()
+            val alignment = device.deviceInfo.limits.minUniformOffsetAlignment
+            transientMemory.allocateGpuMapped(
+                this.size.toLong(),
+                alignment.toLong(),
+                GpuBuffer.USAGE_UNIFORM
+            ).use { view ->
                 for (entry in this.values) {
                     val key = entry.key
                     val value = entry.value
-                    if (value == null) {
-                        throw RuntimeException("Failed to bind \"" + key.name() + "\" in Uniform Storage (" + this.name + ") as value is not set!")
-                    } else {
-                        (key.serializer() as UniformSerializer<Any>).put(buffer, value)
-                    }
+                        ?: throw RuntimeException("Failed to bind \"" + key.name + "\" in Uniform Storage (" + this.name + ") as value is not set!")
+                    (key.serializer as UniformSerializer<Any>).put(view.data, value)
                 }
 
-                commandEncoder.writeToBuffer(slice, buffer)
+                return view.slice
             }
-
-            this.dirty = false
         }
     }
 
-    fun update() = this.update(RenderSystem.getDevice().createCommandEncoder())
-
-    fun slice() = this.ubo.slice()
-
-    fun isClose() = this.closed
+    fun isClosed() = this.closed
 
     override fun close() {
         if (!this.closed) {
             this.closed = true
-            this.ubo.close()
             this.keys.clear()
             this.values.clear()
         }
@@ -127,7 +109,7 @@ class UniformStorage : AutoCloseable {
 
         fun with(key: UniformKey<*>): Builder {
             this.keys.add(key)
-            key.serializer().size(this.calculator)
+            key.serializer.size(this.calculator)
             return this
         }
 
