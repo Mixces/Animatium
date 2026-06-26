@@ -12,7 +12,7 @@ out float sphericalVertexDistance;
 void main() {
     vec4 eye = ModelViewMat * vec4(Position, 1.0);
 #ifdef PLANAR_FOG
-    float dist = -eye.z;
+    float dist = abs(eye.z);
     cylindricalVertexDistance = dist;
     sphericalVertexDistance = dist;
 #else
