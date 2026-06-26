@@ -26,59 +26,57 @@
 package org.visuals.legacy.animatium.handler.rendering.lighting.lightmap
 
 import btw.lowercase.renderer.Renderer
-import com.mojang.blaze3d.buffers.GpuBuffer
-import com.mojang.blaze3d.buffers.Std140Builder
-import com.mojang.blaze3d.buffers.Std140SizeCalculator
 import com.mojang.blaze3d.textures.GpuTextureView
-import net.minecraft.client.renderer.MappableRingBuffer
 import net.minecraft.util.profiling.Profiler
 import org.visuals.legacy.animatium.handler.rendering.AnimatiumPipelines
 import org.visuals.legacy.animatium.renderer.buffer.BasicGeometry
+import org.visuals.legacy.animatium.renderer.uniform.UniformKey
+import org.visuals.legacy.animatium.renderer.uniform.UniformStorage
 
 class LegacyLightmapRenderer : AutoCloseable {
     companion object {
         private val BASE_GEOMETRY = BasicGeometry(0, 3)
-        private val LIGHTMAP_UBO_SIZE = Std140SizeCalculator()
-            .putFloat() // SkyDarken
-            .putFloat() // SkyDarkness
-            .putFloat() // BlockLightRed
-            .putFloat() // NightVisionScale
-            .putFloat() // Gamma
-            .putInt() // UseBrightLightmap
-            .get()
+        private val SkyDarken = UniformKey.Float("SkyDarken")
+        private val SkyDarkness = UniformKey.Float("SkyDarkness")
+        private val BlockLightRed = UniformKey.Float("BlockLightRed")
+        private val NightVisionScale = UniformKey.Float("NightVisionScale")
+        private val Gamma = UniformKey.Float("Gamma")
+        private val UseBrightLightmap = UniformKey.Integer("UseBrightLightmap")
     }
 
-    private val ubo = MappableRingBuffer(
-        { "Legacy Lightmap UBO" },
-        GpuBuffer.USAGE_UNIFORM or GpuBuffer.USAGE_MAP_WRITE,
-        LIGHTMAP_UBO_SIZE
-    )
+    private val lightmapInfoUniform = UniformStorage.builder("Legacy Lightmap UBO")
+        .with(SkyDarken)
+        .with(SkyDarkness)
+        .with(BlockLightRed)
+        .with(NightVisionScale)
+        .with(Gamma)
+        .with(UseBrightLightmap)
+        .build()
 
     fun render(state: LegacyLightmapState, textureView: GpuTextureView) {
         if (state.needsUpdate) {
             val profiler = Profiler.get()
             profiler.push("lightmap")
 
-            this.ubo.currentBuffer().map(false, true).use { mappedView ->
-                Std140Builder.intoBuffer(mappedView.data())
-                    .putFloat(state.skyDarken)
-                    .putFloat(state.skyDarkness)
-                    .putFloat(state.blockLightRed)
-                    .putFloat(state.nightVisionScale)
-                    .putFloat(state.gamma)
-                    .putInt(if (state.useBrightLightmap) 1 else 0)
-            }
-
             Renderer.of({ "Legacy Lightmap Update" }, textureView).use { renderer ->
                 renderer.setPipeline(AnimatiumPipelines.LEGACY_LIGHTMAP)
-                renderer.setUniform("LightmapInfo", this.ubo.currentBuffer())
+                renderer.setUniform(
+                    "LightmapInfo",
+                    this.lightmapInfoUniform
+                        .set(SkyDarken, state.skyDarken)
+                        .set(SkyDarkness, state.skyDarkness)
+                        .set(BlockLightRed, state.blockLightRed)
+                        .set(NightVisionScale, state.nightVisionScale)
+                        .set(Gamma, state.gamma)
+                        .set(UseBrightLightmap, if (state.useBrightLightmap) 1 else 0)
+                        .upload()
+                )
                 renderer.draw(BASE_GEOMETRY)
             }
 
-            this.ubo.rotate()
             profiler.pop()
         }
     }
 
-    override fun close() = this.ubo.close()
+    override fun close() = this.lightmapInfoUniform.close()
 }

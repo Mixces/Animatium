@@ -37,7 +37,6 @@ import org.visuals.legacy.animatium.renderer.DynamicTransforms
 import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry
 import org.visuals.legacy.animatium.renderer.vertex.VertexLayouts
 import org.visuals.legacy.animatium.util.compatibility.IrisPipeline
-import org.visuals.legacy.animatium.util.compatibility.IrisUtil
 
 object LegacySkyRenderer {
     private val GET_VOID_BOX_GEOMETRY = { offset: Float ->
@@ -97,14 +96,6 @@ object LegacySkyRenderer {
             )
         }
 
-    init {
-        IrisUtil.assignPipeline(
-            IrisPipeline.SKY_BASIC,
-            AnimatiumPipelines.LEGACY_SKY,
-            AnimatiumPipelines.LEGACY_SKY_PLANAR_FOG
-        )
-    }
-
     @JvmStatic
     fun renderBlueVoid(skyColor: Int, depth: Double) {
         Renderer.of { "Blue void sky disc" }.use { renderer ->
@@ -121,7 +112,10 @@ object LegacySkyRenderer {
                 1.0F
             )
 
-            renderer.setPipeline(AnimatiumPipelines.getSkyPipeline(AnimatiumConfig.instance().other.planarSkyFog))
+            renderer.setPipeline(
+                AnimatiumPipelines.getSkyPipeline(AnimatiumConfig.instance().other.planarSkyFog),
+                IrisPipeline.SKY_BASIC
+            )
             renderer.setUniform(
                 DynamicTransforms.KEY,
                 DynamicTransforms.builder()
