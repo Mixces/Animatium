@@ -27,15 +27,16 @@ package org.visuals.legacy.animatium.renderer.uniform
 
 import com.mojang.blaze3d.buffers.GpuBuffer
 import com.mojang.blaze3d.buffers.GpuBufferSlice
+import com.mojang.blaze3d.buffers.Std140Builder
 import com.mojang.blaze3d.buffers.Std140SizeCalculator
 import com.mojang.blaze3d.systems.RenderSystem
 
 class UniformStorage : AutoCloseable {
-    private val name: String
+    val name: String
+
     private val keys: MutableList<UniformKey<*>>
     private val values = LinkedHashMap<UniformKey<*>, Any?>()
     private val size: Int
-
     private var closed = false
 
     private constructor(name: String, keys: List<UniformKey<*>>, size: Int) {
@@ -53,9 +54,9 @@ class UniformStorage : AutoCloseable {
 
     fun <T> set(key: UniformKey<T>, value: T): UniformStorage {
         if (this.closed) {
-            throw RuntimeException("Cannot set value in uniform storage \"" + this.name + "\" as it has been closed!")
+            throw RuntimeException("Cannot set value in Uniform Storage (${this.name}) as it has been closed!")
         } else if (!this.keys.contains(key)) {
-            throw UnsupportedOperationException("Uniform storage does not contain key '" + key.name + "'!")
+            throw UnsupportedOperationException("Uniform storage does not contain key '${key.name}'!")
         } else {
             this.values[key] = value
             return this
@@ -71,7 +72,7 @@ class UniformStorage : AutoCloseable {
 
     fun upload(): GpuBufferSlice {
         if (this.closed) {
-            throw RuntimeException("Cannot update uniform storage \"" + this.name + "\" as it has been closed!")
+            throw RuntimeException("Cannot upload Uniform Storage (${this.name}) as it has been closed!")
         } else {
             val device = RenderSystem.getDevice()
             val transientMemory = device.createCommandEncoder().transientMemory()
@@ -81,11 +82,12 @@ class UniformStorage : AutoCloseable {
                 alignment.toLong(),
                 GpuBuffer.USAGE_UNIFORM
             ).use { view ->
+                val builder = Std140Builder.intoBuffer(view.data)
                 for (entry in this.values) {
                     val key = entry.key
                     val value = entry.value
-                        ?: throw RuntimeException("Failed to bind \"" + key.name + "\" in Uniform Storage (" + this.name + ") as value is not set!")
-                    (key.serializer as UniformSerializer<Any>).put(view.data, value)
+                        ?: throw RuntimeException("Failed to bind \"${key.name}\" in Uniform Storage (${this.name}) as value is not set!")
+                    (key.serializer as UniformSerializer<Any>).put(builder, value)
                 }
 
                 return view.slice
@@ -116,7 +118,7 @@ class UniformStorage : AutoCloseable {
         fun build(): UniformStorage {
             val size = this.calculator.get()
             if (size == 0) {
-                throw RuntimeException("Cannot build Uniform Storage (" + this.name + ") as it contains no uniforms!")
+                throw RuntimeException("Cannot build Uniform Storage (${this.name}) as it contains no uniforms!")
             } else {
                 return UniformStorage(this.name, this.keys, size)
             }

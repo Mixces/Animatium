@@ -27,33 +27,50 @@ package org.visuals.legacy.animatium.renderer.uniform
 
 import org.joml.*
 
-class UniformKey<T>(val name: String, val serializer: UniformSerializer<*>) {
+class UniformKey<T> {
     companion object {
         @JvmStatic
-        fun Integer(name: String): UniformKey<Int> = UniformKey(name, UniformSerializer.INTEGER)
+        fun <T> of(name: String, serializer: UniformSerializer<T>): UniformKey<T> = UniformKey(name, serializer)
 
         @JvmStatic
-        fun Float(name: String): UniformKey<Float> = UniformKey(name, UniformSerializer.FLOAT)
+        fun Integer(name: String): UniformKey<Int> = of(name, UniformSerializer.INTEGER)
 
         @JvmStatic
-        fun Matrix4f(name: String): UniformKey<Matrix4f> = UniformKey(name, UniformSerializer.MATRIX4F)
+        fun Float(name: String): UniformKey<Float> = of(name, UniformSerializer.FLOAT)
 
         @JvmStatic
-        fun Vector2f(name: String): UniformKey<Vector2f> = UniformKey(name, UniformSerializer.VECTOR2F)
+        fun Double(name: String): UniformKey<Double> = of(name, UniformSerializer.DOUBLE)
 
         @JvmStatic
-        fun Vector2i(name: String): UniformKey<Vector2i> = UniformKey(name, UniformSerializer.VECTOR2I)
+        fun Boolean(name: String): UniformKey<Boolean> = of(name, UniformSerializer.BOOLEAN)
 
         @JvmStatic
-        fun Vector3f(name: String): UniformKey<Vector3f> = UniformKey(name, UniformSerializer.VECTOR3F)
+        fun Matrix4f(name: String): UniformKey<Matrix4f> = of(name, UniformSerializer.MATRIX4F)
 
         @JvmStatic
-        fun Vector3i(name: String): UniformKey<Vector3i> = UniformKey(name, UniformSerializer.VECTOR3I)
+        fun Vector2f(name: String): UniformKey<Vector2f> = of(name, UniformSerializer.VECTOR2F)
 
         @JvmStatic
-        fun Vector4f(name: String): UniformKey<Vector4f> = UniformKey(name, UniformSerializer.VECTOR4F)
+        fun Vector2i(name: String): UniformKey<Vector2i> = of(name, UniformSerializer.VECTOR2I)
 
         @JvmStatic
-        fun Vector4i(name: String): UniformKey<Vector4i> = UniformKey(name, UniformSerializer.VECTOR4I)
+        fun Vector3f(name: String): UniformKey<Vector3f> = of(name, UniformSerializer.VECTOR3F)
+
+        @JvmStatic
+        fun Vector3i(name: String): UniformKey<Vector3i> = of(name, UniformSerializer.VECTOR3I)
+
+        @JvmStatic
+        fun Vector4f(name: String): UniformKey<Vector4f> = of(name, UniformSerializer.VECTOR4F)
+
+        @JvmStatic
+        fun Vector4i(name: String): UniformKey<Vector4i> = of(name, UniformSerializer.VECTOR4I)
+    }
+
+    val name: String
+    val serializer: UniformSerializer<T>
+
+    private constructor(name: String, serializer: UniformSerializer<T>) {
+        this.name = name
+        this.serializer = serializer
     }
 }

@@ -47,6 +47,7 @@ import org.visuals.legacy.animatium.renderer.DynamicTransforms;
 import org.visuals.legacy.animatium.renderer.RenderDescriptor;
 import org.visuals.legacy.animatium.renderer.buffer.Geometry;
 import org.visuals.legacy.animatium.renderer.texture.TextureAndSampler;
+import org.visuals.legacy.animatium.renderer.uniform.UniformStorage;
 import org.visuals.legacy.animatium.util.compatibility.IrisPipeline;
 import org.visuals.legacy.animatium.util.compatibility.IrisUtil;
 
@@ -148,6 +149,10 @@ public final class Renderer implements AutoCloseable {
 
     public void setUniform(final String name, final GpuBuffer data) {
         this.setUniform(name, data.slice());
+    }
+
+    public void setUniform(final UniformStorage storage) {
+        this.setUniform(storage.getName(), storage.upload());
     }
 
     public void setProjectionMatrix(final Matrix4f matrix4f) {
