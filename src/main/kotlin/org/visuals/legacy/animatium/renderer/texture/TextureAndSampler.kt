@@ -28,7 +28,6 @@ package org.visuals.legacy.animatium.renderer.texture
 import com.mojang.blaze3d.textures.GpuSampler
 import com.mojang.blaze3d.textures.GpuTextureView
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.render.TextureSetup
 import net.minecraft.resources.Identifier
 
 data class TextureAndSampler(val textureView: GpuTextureView?, val sampler: GpuSampler?) {
@@ -38,16 +37,6 @@ data class TextureAndSampler(val textureView: GpuTextureView?, val sampler: GpuS
             val textureManager = Minecraft.getInstance().textureManager
             val texture = textureManager.getTexture(location)
             return TextureAndSampler(texture.getTextureView(), texture.getSampler())
-        }
-
-        @JvmStatic
-        fun get(index: Int, setup: TextureSetup): TextureAndSampler {
-            return when (index) {
-                0 -> TextureAndSampler(setup.texure0(), setup.sampler0())
-                1 -> TextureAndSampler(setup.texure1(), setup.sampler1())
-                2 -> TextureAndSampler(setup.texure2(), setup.sampler2())
-                else -> throw IndexOutOfBoundsException("There is no texture and sampler with index $index!")
-            }
         }
     }
 }

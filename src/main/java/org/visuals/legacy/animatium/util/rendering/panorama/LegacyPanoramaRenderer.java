@@ -23,36 +23,29 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering;
+package org.visuals.legacy.animatium.util.rendering.panorama;
 
-import btw.lowercase.renderer.Renderer;
 import com.mojang.blaze3d.GpuFormat;
 import com.mojang.blaze3d.pipeline.MainTarget;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.textures.GpuTextureView;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.navigation.ScreenRectangle;
-import net.minecraft.client.gui.render.TextureSetup;
-import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.state.gui.GuiElementRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import org.joml.Matrix3x2f;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.visuals.legacy.animatium.handler.rendering.AnimatiumPipelines;
 import org.visuals.legacy.animatium.handler.rendering.RenderUtilsKt;
 import org.visuals.legacy.animatium.renderer.DynamicTransforms;
 import org.visuals.legacy.animatium.renderer.RenderDescriptor;
+import org.visuals.legacy.animatium.renderer.Renderer;
 import org.visuals.legacy.animatium.renderer.buffer.Geometry;
 import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry;
 import org.visuals.legacy.animatium.renderer.vertex.VertexLayouts;
@@ -91,7 +84,7 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
     private final GpuTexture backgroundTexture;
     private final GpuTextureView backgroundTextureView;
 
-    private @Nullable PanoramaRenderState state;
+    private @Nullable LegacyPanoramaRenderState state;
 
     @SuppressWarnings("DataFlowIssue")
     LegacyPanoramaRenderer() {
@@ -104,17 +97,17 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
 
     public void render() {
         if (this.state != null) {
-            final float xRot = Mth.sin(this.state.spin / 400.0F) * 25.0F + 20.0F;
-            final float yRot = -this.state.spin * 0.1F;
+            final float xRot = Mth.sin(this.state.spin() / 400.0F) * 25.0F + 20.0F;
+            final float yRot = -this.state.spin() * 0.1F;
             this.renderCubeMap(xRot, yRot);
-            this.rotateAndBlurCubeMap(this.state.pose, this.state.width, this.state.height);
+            this.rotateAndBlurCubeMap(this.state.pose(), this.state.width(), this.state.height());
         }
     }
 
     public void extractRenderState(final GuiGraphicsExtractor graphics, final int width, final int height, final float tickDelta) {
         final double panoramaSpeed = Minecraft.getInstance().gameRenderer.gameRenderState().optionsRenderState.panoramaSpeed;
-        this.state = new PanoramaRenderState(graphics.pose(), width, height, this.state == null ? 0.0F : (float) (this.state.spin + (tickDelta * panoramaSpeed)));
-        graphics.guiRenderState.addGuiElement(new BlitTexture(graphics.pose(), this.backgroundTextureView, width, height));
+        this.state = new LegacyPanoramaRenderState(graphics.pose(), width, height, this.state == null ? 0.0F : (float) (this.state.spin() + (tickDelta * panoramaSpeed)));
+        graphics.guiRenderState.addGuiElement(new PanoramaBlitTexture(graphics.pose(), this.backgroundTextureView, width, height));
     }
 
     private void renderCubeMap(final float xRot, final float yRot) {
@@ -161,43 +154,5 @@ public final class LegacyPanoramaRenderer implements AutoCloseable {
         this.backgroundTextureView.close();
         this.backgroundTexture.close();
         this.panoramaTarget.destroyBuffers();
-    }
-
-    private record BlitTexture(Matrix3x2f pose, GpuTextureView textureView,
-                               int width, int height) implements GuiElementRenderState {
-        @Override
-        public void buildVertices(final VertexConsumer vertexConsumer) {
-            final int color = ARGB.white(1.0F);
-            final float aspect = this.width > this.height ? 120.0F / this.width : 120.0F / this.height;
-            final float sw = this.width * aspect / 256.0F;
-            final float sh = this.height * aspect / 256.0F;
-            vertexConsumer.addVertexWith2DPose(this.pose, 0.0F, this.height).setUv(0.5F - sh, 0.5F + sw).setColor(color);
-            vertexConsumer.addVertexWith2DPose(this.pose, this.width, this.height).setUv(0.5F - sh, 0.5F - sw).setColor(color);
-            vertexConsumer.addVertexWith2DPose(this.pose, this.width, 0.0F).setUv(0.5F + sh, 0.5F - sw).setColor(color);
-            vertexConsumer.addVertexWith2DPose(this.pose, 0.0F, 0.0F).setUv(0.5F + sh, 0.5F + sw).setColor(color);
-        }
-
-        @Override
-        public @NonNull RenderPipeline pipeline() {
-            return RenderPipelines.GUI_TEXTURED;
-        }
-
-        @Override
-        public @NonNull TextureSetup textureSetup() {
-            return TextureSetup.singleTexture(this.textureView, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
-        }
-
-        @Override
-        public @Nullable ScreenRectangle scissorArea() {
-            return null;
-        }
-
-        @Override
-        public @NonNull ScreenRectangle bounds() {
-            return new ScreenRectangle(0, 0, this.width, this.height);
-        }
-    }
-
-    private record PanoramaRenderState(Matrix3x2f pose, int width, int height, float spin) {
     }
 }

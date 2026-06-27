@@ -25,7 +25,6 @@
 
 package org.visuals.legacy.animatium.handler.rendering
 
-import btw.lowercase.renderer.Renderer
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.VertexConsumer
 import net.minecraft.client.Minecraft
@@ -34,6 +33,7 @@ import net.minecraft.util.ARGB
 import org.joml.Vector4f
 import org.visuals.legacy.animatium.config.AnimatiumConfig
 import org.visuals.legacy.animatium.renderer.DynamicTransforms
+import org.visuals.legacy.animatium.renderer.Renderer
 import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry
 import org.visuals.legacy.animatium.renderer.vertex.VertexLayouts
 import org.visuals.legacy.animatium.util.compatibility.IrisPipeline
@@ -116,6 +116,7 @@ object LegacySkyRenderer {
                 AnimatiumPipelines.getSkyPipeline(AnimatiumConfig.instance().other.planarSkyFog),
                 IrisPipeline.SKY_BASIC
             )
+
             renderer.setUniform(
                 DynamicTransforms.KEY,
                 DynamicTransforms.builder()
@@ -123,6 +124,7 @@ object LegacySkyRenderer {
                     .withShaderColor(color)
                     .build()
             )
+
             renderer.draw(BOTTOM_GEOMETRY)
         }
     }

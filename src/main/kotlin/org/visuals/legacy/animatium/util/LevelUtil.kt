@@ -38,7 +38,7 @@ fun ClientLevel.hasVoidFog(): Boolean {
 }
 
 fun ClientLevel.getLegacySkyDarken(): Float {
-    var value = 1.0F - (Mth.cos(this.getTimeOfDay(1.0F) * (Math.PI * 2).toFloat()) * 2.0F + 0.2F)
+    var value = 1.0F - (Mth.cos((this.getTimeOfDay(1.0F) * (Math.PI * 2).toFloat()).toDouble()) * 2.0F + 0.2F)
     value = Mth.clamp(value, 0.0F, 1.0F)
     value = 1.0F - value
     value *= 1.0F - this.getRainLevel(1.0F) * 5.0F / 16.0F
@@ -46,33 +46,37 @@ fun ClientLevel.getLegacySkyDarken(): Float {
     return value * 0.8F + 0.2F
 }
 
-fun ClientLevel.getTimeOfDay(tickDelta: Float): Double {
-    var dayTime = this.defaultClockTime
+fun ClientLevel.getLegacyFixedTime(): Long? {
+    if (this.dimensionType().hasFixedTime()) {
+        val dimension = this.dimension()
+        if (dimension == Level.NETHER) {
+            return 18000L
+        } else if (dimension == Level.END) {
+            return 6000L
+        }
+    }
+
+    return null
+}
+
+fun ClientLevel.getTimeOfDay(tickDelta: Float): Float {
+    var dayTime = this.getLegacyFixedTime() ?: this.overworldClockTime
     if (dayTime == 0L) {
         dayTime = 1L // 1.8 never lets the tick time be 0
     }
 
-    if (this.dimensionType().hasFixedTime()) {
-        val dimension = this.dimension()
-        if (dimension == Level.NETHER) {
-            dayTime = 18000L
-        } else if (dimension == Level.END) {
-            dayTime = 6000L
-        }
-    }
-
     val time = Math.toIntExact(dayTime % 24000L)
 
-    var frac = (time + tickDelta) / 24000.0 - 0.25
-    if (frac < 0.0) {
+    var frac = (time + tickDelta) / 24000.0F - 0.25F
+    if (frac < 0.0F) {
         ++frac
     }
 
-    if (frac > 1.0) {
+    if (frac > 1.0F) {
         --frac
     }
 
-    val mul = 1.0 - ((cos(frac * Math.PI) + 1.0) / 2.0)
-    frac += (mul - frac) / 3.0
+    val mul = 1.0F - ((cos(frac * Math.PI) + 1.0) / 2.0).toFloat()
+    frac += (mul - frac) / 3.0F
     return frac
 }

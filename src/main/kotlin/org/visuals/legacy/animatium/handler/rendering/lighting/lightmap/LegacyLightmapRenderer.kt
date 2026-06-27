@@ -25,10 +25,10 @@
 
 package org.visuals.legacy.animatium.handler.rendering.lighting.lightmap
 
-import btw.lowercase.renderer.Renderer
 import com.mojang.blaze3d.textures.GpuTextureView
 import net.minecraft.util.profiling.Profiler
 import org.visuals.legacy.animatium.handler.rendering.AnimatiumPipelines
+import org.visuals.legacy.animatium.renderer.Renderer
 import org.visuals.legacy.animatium.renderer.buffer.BasicGeometry
 import org.visuals.legacy.animatium.renderer.uniform.DynamicUniformStorage
 import org.visuals.legacy.animatium.renderer.uniform.UniformKey
@@ -70,6 +70,7 @@ class LegacyLightmapRenderer : AutoCloseable {
                         .set(NightVisionScale, state.nightVisionScale)
                         .set(Gamma, state.gamma)
                         .set(UseBrightLightmap, state.useBrightLightmap)
+                        .upload()
                 )
                 renderer.draw(BASE_GEOMETRY)
             }

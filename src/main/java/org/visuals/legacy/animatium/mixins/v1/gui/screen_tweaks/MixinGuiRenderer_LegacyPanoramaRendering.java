@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.rendering.LegacyPanoramaRenderer;
+import org.visuals.legacy.animatium.util.rendering.panorama.LegacyPanoramaRenderer;
 
 @Mixin(GuiRenderer.class)
 public abstract class MixinGuiRenderer_LegacyPanoramaRendering {

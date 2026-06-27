@@ -25,7 +25,6 @@
 
 package org.visuals.legacy.animatium.util.rendering;
 
-import btw.lowercase.renderer.Renderer;
 import com.mojang.blaze3d.GpuFormat;
 import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.buffers.GpuBuffer;
@@ -48,6 +47,7 @@ import org.joml.Vector3f;
 import org.jspecify.annotations.NonNull;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.renderer.DynamicTransforms;
+import org.visuals.legacy.animatium.renderer.Renderer;
 import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry;
 import org.visuals.legacy.animatium.renderer.vertex.VertexLayouts;
 

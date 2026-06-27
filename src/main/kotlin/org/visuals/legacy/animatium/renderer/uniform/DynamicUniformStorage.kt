@@ -34,19 +34,19 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 class DynamicUniformStorage : UniformStorage, AutoCloseable {
     val name: String
 
-    private val keys: Set<UniformKey<*>>
+    private val keys: List<UniformKey<*>>
     private val values = Object2ObjectOpenHashMap<UniformKey<*>, Any?>()
     private val size: Int
 
     var isClosed = false
         private set
 
-    private constructor(name: String, mappings: Map<UniformKey<*>, Any?>, size: Int) {
+    private constructor(name: String, keys: List<UniformKey<*>>, defaults: Map<UniformKey<*>, Any?>, size: Int) {
         this.name = name
-        this.keys = mappings.keys
+        this.keys = keys
         this.size = size
         for (key in this.keys) {
-            this.values[key] = mappings[key]
+            this.values[key] = defaults[key]
         }
     }
 
@@ -68,13 +68,10 @@ class DynamicUniformStorage : UniformStorage, AutoCloseable {
         }
     }
 
-    override fun <T> get(key: UniformKey<T>): T? =
-        if (this.isClosed || !this.keys.contains(key)) {
-            null
-        } else {
-            this.values[key] as T?
-        }
+    @Suppress("UNCHECKED_CAST")
+    override fun <T> get(key: UniformKey<T>): T? = if (!this.keys.contains(key)) null else this.values[key] as T?
 
+    @Suppress("UNCHECKED_CAST")
     override fun upload(): GpuBufferSlice {
         if (this.isClosed) {
             throw RuntimeException("Cannot upload Uniform Storage (${this.name}) as it has been closed!")
@@ -88,9 +85,8 @@ class DynamicUniformStorage : UniformStorage, AutoCloseable {
                 GpuBuffer.USAGE_UNIFORM
             ).use { view ->
                 val builder = Std140Builder.intoBuffer(view.data)
-                for (entry in this.values) {
-                    val key = entry.key
-                    val value = entry.value
+                for (key in this.keys) {
+                    val value = this.values[key]
                         ?: throw RuntimeException("Failed to bind \"${key.name}\" in Uniform Storage (${this.name}) as value is not set!")
                     (key.serializer as UniformSerializer<Any>).put(builder, value)
                 }
@@ -113,7 +109,7 @@ class DynamicUniformStorage : UniformStorage, AutoCloseable {
             if (size == 0) {
                 throw RuntimeException("Cannot build Uniform Storage (${this.name}) as it contains no uniforms!")
             } else {
-                return DynamicUniformStorage(this.name, this.mappings, size)
+                return DynamicUniformStorage(this.name, this.keys.toList(), HashMap(this.defaults), size)
             }
         }
     }

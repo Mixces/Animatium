@@ -40,13 +40,19 @@ interface UniformStorage : AutoCloseable {
     override fun close()
 
     abstract class Builder {
-        protected val mappings = hashMapOf<UniformKey<*>, Any?>()
+        protected val keys = arrayListOf<UniformKey<*>>()
+        protected val defaults = hashMapOf<UniformKey<*>, Any?>()
         protected val calculator = Std140SizeCalculator()
 
         fun <T> with(key: UniformKey<T>, defaultValue: T?): Builder {
-            this.mappings[key] = defaultValue
-            key.serializer.size(this.calculator)
-            return this
+            if (keys.contains(key)) {
+                throw RuntimeException("Cannot add key '${key.name}' to uniform storage builder as it already contains it!")
+            } else {
+                this.keys.add(key)
+                this.defaults[key] = defaultValue
+                key.serializer.size(this.calculator)
+                return this
+            }
         }
 
         fun <T> with(key: UniformKey<T>): Builder = with(key, null)
