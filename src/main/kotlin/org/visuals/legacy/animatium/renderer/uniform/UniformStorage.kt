@@ -25,103 +25,32 @@
 
 package org.visuals.legacy.animatium.renderer.uniform
 
-import com.mojang.blaze3d.buffers.GpuBuffer
 import com.mojang.blaze3d.buffers.GpuBufferSlice
-import com.mojang.blaze3d.buffers.Std140Builder
 import com.mojang.blaze3d.buffers.Std140SizeCalculator
-import com.mojang.blaze3d.systems.RenderSystem
 
-class UniformStorage : AutoCloseable {
-    val name: String
+interface UniformStorage : AutoCloseable {
+    fun name(): String
 
-    private val keys: MutableList<UniformKey<*>>
-    private val values = LinkedHashMap<UniformKey<*>, Any?>()
-    private val size: Int
-    private var closed = false
+    fun <T> set(key: UniformKey<T>, value: T): UniformStorage
 
-    private constructor(name: String, keys: List<UniformKey<*>>, size: Int) {
-        this.name = name
-        this.keys = keys.toMutableList()
-        this.size = size
-        for (key in this.keys) {
-            this.values[key] = null
-        }
-    }
+    fun <T> get(key: UniformKey<T>): T?
 
-    companion object {
-        fun builder(name: String) = Builder(name)
-    }
+    fun upload(): GpuBufferSlice
 
-    fun <T> set(key: UniformKey<T>, value: T): UniformStorage {
-        if (this.closed) {
-            throw RuntimeException("Cannot set value in Uniform Storage (${this.name}) as it has been closed!")
-        } else if (!this.keys.contains(key)) {
-            throw UnsupportedOperationException("Uniform storage does not contain key '${key.name}'!")
-        } else {
-            this.values[key] = value
-            return this
-        }
-    }
+    override fun close()
 
-    fun <T> get(key: UniformKey<T>): T? =
-        if (!this.keys.contains(key)) {
-            null
-        } else {
-            this.values[key] as T?
-        }
+    abstract class Builder {
+        protected val mappings = hashMapOf<UniformKey<*>, Any?>()
+        protected val calculator = Std140SizeCalculator()
 
-    fun upload(): GpuBufferSlice {
-        if (this.closed) {
-            throw RuntimeException("Cannot upload Uniform Storage (${this.name}) as it has been closed!")
-        } else {
-            val device = RenderSystem.getDevice()
-            val transientMemory = device.createCommandEncoder().transientMemory()
-            val alignment = device.deviceInfo.limits.minUniformOffsetAlignment
-            transientMemory.allocateGpuMapped(
-                this.size.toLong(),
-                alignment.toLong(),
-                GpuBuffer.USAGE_UNIFORM
-            ).use { view ->
-                val builder = Std140Builder.intoBuffer(view.data)
-                for (entry in this.values) {
-                    val key = entry.key
-                    val value = entry.value
-                        ?: throw RuntimeException("Failed to bind \"${key.name}\" in Uniform Storage (${this.name}) as value is not set!")
-                    (key.serializer as UniformSerializer<Any>).put(builder, value)
-                }
-
-                return view.slice
-            }
-        }
-    }
-
-    fun isClosed() = this.closed
-
-    override fun close() {
-        if (!this.closed) {
-            this.closed = true
-            this.keys.clear()
-            this.values.clear()
-        }
-    }
-
-    class Builder(private val name: String) {
-        private val keys = arrayListOf<UniformKey<*>>()
-        private val calculator = Std140SizeCalculator()
-
-        fun with(key: UniformKey<*>): Builder {
-            this.keys.add(key)
+        fun <T> with(key: UniformKey<T>, defaultValue: T?): Builder {
+            this.mappings[key] = defaultValue
             key.serializer.size(this.calculator)
             return this
         }
 
-        fun build(): UniformStorage {
-            val size = this.calculator.get()
-            if (size == 0) {
-                throw RuntimeException("Cannot build Uniform Storage (${this.name}) as it contains no uniforms!")
-            } else {
-                return UniformStorage(this.name, this.keys, size)
-            }
-        }
+        fun <T> with(key: UniformKey<T>): Builder = with(key, null)
+
+        abstract fun build(): UniformStorage
     }
 }

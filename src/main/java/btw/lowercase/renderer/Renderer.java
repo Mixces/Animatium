@@ -152,7 +152,7 @@ public final class Renderer implements AutoCloseable {
     }
 
     public void setUniform(final UniformStorage storage) {
-        this.setUniform(storage.getName(), storage.upload());
+        this.setUniform(storage.name(), storage.upload());
     }
 
     public void setProjectionMatrix(final Matrix4f matrix4f) {

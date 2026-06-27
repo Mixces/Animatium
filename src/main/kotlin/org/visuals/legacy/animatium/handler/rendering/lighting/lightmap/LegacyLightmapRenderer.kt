@@ -30,8 +30,8 @@ import com.mojang.blaze3d.textures.GpuTextureView
 import net.minecraft.util.profiling.Profiler
 import org.visuals.legacy.animatium.handler.rendering.AnimatiumPipelines
 import org.visuals.legacy.animatium.renderer.buffer.BasicGeometry
+import org.visuals.legacy.animatium.renderer.uniform.DynamicUniformStorage
 import org.visuals.legacy.animatium.renderer.uniform.UniformKey
-import org.visuals.legacy.animatium.renderer.uniform.UniformStorage
 
 class LegacyLightmapRenderer : AutoCloseable {
     companion object {
@@ -45,7 +45,7 @@ class LegacyLightmapRenderer : AutoCloseable {
         private val BASE_GEOMETRY = BasicGeometry(0, 3)
     }
 
-    private val lightmapInfoUniform = UniformStorage.builder("LightmapInfo")
+    private val lightmapInfoUniform = DynamicUniformStorage.builder("LightmapInfo")
         .with(SkyDarken)
         .with(SkyDarkness)
         .with(BlockLightRed)
