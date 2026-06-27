@@ -85,7 +85,7 @@ class BloodParticle(
                 return false
             } else {
                 val netPlayerHandler = minecraft.gameMode ?: return false
-                return (netPlayerHandler.playerMode == GameType.SURVIVAL) or (netPlayerHandler.playerMode == GameType.CREATIVE)
+                return (netPlayerHandler.playerMode == GameType.SURVIVAL) || (netPlayerHandler.playerMode == GameType.CREATIVE)
             }
         }
 
