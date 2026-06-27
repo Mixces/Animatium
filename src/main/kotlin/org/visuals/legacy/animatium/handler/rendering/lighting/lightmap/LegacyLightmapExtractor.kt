@@ -59,6 +59,7 @@ class LegacyLightmapExtractor {
             state.gamma = minecraft.options.gamma().get().toFloat()
             state.useBrightLightmap = level.dimension() == ClientLevel.END
             profiler.pop()
+
             this.needsUpdate = false
         }
     }

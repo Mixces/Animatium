@@ -45,7 +45,7 @@ class LegacyLightmapRenderer : AutoCloseable {
         private val BASE_GEOMETRY = BasicGeometry(0, 3)
     }
 
-    private val lightmapInfoUniform = DynamicUniformStorage.builder("LightmapInfo")
+    private val lightmapInfoUniform = DynamicUniformStorage.builder("Legacy Lightmap UBO")
         .with(SkyDarken)
         .with(SkyDarkness)
         .with(BlockLightRed)
@@ -62,6 +62,7 @@ class LegacyLightmapRenderer : AutoCloseable {
             Renderer.of({ "Legacy Lightmap Update" }, textureView).use { renderer ->
                 renderer.setPipeline(AnimatiumPipelines.LEGACY_LIGHTMAP)
                 renderer.setUniform(
+                    "LightmapInfo",
                     this.lightmapInfoUniform
                         .set(SkyDarken, state.skyDarken)
                         .set(SkyDarkness, state.skyDarkness)

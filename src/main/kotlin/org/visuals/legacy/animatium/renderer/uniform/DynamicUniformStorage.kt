@@ -29,12 +29,13 @@ import com.mojang.blaze3d.buffers.GpuBuffer
 import com.mojang.blaze3d.buffers.GpuBufferSlice
 import com.mojang.blaze3d.buffers.Std140Builder
 import com.mojang.blaze3d.systems.RenderSystem
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 
 class DynamicUniformStorage : UniformStorage, AutoCloseable {
     val name: String
 
-    private val keys: List<UniformKey<*>>
-    private val values = HashMap<UniformKey<*>, Any?>()
+    private val keys: Set<UniformKey<*>>
+    private val values = Object2ObjectOpenHashMap<UniformKey<*>, Any?>()
     private val size: Int
 
     var isClosed = false
@@ -42,7 +43,7 @@ class DynamicUniformStorage : UniformStorage, AutoCloseable {
 
     private constructor(name: String, mappings: Map<UniformKey<*>, Any?>, size: Int) {
         this.name = name
-        this.keys = mappings.keys.toList()
+        this.keys = mappings.keys
         this.size = size
         for (key in this.keys) {
             this.values[key] = mappings[key]
@@ -60,7 +61,7 @@ class DynamicUniformStorage : UniformStorage, AutoCloseable {
         if (this.isClosed) {
             throw RuntimeException("Cannot set value in Uniform Storage (${this.name}) as it has been closed!")
         } else if (!this.keys.contains(key)) {
-            throw UnsupportedOperationException("Uniform storage does not contain key '${key.name}'!")
+            throw RuntimeException("Uniform storage does not contain key '${key.name}'!")
         } else {
             this.values[key] = value
             return this
