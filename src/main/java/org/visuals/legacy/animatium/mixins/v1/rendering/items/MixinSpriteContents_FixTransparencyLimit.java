@@ -37,7 +37,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 @Mixin(SpriteContents.class)
 public abstract class MixinSpriteContents_FixTransparencyLimit {
     @WrapOperation(method = "isTransparent", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/ARGB;alpha(I)I"))
-    private int animatium$upMinPixelTransparencyLimit(final int color, Operation<Integer> original) {
+    private int animatium$upMinPixelTransparencyLimit(final int color, final Operation<Integer> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.upMinPixelTransparencyLimit && ARGB.alphaFloat(color) <= 0.1F) {
             return 0;
         } else {

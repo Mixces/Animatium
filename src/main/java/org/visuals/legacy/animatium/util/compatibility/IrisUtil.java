@@ -40,12 +40,11 @@ public final class IrisUtil {
     static {
         try {
             // API
-            Class<?> irisApiClass = Class.forName("net.irisshaders.iris.api.v0.IrisApi");
+            final Class<?> irisApiClass = Class.forName("net.irisshaders.iris.api.v0.IrisApi");
             IRIS_INSTANCE = irisApiClass.getMethod("getInstance").invoke(null);
 
             // Enums
-            @SuppressWarnings("rawtypes")
-            Class<? extends Enum> irisProgramEnum = Class.forName("net.irisshaders.iris.api.v0.IrisProgram").asSubclass(Enum.class);
+            @SuppressWarnings("rawtypes") final Class<? extends Enum> irisProgramEnum = Class.forName("net.irisshaders.iris.api.v0.IrisProgram").asSubclass(Enum.class);
             Arrays.stream(IrisPipeline.VALUES).forEach((program) -> program.initialize(irisProgramEnum));
 
             // Methods
@@ -66,12 +65,6 @@ public final class IrisUtil {
             pipelineCache.put(pipeline, program);
             IRIS_ASSIGN_PIPELINE_METHOD.invoke(IRIS_INSTANCE, pipeline, program.internal());
         } catch (final Exception ignored) {
-        }
-    }
-
-    public static void assignPipeline(final IrisPipeline program, final RenderPipeline... pipelines) {
-        for (final RenderPipeline pipeline : pipelines) {
-            assignPipeline(pipeline, program);
         }
     }
 }

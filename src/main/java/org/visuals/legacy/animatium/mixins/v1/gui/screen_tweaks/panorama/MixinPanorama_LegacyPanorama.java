@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.gui.screen_tweaks;
+package org.visuals.legacy.animatium.mixins.v1.gui.screen_tweaks.panorama;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -36,7 +36,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.rendering.panorama.LegacyPanoramaRenderer;
+import org.visuals.legacy.animatium.handler.rendering.panorama.LegacyPanoramaRenderer;
 
 @Mixin(Panorama.class)
 public abstract class MixinPanorama_LegacyPanorama {

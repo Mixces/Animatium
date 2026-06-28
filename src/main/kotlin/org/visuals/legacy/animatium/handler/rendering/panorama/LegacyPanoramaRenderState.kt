@@ -23,9 +23,8 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.rendering.panorama;
+package org.visuals.legacy.animatium.handler.rendering.panorama
 
-import org.joml.Matrix3x2f;
+import org.joml.Matrix3x2f
 
-public record LegacyPanoramaRenderState(Matrix3x2f pose, int width, int height, float spin) {
-}
+data class LegacyPanoramaRenderState(val pose: Matrix3x2f, val width: Int, val height: Int, val spin: Float)
