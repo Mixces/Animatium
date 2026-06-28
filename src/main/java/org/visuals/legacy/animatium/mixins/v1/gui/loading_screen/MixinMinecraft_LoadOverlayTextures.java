@@ -25,31 +25,39 @@
 
 package org.visuals.legacy.animatium.mixins.v1.gui.loading_screen;
 
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.LoadingOverlay;
 import net.minecraft.client.main.GameConfig;
 import net.minecraft.client.renderer.texture.TextureManager;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft_LoadOverlayTextures {
-    @Shadow
-    @Final
-    private TextureManager textureManager;
+    @Unique
+    private final ThreadLocal<Runnable> animatium$loadOverlayTextures = ThreadLocal.withInitial(() -> null);
 
-    @WrapWithCondition(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/LoadingOverlay;registerTextures(Lnet/minecraft/client/renderer/texture/TextureManager;)V"))
-    private boolean animatium$disableVanillaLoading(final TextureManager textureManager) {
-        return false;
+    @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/LoadingOverlay;registerTextures(Lnet/minecraft/client/renderer/texture/TextureManager;)V"))
+    private void animatium$disableVanillaLoading(final TextureManager textureManager, final Operation<Void> original) {
+        final Runnable runnable = () -> original.call(textureManager);
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.legacyLoadingScreen) {
+            this.animatium$loadOverlayTextures.set(runnable);
+        } else {
+            runnable.run();
+        }
     }
 
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/resources/ReloadableResourceManager;createReload(Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/concurrent/CompletableFuture;Ljava/util/List;)Lnet/minecraft/server/packs/resources/ReloadInstance;", shift = At.Shift.AFTER))
     private void animatium$loadOverlayTextures(final GameConfig gameConfig, final CallbackInfo ci) {
-        LoadingOverlay.registerTextures(this.textureManager);
+        final Runnable runnable = this.animatium$loadOverlayTextures.get();
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.legacyLoadingScreen && runnable != null) {
+            runnable.run();
+        }
     }
 }

@@ -127,7 +127,7 @@
 		"v1.rendering.lighting.MixinLightmap_LegacyLightmap",
 		"v1.rendering.lighting.MixinLightmapRenderState_StoreLegacy",
 		"v1.rendering.lighting.MixinLightmapRenderStateExtractor_LegacyLightmap",
-		"v1.rendering.min_transparency.MixinSpriteContents_FixTransparencyLimit",
+      "v1.rendering.items.MixinSpriteContents_FixTransparencyLimit",
 		"v1.rendering.outlines.MixinGameRenderer_PersistentBlockOutline",
 		"v1.rendering.outlines.MixinLevelRenderer_BlockOutlines",
 		"v1.rendering.sky.MixinLevelRenderer_OldCloudRendering",

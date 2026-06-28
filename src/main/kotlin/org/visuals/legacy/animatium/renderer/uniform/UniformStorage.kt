@@ -45,7 +45,7 @@ interface UniformStorage : AutoCloseable {
         protected val calculator = Std140SizeCalculator()
 
         fun <T> with(key: UniformKey<T>, defaultValue: T?): Builder {
-            if (keys.contains(key)) {
+            if (this.keys.contains(key)) {
                 throw RuntimeException("Cannot add key '${key.name}' to uniform storage builder as it already contains it!")
             } else {
                 this.keys.add(key)

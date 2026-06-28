@@ -26,7 +26,6 @@
 package org.visuals.legacy.animatium.renderer.uniform
 
 import com.mojang.blaze3d.buffers.GpuBuffer
-import com.mojang.blaze3d.buffers.GpuBufferSlice
 import com.mojang.blaze3d.buffers.Std140Builder
 import com.mojang.blaze3d.systems.RenderSystem
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
@@ -57,42 +56,38 @@ class DynamicUniformStorage : UniformStorage, AutoCloseable {
 
     override fun name(): String = this.name
 
-    override fun <T> set(key: UniformKey<T>, value: T): DynamicUniformStorage {
-        if (this.isClosed) {
-            throw RuntimeException("Cannot set value in Uniform Storage (${this.name}) as it has been closed!")
-        } else if (!this.keys.contains(key)) {
-            throw RuntimeException("Uniform storage does not contain key '${key.name}'!")
-        } else {
-            this.values[key] = value
-            return this
-        }
+    override fun <T> set(key: UniformKey<T>, value: T) = if (this.isClosed) {
+        throw RuntimeException("Cannot set value in Uniform Storage (${this.name}) as it has been closed!")
+    } else if (!this.keys.contains(key)) {
+        throw RuntimeException("Uniform storage does not contain key '${key.name}'!")
+    } else {
+        this.values[key] = value
+        this
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T> get(key: UniformKey<T>): T? = if (!this.keys.contains(key)) null else this.values[key] as T?
+    override fun <T> get(key: UniformKey<T>) = if (!this.keys.contains(key)) null else this.values[key] as T?
 
     @Suppress("UNCHECKED_CAST")
-    override fun upload(): GpuBufferSlice {
-        if (this.isClosed) {
-            throw RuntimeException("Cannot upload Uniform Storage (${this.name}) as it has been closed!")
-        } else {
-            val device = RenderSystem.getDevice()
-            val transientMemory = device.createCommandEncoder().transientMemory()
-            val alignment = device.deviceInfo.limits.minUniformOffsetAlignment
-            transientMemory.allocateGpuMapped(
-                this.size.toLong(),
-                alignment.toLong(),
-                GpuBuffer.USAGE_UNIFORM
-            ).use { view ->
-                val builder = Std140Builder.intoBuffer(view.data)
-                for (key in this.keys) {
-                    val value = this.values[key]
-                        ?: throw RuntimeException("Failed to bind \"${key.name}\" in Uniform Storage (${this.name}) as value is not set!")
-                    (key.serializer as UniformSerializer<Any>).put(builder, value)
-                }
-
-                return view.slice
+    override fun upload() = if (this.isClosed) {
+        throw RuntimeException("Cannot upload Uniform Storage (${this.name}) as it has been closed!")
+    } else {
+        val device = RenderSystem.getDevice()
+        val transientMemory = device.createCommandEncoder().transientMemory()
+        val alignment = device.deviceInfo.limits.minUniformOffsetAlignment
+        transientMemory.allocateGpuMapped(
+            this.size.toLong(),
+            alignment.toLong(),
+            GpuBuffer.USAGE_UNIFORM
+        ).use { view ->
+            val builder = Std140Builder.intoBuffer(view.data)
+            for (key in this.keys) {
+                val value = this.values[key]
+                    ?: throw RuntimeException("Failed to bind \"${key.name}\" in Uniform Storage (${this.name}) as value is not set!")
+                (key.serializer as UniformSerializer<Any>).put(builder, value)
             }
+
+            view.slice
         }
     }
 
