@@ -38,7 +38,7 @@ import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import org.joml.Quaternionf
 
-class FootstepParticle(level: ClientLevel, x: Double, y: Double, z: Double, sprite: TextureAtlasSprite) :
+class FootprintParticle(level: ClientLevel, x: Double, y: Double, z: Double, sprite: TextureAtlasSprite) :
     SingleQuadParticle(level, x, y, z, sprite) {
     init {
         this.quadSize = 0.125F
@@ -70,6 +70,6 @@ class FootstepParticle(level: ClientLevel, x: Double, y: Double, z: Double, spri
             velocityY: Double,
             velocityZ: Double,
             random: RandomSource
-        ): Particle = FootstepParticle(level, x, y, z, provider.get(random))
+        ): Particle = FootprintParticle(level, x, y, z, provider.get(random))
     }
 }

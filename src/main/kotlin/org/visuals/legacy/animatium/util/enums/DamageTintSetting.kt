@@ -23,11 +23,17 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.enums;
+package org.visuals.legacy.animatium.util.enums
 
-public enum CameraVersionSetting {
-    V1_8,
-    V1_9_TO_V1_13_2,
-    V1_14_TO_V1_14_3,
-    VANILLA
+import net.minecraft.util.ARGB
+
+enum class DamageTintSetting(private val colorGetter: (brightness: Float) -> Int) {
+    V1_7({ brightness -> ARGB.colorFromFloat(0.4F, brightness, 0.0F, 0.0F) }),
+    V1_8(ARGB.colorFromFloat(0.3F, 1.0F, 0.0F, 0.0F)),
+    V1_8_ORANGE_MARSHALL(ARGB.colorFromFloat(0.5F, 1.0F, 0.0F, 0.0F)),
+    VANILLA(-1); // Doesn't matter, any code will fall out if the setting is set to this (NOTE: 1.15 was when the alpha changed from 0.3F to 0.6980392156862745F)
+
+    constructor(color: Int) : this({ color })
+
+    fun getColor(brightness: Float) = this.colorGetter(brightness)
 }

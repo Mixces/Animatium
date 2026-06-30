@@ -23,28 +23,11 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.states;
+package org.visuals.legacy.animatium.util.enums
 
-public interface ViewBobbingStorage {
-    // Bobbing Tilt
-    default void animatium$setBobbingTilt(final float bobbingTilt) {
-        throw new UnsupportedOperationException();
-    }
-
-    default float animatium$getBobbingTilt() {
-        throw new UnsupportedOperationException();
-    }
-
-    default float animatium$getPreviousBobbingTilt() {
-        throw new UnsupportedOperationException();
-    }
-
-    // Horizontal Speed
-    default float animatium$getHorizontalSpeed() {
-        throw new UnsupportedOperationException();
-    }
-
-    default float animatium$getPreviousHorizontalSpeed() {
-        throw new UnsupportedOperationException();
-    }
+enum class CameraVersionSetting {
+    V1_8,
+    V1_9_TO_V1_13_2,
+    V1_14_TO_V1_14_3,
+    VANILLA
 }

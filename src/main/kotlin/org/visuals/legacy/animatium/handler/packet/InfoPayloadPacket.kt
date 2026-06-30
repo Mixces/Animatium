@@ -23,16 +23,28 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.states;
+package org.visuals.legacy.animatium.handler.packet
 
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf
+import net.minecraft.network.codec.StreamCodec
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload
+import org.visuals.legacy.animatium.Animatium.location
+import java.util.*
 
-public interface ItemUtilityRenderState {
-    default ItemStack animatium$getItemStack() {
-        return null;
+data class InfoPayloadPacket(val version: Double, val developmentVersion: String?) : CustomPacketPayload {
+    companion object {
+        val ID = CustomPacketPayload.Type<InfoPayloadPacket>(location("info"))
+
+        val CODEC: StreamCodec<FriendlyByteBuf, InfoPayloadPacket> =
+            CustomPacketPayload.codec(InfoPayloadPacket::write, InfoPayloadPacket::read)
+
+        private fun read(buffer: FriendlyByteBuf): Nothing = throw UnsupportedOperationException()
     }
 
-    default void animatium$setItemStack(final ItemStack itemStack) {
-        throw new UnsupportedOperationException();
+    private fun write(buffer: FriendlyByteBuf) {
+        buffer.writeDouble(this.version)
+        buffer.writeOptional(Optional.ofNullable(this.developmentVersion), FriendlyByteBuf::writeUtf)
     }
+
+    override fun type(): CustomPacketPayload.Type<out CustomPacketPayload> = ID
 }

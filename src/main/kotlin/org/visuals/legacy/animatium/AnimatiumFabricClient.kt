@@ -38,8 +38,8 @@ import net.fabricmc.loader.api.FabricLoader
 import org.visuals.legacy.animatium.command.AnimatiumCommand
 import org.visuals.legacy.animatium.handler.AnimatiumKeybinds
 import org.visuals.legacy.animatium.handler.AnimatiumParticles
-import org.visuals.legacy.animatium.packet.InfoPayloadPacket
-import org.visuals.legacy.animatium.packet.SetServerFeaturesPayloadPacket
+import org.visuals.legacy.animatium.handler.packet.InfoPayloadPacket
+import org.visuals.legacy.animatium.handler.packet.SetServerFeaturesPayloadPacket
 
 @Entrypoint
 class AnimatiumFabricClient : ClientModInitializer {

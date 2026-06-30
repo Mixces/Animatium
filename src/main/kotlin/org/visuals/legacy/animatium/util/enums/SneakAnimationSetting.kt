@@ -23,19 +23,15 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.enums;
+package org.visuals.legacy.animatium.util.enums
 
-public enum SneakAnimationSetting {
-	V1_7,
-	V1_8,
-	V1_13,
-	VANILLA;
+enum class SneakAnimationSetting {
+    V1_7,
+    V1_8,
+    V1_13,
+    VANILLA;
 
-	public boolean isSmooth() {
-		return this != V1_8;
-	}
+    fun isSmooth() = this != V1_8
 
-	public boolean isInstantResponse() {
-		return this != VANILLA;
-	}
+    fun isInstantResponse() = this != VANILLA
 }

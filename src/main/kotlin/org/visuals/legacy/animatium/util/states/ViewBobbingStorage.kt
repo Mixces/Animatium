@@ -23,19 +23,28 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.enums;
+package org.visuals.legacy.animatium.util.states
 
-public enum VoidFogSetting {
-    BOTH,
-    PARTICLES,
-    FOG,
-    OFF;
-
-    public boolean hasFog() {
-        return this == BOTH || this == FOG;
+interface ViewBobbingStorage {
+    // Bobbing Tilt
+    fun `animatium$setBobbingTilt`(bobbingTilt: Float) {
+        throw UnsupportedOperationException()
     }
 
-    public boolean hasParticles() {
-        return this == BOTH || this == PARTICLES;
+    fun `animatium$getBobbingTilt`(): Float {
+        throw UnsupportedOperationException()
+    }
+
+    fun `animatium$getPreviousBobbingTilt`(): Float {
+        throw UnsupportedOperationException()
+    }
+
+    // Horizontal Speed
+    fun `animatium$getHorizontalSpeed`(): Float {
+        throw UnsupportedOperationException()
+    }
+
+    fun `animatium$getPreviousHorizontalSpeed`(): Float {
+        throw UnsupportedOperationException()
     }
 }

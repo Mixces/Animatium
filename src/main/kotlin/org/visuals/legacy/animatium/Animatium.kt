@@ -33,13 +33,13 @@ import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.Identifier
 import org.visuals.legacy.animatium.config.AnimatiumConfig
 import org.visuals.legacy.animatium.config.bundle.ConfigBundles
-import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor
 import org.visuals.legacy.animatium.handler.AnimatiumDebugEntry
-import org.visuals.legacy.animatium.util.config.ConfigUtil
+import org.visuals.legacy.animatium.handler.rendering.lighting.LegacyDiffuseLighting
+import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor
+import org.visuals.legacy.animatium.util.config.GeneralConfigUtil
 import org.visuals.legacy.animatium.util.enums.ServerFeature
 import org.visuals.legacy.animatium.util.isSingleplayer
 import org.visuals.legacy.animatium.util.reinitializeInventorySlots
-import org.visuals.legacy.animatium.handler.rendering.lighting.LegacyDiffuseLighting
 import java.util.*
 
 object Animatium {
@@ -52,7 +52,7 @@ object Animatium {
     var enabled = true
         set(value) {
             field = value
-            ConfigUtil.put(ConfigUtil.ENABLED_KEY, value)
+            GeneralConfigUtil.put(GeneralConfigUtil.ENABLED_KEY, value)
         }
 
     @JvmStatic
@@ -62,7 +62,7 @@ object Animatium {
     fun hasServerFeature(feature: ServerFeature): Boolean {
         if (isSingleplayer()) {
             for (entry in ConfigBundles.EXTRAS.entries()) {
-                if (entry.name.equals(feature.getName())) {
+                if (entry.name.equals(feature.serializedName)) {
                     return entry.value() as Boolean
                 }
             }
@@ -93,10 +93,10 @@ object Animatium {
 
         AnimatiumConfig.load()
         try {
-            ConfigUtil.load()
+            GeneralConfigUtil.load()
             LOGGER.info("Successfully loaded the animatium utility config!")
         } catch (_: Exception) {
-            enabled = ConfigUtil.getBoolean(ConfigUtil.ENABLED_KEY)
+            enabled = GeneralConfigUtil.getBoolean(GeneralConfigUtil.ENABLED_KEY)
             LOGGER.error("Failed to load animatium utility config, defaulting...")
         }
 

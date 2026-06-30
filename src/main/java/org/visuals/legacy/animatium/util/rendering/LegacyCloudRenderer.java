@@ -99,7 +99,6 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
         final int colorB = ARGB.colorFromFloat(0.8F, 1.0F, 1.0F, 1.0F);
         final int colorC = ARGB.colorFromFloat(0.8F, 0.9F, 0.9F, 0.9F);
         final int colorD = ARGB.colorFromFloat(0.8F, 0.8F, 0.8F, 0.8F);
-
         try (final ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(52 * 64 * 64 * DefaultVertexFormat.POSITION_COLOR.getVertexSize())) {
             final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, pipeline.getPrimitiveTopology(), Objects.requireNonNull(pipeline.getVertexFormatBinding(0)));
             this.buildMesh(relativeCameraPos, builder, cellX, cellZ, colorA, colorB, colorC, colorD, cloudStatus == CloudStatus.FANCY);
@@ -295,7 +294,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
     protected @NotNull Optional<CloudRenderer.TextureData> prepare(final @NonNull ResourceManager resourceManager, final @NonNull ProfilerFiller profilerFiller) {
         try {
             final Optional<CloudRenderer.TextureData> optionalTextureData;
-            try (final InputStream inputStream = resourceManager.open(CloudRenderer.TEXTURE_LOCATION); final NativeImage nativeImage = NativeImage.read(inputStream);) {
+            try (final InputStream inputStream = resourceManager.open(CloudRenderer.TEXTURE_LOCATION); final NativeImage nativeImage = NativeImage.read(inputStream)) {
                 final int width = nativeImage.getWidth();
                 final int height = nativeImage.getHeight();
                 final long[] cells = new long[width * height];

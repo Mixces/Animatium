@@ -23,38 +23,16 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.states;
+package org.visuals.legacy.animatium.util.states
 
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStack
 
-public interface UtilityRenderState {
-    default ItemStack animatium$getItemHeldByArm(final HumanoidArm humanoidArm) {
-        throw new UnsupportedOperationException();
+interface ItemUtilityRenderState {
+    fun `animatium$getItemStack`(): ItemStack {
+        throw UnsupportedOperationException()
     }
 
-    default boolean animatium$isFishing() {
-        throw new UnsupportedOperationException();
-    }
-
-    default void animatium$setFishing() {
-        throw new UnsupportedOperationException();
-    }
-
-    default boolean animatium$isSleeping() {
-        throw new UnsupportedOperationException();
-    }
-
-    default void animatium$setSleeping() {
-        throw new UnsupportedOperationException();
-    }
-
-    default EntityDimensions animatium$getStandingDimensions() {
-        throw new UnsupportedOperationException();
-    }
-
-    default void animatium$setStandingDimensions(final EntityDimensions entityDimensions) {
-        throw new UnsupportedOperationException();
+    fun `animatium$setItemStack`(itemStack: ItemStack) {
+        throw UnsupportedOperationException()
     }
 }

@@ -44,7 +44,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.screens.OnboardingScreen;
+import org.visuals.legacy.animatium.handler.screen.OnboardingScreen;
 
 import java.util.Calendar;
 import java.util.Random;

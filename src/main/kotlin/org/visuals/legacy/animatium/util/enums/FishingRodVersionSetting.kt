@@ -23,9 +23,9 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.enums;
+package org.visuals.legacy.animatium.util.enums
 
-public enum FishingRodVersionSetting {
+enum class FishingRodVersionSetting {
     V1_7,
     V1_8,
     V1_13,

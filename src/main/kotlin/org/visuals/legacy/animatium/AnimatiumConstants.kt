@@ -27,7 +27,7 @@ package org.visuals.legacy.animatium
 
 import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel
-import org.visuals.legacy.animatium.packet.InfoPayloadPacket
+import org.visuals.legacy.animatium.handler.packet.InfoPayloadPacket
 import java.lang.Boolean.parseBoolean
 import java.lang.Double.parseDouble
 

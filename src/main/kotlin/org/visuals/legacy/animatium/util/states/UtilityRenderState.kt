@@ -23,28 +23,38 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.packet
+package org.visuals.legacy.animatium.util.states
 
-import net.minecraft.network.FriendlyByteBuf
-import net.minecraft.network.codec.StreamCodec
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload
-import org.visuals.legacy.animatium.Animatium.location
-import java.util.*
+import net.minecraft.world.entity.EntityDimensions
+import net.minecraft.world.entity.HumanoidArm
+import net.minecraft.world.item.ItemStack
 
-data class InfoPayloadPacket(val version: Double, val developmentVersion: String?) : CustomPacketPayload {
-    companion object {
-        val ID = CustomPacketPayload.Type<InfoPayloadPacket>(location("info"))
-
-        val CODEC: StreamCodec<FriendlyByteBuf, InfoPayloadPacket> =
-            CustomPacketPayload.codec(InfoPayloadPacket::write, InfoPayloadPacket::read)
-
-        private fun read(buffer: FriendlyByteBuf): Nothing = throw UnsupportedOperationException()
+interface UtilityRenderState {
+    fun `animatium$getItemHeldByArm`(humanoidArm: HumanoidArm): ItemStack {
+        throw UnsupportedOperationException()
     }
 
-    private fun write(buffer: FriendlyByteBuf) {
-        buffer.writeDouble(this.version)
-        buffer.writeOptional(Optional.ofNullable(this.developmentVersion), FriendlyByteBuf::writeUtf)
+    fun `animatium$isFishing`(): Boolean {
+        throw UnsupportedOperationException()
     }
 
-    override fun type(): CustomPacketPayload.Type<out CustomPacketPayload> = ID
+    fun `animatium$setFishing`() {
+        throw UnsupportedOperationException()
+    }
+
+    fun `animatium$isSleeping`(): Boolean {
+        throw UnsupportedOperationException()
+    }
+
+    fun `animatium$setSleeping`() {
+        throw UnsupportedOperationException()
+    }
+
+    fun `animatium$getStandingDimensions`(): EntityDimensions {
+        throw UnsupportedOperationException()
+    }
+
+    fun `animatium$setStandingDimensions`(entityDimensions: EntityDimensions) {
+        throw UnsupportedOperationException()
+    }
 }

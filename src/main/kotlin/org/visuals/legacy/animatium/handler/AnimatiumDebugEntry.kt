@@ -53,9 +53,9 @@ class AnimatiumDebugEntry : DebugScreenEntry {
         if (!Animatium.ENABLED_SERVER_FEATURES.isEmpty()) {
             list.add("Enabled Server Features:")
             if (Animatium.hasServerFeature(ServerFeature.ALL)) {
-                Arrays.stream(ServerFeature.VALUES).forEach { feature -> list.add(" - " + feature.getName()) }
+                Arrays.stream(ServerFeature.VALUES).forEach { feature -> list.add(" - " + feature.serializedName) }
             } else {
-                Animatium.ENABLED_SERVER_FEATURES.forEach { feature -> list.add(" - " + feature.getName()) }
+                Animatium.ENABLED_SERVER_FEATURES.forEach { feature -> list.add(" - " + feature.serializedName) }
             }
         }
 

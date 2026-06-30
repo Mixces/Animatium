@@ -27,7 +27,7 @@ package org.visuals.legacy.animatium.handler.rendering
 
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
-import org.visuals.legacy.animatium.util.getBrightness
+import org.visuals.legacy.animatium.util.getLegacyBrightness
 
 class LegacyFogDarkness {
     companion object {
@@ -39,8 +39,9 @@ class LegacyFogDarkness {
     private var darkness: Float = 0.0F
 
     fun tick(entity: Entity, viewDistance: Int) {
+        val brightness = entity.level().getLegacyBrightness(entity.blockPosition())
         this.prevDarkness = this.darkness
-        this.darkness = Mth.lerp(0.1F, this.darkness, Mth.lerp(entity.getBrightness(), viewDistance / 32.0F, 1.0F))
+        this.darkness = Mth.lerp(0.1F, this.darkness, Mth.lerp(brightness, viewDistance / 32.0F, 1.0F))
     }
 
     fun getDarkness(tickDelta: Float): Float = Mth.lerp(tickDelta, this.prevDarkness, this.darkness)

@@ -1,13 +1,12 @@
 # Release 4.0
 
-## General
+26.1 backport coming soon.
+
+## General Changes
 
 - Reworked a lot of code & Moved a lot of it to Kotlin (kotlin da goat g)
 - Config setting names are more generalized
 - Scrapped the config data packet idea (no replacement)
-
-## Changes
-
 - All settings in the "Fixes" category now get disabled when you disable the mod "/animatium off"
 - Your onboarding/preset version will now be remembered
 - Decouple Fishing Rod Version from Item Positions setting
@@ -15,6 +14,19 @@
     - This setting wasn't really a fix and should have been in the "Items Category" to begin with
     - Also, added logic to re-add the old item equip use on ground logic that was missing.
         - (Try placing a block under you, your hand will do the equip animation like it did in <=1.8.x)
+
+## Fixes
+
+- Fixed "Long Un-sneak" setting affecting vanilla sneaking when disabled
+- Fixed disabled widget text colors when using "Old Widget Hover Text Colors"
+- Fixed jittering when sneaking on slime blocks when "Bring back bobbing tilt" is enabled
+- Fixed mod not "requiring" YACL on launch
+- Fixed potential crash when using the 1.7 sneak animation
+- Fixed Damage tint not affecting blocks/items equipped in the head slot when they should be
+- Fixed onboarding showing if the screen was opened via commands and the game closed
+- Fixed "Hide Recipe Book" setting missing from config screen
+- Fixed "Old Block Mining Progress" doing nothing at all
+- Fixed sodium icon in Video Settings being broken
 
 ## New
 
@@ -28,6 +40,8 @@
         - Legacy Diffuse Lighting
         - Legacy Lightmap
         - Legacy Fog Darkening
+            - Known bug of causing night vision to be very blue
+            - Known bug of persisting for a second when setting time to day after night
         - Damage Tint Style
             - V1_7 (Not fully accurate, will fix in future release)
             - V1_8
@@ -64,15 +78,3 @@
 
 These were reasons as to why these were removed, in which being some were very much disliked and some can be done easily
 with a resource pack.
-
-## Fixes
-
-- Fixed "Long Un-sneak" setting affecting vanilla sneaking when disabled
-- Fixed disabled widget text colors when using "Old Widget Hover Text Colors"
-- Fixed jittering when sneaking on slime blocks when "Bring back bobbing tilt" is enabled
-- Fixed mod not "requiring" YACL on launch
-- Fixed potential crash when using the 1.7 sneak animation
-- Fixed Damage tint not affecting blocks/items equipped in the head slot when they should be
-- Fixed onboarding showing if the screen was opened via commands and the game closed
-- Fixed "Hide Recipe Book" setting missing from config screen
-- Fixed "Old Block Mining Progress" doing nothing at all

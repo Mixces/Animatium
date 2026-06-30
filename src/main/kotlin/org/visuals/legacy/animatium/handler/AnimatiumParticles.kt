@@ -34,7 +34,7 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
 import org.visuals.legacy.animatium.Animatium.location
 import org.visuals.legacy.animatium.handler.particle.BloodParticle
-import org.visuals.legacy.animatium.handler.particle.FootstepParticle
+import org.visuals.legacy.animatium.handler.particle.FootprintParticle
 
 object AnimatiumParticles {
     private val REGISTRY =
@@ -43,7 +43,7 @@ object AnimatiumParticles {
         hashMapOf<SimpleParticleType, ParticleProviderRegistry.PendingParticleProvider<SimpleParticleType>>()
 
     val BLOOD_PARTICLE_TYPE = register(location("blood"), true, BloodParticle.Provider())
-    val FOOTSTEP_PARTICLE_TYPE = register(location("footstep"), false, FootstepParticle::Provider)
+    val FOOTPRINT_PARTICLE_TYPE = register(location("footprint"), false, FootprintParticle::Provider)
 
     fun bootstrap() {
         val providerRegistry = ParticleProviderRegistry.getInstance()

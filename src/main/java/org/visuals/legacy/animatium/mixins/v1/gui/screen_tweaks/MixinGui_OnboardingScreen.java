@@ -34,8 +34,8 @@ import net.minecraft.client.gui.screens.TitleScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.visuals.legacy.animatium.screens.OnboardingScreen;
-import org.visuals.legacy.animatium.util.config.ConfigUtil;
+import org.visuals.legacy.animatium.handler.screen.OnboardingScreen;
+import org.visuals.legacy.animatium.util.config.GeneralConfigUtil;
 
 @Mixin(Gui.class)
 public abstract class MixinGui_OnboardingScreen {
@@ -44,7 +44,7 @@ public abstract class MixinGui_OnboardingScreen {
     @Expression("@(this).screen = guiScreen")
     @ModifyVariable(method = "setScreen", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.BEFORE), argsOnly = true, name = "screen")
     private Screen animatium$showOnboarding(final Screen screen) {
-        if (screen instanceof TitleScreen titleScreen && ConfigUtil.getBoolean(ConfigUtil.ONBOARDING_KEY)) {
+        if (screen instanceof TitleScreen titleScreen && GeneralConfigUtil.getBoolean(GeneralConfigUtil.ONBOARDING_KEY)) {
             return new OnboardingScreen(titleScreen, false);
         } else {
             return screen;

@@ -23,11 +23,11 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.enums;
+package org.visuals.legacy.animatium.util.enums
 
-import java.util.Arrays;
+import java.util.*
 
-public enum ServerFeature {
+enum class ServerFeature(val serializedName: String, val id: Int) {
     ALL("all", 0),
     MISS_PENALTY("miss_penalty", 1),
     LEFT_CLICK_ITEM_USAGE("left_click_item_usage", 2),
@@ -39,20 +39,10 @@ public enum ServerFeature {
     FIX_SPRINT_ITEM_USE("disable_sprint_item_use", 8),
     FIX_SPRINT_SNEAKING("disable_sprint_sneaking", 9);
 
-    public static final ServerFeature[] VALUES = values();
-    private final String name;
-    private final int id;
+    companion object {
+        @JvmField
+        val VALUES = entries.toTypedArray()
 
-    ServerFeature(final String name, final int id) {
-        this.name = name;
-        this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public static ServerFeature byId(final int id) {
-        return Arrays.stream(VALUES).filter(it -> it.id == id).findFirst().orElse(null);
+        fun byId(id: Int): ServerFeature? = Arrays.stream(VALUES).filter({ it.id == id }).findFirst().orElse(null)
     }
 }

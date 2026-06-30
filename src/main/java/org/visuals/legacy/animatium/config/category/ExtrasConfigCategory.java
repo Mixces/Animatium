@@ -136,7 +136,7 @@ public final class ExtrasConfigCategory extends Category {
             final EntryBundle.Group serverFeatureGroup = new EntryBundle.Group("server_features");
             Arrays.stream(ServerFeature.VALUES)
                     .filter(it -> it != ServerFeature.ALL)
-                    .forEach(it -> serverFeatureGroup.booleanEntry(it.getName()));
+                    .forEach(it -> serverFeatureGroup.booleanEntry(it.getSerializedName()));
             bundle.group(serverFeatureGroup);
         }
 
