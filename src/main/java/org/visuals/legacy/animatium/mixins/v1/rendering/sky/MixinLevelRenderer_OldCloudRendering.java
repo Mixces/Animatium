@@ -27,10 +27,8 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.sky;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.CloudStatus;
 import net.minecraft.client.renderer.CloudRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -55,14 +53,17 @@ public abstract class MixinLevelRenderer_OldCloudRendering {
         }
     }
 
-    @WrapOperation(method = "lambda$addCloudsPass$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CloudRenderer;render(ILnet/minecraft/client/CloudStatus;FILnet/minecraft/world/phys/Vec3;JF)V"))
+    // prepareTranslucents -> CloudRenderer#prepare(color, cloudStatus, bottomY, cameraPosition, tickDelta)
+
+    // TODO: 26.3
+    /*@WrapOperation(method = "lambda$addCloudsPass$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CloudRenderer;render(ILnet/minecraft/client/CloudStatus;FILnet/minecraft/world/phys/Vec3;JF)V"))
     private void animatium$renderLegacyClouds(final CloudRenderer instance, final int color, final CloudStatus cloudStatus, final float bottomY, final int range, final Vec3 cameraPosition, final long gameTime, final float tickDelta, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldCloudRendering) {
             LegacyCloudRenderer.INSTANCE.render(color, cloudStatus, bottomY, cameraPosition, tickDelta);
         } else {
             original.call(instance, color, cloudStatus, bottomY, range, cameraPosition, gameTime, tickDelta);
         }
-    }
+    }*/
 
     @WrapOperation(method = "endFrame", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CloudRenderer;endFrame()V"))
     private void animatium$endLegacyCloudsFrame(final CloudRenderer instance, final Operation<Void> original) {

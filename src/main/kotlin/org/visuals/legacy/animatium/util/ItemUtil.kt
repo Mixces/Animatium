@@ -43,7 +43,7 @@ fun isSwordItem(stack: ItemStack): Boolean {
 }
 
 fun isAxeItem(stack: ItemStack): Boolean {
-    return stack.item is AxeItem || stack.`is`(ItemTags.AXES)
+    return stack.`is`(ItemTags.AXES)
 }
 
 fun isPickaxeItem(stack: ItemStack): Boolean {
@@ -51,11 +51,11 @@ fun isPickaxeItem(stack: ItemStack): Boolean {
 }
 
 fun isShovelItem(stack: ItemStack): Boolean {
-    return stack.item is ShovelItem || stack.`is`(ItemTags.SHOVELS)
+    return stack.`is`(ItemTags.SHOVELS)
 }
 
 fun isHoeItem(stack: ItemStack): Boolean {
-    return stack.item is HoeItem || stack.`is`(ItemTags.HOES)
+    return stack.`is`(ItemTags.HOES)
 }
 
 fun isDiggerItem(stack: ItemStack): Boolean {

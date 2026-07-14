@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.spotless)
 }
 
-stonecutter active "26.2-fabric" /* [SC] DO NOT EDIT */
+stonecutter active "26.3-fabric" /* [SC] DO NOT EDIT */
 
 stonecutter tasks {
     order("publishMods", versionComparator)

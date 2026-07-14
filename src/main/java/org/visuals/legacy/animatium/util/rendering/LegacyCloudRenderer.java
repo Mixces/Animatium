@@ -65,7 +65,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
 
     private static final RenderPipeline.Snippet CLOUDS_SNIPPET = RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
             .withVertexShader(Animatium.location("core/legacy_clouds"))
-            .withFragmentShader("core/rendertype_clouds")
+            .withFragmentShader("core/clouds")
             .withDepthStencilState(DepthStencilState.DEFAULT)
             .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
             .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
@@ -271,11 +271,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
     }
 
     private void draw(final RenderPipeline pipeline, final Vector3f offset, final int color) {
-        RenderTarget cloudsTarget = Minecraft.getInstance().levelRenderer.cloudsTarget();
-        if (cloudsTarget == null) {
-            cloudsTarget = Minecraft.getInstance().gameRenderer.mainRenderTarget();
-        }
-
+        final RenderTarget cloudsTarget = Minecraft.getInstance().gameRenderer.mainRenderTarget();
         try (final Renderer renderer = Renderer.of(() -> "Legacy Clouds", cloudsTarget)) {
             renderer.setPipeline(pipeline);
             renderer.setUniform(DynamicTransforms.KEY, DynamicTransforms.builder()

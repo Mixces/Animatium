@@ -54,7 +54,8 @@ public abstract class MixinCustomHeadLayer_DamageTintArmor<S extends LivingEntit
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.damageTintArmor) {
             final SkullModelBase.State modelState = new SkullModelBase.State();
             modelState.animationPos = animationValue;
-            submitNodeCollector.submitModel(model, modelState, poseStack, renderType, lightCoords, OverlayTexture.pack(0, OverlayTexture.v(state.hasRedOverlay)), outlineColor, breakProgress);
+            // TODO: 26.3 (Test)
+            submitNodeCollector.submitModel(model, modelState, poseStack, renderType, lightCoords, OverlayTexture.pack(0, OverlayTexture.v(state.hasRedOverlay)), -1, null, state.outlineColor);
         } else {
             original.call(animationValue, poseStack, submitNodeCollector, lightCoords, model, renderType, outlineColor, breakProgress);
         }

@@ -29,7 +29,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.pipeline.CompiledRenderPipeline;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.renderer.SkyRenderer;
@@ -56,11 +56,11 @@ public abstract class MixinSkyRenderer_PlanarFogSky {
         animatium$skyIndexBuffer = RenderSystem.getSequentialBuffer(PrimitiveTopology.QUADS);
     }
 
-    @WrapOperation(method = "renderSkyDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setPipeline(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V"))
-    private void animatium$planarFogPipeline$skyDisc(final RenderPass instance, final RenderPipeline renderPipeline, final Operation<Void> original) {
-        RenderPipeline pipeline = renderPipeline;
+    @WrapOperation(method = "renderSkyDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setPipeline(Lcom/mojang/blaze3d/pipeline/CompiledRenderPipeline;)V"))
+    private void animatium$planarFogPipeline$skyDisc(final RenderPass instance, final CompiledRenderPipeline renderPipeline, final Operation<Void> original) {
+        CompiledRenderPipeline pipeline = renderPipeline;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
-            pipeline = AnimatiumPipelines.LEGACY_SKY_PLANAR_FOG;
+            pipeline = RenderSystem.getCompiledPipeline(AnimatiumPipelines.LEGACY_SKY_PLANAR_FOG);
         }
 
         original.call(instance, pipeline);
@@ -75,11 +75,11 @@ public abstract class MixinSkyRenderer_PlanarFogSky {
         }
     }
 
-    @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setPipeline(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V"))
-    private void animatium$planarFogPipeline$darkSkyDisc(final RenderPass instance, final RenderPipeline renderPipeline, final Operation<Void> original) {
-        RenderPipeline pipeline = renderPipeline;
+    @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setPipeline(Lcom/mojang/blaze3d/pipeline/CompiledRenderPipeline;)V"))
+    private void animatium$planarFogPipeline$darkSkyDisc(final RenderPass instance, final CompiledRenderPipeline renderPipeline, final Operation<Void> original) {
+        CompiledRenderPipeline pipeline = renderPipeline;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
-            pipeline = AnimatiumPipelines.LEGACY_SKY_PLANAR_FOG;
+            pipeline = RenderSystem.getCompiledPipeline(AnimatiumPipelines.LEGACY_SKY_PLANAR_FOG);
         }
 
         original.call(instance, pipeline);

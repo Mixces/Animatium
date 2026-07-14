@@ -44,14 +44,14 @@ data class RenderDescriptor(
     }
 
     fun createPass(): RenderPass {
-        val descriptor = RenderPassDescriptor.create(this.name)
+        val descriptor = RenderPassDescriptor.builder(this.name)
         descriptor.withColorAttachment(this.colorTexture)
         if (this.depthTexture != null) {
             descriptor.withDepthAttachment(this.depthTexture)
         }
 
         descriptor.withRenderArea(this.area.vanilla())
-        return RenderSystem.getDevice().createCommandEncoder().createRenderPass(descriptor)
+        return RenderSystem.getDevice().createCommandEncoder().createRenderPass(descriptor.build())
     }
 
     data class Area(val x: Int, val y: Int, val width: Int, val height: Int) {
@@ -67,24 +67,12 @@ data class RenderDescriptor(
         private var depthTexture: GpuTextureView? = null
         private var area: Area? = null
 
-        fun withRenderTarget(renderTarget: RenderTarget, ignoreGlobalOverrides: Boolean): Builder {
+        fun withRenderTarget(renderTarget: RenderTarget): Builder {
             this.colorTexture = renderTarget.getColorTextureView()
-            this.depthTexture = if (renderTarget.useDepth) renderTarget.getDepthTextureView() else null
-            if (!ignoreGlobalOverrides) {
-                if (RenderSystem.outputColorTextureOverride != null) {
-                    this.colorTexture = RenderSystem.outputColorTextureOverride
-                }
-
-                if (RenderSystem.outputDepthTextureOverride != null) {
-                    this.depthTexture = if (renderTarget.useDepth) RenderSystem.outputDepthTextureOverride else null
-                }
-            }
-
+            this.depthTexture = if (renderTarget.hasDepth()) renderTarget.getDepthTextureView() else null
             this.area = Area(0, 0, renderTarget.width, renderTarget.height)
             return this
         }
-
-        fun withRenderTarget(renderTarget: RenderTarget): Builder = this.withRenderTarget(renderTarget, true)
 
         fun withColorTexture(colorTexture: GpuTextureView): Builder {
             this.colorTexture = colorTexture

@@ -75,7 +75,7 @@ class Renderer : AutoCloseable {
         @JvmStatic
         fun of(label: Supplier<String>, renderTarget: RenderTarget, area: RenderDescriptor.Area): Renderer {
             val descriptor = RenderDescriptor.builder(label)
-                .withRenderTarget(renderTarget, false)
+                .withRenderTarget(renderTarget)
                 .withArea(area)
                 .build()
             return of(descriptor)
@@ -175,7 +175,7 @@ class Renderer : AutoCloseable {
             val dynamicTransforms = this.uniforms.getOrDefault(DynamicTransforms.KEY, builder().build())
             val autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.primitiveTopology)
             this.descriptor.createPass().use { pass ->
-                pass.setPipeline(pipeline)
+                pass.setPipeline(RenderSystem.getCompiledPipeline(pipeline))
 
                 val bindGroupLayouts = pipeline.bindGroupLayouts
                 val descriptions = BindGroupLayout.flattenUniforms(bindGroupLayouts)

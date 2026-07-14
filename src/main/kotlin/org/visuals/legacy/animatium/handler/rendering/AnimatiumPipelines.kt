@@ -55,7 +55,8 @@ object AnimatiumPipelines {
 
     @JvmField
     val TEXTURED_QUAD = RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
-        .withBindGroupLayout(BindGroupLayouts.MATRICES_PROJECTION)
+        .withBindGroupLayout(BindGroupLayouts.DYNAMIC_TRANSFORMS)
+        .withBindGroupLayout(BindGroupLayouts.PROJECTION)
         .withBindGroupLayout(BindGroupLayouts.SAMPLER0)
         .withPrimitiveTopology(PrimitiveTopology.QUADS)
         .buildSnippet()
@@ -103,6 +104,7 @@ object AnimatiumPipelines {
             .withVertexShader("core/position_color")
             .withFragmentShader("core/position_color")
             .withDepthStencilState(NO_DEPTH_WRITE)
+            .withColorTargetState(ColorTargetState.DEFAULT)
             .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
             .withPrimitiveTopology(PrimitiveTopology.QUADS)
             .buildSnippet()
@@ -121,6 +123,7 @@ object AnimatiumPipelines {
             .withVertexShader(location("core/legacy_sky"))
             .withFragmentShader(location("core/legacy_sky"))
             .withDepthStencilState(NO_DEPTH_WRITE)
+            .withColorTargetState(ColorTargetState.DEFAULT)
             .withVertexBinding(0, DefaultVertexFormat.POSITION)
             .withPrimitiveTopology(PrimitiveTopology.QUADS)
             .buildSnippet()
@@ -150,11 +153,12 @@ object AnimatiumPipelines {
     // Color Boost
     @JvmField
     val COLOR_BOOST_BLIT: RenderPipeline = RenderPipelines.register(
-        RenderPipeline.builder()
+        RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
             .withLocation(location("pipeline/colorboost"))
             .withVertexShader("core/screenquad")
             .withFragmentShader(location("core/colorboost"))
             .withBindGroupLayout(BindGroupLayouts.SAMPLER0)
+            .withColorTargetState(ColorTargetState.DEFAULT)
             .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
             .build()
     )
@@ -167,11 +171,12 @@ object AnimatiumPipelines {
 
     @JvmField
     val LEGACY_LIGHTMAP: RenderPipeline = RenderPipelines.register(
-        RenderPipeline.builder()
+        RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
             .withLocation(location("pipeline/legacy_lightmap"))
             .withVertexShader("core/screenquad")
             .withFragmentShader(location("core/legacy_lightmap"))
             .withBindGroupLayout(LEGACY_LIGHTMAP_INFO)
+            .withColorTargetState(ColorTargetState.DEFAULT)
             .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
             .build()
     )
