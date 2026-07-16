@@ -42,12 +42,12 @@ import org.visuals.legacy.animatium.util.rendering.LegacyCloudRenderer;
 @Mixin(LevelRenderer.class)
 public abstract class MixinLevelRenderer_OldCloudRendering {
     @Inject(method = "close", at = @At("TAIL"))
-    private void animatium$closeLegacyClouds(CallbackInfo ci) {
+    private void animatium$closeLegacyClouds(final CallbackInfo ci) {
         LegacyCloudRenderer.INSTANCE.close();
     }
 
-    @WrapOperation(method = "allChanged", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CloudRenderer;markForRebuild()V"))
-    private void animatium$markLegacyCloudsForRebuild$1(CloudRenderer instance, Operation<Void> original) {
+    @WrapOperation(method = {"allChanged", "needsUpdate"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CloudRenderer;markForRebuild()V"))
+    private void animatium$markLegacyCloudsForRebuild$1(final CloudRenderer instance, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldCloudRendering) {
             LegacyCloudRenderer.INSTANCE.markForRebuild();
         } else {
@@ -56,26 +56,17 @@ public abstract class MixinLevelRenderer_OldCloudRendering {
     }
 
     @WrapOperation(method = "lambda$addCloudsPass$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CloudRenderer;render(ILnet/minecraft/client/CloudStatus;FILnet/minecraft/world/phys/Vec3;JF)V"))
-    private void animatium$renderLegacyClouds(CloudRenderer instance, int cloudColor, CloudStatus cloudStatus, float height, int range, Vec3 cameraPosition, long ticks, float partialTick, Operation<Void> original) {
+    private void animatium$renderLegacyClouds(final CloudRenderer instance, final int color, final CloudStatus cloudStatus, final float bottomY, final int range, final Vec3 cameraPosition, final long gameTime, final float tickDelta, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldCloudRendering) {
-            LegacyCloudRenderer.INSTANCE.render(cloudColor, cloudStatus, height, cameraPosition, partialTick);
+            LegacyCloudRenderer.INSTANCE.render(color, cloudStatus, bottomY, cameraPosition, tickDelta);
         } else {
-            original.call(instance, cloudColor, cloudStatus, height, range, cameraPosition, ticks, partialTick);
+            original.call(instance, color, cloudStatus, bottomY, range, cameraPosition, gameTime, tickDelta);
         }
     }
 
     @WrapOperation(method = "endFrame", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CloudRenderer;endFrame()V"))
-    private void animatium$endLegacyCloudsFrame(CloudRenderer instance, Operation<Void> original) {
+    private void animatium$endLegacyCloudsFrame(final CloudRenderer instance, final Operation<Void> original) {
         if (!Animatium.isEnabled() || !AnimatiumConfig.instance().other.oldCloudRendering) {
-            original.call(instance);
-        }
-    }
-
-    @WrapOperation(method = "needsUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CloudRenderer;markForRebuild()V"))
-    private void animatium$markLegacyCloudsForRebuild$2(CloudRenderer instance, Operation<Void> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldCloudRendering) {
-            LegacyCloudRenderer.INSTANCE.markForRebuild();
-        } else {
             original.call(instance);
         }
     }

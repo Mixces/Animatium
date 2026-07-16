@@ -40,79 +40,75 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.rendering.SkyRendererUtility;
+import org.visuals.legacy.animatium.handler.rendering.AnimatiumPipelines;
+import org.visuals.legacy.animatium.handler.rendering.LegacySkyRenderer;
 
 @Mixin(SkyRenderer.class)
 public abstract class MixinSkyRenderer_PlanarFogSky {
     @Unique
-    private static GpuBuffer animatium$topSkyBuffer = null;
-
-    @Unique
     private static RenderSystem.AutoStorageIndexBuffer animatium$skyIndexBuffer;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void init(CallbackInfo ci) {
-        animatium$topSkyBuffer = SkyRendererUtility.initializeSky((builder) -> SkyRendererUtility.buildSkyHalf(builder, 16.0F, false));
+    private void animatium$initSkyRenderer(final CallbackInfo ci) {
+        // Load them before anything (Static Variables don't load until used, which would cause a issue in the RenderPass)
+        LegacySkyRenderer.TOP_GEOMETRY.getVertexBuffer();
+        LegacySkyRenderer.BOTTOM_GEOMETRY.getVertexBuffer();
         animatium$skyIndexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
     }
 
     @WrapOperation(method = "renderSkyDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setPipeline(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V"))
-    private void animatium$planarFogPipeline$skyDisc(RenderPass instance, RenderPipeline renderPipeline, Operation<Void> original) {
+    private void animatium$planarFogPipeline$skyDisc(final RenderPass instance, final RenderPipeline renderPipeline, final Operation<Void> original) {
         RenderPipeline pipeline = renderPipeline;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
-            pipeline = SkyRendererUtility.LEGACY_SKY_PLANAR_FOG_PIPELINE;
+            pipeline = AnimatiumPipelines.LEGACY_SKY_PLANAR_FOG;
         }
 
         original.call(instance, pipeline);
     }
 
     @WrapOperation(method = "renderSkyDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setVertexBuffer(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V", ordinal = 0))
-    private void animatium$planarFogPipeline$skyDisc$vertexBuffer(RenderPass instance, int index, GpuBuffer gpuBuffer, Operation<Void> original) {
-        GpuBuffer buffer = gpuBuffer;
+    private void animatium$planarFogPipeline$skyDisc$vertexBuffer(final RenderPass instance, final int slot, final GpuBuffer vertexBuffer, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
-            buffer = animatium$topSkyBuffer;
-            instance.setIndexBuffer(animatium$skyIndexBuffer.getBuffer(6), animatium$skyIndexBuffer.type());
+            LegacySkyRenderer.TOP_GEOMETRY.bind(instance, animatium$skyIndexBuffer);
+        } else {
+            original.call(instance, slot, vertexBuffer);
         }
-
-        original.call(instance, index, buffer);
     }
 
     @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setPipeline(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V"))
-    private void animatium$planarFogPipeline$darkSkyDisc(RenderPass instance, RenderPipeline renderPipeline, Operation<Void> original) {
+    private void animatium$planarFogPipeline$darkSkyDisc(final RenderPass instance, final RenderPipeline renderPipeline, final Operation<Void> original) {
         RenderPipeline pipeline = renderPipeline;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
-            pipeline = SkyRendererUtility.LEGACY_SKY_PLANAR_FOG_PIPELINE;
+            pipeline = AnimatiumPipelines.LEGACY_SKY_PLANAR_FOG;
         }
 
         original.call(instance, pipeline);
     }
 
     @WrapOperation(method = "renderSkyDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;draw(II)V", ordinal = 0))
-    private void animatium$planarFogPipeline$skyDisc$draw(RenderPass instance, int i, int j, Operation<Void> original) {
+    private void animatium$planarFogPipeline$skyDisc$draw(final RenderPass instance, final int firstVertex, final int vertexCount, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
-            instance.drawIndexed(i, 0, 1014, 1);
+            LegacySkyRenderer.TOP_GEOMETRY.draw(instance);
         } else {
-            original.call(instance, i, j);
+            original.call(instance, firstVertex, vertexCount);
         }
     }
 
     @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setVertexBuffer(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V", ordinal = 0))
-    private void animatium$planarFogPipeline$darkSkyDisc$vertexBuffer(RenderPass instance, int index, GpuBuffer gpuBuffer, Operation<Void> original) {
-        GpuBuffer buffer = gpuBuffer;
+    private void animatium$planarFogPipeline$darkSkyDisc$vertexBuffer(final RenderPass instance, final int slot, final GpuBuffer vertexBuffer, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
-            buffer = SkyRendererUtility.getGpuBuffer();
-            instance.setIndexBuffer(animatium$skyIndexBuffer.getBuffer(6), animatium$skyIndexBuffer.type());
+            LegacySkyRenderer.BOTTOM_GEOMETRY.bind(instance, animatium$skyIndexBuffer);
+        } else {
+            original.call(instance, slot, vertexBuffer);
         }
-
-        original.call(instance, index, buffer);
     }
 
     @WrapOperation(method = "renderDarkDisc", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;draw(II)V", ordinal = 0))
-    private void animatium$planarFogPipeline$darkSkyDisc$draw(RenderPass instance, int i, int j, Operation<Void> original) {
+    private void animatium$planarFogPipeline$darkSkyDisc$draw(final RenderPass instance, final int firstVertex, final int vertexCount, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.planarSkyFog) {
-            instance.drawIndexed(i, 0, 1014, 1);
+            LegacySkyRenderer.BOTTOM_GEOMETRY.draw(instance);
         } else {
-            original.call(instance, i, j);
+            original.call(instance, firstVertex, vertexCount);
         }
     }
 }

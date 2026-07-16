@@ -40,7 +40,7 @@ import java.util.Map;
 @Mixin(Avatar.class)
 public abstract class MixinAvatar_OldSneakHeight {
     @WrapOperation(method = "getDefaultDimensions", at = @At(value = "INVOKE", target = "Ljava/util/Map;getOrDefault(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"))
-    private <V> V animatium$oldSneakHeight(Map<Pose, EntityDimensions> instance, Object pose, V defaultValue, Operation<EntityDimensions> original) {
+    private <V> V animatium$oldSneakHeight(final Map<Pose, EntityDimensions> instance, final Object pose, final V defaultValue, final Operation<EntityDimensions> original) {
         final EntityDimensions entityDimensions = original.call(instance, pose, defaultValue);
         if (Animatium.hasServerFeature(ServerFeature.OLD_SNEAK_HEIGHT) && pose == Pose.CROUCHING) {
             return (V) new EntityDimensions(entityDimensions.width(), 1.65F, 1.54F, entityDimensions.attachments(), entityDimensions.fixed());

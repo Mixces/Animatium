@@ -41,7 +41,7 @@ public abstract class MixinChatComponent_OldPosition {
 
     @Expression("40")
     @ModifyExpressionValue(method = "extractRenderState(Lnet/minecraft/client/gui/components/ChatComponent$ChatGraphicsAccess;IILnet/minecraft/client/gui/components/ChatComponent$DisplayMode;)V", at = @At("MIXINEXTRAS:EXPRESSION"))
-    private int animatium$oldChatPosition$render(int original) {
+    private int animatium$oldChatPosition$render(final int original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldChatPosition) {
             return animatium$oldChatY;
         } else {

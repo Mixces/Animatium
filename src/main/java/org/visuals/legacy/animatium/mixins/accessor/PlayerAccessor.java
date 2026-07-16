@@ -35,10 +35,10 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Player.class)
 public interface PlayerAccessor {
-	@Invoker("canPlayerFitWithinBlocksAndEntitiesWhen")
-	boolean animatium$canChangeIntoPose(Pose pose);
+    @Invoker("canPlayerFitWithinBlocksAndEntitiesWhen")
+    boolean animatium$canChangeIntoPose(final Pose pose);
 
-	@Accessor("inventoryMenu")
-	@Mutable
-	void animatium$setInventoryMenu(InventoryMenu inventoryMenu);
+    @Accessor("inventoryMenu")
+    @Mutable
+    void animatium$setInventoryMenu(final InventoryMenu inventoryMenu);
 }

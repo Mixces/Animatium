@@ -32,63 +32,35 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
-import org.visuals.legacy.animatium.screens.OnboardingScreen;
-import org.visuals.legacy.animatium.util.Utils;
-import org.visuals.legacy.animatium.util.config.ConfigUtil;
+import org.visuals.legacy.animatium.handler.screen.OnboardingScreen;
 
+import java.util.Calendar;
 import java.util.Random;
 
 public class AnimatiumCommand implements Command<FabricClientCommandSource> {
     public static LiteralArgumentBuilder<FabricClientCommandSource> create() {
         final LiteralArgumentBuilder<FabricClientCommandSource> command = ClientCommands.literal("animatium").executes(new AnimatiumCommand());
+        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("on").executes(On.UNIT));
+        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("off").executes(Off.UNIT));
+        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("reload").executes(Reload.UNIT));
+        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("onboarding").executes(Onboarding.UNIT));
 
-        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("on").executes((context) -> {
-            final FabricClientCommandSource source = context.getSource();
-            if (Animatium.isEnabled()) {
-                source.sendFeedback(Component.literal("Mod is already enabled!").withStyle(ChatFormatting.YELLOW));
-            } else {
-                source.sendFeedback(Component.literal("Mod enabled.").withStyle(ChatFormatting.GREEN));
-                Animatium.setEnabled(true);
-                reload();
-            }
-
-            return Command.SINGLE_SUCCESS;
-        }));
-
-        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("off").executes((context) -> {
-            final FabricClientCommandSource source = context.getSource();
-            if (!Animatium.isEnabled()) {
-                source.sendFeedback(Component.literal("Mod is already disabled!").withStyle(ChatFormatting.YELLOW));
-            } else {
-                source.sendFeedback(Component.literal("Mod disabled.").withStyle(ChatFormatting.RED));
-                Animatium.setEnabled(false);
-                reload();
-            }
-
-            return Command.SINGLE_SUCCESS;
-        }));
-
-        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("reload").executes((context) -> {
-            final FabricClientCommandSource source = context.getSource();
-            source.sendFeedback(Component.literal("Mod reloaded.").withStyle(ChatFormatting.GREEN));
-            reload();
-
-            return Command.SINGLE_SUCCESS;
-        }));
-
-        command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("onboarding").executes((context) -> {
-            ConfigUtil.put("onboarding", true);
-
-            final Minecraft minecraft = context.getSource().getClient();
-            minecraft.schedule(() -> minecraft.setScreen(new OnboardingScreen(minecraft.screen)));
-
-            return Command.SINGLE_SUCCESS;
-        }));
+        final Calendar calendar = Calendar.getInstance();
+        if (calendar.get(Calendar.MONTH) == Calendar.SEPTEMBER && calendar.get(Calendar.DAY_OF_MONTH) == 6) {
+            command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("birthday").executes(Birthday.UNIT));
+        }
 
         return command;
     }
@@ -104,10 +76,106 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static void reload() {
-        final Minecraft minecraft = Minecraft.getInstance();
-        minecraft.levelRenderer.allChanged();
-        ((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
-        Utils.reinitializeInventorySlots();
+    private static class On implements Command<FabricClientCommandSource> {
+        public static final On UNIT = new On();
+
+        @Override
+        public int run(final CommandContext<FabricClientCommandSource> context) {
+            final FabricClientCommandSource source = context.getSource();
+            if (Animatium.isEnabled()) {
+                source.sendFeedback(Component.literal("Mod is already enabled!").withStyle(ChatFormatting.YELLOW));
+            } else {
+                source.sendFeedback(Component.literal("Mod enabled.").withStyle(ChatFormatting.GREEN));
+                Animatium.setEnabled(true);
+                Animatium.reload();
+            }
+
+            return Command.SINGLE_SUCCESS;
+        }
+    }
+
+    private static class Off implements Command<FabricClientCommandSource> {
+        public static final Off UNIT = new Off();
+
+        @Override
+        public int run(final CommandContext<FabricClientCommandSource> context) {
+            final FabricClientCommandSource source = context.getSource();
+            if (!Animatium.isEnabled()) {
+                source.sendFeedback(Component.literal("Mod is already disabled!").withStyle(ChatFormatting.YELLOW));
+            } else {
+                source.sendFeedback(Component.literal("Mod disabled.").withStyle(ChatFormatting.RED));
+                Animatium.setEnabled(false);
+                Animatium.reload();
+            }
+
+            return Command.SINGLE_SUCCESS;
+        }
+    }
+
+    private static class Reload implements Command<FabricClientCommandSource> {
+        public static final Reload UNIT = new Reload();
+
+        @Override
+        public int run(final CommandContext<FabricClientCommandSource> context) {
+            final FabricClientCommandSource source = context.getSource();
+            source.sendFeedback(Component.literal("Mod reloaded.").withStyle(ChatFormatting.GREEN));
+            Animatium.reload();
+            return Command.SINGLE_SUCCESS;
+        }
+    }
+
+    private static class Onboarding implements Command<FabricClientCommandSource> {
+        public static final Onboarding UNIT = new Onboarding();
+
+        @Override
+        public int run(final CommandContext<FabricClientCommandSource> context) {
+            final Minecraft minecraft = context.getSource().getClient();
+            minecraft.schedule(() -> minecraft.setScreen(new OnboardingScreen(minecraft.screen, true)));
+            return Command.SINGLE_SUCCESS;
+        }
+    }
+
+    private static class Birthday implements Command<FabricClientCommandSource> {
+        public static final Birthday UNIT = new Birthday();
+
+        private final RandomSource random = RandomSource.createThreadLocalInstance();
+
+        @Override
+        public int run(final CommandContext<FabricClientCommandSource> context) {
+            final Entity entity = context.getSource().getEntity();
+            final ClientLevel level = context.getSource().getLevel();
+            if (!(entity instanceof Player)) {
+                // Do nothing for non-players
+                return Command.SINGLE_SUCCESS;
+            }
+
+            final double x = entity.getBlockX() + this.random.nextDouble();
+            final double y = entity.getBlockY() + this.random.nextDouble();
+            final double z = entity.getBlockZ() + this.random.nextDouble();
+            for (int i = 0; i < 180; ++i) {
+                SoundEvent sound;
+                final int random = this.random.nextIntBetweenInclusive(0, 6);
+                if (random > 3) {
+                    sound = SoundEvents.AMETHYST_BLOCK_CHIME;
+                } else {
+                    sound = SoundEvents.FIREWORK_ROCKET_BLAST;
+                }
+
+                level.playLocalSound(x, y, z, sound, SoundSource.AMBIENT, 20.0F, 0.95F + this.random.nextFloat() * 0.15F, true);
+            }
+
+            context.getSource().sendFeedback(colorful("It's the creators birthday today!!! Wish them a happy birthday!"));
+            return Command.SINGLE_SUCCESS;
+        }
+
+        private Component colorful(final String literal) {
+            final String[] parts = literal.split("");
+            final MutableComponent component = Component.empty();
+            for (final String part : parts) {
+                component.append(Component.literal(part).withColor(ARGB.opaque((int) (Math.random() * 16777215))));
+            }
+
+            return component;
+        }
     }
 }

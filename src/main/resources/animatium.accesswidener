@@ -7,15 +7,14 @@ accessible class com/mojang/blaze3d/pipeline/MainTarget$Dimension
 accessible class net/minecraft/client/renderer/CloudRenderer$RelativeCameraPos
 accessible class net/minecraft/client/gui/components/AbstractSelectionList$Entry
 
-accessible class com/mojang/blaze3d/opengl/GlDevice
-
+accessible method com/mojang/blaze3d/pipeline/RenderPipeline$Builder <init> ()V
+accessible field com/mojang/blaze3d/pipeline/RenderPipeline$Builder definesBuilder Ljava/util/Optional;
 accessible method com/mojang/blaze3d/pipeline/MainTarget$Dimension listWithFallback (II)Ljava/util/List;
 accessible field net/minecraft/client/renderer/item/ItemStackRenderState displayContext Lnet/minecraft/world/item/ItemDisplayContext;
 accessible method net/minecraft/client/gui/components/debug/DebugScreenEntries register (Lnet/minecraft/resources/Identifier;Lnet/minecraft/client/gui/components/debug/DebugScreenEntry;)Lnet/minecraft/resources/Identifier;
 accessible field net/minecraft/world/entity/Avatar STANDING_DIMENSIONS Lnet/minecraft/world/entity/EntityDimensions;
 accessible method net/minecraft/client/renderer/GameRenderer setPostEffect (Lnet/minecraft/resources/Identifier;)V
 
-accessible field net/minecraft/client/renderer/RenderPipelines MATRICES_PROJECTION_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
 accessible field net/minecraft/client/renderer/RenderPipelines MATRICES_FOG_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
 accessible method net/minecraft/client/renderer/RenderPipelines register (Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Lcom/mojang/blaze3d/pipeline/RenderPipeline;
 
@@ -26,3 +25,5 @@ accessible method net/minecraft/client/renderer/CloudRenderer isNorthEmpty (J)Z
 accessible method net/minecraft/client/renderer/CloudRenderer isSouthEmpty (J)Z
 accessible method net/minecraft/client/renderer/CloudRenderer isWestEmpty (J)Z
 accessible method net/minecraft/client/renderer/CloudRenderer isEastEmpty (J)Z
+
+accessible method net/minecraft/client/multiplayer/ClientLevel getSkyFlashTime ()I

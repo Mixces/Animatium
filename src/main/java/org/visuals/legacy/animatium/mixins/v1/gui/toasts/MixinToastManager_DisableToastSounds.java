@@ -42,7 +42,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 @Mixin(ToastManager.class)
 public abstract class MixinToastManager_DisableToastSounds {
     @WrapWithCondition(method = "lambda$update$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/toasts/Toast$Visibility;playSound(Lnet/minecraft/client/sounds/SoundManager;)V"))
-    private boolean animatium$disableToastSounds(Toast.Visibility instance, SoundManager soundManager, @Local(argsOnly = true) ToastManager.ToastInstance<Toast> toastInstance) {
+    private boolean animatium$disableToastSounds(final Toast.Visibility instance, final SoundManager manager, @Local(argsOnly = true, name = "toast") final ToastManager.ToastInstance<Toast> toastInstance) {
         final Toast toast = toastInstance.getToast();
         return !Animatium.isEnabled() || !AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts || (!(toast instanceof RecipeToast) && !(toast instanceof TutorialToast));
     }

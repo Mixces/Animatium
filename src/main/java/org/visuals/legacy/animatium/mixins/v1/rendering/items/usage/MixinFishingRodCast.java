@@ -33,16 +33,16 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
+import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
 @Mixin(FishingRodCast.class)
 public abstract class MixinFishingRodCast {
     @ModifyReturnValue(method = "get", at = @At(value = "RETURN", ordinal = 0))
-    private boolean animatium$getValue(boolean original, @Local(argsOnly = true) ItemDisplayContext displayContext) {
+    private boolean animatium$getValue(final boolean original, @Local(argsOnly = true, name = "displayContext") final ItemDisplayContext displayContext) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.disableItemUsingTextureInGUI && displayContext == ItemDisplayContext.GUI) {
             return false;
         } else {
-            return (Animatium.isEnabled() && AnimatiumConfig.instance().items.fishingRodVersion.ordinal() <= FishingRodVersion.V1_8.ordinal()) || original;
+            return (Animatium.isEnabled() && AnimatiumConfig.instance().items.fishingRodVersion.ordinal() <= FishingRodVersionSetting.V1_8.ordinal()) || original;
         }
     }
 }

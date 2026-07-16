@@ -28,7 +28,6 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.blocks;
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.minecraft.util.ARGB;
 import net.minecraft.world.level.biome.BiomeSpecialEffects;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -46,12 +45,12 @@ public abstract class MixinBiomeSpecialEffects_DisableWaterBiomeTint {
     @Definition(id = "waterColor", field = "Lnet/minecraft/world/level/biome/BiomeSpecialEffects;waterColor:I")
     @Expression("this.waterColor")
     @ModifyExpressionValue(method = "waterColor", at = @At("MIXINEXTRAS:EXPRESSION"))
-    private int animatium$oldWaterColor(int original) {
+    private int animatium$oldWaterColor(final int original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.oldWaterColorEffects) {
             if (this.waterColor == 6388580/*Swamp Water Color*/) {
-                return ARGB.color(224, 255, 174);
+                return 0xFFe0FFAE;
             } else {
-                return ARGB.white(1.0F);
+                return -1;
             }
         } else {
             return original;

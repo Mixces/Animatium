@@ -27,31 +27,30 @@ package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.network.chat.Component;
-import org.visuals.legacy.animatium.util.Utils;
-import org.visuals.legacy.animatium.util.config.EntryBundle;
-import org.visuals.legacy.animatium.util.enums.CameraVersion;
+import org.visuals.legacy.animatium.util.UtilsKt;
+import org.visuals.legacy.animatium.config.bundle.EntryBundle;
+import org.visuals.legacy.animatium.util.enums.CameraVersionSetting;
 
-public class ScreenConfigCategory extends Category {
-    public CameraVersion cameraVersion = CameraVersion.V1_8;
-    public boolean crosshairInThirdPerson = true;
-    public boolean disableHeartFlash = true;
-    public boolean centerScrollableListWidgets = true;
-    public boolean listWidgetSelectedBorderColor = true;
-    public boolean legacyWidgetHoverTextColor = true;
-    public boolean disableDebugHudBackground = true;
-    public boolean debugHudTextShadow = true;
-    public boolean disableCameraTransparentPassthrough = true;
-    public boolean tooltipStyleRendering = true;
-    public boolean slotHoverStyleRendering = true;
-    public boolean listBackgroundGradient = true;
-    public boolean effectsInventoryPosition = true;
-    public boolean snappySliderMovement = true;
-    public boolean hideRecipeBook = true;
-    // TODO 3.3: public boolean panoramaRendering = false;
-    public boolean legacyLoadingScreen = true;
-    public boolean oldChatPosition = true;
-    public boolean oldCrosshairPosition = true;
-    public boolean disconnectServerToTitleScreen = true;
+public final class ScreenConfigCategory extends Category {
+    public CameraVersionSetting cameraVersion = CameraVersionSetting.VANILLA;
+    public boolean crosshairInThirdPerson = false;
+    public boolean disableHeartFlash = false;
+    public boolean centerScrollableListWidgets = false;
+    public boolean listWidgetSelectedBorderColor = false;
+    public boolean legacyWidgetHoverTextColor = false;
+    public boolean disableDebugHudBackground = false;
+    public boolean debugHudTextShadow = false;
+    public boolean disableCameraTransparentPassthrough = false;
+    public boolean tooltipStyleRendering = false;
+    public boolean slotHoverStyleRendering = false;
+    public boolean listBackgroundGradient = false;
+    public boolean inventoryEffectsPosition = false;
+    public boolean fullWidthInventoryEffects = false;
+    public boolean panoramaRendering = false;
+    public boolean legacyLoadingScreen = false;
+    public boolean oldChatPosition = false;
+    public boolean oldCrosshairPosition = false;
+    public boolean disconnectServerToTitleScreen = false;
     public boolean oldCraftingSlotsPosition = false;
 
     public static ConfigCategory create(final ScreenConfigCategory defaults, final ScreenConfigCategory config) {
@@ -65,7 +64,7 @@ public class ScreenConfigCategory extends Category {
     public EntryBundle bundle() {
         final EntryBundle bundle = new EntryBundle(this, "screen");
 
-        bundle.enumEntry("cameraVersion", CameraVersion.class);
+        bundle.enumEntry("cameraVersion", CameraVersionSetting.class);
         bundle.booleanEntry("crosshairInThirdPerson");
         bundle.booleanEntry("disableHeartFlash");
         bundle.booleanEntry("centerScrollableListWidgets");
@@ -77,15 +76,14 @@ public class ScreenConfigCategory extends Category {
         bundle.booleanEntry("tooltipStyleRendering");
         bundle.booleanEntry("slotHoverStyleRendering");
         bundle.booleanEntry("listBackgroundGradient");
-        bundle.booleanEntry("effectsInventoryPosition");
-        bundle.booleanEntry("snappySliderMovement");
-        bundle.booleanEntry("hideRecipeBook");
-        // TODO 3.3: bundle.booleanEntry("panoramaRendering");
+        bundle.booleanEntry("inventoryEffectsPosition");
+        bundle.booleanEntry("fullWidthInventoryEffects");
+        bundle.booleanEntry("panoramaRendering");
         bundle.booleanEntry("legacyLoadingScreen");
         bundle.booleanEntry("oldChatPosition");
         bundle.booleanEntry("oldCrosshairPosition");
         bundle.booleanEntry("disconnectServerToTitleScreen");
-        bundle.booleanEntry("oldCraftingSlotsPosition", (option, event) -> Utils.reinitializeInventorySlots());
+        bundle.booleanEntry("oldCraftingSlotsPosition", (option, event) -> UtilsKt.reinitializeInventorySlots());
 
         return bundle;
     }

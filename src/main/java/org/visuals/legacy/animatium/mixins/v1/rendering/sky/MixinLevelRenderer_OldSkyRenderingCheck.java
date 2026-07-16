@@ -35,6 +35,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(GameRenderer.class)
@@ -46,11 +47,11 @@ public abstract class MixinLevelRenderer_OldSkyRenderingCheck {
     @Definition(id = "renderSky", local = @Local(type = boolean.class, ordinal = 1, argsOnly = true))
     @Expression("renderSky")
     @ModifyArg(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderLevel(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/renderer/state/level/CameraRenderState;Lorg/joml/Matrix4fc;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lorg/joml/Vector4f;ZLnet/minecraft/client/renderer/chunk/ChunkSectionsToRender;)V"), index = 7)
-    private boolean animatium$oldSkyRenderingCheck(boolean original) {
-        if (AnimatiumConfig.instance().fixes.oldSkyRenderingCheck) {
-            original = original && this.minecraft.options.getEffectiveRenderDistance() >= 4;
+    private boolean animatium$oldSkyRenderingCheck(final boolean original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.oldSkyRenderingCheck) {
+            return original && this.minecraft.options.getEffectiveRenderDistance() >= 4;
+        } else {
+            return original;
         }
-
-        return original;
     }
 }

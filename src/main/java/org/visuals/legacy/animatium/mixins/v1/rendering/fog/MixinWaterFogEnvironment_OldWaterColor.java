@@ -43,7 +43,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 @Mixin(WaterFogEnvironment.class)
 public abstract class MixinWaterFogEnvironment_OldWaterColor {
     @ModifyReturnValue(method = "getBaseColor", at = @At("RETURN"))
-    private int animatium$oldWaterFogColor(int original, @Local(argsOnly = true) Camera camera, @Local(argsOnly = true) ClientLevel level) {
+    private int animatium$oldWaterFogColor(final int original, @Local(argsOnly = true, name = "camera") final Camera camera, @Local(argsOnly = true, name = "level") final ClientLevel level) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldWaterColorFog) {
             float value = 0.0F;
             if (camera.entity() instanceof LivingEntity livingEntity) {

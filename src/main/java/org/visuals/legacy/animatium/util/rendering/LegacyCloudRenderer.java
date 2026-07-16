@@ -42,10 +42,16 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
+import org.jspecify.annotations.NonNull;
 import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.renderer.DynamicTransforms;
+import org.visuals.legacy.animatium.renderer.Renderer;
+import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry;
+import org.visuals.legacy.animatium.renderer.vertex.VertexLayouts;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -83,36 +89,41 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
     private int prevCellX = Integer.MIN_VALUE;
     private int prevCellZ = Integer.MIN_VALUE;
     private CloudRenderer.TextureData textureData;
-    private GpuBuffer vertexBuffer = null;
-    private int indexCount = 0;
+    private IndexedGeometry geometry = null;
 
-    private void setupMesh(RenderPipeline pipeline, int cellX, int cellZ, CloudStatus cloudStatus, CloudRenderer.RelativeCameraPos relativeCameraPos) {
+    private void setupMesh(final RenderPipeline pipeline, final int cellX, final int cellZ, final CloudStatus cloudStatus, final CloudRenderer.RelativeCameraPos relativeCameraPos) {
         final int colorA = ARGB.colorFromFloat(0.8F, 0.7F, 0.7F, 0.7F);
         final int colorB = ARGB.colorFromFloat(0.8F, 1.0F, 1.0F, 1.0F);
         final int colorC = ARGB.colorFromFloat(0.8F, 0.9F, 0.9F, 0.9F);
         final int colorD = ARGB.colorFromFloat(0.8F, 0.8F, 0.8F, 0.8F);
-        final BufferBuilder builder = Tesselator.getInstance().begin(pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
-        this.buildMesh(relativeCameraPos, builder, cellX, cellZ, colorA, colorB, colorC, colorD, cloudStatus == CloudStatus.FANCY);
-        try (final MeshData meshData = builder.build()) {
-            if (meshData == null) {
-                this.indexCount = 0;
-            } else {
-                this.indexCount = meshData.drawState().indexCount();
-                if (this.vertexBuffer != null && this.vertexBuffer.size() >= meshData.vertexBuffer().remaining()) {
-                    RenderSystem.getDevice().createCommandEncoder().writeToBuffer(this.vertexBuffer.slice(), meshData.vertexBuffer());
-                } else {
-                    if (this.vertexBuffer != null) {
-                        this.vertexBuffer.close();
-                        this.vertexBuffer = null;
+        try (final ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(52 * 64 * 64 * DefaultVertexFormat.POSITION_COLOR.getVertexSize())) {
+            final BufferBuilder builder = new BufferBuilder(byteBufferBuilder, pipeline.getVertexFormatMode(), Objects.requireNonNull(pipeline.getVertexFormat()));
+            this.buildMesh(relativeCameraPos, builder, cellX, cellZ, colorA, colorB, colorC, colorD, cloudStatus == CloudStatus.FANCY);
+            try (final MeshData meshData = builder.build()) {
+                if (meshData == null) {
+                    if (this.geometry != null) {
+                        this.geometry.close();
+                        this.geometry = null;
                     }
+                } else {
+                    final int indexCount = meshData.drawState().indexCount();
+                    if (this.geometry != null && this.geometry.getVertexBuffer().size() >= meshData.vertexBuffer().remaining()) {
+                        RenderSystem.getDevice().createCommandEncoder().writeToBuffer(this.geometry.getVertexBuffer().slice(), meshData.vertexBuffer());
+                    } else {
+                        if (this.geometry != null) {
+                            this.geometry.close();
+                            this.geometry = null;
+                        }
 
-                    this.vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "Cloud vertex buffer", GpuBuffer.USAGE_VERTEX | GpuBuffer.USAGE_COPY_DST, meshData.vertexBuffer());
+                        final GpuBuffer vertexBuffer = RenderSystem.getDevice().createBuffer(() -> "Cloud vertex buffer", GpuBuffer.USAGE_VERTEX | GpuBuffer.USAGE_COPY_DST, meshData.vertexBuffer());
+                        this.geometry = new IndexedGeometry(VertexLayouts.POSITIONED_COLOR_QUAD, vertexBuffer, indexCount, true);
+                    }
                 }
             }
         }
     }
 
-    private void buildMesh(CloudRenderer.RelativeCameraPos relativeCameraPos, BufferBuilder builder, int cellX, int cellZ, int i3, int i4, int i5, int i6, boolean fancy) {
+    private void buildMesh(final CloudRenderer.RelativeCameraPos relativeCameraPos, final VertexConsumer vertexConsumer, final int cellX, final int cellZ, final int colorA, final int colorB, final int colorC, final int colorD, final boolean fancy) {
         if (this.textureData != null) {
             final int width = this.textureData.width();
             for (int y = -32; y <= 32; y++) {
@@ -123,94 +134,94 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
                     if (cellData != 0L) {
                         final int cellColor = (int) (cellData >> 4 & 4294967295L);
                         if (fancy) {
-                            final int bottomColor = ARGB.multiply(i3, cellColor);
-                            final int topColor = ARGB.multiply(i4, cellColor);
-                            final int sideColor = ARGB.multiply(i5, cellColor);
-                            final int frontColor = ARGB.multiply(i6, cellColor);
+                            final int bottomColor = ARGB.multiply(colorA, cellColor);
+                            final int topColor = ARGB.multiply(colorB, cellColor);
+                            final int sideColor = ARGB.multiply(colorC, cellColor);
+                            final int frontColor = ARGB.multiply(colorD, cellColor);
                             final float f = x * 12.0F;
                             final float f2 = f + 12.0F;
                             final float f5 = y * 12.0F;
                             final float f6 = f5 + 12.0F;
                             if (relativeCameraPos != CloudRenderer.RelativeCameraPos.BELOW_CLOUDS) {
-                                builder.addVertex(f, 4.0F, f5).setColor(topColor);
-                                builder.addVertex(f, 4.0F, f6).setColor(topColor);
-                                builder.addVertex(f2, 4.0F, f6).setColor(topColor);
-                                builder.addVertex(f2, 4.0F, f5).setColor(topColor);
+                                vertexConsumer.addVertex(f, 4.0F, f5).setColor(topColor);
+                                vertexConsumer.addVertex(f, 4.0F, f6).setColor(topColor);
+                                vertexConsumer.addVertex(f2, 4.0F, f6).setColor(topColor);
+                                vertexConsumer.addVertex(f2, 4.0F, f5).setColor(topColor);
                             }
 
                             if (relativeCameraPos != CloudRenderer.RelativeCameraPos.ABOVE_CLOUDS) {
-                                builder.addVertex(f2, 0.0F, f5).setColor(bottomColor);
-                                builder.addVertex(f2, 0.0F, f6).setColor(bottomColor);
-                                builder.addVertex(f, 0.0F, f6).setColor(bottomColor);
-                                builder.addVertex(f, 0.0F, f5).setColor(bottomColor);
+                                vertexConsumer.addVertex(f2, 0.0F, f5).setColor(bottomColor);
+                                vertexConsumer.addVertex(f2, 0.0F, f6).setColor(bottomColor);
+                                vertexConsumer.addVertex(f, 0.0F, f6).setColor(bottomColor);
+                                vertexConsumer.addVertex(f, 0.0F, f5).setColor(bottomColor);
                             }
 
                             if (CloudRenderer.isNorthEmpty(cellData) && y > 0) {
-                                builder.addVertex(f, 0.0F, f5).setColor(frontColor);
-                                builder.addVertex(f, 4.0F, f5).setColor(frontColor);
-                                builder.addVertex(f2, 4.0F, f5).setColor(frontColor);
-                                builder.addVertex(f2, 0.0F, f5).setColor(frontColor);
+                                vertexConsumer.addVertex(f, 0.0F, f5).setColor(frontColor);
+                                vertexConsumer.addVertex(f, 4.0F, f5).setColor(frontColor);
+                                vertexConsumer.addVertex(f2, 4.0F, f5).setColor(frontColor);
+                                vertexConsumer.addVertex(f2, 0.0F, f5).setColor(frontColor);
                             }
 
                             if (CloudRenderer.isSouthEmpty(cellData) && y < 0) {
-                                builder.addVertex(f2, 0.0F, f6).setColor(frontColor);
-                                builder.addVertex(f2, 4.0F, f6).setColor(frontColor);
-                                builder.addVertex(f, 4.0F, f6).setColor(frontColor);
-                                builder.addVertex(f, 0.0F, f6).setColor(frontColor);
+                                vertexConsumer.addVertex(f2, 0.0F, f6).setColor(frontColor);
+                                vertexConsumer.addVertex(f2, 4.0F, f6).setColor(frontColor);
+                                vertexConsumer.addVertex(f, 4.0F, f6).setColor(frontColor);
+                                vertexConsumer.addVertex(f, 0.0F, f6).setColor(frontColor);
                             }
 
                             if (CloudRenderer.isWestEmpty(cellData) && x > 0) {
-                                builder.addVertex(f, 0.0F, f6).setColor(sideColor);
-                                builder.addVertex(f, 4.0F, f6).setColor(sideColor);
-                                builder.addVertex(f, 4.0F, f5).setColor(sideColor);
-                                builder.addVertex(f, 0.0F, f5).setColor(sideColor);
+                                vertexConsumer.addVertex(f, 0.0F, f6).setColor(sideColor);
+                                vertexConsumer.addVertex(f, 4.0F, f6).setColor(sideColor);
+                                vertexConsumer.addVertex(f, 4.0F, f5).setColor(sideColor);
+                                vertexConsumer.addVertex(f, 0.0F, f5).setColor(sideColor);
                             }
 
                             if (CloudRenderer.isEastEmpty(cellData) && x < 0) {
-                                builder.addVertex(f2, 0.0F, f5).setColor(sideColor);
-                                builder.addVertex(f2, 4.0F, f5).setColor(sideColor);
-                                builder.addVertex(f2, 4.0F, f6).setColor(sideColor);
-                                builder.addVertex(f2, 0.0F, f6).setColor(sideColor);
+                                vertexConsumer.addVertex(f2, 0.0F, f5).setColor(sideColor);
+                                vertexConsumer.addVertex(f2, 4.0F, f5).setColor(sideColor);
+                                vertexConsumer.addVertex(f2, 4.0F, f6).setColor(sideColor);
+                                vertexConsumer.addVertex(f2, 0.0F, f6).setColor(sideColor);
                             }
 
                             if (Math.abs(x) <= 1 && Math.abs(y) <= 1) {
-                                builder.addVertex(f2, 4.0F, f5).setColor(topColor);
-                                builder.addVertex(f2, 4.0F, f6).setColor(topColor);
-                                builder.addVertex(f, 4.0F, f6).setColor(topColor);
-                                builder.addVertex(f, 4.0F, f5).setColor(topColor);
+                                vertexConsumer.addVertex(f2, 4.0F, f5).setColor(topColor);
+                                vertexConsumer.addVertex(f2, 4.0F, f6).setColor(topColor);
+                                vertexConsumer.addVertex(f, 4.0F, f6).setColor(topColor);
+                                vertexConsumer.addVertex(f, 4.0F, f5).setColor(topColor);
 
-                                builder.addVertex(f, 0.0F, f5).setColor(bottomColor);
-                                builder.addVertex(f, 0.0F, f6).setColor(bottomColor);
-                                builder.addVertex(f2, 0.0F, f6).setColor(bottomColor);
-                                builder.addVertex(f2, 0.0F, f5).setColor(bottomColor);
+                                vertexConsumer.addVertex(f, 0.0F, f5).setColor(bottomColor);
+                                vertexConsumer.addVertex(f, 0.0F, f6).setColor(bottomColor);
+                                vertexConsumer.addVertex(f2, 0.0F, f6).setColor(bottomColor);
+                                vertexConsumer.addVertex(f2, 0.0F, f5).setColor(bottomColor);
 
-                                builder.addVertex(f2, 0.0F, f5).setColor(frontColor);
-                                builder.addVertex(f2, 4.0F, f5).setColor(frontColor);
-                                builder.addVertex(f, 4.0F, f5).setColor(frontColor);
-                                builder.addVertex(f, 0.0F, f5).setColor(frontColor);
-                                builder.addVertex(f, 0.0F, f6).setColor(frontColor);
-                                builder.addVertex(f, 4.0F, f6).setColor(frontColor);
-                                builder.addVertex(f2, 4.0F, f6).setColor(frontColor);
-                                builder.addVertex(f2, 0.0F, f6).setColor(frontColor);
+                                vertexConsumer.addVertex(f2, 0.0F, f5).setColor(frontColor);
+                                vertexConsumer.addVertex(f2, 4.0F, f5).setColor(frontColor);
+                                vertexConsumer.addVertex(f, 4.0F, f5).setColor(frontColor);
+                                vertexConsumer.addVertex(f, 0.0F, f5).setColor(frontColor);
+                                vertexConsumer.addVertex(f, 0.0F, f6).setColor(frontColor);
+                                vertexConsumer.addVertex(f, 4.0F, f6).setColor(frontColor);
+                                vertexConsumer.addVertex(f2, 4.0F, f6).setColor(frontColor);
+                                vertexConsumer.addVertex(f2, 0.0F, f6).setColor(frontColor);
 
-                                builder.addVertex(f, 0.0F, f5).setColor(sideColor);
-                                builder.addVertex(f, 4.0F, f5).setColor(sideColor);
-                                builder.addVertex(f, 4.0F, f6).setColor(sideColor);
-                                builder.addVertex(f, 0.0F, f6).setColor(sideColor);
-                                builder.addVertex(f2, 0.0F, f6).setColor(sideColor);
-                                builder.addVertex(f2, 4.0F, f6).setColor(sideColor);
-                                builder.addVertex(f2, 4.0F, f5).setColor(sideColor);
-                                builder.addVertex(f2, 0.0F, f5).setColor(sideColor);
+                                vertexConsumer.addVertex(f, 0.0F, f5).setColor(sideColor);
+                                vertexConsumer.addVertex(f, 4.0F, f5).setColor(sideColor);
+                                vertexConsumer.addVertex(f, 4.0F, f6).setColor(sideColor);
+                                vertexConsumer.addVertex(f, 0.0F, f6).setColor(sideColor);
+                                vertexConsumer.addVertex(f2, 0.0F, f6).setColor(sideColor);
+                                vertexConsumer.addVertex(f2, 4.0F, f6).setColor(sideColor);
+                                vertexConsumer.addVertex(f2, 4.0F, f5).setColor(sideColor);
+                                vertexConsumer.addVertex(f2, 0.0F, f5).setColor(sideColor);
                             }
                         } else {
                             final float f = x * 12.0F;
                             final float f2 = f + 12.0F;
                             final float f3 = y * 12.0F;
                             final float f4 = f3 + 12.0F;
-                            builder.addVertex(f, 0.0F, f3).setColor(ARGB.multiply(i4, cellColor));
-                            builder.addVertex(f, 0.0F, f4).setColor(ARGB.multiply(i4, cellColor));
-                            builder.addVertex(f2, 0.0F, f4).setColor(ARGB.multiply(i4, cellColor));
-                            builder.addVertex(f2, 0.0F, f3).setColor(ARGB.multiply(i4, cellColor));
+                            vertexConsumer.addVertex(f, 0.0F, f3).setColor(ARGB.multiply(colorB, cellColor));
+                            vertexConsumer.addVertex(f, 0.0F, f4).setColor(ARGB.multiply(colorB, cellColor));
+                            vertexConsumer.addVertex(f2, 0.0F, f4).setColor(ARGB.multiply(colorB, cellColor));
+                            vertexConsumer.addVertex(f2, 0.0F, f3).setColor(ARGB.multiply(colorB, cellColor));
                         }
                     }
                 }
@@ -218,7 +229,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
         }
     }
 
-    public void render(int cloudColor, CloudStatus cloudStatus, float height, Vec3 cameraOffset, float ticks) {
+    public void render(final int cloudColor, final CloudStatus cloudStatus, final float height, final Vec3 cameraOffset, final float ticks) {
         if (this.textureData != null) {
             double x = cameraOffset.x + ticks * 0.030000001F;
             double z = cameraOffset.z + 3.96F;
@@ -243,10 +254,10 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
                 this.setupMesh(pipeline, cellX, cellZ, cloudStatus, relativeCameraPos);
             }
 
-            if (this.indexCount != 0) {
-                final float f5 = (float) (x - cellX * 12.0F);
-                final float f6 = (float) (z - cellZ * 12.0F);
-                final Vector3f offset = new Vector3f(-f5, offsetBottom, -f6);
+            if (this.geometry.getIndexCount() != 0) {
+                final float offsetX = (float) (x - cellX * 12.0F);
+                final float offsetZ = (float) (z - cellZ * 12.0F);
+                final Vector3f offset = new Vector3f(-offsetX, offsetBottom, -offsetZ);
                 if (pipeline != FLAT_CLOUDS) {
                     this.draw(CLOUDS_DEPTH_ONLY, offset, cloudColor);
                 }
@@ -258,18 +269,17 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
 
     private void draw(final RenderPipeline pipeline, final Vector3f offset, final int color) {
         RenderTarget cloudsTarget = Minecraft.getInstance().levelRenderer.getCloudsTarget();
-        try (final ImmediateRenderer renderer = ImmediateRenderer.of("Legacy Clouds")) {
-            renderer.setPipeline(pipeline);
-            if (cloudsTarget == null) {
-                cloudsTarget = Minecraft.getInstance().getMainRenderTarget();
-            }
+        if (cloudsTarget == null) {
+            cloudsTarget = Minecraft.getInstance().getMainRenderTarget();
+        }
 
-            final RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(renderer.getPipeline().getVertexFormatMode());
-            renderer.setup(this.vertexBuffer, autoStorageIndexBuffer.getBuffer(this.indexCount), autoStorageIndexBuffer.type(), this.indexCount);
-            renderer.setDynamicTransforms(renderer.getDynamicTransforms()
+        try (final Renderer renderer = Renderer.of(() -> "Legacy Clouds", cloudsTarget)) {
+            renderer.setPipeline(pipeline);
+            renderer.setUniform(DynamicTransforms.KEY, DynamicTransforms.builder()
                     .withShaderColor(ARGB.color(1.0F, color))
-                    .withModelOffset(offset));
-            renderer.drawTo(cloudsTarget);
+                    .withModelOffset(offset)
+                    .build());
+            renderer.draw(this.geometry);
         }
     }
 
@@ -278,10 +288,10 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
     }
 
     @Override
-    protected @NotNull Optional<CloudRenderer.TextureData> prepare(final ResourceManager resourceManager, final ProfilerFiller profilerFiller) {
+    protected @NotNull Optional<CloudRenderer.TextureData> prepare(final @NonNull ResourceManager resourceManager, final @NonNull ProfilerFiller profilerFiller) {
         try {
             final Optional<CloudRenderer.TextureData> optionalTextureData;
-            try (final InputStream inputStream = resourceManager.open(CloudRenderer.TEXTURE_LOCATION); final NativeImage nativeImage = NativeImage.read(inputStream);) {
+            try (final InputStream inputStream = resourceManager.open(CloudRenderer.TEXTURE_LOCATION); final NativeImage nativeImage = NativeImage.read(inputStream)) {
                 final int width = nativeImage.getWidth();
                 final int height = nativeImage.getHeight();
                 final long[] cells = new long[width * height];
@@ -304,21 +314,22 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
             }
 
             return optionalTextureData;
-        } catch (IOException ignored) {
+        } catch (final IOException ignored) {
             return Optional.empty();
         }
     }
 
     @Override
-    protected void apply(Optional<CloudRenderer.TextureData> optional, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
+    protected void apply(final Optional<CloudRenderer.TextureData> optional, final @NonNull ResourceManager resourceManager, final @NonNull ProfilerFiller profilerFiller) {
         this.textureData = optional.orElse(null);
         this.needsRebuild = true;
     }
 
     @Override
     public void close() {
-        if (this.vertexBuffer != null) {
-            this.vertexBuffer.close();
+        if (this.geometry != null) {
+            this.geometry.close();
+            this.geometry = null;
         }
     }
 }

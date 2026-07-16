@@ -1,0 +1,105 @@
+/**
+ * Animatium
+ * The all-you-could-want legacy animations mod for modern minecraft versions.
+ * Brings back animations from the 1.7/1.8 era and more.
+ * <p>
+ * Copyright (C) 2024-2025 lowercasebtw
+ * Copyright (C) 2024-2025 mixces
+ * Copyright (C) 2024-2025 Contributors to the project retain their copyright
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * "MINECRAFT" LINKING EXCEPTION TO THE GPL
+ */
+
+package org.visuals.legacy.animatium
+
+import com.mojang.logging.LogUtils
+import net.minecraft.SharedConstants
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.components.debug.DebugScreenEntries
+import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.resources.Identifier
+import org.visuals.legacy.animatium.config.AnimatiumConfig
+import org.visuals.legacy.animatium.config.bundle.ConfigBundles
+import org.visuals.legacy.animatium.handler.AnimatiumDebugEntry
+import org.visuals.legacy.animatium.handler.rendering.lighting.LegacyDiffuseLighting
+import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor
+import org.visuals.legacy.animatium.util.config.GeneralConfigUtil
+import org.visuals.legacy.animatium.util.enums.ServerFeature
+import org.visuals.legacy.animatium.util.isSingleplayer
+import org.visuals.legacy.animatium.util.reinitializeInventorySlots
+import java.util.*
+
+object Animatium {
+    private val LOGGER = LogUtils.getLogger()
+
+    @JvmField
+    val ENABLED_SERVER_FEATURES: EnumSet<ServerFeature> = EnumSet.noneOf(ServerFeature::class.java)
+
+    @JvmStatic
+    var enabled = true
+        set(value) {
+            field = value
+            GeneralConfigUtil.put(GeneralConfigUtil.ENABLED_KEY, value)
+        }
+
+    @JvmStatic
+    fun isEnabled(): Boolean = enabled
+
+    @JvmStatic
+    fun hasServerFeature(feature: ServerFeature): Boolean {
+        if (isSingleplayer()) {
+            for (entry in ConfigBundles.EXTRAS.entries()) {
+                if (entry.name.equals(feature.serializedName)) {
+                    return entry.value() as Boolean
+                }
+            }
+
+            return false
+        } else {
+            return ENABLED_SERVER_FEATURES.contains(ServerFeature.ALL) || ENABLED_SERVER_FEATURES.contains(feature)
+        }
+    }
+
+    @JvmStatic
+    fun reload() {
+        val minecraft = Minecraft.getInstance()
+        minecraft.levelRenderer.allChanged()
+        LegacyDiffuseLighting.refresh()
+        (minecraft.gameRenderer as GameRendererAccessor).`animatium$setOverlayTexture`(OverlayTexture())
+        reinitializeInventorySlots()
+    }
+
+    @JvmStatic
+    fun location(path: String): Identifier = Identifier.fromNamespaceAndPath(AnimatiumConstants.MOD_ID, path)
+
+    @JvmStatic
+    fun initialize() {
+        if (AnimatiumConstants.IS_DEVELOPMENT) {
+            SharedConstants.IS_RUNNING_IN_IDE = true
+        }
+
+        AnimatiumConfig.load()
+        try {
+            GeneralConfigUtil.load()
+            LOGGER.info("Successfully loaded the animatium utility config!")
+        } catch (_: Exception) {
+            enabled = GeneralConfigUtil.getBoolean(GeneralConfigUtil.ENABLED_KEY)
+            LOGGER.error("Failed to load animatium utility config, defaulting...")
+        }
+
+        DebugScreenEntries.register(AnimatiumDebugEntry.GROUP, AnimatiumDebugEntry())
+    }
+}

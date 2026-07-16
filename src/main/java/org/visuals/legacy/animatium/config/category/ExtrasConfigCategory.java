@@ -27,16 +27,14 @@ package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
-import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
-import org.visuals.legacy.animatium.util.compatibility.Mods;
-import org.visuals.legacy.animatium.util.config.EntryBundle;
+import org.visuals.legacy.animatium.config.bundle.EntryBundle;
+import org.visuals.legacy.animatium.handler.compatibility.ModsKt;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
 import java.util.Arrays;
 
-public class ExtrasConfigCategory extends Category {
+public final class ExtrasConfigCategory extends Category {
     public boolean minimalViewBobbing = false;
     public boolean showNameTagInThirdPerson = false;
     public boolean hideNameTagBackground = false;
@@ -47,12 +45,9 @@ public class ExtrasConfigCategory extends Category {
     public boolean alwaysSharpParticles = false;
     public boolean disableRecipeAndTutorialToasts = false;
     public boolean showArmWhileInvisible = false;
-    // TODO 3.3: public boolean damageTintItems = false;
-    // TODO 3.3: public boolean damageTintCape = false;
     public boolean fakeMissPenaltySwing = false;
     public boolean dontMoveBlueVoid = false;
     public boolean disableEntityDeathTopple = false;
-    public boolean deepRedHurtTint = false;
     public boolean disableParticlePhysics = false;
     public boolean disableFirstPersonParticles = false;
     public boolean dontClearChat = false;
@@ -60,13 +55,20 @@ public class ExtrasConfigCategory extends Category {
     public boolean oldWaterColorEffects = false;
     public boolean colorBoost = false;
     public boolean alwaysBlockingHeadCap = false;
+    public boolean hideRecipeBook = false;
+    public boolean legacyLoadingScreenProgressBar = false;
+    public boolean damageBloodParticles = false;
+    public int bloodParticleMultiplier = 1;
+    // Damage Tint
+    public boolean damageTintItems = false;
+    public boolean damageTintCape = false;
     // Item Swing
-    // TODO 3.3: public float itemSwingSpeed = 0.0F;
-    // TODO 3.3: public float hasteSwingSpeed = 0.0F;
-    // TODO 3.3: public float miningFatigueSwingSpeed = 0.0F;
-    public boolean highAttackSpeedVisual = false;
-    // TODO 3.3: public boolean ignoreHasteSpeed = false;
-    // TODO 3.3: public boolean ignoreMiningFatigueSpeed = false;
+    public boolean customSwingSpeed = false;
+    public float itemSwingSpeed = 0.0F;
+    public float hasteSwingSpeed = 0.0F;
+    public float miningFatigueSwingSpeed = 0.0F;
+    public boolean ignoreHasteSpeed = false;
+    public boolean ignoreMiningFatigueSpeed = false;
     // Server Features (Singleplayer Only)
     public boolean miss_penalty = false;
     public boolean left_click_item_usage = false;
@@ -88,48 +90,53 @@ public class ExtrasConfigCategory extends Category {
     @Override
     public EntryBundle bundle() {
         final EntryBundle bundle = new EntryBundle(this, "extras");
-
-        bundle.booleanEntry("minimalViewBobbing");
-        bundle.booleanEntry("showNameTagInThirdPerson");
-        bundle.booleanEntry("hideNameTagBackground");
-        bundle.booleanEntry("nameTagTextShadow");
-        bundle.booleanEntry("debugHudTextColor");
-        bundle.booleanEntry("offhandUsageSwinging");
-        bundle.booleanEntry("alwaysUsageSwing");
-        bundle.booleanEntry("alwaysSharpParticles");
-        if (!Mods.HAS_SODIUM_EXTRAS) {
+        bundle.booleanEntry("minimalViewBobbing")
+                .booleanEntry("showNameTagInThirdPerson")
+                .booleanEntry("hideNameTagBackground")
+                .booleanEntry("nameTagTextShadow")
+                .booleanEntry("debugHudTextColor")
+                .booleanEntry("offhandUsageSwinging")
+                .booleanEntry("alwaysUsageSwing")
+                .booleanEntry("alwaysSharpParticles");
+        if (!ModsKt.HAS_SODIUM_EXTRAS) {
             bundle.booleanEntry("disableRecipeAndTutorialToasts");
         }
 
         final Minecraft minecraft = Minecraft.getInstance();
-        bundle.booleanEntry("showArmWhileInvisible");
-        // TODO 3.3: bundle.booleanEntry("damageTintItems");
-        // TODO 3.3: bundle.booleanEntry("damageTintCape");
-        bundle.booleanEntry("fakeMissPenaltySwing");
-        bundle.booleanEntry("dontMoveBlueVoid");
-        bundle.booleanEntry("disableEntityDeathTopple");
-        bundle.booleanEntry("deepRedHurtTint", (option, event) -> ((GameRendererAccessor) minecraft.gameRenderer).animatium$setOverlayTexture(new OverlayTexture()));
-        bundle.booleanEntry("disableParticlePhysics");
-        bundle.booleanEntry("disableFirstPersonParticles");
-        bundle.booleanEntry("dontClearChat");
-        bundle.booleanEntry("dontCloseChat");
-        bundle.booleanEntry("oldWaterColorEffects", (option, event) -> minecraft.levelRenderer.allChanged());
-        bundle.booleanEntry("colorBoost");
-        bundle.booleanEntry("alwaysBlockingHeadCap");
+        bundle.booleanEntry("showArmWhileInvisible")
+                .booleanEntry("fakeMissPenaltySwing")
+                .booleanEntry("dontMoveBlueVoid")
+                .booleanEntry("disableEntityDeathTopple")
+                .booleanEntry("disableParticlePhysics")
+                .booleanEntry("disableFirstPersonParticles")
+                .booleanEntry("dontClearChat")
+                .booleanEntry("dontCloseChat")
+                .booleanEntry("oldWaterColorEffects", (option, event) -> minecraft.levelRenderer.allChanged())
+                .booleanEntry("colorBoost")
+                .booleanEntry("alwaysBlockingHeadCap")
+                .booleanEntry("hideRecipeBook")
+                .booleanEntry("legacyLoadingScreenProgressBar")
+                .booleanEntry("damageBloodParticles")
+                .intRange("bloodParticleMultiplier", 1, 40);
+
+        // Damage Tint
+        bundle.group((EntryBundle.Group) new EntryBundle.Group("damage_tint")
+                .booleanEntry("damageTintItems")
+                .booleanEntry("damageTintCape"));
 
         bundle.group((EntryBundle.Group) new EntryBundle.Group("item_swing")
-                // TODO 3.3: .floatEntry("itemSwingSpeed", -1.0F, 1.0F, 0.1F)
-                // TODO 3.3: .floatEntry("hasteSwingSpeed", -1.0F, 1.0F, 0.1F)
-                // TODO 3.3: .floatEntry("miningFatigueSwingSpeed", -1.0F, 1.0F, 0.1F)
-                .booleanEntry("highAttackSpeedVisual"));
-                // TODO 3.3: .booleanEntry("ignoreHasteSpeed")
-                // TODO 3.3: .booleanEntry("ignoreMiningFatigueSpeed"));
+                .booleanEntry("customSwingSpeed")
+                .floatRange("itemSwingSpeed", -2.0F, 1.0F, 0.1F)
+                .floatRange("hasteSwingSpeed", -2.0F, 1.0F, 0.1F)
+                .floatRange("miningFatigueSwingSpeed", -2.0F, 1.0F, 0.1F)
+                .booleanEntry("ignoreHasteSpeed")
+                .booleanEntry("ignoreMiningFatigueSpeed"));
 
         {
             final EntryBundle.Group serverFeatureGroup = new EntryBundle.Group("server_features");
             Arrays.stream(ServerFeature.VALUES)
                     .filter(it -> it != ServerFeature.ALL)
-                    .forEach(it -> serverFeatureGroup.booleanEntry(it.getName()));
+                    .forEach(it -> serverFeatureGroup.booleanEntry(it.getSerializedName()));
             bundle.group(serverFeatureGroup);
         }
 

@@ -27,22 +27,20 @@ package org.visuals.legacy.animatium.mixins.v1.general.server_features;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.FishingHookRenderer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.FishingHook;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.util.EntityUtilKt;
 import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
 @Mixin(FishingHookRenderer.class)
 public abstract class MixinFishingHookRenderer_HideFirstPersonBobber {
     @ModifyReturnValue(method = "shouldRender(Lnet/minecraft/world/entity/projectile/FishingHook;Lnet/minecraft/client/renderer/culling/Frustum;DDD)Z", at = @At("RETURN"))
-    private boolean animatium$hideBobberAttachedToSelf(boolean original, @Local(argsOnly = true) FishingHook fishingHook) {
-        if (Animatium.hasServerFeature(ServerFeature.HIDE_FIRSTPERSON_ROD_BOBBER) &&
-                fishingHook.getHookedIn() instanceof Entity entity &&
-                entity.getId() == Minecraft.getInstance().player.getId()) {
+    private boolean animatium$hideBobberAttachedToSelf(final boolean original, @Local(argsOnly = true, name = "entity") final FishingHook entity) {
+        if (Animatium.hasServerFeature(ServerFeature.HIDE_FIRSTPERSON_ROD_BOBBER) && entity.getHookedIn() instanceof Entity hook && EntityUtilKt.isSelf(hook)) {
             return false;
         } else {
             return original;

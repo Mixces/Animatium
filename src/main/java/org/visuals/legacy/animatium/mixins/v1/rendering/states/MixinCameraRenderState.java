@@ -53,7 +53,7 @@ public abstract class MixinCameraRenderState implements CameraUtilityRenderState
     }
 
     @Override
-    public void animatium$setPartialTickTime(float partialTickTime) {
+    public void animatium$setPartialTickTime(final float partialTickTime) {
         this.animatium$partialTickTime = partialTickTime;
     }
 
@@ -63,7 +63,7 @@ public abstract class MixinCameraRenderState implements CameraUtilityRenderState
     }
 
     @Override
-    public void animatium$setOldEyeHeight(float oldEyeHeight) {
+    public void animatium$setOldEyeHeight(final float oldEyeHeight) {
         this.animatium$oldEyeHeight = oldEyeHeight;
     }
 
@@ -73,7 +73,7 @@ public abstract class MixinCameraRenderState implements CameraUtilityRenderState
     }
 
     @Override
-    public void animatium$setEyeHeight(float eyeHeight) {
+    public void animatium$setEyeHeight(final float eyeHeight) {
         this.animatium$eyeHeight = eyeHeight;
     }
 
@@ -83,7 +83,7 @@ public abstract class MixinCameraRenderState implements CameraUtilityRenderState
     }
 
     @Override
-    public void animatium$setYRot(float yRot) {
+    public void animatium$setYRot(final float yRot) {
         this.animatium$yRot = yRot;
     }
 
@@ -93,7 +93,7 @@ public abstract class MixinCameraRenderState implements CameraUtilityRenderState
     }
 
     @Override
-    public void animatium$setXRot(float xRot) {
+    public void animatium$setXRot(final float xRot) {
         this.animatium$xRot = xRot;
     }
 }

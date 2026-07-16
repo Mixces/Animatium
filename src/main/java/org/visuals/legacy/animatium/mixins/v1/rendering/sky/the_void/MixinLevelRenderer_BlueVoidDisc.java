@@ -37,21 +37,21 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.rendering.SkyRendererUtility;
+import org.visuals.legacy.animatium.handler.rendering.LegacySkyRenderer;
 
 @Mixin(LevelRenderer.class)
 public abstract class MixinLevelRenderer_BlueVoidDisc {
     @Inject(method = "lambda$addSkyPass$0", at = @At("TAIL"))
-    private static void animatium$blueVoidSky(GpuBufferSlice gpuBufferSlice, SkyRenderState skyRenderState, SkyRenderer skyRenderer, CallbackInfo ci) {
+    private static void animatium$blueVoidSky(final GpuBufferSlice skyFog, final SkyRenderState state, final SkyRenderer skyRenderer, final CallbackInfo ci) {
         final Minecraft minecraft = Minecraft.getInstance();
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.blueVoidSky && skyRenderState.skybox != DimensionType.Skybox.END && minecraft.level != null && minecraft.player != null) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.blueVoidSky && state.skybox != DimensionType.Skybox.END && minecraft.level != null && minecraft.player != null) {
             final float tickDelta = minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true);
-            SkyRendererUtility.renderBlueVoid(skyRenderState.skyColor, SkyRendererUtility.getHorizonEyeHeight(minecraft.level, tickDelta));
+            LegacySkyRenderer.renderBlueVoid(state.skyColor, LegacySkyRenderer.getHorizonEyeHeight(minecraft.level, tickDelta));
         }
     }
 
     @Inject(method = "close", at = @At("TAIL"))
-    private void animatium$closeSkyRenderUtility(CallbackInfo ci) {
-        SkyRendererUtility.close();
+    private void animatium$closeSkyRenderUtility(final CallbackInfo ci) {
+        LegacySkyRenderer.close();
     }
 }

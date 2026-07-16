@@ -31,7 +31,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.states.ViewBobbingStorage;
 
 @Mixin(LivingEntity.class)
@@ -43,10 +42,8 @@ public abstract class MixinLivingEntity_ViewBobbingTilt implements ViewBobbingSt
     private float animatium$previousBobbingTilt = 0.0F;
 
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;tickEffects()V", shift = At.Shift.BEFORE))
-    private void animatium$updatePreviousBobbingTiltValue(CallbackInfo ci) {
-        if (AnimatiumConfig.instance().fixes.fixVerticalBobbingTilt) {
-            this.animatium$previousBobbingTilt = this.animatium$bobbingTilt;
-        }
+    private void animatium$updatePreviousBobbingTiltValue(final CallbackInfo ci) {
+        this.animatium$previousBobbingTilt = this.animatium$bobbingTilt;
     }
 
     @Override

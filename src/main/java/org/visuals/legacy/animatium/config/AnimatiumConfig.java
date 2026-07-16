@@ -25,6 +25,7 @@
 
 package org.visuals.legacy.animatium.config;
 
+import com.mojang.logging.LogUtils;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
@@ -33,6 +34,7 @@ import dev.isxander.yacl3.platform.YACLPlatform;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 import org.visuals.legacy.animatium.config.category.*;
 
 import java.io.File;
@@ -40,7 +42,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public final class AnimatiumConfig {
-    private static final ConfigClassHandler<AnimatiumConfig> CONFIG = ConfigClassHandler.createBuilder(AnimatiumConfig.class)
+    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final ConfigClassHandler<AnimatiumConfig> HANDLER = ConfigClassHandler.createBuilder(AnimatiumConfig.class)
             .serializer((config) -> GsonConfigSerializerBuilder.create(config)
                     .setPath(YACLPlatform.getConfigDir().resolve("animatium3.json"))
                     .build()
@@ -65,7 +68,7 @@ public final class AnimatiumConfig {
     public ExtrasConfigCategory extras = new ExtrasConfigCategory();
 
     public static Screen getConfigScreen(@Nullable Screen parent) {
-        return YetAnotherConfigLib.create(CONFIG, (defaults, config, builder) -> {
+        return YetAnotherConfigLib.create(HANDLER, (defaults, config, builder) -> {
             builder.title(Component.translatable("animatium.title"));
             builder.category(MovementConfigCategory.create(defaults.movement, config.movement));
             builder.category(ScreenConfigCategory.create(defaults.screen, config.screen));
@@ -73,15 +76,7 @@ public final class AnimatiumConfig {
             builder.category(FixesConfigCategory.create(defaults.fixes, config.fixes));
             builder.category(OtherConfigCategory.create(defaults.other, config.other));
             builder.category(ExtrasConfigCategory.create(defaults.extras, config.extras));
-            builder.save(() -> {
-                CONFIG.save();
-
-                // TODO:
-                // final Minecraft minecraft = Minecraft.getInstance();
-                // if (minecraft.getConnection() != null && !minecraft.isLocalServer()) {
-                //     ClientPlayNetworking.send(new ConfigDataPayloadPacket());
-                // }
-            });
+            builder.save(HANDLER::save);
             return builder;
         }).generateScreen(parent);
     }
@@ -100,21 +95,21 @@ public final class AnimatiumConfig {
 
             try {
                 Files.move(oldFilePath, newFilePath);
-                System.out.println("Detected old animatium 3.0 config file, moved to new location!");
+                LOGGER.info("Detected old animatium 3.0 config file, moved to new location!");
             } catch (Exception exception) {
-                System.err.println("Failed to move old animatium config to new location!");
+                LOGGER.error("Failed to move old animatium config to new location!");
                 exception.printStackTrace();
             }
         }
 
-        CONFIG.load();
+        HANDLER.load();
     }
 
     public static void save() {
-        CONFIG.save();
+        HANDLER.save();
     }
 
     public static AnimatiumConfig instance() {
-        return CONFIG.instance();
+        return HANDLER.instance();
     }
 }

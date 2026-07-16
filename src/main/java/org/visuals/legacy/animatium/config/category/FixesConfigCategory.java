@@ -27,58 +27,54 @@ package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.network.chat.Component;
-import org.visuals.legacy.animatium.util.compatibility.Mods;
-import org.visuals.legacy.animatium.util.config.EntryBundle;
+import org.visuals.legacy.animatium.config.bundle.EntryBundle;
+import org.visuals.legacy.animatium.handler.compatibility.ModsKt;
 
-public class FixesConfigCategory extends Category {
-	public boolean fixSneakingFeetPosition = true;
-	public boolean fixMirrorArmSwing = true;
-	public boolean fixOffHandUsingPose = true;
-	public boolean fixCastLineCheck = true;
-	public boolean fixCastLineSwing = true;
-	public boolean fixEquipAnimationItemCheck = true;
-	public boolean fixFireballClientsideVisual = true;
-	public boolean fixTextStrikethroughStyle = true;
-	public boolean fixHighAttackSpeedIndicator = true;
-	public boolean fixVerticalBobbingTilt = true;
-	public boolean upMinPixelTransparencyLimit = true;
-	public boolean fixEquipAnimationOnItemUse = true;
-	public boolean fixItemUsageVisualInGUI = true;
-	public boolean fixDoubleUsageVisual = true;
-	public boolean oldSkyRenderingCheck = true;
-	public boolean instantBed = true;
+public final class FixesConfigCategory extends Category {
+    public boolean fixSneakingFeetPosition = true;
+    public boolean fixMirrorArmSwing = true;
+    public boolean fixOffHandUsingPose = true;
+    public boolean fixCastLineCheck = true;
+    public boolean fixCastLineSwing = true;
+    public boolean fixFireballClientsideVisual = true;
+    public boolean fixTextStrikethroughStyle = true;
+    public boolean fixHighAttackSpeedIndicator = true;
+    public boolean fixVerticalBobbingTilt = true;
+    public boolean upMinPixelTransparencyLimit = true;
+    public boolean fixEquipAnimationOnItemUse = true;
+    public boolean fixItemUsageVisualInGUI = true;
+    public boolean fixDoubleUsageVisual = true;
+    public boolean oldSkyRenderingCheck = true;
 
-	public static ConfigCategory create(final FixesConfigCategory defaults, final FixesConfigCategory config) {
-		final ConfigCategory.Builder category = ConfigCategory.createBuilder();
-		category.name(Component.translatable("animatium.category.fixes"));
-		config.bundle().install(category, defaults, config);
-		return category.build();
-	}
+    public static ConfigCategory create(final FixesConfigCategory defaults, final FixesConfigCategory config) {
+        final ConfigCategory.Builder category = ConfigCategory.createBuilder();
+        category.name(Component.translatable("animatium.category.fixes"));
+        config.bundle().install(category, defaults, config);
+        return category.build();
+    }
 
-	@Override
-	public EntryBundle bundle() {
-		final EntryBundle bundle = new EntryBundle(this, "fixes");
+    @Override
+    public EntryBundle bundle() {
+        final EntryBundle bundle = new EntryBundle(this, "fixes");
 
-		bundle.booleanEntry("fixSneakingFeetPosition");
-		bundle.booleanEntry("fixMirrorArmSwing");
-		bundle.booleanEntry("fixOffHandUsingPose");
-		bundle.booleanEntry("fixCastLineCheck");
-		bundle.booleanEntry("fixCastLineSwing");
-		bundle.booleanEntry("fixEquipAnimationItemCheck");
-		bundle.booleanEntry("fixFireballClientsideVisual");
-		if (!Mods.HAS_VIAFABRICPLUS) {
-			bundle.booleanEntry("fixTextStrikethroughStyle");
-		}
+        bundle.booleanEntry("fixSneakingFeetPosition");
+        bundle.booleanEntry("fixMirrorArmSwing");
+        bundle.booleanEntry("fixOffHandUsingPose");
+        bundle.booleanEntry("fixCastLineCheck");
+        bundle.booleanEntry("fixCastLineSwing");
+        bundle.booleanEntry("fixFireballClientsideVisual");
+        if (!ModsKt.HAS_VFP) {
+            bundle.booleanEntry("fixTextStrikethroughStyle");
+        }
 
-		bundle.booleanEntry("fixHighAttackSpeedIndicator");
-		bundle.booleanEntry("fixVerticalBobbingTilt");
-		bundle.booleanEntry("upMinPixelTransparencyLimit");
-		bundle.booleanEntry("fixEquipAnimationOnItemUse");
-		bundle.booleanEntry("fixItemUsageVisualInGUI");
-		bundle.booleanEntry("fixDoubleUsageVisual");
-		bundle.booleanEntry("oldSkyRenderingCheck");
-		bundle.booleanEntry("instantBed");
+        bundle.booleanEntry("fixHighAttackSpeedIndicator");
+        bundle.booleanEntry("fixVerticalBobbingTilt");
+        bundle.booleanEntry("upMinPixelTransparencyLimit");
+        bundle.booleanEntry("fixEquipAnimationOnItemUse");
+        bundle.booleanEntry("fixItemUsageVisualInGUI");
+        bundle.booleanEntry("fixDoubleUsageVisual");
+        bundle.booleanEntry("oldSkyRenderingCheck");
 
-		return bundle;
-	}
+        return bundle;
+    }
 }

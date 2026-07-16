@@ -45,7 +45,7 @@ public abstract class MixinMultiPlayerGameMode_StopBlockMining {
     private boolean isDestroying;
 
     @WrapOperation(method = "stopDestroyBlock", at = @At(value = "FIELD", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;isDestroying:Z", opcode = Opcodes.GETFIELD))
-    private boolean animatium$miningItemUsage$allowFullBlock(MultiPlayerGameMode instance, Operation<Boolean> original) {
+    private boolean animatium$miningItemUsage$allowFullBlock(final MultiPlayerGameMode instance, final Operation<Boolean> original) {
         if (Animatium.hasServerFeature(ServerFeature.MINING_ITEM_USAGE)) {
             return true;
         } else {
@@ -54,7 +54,7 @@ public abstract class MixinMultiPlayerGameMode_StopBlockMining {
     }
 
     @WrapWithCondition(method = "stopDestroyBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"))
-    private boolean animatium$miningItemUsage$stopPacket(ClientPacketListener instance, Packet<?> packet) {
+    private boolean animatium$miningItemUsage$stopPacket(final ClientPacketListener instance, final Packet<?> packet) {
         if (Animatium.hasServerFeature(ServerFeature.MINING_ITEM_USAGE)) {
             return this.isDestroying;
         } else {
@@ -63,7 +63,7 @@ public abstract class MixinMultiPlayerGameMode_StopBlockMining {
     }
 
     @WrapWithCondition(method = "stopDestroyBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;resetAttackStrengthTicker()V"))
-    private boolean animatium$miningItemUsage$fixAttackProgress(LocalPlayer instance) {
+    private boolean animatium$miningItemUsage$fixAttackProgress(final LocalPlayer instance) {
         if (Animatium.hasServerFeature(ServerFeature.MINING_ITEM_USAGE)) {
             return this.isDestroying;
         } else {

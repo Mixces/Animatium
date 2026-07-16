@@ -31,6 +31,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -39,12 +40,11 @@ import org.visuals.legacy.animatium.util.states.UtilityRenderState;
 
 @Mixin(ArmedEntityRenderState.class)
 public abstract class MixinArmedEntityRenderState implements UtilityRenderState {
-    // TODO/NOTE: 25w43a seemingly has these fields now?
-    @Unique
-    private ItemStack animatium$leftStack = ItemStack.EMPTY;
+    @Shadow
+    public ItemStack leftHandItemStack;
 
-    @Unique
-    private ItemStack animatium$rightStack = ItemStack.EMPTY;
+    @Shadow
+    public ItemStack rightHandItemStack;
 
     @Unique
     private boolean animatium$isFishing = false;
@@ -52,43 +52,30 @@ public abstract class MixinArmedEntityRenderState implements UtilityRenderState 
     @Unique
     private boolean animatium$isSleeping = false;
 
-	@Unique
-	private EntityDimensions animatium$standingDimensions = null;
+    @Unique
+    private EntityDimensions animatium$standingDimensions = null;
 
     @Inject(method = "extractArmedEntityRenderState", at = @At("TAIL"))
-    private static void animatium$storeData(LivingEntity livingEntity, ArmedEntityRenderState armedEntityRenderState, ItemModelResolver modelResolver, float partialTick, CallbackInfo ci) {
-        armedEntityRenderState.animatium$setItemHeldByArm(HumanoidArm.LEFT, livingEntity.getItemHeldByArm(HumanoidArm.LEFT));
-        armedEntityRenderState.animatium$setItemHeldByArm(HumanoidArm.RIGHT, livingEntity.getItemHeldByArm(HumanoidArm.RIGHT));
-        if (livingEntity instanceof Player player && player.fishing != null) {
-            armedEntityRenderState.animatium$setFishing();
+    private static void animatium$storeData(final LivingEntity entity, final ArmedEntityRenderState state, final ItemModelResolver itemModelResolver, final float partialTicks, final CallbackInfo ci) {
+        if (entity instanceof Player player && player.fishing != null) {
+            state.animatium$setFishing();
         }
 
-        if (livingEntity.isSleeping()) {
-            armedEntityRenderState.animatium$setSleeping();
+        if (entity.isSleeping()) {
+            state.animatium$setSleeping();
         }
 
-		if (livingEntity instanceof Avatar avatar) {
-            armedEntityRenderState.animatium$setStandingDimensions(avatar.getDefaultDimensions(Pose.STANDING));
-		}
-    }
-
-    @Override
-    public ItemStack animatium$getItemHeldByArm(HumanoidArm arm) {
-        if (arm == HumanoidArm.LEFT) {
-            return animatium$leftStack;
-        } else if (arm == HumanoidArm.RIGHT) {
-            return animatium$rightStack;
-        } else {
-            throw new UnsupportedOperationException();
+        if (entity instanceof Avatar avatar) {
+            state.animatium$setStandingDimensions(avatar.getDefaultDimensions(Pose.STANDING));
         }
     }
 
     @Override
-    public void animatium$setItemHeldByArm(HumanoidArm arm, ItemStack itemStack) {
+    public ItemStack animatium$getItemHeldByArm(final HumanoidArm arm) {
         if (arm == HumanoidArm.LEFT) {
-            animatium$leftStack = itemStack;
+            return this.leftHandItemStack;
         } else if (arm == HumanoidArm.RIGHT) {
-            animatium$rightStack = itemStack;
+            return this.rightHandItemStack;
         } else {
             throw new UnsupportedOperationException();
         }
@@ -114,13 +101,13 @@ public abstract class MixinArmedEntityRenderState implements UtilityRenderState 
         animatium$isSleeping = true;
     }
 
-	@Override
-	public EntityDimensions animatium$getStandingDimensions() {
-		return animatium$standingDimensions;
-	}
+    @Override
+    public EntityDimensions animatium$getStandingDimensions() {
+        return animatium$standingDimensions;
+    }
 
-	@Override
-	public void animatium$setStandingDimensions(EntityDimensions entityDimensions) {
-		animatium$standingDimensions = entityDimensions;
-	}
+    @Override
+    public void animatium$setStandingDimensions(final EntityDimensions entityDimensions) {
+        animatium$standingDimensions = entityDimensions;
+    }
 }
