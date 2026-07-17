@@ -109,7 +109,8 @@ public class ItemUtils {
 	public boolean isItemBlacklisted(final ItemStack stack) {
 		return isShieldItem(stack) ||
 				isBlockItemBlacklisted(stack) ||
-				stack.is(Items.CROSSBOW);
+				stack.is(Items.CROSSBOW) ||
+				stack.is(ItemTags.SPEARS);
 	}
 
 	public boolean isSwingItemBlacklisted(final ItemStack stack) {

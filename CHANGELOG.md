@@ -1,8 +1,9 @@
 # Added
 
-- Extras setting to make "getMaxHeadRotationRelativeToBody" `isBlocking` check to always return true. Was requested by
-  people due to a bug I accidentally introduced in 1.21.5 Animatium.
+- Instant Bed
 
 # Changed
 
-- Fixed disableInventoryEntityScissor
+- Added missing code for legacy equip logic
+- Fixed sodium icon being broken in video settings
+- Blacklisted spear items from item transforms
