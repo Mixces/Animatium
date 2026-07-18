@@ -23,28 +23,25 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.handler.packet
+package org.visuals.legacy.animatium.handler.payloads
 
-import net.minecraft.network.FriendlyByteBuf
+import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import org.visuals.legacy.animatium.Animatium.location
 import java.util.*
 
-data class InfoPayloadPacket(val version: Double, val developmentVersion: String?) : CustomPacketPayload {
+data class InfoPayload(val version: Double, val developmentVersion: Optional<String>) : CustomPacketPayload {
     companion object {
-        val ID = CustomPacketPayload.Type<InfoPayloadPacket>(location("info"))
+        val TYPE = CustomPacketPayload.Type<InfoPayload>(location("info"))
 
-        val CODEC: StreamCodec<FriendlyByteBuf, InfoPayloadPacket> =
-            CustomPacketPayload.codec(InfoPayloadPacket::write, InfoPayloadPacket::read)
-
-        private fun read(buffer: FriendlyByteBuf): Nothing = throw UnsupportedOperationException()
+        val STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.DOUBLE,
+            InfoPayload::version,
+            ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8),
+            InfoPayload::developmentVersion
+        ) { version, developmentVersion -> InfoPayload(version, developmentVersion) }
     }
 
-    private fun write(buffer: FriendlyByteBuf) {
-        buffer.writeDouble(this.version)
-        buffer.writeOptional(Optional.ofNullable(this.developmentVersion), FriendlyByteBuf::writeUtf)
-    }
-
-    override fun type(): CustomPacketPayload.Type<out CustomPacketPayload> = ID
+    override fun type() = TYPE
 }

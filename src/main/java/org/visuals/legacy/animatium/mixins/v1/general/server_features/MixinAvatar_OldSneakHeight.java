@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.sneaking;
+package org.visuals.legacy.animatium.mixins.v1.general.server_features;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -32,8 +32,8 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.util.enums.ServerFeature;
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatureManager;
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatures;
 
 import java.util.Map;
 
@@ -42,7 +42,7 @@ public abstract class MixinAvatar_OldSneakHeight {
     @WrapOperation(method = "getDefaultDimensions", at = @At(value = "INVOKE", target = "Ljava/util/Map;getOrDefault(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"))
     private <V> V animatium$oldSneakHeight(final Map<Pose, EntityDimensions> instance, final Object pose, final V defaultValue, final Operation<EntityDimensions> original) {
         final EntityDimensions entityDimensions = original.call(instance, pose, defaultValue);
-        if (Animatium.hasServerFeature(ServerFeature.OLD_SNEAK_HEIGHT) && pose == Pose.CROUCHING) {
+        if (ServerFeatureManager.isPresent(ServerFeatures.OLD_SNEAK_HEIGHT) && pose == Pose.CROUCHING) {
             return (V) new EntityDimensions(entityDimensions.width(), 1.65F, 1.54F, entityDimensions.attachments(), entityDimensions.fixed());
         } else {
             return (V) entityDimensions;
