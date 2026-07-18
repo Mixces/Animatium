@@ -23,26 +23,8 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.enums
+package org.visuals.legacy.animatium.handler.server_features
 
-import java.util.*
+import net.minecraft.resources.Identifier
 
-enum class ServerFeature(val serializedName: String, val id: Int) {
-    ALL("all", 0),
-    MISS_PENALTY("miss_penalty", 1),
-    LEFT_CLICK_ITEM_USAGE("left_click_item_usage", 2),
-    MINING_ITEM_USAGE("mining_item_usage", 3),
-    HIDE_FIRSTPERSON_ROD_BOBBER("hide_rod_bobber", 4),
-    PICK_INFLATION("pick_inflation", 5),
-    OLD_SNEAK_HEIGHT("old_sneak_height", 6),
-    CLIENTSIDE_ENTITIES("clientside_entities", 7),
-    FIX_SPRINT_ITEM_USE("disable_sprint_item_use", 8),
-    FIX_SPRINT_SNEAKING("disable_sprint_sneaking", 9);
-
-    companion object {
-        @JvmField
-        val VALUES = entries.toTypedArray()
-
-        fun byId(id: Int): ServerFeature? = Arrays.stream(VALUES).filter({ it.id == id }).findFirst().orElse(null)
-    }
-}
+class ServerFeature(val identifier: Identifier, val raw: Int)

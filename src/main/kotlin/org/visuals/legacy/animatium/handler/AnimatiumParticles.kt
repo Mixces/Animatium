@@ -67,7 +67,7 @@ object AnimatiumParticles {
         return type
     }
 
-    fun register(
+    private fun register(
         id: Identifier,
         alwaysSpawn: Boolean,
         provider: ParticleProviderRegistry.PendingParticleProvider<SimpleParticleType>

@@ -25,11 +25,11 @@
 
 package org.visuals.legacy.animatium.handler
 
+import com.mojang.blaze3d.platform.InputConstants
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
-import org.lwjgl.glfw.GLFW
 import org.visuals.legacy.animatium.Animatium.location
 import org.visuals.legacy.animatium.config.AnimatiumConfig
 import java.util.function.Consumer
@@ -40,7 +40,7 @@ object AnimatiumKeybinds {
 
     val CONFIG_SCREEN = create(
         "Open Mod Configuration",
-        GLFW.GLFW_KEY_BACKSLASH
+        InputConstants.KEY_BACKSLASH
     ) { client -> client.gui.setScreen(AnimatiumConfig.getConfigScreen(client.gui.screen())) }
 
     fun bootstrap() {

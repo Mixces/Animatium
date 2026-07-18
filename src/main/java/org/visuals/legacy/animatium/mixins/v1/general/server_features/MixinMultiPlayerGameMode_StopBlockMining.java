@@ -36,8 +36,8 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.util.enums.ServerFeature;
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatureManager;
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatures;
 
 @Mixin(MultiPlayerGameMode.class)
 public abstract class MixinMultiPlayerGameMode_StopBlockMining {
@@ -46,7 +46,7 @@ public abstract class MixinMultiPlayerGameMode_StopBlockMining {
 
     @WrapOperation(method = "stopDestroyBlock", at = @At(value = "FIELD", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;isDestroying:Z", opcode = Opcodes.GETFIELD))
     private boolean animatium$miningItemUsage$allowFullBlock(final MultiPlayerGameMode instance, final Operation<Boolean> original) {
-        if (Animatium.hasServerFeature(ServerFeature.MINING_ITEM_USAGE)) {
+        if (ServerFeatureManager.isPresent(ServerFeatures.MINING_ITEM_USAGE)) {
             return true;
         } else {
             return original.call(instance);
@@ -55,7 +55,7 @@ public abstract class MixinMultiPlayerGameMode_StopBlockMining {
 
     @WrapWithCondition(method = "stopDestroyBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"))
     private boolean animatium$miningItemUsage$stopPacket(final ClientPacketListener instance, final Packet<?> packet) {
-        if (Animatium.hasServerFeature(ServerFeature.MINING_ITEM_USAGE)) {
+        if (ServerFeatureManager.isPresent(ServerFeatures.MINING_ITEM_USAGE)) {
             return this.isDestroying;
         } else {
             return true;
@@ -64,7 +64,7 @@ public abstract class MixinMultiPlayerGameMode_StopBlockMining {
 
     @WrapWithCondition(method = "stopDestroyBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;resetAttackStrengthTicker()V"))
     private boolean animatium$miningItemUsage$fixAttackProgress(final LocalPlayer instance) {
-        if (Animatium.hasServerFeature(ServerFeature.MINING_ITEM_USAGE)) {
+        if (ServerFeatureManager.isPresent(ServerFeatures.MINING_ITEM_USAGE)) {
             return this.isDestroying;
         } else {
             return true;

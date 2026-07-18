@@ -23,22 +23,27 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.general.server_features;
+package org.visuals.legacy.animatium.handler.server_features
 
-import net.minecraft.world.entity.Entity;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.visuals.legacy.animatium.handler.server_features.ServerFeatureManager;
-import org.visuals.legacy.animatium.handler.server_features.ServerFeatures;
+import org.visuals.legacy.animatium.config.bundle.ConfigBundles
+import org.visuals.legacy.animatium.util.isSingleplayer
 
-@Mixin(Entity.class)
-public abstract class MixinEntity_PickInflation {
-    @Inject(method = "getPickRadius", at = @At("HEAD"), cancellable = true)
-    private void animatium$pickInflation(final CallbackInfoReturnable<Float> cir) {
-        if (ServerFeatureManager.isPresent(ServerFeatures.PICK_INFLATION)) {
-            cir.setReturnValue(0.1F);
+object ServerFeatureManager {
+    @JvmField
+    val ENABLED_SERVER_FEATURES: HashSet<ServerFeature> = hashSetOf()
+
+    @JvmStatic
+    fun isPresent(feature: ServerFeature): Boolean {
+        if (isSingleplayer()) {
+            for (entry in ConfigBundles.EXTRAS.entries()) {
+                if (entry.name.equals(feature.identifier.path)) {
+                    return entry.value() as Boolean
+                }
+            }
+
+            return false
+        } else {
+            return ENABLED_SERVER_FEATURES.contains(feature)
         }
     }
 }

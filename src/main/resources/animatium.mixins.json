@@ -47,7 +47,7 @@
 		"v1.entity.projectiles.age.MixinWindCharge_AgeCheck",
 		"v1.entity.rotations.MixinLivingEntity",
 		"v1.entity.rotations.MixinPlayer_UncapHeadRotation",
-		"v1.entity.sneaking.MixinAvatar_OldSneakHeight",
+      "v1.general.server_features.MixinAvatar_OldSneakHeight",
 		"v1.entity.sneaking.MixinAvatarRenderer_FixSneakFeetPosition",
 		"v1.entity.sneaking.MixinElytraAnimationState_SneakAnimationWhileGliding",
 		"v1.entity.sneaking.MixinElytraModel_SneakTranslation",

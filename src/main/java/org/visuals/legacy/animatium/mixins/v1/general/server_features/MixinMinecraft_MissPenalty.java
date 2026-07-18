@@ -40,8 +40,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatureManager;
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatures;
 import org.visuals.legacy.animatium.util.EntityUtilKt;
-import org.visuals.legacy.animatium.util.enums.ServerFeature;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft_MissPenalty {
@@ -62,7 +63,7 @@ public abstract class MixinMinecraft_MissPenalty {
 
     @WrapOperation(method = "startAttack", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 0, opcode = Opcodes.GETFIELD))
     private int animatium$disableSwingMissPenalty(final Minecraft instance, final Operation<Integer> original) {
-        if (Animatium.hasServerFeature(ServerFeature.MISS_PENALTY) && (this.hitResult != null && this.hitResult.getType() != HitResult.Type.BLOCK)) {
+        if (ServerFeatureManager.isPresent(ServerFeatures.MISS_PENALTY) && (this.hitResult != null && this.hitResult.getType() != HitResult.Type.BLOCK)) {
             return 0;
         } else {
             return original.call(instance);
