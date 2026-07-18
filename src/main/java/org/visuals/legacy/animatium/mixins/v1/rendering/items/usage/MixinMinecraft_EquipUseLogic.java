@@ -143,7 +143,7 @@ public abstract class MixinMinecraft_EquipUseLogic {
         }
     }
 
-    @Definition(id = "interactionResult2", local = @Local(type = InteractionResult.class, name = "interactionResult2"))
+    @Definition(id = "interactionResult2", local = @Local(type = InteractionResult.class, ordinal = 1))
     @Definition(id = "Fail", type = InteractionResult.Fail.class)
     @Expression("interactionResult2 instanceof Fail")
     @Inject(method = "startUseItem", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.BEFORE))
