@@ -30,9 +30,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.config.bundle.EntryBundle;
 import org.visuals.legacy.animatium.handler.compatibility.ModsKt;
-import org.visuals.legacy.animatium.util.enums.ServerFeature;
-
-import java.util.Arrays;
+import org.visuals.legacy.animatium.handler.server_features.ServerFeature;
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatures;
 
 public final class ExtrasConfigCategory extends Category {
     public boolean minimalViewBobbing = false;
@@ -134,9 +133,12 @@ public final class ExtrasConfigCategory extends Category {
 
         {
             final EntryBundle.Group serverFeatureGroup = new EntryBundle.Group("server_features");
-            Arrays.stream(ServerFeature.VALUES)
-                    .filter(it -> it != ServerFeature.ALL)
-                    .forEach(it -> serverFeatureGroup.booleanEntry(it.getSerializedName()));
+            for (final ServerFeature feature : ServerFeatures.allFeatures()) {
+                if (!ServerFeatures.ALL.equals(feature)) {
+                    serverFeatureGroup.booleanEntry(feature.getIdentifier().getPath());
+                }
+            }
+
             bundle.group(serverFeatureGroup);
         }
 

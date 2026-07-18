@@ -27,9 +27,10 @@ package org.visuals.legacy.animatium
 
 import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel
-import org.visuals.legacy.animatium.handler.packet.InfoPayloadPacket
+import org.visuals.legacy.animatium.handler.payloads.InfoPayload
 import java.lang.Boolean.parseBoolean
 import java.lang.Double.parseDouble
+import java.util.*
 
 object AnimatiumConstants {
     const val MOD_ID = "@MODID@"
@@ -48,7 +49,7 @@ object AnimatiumConstants {
     val FAST_GRASS_MODEL_KEY: ExtraModelKey<BlockStateModel> =
         ExtraModelKey.create(FAST_GRASS_MODEL_LOCATION::toString)
 
-    @JvmStatic
-    fun getInfoPayload(): InfoPayloadPacket =
-        InfoPayloadPacket(VERSION, if (IS_DEVELOPMENT) DEVELOPMENT_VERSION else null)
+    @JvmField
+    val INFO_PAYLOAD =
+        InfoPayload(VERSION, if (IS_DEVELOPMENT) Optional.of(DEVELOPMENT_VERSION) else Optional.empty())
 }

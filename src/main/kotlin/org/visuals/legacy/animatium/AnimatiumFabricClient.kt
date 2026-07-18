@@ -30,16 +30,13 @@ import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin
 import net.fabricmc.fabric.api.client.model.loading.v1.SimpleUnbakedExtraModel
-import net.fabricmc.fabric.api.client.networking.v1.*
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader
 import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType
 import net.fabricmc.loader.api.FabricLoader
 import org.visuals.legacy.animatium.command.AnimatiumCommand
 import org.visuals.legacy.animatium.handler.AnimatiumKeybinds
+import org.visuals.legacy.animatium.handler.AnimatiumNetworking
 import org.visuals.legacy.animatium.handler.AnimatiumParticles
-import org.visuals.legacy.animatium.handler.packet.InfoPayloadPacket
-import org.visuals.legacy.animatium.handler.packet.SetServerFeaturesPayloadPacket
 
 @Entrypoint
 class AnimatiumFabricClient : ClientModInitializer {
@@ -52,49 +49,17 @@ class AnimatiumFabricClient : ClientModInitializer {
             ResourceLoader.registerBuiltinPack(Animatium.location(pack), modContainer, PackActivationType.NORMAL)
         }
 
-        ModelLoadingPlugin.register({ context ->
+        ModelLoadingPlugin.register { context ->
             context.addModel(
                 AnimatiumConstants.FAST_GRASS_MODEL_KEY,
                 SimpleUnbakedExtraModel.blockStateModel(AnimatiumConstants.FAST_GRASS_MODEL_LOCATION)
             )
-        })
+        }
 
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ -> dispatcher.register(AnimatiumCommand.create()) }
 
         AnimatiumKeybinds.bootstrap()
         AnimatiumParticles.bootstrap()
-        this.registerPayloads()
-    }
-
-    private fun registerPayloads() {
-        ClientLoginConnectionEvents.DISCONNECT.register { _, _ -> Animatium.ENABLED_SERVER_FEATURES.clear() }
-        ClientConfigurationConnectionEvents.DISCONNECT.register { _, _ -> Animatium.ENABLED_SERVER_FEATURES.clear() }
-        ClientPlayConnectionEvents.DISCONNECT.register { _, _ -> Animatium.ENABLED_SERVER_FEATURES.clear() }
-
-        ClientPlayConnectionEvents.JOIN.register { _, sender, client ->
-            if (!client.isLocalServer) {
-                sender.sendPacket(AnimatiumConstants.getInfoPayload())
-            }
-        }
-
-        PayloadTypeRegistry.clientboundConfiguration()
-            .register(SetServerFeaturesPayloadPacket.ID, SetServerFeaturesPayloadPacket.CODEC)
-        ClientConfigurationNetworking.registerGlobalReceiver(SetServerFeaturesPayloadPacket.ID) { payload, context ->
-            context.client().schedule {
-                Animatium.ENABLED_SERVER_FEATURES.clear()
-                Animatium.ENABLED_SERVER_FEATURES.addAll(payload.features)
-            }
-        }
-
-        PayloadTypeRegistry.clientboundPlay()
-            .register(SetServerFeaturesPayloadPacket.ID, SetServerFeaturesPayloadPacket.CODEC)
-        ClientPlayNetworking.registerGlobalReceiver(SetServerFeaturesPayloadPacket.ID) { payload, context ->
-            context.client().schedule {
-                Animatium.ENABLED_SERVER_FEATURES.clear()
-                Animatium.ENABLED_SERVER_FEATURES.addAll(payload.features)
-            }
-        }
-
-        PayloadTypeRegistry.serverboundPlay().register(InfoPayloadPacket.ID, InfoPayloadPacket.CODEC)
+        AnimatiumNetworking.bootstrap()
     }
 }

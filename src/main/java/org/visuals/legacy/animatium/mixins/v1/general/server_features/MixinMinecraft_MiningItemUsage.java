@@ -34,8 +34,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.util.enums.ServerFeature;
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatureManager;
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatures;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft_MiningItemUsage {
@@ -44,7 +44,7 @@ public abstract class MixinMinecraft_MiningItemUsage {
     @Expression("this.gameMode.isDestroying()")
     @ModifyExpressionValue(method = "startUseItem", at = @At("MIXINEXTRAS:EXPRESSION"))
     private boolean animatium$leftClickItemUsage$miningItemUsage(final boolean original) {
-        if (Animatium.hasServerFeature(ServerFeature.MINING_ITEM_USAGE) || Animatium.hasServerFeature(ServerFeature.LEFT_CLICK_ITEM_USAGE)) {
+        if (ServerFeatureManager.isPresent(ServerFeatures.MINING_ITEM_USAGE) || ServerFeatureManager.isPresent(ServerFeatures.LEFT_CLICK_ITEM_USAGE)) {
             return false;
         } else {
             return original;
@@ -53,7 +53,7 @@ public abstract class MixinMinecraft_MiningItemUsage {
 
     @WrapOperation(method = "continueAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z"))
     private boolean animatium$miningItemUsage(final LocalPlayer instance, final Operation<Boolean> original) {
-        if (Animatium.hasServerFeature(ServerFeature.MINING_ITEM_USAGE)) {
+        if (ServerFeatureManager.isPresent(ServerFeatures.MINING_ITEM_USAGE)) {
             return false;
         } else {
             return original.call(instance);

@@ -32,21 +32,14 @@ import net.minecraft.client.gui.components.debug.DebugScreenEntries
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.Identifier
 import org.visuals.legacy.animatium.config.AnimatiumConfig
-import org.visuals.legacy.animatium.config.bundle.ConfigBundles
-import org.visuals.legacy.animatium.handler.AnimatiumDebugEntry
+import org.visuals.legacy.animatium.handler.screen.debug.AnimatiumDebugEntry
 import org.visuals.legacy.animatium.handler.rendering.lighting.LegacyDiffuseLighting
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor
 import org.visuals.legacy.animatium.util.config.GeneralConfigUtil
-import org.visuals.legacy.animatium.util.enums.ServerFeature
-import org.visuals.legacy.animatium.util.isSingleplayer
 import org.visuals.legacy.animatium.util.reinitializeInventorySlots
-import java.util.*
 
 object Animatium {
     private val LOGGER = LogUtils.getLogger()
-
-    @JvmField
-    val ENABLED_SERVER_FEATURES: EnumSet<ServerFeature> = EnumSet.noneOf(ServerFeature::class.java)
 
     @JvmStatic
     var enabled = true
@@ -57,21 +50,6 @@ object Animatium {
 
     @JvmStatic
     fun isEnabled(): Boolean = enabled
-
-    @JvmStatic
-    fun hasServerFeature(feature: ServerFeature): Boolean {
-        if (isSingleplayer()) {
-            for (entry in ConfigBundles.EXTRAS.entries()) {
-                if (entry.name.equals(feature.serializedName)) {
-                    return entry.value() as Boolean
-                }
-            }
-
-            return false
-        } else {
-            return ENABLED_SERVER_FEATURES.contains(ServerFeature.ALL) || ENABLED_SERVER_FEATURES.contains(feature)
-        }
-    }
 
     @JvmStatic
     fun reload() {

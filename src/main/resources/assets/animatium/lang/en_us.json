@@ -360,5 +360,6 @@
 	"animatium.disable_sprint_sneaking": "disable_sprint_sneaking",
 	"animatium.disable_sprint_sneaking.description": "",
 
-	"animatium.category.debug": "Animatium"
+	"animatium.category.debug": "Animatium",
+	"key.category.animatium.common": "Animatium (Common)"
 }
