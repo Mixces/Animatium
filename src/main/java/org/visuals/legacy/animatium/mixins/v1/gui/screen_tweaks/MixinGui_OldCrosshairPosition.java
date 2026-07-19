@@ -30,7 +30,7 @@ import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
@@ -38,10 +38,10 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(Gui.class)
 public abstract class MixinGui_OldCrosshairPosition {
-    @Definition(id = "graphics", local = @Local(type = GuiGraphicsExtractor.class, argsOnly = true))
-    @Definition(id = "guiWidth", method = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;guiWidth()I")
+    @Definition(id = "graphics", local = @Local(type = GuiGraphics.class, argsOnly = true))
+    @Definition(id = "guiWidth", method = "Lnet/minecraft/client/gui/GuiGraphics;guiWidth()I")
     @Expression("(graphics.guiWidth() - 15) / 2")
-    @ModifyExpressionValue(method = "extractCrosshair", at = @At("MIXINEXTRAS:EXPRESSION"))
+    @ModifyExpressionValue(method = "renderCrosshair", at = @At("MIXINEXTRAS:EXPRESSION"))
     private int animatium$oldCrosshairPosition(final int original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.oldCrosshairPosition) {
             return original + 1;

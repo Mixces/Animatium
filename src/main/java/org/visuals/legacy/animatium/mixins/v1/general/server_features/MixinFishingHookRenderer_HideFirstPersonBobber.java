@@ -39,7 +39,7 @@ import org.visuals.legacy.animatium.util.EntityUtilKt;
 @Mixin(FishingHookRenderer.class)
 public abstract class MixinFishingHookRenderer_HideFirstPersonBobber {
     @ModifyReturnValue(method = "shouldRender(Lnet/minecraft/world/entity/projectile/FishingHook;Lnet/minecraft/client/renderer/culling/Frustum;DDD)Z", at = @At("RETURN"))
-    private boolean animatium$hideBobberAttachedToSelf(final boolean original, @Local(argsOnly = true, name = "entity") final FishingHook entity) {
+    private boolean animatium$hideBobberAttachedToSelf(final boolean original, @Local(argsOnly = true, ordinal = 0) final FishingHook entity) {
         if (ServerFeatureManager.isPresent(ServerFeatures.HIDE_FIRST_PERSON_ROD_BOBBER) && entity.getHookedIn() instanceof Entity hook && EntityUtilKt.isSelf(hook)) {
             return false;
         } else {

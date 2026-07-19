@@ -29,8 +29,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.Panorama;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.PanoramaRenderer;
 import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -38,10 +38,10 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.handler.rendering.panorama.LegacyPanoramaRenderer;
 
-@Mixin(Panorama.class)
-public abstract class MixinPanorama_LegacyPanorama {
-    @WrapOperation(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIIIII)V"))
-    private void animatium$legacyPanorama(final GuiGraphicsExtractor instance, final RenderPipeline renderPipeline, final Identifier texture, final int x, final int y, final float u, final float v, final int width, final int height, final int srcWidth, final int srcHeight, final int textureWidth, final int textureHeight, final Operation<Void> original) {
+@Mixin(PanoramaRenderer.class)
+public abstract class MixinPanoramaRenderer_LegacyPanorama {
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIIIII)V"))
+    private void animatium$legacyPanorama(final GuiGraphics instance, final RenderPipeline renderPipeline, final Identifier texture, final int x, final int y, final float u, final float v, final int width, final int height, final int srcWidth, final int srcHeight, final int textureWidth, final int textureHeight, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.panoramaRendering) {
             LegacyPanoramaRenderer.INSTANCE.extractRenderState(instance, width, height, Minecraft.getInstance().getDeltaTracker().getRealtimeDeltaTicks());
             instance.fillGradient(0, 0, width, height, -2130706433, 16777215);

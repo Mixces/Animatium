@@ -28,7 +28,7 @@ package org.visuals.legacy.animatium.mixins.v1.gui.old_inventory_rendering;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.Nullable;
@@ -44,13 +44,13 @@ public abstract class MixinAbstractContainerScreen {
     @Nullable
     protected Slot hoveredSlot;
 
-    @WrapWithCondition(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractSlotHighlightBack(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V"))
-    private boolean animatium$slotHoverStyleRendering$disableBack(final AbstractContainerScreen<?> instance, final GuiGraphicsExtractor graphics) {
+    @WrapWithCondition(method = "renderContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderSlotHighlightBack(Lnet/minecraft/client/gui/GuiGraphics;)V"))
+    private boolean animatium$slotHoverStyleRendering$disableBack(final AbstractContainerScreen<?> instance, final GuiGraphics graphics) {
         return !Animatium.isEnabled() || !AnimatiumConfig.instance().screen.slotHoverStyleRendering;
     }
 
-    @WrapOperation(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractSlotHighlightFront(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V"))
-    private void animatium$slotHoverStyleRendering(final AbstractContainerScreen<?> instance, final GuiGraphicsExtractor graphics, final Operation<Void> original) {
+    @WrapOperation(method = "renderContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderSlotHighlightFront(Lnet/minecraft/client/gui/GuiGraphics;)V"))
+    private void animatium$slotHoverStyleRendering(final AbstractContainerScreen<?> instance, final GuiGraphics graphics, final Operation<Void> original) {
         final Slot slot = this.hoveredSlot;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.slotHoverStyleRendering && slot != null && slot.isHighlightable()) {
             graphics.fillGradient(slot.x, slot.y, slot.x + 16, slot.y + 16, -2130706433, -2130706433);

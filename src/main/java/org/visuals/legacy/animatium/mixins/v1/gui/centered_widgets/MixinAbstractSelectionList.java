@@ -27,7 +27,7 @@ package org.visuals.legacy.animatium.mixins.v1.gui.centered_widgets;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractScrollArea;
 import net.minecraft.client.gui.components.AbstractSelectionList;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,14 +39,14 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(AbstractSelectionList.class)
 public abstract class MixinAbstractSelectionList<E extends AbstractSelectionList.Entry<E>> {
-    @Inject(method = "extractItem", at = @At("HEAD"))
-    private void animatium$updateScroll(final GuiGraphicsExtractor graphics, final int mouseX, final int mouseY, final float tickDelta, final E entry, final CallbackInfo ci) {
+    @Inject(method = "renderItem", at = @At("HEAD"))
+    private void animatium$updateScroll(final GuiGraphics graphics, final int mouseX, final int mouseY, final float tickDelta, final E entry, final CallbackInfo ci) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.centerScrollableListWidgets) {
             ((AbstractScrollArea) (Object) this).refreshScrollAmount();
         }
     }
 
-    @WrapOperation(method = "extractItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/AbstractSelectionList;isFocused()Z"))
+    @WrapOperation(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/AbstractSelectionList;isFocused()Z"))
     private boolean animatium$listWidgetSelectedBorderColor(AbstractSelectionList<?> instance, Operation<Boolean> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.listWidgetSelectedBorderColor) {
             return false;
