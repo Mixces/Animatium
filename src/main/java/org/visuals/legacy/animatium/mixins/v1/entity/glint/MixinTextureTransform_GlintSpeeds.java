@@ -54,7 +54,7 @@ public abstract class MixinTextureTransform_GlintSpeeds {
     }
 
     @ModifyExpressionValue(method = "setupGlintTexturing", at = @At(value = "CONSTANT", args = "doubleValue=8.0"))
-    private static double animatium$glintSpeed(final double original, @Local(argsOnly = true, name = "scale") final float scale) {
+    private static double animatium$glintSpeed(final double original, @Local(argsOnly = true, ordinal = 0) final float scale) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.legacyGlintSpeed && scale == 8.0F) {
             // Value taken from 1.8
             return 1.0D;
@@ -64,7 +64,7 @@ public abstract class MixinTextureTransform_GlintSpeeds {
     }
 
     @ModifyExpressionValue(method = "setupGlintTexturing", at = @At(value = "CONSTANT", args = "floatValue=110000.0"))
-    private static float animatium$glintSpeed$horizontal(final float original, @Local(argsOnly = true, name = "scale") final float scale) {
+    private static float animatium$glintSpeed$horizontal(final float original, @Local(argsOnly = true, ordinal = 0) final float scale) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.legacyGlintSpeed && scale == 8.0F) {
             // Value taken from 1.7/1.8
             return 4873.0F;
@@ -74,7 +74,7 @@ public abstract class MixinTextureTransform_GlintSpeeds {
     }
 
     @ModifyExpressionValue(method = "setupGlintTexturing", at = @At(value = "CONSTANT", args = "floatValue=30000.0"))
-    private static float animatium$glintSpeed$diagonal(final float original, @Local(argsOnly = true, name = "scale") final float scale) {
+    private static float animatium$glintSpeed$diagonal(final float original, @Local(argsOnly = true, ordinal = 0) final float scale) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.legacyGlintSpeed && scale == 8.0F) {
             // Value taken from 1.7/1.8
             return 3000.0F;
