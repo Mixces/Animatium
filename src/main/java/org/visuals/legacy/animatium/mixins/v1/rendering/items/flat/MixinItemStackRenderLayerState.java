@@ -27,9 +27,10 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.items.flat;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.resources.model.cuboid.ItemTransform;
-import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -53,17 +54,17 @@ import java.util.stream.Collectors;
 
 @Mixin(ItemStackRenderState.LayerRenderState.class)
 public abstract class MixinItemStackRenderLayerState {
-    @Shadow
-    private ItemTransform itemTransform;
+    @Shadow(aliases = "transform")
+    ItemTransform itemTransform;
 
     @Shadow(aliases = "this$0")
     @Final
     ItemStackRenderState itemStackRenderState;
 
     @Shadow
-    private boolean usesBlockLight;
+    boolean usesBlockLight;
 
-    @ModifyArg(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemDisplayContext;III[ILjava/util/List;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"), index = 6)
+    @ModifyArg(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemDisplayContext;III[ILjava/util/List;Lnet/minecraft/client/renderer/rendertype/RenderType;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"), index = 6)
     private List<BakedQuad> animatium$itemDrops2D(final List<BakedQuad> quads) {
         if (Animatium.isEnabled() && animatium$isTransformationModeValid() && !this.usesBlockLight) {
             return quads.stream().filter(baked -> baked.direction() == Direction.SOUTH).collect(Collectors.toList());
@@ -72,7 +73,7 @@ public abstract class MixinItemStackRenderLayerState {
         }
     }
 
-    @ModifyArg(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemDisplayContext;III[ILjava/util/List;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"), index = 7)
+    @ModifyArg(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemDisplayContext;III[ILjava/util/List;Lnet/minecraft/client/renderer/rendertype/RenderType;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"), index = 9)
     private ItemStackRenderState.FoilType animatium$disableGlintOn2DItems(final ItemStackRenderState.FoilType foilType) {
         final boolean glintDropped = !AnimatiumConfig.instance().items.glintOnItemDrops2D;
         final boolean glintFramed = !AnimatiumConfig.instance().items.glintOnItemFramed2D;
@@ -86,11 +87,12 @@ public abstract class MixinItemStackRenderLayerState {
     }
 
     // TODO/MOVE
-    @Inject(method = "applyTransform", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/cuboid/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack$Pose;)V"))
-    private void animatium$itemPositions(final PoseStack.Pose localPose, final CallbackInfo ci) {
+    @Inject(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack$Pose;)V"))
+    private void animatium$itemPositions(final PoseStack poseStack, final SubmitNodeCollector nodeCollector, final int packedLight, final int packedOverlay, final int outlineColor, final CallbackInfo ci) {
         if (Animatium.isEnabled()) {
             final ItemStack stack = this.itemStackRenderState.animatium$getItemStack();
             if (!stack.isEmpty()) {
+                final PoseStack.Pose localPose = poseStack.last();
                 final ItemDisplayContext itemDisplayContext = this.itemStackRenderState.displayContext;
                 final boolean isGui = itemDisplayContext == ItemDisplayContext.GUI;
                 final boolean isFirstPerson = itemDisplayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || itemDisplayContext == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;

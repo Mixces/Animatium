@@ -23,33 +23,25 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.gui.screen_tweaks.panorama;
+package org.visuals.legacy.animatium.mixins.v1.entity.nametag;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.gui.render.GuiRenderer;
-import net.minecraft.client.renderer.CubeMap;
+import net.minecraft.client.Options;
+import net.minecraft.client.renderer.feature.NameTagFeatureRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.handler.rendering.panorama.LegacyPanoramaRenderer;
 
-@Mixin(GuiRenderer.class)
-public abstract class MixinGuiRenderer_LegacyPanoramaRendering {
-    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CubeMap;render(FF)V", ordinal = 0))
-    private void animatium$panoramaRendering(final CubeMap instance, final float rotXInDegrees, final float rotYInDegrees, final Operation<Void> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.panoramaRendering) {
-            LegacyPanoramaRenderer.INSTANCE.render();
+@Mixin(NameTagFeatureRenderer.Storage.class)
+public abstract class MixinNameTagFeatureRenderer$Storage_NameTagBackground {
+    @WrapOperation(method = "add", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Options;getBackgroundOpacity(F)F"))
+    private float animatium$nameTagBackground(final Options instance, final float defaultOpacity, final Operation<Float> original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.hideNameTagBackground) {
+            return 0F;
         } else {
-            original.call(instance, rotXInDegrees, rotYInDegrees);
+            return original.call(instance, defaultOpacity);
         }
-    }
-
-    @Inject(method = "close", at = @At("TAIL"))
-    private void animatium$closePanorama(final CallbackInfo ci) {
-        LegacyPanoramaRenderer.INSTANCE.close();
     }
 }

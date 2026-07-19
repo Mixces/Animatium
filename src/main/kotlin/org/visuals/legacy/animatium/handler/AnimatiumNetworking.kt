@@ -57,7 +57,7 @@ object AnimatiumNetworking {
             }
         }
 
-        PayloadTypeRegistry.playC2S()
+        PayloadTypeRegistry.playS2C()
             .register(SetServerFeaturesPayload.TYPE, SetServerFeaturesPayload.STREAM_CODEC)
         ClientPlayNetworking.registerGlobalReceiver(SetServerFeaturesPayload.TYPE) { payload, context ->
             context.client().schedule {

@@ -23,26 +23,19 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.nametag;
+package org.visuals.legacy.animatium.mixins.v1.gui.screen_tweaks.panorama;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.renderer.SubmitNodeCollection;
-import net.minecraft.client.renderer.state.OptionsRenderState;
+import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.visuals.legacy.animatium.handler.rendering.panorama.LegacyPanoramaRenderer;
 
-@Mixin(SubmitNodeCollection.class)
-public abstract class MixinSubmitNodeCollection_NameTagBackground {
-    /*@WrapOperation(method = "submitNameTag", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/state/OptionsRenderState;getBackgroundOpacity(F)F"))
-    private float animatium$nameTagBackground(final OptionsRenderState instance, final float defaultOpacity, final Operation<Float> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.hideNameTagBackground) {
-            return 0F;
-        } else {
-            return original.call(instance, defaultOpacity);
-        }
-    }*/
-    // TODO: 26.1
+@Mixin(GameRenderer.class)
+public abstract class MixinGameRenderer_CloseLegacyPanorama {
+    @Inject(method = "close", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CubeMap;close()V", shift = At.Shift.AFTER))
+    private void animatium$closePanorama(final CallbackInfo ci) {
+        LegacyPanoramaRenderer.INSTANCE.close();
+    }
 }

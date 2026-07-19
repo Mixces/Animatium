@@ -25,26 +25,34 @@
 
 package org.visuals.legacy.animatium.mixins.v1.rendering.blocks;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.BlockStateModelSet;
-import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.renderer.block.BlockModelShaper;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.GrassBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.AnimatiumConstants;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(BlockStateModelSet.class)
-public abstract class MixinBlockStateModelSet_FastGrassSide {
-    @Inject(method = "get", at = @At("HEAD"), cancellable = true)
-    private void animatium$fastGrass(final BlockState state, final CallbackInfoReturnable<BlockStateModel> cir) {
+@Mixin(BlockRenderDispatcher.class)
+public abstract class MixinBlockRenderDispatcher_FastGrassSide {
+    @Shadow
+    @Final
+    private BlockModelShaper blockModelShaper;
+
+    @WrapOperation(method = "getBlockModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/BlockModelShaper;getBlockModel(Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/client/renderer/block/model/BlockStateModel;"))
+    private BlockStateModel animatium$fastGrass(final BlockModelShaper instance, final BlockState state, final Operation<BlockStateModel> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.fastGrass && (state.is(Blocks.GRASS_BLOCK) && !state.getValue(GrassBlock.SNOWY))) {
-            cir.setReturnValue(Minecraft.getInstance().getModelManager().getModel(AnimatiumConstants.FAST_GRASS_MODEL_KEY));
+            return this.blockModelShaper.getModelManager().getModel(AnimatiumConstants.FAST_GRASS_MODEL_KEY);
+        } else {
+            return original.call(instance, state);
         }
     }
 }

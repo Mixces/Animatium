@@ -69,7 +69,7 @@ public abstract class MixinLivingEntity_Particles extends Entity {
     }
 
     @WrapOperation(method = "tickEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))
-    private void animatium$blendPotionParticleColors(final Level instance, final ParticleOptions particle, final double x, final double y, final double z, final double velocityX, final double velocityY, final double velocityZ, final Operation<Void> original, @Local(name = "isAmbient") final boolean hasAmbience) {
+    private void animatium$blendPotionParticleColors(final Level instance, final ParticleOptions particle, final double x, final double y, final double z, final double velocityX, final double velocityY, final double velocityZ, final Operation<Void> original, @Local(ordinal = 0) final boolean hasAmbience) {
         ParticleOptions options = particle;
         double red = velocityX;
         double green = velocityY;

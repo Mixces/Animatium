@@ -25,7 +25,7 @@
 
 package org.visuals.legacy.animatium.mixins.v1.entity.glint;
 
-import net.minecraft.client.renderer.feature.ItemFeatureRenderer;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,8 +38,8 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinTextureManager_ArmorItemGlint {
     @ModifyVariable(method = "getTexture", at = @At("HEAD"), argsOnly = true, name = "location")
     private Identifier animatium$useItemGlint(final Identifier location) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.itemGlintOnEntity && location == ItemFeatureRenderer.ENCHANTED_GLINT_ARMOR) {
-            return ItemFeatureRenderer.ENCHANTED_GLINT_ITEM;
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.itemGlintOnEntity && location == ItemRenderer.ENCHANTED_GLINT_ARMOR) {
+            return ItemRenderer.ENCHANTED_GLINT_ITEM;
         } else {
             return location;
         }

@@ -37,7 +37,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
 import org.objectweb.asm.Opcodes;
@@ -54,7 +54,7 @@ import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 @Mixin(LivingEntityRenderer.class)
 public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderState> {
     // TODO/MOVE
-    @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal = 1))
+    @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal = 1))
     private void animatium$syncPlayerModelWithEyeHeight(final S livingEntityRenderState, final PoseStack poseStack, final SubmitNodeCollector submitNodeCollector, final CameraRenderState cameraRenderState, final CallbackInfo ci) {
         if (Animatium.isEnabled()
                 && AnimatiumConfig.instance().movement.sneakAnimation == SneakAnimationSetting.V1_7
@@ -80,7 +80,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
     }
 
     @WrapOperation(method = "setupRotations", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;deathTime:F", opcode = Opcodes.GETFIELD))
-    private float animatium$entityDeathTopple(final LivingEntityRenderState instance, final Operation<Float> original, @Local(argsOnly = true, name = "state") final S state) {
+    private float animatium$entityDeathTopple(final LivingEntityRenderState instance, final Operation<Float> original, @Local(argsOnly = true, ordinal = 0) final S state) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.disableEntityDeathTopple && state instanceof AvatarRenderState) {
             return 0;
         } else {
@@ -88,7 +88,7 @@ public abstract class MixinLivingEntityRenderer<S extends LivingEntityRenderStat
         }
     }
 
-    @WrapMethod(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V")
+    @WrapMethod(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V")
     private void animatium$disableModelWhilstSleeping(final S state, final PoseStack poseStack, final SubmitNodeCollector submitNodeCollector, final CameraRenderState camera, final Operation<Void> original) {
         if (Animatium.isEnabled()
                 && AnimatiumConfig.instance().other.disableModelWhilstSleeping

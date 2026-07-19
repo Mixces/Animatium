@@ -123,7 +123,7 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
     @Definition(id = "ShieldItem", type = ShieldItem.class)
     @Expression("item.getItem() instanceof ShieldItem")
     @ModifyExpressionValue(method = "renderArmWithItem", at = @At("MIXINEXTRAS:EXPRESSION"))
-    private boolean animatium$oldFirstPersonSwordBlock(final boolean original, @Local(argsOnly = true, name = "player") final AbstractClientPlayer player, @Local(argsOnly = true, name = "hand") final InteractionHand hand, @Local(argsOnly = true, name = "itemStack") final ItemStack itemStack, @Local(argsOnly = true, name = "poseStack") final PoseStack poseStack) {
+    private boolean animatium$oldFirstPersonSwordBlock(final boolean original, @Local(argsOnly = true, ordinal = 0) final AbstractClientPlayer player, @Local(argsOnly = true, ordinal = 0) final InteractionHand hand, @Local(argsOnly = true, ordinal = 0) final ItemStack itemStack, @Local(argsOnly = true, ordinal = 0) final PoseStack poseStack) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemPositions && !(itemStack.getItem() instanceof ShieldItem)) {
             final int direction = EntityUtilKt.getHandMultiplier(player, hand);
             // We do this to fix a rounding error in Mojangs code.
@@ -189,7 +189,7 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
                     from = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/ItemUseAnimation;"),
                     to = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;applyItemArmTransform(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/HumanoidArm;F)V", ordinal = 4)
             ))
-    private void animatium$itemUsageSwinging(final AbstractClientPlayer player, final float tickDelta, final float pitch, final InteractionHand hand, final float swingProgress, final ItemStack itemStack, final float equippedProgress, final PoseStack poseStack, final SubmitNodeCollector submitNodeCollector, final int lightCoords, final CallbackInfo ci, @Local(name = "arm") final HumanoidArm arm) {
+    private void animatium$itemUsageSwinging(final AbstractClientPlayer player, final float tickDelta, final float pitch, final InteractionHand hand, final float swingProgress, final ItemStack itemStack, final float equippedProgress, final PoseStack poseStack, final SubmitNodeCollector submitNodeCollector, final int lightCoords, final CallbackInfo ci, @Local(ordinal = 0) final HumanoidArm arm) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemUsageSwinging) {
             this.applyItemArmAttackTransform(poseStack, arm, swingProgress);
         }
@@ -201,7 +201,7 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getOffhandItem()Lnet/minecraft/world/item/ItemStack;"))
-    private void animatium$createCopyStack(final CallbackInfo ci, @Local(name = "player") final LocalPlayer player, @Local(name = "nextMainHand") final ItemStack nextMainHand, @Share("copyStack") final LocalRef<ItemStack> copyStack) {
+    private void animatium$createCopyStack(final CallbackInfo ci, @Local(ordinal = 0) final LocalPlayer player, @Local(ordinal = 0) final ItemStack nextMainHand, @Share("copyStack") final LocalRef<ItemStack> copyStack) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.equipAnimationItemCheck) {
             // Initialize our copied stack
             copyStack.set(nextMainHand.copy());
@@ -253,7 +253,7 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
         }
     }
 
-    @ModifyVariable(method = "tick", at = @At(value = "LOAD", ordinal = 2), name = "nextMainHand")
+    @ModifyVariable(method = "tick", at = @At(value = "LOAD", ordinal = 2), ordinal = 0)
     private ItemStack animatium$useLocalCopyStack(final ItemStack nextMainHand, @Share("copyStack") final LocalRef<ItemStack> copyStack) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.equipAnimationItemCheck) {
             // Use the local copied stack for the stack comparison

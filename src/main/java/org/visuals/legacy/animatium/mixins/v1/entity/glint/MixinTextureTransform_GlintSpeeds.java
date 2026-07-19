@@ -25,10 +25,11 @@
 
 package org.visuals.legacy.animatium.mixins.v1.entity.glint;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.renderer.rendertype.TextureTransform;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
@@ -36,8 +37,14 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(TextureTransform.class)
 public abstract class MixinTextureTransform_GlintSpeeds {
-    @ModifyExpressionValue(method = "setupGlintTexturing", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/state/OptionsRenderState;glintSpeed:D", opcode = Opcodes.GETFIELD))
-    private static double animatium$forceMaxGlintSpeed(final double original) {
+    @Definition(id = "Double", type = Double.class)
+    @Definition(id = "getInstance", method = "Lnet/minecraft/client/Minecraft;getInstance()Lnet/minecraft/client/Minecraft;")
+    @Definition(id = "options", field = "Lnet/minecraft/client/Minecraft;options:Lnet/minecraft/client/Options;")
+    @Definition(id = "glintSpeed", method = "Lnet/minecraft/client/Options;glintSpeed()Lnet/minecraft/client/OptionInstance;")
+    @Definition(id = "get", method = "Lnet/minecraft/client/OptionInstance;get()Ljava/lang/Object;")
+    @Expression("(Double) (getInstance().options.glintSpeed()).get()")
+    @ModifyExpressionValue(method = "setupGlintTexturing", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private static Double animatium$forceMaxGlintSpeed(final Double original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.maxGlintProperties) {
             // 100% glint speed
             return 1.0D;

@@ -102,7 +102,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
     }
 
     @WrapOperation(method = "setupAttackAnimation", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/model/geom/ModelPart;xRot:F", ordinal = 0))
-    public void animatium$fixMirrorArmSwing$field(final ModelPart instance, final float value, final Operation<Void> original, @Local(argsOnly = true, name = "state") final T state) {
+    public void animatium$fixMirrorArmSwing$field(final ModelPart instance, final float value, final Operation<Void> original, @Local(argsOnly = true, ordinal = 0) final T state) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixMirrorArmSwing && state.attackArm == HumanoidArm.LEFT) {
             this.rightArm.xRot -= this.body.yRot;
         } else {
@@ -111,7 +111,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
     }
 
     @ModifyExpressionValue(method = "setupAttackAnimation", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;sin(D)F", ordinal = 5))
-    public float animatium$fixMirrorArmSwing$sin(final float original, @Local(argsOnly = true, name = "state") final T state) {
+    public float animatium$fixMirrorArmSwing$sin(final float original, @Local(argsOnly = true, ordinal = 0) final T state) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixMirrorArmSwing) {
             return original * EntityUtilKt.getArmMultiplier(state.attackArm);
         } else {
@@ -153,7 +153,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
     }
 
     @WrapOperation(method = {"poseLeftArm", "poseRightArm"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/HumanoidModel;poseBlockingArm(Lnet/minecraft/client/model/geom/ModelPart;Z)V"))
-    private void animatium$oldSwordBlockArm(final HumanoidModel<?> instance, final ModelPart arm, final boolean right, final Operation<Void> original, @Local(argsOnly = true, name = "state") final T state) {
+    private void animatium$oldSwordBlockArm(final HumanoidModel<?> instance, final ModelPart arm, final boolean right, final Operation<Void> original, @Local(argsOnly = true, ordinal = 0) final T state) {
         original.call(instance, arm, right);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.thirdPersonSwordBlockingPosition) {
             final ItemStack stack = state.animatium$getItemHeldByArm(right ? HumanoidArm.RIGHT : HumanoidArm.LEFT);

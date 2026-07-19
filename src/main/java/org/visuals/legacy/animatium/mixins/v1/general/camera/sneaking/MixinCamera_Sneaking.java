@@ -55,7 +55,7 @@ public abstract class MixinCamera_Sneaking {
     @Shadow
     private Entity entity;
 
-    @Inject(method = "alignWithEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setRotation(FF)V", shift = At.Shift.AFTER))
+    @Inject(method = "setup", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setRotation(FF)V", shift = At.Shift.AFTER))
     private void animatium$removeSmoothSneaking(final CallbackInfo ci) {
         if (Animatium.isEnabled() && !AnimatiumConfig.instance().movement.sneakAnimation.isSmooth()) {
             this.eyeHeightOld = this.eyeHeight;

@@ -149,7 +149,7 @@ public abstract class MixinMinecraft_EquipUseLogic {
     @Definition(id = "Fail", type = InteractionResult.Fail.class)
     @Expression("useResult instanceof Fail")
     @Inject(method = "startUseItem", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.BEFORE))
-    private void animatium$oldEquipUse(final CallbackInfo ci, @Local(ordinal = 0) final ItemStack heldItem, @Local(name = "oldCount") final int oldCount, @Local(ordinal = 0) final InteractionHand hand) {
+    private void animatium$oldEquipUse(final CallbackInfo ci, @Local(ordinal = 0) final ItemStack heldItem, @Local(ordinal = 0) final int oldCount, @Local(ordinal = 0) final InteractionHand hand) {
         if (Animatium.isEnabled()
                 && AnimatiumConfig.instance().items.equipAnimationItemCheck
                 && !heldItem.isEmpty()

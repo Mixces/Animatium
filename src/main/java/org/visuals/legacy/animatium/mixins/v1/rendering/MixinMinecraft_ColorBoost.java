@@ -53,7 +53,7 @@ public abstract class MixinMinecraft_ColorBoost {
     @Shadow
     public abstract RenderTarget getMainRenderTarget();
 
-    @WrapOperation(method = "renderFrame", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;blitToScreen()V"))
+    @WrapOperation(method = "runTick", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;blitToScreen()V"))
     private void animatium$colorBoost(final RenderTarget instance, final Operation<Void> original) {
         final RenderTarget renderTarget = this.getMainRenderTarget();
         final GpuTextureView colorTextureView = renderTarget.getColorTextureView();

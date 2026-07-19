@@ -30,6 +30,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.CubeMap;
 import net.minecraft.client.renderer.PanoramaRenderer;
 import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
@@ -40,6 +41,15 @@ import org.visuals.legacy.animatium.handler.rendering.panorama.LegacyPanoramaRen
 
 @Mixin(PanoramaRenderer.class)
 public abstract class MixinPanoramaRenderer_LegacyPanorama {
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/CubeMap;render(Lnet/minecraft/client/Minecraft;FF)V"))
+    private void animatium$panoramaRendering(final CubeMap instance, final Minecraft minecraft, final float rotXInDegrees, final float rotYInDegrees, final Operation<Void> original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.panoramaRendering) {
+            LegacyPanoramaRenderer.INSTANCE.render();
+        } else {
+            original.call(instance, minecraft, rotXInDegrees, rotYInDegrees);
+        }
+    }
+
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIIIII)V"))
     private void animatium$legacyPanorama(final GuiGraphics instance, final RenderPipeline renderPipeline, final Identifier texture, final int x, final int y, final float u, final float v, final int width, final int height, final int srcWidth, final int srcHeight, final int textureWidth, final int textureHeight, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.panoramaRendering) {

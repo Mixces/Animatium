@@ -88,7 +88,7 @@ class OnboardingScreen(private val original: Screen?, private val accessedViaCom
                 GeneralConfigUtil.put(GeneralConfigUtil.PRESET_VERSION_KEY, this.presetVersion.name)
 
                 this.presetVersion.apply()
-                this.minecraft.player?.sendSystemMessage(
+                this.minecraft.gui.chat.addMessage(
                     Component.literal("Applied preset " + this@OnboardingScreen.presetVersion.name + "!").withColor(-0xff0100)
                 )
                 this.minecraft.setScreen(this.original)

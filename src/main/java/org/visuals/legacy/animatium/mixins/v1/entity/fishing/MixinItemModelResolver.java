@@ -59,9 +59,9 @@ public abstract class MixinItemModelResolver {
             final ItemStack instance,
             final DataComponentType<?> dataComponentType,
             final Operation<Object> original,
-            @Local(argsOnly = true, name = "displayContext") final ItemDisplayContext displayContext,
-            @Local(argsOnly = true, name = "owner") final ItemOwner owner,
-            @Local(argsOnly = true, name = "item") final ItemStack item
+            @Local(argsOnly = true, ordinal = 0) final ItemDisplayContext displayContext,
+            @Local(argsOnly = true, ordinal = 0) final ItemOwner owner,
+            @Local(argsOnly = true, ordinal = 0) final ItemStack item
     ) {
         final LivingEntity livingEntity = owner == null ? null : owner.asLivingEntity();
         // TODO/FIX
