@@ -27,9 +27,8 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.states;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -44,13 +43,9 @@ public abstract class MixinGameRenderer {
     @Final
     private Camera mainCamera;
 
-    @Shadow
-    @Final
-    private Minecraft minecraft;
-
     @Inject(method = "extractCamera", at = @At("TAIL"))
-    private void animatium$setupCameraState(final CallbackInfo ci, @Local(name = "cameraState") final CameraRenderState cameraState) {
-        cameraState.animatium$setPartialTickTime(this.mainCamera.getCameraEntityPartialTicks(this.minecraft.getDeltaTracker()));
+    private void animatium$setupCameraState(final CallbackInfo ci, @Local(ordinal = 0) final CameraRenderState cameraState) {
+        cameraState.animatium$setPartialTickTime(this.mainCamera.getPartialTickTime());
         cameraState.animatium$setOldEyeHeight(((CameraAccessor) this.mainCamera).animatium$getOldEyeHeight());
         cameraState.animatium$setEyeHeight(((CameraAccessor) this.mainCamera).animatium$getEyeHeight());
         cameraState.animatium$setYRot(this.mainCamera.yRot());

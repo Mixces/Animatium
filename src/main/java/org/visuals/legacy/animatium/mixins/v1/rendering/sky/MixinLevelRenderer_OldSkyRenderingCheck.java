@@ -46,7 +46,7 @@ public abstract class MixinLevelRenderer_OldSkyRenderingCheck {
 
     @Definition(id = "renderSky", local = @Local(type = boolean.class, ordinal = 1, argsOnly = true))
     @Expression("renderSky")
-    @ModifyArg(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderLevel(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/renderer/state/level/CameraRenderState;Lorg/joml/Matrix4fc;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lorg/joml/Vector4f;ZLnet/minecraft/client/renderer/chunk/ChunkSectionsToRender;)V"), index = 7)
+    @ModifyArg(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderLevel(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lorg/joml/Vector4f;Z)V"), index = 9)
     private boolean animatium$oldSkyRenderingCheck(final boolean original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.oldSkyRenderingCheck) {
             return original && this.minecraft.options.getEffectiveRenderDistance() >= 4;

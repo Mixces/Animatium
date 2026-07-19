@@ -53,7 +53,7 @@ import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 @Mixin(ItemInHandLayer.class)
 public abstract class MixinItemInHandLayer_ThirdPersonItemPositions<S extends ArmedEntityRenderState> {
     @ModifyArgs(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V"))
-    private void animatium$oldTransformTranslation(final Args args, @Local(argsOnly = true, name = "state") final S state, @Local(argsOnly = true, name = "arm") final HumanoidArm arm) {
+    private void animatium$oldTransformTranslation(final Args args, @Local(argsOnly = true, ordinal = 0) final S state, @Local(argsOnly = true, ordinal = 0) final HumanoidArm arm) {
         final ItemStack stack = state.animatium$getItemHeldByArm(arm);
         if (Animatium.isEnabled() && ItemUtilKt.shouldApplyItemPositionsInThirdPerson(state) && !ItemUtilKt.isItemBlacklisted(stack)) {
             args.setAll((float) args.get(0) * -1.0F, 0.4375F, (float) args.get(2) / 10 * -1.0F);
@@ -61,7 +61,7 @@ public abstract class MixinItemInHandLayer_ThirdPersonItemPositions<S extends Ar
     }
 
     @WrapWithCondition(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lorg/joml/Quaternionfc;)V"))
-    private boolean animatium$removeTransformMultiply(final PoseStack instance, final Quaternionfc by, @Local(argsOnly = true, name = "state") final S state, @Local(argsOnly = true, name = "arm") final HumanoidArm arm) {
+    private boolean animatium$removeTransformMultiply(final PoseStack instance, final Quaternionfc by, @Local(argsOnly = true, ordinal = 0) final S state, @Local(argsOnly = true, ordinal = 0) final HumanoidArm arm) {
         final ItemStack stack = state.animatium$getItemHeldByArm(arm);
         return !Animatium.isEnabled() || !ItemUtilKt.shouldApplyItemPositionsInThirdPerson(state) || ItemUtilKt.isItemBlacklisted(stack);
     }

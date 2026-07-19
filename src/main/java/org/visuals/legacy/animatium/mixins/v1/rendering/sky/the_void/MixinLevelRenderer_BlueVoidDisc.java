@@ -29,7 +29,7 @@ import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.SkyRenderer;
-import net.minecraft.client.renderer.state.level.SkyRenderState;
+import net.minecraft.client.renderer.state.SkyRenderState;
 import net.minecraft.world.level.dimension.DimensionType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -41,7 +41,7 @@ import org.visuals.legacy.animatium.handler.rendering.LegacySkyRenderer;
 
 @Mixin(LevelRenderer.class)
 public abstract class MixinLevelRenderer_BlueVoidDisc {
-    @Inject(method = "lambda$addSkyPass$0", at = @At("TAIL"))
+    @Inject(method = "method_62215", at = @At("TAIL"))
     private static void animatium$blueVoidSky(final GpuBufferSlice skyFog, final SkyRenderState state, final SkyRenderer skyRenderer, final CallbackInfo ci) {
         final Minecraft minecraft = Minecraft.getInstance();
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.blueVoidSky && state.skybox != DimensionType.Skybox.END && minecraft.level != null && minecraft.player != null) {

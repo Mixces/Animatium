@@ -43,7 +43,7 @@ public abstract class MixinLevelRenderer_LegacyCloudHeight {
     @Shadow
     private @Nullable ClientLevel level;
 
-    @WrapOperation(method = "extractLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/attribute/EnvironmentAttributeProbe;getValue(Lnet/minecraft/world/attribute/EnvironmentAttribute;F)Ljava/lang/Object;", ordinal = 1))
+    @WrapOperation(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/attribute/EnvironmentAttributeProbe;getValue(Lnet/minecraft/world/attribute/EnvironmentAttribute;F)Ljava/lang/Object;", ordinal = 1))
     private <Value> Value animatium$cloudHeight(final EnvironmentAttributeProbe instance, final EnvironmentAttribute<Value> attribute, final float partialTicks, final Operation<Value> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.cloudHeight && !this.level.dimensionType().hasCeiling()) {
             return (Value) (Object) 128.0F;
