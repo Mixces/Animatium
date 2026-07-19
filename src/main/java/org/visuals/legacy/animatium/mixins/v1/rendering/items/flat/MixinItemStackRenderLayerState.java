@@ -54,10 +54,10 @@ import java.util.stream.Collectors;
 
 @Mixin(ItemStackRenderState.LayerRenderState.class)
 public abstract class MixinItemStackRenderLayerState {
-    @Shadow(aliases = "transform")
-    ItemTransform itemTransform;
+    @Shadow
+    ItemTransform transform;
 
-    @Shadow(aliases = "this$0")
+    @Shadow(aliases = "field_55345")
     @Final
     ItemStackRenderState itemStackRenderState;
 
@@ -73,7 +73,7 @@ public abstract class MixinItemStackRenderLayerState {
         }
     }
 
-    @ModifyArg(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemDisplayContext;III[ILjava/util/List;Lnet/minecraft/client/renderer/rendertype/RenderType;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"), index = 9)
+    @ModifyArg(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemDisplayContext;III[ILjava/util/List;Lnet/minecraft/client/renderer/rendertype/RenderType;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"), index = 8)
     private ItemStackRenderState.FoilType animatium$disableGlintOn2DItems(final ItemStackRenderState.FoilType foilType) {
         final boolean glintDropped = !AnimatiumConfig.instance().items.glintOnItemDrops2D;
         final boolean glintFramed = !AnimatiumConfig.instance().items.glintOnItemFramed2D;
@@ -97,9 +97,9 @@ public abstract class MixinItemStackRenderLayerState {
                 final boolean isGui = itemDisplayContext == ItemDisplayContext.GUI;
                 final boolean isFirstPerson = itemDisplayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || itemDisplayContext == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
                 final boolean isThirdPerson = itemDisplayContext == ItemDisplayContext.THIRD_PERSON_LEFT_HAND || itemDisplayContext == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
-                float x = this.itemTransform.translation().x();
-                float y = this.itemTransform.translation().y();
-                float z = this.itemTransform.translation().z();
+                float x = this.transform.translation().x();
+                float y = this.transform.translation().y();
+                float z = this.transform.translation().z();
                 if (AnimatiumConfig.instance().items.fishingRodVersion != FishingRodVersionSetting.VANILLA && ItemUtilKt.isFishingRodItem(stack) && isFirstPerson) {
                     final int ordinal = AnimatiumConfig.instance().items.fishingRodVersion.ordinal();
                     if (ordinal <= FishingRodVersionSetting.V1_8.ordinal()) {
@@ -125,11 +125,11 @@ public abstract class MixinItemStackRenderLayerState {
                 // TODO/NEED TO FIX
                 if (AnimatiumConfig.instance().items.skullPosition && ItemUtilKt.isSkullBlock(stack) && isGui && !AnimatiumConfig.instance().items.mobHeadIcons) {
                     localPose.translate(x, y, z);
-                    localPose.mulPose(Axis.XP.rotationDegrees(UtilsKt.toRadians(this.itemTransform.rotation().x())).get(new Matrix4f()));
-                    localPose.mulPose(Axis.YP.rotationDegrees(UtilsKt.toRadians(this.itemTransform.rotation().y())).get(new Matrix4f()));
-                    localPose.mulPose(Axis.ZP.rotationDegrees(UtilsKt.toRadians(this.itemTransform.rotation().x())).get(new Matrix4f()));
+                    localPose.mulPose(Axis.XP.rotationDegrees(UtilsKt.toRadians(this.transform.rotation().x())).get(new Matrix4f()));
+                    localPose.mulPose(Axis.YP.rotationDegrees(UtilsKt.toRadians(this.transform.rotation().y())).get(new Matrix4f()));
+                    localPose.mulPose(Axis.ZP.rotationDegrees(UtilsKt.toRadians(this.transform.rotation().x())).get(new Matrix4f()));
                     localPose.scale(0.9F, 0.9F, 0.9F);
-                    localPose.scale(this.itemTransform.scale().x(), this.itemTransform.scale().y(), this.itemTransform.scale().z());
+                    localPose.scale(this.transform.scale().x(), this.transform.scale().y(), this.transform.scale().z());
                     animatium$doInverseTransformations(localPose);
                 }
             }
@@ -138,11 +138,11 @@ public abstract class MixinItemStackRenderLayerState {
 
     @Unique
     private void animatium$doInverseTransformations(final PoseStack.Pose localPose) {
-        localPose.scale(1 / this.itemTransform.scale().x(), 1 / this.itemTransform.scale().y(), 1 / this.itemTransform.scale().z());
-        localPose.mulPose(Axis.ZP.rotationDegrees(-UtilsKt.toRadians(this.itemTransform.rotation().x())).get(new Matrix4f()));
-        localPose.mulPose(Axis.YP.rotationDegrees(-UtilsKt.toRadians(this.itemTransform.rotation().y())).get(new Matrix4f()));
-        localPose.mulPose(Axis.XP.rotationDegrees(-UtilsKt.toRadians(this.itemTransform.rotation().z())).get(new Matrix4f()));
-        localPose.translate(-this.itemTransform.translation().x(), -this.itemTransform.translation().y(), -this.itemTransform.translation().z());
+        localPose.scale(1 / this.transform.scale().x(), 1 / this.transform.scale().y(), 1 / this.transform.scale().z());
+        localPose.mulPose(Axis.ZP.rotationDegrees(-UtilsKt.toRadians(this.transform.rotation().x())).get(new Matrix4f()));
+        localPose.mulPose(Axis.YP.rotationDegrees(-UtilsKt.toRadians(this.transform.rotation().y())).get(new Matrix4f()));
+        localPose.mulPose(Axis.XP.rotationDegrees(-UtilsKt.toRadians(this.transform.rotation().z())).get(new Matrix4f()));
+        localPose.translate(-this.transform.translation().x(), -this.transform.translation().y(), -this.transform.translation().z());
     }
 
     @Unique

@@ -65,7 +65,7 @@ public abstract class MixinGuiGraphics_ToolTipItemBar {
     }
 
     @Inject(method = "renderItemBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(Lcom/mojang/blaze3d/pipeline/RenderPipeline;IIIII)V", ordinal = 0, shift = At.Shift.AFTER))
-    private void animatium$oldDurabilityBar(final ItemStack itemStack, final int x, final int y, final CallbackInfo ci, @Local(name = "left") final int left, final @Local(name = "top") int top) {
+    private void animatium$oldDurabilityBar(final ItemStack itemStack, final int x, final int y, final CallbackInfo ci, @Local(ordinal = 2) final int left, final @Local(ordinal = 3) int top) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.durabilityBarColors && !(itemStack.getItem() instanceof BundleItem)) {
             final int color = ARGB.opaque(ARGB.color((255 - ItemUtilKt.getLegacyDurabilityColorValue(itemStack)) / 4, 64, 0));
             RenderUtilsKt.fillRectangle((GuiGraphics) (Object) this, left, top, 12, 1, color);
