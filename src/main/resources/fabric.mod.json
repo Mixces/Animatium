@@ -27,14 +27,15 @@
 		"fabric-networking-api-v1": "*",
 		"fabric-command-api-v2": "*",
 		"fabric-resource-loader-v0": "*",
-		"fabric-model-loading-api-v1": "*"
+		"fabric-language-kotlin": "*",
+		"yet_another_config_lib_v3": "*"
 	},
 	"custom": {
 		"loom:injected_interfaces": {
-			"net/minecraft/class_12075": ["org/visuals/legacy/animatium/util/states/CameraUtilityRenderState"],
-			"net/minecraft/class_10444": ["org/visuals/legacy/animatium/util/states/ItemUtilityRenderState"],
-			"net/minecraft/class_10426": ["org/visuals/legacy/animatium/util/states/UtilityRenderState"],
-			"net/minecraft/class_1297": ["org/visuals/legacy/animatium/util/states/ViewBobbingStorage"]
+			"net/minecraft/client/renderer/state/CameraRenderState": ["org/visuals/legacy/animatium/util/states/CameraUtilityRenderState"],
+			"net/minecraft/client/renderer/item/ItemStackRenderState": ["org/visuals/legacy/animatium/util/states/ItemUtilityRenderState"],
+			"net/minecraft/client/renderer/entity/state/ArmedEntityRenderState": ["org/visuals/legacy/animatium/util/states/UtilityRenderState"],
+			"net/minecraft/world/entity/Entity": ["org/visuals/legacy/animatium/util/states/ViewBobbingStorage"]
 		},
 		"modmenu": {
 			"links": {

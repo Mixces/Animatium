@@ -37,14 +37,14 @@ import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 
 @Mixin(ElytraAnimationState.class)
 public class MixinElytraAnimationState_SneakAnimationWhileGliding {
-	// TODO: is needed?
-	@WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isCrouching()Z"))
-	private boolean animatium$sneakAnimationWhileGliding(LivingEntity livingEntity, Operation<Boolean> original) {
-		final boolean isCrouching = original.call(livingEntity);
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.sneakAnimation.ordinal() <= SneakAnimationSetting.V1_13.ordinal()) {
-			return isCrouching || livingEntity.isShiftKeyDown();
-		} else {
-			return isCrouching;
-		}
-	}
+    // TODO: is needed?
+    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isCrouching()Z"))
+    private boolean animatium$sneakAnimationWhileGliding(final LivingEntity instance, final Operation<Boolean> original) {
+        final boolean isCrouching = original.call(instance);
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.sneakAnimation.ordinal() <= SneakAnimationSetting.V1_13.ordinal()) {
+            return isCrouching || instance.isShiftKeyDown();
+        } else {
+            return isCrouching;
+        }
+    }
 }

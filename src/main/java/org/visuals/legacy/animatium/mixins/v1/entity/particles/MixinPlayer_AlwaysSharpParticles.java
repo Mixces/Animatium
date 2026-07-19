@@ -39,17 +39,17 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 @Mixin(Player.class)
 public abstract class MixinPlayer_AlwaysSharpParticles {
     @Shadow
-    public abstract void magicCrit(final Entity entityHit);
+    public abstract void magicCrit(final Entity entity);
 
     @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;cannotAttack(Lnet/minecraft/world/entity/Entity;)Z", shift = At.Shift.AFTER))
-    private void animatium$alwaysSharpParticles(final Entity target, final CallbackInfo ci) {
+    private void animatium$alwaysSharpParticles(final Entity entity, final CallbackInfo ci) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.alwaysSharpParticles) {
-            this.magicCrit(target);
+            this.magicCrit(entity);
         }
     }
 
     @WrapWithCondition(method = "attackVisualEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;magicCrit(Lnet/minecraft/world/entity/Entity;)V"))
-    private boolean animatium$disableVanillaCrit(final Player instance, final Entity entityHit) {
+    private boolean animatium$disableVanillaCrit(final Player instance, final Entity entity) {
         return !Animatium.isEnabled() || !AnimatiumConfig.instance().extras.alwaysSharpParticles;
     }
 }

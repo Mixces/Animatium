@@ -36,13 +36,13 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(AtmosphericFogEnvironment.class)
 public abstract class MixinAtmosphericFogEnvironment_OldCloudRendering {
-	@Expression("(float) (? * 16)")
-	@ModifyExpressionValue(method = "setupFog", at = @At("MIXINEXTRAS:EXPRESSION"))
-	private float animatium$oldCloudFogDistance(float original, @Local(argsOnly = true) float renderDistance) {
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldCloudRendering) {
-			return renderDistance;
-		} else {
-			return original;
-		}
-	}
+    @Expression("(float) (? * 16)")
+    @ModifyExpressionValue(method = "setupFog", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private float animatium$oldCloudFogDistance(final float original, @Local(argsOnly = true, name = "renderDistance") final float renderDistance) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldCloudRendering) {
+            return renderDistance;
+        } else {
+            return original;
+        }
+    }
 }

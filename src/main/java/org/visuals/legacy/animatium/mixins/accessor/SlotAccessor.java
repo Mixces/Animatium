@@ -34,5 +34,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface SlotAccessor {
 	@Accessor("x")
 	@Mutable
-	void animatium$setX(int x);
+	void animatium$setX(final int x);
 }

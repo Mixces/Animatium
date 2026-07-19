@@ -1,12 +1,13 @@
-#version 150
+#version 330
 
-uniform sampler2D Sampler0;
+#moj_import <minecraft:dynamictransforms.glsl>
 
-in vec2 texCoord0;
-in vec4 vertexColor;
+uniform samplerCube Sampler0;
+
+in vec3 texCoord0;
 
 out vec4 fragColor;
 
 void main() {
-    fragColor = texture(Sampler0, texCoord0) * vertexColor;
+    fragColor = texture(Sampler0, texCoord0) * ColorModulator;
 }

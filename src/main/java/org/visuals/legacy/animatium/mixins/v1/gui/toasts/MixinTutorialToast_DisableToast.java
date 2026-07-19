@@ -29,7 +29,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.gui.components.toasts.TutorialToast;
 import org.spongepowered.asm.mixin.Mixin;
@@ -40,16 +40,16 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 @Mixin(TutorialToast.class)
 public abstract class MixinTutorialToast_DisableToast {
     @WrapMethod(method = "update")
-    private void animatium$disableTutorialToast(ToastManager toastManager, long visibilityTime, Operation<Void> original) {
+    private void animatium$disableTutorialToast(final ToastManager manager, final long fullyVisibleForMs, final Operation<Void> original) {
         if (!Animatium.isEnabled() || !AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts) {
-            original.call(toastManager, visibilityTime);
+            original.call(manager, fullyVisibleForMs);
         }
     }
 
-    @WrapMethod(method = "render")
-    private void animatium$disableTutorialToast(GuiGraphics guiGraphics, Font font, long visibilityTime, Operation<Void> original) {
+    @WrapMethod(method = "extractRenderState")
+    private void animatium$disableTutorialToast(final GuiGraphicsExtractor graphics, final Font font, final long fullyVisibleForMs, final Operation<Void> original) {
         if (!Animatium.isEnabled() || !AnimatiumConfig.instance().extras.disableRecipeAndTutorialToasts) {
-            original.call(guiGraphics, font, visibilityTime);
+            original.call(graphics, font, fullyVisibleForMs);
         }
     }
 }

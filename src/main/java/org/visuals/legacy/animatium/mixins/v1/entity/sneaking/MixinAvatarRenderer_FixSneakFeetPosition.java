@@ -46,7 +46,7 @@ public abstract class MixinAvatarRenderer_FixSneakFeetPosition<AvatarLikeEntity 
     }
 
     @WrapOperation(method = "getRenderOffset(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;)Lnet/minecraft/world/phys/Vec3;", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;isCrouching:Z"))
-    private boolean animatium$fixSneakingFeetPosition(AvatarRenderState instance, Operation<Boolean> original) {
+    private boolean animatium$fixSneakingFeetPosition(final AvatarRenderState instance, final Operation<Boolean> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixSneakingFeetPosition) {
             return false;
         } else {

@@ -41,11 +41,11 @@ public abstract class MixinAbstractButton_LegacyTextHoverColor extends AbstractW
         super(x, y, width, height, message);
     }
 
-    @WrapOperation(method = "renderDefaultLabel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/AbstractButton;getMessage()Lnet/minecraft/network/chat/Component;"))
-    private Component animatium$renderWidget$old$textColor(AbstractButton instance, Operation<Component> original) {
+    @WrapOperation(method = "extractDefaultLabel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/AbstractButton;getMessage()Lnet/minecraft/network/chat/Component;"))
+    private Component animatium$renderWidget$old$textColor(final AbstractButton instance, final Operation<Component> original) {
         final Component component = original.call(instance);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.legacyWidgetHoverTextColor) {
-            return component.copy().withColor(!this.active ? 0xFFE0E0E0 : (this.isHoveredOrFocused() ? 0xFFFFFFA0 : 0xFFE0E0E0));
+            return component.copy().withColor(!this.active ? 0xA0A0A0 : (this.isHoveredOrFocused() ? 0xFFFFA0 : 0xE0E0E0));
         } else {
             return component;
         }

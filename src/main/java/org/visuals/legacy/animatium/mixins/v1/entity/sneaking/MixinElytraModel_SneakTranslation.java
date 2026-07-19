@@ -36,7 +36,7 @@ import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 @Mixin(ElytraModel.class)
 public class MixinElytraModel_SneakTranslation {
     @ModifyExpressionValue(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At(value = "CONSTANT", args = "floatValue=3.0"))
-    private float animatium$fixSneakTranslationWhileGliding(float original) {
+    private float animatium$fixSneakTranslationWhileGliding(final float original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.sneakAnimation == SneakAnimationSetting.V1_7) {
             return 0.0F;
         } else {

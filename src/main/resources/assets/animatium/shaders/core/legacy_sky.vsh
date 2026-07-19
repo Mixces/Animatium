@@ -10,12 +10,14 @@ out float cylindricalVertexDistance;
 out float sphericalVertexDistance;
 
 void main() {
-    gl_Position = ProjMat * ModelViewMat * vec4(Position, 1.0);
+    vec4 eye = ModelViewMat * vec4(Position, 1.0);
 #ifdef PLANAR_FOG
-    cylindricalVertexDistance = gl_Position.z;
-    sphericalVertexDistance = gl_Position.z;
+    float dist = abs(eye.z);
+    cylindricalVertexDistance = dist;
+    sphericalVertexDistance = dist;
 #else
     cylindricalVertexDistance = fog_cylindrical_distance(Position);
     sphericalVertexDistance = fog_spherical_distance(Position);
 #endif
+    gl_Position = ProjMat * eye;
 }

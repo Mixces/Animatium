@@ -1,22 +1,20 @@
-## 3.3 TODO:
+## ? TODO:
 
 #### HIGH PRIORITY
 
 #### MEDIUM PRIORITY
 
-- 1.21.11: old effects width in inventory
 - fix lang inaccuracies
 - old obfuscated text
 - old window icon
-- item swing stuff
 - fix 2d item drops (shields facing you shouldn't happen/etc)
-- fix old fall particle physics
+- fog darkness causes night vision to be hella blue
 
 #### LOW PRIORITY
 
 - fix fast grass w/ sodium
-- fix panorama pixelness/re-enable old panorama
 - old head rotation (1.1/1.7)
+- fog darkness lingers when time is set from midnight to day for a second
 
 #### ???
 

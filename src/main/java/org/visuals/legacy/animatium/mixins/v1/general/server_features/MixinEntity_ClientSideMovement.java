@@ -31,14 +31,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.util.enums.ServerFeature;
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatureManager;
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatures;
 
 @Mixin(Entity.class)
 public abstract class MixinEntity_ClientSideMovement {
     @Inject(method = "isLocalInstanceAuthoritative", at = @At("HEAD"), cancellable = true)
-    private void animatium$clientSideEntityMovement(CallbackInfoReturnable<Boolean> cir) {
-        if (Animatium.hasServerFeature(ServerFeature.CLIENTSIDE_ENTITIES) && !(((Entity) (Object) this) instanceof Player)) {
+    private void animatium$clientSideEntityMovement(final CallbackInfoReturnable<Boolean> cir) {
+        if (ServerFeatureManager.isPresent(ServerFeatures.CLIENTSIDE_ENTITIES) && !(((Entity) (Object) this) instanceof Player)) {
             cir.setReturnValue(true);
         }
     }

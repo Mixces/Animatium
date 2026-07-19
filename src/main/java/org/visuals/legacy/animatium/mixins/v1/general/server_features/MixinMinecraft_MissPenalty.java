@@ -40,8 +40,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.Utils;
-import org.visuals.legacy.animatium.util.enums.ServerFeature;
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatureManager;
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatures;
+import org.visuals.legacy.animatium.util.EntityUtilKt;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft_MissPenalty {
@@ -54,15 +55,15 @@ public abstract class MixinMinecraft_MissPenalty {
     public LocalPlayer player;
 
     @Inject(method = "startAttack", at = @At(value = "RETURN", ordinal = 0))
-    private void animatium$fakeMissPenaltySwing(CallbackInfoReturnable<Boolean> cir) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.fakeMissPenaltySwing && player != null) {
-            Utils.fakeHandSwing(player, InteractionHand.MAIN_HAND);
+    private void animatium$fakeMissPenaltySwing(final CallbackInfoReturnable<Boolean> cir) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.fakeMissPenaltySwing && this.player != null) {
+            EntityUtilKt.fakeHandSwing(this.player, InteractionHand.MAIN_HAND);
         }
     }
 
     @WrapOperation(method = "startAttack", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 0, opcode = Opcodes.GETFIELD))
-    private int animatium$disableSwingMissPenalty(Minecraft instance, Operation<Integer> original) {
-        if (Animatium.hasServerFeature(ServerFeature.MISS_PENALTY) && (this.hitResult != null && this.hitResult.getType() != HitResult.Type.BLOCK)) {
+    private int animatium$disableSwingMissPenalty(final Minecraft instance, final Operation<Integer> original) {
+        if (ServerFeatureManager.isPresent(ServerFeatures.MISS_PENALTY) && (this.hitResult != null && this.hitResult.getType() != HitResult.Type.BLOCK)) {
             return 0;
         } else {
             return original.call(instance);

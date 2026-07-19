@@ -34,12 +34,12 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(ScreenEffectRenderer.class)
 public abstract class MixinScreenEffectRenderer_TextureOverlays {
-	@ModifyExpressionValue(method = "renderWater", at = @At(value = "CONSTANT", args = "floatValue=0.1"))
-	private static float animatium$useOldWaterOverlayOpacity(final float original) {
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldWaterOverlayOpacity) {
-			return 0.5F;
-		} else {
-			return original;
-		}
-	}
+    @ModifyExpressionValue(method = "renderWater", at = @At(value = "CONSTANT", args = "floatValue=0.1"))
+    private static float animatium$useOldWaterOverlayOpacity(final float original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldWaterOverlayOpacity) {
+            return 0.5F;
+        } else {
+            return original;
+        }
+    }
 }

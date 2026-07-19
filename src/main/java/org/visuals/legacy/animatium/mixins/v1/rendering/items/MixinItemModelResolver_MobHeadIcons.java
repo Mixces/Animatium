@@ -35,13 +35,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.ItemUtils;
+import org.visuals.legacy.animatium.util.ItemUtilKt;
 
 @Mixin(ItemModelResolver.class)
 public abstract class MixinItemModelResolver_MobHeadIcons {
     @WrapOperation(method = {"appendItemLayers", "shouldPlaySwapAnimation"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;get(Lnet/minecraft/core/component/DataComponentType;)Ljava/lang/Object;"))
-    private Object animatium$mobHeadIcons(ItemStack instance, DataComponentType<?> dataComponentType, Operation<Object> original) {
-        final Identifier mobHeadLocation = ItemUtils.getMobHeadLocation(instance.getItem());
+    private Object animatium$mobHeadIcons(final ItemStack instance, final DataComponentType<?> dataComponentType, final Operation<Object> original) {
+        final Identifier mobHeadLocation = ItemUtilKt.getMobHeadLocation(instance.getItem());
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.mobHeadIcons && mobHeadLocation != null) {
             return mobHeadLocation;
         } else {

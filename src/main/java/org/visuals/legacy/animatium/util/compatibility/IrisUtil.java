@@ -26,25 +26,25 @@
 package org.visuals.legacy.animatium.util.compatibility;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import lombok.experimental.UtilityClass;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Map;
 
-@UtilityClass
-public class IrisUtil {
-    private Object IRIS_INSTANCE = null;
-    private Method IRIS_ASSIGN_PIPELINE_METHOD = null;
+public final class IrisUtil {
+    private static final Map<RenderPipeline, IrisPipeline> pipelineCache = new Object2ObjectOpenHashMap<>();
+    private static Object IRIS_INSTANCE = null;
+    private static Method IRIS_ASSIGN_PIPELINE_METHOD = null;
 
     static {
         try {
             // API
-            Class<?> irisApiClass = Class.forName("net.irisshaders.iris.api.v0.IrisApi");
+            final Class<?> irisApiClass = Class.forName("net.irisshaders.iris.api.v0.IrisApi");
             IRIS_INSTANCE = irisApiClass.getMethod("getInstance").invoke(null);
 
             // Enums
-            @SuppressWarnings("rawtypes")
-            Class<? extends Enum> irisProgramEnum = Class.forName("net.irisshaders.iris.api.v0.IrisProgram").asSubclass(Enum.class);
+            @SuppressWarnings("rawtypes") final Class<? extends Enum> irisProgramEnum = Class.forName("net.irisshaders.iris.api.v0.IrisProgram").asSubclass(Enum.class);
             Arrays.stream(IrisPipeline.VALUES).forEach((program) -> program.initialize(irisProgramEnum));
 
             // Methods
@@ -53,16 +53,18 @@ public class IrisUtil {
         }
     }
 
-    public void assignPipeline(RenderPipeline pipeline, IrisPipeline program) {
+    public static void assignPipeline(final RenderPipeline pipeline, final IrisPipeline program) {
         try {
-            IRIS_ASSIGN_PIPELINE_METHOD.invoke(IRIS_INSTANCE, pipeline, program.internal());
-        } catch (Exception ignored) {
-        }
-    }
+            if (pipelineCache.containsKey(pipeline)) {
+                final IrisPipeline irisPipeline = pipelineCache.get(pipeline);
+                if (irisPipeline == program) {
+                    return;
+                }
+            }
 
-    public void assignPipeline(IrisPipeline program, RenderPipeline... pipelines) {
-        for (RenderPipeline pipeline : pipelines) {
-            assignPipeline(pipeline, program);
+            pipelineCache.put(pipeline, program);
+            IRIS_ASSIGN_PIPELINE_METHOD.invoke(IRIS_INSTANCE, pipeline, program.internal());
+        } catch (final Exception ignored) {
         }
     }
 }

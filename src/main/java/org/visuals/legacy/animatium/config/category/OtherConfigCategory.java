@@ -26,92 +26,108 @@
 package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
-import org.visuals.legacy.animatium.util.compatibility.Mods;
-import org.visuals.legacy.animatium.util.config.EntryBundle;
+import org.visuals.legacy.animatium.config.bundle.EntryBundle;
+import org.visuals.legacy.animatium.handler.compatibility.ModsKt;
+import org.visuals.legacy.animatium.handler.rendering.lighting.LegacyDiffuseLighting;
+import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
+import org.visuals.legacy.animatium.util.enums.DamageTintSetting;
 import org.visuals.legacy.animatium.util.enums.VoidFogSetting;
 
-public class OtherConfigCategory extends Category {
-	// Sky
-	public boolean blueVoidSky = true;
-	public boolean planarSkyFog = true;
-	public boolean cloudHeight = true;
-	public boolean playerVoidBox = true;
-	// Other
-	public boolean thirdPersonSwordBlockingPosition = true;
-	public boolean lockBlockingArmRotation = true;
-	public boolean projectileAgeCheck = false;
-	public boolean blockMiningProgress = true;
-	public boolean disableInventoryEntityScissor = false;
-	public boolean blockOutlineRendering = true;
-	public boolean disableModelWhilstSleeping = false;
-	public boolean entityArmorHurtTint = true;
-	public boolean itemGlintOnEntity = true;
-	public boolean maxGlintProperties = true;
-	public boolean armorHurtRendering = false;
-	public boolean disableEntityGlowOutline = false;
-	public boolean disableModernCombatSounds = true;
-	public boolean disableModernCombatParticles = true;
-	public boolean restoreParticleBlending = true;
-	public boolean heldItemArmLogic = true;
-	public boolean flameDimensions = true;
-	public boolean flameOffset = true;
-	public boolean persistentBlockOutline = false;
-	public boolean oldCloudRendering = true;
-	public boolean fastGrass = true;
-	public boolean oldY0Height = false;
-	public boolean oldWaterOverlayOpacity = true;
-	public boolean oldWaterColorFog = true;
-	public boolean disableRandomBlockRotations = true;
-	public VoidFogSetting voidFog = VoidFogSetting.PARTICLES;
+public final class OtherConfigCategory extends Category {
+    // Sky
+    public boolean blueVoidSky = false;
+    public boolean planarSkyFog = false;
+    public boolean cloudHeight = false;
+    public boolean playerVoidBox = false;
+    public boolean oldCloudRendering = false;
+    public VoidFogSetting voidFog = VoidFogSetting.OFF;
+    // Damage Tint
+    public boolean damageTintArmor = false;
+    public DamageTintSetting damageTintStyle = DamageTintSetting.VANILLA;
+    // Other
+    public boolean restoreParticleBlending = false;
+    public boolean lockBlockingArmRotation = false;
+    public boolean legacyBlockMiningProgress = false;
+    public boolean projectileAgeCheck = false;
+    public boolean blockOutlineRendering = false;
+    public boolean disableModelWhilstSleeping = false;
+    public boolean flameDimensions = false;
+    public boolean heldItemArmLogic = false;
+    public boolean thirdPersonSwordBlockingPosition = false;
+    public boolean disableInventoryEntityScissor = false;
+    public boolean itemGlintOnEntity = false;
+    public boolean maxGlintProperties = false;
+    public boolean flameOffset = false;
+    public boolean persistentBlockOutline = false;
+    public boolean fastGrass = false;
+    public boolean oldY0Height = false;
+    public boolean oldWaterOverlayOpacity = false;
+    public boolean oldWaterColorFog = false;
+    public boolean disableRandomBlockRotations = false;
+    public boolean legacyDiffuseLighting = false;
+    public boolean legacyLightmap = false;
+    public boolean legacyFogDarkness = false;
+    public boolean legacySplashPosition = false;
 
-	public static ConfigCategory create(final OtherConfigCategory defaults, final OtherConfigCategory config) {
-		final ConfigCategory.Builder category = ConfigCategory.createBuilder();
-		category.name(Component.translatable("animatium.category.other"));
-		config.bundle().install(category, defaults, config);
-		return category.build();
-	}
+    public static ConfigCategory create(final OtherConfigCategory defaults, final OtherConfigCategory config) {
+        final ConfigCategory.Builder category = ConfigCategory.createBuilder();
+        category.name(Component.translatable("animatium.category.other"));
+        config.bundle().install(category, defaults, config);
+        return category.build();
+    }
 
-	@Override
-	public EntryBundle bundle() {
-		final EntryBundle bundle = new EntryBundle(this, "other");
+    @Override
+    public EntryBundle bundle() {
+        final EntryBundle bundle = new EntryBundle(this, "other");
 
-		bundle.group((EntryBundle.Group) new EntryBundle.Group("sky")
-				.booleanEntry("blueVoidSky")
-				.booleanEntry("planarSkyFog")
-				.booleanEntry("cloudHeight")
-				.booleanEntry("playerVoidBox"));
+        bundle.group((EntryBundle.Group) new EntryBundle.Group("sky")
+                .booleanEntry("oldCloudRendering")
+                .booleanEntry("cloudHeight")
+                .booleanEntry("blueVoidSky")
+                .booleanEntry("playerVoidBox")
+                .enumEntry("voidFog", VoidFogSetting.class)
+                .booleanEntry("planarSkyFog"));
 
-		bundle.booleanEntry("thirdPersonSwordBlockingPosition");
-		bundle.booleanEntry("lockBlockingArmRotation");
-		bundle.booleanEntry("projectileAgeCheck");
-		bundle.booleanEntry("blockMiningProgress");
-		bundle.booleanEntry("disableInventoryEntityScissor");
-		bundle.booleanEntry("blockOutlineRendering");
-		bundle.booleanEntry("disableModelWhilstSleeping");
-		if (!Mods.HAS_LUNAR_CLIENT) {
-			bundle.booleanEntry("entityArmorHurtTint");
-		}
+        final EntryBundle.Group damageTintGroup = new EntryBundle.Group("damage_tint");
+        if (!ModsKt.HAS_LUNAR_CLIENT) {
+            damageTintGroup.booleanEntry("damageTintArmor");
+        }
+        damageTintGroup.enumEntry("damageTintStyle", DamageTintSetting.class, (option, event) -> {
+            final GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
+            gameRenderer.overlayTexture().close();
+            ((GameRendererAccessor) gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
+        });
+        bundle.group(damageTintGroup);
 
-		bundle.booleanEntry("itemGlintOnEntity");
-		bundle.booleanEntry("maxGlintProperties");
-		bundle.booleanEntry("armorHurtRendering");
-		bundle.booleanEntry("disableEntityGlowOutline");
-		bundle.booleanEntry("disableModernCombatSounds");
-		bundle.booleanEntry("disableModernCombatParticles");
-		bundle.booleanEntry("restoreParticleBlending");
-		bundle.booleanEntry("heldItemArmLogic");
-		bundle.booleanEntry("flameDimensions");
-		bundle.booleanEntry("flameOffset");
-		bundle.booleanEntry("persistentBlockOutline");
-		bundle.booleanEntry("oldCloudRendering");
-		bundle.booleanEntry("fastGrass");
-		bundle.booleanEntry("oldY0Height");
-		bundle.booleanEntry("oldWaterOverlayOpacity");
-		bundle.booleanEntry("oldWaterColorFog");
-		bundle.booleanEntry("disableRandomBlockRotations");
-		bundle.enumEntry("voidFog", VoidFogSetting.class);
+        bundle.group((EntryBundle.Group) new EntryBundle.Group("other")
+                .booleanEntry("restoreParticleBlending")
+                .booleanEntry("lockBlockingArmRotation")
+                .booleanEntry("legacyBlockMiningProgress")
+                .booleanEntry("projectileAgeCheck")
+                .booleanEntry("blockOutlineRendering")
+                .booleanEntry("disableModelWhilstSleeping")
+                .booleanEntry("flameDimensions")
+                .booleanEntry("heldItemArmLogic")
+                .booleanEntry("thirdPersonSwordBlockingPosition")
+                .booleanEntry("disableInventoryEntityScissor")
+                .booleanEntry("itemGlintOnEntity")
+                .booleanEntry("maxGlintProperties")
+                .booleanEntry("flameOffset")
+                .booleanEntry("persistentBlockOutline")
+                .booleanEntry("fastGrass")
+                .booleanEntry("oldY0Height")
+                .booleanEntry("oldWaterOverlayOpacity")
+                .booleanEntry("oldWaterColorFog")
+                .booleanEntry("disableRandomBlockRotations")
+                .booleanEntry("legacyDiffuseLighting", (option, value) -> LegacyDiffuseLighting.refresh())
+                .booleanEntry("legacyLightmap")
+                .booleanEntry("legacyFogDarkness")
+                .booleanEntry("legacySplashPosition"));
 
-		return bundle;
-	}
+        return bundle;
+    }
 }

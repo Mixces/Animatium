@@ -38,21 +38,29 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.LevelUtilKt;
 
 @Mixin(ClientLevel.class)
 public abstract class MixinClientLevel_VoidParticles {
     // TODO: Fix minY
     @WrapOperation(method = "doAnimateTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;animateTick(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/util/RandomSource;)V"))
-    private void animatium$voidParticles(Block instance, BlockState blockState, Level level, BlockPos blockPos, RandomSource random, Operation<Void> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidFog.hasParticles() && blockState.isAir() && random.nextInt(8) > blockPos.getY() && Utils.hasFog1_7((ClientLevel) level)) {
+    private void animatium$voidParticles(final Block instance, final BlockState state, final Level level, final BlockPos pos, final RandomSource random, final Operation<Void> original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.voidFog.hasParticles() && state.isAir() && random.nextInt(8) > pos.getY() && LevelUtilKt.hasVoidFog((ClientLevel) level)) {
             // NOTE: Depth Suspend particle as a thing doesn't exist anymore
             // But its class still does as it's used by HappyVillager/Composter/Etc
             // And MYCELIUM is literally just Depth Suspend
             // as it's just the raw provider!
-            level.addParticle(ParticleTypes.MYCELIUM, blockPos.getX() + random.nextFloat(), blockPos.getY() + random.nextFloat(), blockPos.getZ() + random.nextFloat(), 0.0, 0.0, 0.0);
+            level.addParticle(
+                    ParticleTypes.MYCELIUM,
+                    pos.getX() + random.nextFloat(),
+                    pos.getY() + random.nextFloat(),
+                    pos.getZ() + random.nextFloat(),
+                    0.0,
+                    0.0,
+                    0.0
+            );
         } else {
-            original.call(instance, blockState, level, blockPos, random);
+            original.call(instance, state, level, pos, random);
         }
     }
 }

@@ -1,8 +1,14 @@
-import java.lang.Boolean.parseBoolean
+@file:OptIn(StonecutterExperimentalAPI::class)
+
+import com.google.devtools.ksp.processing.parseBoolean
+import dev.kikugie.stonecutter.StonecutterExperimentalAPI
+import net.fabricmc.loom.api.LoomGradleExtensionAPI
+import net.fabricmc.loom.api.fabricapi.FabricApiExtension
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.loom)
+    alias(libs.plugins.loom) apply false
+    alias(libs.plugins.loom.remap) apply false
     alias(libs.plugins.publishing)
     alias(libs.plugins.blossom)
     alias(libs.plugins.ksp)
@@ -40,8 +46,8 @@ class ModData {
 class Dependencies {
     val fabricLoaderVersion = property("deps.fabric_loader_version") as String?
     val fabricApiVersion = property("deps.fabric_api_version") as String?
+    val languageKotlinVersion = property("deps.language_kotlin_version") as String?
     val devAuthVersion = property("deps.devauth_version") as String?
-    val lombokVersion = property("deps.lombok_version") as String?
     val mixinConstraintsVersion = property("deps.mixinconstraints_version") as String?
     val mixinSquaredVersion = property("deps.mixinsquared_version") as String?
 }
@@ -49,8 +55,15 @@ class Dependencies {
 val mod = ModData()
 val deps = Dependencies()
 
+// Apply specific loom
+if (mod.obfuscated) {
+    apply(plugin = "net.fabricmc.fabric-loom-remap")
+} else {
+    apply(plugin = "net.fabricmc.fabric-loom")
+}
+
 class LoaderData {
-    val name = loom.platform.get().name.lowercase()
+    val name = property("loader.platform") as String?
 }
 
 val loader = LoaderData()
@@ -59,25 +72,21 @@ version = "${mod.version}+${mod.minecraftVersion}-${loader.name}" + (if (mod.dev
 group = mod.group
 base { archivesName.set(mod.id) }
 
-loom {
-    silentMojangMappingsLicense()
+extensions.configure<LoomGradleExtensionAPI> {
+    runConfigs.remove(runConfigs["server"]) // Removes server run configs
     runConfigs.all {
         ideConfigGenerated(stonecutter.current.isActive)
         runDir = "../../run"
     }
 
-    runConfigs.remove(runConfigs["server"]) // Removes server run configs
-    accessWidenerPath = rootProject.file("src/main/resources/animatium.accesswidener")
+    accessWidenerPath = stonecutter.process(
+        rootProject.file("src/main/resources/${mod.id}.accesswidener"),
+        "build/processed.accesswidener"
+    )
 
     runs {
         afterEvaluate {
-            val mixinJarFile = configurations.runtimeClasspath.get().incoming.artifactView {
-                componentFilter {
-                    it is ModuleComponentIdentifier && it.group == "net.fabricmc" && it.module == "sponge-mixin"
-                }
-            }.files.first()
             configureEach {
-                vmArg("-javaagent:$mixinJarFile")
                 property("mixin.hotSwap", "true")
                 property("mixin.debug.export", "true") // Puts mixin outputs in /run/.mixin.out
                 property("devauth.enabled", "true")
@@ -97,6 +106,15 @@ fletchingTable {
     }
 }
 
+val loom: LoomGradleExtensionAPI by extensions
+val fabricApi: FabricApiExtension by extensions
+val minecraft by configurations.existing
+val include by configurations.existing
+val modImplementation: NamedDomainObjectProvider<Configuration> =
+    configurations.named(if (mod.obfuscated) "modImplementation" else "implementation")
+val modRuntimeOnly: NamedDomainObjectProvider<Configuration> =
+    configurations.named(if (mod.obfuscated) "modRuntimeOnly" else "runtimeOnly")
+
 dependencies {
     minecraft("com.mojang:minecraft:${mod.minecraftVersion}")
 
@@ -113,32 +131,19 @@ dependencies {
         })
     }
 
-    compileOnly("org.projectlombok:lombok:${deps.lombokVersion}")
-    annotationProcessor("org.projectlombok:lombok:${deps.lombokVersion}")
     modRuntimeOnly("me.djtheredstoner:DevAuth-${loader.name}:${deps.devAuthVersion}")
-
-    include(implementation("com.moulberry:mixinconstraints:${deps.mixinConstraintsVersion}")!!)!!
+    include(implementation("com.moulberry:mixinconstraints:${deps.mixinConstraintsVersion}")!!)
     include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-${loader.name}:${deps.mixinSquaredVersion}")!!)!!)
+
     modImplementation("net.fabricmc:fabric-loader:${deps.fabricLoaderVersion}")!!
-
-    modImplementation(fabricApi.module("fabric-resource-loader-v0", deps.fabricApiVersion!!))
-    modImplementation(fabricApi.module("fabric-networking-api-v1", deps.fabricApiVersion))
-    modImplementation(fabricApi.module("fabric-command-api-v2", deps.fabricApiVersion))
-    modImplementation(fabricApi.module("fabric-model-loading-api-v1", deps.fabricApiVersion))
-
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${deps.fabricApiVersion}")
     optionalProp("deps.modmenu_version") { prop ->
-        modImplementation("com.terraformersmc:modmenu:$prop") {
-            exclude(group="net.fabricmc.fabric-api")
-        }
-
-        modImplementation(fabricApi.module("fabric-screen-api-v1", deps.fabricApiVersion))
-        modImplementation(fabricApi.module("fabric-key-binding-api-v1", deps.fabricApiVersion))
+        modImplementation("com.terraformersmc:modmenu:$prop")
     }
 
+    include(implementation("net.fabricmc:fabric-language-kotlin:${deps.languageKotlinVersion}")!!)
     optionalProp("deps.yacl_version") { prop ->
-        modImplementation("dev.isxander:yet-another-config-lib:$prop") {
-            exclude(group="net.fabricmc.fabric-api")
-        }
+        modImplementation("dev.isxander:yet-another-config-lib:$prop")
     }
 }
 

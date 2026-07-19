@@ -25,10 +25,10 @@
 
 package org.visuals.legacy.animatium.mixins.v1.gui.screen_tweaks;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractContainerWidget;
 import net.minecraft.client.gui.components.AbstractSelectionList;
-import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -38,15 +38,15 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
 @Mixin(AbstractSelectionList.class)
 public abstract class MixinAbstractSelectionList_ListGradientBackground extends AbstractContainerWidget {
-    public MixinAbstractSelectionList_ListGradientBackground(int width, int height, int y, int itemHeight) {
-        super(0, y, width, height, CommonComponents.EMPTY);
+    public MixinAbstractSelectionList_ListGradientBackground(final int x, final int y, final int width, final int height, final Component message, final ScrollbarSettings scrollbarSettings) {
+        super(x, y, width, height, message, scrollbarSettings);
     }
 
-    @Inject(method = "renderListBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIII)V", shift = At.Shift.AFTER))
-    private void animatium$renderListBackgroundGradient(GuiGraphics guiGraphics, CallbackInfo ci) {
+    @Inject(method = "extractListBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIII)V", shift = At.Shift.AFTER))
+    private void animatium$renderListBackgroundGradient(final GuiGraphicsExtractor graphics, final CallbackInfo ci) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.listBackgroundGradient) {
-            guiGraphics.fillGradient(this.getX(), this.getY(), this.getRight(), this.getY() + 4, -16777216, 0);
-            guiGraphics.fillGradient(this.getX(), this.getBottom() - 4, this.getRight(), this.getBottom(), 0, -16777216);
+            graphics.fillGradient(this.getX(), this.getY(), this.getRight(), this.getY() + 4, -16777216, 0);
+            graphics.fillGradient(this.getX(), this.getBottom() - 4, this.getRight(), this.getBottom(), 0, -16777216);
         }
     }
 }

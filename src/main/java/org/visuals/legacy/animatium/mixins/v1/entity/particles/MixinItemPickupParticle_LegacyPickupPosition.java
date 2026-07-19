@@ -42,7 +42,7 @@ public abstract class MixinItemPickupParticle_LegacyPickupPosition {
     private Entity target;
 
     @ModifyExpressionValue(method = "updatePosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getEyeY()D"))
-    private double animatium$itemPickupPosition(double original) {
+    private double animatium$itemPickupPosition(final double original) {
         // TODO: Check this setting, I think the description of it might of been wrong
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemPickupPosition) {
             return this.target.position().y;

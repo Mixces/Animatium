@@ -45,33 +45,32 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
-import org.visuals.legacy.animatium.util.states.ItemUtilityRenderState;
+import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
 @Mixin(ItemModelResolver.class)
 public abstract class MixinItemModelResolver {
     @Inject(method = "appendItemLayers", at = @At("HEAD"))
-    private void animatium$storeItemStack(final ItemStackRenderState itemStackRenderState, final ItemStack itemStack, final ItemDisplayContext itemDisplayContext, final Level level, final ItemOwner itemOwner, final int i, final CallbackInfo ci) {
-        itemStackRenderState.animatium$setItemStack(itemStack);
+    private void animatium$storeItemStack(final ItemStackRenderState output, final ItemStack item, final ItemDisplayContext displayContext, final Level level, final ItemOwner owner, final int seed, final CallbackInfo ci) {
+        output.animatium$setItemStack(item);
     }
 
     @WrapOperation(method = "appendItemLayers", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;get(Lnet/minecraft/core/component/DataComponentType;)Ljava/lang/Object;"))
-    private Object animatium$stickModelWhenCastInThirdperson(
+    private Object animatium$stickModelWhenCastInThirdPerson(
             final ItemStack instance,
             final DataComponentType<?> dataComponentType,
             final Operation<Object> original,
-            @Local(argsOnly = true) final ItemDisplayContext displayContext,
-            @Local(argsOnly = true) final ItemOwner itemOwner,
-            @Local(argsOnly = true) final ItemStack itemStack
+            @Local(argsOnly = true, name = "displayContext") final ItemDisplayContext displayContext,
+            @Local(argsOnly = true, name = "owner") final ItemOwner owner,
+            @Local(argsOnly = true, name = "item") final ItemStack item
     ) {
-        final LivingEntity livingEntity = itemOwner == null ? null : itemOwner.asLivingEntity();
-		// TODO: Fix
+        final LivingEntity livingEntity = owner == null ? null : owner.asLivingEntity();
+        // TODO/FIX
         if (Animatium.isEnabled() &&
-                AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersion.V1_7 &&
-                itemStack.getItem() == Items.FISHING_ROD &&
+                AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersionSetting.V1_7 &&
+                item.getItem() == Items.FISHING_ROD &&
                 (livingEntity instanceof Player player && player.fishing != null) &&
-                ((displayContext == ItemDisplayContext.THIRD_PERSON_LEFT_HAND && livingEntity.getOffhandItem() == itemStack) ||
-                        (displayContext == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND && livingEntity.getMainHandItem() == itemStack))) {
+                ((displayContext == ItemDisplayContext.THIRD_PERSON_LEFT_HAND && livingEntity.getOffhandItem() == item) ||
+                        (displayContext == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND && livingEntity.getMainHandItem() == item))) {
             return Identifier.withDefaultNamespace("stick");
         } else {
             return original.call(instance, dataComponentType);

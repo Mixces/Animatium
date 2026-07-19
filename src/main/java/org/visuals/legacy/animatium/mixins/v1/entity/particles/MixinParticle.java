@@ -41,16 +41,16 @@ public abstract class MixinParticle {
     public abstract AABB getBoundingBox();
 
     @Shadow
-    public abstract void setBoundingBox(AABB aabb);
+    public abstract void setBoundingBox(final AABB bb);
 
     @Shadow
     protected abstract void setLocationFromBoundingbox();
 
     @Inject(method = "move", at = @At("HEAD"), cancellable = true)
-    private void animatium$particlePhysics(double x, double y, double z, CallbackInfo ci) {
+    private void animatium$particlePhysics(final double xa, final double ya, final double za, final CallbackInfo ci) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.disableParticlePhysics) {
             ci.cancel();
-            this.setBoundingBox(this.getBoundingBox().move(x, y, z));
+            this.setBoundingBox(this.getBoundingBox().move(xa, ya, za));
             this.setLocationFromBoundingbox();
         }
     }

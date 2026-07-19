@@ -52,8 +52,10 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.ItemUtils;
-import org.visuals.legacy.animatium.util.Utils;
+import org.visuals.legacy.animatium.util.EntityUtilKt;
+import org.visuals.legacy.animatium.util.ItemUtilKt;
+
+import java.util.Objects;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft_EquipUseLogic {
@@ -81,20 +83,20 @@ public abstract class MixinMinecraft_EquipUseLogic {
     @Final
     public GameRenderer gameRenderer;
 
-    @ModifyVariable(method = "startUseItem", at = @At(value = "STORE", ordinal = 0))
-    private ItemStack animatium$fixCopyStackUseItem(final ItemStack original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck) {
+    @ModifyVariable(method = "startUseItem", at = @At("STORE"), name = "heldItem")
+    private ItemStack animatium$fixCopyStackUseItem(final ItemStack heldItem) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.equipAnimationItemCheck) {
             // Update the stack to match mutations to the stack in other classes
-            return original.copy();
+            return heldItem.copy();
         } else {
-            return original;
+            return heldItem;
         }
     }
 
     @WrapOperation(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V", ordinal = 2))
-    private void animatium$swingOnUse(final LocalPlayer instance, final InteractionHand hand, final Operation<Void> original, @Local(ordinal = 0) ItemStack itemStack) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.disableSwingOnUse && ItemUtils.isSwingItemBlacklisted(itemStack)) {
-            Utils.sendSwingPacket(instance, hand);
+    private void animatium$swingOnUse(final LocalPlayer instance, final InteractionHand hand, final Operation<Void> original, @Local(name = "heldItem") final ItemStack heldItem) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.disableSwingOnUse && ItemUtilKt.isSwingItemBlacklisted(heldItem)) {
+            EntityUtilKt.sendSwingPacket(instance, hand);
         } else {
             original.call(instance, hand);
         }
@@ -103,7 +105,7 @@ public abstract class MixinMinecraft_EquipUseLogic {
     @WrapOperation(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V"))
     private void animatium$swingOnDrop(final LocalPlayer instance, final InteractionHand hand, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.disableSwingOnDrop) {
-            Utils.sendSwingPacket(instance, hand);
+            EntityUtilKt.sendSwingPacket(instance, hand);
         } else {
             original.call(instance, hand);
         }
@@ -112,7 +114,7 @@ public abstract class MixinMinecraft_EquipUseLogic {
     @WrapOperation(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V", ordinal = 0))
     private void animatium$swingOnEntityInteract(final LocalPlayer instance, final InteractionHand hand, final Operation<Void> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.disableSwingOnEntityInteract) {
-            Utils.sendSwingPacket(instance, hand);
+            EntityUtilKt.sendSwingPacket(instance, hand);
         } else {
             original.call(instance, hand);
         }
@@ -124,12 +126,12 @@ public abstract class MixinMinecraft_EquipUseLogic {
                 && AnimatiumConfig.instance().items.itemUsageSwinging
                 && this.player != null
                 && !(this.player.getItemInHand(this.player.getUsedItemHand()).isEmpty() || !this.player.isUsingItem() || !this.options.keyAttack.isDown())) {
-            Utils.applySwingWhilstMining(this.level, this.player, this.hitResult);
+            EntityUtilKt.applySwingWhilstMining(this.level, this.player, this.hitResult);
         }
     }
 
     @WrapWithCondition(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;itemUsed(Lnet/minecraft/world/InteractionHand;)V"))
-    private boolean animatium$equipAnimationOnItemUse(final ItemInHandRenderer instance, final InteractionHand interactionHand) {
+    private boolean animatium$equipAnimationOnItemUse(final ItemInHandRenderer instance, final InteractionHand hand) {
         // TODO: This fixes projectile equip, but it isn't going to be 100% accurate in some other areas. This needs to be worked on :)
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixEquipAnimationOnItemUse) {
             // The equip animation plays when right-clicking blocks in creative mode in <1.8.x
@@ -143,15 +145,15 @@ public abstract class MixinMinecraft_EquipUseLogic {
         }
     }
 
-    @Definition(id = "interactionResult2", local = @Local(type = InteractionResult.class, ordinal = 1))
+    @Definition(id = "useResult", local = @Local(type = InteractionResult.class, name = "useResult"))
     @Definition(id = "Fail", type = InteractionResult.Fail.class)
-    @Expression("interactionResult2 instanceof Fail")
+    @Expression("useResult instanceof Fail")
     @Inject(method = "startUseItem", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.BEFORE))
-    private void animatium$oldEquipUse(final CallbackInfo ci, @Local(ordinal = 0) final ItemStack heldItem, @Local(ordinal = 2) final int oldCount, @Local(ordinal = 0) final InteractionHand hand) {
+    private void animatium$oldEquipUse(final CallbackInfo ci, @Local(name = "heldItem") final ItemStack heldItem, @Local(name = "oldCount") final int oldCount, @Local(name = "hand") final InteractionHand hand) {
         if (Animatium.isEnabled()
-                && AnimatiumConfig.instance().fixes.fixEquipAnimationItemCheck
+                && AnimatiumConfig.instance().items.equipAnimationItemCheck
                 && !heldItem.isEmpty()
-                && (heldItem.getCount() != oldCount || this.player.hasInfiniteMaterials())) {
+                && (heldItem.getCount() != oldCount || Objects.requireNonNull(this.player).hasInfiniteMaterials())) {
             this.gameRenderer.itemInHandRenderer.itemUsed(hand);
         }
     }

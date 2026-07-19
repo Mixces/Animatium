@@ -30,14 +30,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.util.enums.ServerFeature;
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatureManager;
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatures;
 
 @Mixin(Entity.class)
 public abstract class MixinEntity_PickInflation {
     @Inject(method = "getPickRadius", at = @At("HEAD"), cancellable = true)
-    private void animatium$pickInflation(CallbackInfoReturnable<Float> cir) {
-        if (Animatium.hasServerFeature(ServerFeature.PICK_INFLATION)) {
+    private void animatium$pickInflation(final CallbackInfoReturnable<Float> cir) {
+        if (ServerFeatureManager.isPresent(ServerFeatures.PICK_INFLATION)) {
             cir.setReturnValue(0.1F);
         }
     }

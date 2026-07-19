@@ -27,84 +27,84 @@ package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.network.chat.Component;
-import org.visuals.legacy.animatium.util.config.EntryBundle;
-import org.visuals.legacy.animatium.util.enums.FishingRodVersion;
+import org.visuals.legacy.animatium.config.bundle.EntryBundle;
+import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
-public class ItemsConfigCategory extends Category {
-	// (Items) Enchantment Glint
-	public boolean legacyGlintSpeed = true;
-	public boolean glintOnItemDrops2D = true;
-	public boolean glintOnItemFramed2D = true;
-	// (Items) 2D Drops
-	public boolean itemDropsFaceCamera = true;
-	public boolean itemDropsFaceCameraRotationFix = false;
-	public boolean itemDrops2D = true;
-	public boolean itemFramed2D = true;
-	public boolean itemColors2D = true;
-	// (Items) Transformations
-	public boolean itemPositions = true;
-	public boolean itemPositionsInThirdPerson = true;
-	public boolean thinBlockPositions = true;
-	public boolean skullPosition = true;
-	public FishingRodVersion fishingRodVersion = FishingRodVersion.V1_7;
-	// (Items) Other
-	public boolean thinFishingRodLineThickness = false;
-	public boolean itemUsageSwinging = true;
-	public boolean disableSwingOnUse = false;
-	public boolean disableSwingOnDrop = false;
-	public boolean disableSwingOnEntityInteract = false;
-	public boolean disableItemUsingTextureInGUI = true;
-	public boolean durabilityBarColors = true;
-	public boolean legacyItemRarities = true;
-	public boolean heldItemVisibilityInBoat = true;
-	public boolean itemPickupPosition = true;
-	public boolean mobHeadIcons = true;
-	public boolean eggSnowballParticles = true;
+public final class ItemsConfigCategory extends Category {
+    // (Items) Enchantment Glint
+    public boolean legacyGlintSpeed = false;
+    public boolean glintOnItemDrops2D = false;
+    public boolean glintOnItemFramed2D = false;
+    // (Items) 2D Drops
+    public boolean itemDropsFaceCamera = false;
+    public boolean itemDropsFaceCameraRotationFix = false;
+    public boolean itemDrops2D = false;
+    public boolean itemFramed2D = false;
+    // (Items) Transformations
+    public boolean itemPositions = false;
+    public boolean itemPositionsInThirdPerson = false;
+    public boolean thinBlockPositions = false;
+    public boolean skullPosition = false;
+    public FishingRodVersionSetting fishingRodVersion = FishingRodVersionSetting.VANILLA;
+    // (Items) Other
+    public boolean thinFishingRodLineThickness = false;
+    public boolean itemUsageSwinging = false;
+    public boolean disableSwingOnUse = false;
+    public boolean disableSwingOnDrop = false;
+    public boolean disableSwingOnEntityInteract = false;
+    public boolean disableItemUsingTextureInGUI = false;
+    public boolean equipAnimationItemCheck = false;
+    public boolean durabilityBarColors = false;
+    public boolean legacyItemRarities = false;
+    public boolean heldItemVisibilityInBoat = false;
+    public boolean itemPickupPosition = false;
+    public boolean mobHeadIcons = false;
+    public boolean eggSnowballParticles = false;
 
-	public static ConfigCategory create(final ItemsConfigCategory defaults, final ItemsConfigCategory config) {
-		final ConfigCategory.Builder category = ConfigCategory.createBuilder();
-		category.name(Component.translatable("animatium.category.items"));
-		config.bundle().install(category, defaults, config);
-		return category.build();
-	}
+    public static ConfigCategory create(final ItemsConfigCategory defaults, final ItemsConfigCategory config) {
+        final ConfigCategory.Builder category = ConfigCategory.createBuilder();
+        category.name(Component.translatable("animatium.category.items"));
+        config.bundle().install(category, defaults, config);
+        return category.build();
+    }
 
-	@Override
-	public EntryBundle bundle() {
-		final EntryBundle bundle = new EntryBundle(this, "items");
+    @Override
+    public EntryBundle bundle() {
+        final EntryBundle bundle = new EntryBundle(this, "items");
 
-		bundle.group((EntryBundle.Group) new EntryBundle.Group("glint")
-				.booleanEntry("legacyGlintSpeed")
-				.booleanEntry("glintOnItemDrops2D")
-				.booleanEntry("glintOnItemFramed2D"));
+        bundle.group((EntryBundle.Group) new EntryBundle.Group("glint")
+                .booleanEntry("legacyGlintSpeed")
+                .booleanEntry("glintOnItemDrops2D")
+                .booleanEntry("glintOnItemFramed2D"));
 
-		bundle.group((EntryBundle.Group) new EntryBundle.Group("drops2d")
-				.booleanEntry("itemDropsFaceCamera")
-				.booleanEntry("itemDropsFaceCameraRotationFix")
-				.booleanEntry("itemDrops2D")
-				.booleanEntry("itemFramed2D")
-				.booleanEntry("itemColors2D"));
+        bundle.group((EntryBundle.Group) new EntryBundle.Group("drops2d")
+                .booleanEntry("itemDropsFaceCamera")
+                .booleanEntry("itemDropsFaceCameraRotationFix")
+                .booleanEntry("itemDrops2D")
+                .booleanEntry("itemFramed2D"));
 
-		bundle.group((EntryBundle.Group) new EntryBundle.Group("transformations")
-				.booleanEntry("itemPositions")
-				.booleanEntry("itemPositionsInThirdPerson")
-				.booleanEntry("thinBlockPositions")
-				.booleanEntry("skullPosition")
-				.enumEntry("fishingRodVersion", FishingRodVersion.class));
+        bundle.group((EntryBundle.Group) new EntryBundle.Group("transformations")
+                .booleanEntry("itemPositions")
+                .booleanEntry("itemPositionsInThirdPerson")
+                .booleanEntry("thinBlockPositions")
+                .booleanEntry("skullPosition")
+                .enumEntry("fishingRodVersion", FishingRodVersionSetting.class));
 
-		bundle.group((EntryBundle.Group) new EntryBundle.Group("other")
-				.booleanEntry("thinFishingRodLineThickness")
-				.booleanEntry("itemUsageSwinging")
-				.booleanEntry("disableSwingOnUse")
-				.booleanEntry("disableSwingOnDrop")
-				.booleanEntry("disableSwingOnEntityInteract")
-				.booleanEntry("disableItemUsingTextureInGUI")
-				.booleanEntry("durabilityBarColors")
-				.booleanEntry("legacyItemRarities")
-				.booleanEntry("heldItemVisibilityInBoat")
-				.booleanEntry("itemPickupPosition")
-				.booleanEntry("mobHeadIcons")
-				.booleanEntry("eggSnowballParticles"));
+        bundle.group((EntryBundle.Group) new EntryBundle.Group("other")
+                .booleanEntry("thinFishingRodLineThickness")
+                .booleanEntry("itemUsageSwinging")
+                .booleanEntry("disableSwingOnUse")
+                .booleanEntry("disableSwingOnDrop")
+                .booleanEntry("disableSwingOnEntityInteract")
+                .booleanEntry("disableItemUsingTextureInGUI")
+                .booleanEntry("equipAnimationItemCheck")
+                .booleanEntry("durabilityBarColors")
+                .booleanEntry("legacyItemRarities")
+                .booleanEntry("heldItemVisibilityInBoat")
+                .booleanEntry("itemPickupPosition")
+                .booleanEntry("mobHeadIcons")
+                .booleanEntry("eggSnowballParticles"));
 
-		return bundle;
-	}
+        return bundle;
+    }
 }

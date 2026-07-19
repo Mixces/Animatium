@@ -29,13 +29,10 @@ import dev.isxander.yacl3.api.Binding;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.StateManager;
-import dev.isxander.yacl3.api.controller.ControllerBuilder;
-import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
-import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
-import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
+import dev.isxander.yacl3.api.controller.*;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.AnimatiumConstants;
-import org.visuals.legacy.animatium.util.config.EntryBundle;
+import org.visuals.legacy.animatium.config.bundle.EntryBundle;
 
 import java.lang.reflect.Field;
 import java.util.function.BiConsumer;
@@ -44,6 +41,7 @@ import java.util.function.Function;
 public abstract class Category {
     public enum OptionType {
         BOOLEAN(false),
+        INT(true),
         FLOAT(true),
         ENUM(false);
 
@@ -51,10 +49,6 @@ public abstract class Category {
 
         OptionType(final boolean sliderCapable) {
             this.sliderCapable = sliderCapable;
-        }
-
-        public boolean isSliderCapable() {
-            return this.sliderCapable;
         }
     }
 
@@ -93,7 +87,7 @@ public abstract class Category {
         }
 
         public <S> OptionBuilder<T> slider(final S min, final S max, final S step) {
-            if (this.type == null || !this.type.isSliderCapable()) {
+            if (this.type == null || !this.type.sliderCapable) {
                 throw new RuntimeException("Option doesn't allow slider.");
             } else {
                 this.slider = true;
@@ -117,8 +111,18 @@ public abstract class Category {
         public <CategoryLike extends Category, K> Option<K> build(final CategoryLike defaults, final CategoryLike current) {
             final Function<Option<K>, ControllerBuilder<K>> controllerBuilder = switch (this.type) {
                 case BOOLEAN -> (opt) ->
-                        (ControllerBuilder<K>) TickBoxControllerBuilder
-                                .create((Option<Boolean>) opt);
+                        (ControllerBuilder<K>) TickBoxControllerBuilder.create((Option<Boolean>) opt);
+
+                case INT -> (opt) -> {
+                    if (this.slider) {
+                        return (ControllerBuilder<K>) IntegerSliderControllerBuilder
+                                .create((Option<Integer>) opt)
+                                .range((int) this.min, (int) this.max)
+                                .step((int) this.step);
+                    } else {
+                        throw new RuntimeException("TODO: Int non-slider");
+                    }
+                };
 
                 case FLOAT -> (opt) -> {
                     if (this.slider) {
@@ -181,7 +185,7 @@ public abstract class Category {
         public Field currentField;
         public S defaultValue;
 
-        public static <T extends Category, S> Reference<S> get(String fieldName, T defaults, T current) {
+        public static <T extends Category, S> Reference<S> get(final String fieldName, final T defaults, final T current) {
             final Reference<S> reference = new Reference<>();
 
             final Class<?> defaultsClazz = defaults.getClass();

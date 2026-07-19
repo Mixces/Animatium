@@ -37,7 +37,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 @Mixin(FogRenderer.class)
 public abstract class MixinFogRenderer_OldMinY {
     @WrapOperation(method = "computeFogColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;getMinY()I"))
-    private int animatium$oldMinY(ClientLevel instance, Operation<Integer> original) {
+    private int animatium$oldMinY(final ClientLevel instance, final Operation<Integer> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldY0Height) {
             return 0;
         } else {

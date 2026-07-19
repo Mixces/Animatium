@@ -39,7 +39,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinThrownEgg_SnowballParticles {
     // TODO/NOTE: Should x/y/z speed be 0.0?
     @WrapOperation(method = "handleEntityEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/throwableitemprojectile/ThrownEgg;getItem()Lnet/minecraft/world/item/ItemStack;"))
-    private ItemStack animatium$eggSnowballParticles(ThrownEgg instance, Operation<ItemStack> original) {
+    private ItemStack animatium$eggSnowballParticles(final ThrownEgg instance, final Operation<ItemStack> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.eggSnowballParticles) {
             return new ItemStack(Items.SNOWBALL);
         } else {

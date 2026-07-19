@@ -32,22 +32,22 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.util.enums.ServerFeature;
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatureManager;
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatures;
 
 @Mixin(LocalPlayer.class)
 public abstract class MixinLocalPlayer_FixSprinting extends AbstractClientPlayer {
-	public MixinLocalPlayer_FixSprinting(final ClientLevel clientLevel, final GameProfile gameProfile) {
-		super(clientLevel, gameProfile);
-	}
+    public MixinLocalPlayer_FixSprinting(final ClientLevel clientLevel, final GameProfile gameProfile) {
+        super(clientLevel, gameProfile);
+    }
 
-	@ModifyReturnValue(method = "isSprintingPossible", at = @At("RETURN"))
-	private boolean animatium$fixItemUseSprinting(final boolean original) {
-		if ((Animatium.hasServerFeature(ServerFeature.FIX_SPRINT_ITEM_USE) && this.isUsingItem())
-				|| (Animatium.hasServerFeature(ServerFeature.FIX_SPRINT_SNEAKING) && this.isCrouching())) {
-			return false;
-		} else {
-			return original;
-		}
-	}
+    @ModifyReturnValue(method = "isSprintingPossible", at = @At("RETURN"))
+    private boolean animatium$fixItemUseSprinting(final boolean original) {
+        if ((ServerFeatureManager.isPresent(ServerFeatures.FIX_SPRINT_ITEM_USE) && this.isUsingItem())
+                || (ServerFeatureManager.isPresent(ServerFeatures.FIX_SPRINT_SNEAKING) && this.isCrouching())) {
+            return false;
+        } else {
+            return original;
+        }
+    }
 }
