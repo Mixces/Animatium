@@ -27,6 +27,7 @@ package org.visuals.legacy.animatium.handler.rendering
 
 import com.mojang.blaze3d.pipeline.BlendFunction
 import com.mojang.blaze3d.pipeline.RenderPipeline
+import com.mojang.blaze3d.platform.DepthTestFunction
 import com.mojang.blaze3d.platform.DestFactor
 import com.mojang.blaze3d.platform.SourceFactor
 import com.mojang.blaze3d.shaders.UniformType
@@ -54,7 +55,8 @@ object AnimatiumPipelines {
     val LEGACY_PANORAMA_SNIPPET = RenderPipeline.builder(TEXTURED_QUAD)
         .withVertexShader(location("core/legacy_panorama"))
         .withFragmentShader(location("core/legacy_panorama"))
-        // .withDepthStencilState(NO_DEPTH_WRITE) // TODO/NOTE: Panorama only works when either using GT_OR_EQL, or disabling this line in 26.1.x.
+        .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+        .withDepthWrite(false)
         .withCull(false)
         .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
         .buildSnippet()
@@ -84,6 +86,8 @@ object AnimatiumPipelines {
             .withFragmentShader(location("core/legacy_panorama_blur"))
             .withBlend(PANORAMA_BLEND)
             .withColorWrite(true, false)
+            .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+            .withDepthWrite(false)
             .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
             .build()
     )
