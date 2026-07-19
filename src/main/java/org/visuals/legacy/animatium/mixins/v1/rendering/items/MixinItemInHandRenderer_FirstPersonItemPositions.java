@@ -104,7 +104,7 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
     }
 
     @WrapOperation(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V", ordinal = 1))
-    private void animatium$postBowTransform(final PoseStack instance, final float xScale, final float yScale, final float zScale, final Operation<Void> original, @Local(argsOnly = true, name = "player") final AbstractClientPlayer player, @Local(argsOnly = true, name = "hand") final InteractionHand hand) {
+    private void animatium$postBowTransform(final PoseStack instance, final float xScale, final float yScale, final float zScale, final Operation<Void> original, @Local(argsOnly = true, ordinal = 0) final AbstractClientPlayer player, @Local(argsOnly = true, ordinal = 0) final InteractionHand hand) {
         final int direction = EntityUtilKt.getHandMultiplier(player, hand);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemPositions) {
             instance.mulPose(Axis.ZP.rotationDegrees(direction * -335));
