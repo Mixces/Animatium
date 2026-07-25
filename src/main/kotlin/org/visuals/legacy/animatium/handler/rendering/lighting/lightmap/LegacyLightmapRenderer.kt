@@ -25,7 +25,7 @@
 
 package org.visuals.legacy.animatium.handler.rendering.lighting.lightmap
 
-import com.mojang.blaze3d.textures.GpuTextureView
+import com.mojang.renderpearl.api.textures.GpuTextureView
 import net.minecraft.util.profiling.Profiler
 import org.visuals.legacy.animatium.handler.rendering.AnimatiumPipelines
 import org.visuals.legacy.animatium.renderer.Renderer

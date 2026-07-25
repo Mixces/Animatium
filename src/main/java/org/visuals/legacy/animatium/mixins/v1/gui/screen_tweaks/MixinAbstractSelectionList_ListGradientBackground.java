@@ -42,7 +42,7 @@ public abstract class MixinAbstractSelectionList_ListGradientBackground extends 
         super(x, y, width, height, message, scrollbarSettings);
     }
 
-    @Inject(method = "extractListBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIII)V", shift = At.Shift.AFTER))
+    @Inject(method = "extractListBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blit(Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIII)V", shift = At.Shift.AFTER))
     private void animatium$renderListBackgroundGradient(final GuiGraphicsExtractor graphics, final CallbackInfo ci) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.listBackgroundGradient) {
             graphics.fillGradient(this.getX(), this.getY(), this.getRight(), this.getY() + 4, -16777216, 0);

@@ -27,9 +27,8 @@ package org.visuals.legacy.animatium.mixins.v1.gui.chat;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.minecraft.client.Minecraft;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.gui.components.ChatComponent;
-import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
@@ -38,7 +37,7 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 public abstract class MixinChatComponent_DontClearChat {
     @WrapMethod(method = "clearMessages")
     private void animatium$dontClearChat(final boolean history, final Operation<Void> original) {
-        if (!Animatium.isEnabled() || !AnimatiumConfig.instance().extras.dontClearChat || GLFW.glfwGetKey(Minecraft.getInstance().getWindow().handle(), GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS) {
+        if (!Animatium.isEnabled() || !AnimatiumConfig.instance().extras.dontClearChat || InputConstants.isKeyDown(InputConstants.KEY_D)) {
             original.call(history);
         }
     }

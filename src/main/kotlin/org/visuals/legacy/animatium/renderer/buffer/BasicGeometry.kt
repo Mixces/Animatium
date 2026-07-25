@@ -25,8 +25,8 @@
 
 package org.visuals.legacy.animatium.renderer.buffer
 
-import com.mojang.blaze3d.systems.RenderPass
 import com.mojang.blaze3d.systems.RenderSystem
+import com.mojang.renderpearl.api.commands.RenderPass
 
 class BasicGeometry(val firstVertex: Int, val vertexCount: Int) : Geometry {
     override fun bind(

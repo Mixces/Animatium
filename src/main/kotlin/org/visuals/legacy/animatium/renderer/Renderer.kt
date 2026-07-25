@@ -26,13 +26,14 @@
 package org.visuals.legacy.animatium.renderer
 
 import com.mojang.blaze3d.ProjectionType
-import com.mojang.blaze3d.buffers.GpuBufferSlice
-import com.mojang.blaze3d.pipeline.BindGroupLayout
-import com.mojang.blaze3d.pipeline.RenderPipeline
 import com.mojang.blaze3d.pipeline.RenderTarget
 import com.mojang.blaze3d.systems.RenderSystem
-import com.mojang.blaze3d.textures.GpuSampler
-import com.mojang.blaze3d.textures.GpuTextureView
+import com.mojang.renderpearl.api.buffers.GpuBufferSlice
+import com.mojang.renderpearl.api.pipeline.BindGroupLayout
+import com.mojang.renderpearl.api.pipeline.RenderPipeline
+import com.mojang.renderpearl.api.pipeline.UniformType
+import com.mojang.renderpearl.api.textures.GpuSampler
+import com.mojang.renderpearl.api.textures.GpuTextureView
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.ProjectionMatrixBuffer
@@ -87,6 +88,14 @@ class Renderer : AutoCloseable {
 
         @JvmStatic
         fun of(label: Supplier<String>): Renderer = of(label, Minecraft.getInstance().gameRenderer.mainRenderTarget())
+
+        private fun flattenSamplers(groups: List<BindGroupLayout>): List<String> {
+            return BindGroupLayout.flattenUniforms(groups)
+                .stream()
+                .filter { it.type == UniformType.COMBINED_IMAGE_SAMPLER }
+                .map(BindGroupLayout.UniformDescription::name)
+                .toList()
+        }
     }
 
     // Data
@@ -113,7 +122,7 @@ class Renderer : AutoCloseable {
     }
 
     fun setPipeline(pipeline: RenderPipeline): Renderer {
-        val samplers = BindGroupLayout.flattenSamplers(pipeline.bindGroupLayouts)
+        val samplers = flattenSamplers(pipeline.bindGroupLayouts)
         return this.setPipeline(
             pipeline,
             if (samplers.contains("Sampler0")) {
@@ -180,6 +189,7 @@ class Renderer : AutoCloseable {
                 val bindGroupLayouts = pipeline.bindGroupLayouts
                 val descriptions = BindGroupLayout.flattenUniforms(bindGroupLayouts)
                     .stream()
+                    .filter { it.type == UniformType.UNIFORM_BUFFER }
                     .map(BindGroupLayout.UniformDescription::name)
                     .toList()
 
@@ -196,11 +206,11 @@ class Renderer : AutoCloseable {
                     }
                 }
 
-                val samplers = BindGroupLayout.flattenSamplers(bindGroupLayouts)
+                val samplers = flattenSamplers(bindGroupLayouts)
                 for (entry in this.textures) {
                     val name = entry.key
                     if (samplers.contains(name)) {
-                        pass.bindTexture(name, entry.value.textureView, entry.value.sampler)
+                        pass.setUniform(name, entry.value.textureView, entry.value.sampler)
                     }
                 }
 

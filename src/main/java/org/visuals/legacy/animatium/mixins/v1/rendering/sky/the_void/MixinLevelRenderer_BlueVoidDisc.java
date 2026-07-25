@@ -25,7 +25,7 @@
 
 package org.visuals.legacy.animatium.mixins.v1.rendering.sky.the_void;
 
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
+import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.state.level.SkyRenderState;

@@ -99,7 +99,7 @@ public abstract class MixinGameRenderer_ModifyViewBobbing {
     }
 
     // TODO/MOVE
-    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlobalSettingsUniform;update(IIDJLnet/minecraft/client/DeltaTracker;ILnet/minecraft/world/phys/Vec3;Z)V"), index = 2)
+    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlobalSettingsUniform;update(IIDJFILnet/minecraft/world/phys/Vec3;Z)V"), index = 2)
     private double animatium$forceMaxGlintStrength(final double original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.maxGlintProperties) {
             // 100% glint strength

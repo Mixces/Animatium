@@ -25,11 +25,11 @@
 
 package org.visuals.legacy.animatium.renderer.buffer
 
-import com.mojang.blaze3d.buffers.GpuBuffer
-import com.mojang.blaze3d.systems.RenderPass
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.ByteBufferBuilder
 import com.mojang.blaze3d.vertex.VertexConsumer
+import com.mojang.renderpearl.api.buffers.GpuBuffer
+import com.mojang.renderpearl.api.commands.RenderPass
 import org.visuals.legacy.animatium.renderer.vertex.VertexLayout
 import java.util.function.Consumer
 

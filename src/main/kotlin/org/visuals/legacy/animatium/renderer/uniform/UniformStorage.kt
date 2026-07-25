@@ -25,8 +25,8 @@
 
 package org.visuals.legacy.animatium.renderer.uniform
 
-import com.mojang.blaze3d.buffers.GpuBufferSlice
 import com.mojang.blaze3d.buffers.Std140SizeCalculator
+import com.mojang.renderpearl.api.buffers.GpuBufferSlice
 
 interface UniformStorage : AutoCloseable {
     fun name(): String

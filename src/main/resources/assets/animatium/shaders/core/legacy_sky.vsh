@@ -1,13 +1,14 @@
-#version 150
+#version 330
+#extension GL_ARB_separate_shader_objects : require
 
-#moj_import <minecraft:fog.glsl>
-#moj_import <minecraft:dynamictransforms.glsl>
-#moj_import <minecraft:projection.glsl>
+#include <minecraft:fog.glsl>
+#include <minecraft:dynamictransforms.glsl>
+#include <minecraft:projection.glsl>
 
-in vec3 Position;
+layout(location = 0) in vec3 Position;
 
-out float cylindricalVertexDistance;
-out float sphericalVertexDistance;
+layout(location = 0) out float cylindricalVertexDistance;
+layout(location = 1) out float sphericalVertexDistance;
 
 void main() {
     vec4 eye = ModelViewMat * vec4(Position, 1.0);

@@ -128,7 +128,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
         }
     }
 
-    @Inject(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At(value = "CONSTANT", args = "floatValue=0.0", ordinal = 1))
+    @Inject(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At(value = "CONSTANT", args = "floatValue=0.0", ordinal = 0))
     private void animatium$bowArmMovement(final T state, final CallbackInfo ci) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().movement.bowArmMovement) {
             final boolean isLeftArmPose = state.leftArmPose == HumanoidModel.ArmPose.BOW_AND_ARROW;
