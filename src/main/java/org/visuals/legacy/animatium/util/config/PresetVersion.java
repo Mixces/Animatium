@@ -215,7 +215,7 @@ public enum PresetVersion {
         other.blockOutlineRendering = true;
         other.disableModelWhilstSleeping = true;
         other.damageTintArmor = false;
-        other.damageTintStyle = DamageTintSetting.V1_8;
+        other.damageTintStyle = DamageTintSetting.VANILLA;
         other.itemGlintOnEntity = true;
         other.maxGlintProperties = true;
         other.restoreParticleBlending = true;
