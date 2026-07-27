@@ -25,7 +25,6 @@
 
 package org.visuals.legacy.animatium.handler.rendering
 
-import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.feature.ItemFeatureRenderer
 import net.minecraft.client.renderer.rendertype.LayeringTransform
 import net.minecraft.client.renderer.rendertype.RenderSetup
@@ -34,7 +33,6 @@ import net.minecraft.client.renderer.rendertype.TextureTransform
 
 object AnimatiumRenderTypes {
     // Glint
-    // NOTE: This is just the default armor glint RenderType, but with ``.useOverlay`` added
     @JvmField
     val ENTITY_ARMOR_GLINT_OVERLAY = RenderType.create(
         "animatium_entity_armor_glint_overlay",
@@ -42,7 +40,7 @@ object AnimatiumRenderTypes {
             .withTexture("Sampler0", ItemFeatureRenderer.ENCHANTED_GLINT_ARMOR)
             .setTextureTransform(TextureTransform.ARMOR_ENTITY_GLINT_TEXTURING)
             .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
-            .useOverlay() // Applies overlay tint
+            .useOverlay()
             .createRenderSetup()
-    );
+    )
 }
