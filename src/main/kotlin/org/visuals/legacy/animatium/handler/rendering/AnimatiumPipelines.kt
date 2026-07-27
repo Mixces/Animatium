@@ -166,12 +166,14 @@ object AnimatiumPipelines {
     )
 
     // Glint
+    @JvmField
     val POSITION_TEX_OVERLAY = VertexFormat.builder(0)
         .addAttribute("Position", GpuFormat.RGB32_FLOAT)
         .addAttribute("UV0", GpuFormat.RG32_FLOAT)
         .addAttribute("UV1", GpuFormat.RG16_SINT)
         .build()
 
+    @JvmField
     val ARMOR_GLINT = RenderPipelines.register(
         RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
             .withLocation(location("pipeline/armor_glint"))
