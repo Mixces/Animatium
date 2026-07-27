@@ -116,6 +116,7 @@ public enum PresetVersion {
         other.blockOutlineRendering = true;
         other.disableModelWhilstSleeping = true;
         other.damageTintArmor = true;
+        other.glintAffectsArmorTint = false;
         other.damageTintStyle = DamageTintSetting.V1_7;
         other.itemGlintOnEntity = true;
         other.maxGlintProperties = true;
@@ -215,6 +216,7 @@ public enum PresetVersion {
         other.blockOutlineRendering = true;
         other.disableModelWhilstSleeping = true;
         other.damageTintArmor = false;
+        other.glintAffectsArmorTint = true;
         other.damageTintStyle = DamageTintSetting.VANILLA;
         other.itemGlintOnEntity = true;
         other.maxGlintProperties = true;
@@ -314,6 +316,7 @@ public enum PresetVersion {
         other.blockOutlineRendering = false;
         other.disableModelWhilstSleeping = false;
         other.damageTintArmor = false;
+        other.glintAffectsArmorTint = false;
         other.damageTintStyle = DamageTintSetting.VANILLA;
         other.itemGlintOnEntity = false;
         other.maxGlintProperties = false;
