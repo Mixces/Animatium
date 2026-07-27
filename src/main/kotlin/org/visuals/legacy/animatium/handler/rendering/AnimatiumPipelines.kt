@@ -166,6 +166,12 @@ object AnimatiumPipelines {
     )
 
     // Glint
+    val POSITION_TEX_OVERLAY = VertexFormat.builder(0)
+        .addAttribute("Position", GpuFormat.RGB32_FLOAT)
+        .addAttribute("UV0", GpuFormat.RG32_FLOAT)
+        .addAttribute("UV1", GpuFormat.RG16_SINT)
+        .build()
+
     // NOTE: Literally the vanilla GLINT RenderPipeline but the shader location changed.
     val ARMOR_GLINT = RenderPipelines.register(
         RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
@@ -178,7 +184,7 @@ object AnimatiumPipelines {
             .withCull(false)
             .withDepthStencilState(DepthStencilState(CompareOp.EQUAL, false))
             .withColorTargetState(ColorTargetState(BlendFunction.GLINT))
-            .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX)
+            .withVertexBinding(0, POSITION_TEX_OVERLAY)
             .withPrimitiveTopology(PrimitiveTopology.QUADS)
             .build()
     )

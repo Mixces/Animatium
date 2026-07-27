@@ -10,7 +10,7 @@ uniform sampler2D Sampler1;
 
 in vec3 Position;
 in vec2 UV0;
-in vec2 UV1;
+in ivec2 UV1;
 
 out float sphericalVertexDistance;
 out float cylindricalVertexDistance;
