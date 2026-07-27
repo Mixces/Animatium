@@ -9,10 +9,7 @@ uniform sampler2D Sampler0;
 in float sphericalVertexDistance;
 in float cylindricalVertexDistance;
 in vec2 texCoord0;
-
-#ifndef NO_OVERLAY
 in vec4 overlayColor;
-#endif
 
 out vec4 fragColor;
 
@@ -22,9 +19,7 @@ void main() {
         discard;
     }
 
-    #ifndef NO_OVERLAY
     color.rgb = mix(overlayColor.rgb, color.rgb, overlayColor.a);
-    #endif
 
     float fade = (1.0f - total_fog_value(sphericalVertexDistance, cylindricalVertexDistance, FogEnvironmentalStart, FogEnvironmentalEnd, FogRenderDistanceStart, FogRenderDistanceEnd)) * GlintAlpha;
     fragColor = vec4(color.rgb * fade, color.a);
