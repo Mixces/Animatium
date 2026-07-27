@@ -47,6 +47,7 @@ public final class OtherConfigCategory extends Category {
     public VoidFogSetting voidFog = VoidFogSetting.OFF;
     // Damage Tint
     public boolean damageTintArmor = false;
+    public boolean glintAffectsArmorTint = false;
     public DamageTintSetting damageTintStyle = DamageTintSetting.VANILLA;
     // Other
     public boolean restoreParticleBlending = false;

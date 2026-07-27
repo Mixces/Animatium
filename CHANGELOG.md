@@ -1,12 +1,11 @@
-# Release 4.1
+# Release 4.2
 
 ## Changes
 
-- Internal changes to server feature code handling
-    - Your server must register the animatium channels during configuration like normal for the info payload to be sent
+- Fixed damage tint color values
+    - Removed v1_8 as it actually matches VANILLA already
+- Added new "Glint Affects Armor Tint" setting for damage armor overlay.
+    - In 1.8-1.14.4, the overlay tint would also affect the glint rendering on armor, producing
+    - this nice pink tint visual.
 
 ## Fixes
-
-- Fixed kick/crash when joining lan worlds with Animatium installed.
-- Fixed missing particle error logs
-- Fixed keybind category name
