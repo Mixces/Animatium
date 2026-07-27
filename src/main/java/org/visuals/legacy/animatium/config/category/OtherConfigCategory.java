@@ -96,6 +96,7 @@ public final class OtherConfigCategory extends Category {
         final EntryBundle.Group damageTintGroup = new EntryBundle.Group("damage_tint");
         if (!ModsKt.HAS_LUNAR_CLIENT) {
             damageTintGroup.booleanEntry("damageTintArmor");
+            damageTintGroup.booleanEntry("glintAffectsArmorTint");
         }
         damageTintGroup.enumEntry("damageTintStyle", DamageTintSetting.class, (option, event) -> {
             final GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
