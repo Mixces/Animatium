@@ -38,7 +38,7 @@ object AnimatiumRenderTypes {
     @JvmField
     val ENTITY_ARMOR_GLINT_OVERLAY = RenderType.create(
         "animatium_entity_armor_glint_overlay",
-        RenderSetup.builder(RenderPipelines.GLINT)
+        RenderSetup.builder(AnimatiumPipelines.ARMOR_GLINT)
             .withTexture("Sampler0", ItemFeatureRenderer.ENCHANTED_GLINT_ARMOR)
             .setTextureTransform(TextureTransform.ARMOR_ENTITY_GLINT_TEXTURING)
             .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)

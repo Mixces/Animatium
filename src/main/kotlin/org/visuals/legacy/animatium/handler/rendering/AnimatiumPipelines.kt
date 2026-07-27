@@ -176,4 +176,22 @@ object AnimatiumPipelines {
             .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
             .build()
     )
+
+    // Glint
+    // NOTE: Literally the vanilla GLINT RenderPipeline but the shader location changed.
+    val ARMOR_GLINT = RenderPipelines.register(
+        RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
+            .withLocation("pipeline/glint")
+            .withVertexShader(location("core/armor_glint"))
+            .withFragmentShader(location("core/armor_glint"))
+            .withBindGroupLayout(BindGroupLayouts.MATRICES_PROJECTION)
+            .withBindGroupLayout(BindGroupLayouts.FOG)
+            .withBindGroupLayout(BindGroupLayouts.SAMPLER0)
+            .withCull(false)
+            .withDepthStencilState(DepthStencilState(CompareOp.EQUAL, false))
+            .withColorTargetState(ColorTargetState(BlendFunction.GLINT))
+            .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX)
+            .withPrimitiveTopology(PrimitiveTopology.QUADS)
+            .build()
+    )
 }
