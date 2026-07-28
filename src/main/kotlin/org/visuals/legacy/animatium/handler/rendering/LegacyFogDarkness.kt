@@ -44,5 +44,5 @@ class LegacyFogDarkness {
         this.darkness = Mth.lerp(0.1F, this.darkness, Mth.lerp(brightness, viewDistance / 32.0F, 1.0F))
     }
 
-    fun getDarkness(tickDelta: Float): Float = Mth.lerp(tickDelta, this.prevDarkness, this.darkness)
+    fun getDarkness(tickDelta: Float) = Mth.lerp(tickDelta, this.prevDarkness, this.darkness)
 }

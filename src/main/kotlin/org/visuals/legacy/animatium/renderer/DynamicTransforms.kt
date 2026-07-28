@@ -25,7 +25,6 @@
 
 package org.visuals.legacy.animatium.renderer
 
-import com.mojang.blaze3d.buffers.GpuBufferSlice
 import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.util.ARGB
 import org.joml.Matrix4f
@@ -36,7 +35,10 @@ object DynamicTransforms {
     const val KEY = "DynamicTransforms"
 
     @JvmStatic
-    fun builder(): Builder = Builder()
+    fun builder() = Builder()
+
+    @JvmStatic
+    fun current() = builder().build()
 
     class Builder {
         private var modelViewMatrix: Matrix4f? = null
@@ -59,13 +61,13 @@ object DynamicTransforms {
             return this
         }
 
-        fun withShaderColor(red: Float, green: Float, blue: Float, alpha: Float): Builder =
+        fun withShaderColor(red: Float, green: Float, blue: Float, alpha: Float) =
             this.withShaderColor(Vector4f(red, green, blue, alpha))
 
-        fun withShaderColor(red: Float, green: Float, blue: Float): Builder =
+        fun withShaderColor(red: Float, green: Float, blue: Float) =
             this.withShaderColor(red, green, blue, 1.0F)
 
-        fun withShaderColor(color: Int): Builder = this.withShaderColor(
+        fun withShaderColor(color: Int) = this.withShaderColor(
             ARGB.redFloat(color),
             ARGB.greenFloat(color),
             ARGB.blueFloat(color),
@@ -77,12 +79,11 @@ object DynamicTransforms {
             return this
         }
 
-        fun build(): GpuBufferSlice =
-            RenderSystem.getDynamicUniforms().writeTransform(
-                this.modelViewMatrix ?: Matrix4f(RenderSystem.getModelViewMatrix()),
-                this.shaderColor,
-                this.modelOffset,
-                this.textureMatrix ?: Matrix4f()
-            )
+        fun build() = RenderSystem.getDynamicUniforms().writeTransform(
+            this.modelViewMatrix ?: RenderSystem.getModelViewMatrixCopy(),
+            this.shaderColor,
+            this.modelOffset,
+            this.textureMatrix ?: Matrix4f()
+        )
     }
 }

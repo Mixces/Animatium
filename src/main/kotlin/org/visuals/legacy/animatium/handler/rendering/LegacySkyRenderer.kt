@@ -79,24 +79,22 @@ object LegacySkyRenderer {
     }
 
     @JvmField
-    val TOP_GEOMETRY: IndexedGeometry =
-        IndexedGeometry.compilePersistent(VertexLayouts.POSITIONED_QUAD, 676) { vertexConsumer ->
-            buildSkyHalf(
-                vertexConsumer,
-                16.0F,
-                false
-            )
-        }
+    val TOP_GEOMETRY = IndexedGeometry.compilePersistent(VertexLayouts.POSITIONED_QUAD, 676) { vertexConsumer ->
+        buildSkyHalf(
+            vertexConsumer,
+            16.0F,
+            false
+        )
+    }
 
     @JvmField
-    val BOTTOM_GEOMETRY: IndexedGeometry =
-        IndexedGeometry.compilePersistent(VertexLayouts.POSITIONED_QUAD, 676) { vertexConsumer ->
-            buildSkyHalf(
-                vertexConsumer,
-                -16.0F,
-                true
-            )
-        }
+    val BOTTOM_GEOMETRY = IndexedGeometry.compilePersistent(VertexLayouts.POSITIONED_QUAD, 676) { vertexConsumer ->
+        buildSkyHalf(
+            vertexConsumer,
+            -16.0F,
+            true
+        )
+    }
 
     @JvmStatic
     fun renderBlueVoid(skyColor: Int, depth: Double) {
@@ -132,7 +130,7 @@ object LegacySkyRenderer {
     }
 
     @JvmStatic
-    fun getHorizonEyeHeight(level: ClientLevel, tickDelta: Float): Double =
+    fun getHorizonEyeHeight(level: ClientLevel, tickDelta: Float) =
         Minecraft.getInstance().player!!.getEyePosition(tickDelta).y - level.getLevelData().getHorizonHeight(level)
 
     // TODO/NOTE: Figure out why its rendering differently than in 18w07a (last snapshot to have it)

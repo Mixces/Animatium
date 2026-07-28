@@ -27,9 +27,9 @@ package org.visuals.legacy.animatium.renderer
 
 import com.mojang.blaze3d.pipeline.RenderTarget
 import com.mojang.blaze3d.systems.RenderPass
+import com.mojang.blaze3d.systems.RenderPassDescriptor
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.textures.GpuTextureView
-import java.util.*
 import java.util.function.Supplier
 
 data class RenderDescriptor(
@@ -44,13 +44,22 @@ data class RenderDescriptor(
     }
 
     fun createPass(): RenderPass {
-        return RenderSystem.getDevice().createCommandEncoder().createRenderPass(this.name, this.colorTexture, OptionalInt.empty(), this.depthTexture, OptionalDouble.empty())
+        val descriptor = RenderPassDescriptor.create(this.name)
+        descriptor.withColorAttachment(this.colorTexture)
+        if (this.depthTexture != null) {
+            descriptor.withDepthAttachment(this.depthTexture)
+        }
+
+        descriptor.withRenderArea(this.area.vanilla())
+        return RenderSystem.getDevice().createCommandEncoder().createRenderPass(descriptor)
     }
 
     data class Area(val x: Int, val y: Int, val width: Int, val height: Int) {
         constructor(width: Int, height: Int) : this(0, 0, width, height)
         constructor(renderTarget: RenderTarget) : this(0, 0, renderTarget.width, renderTarget.height)
         constructor(textureView: GpuTextureView) : this(0, 0, textureView.getWidth(0), textureView.getHeight(0))
+
+        fun vanilla() = RenderPass.RenderArea(this.x, this.y, this.width, this.height)
     }
 
     class Builder(private val name: Supplier<String>) {
@@ -75,7 +84,7 @@ data class RenderDescriptor(
             return this
         }
 
-        fun withRenderTarget(renderTarget: RenderTarget): Builder = this.withRenderTarget(renderTarget, true)
+        fun withRenderTarget(renderTarget: RenderTarget) = this.withRenderTarget(renderTarget, true)
 
         fun withColorTexture(colorTexture: GpuTextureView): Builder {
             this.colorTexture = colorTexture
