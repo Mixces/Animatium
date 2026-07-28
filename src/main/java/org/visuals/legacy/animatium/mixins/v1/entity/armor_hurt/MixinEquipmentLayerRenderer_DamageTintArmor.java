@@ -72,7 +72,7 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
     @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorEntityGlint()Lnet/minecraft/client/renderer/rendertype/RenderType;"))
     private RenderType animatium$useOverlayArmorGlint(final Operation<RenderType> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.damageTintArmor && AnimatiumConfig.instance().other.glintAffectsArmorTint) {
-            return AnimatiumRenderTypes.ENTITY_ARMOR_GLINT_OVERLAY;
+            return AnimatiumRenderTypes.ARMOR_GLINT;
         } else {
             return original.call();
         }
