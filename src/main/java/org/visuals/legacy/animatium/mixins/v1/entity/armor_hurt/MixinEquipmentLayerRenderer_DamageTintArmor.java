@@ -73,18 +73,18 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
         }
     }
 
-    // TODO: Fix visual/OIT
     @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorCutoutNoCullGlint(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
-    private RenderType animatium$useOverlayArmorGlint(final Identifier texture, final Operation<RenderType> original) {
+    private RenderType animatium$disableVanillaGlint(final Identifier texture, final Operation<RenderType> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.damageTintArmor && AnimatiumConfig.instance().other.glintAffectsArmorTint) {
-            return RenderTypes.armorCutoutNoCull(texture);
+            return RenderTypes.entityCutoutZOffset(texture);
         } else {
             return original.call(texture);
         }
     }
 
+    // TODO: Fix OIT
     @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/OrderedSubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/texture/UvMapping;I)V", ordinal = 0))
-    private <S> void animatium$applyGlintRendering(final OrderedSubmitNodeCollector instance, final Model<? super S> model, final S state, final PoseStack poseStack, final RenderType renderType, final int lightCoords, final int overlayCoords, final int color, final @Nullable UvMapping uvMapping, final int outlineColor, final Operation<Void> original, @Local(name = "renderShaderGlint") final boolean renderShaderGlint) {
+    private <S> void animatium$useOverlayArmorGlint(final OrderedSubmitNodeCollector instance, final Model<? super S> model, final S state, final PoseStack poseStack, final RenderType renderType, final int lightCoords, final int overlayCoords, final int color, final @Nullable UvMapping uvMapping, final int outlineColor, final Operation<Void> original, @Local(name = "renderShaderGlint") final boolean renderShaderGlint) {
         original.call(instance, model, state, poseStack, renderType, lightCoords, overlayCoords, color, uvMapping, outlineColor);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.damageTintArmor && AnimatiumConfig.instance().other.glintAffectsArmorTint && renderShaderGlint) {
             original.call(instance, model, state, poseStack, AnimatiumRenderTypes.ARMOR_GLINT, lightCoords, overlayCoords, color, uvMapping, outlineColor);
