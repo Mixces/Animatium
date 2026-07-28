@@ -31,13 +31,13 @@ import com.mojang.renderpearl.api.vertex.VertexFormat
 
 object VertexLayouts {
     @JvmField
-    val POSITIONED_QUAD: VertexLayout = quads(DefaultVertexFormat.POSITION)
+    val POSITIONED_QUAD = quads(DefaultVertexFormat.POSITION)
 
     @JvmField
-    val POSITIONED_COLOR_QUAD: VertexLayout = quads(DefaultVertexFormat.POSITION_COLOR)
+    val POSITIONED_COLOR_QUAD = quads(DefaultVertexFormat.POSITION_COLOR)
 
     @JvmField
-    val POSITION_TEX_QUAD: VertexLayout = quads(DefaultVertexFormat.POSITION_TEX)
+    val POSITION_TEX_QUAD = quads(DefaultVertexFormat.POSITION_TEX)
 
-    private fun quads(vertexFormat: VertexFormat): VertexLayout = VertexLayout(vertexFormat, PrimitiveTopology.QUADS)
+    private fun quads(vertexFormat: VertexFormat) = VertexLayout(vertexFormat, PrimitiveTopology.QUADS)
 }

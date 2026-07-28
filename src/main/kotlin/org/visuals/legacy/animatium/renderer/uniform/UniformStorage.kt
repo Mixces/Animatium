@@ -55,7 +55,7 @@ interface UniformStorage : AutoCloseable {
             }
         }
 
-        fun <T> with(key: UniformKey<T>): Builder = with(key, null)
+        fun <T> with(key: UniformKey<T>) = with(key, null)
 
         abstract fun build(): UniformStorage
     }

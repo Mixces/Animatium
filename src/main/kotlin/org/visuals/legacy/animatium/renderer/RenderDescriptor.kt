@@ -59,7 +59,7 @@ data class RenderDescriptor(
         constructor(renderTarget: RenderTarget) : this(0, 0, renderTarget.width, renderTarget.height)
         constructor(textureView: GpuTextureView) : this(0, 0, textureView.getWidth(0), textureView.getHeight(0))
 
-        fun vanilla(): RenderPass.RenderArea = RenderPass.RenderArea(this.x, this.y, this.width, this.height)
+        fun vanilla() = RenderPass.RenderArea(this.x, this.y, this.width, this.height)
     }
 
     class Builder(private val name: Supplier<String>) {
@@ -73,6 +73,8 @@ data class RenderDescriptor(
             this.area = Area(0, 0, renderTarget.width, renderTarget.height)
             return this
         }
+
+        fun withRenderTarget(renderTarget: RenderTarget): Builder = this.withRenderTarget(renderTarget, true)
 
         fun withColorTexture(colorTexture: GpuTextureView): Builder {
             this.colorTexture = colorTexture

@@ -32,8 +32,8 @@ import net.minecraft.client.gui.components.debug.DebugScreenEntries
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.Identifier
 import org.visuals.legacy.animatium.config.AnimatiumConfig
-import org.visuals.legacy.animatium.handler.screen.debug.AnimatiumDebugEntry
 import org.visuals.legacy.animatium.handler.rendering.lighting.LegacyDiffuseLighting
+import org.visuals.legacy.animatium.handler.screen.debug.AnimatiumDebugEntry
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor
 import org.visuals.legacy.animatium.util.config.GeneralConfigUtil
 import org.visuals.legacy.animatium.util.reinitializeInventorySlots
@@ -61,7 +61,7 @@ object Animatium {
     }
 
     @JvmStatic
-    fun location(path: String): Identifier = Identifier.fromNamespaceAndPath(AnimatiumConstants.MOD_ID, path)
+    fun location(path: String) = Identifier.fromNamespaceAndPath(AnimatiumConstants.MOD_ID, path)
 
     @JvmStatic
     fun initialize() {

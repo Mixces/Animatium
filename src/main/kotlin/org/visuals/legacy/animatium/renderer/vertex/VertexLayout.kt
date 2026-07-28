@@ -31,6 +31,5 @@ import com.mojang.renderpearl.api.pipeline.PrimitiveTopology
 import com.mojang.renderpearl.api.vertex.VertexFormat
 
 data class VertexLayout(val vertexFormat: VertexFormat, val primitiveTopology: PrimitiveTopology) {
-    fun buffer(byteBufferBuilder: ByteBufferBuilder): BufferBuilder =
-        BufferBuilder(byteBufferBuilder, primitiveTopology, vertexFormat)
+    fun buffer(byteBufferBuilder: ByteBufferBuilder) = BufferBuilder(byteBufferBuilder, primitiveTopology, vertexFormat)
 }
