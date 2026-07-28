@@ -63,7 +63,7 @@ fun RenderPipeline.builder() = RenderPipeline.builder().apply {
     }
 
     for (define in shaderDefines.values) {
-        this.withShaderDefine(define.key)
+        this.withShaderDefine(define.key) // TODO: Int/Float value
     }
 
     for (layout in bindGroupLayouts) {

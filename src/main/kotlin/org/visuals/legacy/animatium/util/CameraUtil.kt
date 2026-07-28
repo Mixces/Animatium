@@ -40,10 +40,8 @@ fun Camera.getPositionLerped(): Float {
     )
 }
 
-fun CameraRenderState.getPositionLerped(): Float {
-    return Mth.lerp(
-        this.`animatium$getPartialTickTime`(),
-        this.`animatium$getOldEyeHeight`(),
-        this.`animatium$getEyeHeight`()
-    )
-}
+fun CameraRenderState.getPositionLerped() = Mth.lerp(
+    this.`animatium$getPartialTickTime`(),
+    this.`animatium$getOldEyeHeight`(),
+    this.`animatium$getEyeHeight`()
+)
