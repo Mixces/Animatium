@@ -28,6 +28,7 @@ package org.visuals.legacy.animatium.handler.rendering
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.textures.FilterMode
 import com.mojang.blaze3d.textures.GpuTextureView
+import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumPipelines
 import org.visuals.legacy.animatium.renderer.Renderer
 import org.visuals.legacy.animatium.renderer.buffer.BasicGeometry
 

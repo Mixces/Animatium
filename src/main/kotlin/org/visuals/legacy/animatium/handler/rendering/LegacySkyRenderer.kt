@@ -32,6 +32,7 @@ import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.util.ARGB
 import org.joml.Vector4f
 import org.visuals.legacy.animatium.config.AnimatiumConfig
+import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumPipelines
 import org.visuals.legacy.animatium.renderer.DynamicTransforms
 import org.visuals.legacy.animatium.renderer.Renderer
 import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry

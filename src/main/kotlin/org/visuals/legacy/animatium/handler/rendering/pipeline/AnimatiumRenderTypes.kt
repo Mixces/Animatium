@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.handler.rendering
+package org.visuals.legacy.animatium.handler.rendering.pipeline
 
 import net.minecraft.client.renderer.feature.ItemFeatureRenderer
 import net.minecraft.client.renderer.rendertype.LayeringTransform
