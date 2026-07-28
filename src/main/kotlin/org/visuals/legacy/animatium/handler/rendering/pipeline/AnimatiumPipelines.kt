@@ -25,14 +25,10 @@
 
 package org.visuals.legacy.animatium.handler.rendering.pipeline
 
-import com.mojang.blaze3d.GpuFormat
-import com.mojang.blaze3d.PrimitiveTopology
-import com.mojang.blaze3d.pipeline.*
-import com.mojang.blaze3d.platform.BlendFactor
-import com.mojang.blaze3d.platform.CompareOp
-import com.mojang.blaze3d.shaders.UniformType
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
-import com.mojang.blaze3d.vertex.VertexFormat
+import com.mojang.renderpearl.api.GpuFormat
+import com.mojang.renderpearl.api.pipeline.*
+import com.mojang.renderpearl.api.vertex.VertexFormat
 import net.minecraft.client.renderer.BindGroupLayouts
 import net.minecraft.client.renderer.RenderPipelines
 import org.visuals.legacy.animatium.Animatium.location
@@ -56,7 +52,11 @@ object AnimatiumPipelines {
 
     @JvmField
     val TEXTURED_QUAD = RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
-        .withBindGroupLayouts(BindGroupLayouts.MATRICES_PROJECTION, BindGroupLayouts.SAMPLER0)
+        .withBindGroupLayouts(
+            BindGroupLayouts.DYNAMIC_TRANSFORMS,
+            BindGroupLayouts.PROJECTION,
+            BindGroupLayouts.SAMPLER0
+        )
         .withPrimitiveTopology(PrimitiveTopology.QUADS)
         .buildSnippet()
 
@@ -103,6 +103,7 @@ object AnimatiumPipelines {
             .withVertexShader("core/position_color")
             .withFragmentShader("core/position_color")
             .withDepthStencilState(NO_DEPTH_WRITE)
+            .withColorTargetState(ColorTargetState.DEFAULT)
             .withVertexFormat(DefaultVertexFormat.POSITION_COLOR)
             .withPrimitiveTopology(PrimitiveTopology.QUADS)
             .buildSnippet()
@@ -121,6 +122,7 @@ object AnimatiumPipelines {
             .withVertexShader(location("core/legacy_sky"))
             .withFragmentShader(location("core/legacy_sky"))
             .withDepthStencilState(NO_DEPTH_WRITE)
+            .withColorTargetState(ColorTargetState.DEFAULT)
             .withVertexFormat(DefaultVertexFormat.POSITION)
             .withPrimitiveTopology(PrimitiveTopology.QUADS)
             .buildSnippet()
@@ -151,7 +153,7 @@ object AnimatiumPipelines {
     @JvmField
     val CLOUDS_SNIPPET = RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
         .withVertexShader(location("core/legacy_clouds"))
-        .withFragmentShader("core/rendertype_clouds")
+        .withFragmentShader("core/clouds")
         .withDepthStencilState(DepthStencilState.DEFAULT)
         .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
         .withVertexFormat(DefaultVertexFormat.POSITION_COLOR)
@@ -195,6 +197,7 @@ object AnimatiumPipelines {
             .withVertexShader("core/screenquad")
             .withFragmentShader(location("core/colorboost"))
             .withBindGroupLayout(BindGroupLayouts.SAMPLER0)
+            .withColorTargetState(ColorTargetState.DEFAULT)
             .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
             .build()
     )
@@ -212,6 +215,7 @@ object AnimatiumPipelines {
             .withVertexShader("core/screenquad")
             .withFragmentShader(location("core/legacy_lightmap"))
             .withBindGroupLayout(LEGACY_LIGHTMAP_INFO)
+            .withColorTargetState(ColorTargetState.DEFAULT)
             .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
             .build()
     )

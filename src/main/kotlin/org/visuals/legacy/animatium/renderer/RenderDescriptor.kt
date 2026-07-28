@@ -74,8 +74,6 @@ data class RenderDescriptor(
             return this
         }
 
-        fun withRenderTarget(renderTarget: RenderTarget): Builder = this.withRenderTarget(renderTarget, true)
-
         fun withColorTexture(colorTexture: GpuTextureView): Builder {
             this.colorTexture = colorTexture
             return this

@@ -25,9 +25,10 @@
 
 package org.visuals.legacy.animatium.handler.rendering.pipeline
 
-import com.mojang.blaze3d.pipeline.BindGroupLayout
-import com.mojang.blaze3d.pipeline.RenderPipeline
-import com.mojang.blaze3d.vertex.VertexFormat
+import com.mojang.renderpearl.api.pipeline.BindGroupLayout
+import com.mojang.renderpearl.api.pipeline.RenderPipeline
+import com.mojang.renderpearl.api.pipeline.ShaderType
+import com.mojang.renderpearl.api.vertex.VertexFormat
 import java.util.*
 
 fun RenderPipeline.Builder.withVertexFormat(vertexFormat: VertexFormat) = withVertexBinding(0, vertexFormat)
@@ -40,9 +41,17 @@ fun RenderPipeline.Builder.withBindGroupLayouts(vararg layouts: BindGroupLayout)
     return this
 }
 
-fun RenderPipeline.builder() = RenderPipeline.builder().apply {
-    this.withVertexShader(vertexShader)
-    this.withFragmentShader(fragmentShader)
+fun RenderPipeline.builder() = builderIgnoreDefines()
+
+fun RenderPipeline.builderIgnoreDefines(vararg ignoreDefines: String) = RenderPipeline.builder().apply {
+    for ((type, path) in shaders) {
+        if (type == ShaderType.VERTEX) {
+            this.withVertexShader(path)
+        } else if (type == ShaderType.FRAGMENT) {
+            this.withFragmentShader(path)
+        }
+    }
+
     this.withPolygonMode(polygonMode)
     this.withCull(isCull)
 
@@ -63,6 +72,10 @@ fun RenderPipeline.builder() = RenderPipeline.builder().apply {
     }
 
     for (define in shaderDefines.values) {
+        if (define.key in ignoreDefines) {
+            continue
+        }
+
         this.withShaderDefine(define.key) // TODO: Int/Float value
     }
 

@@ -25,12 +25,12 @@
 
 package org.visuals.legacy.animatium.util.rendering;
 
-import com.mojang.blaze3d.buffers.GpuBuffer;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.renderpearl.api.buffers.GpuBuffer;
+import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import net.minecraft.client.CloudStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.CloudRenderer;
@@ -246,11 +246,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
     }
 
     private void draw(final RenderPipeline pipeline, final Vector3f offset, final int color) {
-        RenderTarget cloudsTarget = Minecraft.getInstance().levelRenderer.cloudsTarget();
-        if (cloudsTarget == null) {
-            cloudsTarget = Minecraft.getInstance().gameRenderer.mainRenderTarget();
-        }
-
+        final RenderTarget cloudsTarget = Minecraft.getInstance().gameRenderer.mainRenderTarget();
         try (final Renderer renderer = Renderer.of(() -> "Legacy Clouds", cloudsTarget)) {
             renderer.setPipeline(pipeline);
             renderer.setUniform(DynamicTransforms.KEY, DynamicTransforms.builder()
