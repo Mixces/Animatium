@@ -39,7 +39,7 @@ import net.minecraft.util.Mth
 import org.joml.Matrix3x2f
 import org.joml.Matrix4f
 import org.joml.Vector4f
-import org.visuals.legacy.animatium.handler.rendering.AnimatiumPipelines
+import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumPipelines
 import org.visuals.legacy.animatium.handler.rendering.copyTextureToTexture
 import org.visuals.legacy.animatium.renderer.DynamicTransforms
 import org.visuals.legacy.animatium.renderer.RenderDescriptor

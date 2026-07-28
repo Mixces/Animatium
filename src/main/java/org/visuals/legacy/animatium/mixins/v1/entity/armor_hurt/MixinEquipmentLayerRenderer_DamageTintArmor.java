@@ -43,7 +43,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.handler.rendering.AnimatiumRenderTypes;
+import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumRenderTypes;
 
 @IfModAbsent("ichor")
 @Mixin(EquipmentLayerRenderer.class)

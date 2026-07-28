@@ -25,17 +25,15 @@
 
 package org.visuals.legacy.animatium.util.rendering;
 
+import com.mojang.blaze3d.buffers.GpuBuffer;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.renderpearl.api.GpuFormat;
-import com.mojang.renderpearl.api.buffers.GpuBuffer;
-import com.mojang.renderpearl.api.pipeline.*;
 import net.minecraft.client.CloudStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.CloudRenderer;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.ARGB;
@@ -45,7 +43,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import org.jspecify.annotations.NonNull;
-import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumPipelines;
 import org.visuals.legacy.animatium.renderer.DynamicTransforms;
 import org.visuals.legacy.animatium.renderer.Renderer;
 import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry;
@@ -62,29 +60,6 @@ import java.util.Optional;
  */
 public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Optional<CloudRenderer.TextureData>> implements AutoCloseable {
     public static final LegacyCloudRenderer INSTANCE = new LegacyCloudRenderer();
-
-    private static final RenderPipeline.Snippet CLOUDS_SNIPPET = RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
-            .withVertexShader(Animatium.location("core/legacy_clouds"))
-            .withFragmentShader("core/clouds")
-            .withDepthStencilState(DepthStencilState.DEFAULT)
-            .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
-            .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
-            .withPrimitiveTopology(PrimitiveTopology.QUADS)
-            .buildSnippet();
-
-    public static final RenderPipeline CLOUDS = RenderPipelines.register(RenderPipeline.builder(CLOUDS_SNIPPET)
-            .withLocation(Animatium.location("pipeline/legacy_clouds"))
-            .build());
-
-    public static final RenderPipeline FLAT_CLOUDS = RenderPipelines.register(RenderPipeline.builder(CLOUDS_SNIPPET)
-            .withLocation(Animatium.location("pipeline/legacy_flat_clouds"))
-            .withCull(false)
-            .build());
-
-    public static final RenderPipeline CLOUDS_DEPTH_ONLY = RenderPipelines.register(RenderPipeline.builder(CLOUDS_SNIPPET)
-            .withLocation("pipeline/clouds_depth_only")
-            .withColorTargetState(new ColorTargetState(Optional.of(BlendFunction.TRANSLUCENT), GpuFormat.RGBA8_UNORM, ColorTargetState.WRITE_NONE))
-            .build());
 
     private boolean needsRebuild = true;
     private CloudRenderer.RelativeCameraPos prevRelativeCameraPos = CloudRenderer.RelativeCameraPos.INSIDE_CLOUDS;
@@ -247,7 +222,7 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
             final float offsetTop = offsetBottom + 4.0F;
             final CloudRenderer.RelativeCameraPos relativeCameraPos = offsetTop < 0.0F ? CloudRenderer.RelativeCameraPos.ABOVE_CLOUDS : (offsetBottom > 0.0F ? CloudRenderer.RelativeCameraPos.BELOW_CLOUDS : CloudRenderer.RelativeCameraPos.INSIDE_CLOUDS);
 
-            final RenderPipeline pipeline = cloudStatus == CloudStatus.FANCY ? CLOUDS : FLAT_CLOUDS;
+            final RenderPipeline pipeline = cloudStatus == CloudStatus.FANCY ? AnimatiumPipelines.CLOUDS : AnimatiumPipelines.FLAT_CLOUDS;
             if (this.needsRebuild || cellX != this.prevCellX || cellZ != this.prevCellZ || relativeCameraPos != this.prevRelativeCameraPos || cloudStatus != this.prevType) {
                 this.needsRebuild = false;
                 this.prevRelativeCameraPos = relativeCameraPos;
@@ -261,8 +236,8 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
                 final float offsetX = (float) (x - cellX * 12.0F);
                 final float offsetZ = (float) (z - cellZ * 12.0F);
                 final Vector3f offset = new Vector3f(-offsetX, offsetBottom, -offsetZ);
-                if (pipeline != FLAT_CLOUDS) {
-                    this.draw(CLOUDS_DEPTH_ONLY, offset, cloudColor);
+                if (pipeline != AnimatiumPipelines.FLAT_CLOUDS) {
+                    this.draw(AnimatiumPipelines.CLOUDS_DEPTH_ONLY, offset, cloudColor);
                 }
 
                 this.draw(pipeline, offset, cloudColor);
@@ -271,7 +246,11 @@ public final class LegacyCloudRenderer extends SimplePreparableReloadListener<Op
     }
 
     private void draw(final RenderPipeline pipeline, final Vector3f offset, final int color) {
-        final RenderTarget cloudsTarget = Minecraft.getInstance().gameRenderer.mainRenderTarget();
+        RenderTarget cloudsTarget = Minecraft.getInstance().levelRenderer.cloudsTarget();
+        if (cloudsTarget == null) {
+            cloudsTarget = Minecraft.getInstance().gameRenderer.mainRenderTarget();
+        }
+
         try (final Renderer renderer = Renderer.of(() -> "Legacy Clouds", cloudsTarget)) {
             renderer.setPipeline(pipeline);
             renderer.setUniform(DynamicTransforms.KEY, DynamicTransforms.builder()

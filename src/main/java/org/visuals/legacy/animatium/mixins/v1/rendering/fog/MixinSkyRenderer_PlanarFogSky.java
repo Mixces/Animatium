@@ -40,7 +40,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.handler.rendering.AnimatiumPipelines;
+import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumPipelines;
 import org.visuals.legacy.animatium.handler.rendering.LegacySkyRenderer;
 
 @Mixin(SkyRenderer.class)
