@@ -33,6 +33,7 @@ import net.minecraft.util.ARGB
 import org.joml.Matrix4f
 import org.joml.Vector4f
 import org.visuals.legacy.animatium.config.AnimatiumConfig
+import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumPipelines
 import org.visuals.legacy.animatium.renderer.DynamicTransforms
 import org.visuals.legacy.animatium.renderer.Renderer
 import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry

@@ -23,49 +23,57 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.handler.rendering
+package org.visuals.legacy.animatium.handler.rendering.pipeline
 
-import com.mojang.blaze3d.pipeline.BlendFunction
-import com.mojang.blaze3d.pipeline.RenderPipeline
-import com.mojang.blaze3d.platform.DepthTestFunction
-import com.mojang.blaze3d.platform.DestFactor
-import com.mojang.blaze3d.platform.SourceFactor
+import com.mojang.blaze3d.GpuFormat
+import com.mojang.blaze3d.PrimitiveTopology
+import com.mojang.blaze3d.pipeline.*
+import com.mojang.blaze3d.platform.BlendFactor
+import com.mojang.blaze3d.platform.CompareOp
 import com.mojang.blaze3d.shaders.UniformType
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
+import net.minecraft.client.renderer.BindGroupLayouts
 import net.minecraft.client.renderer.RenderPipelines
 import org.visuals.legacy.animatium.Animatium.location
+import java.util.*
 
 object AnimatiumPipelines {
+    @JvmField
+    val NO_DEPTH_WRITE = DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false)
+
     // Panorama
     @JvmField
     val PANORAMA_BLEND = BlendFunction(
-        SourceFactor.SRC_ALPHA,
-        DestFactor.ONE_MINUS_SRC_ALPHA,
-        SourceFactor.ONE,
-        DestFactor.ZERO
+        BlendFactor.SRC_ALPHA,
+        BlendFactor.ONE_MINUS_SRC_ALPHA,
+        BlendFactor.ONE,
+        BlendFactor.ZERO
     )
 
+    fun panoramaBlendState(colorMask: @ColorTargetState.WriteMask Int) =
+        ColorTargetState(Optional.of(PANORAMA_BLEND), GpuFormat.RGBA8_UNORM, colorMask)
+
     @JvmField
-    val TEXTURED_QUAD = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
-        .withSampler("Sampler0")
+    val TEXTURED_QUAD = RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
+        .withBindGroupLayouts(BindGroupLayouts.MATRICES_PROJECTION, BindGroupLayouts.SAMPLER0)
+        .withPrimitiveTopology(PrimitiveTopology.QUADS)
         .buildSnippet()
 
     @JvmField
     val LEGACY_PANORAMA_SNIPPET = RenderPipeline.builder(TEXTURED_QUAD)
         .withVertexShader(location("core/legacy_panorama"))
         .withFragmentShader(location("core/legacy_panorama"))
-        .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
-        .withDepthWrite(false)
+        .withDepthStencilState(NO_DEPTH_WRITE)
         .withCull(false)
-        .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
+        .withVertexFormat(DefaultVertexFormat.POSITION)
         .buildSnippet()
 
     @JvmField
     val LEGACY_PANORAMA_1 = RenderPipelines.register(
         RenderPipeline.builder(LEGACY_PANORAMA_SNIPPET)
             .withLocation(location("pipeline/legacy_panorama_1"))
-            .withBlend(PANORAMA_BLEND)
+            .withColorTargetState(panoramaBlendState(ColorTargetState.WRITE_ALL))
             .build()
     )
 
@@ -73,8 +81,7 @@ object AnimatiumPipelines {
     val LEGACY_PANORAMA_2 = RenderPipelines.register(
         RenderPipeline.builder(LEGACY_PANORAMA_SNIPPET)
             .withLocation(location("pipeline/legacy_panorama_2"))
-            .withBlend(PANORAMA_BLEND)
-            .withColorWrite(true, false)
+            .withColorTargetState(panoramaBlendState(ColorTargetState.WRITE_COLOR))
             .build()
     )
 
@@ -84,11 +91,8 @@ object AnimatiumPipelines {
             .withLocation(location("pipeline/legacy_panorama_blur"))
             .withVertexShader(location("core/legacy_panorama_blur"))
             .withFragmentShader(location("core/legacy_panorama_blur"))
-            .withBlend(PANORAMA_BLEND)
-            .withColorWrite(true, false)
-            .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
-            .withDepthWrite(false)
-            .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
+            .withColorTargetState(panoramaBlendState(ColorTargetState.WRITE_COLOR))
+            .withVertexFormat(DefaultVertexFormat.POSITION_TEX)
             .build()
     )
 
@@ -98,8 +102,9 @@ object AnimatiumPipelines {
         RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
             .withVertexShader("core/position_color")
             .withFragmentShader("core/position_color")
-            .withDepthWrite(false)
-            .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS)
+            .withDepthStencilState(NO_DEPTH_WRITE)
+            .withVertexFormat(DefaultVertexFormat.POSITION_COLOR)
+            .withPrimitiveTopology(PrimitiveTopology.QUADS)
             .buildSnippet()
 
     @JvmField
@@ -115,8 +120,9 @@ object AnimatiumPipelines {
             .withLocation(location("pipeline/legacy_sky"))
             .withVertexShader(location("core/legacy_sky"))
             .withFragmentShader(location("core/legacy_sky"))
-            .withDepthWrite(false)
-            .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
+            .withDepthStencilState(NO_DEPTH_WRITE)
+            .withVertexFormat(DefaultVertexFormat.POSITION)
+            .withPrimitiveTopology(PrimitiveTopology.QUADS)
             .buildSnippet()
 
     @JvmField
@@ -141,6 +147,46 @@ object AnimatiumPipelines {
     else
         LEGACY_SKY
 
+    // Clouds
+    @JvmField
+    val CLOUDS_SNIPPET = RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
+        .withVertexShader(location("core/legacy_clouds"))
+        .withFragmentShader("core/rendertype_clouds")
+        .withDepthStencilState(DepthStencilState.DEFAULT)
+        .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
+        .withVertexFormat(DefaultVertexFormat.POSITION_COLOR)
+        .withPrimitiveTopology(PrimitiveTopology.QUADS)
+        .buildSnippet()
+
+    @JvmField
+    val CLOUDS = RenderPipelines.register(
+        RenderPipeline.builder(CLOUDS_SNIPPET)
+            .withLocation(location("pipeline/legacy_clouds"))
+            .build()
+    )
+
+    @JvmField
+    val FLAT_CLOUDS = RenderPipelines.register(
+        RenderPipeline.builder(CLOUDS_SNIPPET)
+            .withLocation(location("pipeline/legacy_flat_clouds"))
+            .withCull(false)
+            .build()
+    )
+
+    @JvmField
+    val CLOUDS_DEPTH_ONLY = RenderPipelines.register(
+        RenderPipeline.builder(CLOUDS_SNIPPET)
+            .withLocation(location("pipeline/legacy_clouds_depth_only"))
+            .withColorTargetState(
+                ColorTargetState(
+                    Optional.of(BlendFunction.TRANSLUCENT),
+                    GpuFormat.RGBA8_UNORM,
+                    ColorTargetState.WRITE_NONE
+                )
+            )
+            .build()
+    )
+
     // Color Boost
     @JvmField
     val COLOR_BOOST_BLIT: RenderPipeline = RenderPipelines.register(
@@ -148,20 +194,25 @@ object AnimatiumPipelines {
             .withLocation(location("pipeline/colorboost"))
             .withVertexShader("core/screenquad")
             .withFragmentShader(location("core/colorboost"))
-            .withSampler("Sampler0")
-            .withVertexFormat(DefaultVertexFormat.EMPTY, VertexFormat.Mode.TRIANGLES)
+            .withBindGroupLayout(BindGroupLayouts.SAMPLER0)
+            .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
             .build()
     )
 
     // Lighting
+    @JvmField
+    val LEGACY_LIGHTMAP_INFO: BindGroupLayout = BindGroupLayout.builder()
+        .withUniform("LightmapInfo", UniformType.UNIFORM_BUFFER)
+        .build()
+
     @JvmField
     val LEGACY_LIGHTMAP: RenderPipeline = RenderPipelines.register(
         RenderPipeline.builder()
             .withLocation(location("pipeline/legacy_lightmap"))
             .withVertexShader("core/screenquad")
             .withFragmentShader(location("core/legacy_lightmap"))
-            .withUniform("LightmapInfo", UniformType.UNIFORM_BUFFER)
-            .withVertexFormat(DefaultVertexFormat.EMPTY, VertexFormat.Mode.TRIANGLES)
+            .withBindGroupLayout(LEGACY_LIGHTMAP_INFO)
+            .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
             .build()
     )
 
@@ -174,19 +225,11 @@ object AnimatiumPipelines {
         .build()
 
     @JvmField
-    val ARMOR_GLINT = RenderPipelines.register(
-        RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
-            .withLocation(location("pipeline/armor_glint"))
-            .withVertexShader(location("core/armor_glint"))
-            .withFragmentShader(location("core/armor_glint"))
-            .withBindGroupLayout(BindGroupLayouts.MATRICES_PROJECTION)
-            .withBindGroupLayout(BindGroupLayouts.FOG)
-            .withBindGroupLayout(BindGroupLayouts.SAMPLER0_SAMPLER1)
-            .withCull(false)
-            .withDepthStencilState(DepthStencilState(CompareOp.EQUAL, false))
-            .withColorTargetState(ColorTargetState(BlendFunction.GLINT))
-            .withVertexBinding(0, POSITION_TEX_OVERLAY)
-            .withPrimitiveTopology(PrimitiveTopology.QUADS)
-            .build()
-    )
+    val ARMOR_GLINT = RenderPipelines.GLINT.builder()
+        .withLocation(location("pipeline/armor_glint"))
+        .withVertexShader(location("core/armor_glint"))
+        .withFragmentShader(location("core/armor_glint"))
+        .withBindGroupLayout(BindGroupLayouts.SAMPLER1)
+        .withVertexFormat(POSITION_TEX_OVERLAY)
+        .build()
 }
