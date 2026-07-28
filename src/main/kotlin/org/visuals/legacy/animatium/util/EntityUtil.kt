@@ -164,3 +164,5 @@ fun LivingEntity.getItemSwingSpeed(fallback: Int): Int {
 
     return fallback
 }
+
+fun Entity.getScale() = if (this is LivingEntity) this.scale else 1.0F
