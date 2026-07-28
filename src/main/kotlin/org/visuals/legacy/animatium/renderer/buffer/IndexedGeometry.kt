@@ -45,37 +45,36 @@ data class IndexedGeometry(
             vertexCount: Int,
             vertexConsumer: Consumer<VertexConsumer>,
             persistent: Boolean
-        ): IndexedGeometry {
-            ByteBufferBuilder.exactlySized(vertexLayout.vertexFormat.vertexSize * vertexCount)
-                .use { byteBufferBuilder ->
-                    val builder = vertexLayout.buffer(byteBufferBuilder)
-                    vertexConsumer.accept(builder)
+        ) = ByteBufferBuilder.exactlySized(vertexLayout.vertexFormat.vertexSize * vertexCount)
+            .use { byteBufferBuilder ->
+                val builder = vertexLayout.buffer(byteBufferBuilder)
+                vertexConsumer.accept(builder)
 
-                    builder.buildOrThrow().use { meshData ->
-                        val device = RenderSystem.getDevice()
-                        val vertexBuffer = device.createBuffer(
-                            { "Vertex buffer for " + vertexLayout.vertexFormat },
-                            GpuBuffer.USAGE_VERTEX,
-                            meshData.vertexBuffer()
-                        )
-                        return IndexedGeometry(vertexLayout, vertexBuffer, meshData.drawState().indexCount, persistent)
-                    }
+                builder.buildOrThrow().use { meshData ->
+                    val device = RenderSystem.getDevice()
+                    val vertexBuffer = device.createBuffer(
+                        { "Vertex buffer for " + vertexLayout.vertexFormat },
+                        GpuBuffer.USAGE_VERTEX,
+                        meshData.vertexBuffer()
+                    )
+
+                    IndexedGeometry(vertexLayout, vertexBuffer, meshData.drawState().indexCount, persistent)
                 }
-        }
+            }
 
         @JvmStatic
         fun compile(
             vertexLayout: VertexLayout,
             vertexCount: Int,
             vertexConsumer: Consumer<VertexConsumer>
-        ): IndexedGeometry = compile(vertexLayout, vertexCount, vertexConsumer, false)
+        ) = compile(vertexLayout, vertexCount, vertexConsumer, false)
 
         @JvmStatic
         fun compilePersistent(
             vertexLayout: VertexLayout,
             vertexCount: Int,
             vertexConsumer: Consumer<VertexConsumer>
-        ): IndexedGeometry = compile(vertexLayout, vertexCount, vertexConsumer, true)
+        ) = compile(vertexLayout, vertexCount, vertexConsumer, true)
     }
 
     override fun bind(pass: RenderPass, autoStorageIndexBuffer: RenderSystem.AutoStorageIndexBuffer) {
@@ -85,9 +84,9 @@ data class IndexedGeometry(
 
     override fun draw(pass: RenderPass) = pass.drawIndexed(indexCount, 1, 0, 0, 0)
 
-    override fun persistent(): Boolean = persistent
+    override fun persistent() = persistent
 
-    override fun isClosed(): Boolean = vertexBuffer.isClosed
+    override fun isClosed() = vertexBuffer.isClosed
 
     override fun close() = vertexBuffer.close()
 }

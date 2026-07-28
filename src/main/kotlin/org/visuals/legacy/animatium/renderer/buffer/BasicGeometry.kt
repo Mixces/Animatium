@@ -37,9 +37,9 @@ class BasicGeometry(val firstVertex: Int, val vertexCount: Int) : Geometry {
 
     override fun draw(pass: RenderPass) = pass.draw(vertexCount, 1, firstVertex, 0)
 
-    override fun persistent(): Boolean = true
+    override fun persistent() = true
 
-    override fun isClosed(): Boolean = false
+    override fun isClosed() = false
 
     override fun close() {
     }
