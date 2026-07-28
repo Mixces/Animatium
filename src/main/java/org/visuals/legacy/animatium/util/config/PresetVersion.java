@@ -240,7 +240,7 @@ public enum PresetVersion {
         // Values
         final MovementConfigCategory movement = AnimatiumConfig.instance().movement;
         movement.sneakAnimation = SneakAnimationSetting.VANILLA;
-        movement.longUnsneak = true;
+        movement.longUnsneak = false;
         movement.oldCapeMovement = false;
         movement.disableCapeLean = false;
         movement.disableCapeSwingRotation = false;
