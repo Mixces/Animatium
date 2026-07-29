@@ -223,9 +223,9 @@ object AnimatiumPipelines {
     // Glint
     @JvmField
     val POSITION_TEX_OVERLAY = VertexFormat.builder(0)
-        .addAttribute("Position", GpuFormat.RGB32_FLOAT)
-        .addAttribute("UV0", GpuFormat.RG32_FLOAT)
-        .addAttribute("UV1", GpuFormat.RG16_SINT)
+        .addAttribute(DefaultVertexFormat.POSITION_SEMANTIC_NAME, GpuFormat.RGB32_FLOAT)
+        .addAttribute(DefaultVertexFormat.UV0_SEMANTIC_NAME, GpuFormat.RG32_FLOAT)
+        .addAttribute(DefaultVertexFormat.UV1_SEMANTIC_NAME, GpuFormat.RG16_SINT)
         .build()
 
     @JvmField
