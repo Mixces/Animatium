@@ -36,6 +36,7 @@ import com.mojang.blaze3d.vertex.VertexFormat
 import net.minecraft.client.renderer.BindGroupLayouts
 import net.minecraft.client.renderer.RenderPipelines
 import org.visuals.legacy.animatium.Animatium.location
+import org.visuals.legacy.animatium.handler.rendering.clouds.CloudPipelineSet
 import java.util.*
 
 object AnimatiumPipelines {
@@ -142,6 +143,7 @@ object AnimatiumPipelines {
                 .build()
         )
 
+    @JvmStatic
     fun getSkyPipeline(planar: Boolean) = if (planar)
         LEGACY_SKY_PLANAR_FOG
     else
@@ -149,9 +151,9 @@ object AnimatiumPipelines {
 
     // Clouds
     @JvmField
-    val CLOUDS_SNIPPET = RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
+    val LEGACY_CLOUDS_SNIPPET = RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
         .withVertexShader(location("core/legacy_clouds"))
-        .withFragmentShader("core/rendertype_clouds")
+        .withFragmentShader(location("core/legacy_clouds"))
         .withDepthStencilState(DepthStencilState.DEFAULT)
         .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
         .withVertexFormat(DefaultVertexFormat.POSITION_COLOR)
@@ -159,33 +161,24 @@ object AnimatiumPipelines {
         .buildSnippet()
 
     @JvmField
-    val CLOUDS = RenderPipelines.register(
-        RenderPipeline.builder(CLOUDS_SNIPPET)
-            .withLocation(location("pipeline/legacy_clouds"))
-            .build()
+    val LEGACY_CLOUDS = CloudPipelineSet.create(
+        "legacy_clouds",
+        LEGACY_CLOUDS_SNIPPET
     )
 
     @JvmField
-    val FLAT_CLOUDS = RenderPipelines.register(
-        RenderPipeline.builder(CLOUDS_SNIPPET)
-            .withLocation(location("pipeline/legacy_flat_clouds"))
-            .withCull(false)
-            .build()
+    val LEGACY_CLOUDS_PLANAR = CloudPipelineSet.create(
+        "legacy_clouds_planar",
+        RenderPipeline.builder(LEGACY_CLOUDS_SNIPPET)
+            .withShaderDefine("PLANAR_FOG")
+            .buildSnippet()
     )
 
-    @JvmField
-    val CLOUDS_DEPTH_ONLY = RenderPipelines.register(
-        RenderPipeline.builder(CLOUDS_SNIPPET)
-            .withLocation(location("pipeline/legacy_clouds_depth_only"))
-            .withColorTargetState(
-                ColorTargetState(
-                    Optional.of(BlendFunction.TRANSLUCENT),
-                    GpuFormat.RGBA8_UNORM,
-                    ColorTargetState.WRITE_NONE
-                )
-            )
-            .build()
-    )
+    @JvmStatic
+    fun getCloudsSet(planar: Boolean) = if (planar)
+        LEGACY_CLOUDS_PLANAR
+    else
+        LEGACY_CLOUDS
 
     // Color Boost
     @JvmField

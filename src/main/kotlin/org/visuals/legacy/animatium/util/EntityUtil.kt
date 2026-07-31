@@ -50,6 +50,8 @@ import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
 import org.visuals.legacy.animatium.Animatium
 import org.visuals.legacy.animatium.config.AnimatiumConfig
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatureManager
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatures
 import org.visuals.legacy.animatium.mixins.accessor.LivingEntityAccessor
 import java.util.*
 import kotlin.math.exp
@@ -103,7 +105,7 @@ fun applySwingWhilstMining(level: ClientLevel?, player: Player, hitResult: HitRe
     if (activeHand == hand) {
         if (hitResult != null && hitResult.type == HitResult.Type.BLOCK) {
             val blockHitResult = hitResult as BlockHitResult
-            if (level != null && !level.getBlockState(blockHitResult.blockPos).isAir) {
+            if (level != null && !level.getBlockState(blockHitResult.blockPos).isAir && !ServerFeatureManager.isPresent(ServerFeatures.MINING_ITEM_USAGE)) {
                 level.addBreakingBlockEffect(blockHitResult.blockPos, blockHitResult.direction)
             }
         } else if (!AnimatiumConfig.instance().extras.alwaysUsageSwing) {
