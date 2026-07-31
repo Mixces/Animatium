@@ -271,7 +271,7 @@ class LegacyCloudRenderer : SimplePreparableReloadListener<Optional<TextureData>
             cloudsTarget = Minecraft.getInstance().gameRenderer.mainRenderTarget()
         }
 
-        Renderer.of({ "Legacy Clouds" }, cloudsTarget).use { renderer ->
+        Renderer.of({ "Legacy Clouds (${pipeline.location})" }, cloudsTarget).use { renderer ->
             renderer.setPipeline(pipeline)
             renderer.setUniform(
                 DynamicTransforms.KEY, DynamicTransforms.builder()
