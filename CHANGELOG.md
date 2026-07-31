@@ -9,6 +9,7 @@
     - this nice pink tint visual.
 - Legacy Clouds no longer go transparent into the fog, matching <=1.21.5
     - Planar sky fog also now affects clouds
+- Added "Smooth Particles" fix setting to restore smooth-rendering particles.
 
 ## Fixes
 

@@ -6,6 +6,7 @@ accessible class net/minecraft/client/gui/components/toasts/ToastManager$ToastIn
 accessible class com/mojang/blaze3d/pipeline/MainTarget$Dimension
 accessible class net/minecraft/client/renderer/CloudRenderer$RelativeCameraPos
 accessible class net/minecraft/client/gui/components/AbstractSelectionList$Entry
+accessible class net/minecraft/client/particle/ParticleResources$MutableSpriteSet
 
 accessible method com/mojang/blaze3d/pipeline/RenderPipeline$Builder <init> ()V
 accessible field com/mojang/blaze3d/pipeline/RenderPipeline$Builder definesBuilder Ljava/util/Optional;
