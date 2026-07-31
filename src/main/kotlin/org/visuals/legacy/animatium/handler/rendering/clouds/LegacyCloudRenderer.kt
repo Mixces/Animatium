@@ -25,13 +25,13 @@
 
 package org.visuals.legacy.animatium.handler.rendering.clouds
 
-import com.mojang.blaze3d.buffers.GpuBuffer
-import com.mojang.blaze3d.pipeline.RenderPipeline
 import com.mojang.blaze3d.platform.NativeImage
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.ByteBufferBuilder
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexConsumer
+import com.mojang.renderpearl.api.buffers.GpuBuffer
+import com.mojang.renderpearl.api.pipeline.RenderPipeline
 import net.minecraft.client.CloudStatus
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.CloudRenderer
@@ -266,11 +266,7 @@ class LegacyCloudRenderer : SimplePreparableReloadListener<Optional<TextureData>
     }
 
     private fun draw(pipeline: RenderPipeline, offset: Vector3f, color: Int) {
-        var cloudsTarget = Minecraft.getInstance().levelRenderer.cloudsTarget()
-        if (cloudsTarget == null) {
-            cloudsTarget = Minecraft.getInstance().gameRenderer.mainRenderTarget()
-        }
-
+        val cloudsTarget = Minecraft.getInstance().gameRenderer.mainRenderTarget()
         Renderer.of({ "Legacy Clouds (${pipeline.location})" }, cloudsTarget).use { renderer ->
             renderer.setPipeline(pipeline)
             renderer.setUniform(
