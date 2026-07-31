@@ -44,7 +44,7 @@ class OnboardingScreen(private val original: Screen?, private val accessedViaCom
     private var v1_8Button: Button? = null
     private var modernButton: Button? = null
 
-    private var presetVersion = PresetVersion.MODERN
+    private var presetVersion = PresetVersion.VANILLA
 
     override fun init() {
         if (!GeneralConfigUtil.getBoolean(GeneralConfigUtil.ONBOARDING_KEY) && !this.accessedViaCommands) {
@@ -53,7 +53,7 @@ class OnboardingScreen(private val original: Screen?, private val accessedViaCom
         }
 
         this.original?.init(this.width, this.height)
-        this.presetVersion = GeneralConfigUtil.getEnum(GeneralConfigUtil.PRESET_VERSION_KEY, PresetVersion.MODERN)
+        this.presetVersion = GeneralConfigUtil.getEnum(GeneralConfigUtil.PRESET_VERSION_KEY, PresetVersion.VANILLA)
 
         val buttonWidth = 100
         this.v1_7Button = this.addRenderableWidget(
@@ -71,7 +71,7 @@ class OnboardingScreen(private val original: Screen?, private val accessedViaCom
                 .bounds((this.width / 2) - (buttonWidth / 2), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
                 .build())
         this.modernButton = this.addRenderableWidget(
-            Button.builder(Component.literal("Modern")) { _: Button -> this.presetVersion = PresetVersion.MODERN }
+            Button.builder(Component.literal("Modern")) { _: Button -> this.presetVersion = PresetVersion.VANILLA }
                 .bounds(
                     ((this.width / 2) - (buttonWidth / 2) + (buttonWidth + Button.DEFAULT_SPACING)),
                     this.height / 2,
@@ -183,6 +183,6 @@ class OnboardingScreen(private val original: Screen?, private val accessedViaCom
     private fun updateVersionButtonState() {
         this.v1_7Button?.active = this.presetVersion != PresetVersion.V1_7
         this.v1_8Button?.active = this.presetVersion != PresetVersion.V1_8
-        this.modernButton?.active = this.presetVersion != PresetVersion.MODERN
+        this.modernButton?.active = this.presetVersion != PresetVersion.VANILLA
     }
 }
