@@ -36,7 +36,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.visuals.legacy.animatium.util.rendering.LegacyCloudRenderer;
+import org.visuals.legacy.animatium.handler.rendering.clouds.LegacyCloudRenderer;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft_LoadLegacyClouds {
