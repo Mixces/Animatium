@@ -7,5 +7,10 @@
 - Added new "Glint Affects Armor Tint" setting for damage armor overlay.
     - In 1.8-1.14.4, the overlay tint would also affect the glint rendering on armor, producing
     - this nice pink tint visual.
+- Legacy Clouds no longer go transparent into the fog, matching <=1.21.5
+    - Planar sky fog also now affects clouds
 
 ## Fixes
+
+- Fixed Legacy Cloud Rendering Crash
+- Fixed duplicate particles when usage mining if the server feature is also enabled

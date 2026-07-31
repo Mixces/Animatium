@@ -7,12 +7,20 @@
 in vec3 Position;
 in vec4 Color;
 
-out float vertexDistance;
+out float cylindricalVertexDistance;
+out float sphericalVertexDistance;
 out vec4 vertexColor;
 
 void main() {
     vec3 pos = Position + ModelOffset;
     gl_Position = ProjMat * ModelViewMat * vec4(pos, 1.0);
-    vertexDistance = fog_spherical_distance(pos);
+#ifdef PLANAR_FOG
+    float dist = abs(eye.z);
+    cylindricalVertexDistance = dist;
+    sphericalVertexDistance = dist;
+#else
+    cylindricalVertexDistance = fog_cylindrical_distance(pos);
+    sphericalVertexDistance = fog_spherical_distance(pos);
+#endif
     vertexColor = Color * ColorModulator;
 }
