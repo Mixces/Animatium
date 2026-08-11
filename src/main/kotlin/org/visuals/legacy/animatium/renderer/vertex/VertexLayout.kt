@@ -25,11 +25,11 @@
 
 package org.visuals.legacy.animatium.renderer.vertex
 
-import com.mojang.blaze3d.PrimitiveTopology
 import com.mojang.blaze3d.vertex.BufferBuilder
 import com.mojang.blaze3d.vertex.ByteBufferBuilder
 import com.mojang.blaze3d.vertex.VertexFormat
+import com.mojang.blaze3d.vertex.VertexFormat.Mode
 
-data class VertexLayout(val vertexFormat: VertexFormat, val primitiveTopology: PrimitiveTopology) {
+data class VertexLayout(val vertexFormat: VertexFormat, val primitiveTopology: Mode) {
     fun buffer(byteBufferBuilder: ByteBufferBuilder) = BufferBuilder(byteBufferBuilder, primitiveTopology, vertexFormat)
 }

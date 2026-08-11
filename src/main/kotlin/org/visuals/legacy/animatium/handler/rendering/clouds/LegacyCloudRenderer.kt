@@ -266,9 +266,9 @@ class LegacyCloudRenderer : SimplePreparableReloadListener<Optional<TextureData>
     }
 
     private fun draw(pipeline: RenderPipeline, offset: Vector3f, color: Int) {
-        var cloudsTarget = Minecraft.getInstance().levelRenderer.cloudsTarget()
+        var cloudsTarget = Minecraft.getInstance().levelRenderer.cloudsTarget
         if (cloudsTarget == null) {
-            cloudsTarget = Minecraft.getInstance().gameRenderer.mainRenderTarget()
+            cloudsTarget = Minecraft.getInstance().mainRenderTarget
         }
 
         Renderer.of({ "Legacy Clouds (${pipeline.location})" }, cloudsTarget).use { renderer ->

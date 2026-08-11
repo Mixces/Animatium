@@ -80,7 +80,7 @@ object DynamicTransforms {
         }
 
         fun build() = RenderSystem.getDynamicUniforms().writeTransform(
-            this.modelViewMatrix ?: RenderSystem.getModelViewMatrixCopy(),
+            this.modelViewMatrix ?: Matrix4f(RenderSystem.getModelViewMatrix()),
             this.shaderColor,
             this.modelOffset,
             this.textureMatrix ?: Matrix4f()

@@ -37,7 +37,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
         DustParticleBase.class,
         ExplodeParticle.class,
         FallingDustParticle.class,
-        GeyserPlumeParticle.class,
         GlowParticle.class,
         GustParticle.class,
         HugeExplosionParticle.class,

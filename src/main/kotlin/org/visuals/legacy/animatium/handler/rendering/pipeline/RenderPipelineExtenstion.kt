@@ -25,48 +25,34 @@
 
 package org.visuals.legacy.animatium.handler.rendering.pipeline
 
-import com.mojang.blaze3d.pipeline.BindGroupLayout
 import com.mojang.blaze3d.pipeline.RenderPipeline
-import com.mojang.blaze3d.vertex.VertexFormat
-import java.util.*
-
-fun RenderPipeline.Builder.withVertexFormat(vertexFormat: VertexFormat) = withVertexBinding(0, vertexFormat)
-
-fun RenderPipeline.Builder.withBindGroupLayouts(vararg layouts: BindGroupLayout): RenderPipeline.Builder {
-    for (layout in layouts) {
-        this.withBindGroupLayout(layout)
-    }
-
-    return this
-}
 
 fun RenderPipeline.builder() = RenderPipeline.builder().apply {
     this.withVertexShader(vertexShader)
     this.withFragmentShader(fragmentShader)
     this.withPolygonMode(polygonMode)
+    this.withColorWrite(isWriteColor, isWriteAlpha)
+    this.withDepthWrite(isWriteDepth)
+    this.withDepthTestFunction(depthTestFunction)
+    this.withDepthBias(depthBiasScaleFactor, depthBiasConstant)
     this.withCull(isCull)
+    this.withVertexFormat(vertexFormat, vertexFormatMode)
 
-    this.withDepthStencilState(Optional.ofNullable(depthStencilState))
-    for ((index, state) in colorTargetStates.withIndex()) {
-        if (state != null) {
-            this.withColorTargetState(index, state)
-        } else {
-            this.withUnusedColorTargetState(index)
-        }
-    }
-
-    this.withPrimitiveTopology(primitiveTopology)
-    for ((binding, vertexFormat) in vertexFormatBindings.withIndex()) {
-        if (vertexFormat != null) {
-            this.withVertexBinding(binding, vertexFormat)
-        }
+    if (blendFunction.isPresent) {
+        this.withBlend(blendFunction.get())
+    } else {
+        this.withoutBlend()
     }
 
     for (define in shaderDefines.values) {
         this.withShaderDefine(define.key) // TODO: Int/Float value
     }
 
-    for (layout in bindGroupLayouts) {
-        this.withBindGroupLayout(layout)
+    for (description in uniforms) {
+        this.withUniform(description.name, description.type)
+    }
+
+    for (sampler in samplers) {
+        this.withSampler(sampler)
     }
 }

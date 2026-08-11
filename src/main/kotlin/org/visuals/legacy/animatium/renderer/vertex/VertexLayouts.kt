@@ -25,9 +25,9 @@
 
 package org.visuals.legacy.animatium.renderer.vertex
 
-import com.mojang.blaze3d.PrimitiveTopology
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
+import com.mojang.blaze3d.vertex.VertexFormat.Mode
 
 object VertexLayouts {
     @JvmField
@@ -39,5 +39,5 @@ object VertexLayouts {
     @JvmField
     val POSITION_TEX_QUAD = quads(DefaultVertexFormat.POSITION_TEX)
 
-    private fun quads(vertexFormat: VertexFormat) = VertexLayout(vertexFormat, PrimitiveTopology.QUADS)
+    private fun quads(vertexFormat: VertexFormat) = VertexLayout(vertexFormat, Mode.QUADS)
 }

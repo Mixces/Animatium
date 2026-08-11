@@ -25,7 +25,7 @@
 
 package org.visuals.legacy.animatium.handler.rendering.pipeline
 
-import net.minecraft.client.renderer.feature.ItemFeatureRenderer
+import net.minecraft.client.renderer.entity.ItemRenderer
 import net.minecraft.client.renderer.rendertype.LayeringTransform
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
@@ -37,7 +37,7 @@ object AnimatiumRenderTypes {
     val ARMOR_GLINT = RenderType.create(
         "animatium_armor_glint",
         RenderSetup.builder(AnimatiumPipelines.ARMOR_GLINT)
-            .withTexture("Sampler0", ItemFeatureRenderer.ENCHANTED_GLINT_ARMOR)
+            .withTexture("Sampler0", ItemRenderer.ENCHANTED_GLINT_ARMOR)
             .setTextureTransform(TextureTransform.ARMOR_ENTITY_GLINT_TEXTURING)
             .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
             .useOverlay()

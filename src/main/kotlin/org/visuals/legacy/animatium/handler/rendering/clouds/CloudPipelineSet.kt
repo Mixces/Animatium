@@ -25,14 +25,11 @@
 
 package org.visuals.legacy.animatium.handler.rendering.clouds
 
-import com.mojang.blaze3d.GpuFormat
 import com.mojang.blaze3d.pipeline.BlendFunction
-import com.mojang.blaze3d.pipeline.ColorTargetState
 import com.mojang.blaze3d.pipeline.RenderPipeline
 import net.minecraft.client.CloudStatus
 import net.minecraft.client.renderer.RenderPipelines
 import org.visuals.legacy.animatium.Animatium.location
-import java.util.*
 
 data class CloudPipelineSet(
     val defaultPipeline: RenderPipeline,
@@ -50,13 +47,8 @@ data class CloudPipelineSet(
             val depthOnlyPipeline = RenderPipelines.register(
                 RenderPipeline.builder(snippet)
                     .withLocation(location("pipeline/${name}_depth_only"))
-                    .withColorTargetState(
-                        ColorTargetState(
-                            Optional.of(BlendFunction.TRANSLUCENT),
-                            GpuFormat.RGBA8_UNORM,
-                            ColorTargetState.WRITE_NONE
-                        )
-                    )
+                    .withBlend(BlendFunction.TRANSLUCENT)
+                    .withColorWrite(false)
                     .build()
             )
 

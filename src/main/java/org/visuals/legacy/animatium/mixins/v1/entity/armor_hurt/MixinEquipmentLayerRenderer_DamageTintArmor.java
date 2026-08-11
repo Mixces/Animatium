@@ -54,16 +54,16 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
     @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorCutoutNoCull(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
     private RenderType animatium$renderLayerArmorTint(final Identifier texture, final Operation<RenderType> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.damageTintArmor) {
-            return RenderTypes.entityCutoutZOffset(texture);
+            return RenderTypes.entityCutoutNoCullZOffset(texture);
         } else {
             return original.call(texture);
         }
     }
 
     @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/Sheets;armorTrimsSheet(Z)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
-    private RenderType animatium$renderLayerArmorTrimTint(final boolean decal, final Operation<RenderType> original, @Local(name = "sprite") final TextureAtlasSprite sprite) {
+    private RenderType animatium$renderLayerArmorTrimTint(final boolean decal, final Operation<RenderType> original, @Local(ordinal = 0) final TextureAtlasSprite sprite) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.damageTintArmor) {
-            return RenderTypes.entityCutoutZOffset(sprite.atlasLocation());
+            return RenderTypes.entityCutoutNoCullZOffset(sprite.atlasLocation());
         } else {
             return original.call(decal);
         }
@@ -79,7 +79,7 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
     }
 
     @ModifyExpressionValue(method = RENDER_LAYERS_TARGET, at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/texture/OverlayTexture;NO_OVERLAY:I", opcode = Opcodes.GETSTATIC))
-    private <S> int animatium$applyOverlayUV(final int original, @Local(argsOnly = true, name = "state") final S entityRenderState) {
+    private <S> int animatium$applyOverlayUV(final int original, @Local(argsOnly = true, ordinal = 0) final S entityRenderState) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.damageTintArmor && entityRenderState instanceof LivingEntityRenderState livingEntityRenderState) {
             return OverlayTexture.pack(0, OverlayTexture.v(livingEntityRenderState.hasRedOverlay));
         } else {
