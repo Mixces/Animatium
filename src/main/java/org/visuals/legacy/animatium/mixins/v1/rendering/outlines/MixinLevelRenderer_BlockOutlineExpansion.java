@@ -38,7 +38,7 @@ import org.visuals.legacy.animatium.util.UtilsKt;
 
 @Mixin(LevelRenderer.class)
 public abstract class MixinLevelRenderer_BlockOutlineExpansion {
-    @WrapOperation(method = "submitHitOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/state/level/BlockOutlineRenderState;shape()Lnet/minecraft/world/phys/shapes/VoxelShape;"))
+    @WrapOperation(method = "renderHitOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/state/level/BlockOutlineRenderState;shape()Lnet/minecraft/world/phys/shapes/VoxelShape;"))
     private VoxelShape animatium$blockOutlineRendering(final BlockOutlineRenderState instance, final Operation<VoxelShape> original) {
         final VoxelShape shape = original.call(instance);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.blockOutlineRendering) {
