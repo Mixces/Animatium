@@ -27,16 +27,17 @@ package org.visuals.legacy.animatium.renderer.vertex
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
+import com.mojang.blaze3d.vertex.VertexFormat.Mode
 
 object VertexLayouts {
     @JvmField
-    val POSITIONED_QUAD: VertexLayout = quads(DefaultVertexFormat.POSITION)
+    val POSITIONED_QUAD = quads(DefaultVertexFormat.POSITION)
 
     @JvmField
-    val POSITIONED_COLOR_QUAD: VertexLayout = quads(DefaultVertexFormat.POSITION_COLOR)
+    val POSITIONED_COLOR_QUAD = quads(DefaultVertexFormat.POSITION_COLOR)
 
     @JvmField
-    val POSITION_TEX_QUAD: VertexLayout = quads(DefaultVertexFormat.POSITION_TEX)
+    val POSITION_TEX_QUAD = quads(DefaultVertexFormat.POSITION_TEX)
 
-    private fun quads(vertexFormat: VertexFormat): VertexLayout = VertexLayout(vertexFormat, VertexFormat.Mode.QUADS)
+    private fun quads(vertexFormat: VertexFormat) = VertexLayout(vertexFormat, Mode.QUADS)
 }

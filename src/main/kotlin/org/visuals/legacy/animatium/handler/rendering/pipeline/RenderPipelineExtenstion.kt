@@ -23,26 +23,29 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.handler.rendering
+package org.visuals.legacy.animatium.handler.rendering.pipeline
 
-import net.minecraft.util.Mth
-import net.minecraft.world.entity.Entity
-import org.visuals.legacy.animatium.util.getLegacyBrightness
+import com.mojang.blaze3d.pipeline.RenderPipeline
+import java.util.*
 
-class LegacyFogDarkness {
-    companion object {
-        @JvmStatic
-        val instance = LegacyFogDarkness()
+fun RenderPipeline.builder() = RenderPipeline.builder().apply {
+    this.withVertexShader(vertexShader)
+    this.withFragmentShader(fragmentShader)
+    this.withPolygonMode(polygonMode)
+    this.withColorTargetState(colorTargetState)
+    this.withDepthStencilState(Optional.ofNullable(depthStencilState))
+    this.withCull(isCull)
+    this.withVertexFormat(vertexFormat, vertexFormatMode)
+
+    for (define in shaderDefines.values) {
+        this.withShaderDefine(define.key) // TODO: Int/Float value
     }
 
-    private var prevDarkness: Float = 0.0F
-    private var darkness: Float = 0.0F
-
-    fun tick(entity: Entity, viewDistance: Int) {
-        val brightness = entity.level().getLegacyBrightness(entity.blockPosition())
-        this.prevDarkness = this.darkness
-        this.darkness = Mth.lerp(0.1F, this.darkness, Mth.lerp(brightness, viewDistance / 32.0F, 1.0F))
+    for (description in uniforms) {
+        this.withUniform(description.name, description.type)
     }
 
-    fun getDarkness(tickDelta: Float) = Mth.lerp(tickDelta, this.prevDarkness, this.darkness)
+    for (sampler in samplers) {
+        this.withSampler(sampler)
+    }
 }

@@ -34,7 +34,7 @@ import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 import org.visuals.legacy.animatium.mixins.accessor.PlayerAccessor
 
-fun toRadians(angle: Float): Float = angle * Mth.DEG_TO_RAD
+fun toRadians(angle: Float) = angle * Mth.DEG_TO_RAD
 
 fun expandVoxelShape(shape: VoxelShape, value: Double): VoxelShape {
     var voxelShape = Shapes.empty()

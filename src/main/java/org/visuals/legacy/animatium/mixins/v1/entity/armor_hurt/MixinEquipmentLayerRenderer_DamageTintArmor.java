@@ -25,29 +25,33 @@
 
 package org.visuals.legacy.animatium.mixins.v1.entity.armor_hurt;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer;
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.Identifier;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumRenderTypes;
 
 @IfModAbsent("ichor")
 @Mixin(EquipmentLayerRenderer.class)
 public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
-    @WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/Identifier;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorCutoutNoCull(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
+    @Unique
+    private static final String RENDER_LAYERS_TARGET = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/Identifier;II)V";
+
+    @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorCutoutNoCull(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
     private RenderType animatium$renderLayerArmorTint(final Identifier texture, final Operation<RenderType> original) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.damageTintArmor) {
             return RenderTypes.entityCutoutZOffset(texture);
@@ -56,27 +60,26 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
         }
     }
 
-    @WrapOperation(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/Identifier;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/Sheets;armorTrimsSheet(Z)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
-    private RenderType animatium$renderLayerArmorTrimTint(final boolean decal, final Operation<RenderType> original, @Local(name = "sprite") final TextureAtlasSprite textureAtlasSprite) {
+    @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/Sheets;armorTrimsSheet(Z)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
+    private RenderType animatium$renderLayerArmorTrimTint(final boolean decal, final Operation<RenderType> original, @Local(name = "sprite") final TextureAtlasSprite sprite) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.damageTintArmor) {
-            return RenderTypes.entityCutoutZOffset(textureAtlasSprite.atlasLocation());
+            return RenderTypes.entityCutoutZOffset(sprite.atlasLocation());
         } else {
             return original.call(decal);
         }
     }
 
-    @ModifyArg(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/Identifier;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/OrderedSubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"), index = 5)
-    private <S> int animatium$modifyUVArmorTint(final int original, @Local(argsOnly = true, name = "state") final S state) {
-        return this.animatium$getPackUv(original, (EntityRenderState) state);
+    @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorEntityGlint()Lnet/minecraft/client/renderer/rendertype/RenderType;"))
+    private RenderType animatium$useOverlayArmorGlint(final Operation<RenderType> original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.damageTintArmor && AnimatiumConfig.instance().other.glintAffectsArmorTint) {
+            return AnimatiumRenderTypes.ARMOR_GLINT;
+        } else {
+            return original.call();
+        }
     }
 
-    @ModifyArg(method = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/Identifier;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/OrderedSubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"), index = 5)
-    private <S> int animatium$modifyUVTrimTint(final int original, @Local(argsOnly = true, name = "state") final S state) {
-        return this.animatium$getPackUv(original, (EntityRenderState) state);
-    }
-
-    @Unique
-    private int animatium$getPackUv(final int original, final EntityRenderState entityRenderState) {
+    @ModifyExpressionValue(method = RENDER_LAYERS_TARGET, at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/texture/OverlayTexture;NO_OVERLAY:I", opcode = Opcodes.GETSTATIC))
+    private <S> int animatium$applyOverlayUV(final int original, @Local(argsOnly = true, name = "state") final S entityRenderState) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.damageTintArmor && entityRenderState instanceof LivingEntityRenderState livingEntityRenderState) {
             return OverlayTexture.pack(0, OverlayTexture.v(livingEntityRenderState.hasRedOverlay));
         } else {

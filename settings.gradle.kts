@@ -24,9 +24,9 @@ stonecutter {
 			}
 		}
 
-		mc("26.1", listOf("fabric"))
+		mc("26.1.2", listOf("fabric"))
 
-		vcsVersion = "26.1-fabric"
+		vcsVersion = "26.1.2-fabric"
 	}
 }
 

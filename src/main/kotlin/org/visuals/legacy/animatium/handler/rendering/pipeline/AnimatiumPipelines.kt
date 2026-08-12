@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.handler.rendering
+package org.visuals.legacy.animatium.handler.rendering.pipeline
 
 import com.mojang.blaze3d.pipeline.BlendFunction
 import com.mojang.blaze3d.pipeline.ColorTargetState
@@ -35,8 +35,10 @@ import com.mojang.blaze3d.platform.SourceFactor
 import com.mojang.blaze3d.shaders.UniformType
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
+import com.mojang.blaze3d.vertex.VertexFormatElement
 import net.minecraft.client.renderer.RenderPipelines
 import org.visuals.legacy.animatium.Animatium.location
+import org.visuals.legacy.animatium.handler.rendering.clouds.CloudPipelineSet
 import java.util.*
 
 object AnimatiumPipelines {
@@ -64,7 +66,7 @@ object AnimatiumPipelines {
     val LEGACY_PANORAMA_SNIPPET = RenderPipeline.builder(TEXTURED_QUAD)
         .withVertexShader(location("core/legacy_panorama"))
         .withFragmentShader(location("core/legacy_panorama"))
-        // .withDepthStencilState(NO_DEPTH_WRITE) // TODO/NOTE: Panorama only works when either using GT_OR_EQL, or disabling this line in 26.1.x.
+        .withDepthStencilState(DepthStencilState(CompareOp.ALWAYS_PASS, false))
         .withCull(false)
         .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
         .buildSnippet()
@@ -140,10 +142,41 @@ object AnimatiumPipelines {
                 .build()
         )
 
+    @JvmStatic
     fun getSkyPipeline(planar: Boolean) = if (planar)
         LEGACY_SKY_PLANAR_FOG
     else
         LEGACY_SKY
+
+    // Clouds
+    @JvmField
+    val LEGACY_CLOUDS_SNIPPET = RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
+        .withVertexShader(location("core/legacy_clouds"))
+        .withFragmentShader(location("core/legacy_clouds"))
+        .withDepthStencilState(DepthStencilState.DEFAULT)
+        .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
+        .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS)
+        .buildSnippet()
+
+    @JvmField
+    val LEGACY_CLOUDS = CloudPipelineSet.create(
+        "legacy_clouds",
+        LEGACY_CLOUDS_SNIPPET
+    )
+
+    @JvmField
+    val LEGACY_CLOUDS_PLANAR = CloudPipelineSet.create(
+        "legacy_clouds_planar",
+        RenderPipeline.builder(LEGACY_CLOUDS_SNIPPET)
+            .withShaderDefine("PLANAR_FOG")
+            .buildSnippet()
+    )
+
+    @JvmStatic
+    fun getCloudsSet(planar: Boolean) = if (planar)
+        LEGACY_CLOUDS_PLANAR
+    else
+        LEGACY_CLOUDS
 
     // Color Boost
     @JvmField
@@ -168,4 +201,21 @@ object AnimatiumPipelines {
             .withVertexFormat(DefaultVertexFormat.EMPTY, VertexFormat.Mode.TRIANGLES)
             .build()
     )
+
+    // Glint
+    @JvmField
+    val POSITION_TEX_OVERLAY = VertexFormat.builder()
+        .add("Position", VertexFormatElement.POSITION)
+        .add("UV0", VertexFormatElement.UV0)
+        .add("UV1", VertexFormatElement.UV1)
+        .build()
+
+    @JvmField
+    val ARMOR_GLINT = RenderPipelines.GLINT.builder()
+        .withLocation(location("pipeline/armor_glint"))
+        .withVertexShader(location("core/armor_glint"))
+        .withFragmentShader(location("core/armor_glint"))
+        .withSampler("Sampler1")
+        .withVertexFormat(POSITION_TEX_OVERLAY, VertexFormat.Mode.QUADS)
+        .build()
 }

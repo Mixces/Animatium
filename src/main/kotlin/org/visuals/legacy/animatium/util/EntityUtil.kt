@@ -48,9 +48,10 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.LevelReader
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
-import net.minecraft.world.phys.Vec3
 import org.visuals.legacy.animatium.Animatium
 import org.visuals.legacy.animatium.config.AnimatiumConfig
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatureManager
+import org.visuals.legacy.animatium.handler.server_features.ServerFeatures
 import org.visuals.legacy.animatium.mixins.accessor.LivingEntityAccessor
 import java.util.*
 import kotlin.math.exp
@@ -62,22 +63,17 @@ fun getHandMultiplier(player: Player): Int {
     return direction * getHandMultiplier(player, hand)
 }
 
-fun getHandMultiplier(player: Player, hand: InteractionHand): Int {
-    return getArmMultiplier(if (hand == InteractionHand.MAIN_HAND) player.mainArm else player.mainArm.opposite)
-}
+fun getHandMultiplier(player: Player, hand: InteractionHand) =
+    getArmMultiplier(if (hand == InteractionHand.MAIN_HAND) player.mainArm else player.mainArm.opposite)
 
-fun getArmMultiplier(arm: HumanoidArm): Int {
-    return if (arm == HumanoidArm.RIGHT) 1 else -1
-}
+fun getArmMultiplier(arm: HumanoidArm) = if (arm == HumanoidArm.RIGHT) 1 else -1
 
-fun Player.getPosWithEyeHeight(tickDelta: Float, eyeHeight: Double): Vec3 {
-    return this.getPosition(tickDelta).add(0.0, eyeHeight, 0.0)
-}
+fun Player.getPosWithEyeHeight(tickDelta: Float, eyeHeight: Double) =
+    this.getPosition(tickDelta).add(0.0, eyeHeight, 0.0)
 
-fun isBlockingArm(arm: HumanoidArm, armedEntityState: ArmedEntityRenderState): Boolean {
-    return (arm == HumanoidArm.LEFT && armedEntityState.leftArmPose == HumanoidModel.ArmPose.BLOCK) ||
+fun isBlockingArm(arm: HumanoidArm, armedEntityState: ArmedEntityRenderState) =
+    (arm == HumanoidArm.LEFT && armedEntityState.leftArmPose == HumanoidModel.ArmPose.BLOCK) ||
             (arm == HumanoidArm.RIGHT && armedEntityState.rightArmPose == HumanoidModel.ArmPose.BLOCK)
-}
 
 fun Player.fakeHandSwing(hand: InteractionHand) {
     // Fake Swinging, Doesn't Send A Packet
@@ -100,9 +96,8 @@ fun LocalPlayer.sendSwingPacket(hand: InteractionHand) {
     this.connection.send(ServerboundSwingPacket(hand))
 }
 
-fun Player.isNotSwinging(): Boolean {
-    return !this.swinging || this.swingTime >= (this as LivingEntityAccessor).`animatium$getSwingDuration`() / 2 || this.swingTime < 0
-}
+fun Player.isNotSwinging() =
+    !this.swinging || this.swingTime >= (this as LivingEntityAccessor).`animatium$getSwingDuration`() / 2 || this.swingTime < 0
 
 fun applySwingWhilstMining(level: ClientLevel?, player: Player, hitResult: HitResult?) {
     val activeHand = player.usedItemHand
@@ -110,7 +105,7 @@ fun applySwingWhilstMining(level: ClientLevel?, player: Player, hitResult: HitRe
     if (activeHand == hand) {
         if (hitResult != null && hitResult.type == HitResult.Type.BLOCK) {
             val blockHitResult = hitResult as BlockHitResult
-            if (level != null && !level.getBlockState(blockHitResult.blockPos).isAir) {
+            if (level != null && !level.getBlockState(blockHitResult.blockPos).isAir && !ServerFeatureManager.isPresent(ServerFeatures.MINING_ITEM_USAGE)) {
                 level.addBreakingBlockEffect(blockHitResult.blockPos, blockHitResult.direction)
             }
         } else if (!AnimatiumConfig.instance().extras.alwaysUsageSwing) {
@@ -171,3 +166,5 @@ fun LivingEntity.getItemSwingSpeed(fallback: Int): Int {
 
     return fallback
 }
+
+fun Entity.getScale() = if (this is LivingEntity) this.scale else 1.0F

@@ -38,48 +38,29 @@ import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting
 import java.lang.Double.isNaN
 import kotlin.math.roundToInt
 
-fun isSwordItem(stack: ItemStack): Boolean {
-    return stack.`is`(ItemTags.SWORDS)
-}
+fun isSwordItem(stack: ItemStack) = stack.`is`(ItemTags.SWORDS)
 
-fun isAxeItem(stack: ItemStack): Boolean {
-    return stack.item is AxeItem || stack.`is`(ItemTags.AXES)
-}
+fun isAxeItem(stack: ItemStack) = stack.item is AxeItem || stack.`is`(ItemTags.AXES)
 
-fun isPickaxeItem(stack: ItemStack): Boolean {
-    return stack.`is`(ItemTags.PICKAXES)
-}
+fun isPickaxeItem(stack: ItemStack) = stack.`is`(ItemTags.PICKAXES)
 
-fun isShovelItem(stack: ItemStack): Boolean {
-    return stack.item is ShovelItem || stack.`is`(ItemTags.SHOVELS)
-}
+fun isShovelItem(stack: ItemStack) = stack.item is ShovelItem || stack.`is`(ItemTags.SHOVELS)
 
-fun isHoeItem(stack: ItemStack): Boolean {
-    return stack.item is HoeItem || stack.`is`(ItemTags.HOES)
-}
+fun isHoeItem(stack: ItemStack) = stack.item is HoeItem || stack.`is`(ItemTags.HOES)
 
-fun isDiggerItem(stack: ItemStack): Boolean {
-    return isAxeItem(stack) || isPickaxeItem(stack) || isShovelItem(stack) || isHoeItem(stack)
-}
+fun isDiggerItem(stack: ItemStack) = isAxeItem(stack) || isPickaxeItem(stack) || isShovelItem(stack) || isHoeItem(stack)
 
-fun isShieldItem(stack: ItemStack): Boolean {
-    return stack.item is ShieldItem || stack.`is`(Items.SHIELD)
-}
+fun isShieldItem(stack: ItemStack) = stack.item is ShieldItem || stack.`is`(Items.SHIELD)
 
-fun isFishingRodItem(stack: ItemStack): Boolean {
-    return stack.item is FishingRodItem || stack.item is FoodOnAStickItem<*>
-}
+fun isFishingRodItem(stack: ItemStack) = stack.item is FishingRodItem || stack.item is FoodOnAStickItem<*>
 
-fun isRangedWeaponItem(stack: ItemStack): Boolean {
-    return stack.item is ProjectileWeaponItem
-}
+fun isRangedWeaponItem(stack: ItemStack) = stack.item is ProjectileWeaponItem
 
-fun isHandheldItem(stack: ItemStack): Boolean {
-    return isDiggerItem(stack) ||
+fun isHandheldItem(stack: ItemStack) =
+    isDiggerItem(stack) ||
             isSwordItem(stack) ||
             isFishingRodItem(stack) ||
             listOf(Items.MACE, Items.TRIDENT, Items.STICK, Items.BREEZE_ROD, Items.BLAZE_ROD).contains(stack.item)
-}
 
 fun isThinBlockItem(stack: ItemStack): Boolean {
     val block = Block.byItem(stack.item)
@@ -90,9 +71,7 @@ fun isThinBlockItem(stack: ItemStack): Boolean {
             block is DaylightDetectorBlock
 }
 
-fun isSkullBlock(stack: ItemStack): Boolean {
-    return Block.byItem(stack.item) is SkullBlock
-}
+fun isSkullBlock(stack: ItemStack) = Block.byItem(stack.item) is SkullBlock
 
 fun isBlockItemBlacklisted(stack: ItemStack): Boolean {
     val block = Block.byItem(stack.item)
@@ -102,23 +81,19 @@ fun isBlockItemBlacklisted(stack: ItemStack): Boolean {
             (isSkullBlock(stack) && !AnimatiumConfig.instance().items.mobHeadIcons)
 }
 
-fun isItemBlacklisted(stack: ItemStack): Boolean {
-    return isShieldItem(stack) ||
+fun isItemBlacklisted(stack: ItemStack) =
+    isShieldItem(stack) ||
             isBlockItemBlacklisted(stack) ||
             stack.`is`(Items.CROSSBOW) ||
             stack.`is`(ItemTags.SPEARS)
-}
 
-fun isSwingItemBlacklisted(stack: ItemStack): Boolean {
-    return stack.item is ProjectileItem ||
+fun isSwingItemBlacklisted(stack: ItemStack) =
+    stack.item is ProjectileItem ||
             stack.item is BucketItem ||
             stack.item is ShearsItem ||
             stack.item is EnderpearlItem
-}
 
-fun isBlock3d(stack: ItemStack, usesBlockLight: Boolean): Boolean {
-    return stack.item is BlockItem && usesBlockLight
-}
+fun isBlock3d(stack: ItemStack, usesBlockLight: Boolean) = stack.item is BlockItem && usesBlockLight
 
 fun applyLegacyFirstPersonTransforms(poseStack: PoseStack, direction: Int, runnable: Runnable) {
     poseStack.mulPose(Axis.YP.rotationDegrees(direction * 45.0F))
@@ -128,8 +103,8 @@ fun applyLegacyFirstPersonTransforms(poseStack: PoseStack, direction: Int, runna
     poseStack.mulPose(Axis.YP.rotationDegrees(direction * -45.0F))
 }
 
-fun shouldApplyItemPositionsInThirdPerson(armedEntityRenderState: ArmedEntityRenderState): Boolean {
-    return if (AnimatiumConfig.instance().items.itemPositionsInThirdPerson) {
+fun shouldApplyItemPositionsInThirdPerson(armedEntityRenderState: ArmedEntityRenderState) =
+    if (AnimatiumConfig.instance().items.itemPositionsInThirdPerson) {
         true
     } else if (AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersionSetting.V1_7) {
         isFishingRodItem(armedEntityRenderState.mainHandItemStack)
@@ -139,7 +114,6 @@ fun shouldApplyItemPositionsInThirdPerson(armedEntityRenderState: ArmedEntityRen
             armedEntityRenderState
         )
     }
-}
 
 fun getLegacyDurabilityColorValue(stack: ItemStack): Int {
     val value = (255.0 - stack.damageValue.toDouble() * 255.0 / stack.maxDamage.toDouble())
@@ -150,8 +124,8 @@ fun getLegacyDurabilityColorValue(stack: ItemStack): Int {
     }
 }
 
-fun getLegacyItemRarity(stack: ItemStack): Rarity {
-    return if (listOf(Items.GOLDEN_APPLE, Items.END_CRYSTAL).contains(stack.item)) {
+fun getLegacyItemRarity(stack: ItemStack) =
+    if (listOf(Items.GOLDEN_APPLE, Items.END_CRYSTAL).contains(stack.item)) {
         Rarity.RARE
     } else if (listOf(Items.NETHER_STAR, Items.ELYTRA, Items.DRAGON_HEAD).contains(stack.item)) {
         Rarity.UNCOMMON
@@ -162,7 +136,6 @@ fun getLegacyItemRarity(stack: ItemStack): Rarity {
     } else {
         stack.rarity
     }
-}
 
 fun getMobHeadLocation(item: Item): Identifier? {
     val block = Block.byItem(item)

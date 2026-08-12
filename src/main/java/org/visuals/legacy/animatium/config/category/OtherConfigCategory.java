@@ -47,6 +47,7 @@ public final class OtherConfigCategory extends Category {
     public VoidFogSetting voidFog = VoidFogSetting.OFF;
     // Damage Tint
     public boolean damageTintArmor = false;
+    public boolean glintAffectsArmorTint = false;
     public DamageTintSetting damageTintStyle = DamageTintSetting.VANILLA;
     // Other
     public boolean restoreParticleBlending = false;
@@ -95,6 +96,7 @@ public final class OtherConfigCategory extends Category {
         final EntryBundle.Group damageTintGroup = new EntryBundle.Group("damage_tint");
         if (!ModsKt.HAS_LUNAR_CLIENT) {
             damageTintGroup.booleanEntry("damageTintArmor");
+            damageTintGroup.booleanEntry("glintAffectsArmorTint");
         }
         damageTintGroup.enumEntry("damageTintStyle", DamageTintSetting.class, (option, event) -> {
             final GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;

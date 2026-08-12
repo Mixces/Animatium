@@ -40,7 +40,6 @@ import net.minecraft.client.renderer.ProjectionMatrixBuffer
 import net.minecraft.resources.Identifier
 import org.joml.Matrix4f
 import org.lwjgl.opengl.GL11
-import org.visuals.legacy.animatium.renderer.DynamicTransforms.builder
 import org.visuals.legacy.animatium.renderer.buffer.Geometry
 import org.visuals.legacy.animatium.renderer.texture.TextureAndSampler
 import org.visuals.legacy.animatium.util.compatibility.IrisPipeline
@@ -50,7 +49,7 @@ import java.util.function.Supplier
 class Renderer : AutoCloseable {
     companion object {
         @JvmStatic
-        fun of(descriptor: RenderDescriptor): Renderer = Renderer(descriptor)
+        fun of(descriptor: RenderDescriptor) = Renderer(descriptor)
 
         @JvmStatic
         fun of(
@@ -58,37 +57,35 @@ class Renderer : AutoCloseable {
             colorTextureView: GpuTextureView,
             depthTextureView: GpuTextureView?,
             area: RenderDescriptor.Area
-        ): Renderer {
-            val descriptor = RenderDescriptor.builder(label)
+        ) = of(
+            RenderDescriptor.builder(label)
                 .withColorTexture(colorTextureView)
                 .withDepthTexture(depthTextureView)
                 .withArea(area)
                 .build()
-            return of(descriptor)
-        }
+        )
 
         @JvmStatic
-        fun of(label: Supplier<String>, colorTextureView: GpuTextureView, depthTextureView: GpuTextureView?): Renderer =
+        fun of(label: Supplier<String>, colorTextureView: GpuTextureView, depthTextureView: GpuTextureView?) =
             of(label, colorTextureView, depthTextureView, RenderDescriptor.Area(colorTextureView))
 
         @JvmStatic
-        fun of(label: Supplier<String>, colorTextureView: GpuTextureView): Renderer = of(label, colorTextureView, null)
+        fun of(label: Supplier<String>, colorTextureView: GpuTextureView) = of(label, colorTextureView, null)
 
         @JvmStatic
-        fun of(label: Supplier<String>, renderTarget: RenderTarget, area: RenderDescriptor.Area): Renderer {
-            val descriptor = RenderDescriptor.builder(label)
+        fun of(label: Supplier<String>, renderTarget: RenderTarget, area: RenderDescriptor.Area) = of(
+            RenderDescriptor.builder(label)
                 .withRenderTarget(renderTarget, false)
                 .withArea(area)
                 .build()
-            return of(descriptor)
-        }
+        )
 
         @JvmStatic
-        fun of(label: Supplier<String>, renderTarget: RenderTarget): Renderer =
+        fun of(label: Supplier<String>, renderTarget: RenderTarget) =
             of(label, renderTarget, RenderDescriptor.Area(renderTarget))
 
         @JvmStatic
-        fun of(label: Supplier<String>): Renderer = of(label, Minecraft.getInstance().mainRenderTarget)
+        fun of(label: Supplier<String>) = of(label, Minecraft.getInstance().mainRenderTarget)
     }
 
     // Data
@@ -131,14 +128,11 @@ class Renderer : AutoCloseable {
         return this
     }
 
-    fun setTexture(name: String, textureView: GpuTextureView, sampler: GpuSampler): Renderer {
-        return this.setTexture(name, TextureAndSampler(textureView, sampler))
-    }
+    fun setTexture(name: String, textureView: GpuTextureView, sampler: GpuSampler) =
+        this.setTexture(name, TextureAndSampler(textureView, sampler))
 
-    fun setTexture(name: String, location: Identifier): Renderer {
+    fun setTexture(name: String, location: Identifier) =
         this.setTexture(name, TextureAndSampler.get(location))
-        return this
-    }
 
     fun setUniform(name: String, data: GpuBufferSlice): Renderer {
         this.uniforms[name] = data
@@ -174,7 +168,7 @@ class Renderer : AutoCloseable {
                 )
             }
 
-            val dynamicTransforms = this.uniforms.getOrDefault(DynamicTransforms.KEY, builder().build())
+            val dynamicTransforms = this.uniforms.getOrDefault(DynamicTransforms.KEY, DynamicTransforms.current())
             val autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.vertexFormatMode)
             this.descriptor.createPass().use { pass ->
                 pass.setPipeline(pipeline)

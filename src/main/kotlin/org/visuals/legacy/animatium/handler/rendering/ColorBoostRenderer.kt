@@ -28,6 +28,7 @@ package org.visuals.legacy.animatium.handler.rendering
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.textures.FilterMode
 import com.mojang.blaze3d.textures.GpuTextureView
+import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumPipelines
 import org.visuals.legacy.animatium.renderer.Renderer
 import org.visuals.legacy.animatium.renderer.buffer.BasicGeometry
 
@@ -35,7 +36,7 @@ object ColorBoostRenderer {
     private val GEOMETRY = BasicGeometry(0, 3)
 
     @JvmStatic
-    fun render(colorAttachment: GpuTextureView, depthAttachment: GpuTextureView?) {
+    fun render(colorAttachment: GpuTextureView, depthAttachment: GpuTextureView) {
         Renderer.of({ "Color Boost Blit" }, colorAttachment, depthAttachment).use { renderer ->
             renderer.setPipeline(AnimatiumPipelines.COLOR_BOOST_BLIT)
             renderer.setTexture(

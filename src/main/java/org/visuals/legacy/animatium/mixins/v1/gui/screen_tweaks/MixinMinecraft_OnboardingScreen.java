@@ -38,7 +38,7 @@ import org.visuals.legacy.animatium.handler.screen.OnboardingScreen;
 import org.visuals.legacy.animatium.util.config.GeneralConfigUtil;
 
 @Mixin(Minecraft.class)
-public abstract class MixinGui_OnboardingScreen {
+public abstract class MixinMinecraft_OnboardingScreen {
     @Definition(id = "screen", field = "Lnet/minecraft/client/Minecraft;screen:Lnet/minecraft/client/gui/screens/Screen;")
     @Definition(id = "guiScreen", local = @Local(type = Screen.class, argsOnly = true))
     @Expression("@(this).screen = guiScreen")

@@ -189,6 +189,8 @@
 	"animatium.fixDoubleUsageVisual.description": "Fixes the double item usage issue on servers, usually found when you have high ping.",
 	"animatium.oldSkyRenderingCheck": "[*] Sky Rendering Check",
 	"animatium.oldSkyRenderingCheck.description": "Brings back the old render distance check for sky rendering, making it not render in <=4 render distance.",
+	"animatium.smoothParticles": "[1.13] Smooth Particles",
+	"animatium.smoothParticles.description": "Updates particles w/ multiple textures on render so that they appear smoothly like in <=1.13.2.",
 
 	"animatium.category.other": "Other",
 
@@ -213,12 +215,13 @@
 	"animatium.category.other.group.damage_tint": "Damage Tint",
 	"animatium.damageTintArmor": "[1.7] Damage Tint Armor",
 	"animatium.damageTintArmor.description": "Applies damage hurt tint to armor like in <=1.7.x.",
+	"animatium.glintAffectsArmorTint": "[1.14.4] Glint Affects Armor Tint",
+	"animatium.glintAffectsArmorTint.description": "Applies the overlay damage tint to glint rendering on the armor like in 1.8-1.14.4.\n\nRequires the \"Damage Tint Armor\" setting to be enabled.",
 	"animatium.damageTintStyle": "[*] Damage Tint Style",
 	"animatium.damageTintStyle.description": "Changes the hurt tint color to match what it was in the selected version.",
-	"animatium.enum.DamageTintSetting.VANILLA": "Vanilla",
 	"animatium.enum.DamageTintSetting.V1_7": "1.7",
-	"animatium.enum.DamageTintSetting.V1_8": "1.8",
 	"animatium.enum.DamageTintSetting.V1_8_ORANGE_MARSHALL": "1.8 (Orange Marshall)",
+	"animatium.enum.DamageTintSetting.VANILLA": "Vanilla",
 
 	"animatium.category.other.group.other": "Other",
 	"animatium.restoreParticleBlending": "[1.20.6] Restore Particle Blending",

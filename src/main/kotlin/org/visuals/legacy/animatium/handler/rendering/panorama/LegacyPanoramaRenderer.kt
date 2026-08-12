@@ -38,8 +38,8 @@ import net.minecraft.util.ARGB
 import net.minecraft.util.Mth
 import org.joml.Matrix3x2f
 import org.joml.Matrix4f
-import org.visuals.legacy.animatium.handler.rendering.AnimatiumPipelines
 import org.visuals.legacy.animatium.handler.rendering.copyTextureToTexture
+import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumPipelines
 import org.visuals.legacy.animatium.renderer.DynamicTransforms
 import org.visuals.legacy.animatium.renderer.RenderDescriptor
 import org.visuals.legacy.animatium.renderer.Renderer
@@ -53,8 +53,8 @@ import java.util.*
 class LegacyPanoramaRenderer : AutoCloseable {
     companion object {
         private const val SAMPLES = 64
-        private const val CLEAR_COLOR = 0xFF000000.toInt()
         private val VIEWPORT = RenderDescriptor.Area(256, 256)
+        private val CLEAR_COLOR = ARGB.colorFromFloat(1.0F, 0.0F, 0.0F, 0.0F)
         private val CUBE_MAP_LOCATION = Identifier.withDefaultNamespace("textures/gui/title/background/panorama")
         private val CUBE_MAP_PROJECTION = Matrix4f().setPerspective(toRadians(120.0F), 1.0F, 0.05F, 10.0F)
 

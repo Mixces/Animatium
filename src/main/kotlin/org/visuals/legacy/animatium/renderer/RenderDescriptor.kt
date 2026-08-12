@@ -44,7 +44,8 @@ data class RenderDescriptor(
     }
 
     fun createPass(): RenderPass {
-        return RenderSystem.getDevice().createCommandEncoder().createRenderPass(this.name, this.colorTexture, OptionalInt.empty(), this.depthTexture, OptionalDouble.empty())
+        return RenderSystem.getDevice().createCommandEncoder()
+            .createRenderPass(this.name, this.colorTexture, OptionalInt.empty(), this.depthTexture, OptionalDouble.empty())
     }
 
     data class Area(val x: Int, val y: Int, val width: Int, val height: Int) {
@@ -75,7 +76,7 @@ data class RenderDescriptor(
             return this
         }
 
-        fun withRenderTarget(renderTarget: RenderTarget): Builder = this.withRenderTarget(renderTarget, true)
+        fun withRenderTarget(renderTarget: RenderTarget) = this.withRenderTarget(renderTarget, true)
 
         fun withColorTexture(colorTexture: GpuTextureView): Builder {
             this.colorTexture = colorTexture

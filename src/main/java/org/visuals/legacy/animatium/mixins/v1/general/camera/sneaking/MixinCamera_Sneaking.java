@@ -29,7 +29,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.Camera;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import org.objectweb.asm.Opcodes;
@@ -42,6 +41,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.mixins.accessor.PlayerAccessor;
+import org.visuals.legacy.animatium.util.EntityUtilKt;
 import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 
 @Mixin(Camera.class)
@@ -80,7 +80,7 @@ public abstract class MixinCamera_Sneaking {
                 this.eyeHeight = this.animatium$getSneakingEyeHeight();
                 return;
             } else if (!AnimatiumConfig.instance().movement.longUnsneak && this.entity.getEyeHeight() > this.eyeHeight) {
-                this.eyeHeight = this.entity.getEyeHeight(Pose.STANDING) * (this.entity instanceof LivingEntity livingEntity ? livingEntity.getScale() : 1.0F);
+                this.eyeHeight = this.entity.getEyeHeight(Pose.STANDING) * EntityUtilKt.getScale(this.entity);
                 return;
             }
         }

@@ -23,26 +23,34 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.handler.rendering
+package org.visuals.legacy.animatium.mixins.v1.entity.particles.smooth;
 
-import net.minecraft.util.Mth
-import net.minecraft.world.entity.Entity
-import org.visuals.legacy.animatium.util.getLegacyBrightness
+import net.minecraft.client.particle.*;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-class LegacyFogDarkness {
-    companion object {
-        @JvmStatic
-        val instance = LegacyFogDarkness()
-    }
-
-    private var prevDarkness: Float = 0.0F
-    private var darkness: Float = 0.0F
-
-    fun tick(entity: Entity, viewDistance: Int) {
-        val brightness = entity.level().getLegacyBrightness(entity.blockPosition())
-        this.prevDarkness = this.darkness
-        this.darkness = Mth.lerp(0.1F, this.darkness, Mth.lerp(brightness, viewDistance / 32.0F, 1.0F))
-    }
-
-    fun getDarkness(tickDelta: Float) = Mth.lerp(tickDelta, this.prevDarkness, this.darkness)
+@Mixin({
+        AttackSweepParticle.class,
+        BaseAshSmokeParticle.class,
+        BubblePopParticle.class,
+        DragonBreathParticle.class,
+        DustParticleBase.class,
+        ExplodeParticle.class,
+        FallingDustParticle.class,
+        GlowParticle.class,
+        GustParticle.class,
+        HugeExplosionParticle.class,
+        PlayerCloudParticle.class,
+        SculkChargeParticle.class,
+        SculkChargePopParticle.class,
+        SimpleAnimatedParticle.class,
+        SnowflakeParticle.class,
+        SoulParticle.class,
+        SpellParticle.class,
+        TrialSpawnerDetectionParticle.class,
+        WakeParticle.class
+})
+public interface SpritesAccessor {
+    @Accessor("sprites")
+    SpriteSet animatium$sprites();
 }

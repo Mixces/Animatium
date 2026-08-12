@@ -48,7 +48,7 @@ object GeneralConfigUtil {
         // Defaults
         this.data.addProperty(ENABLED_KEY, true)
         this.data.addProperty(ONBOARDING_KEY, true)
-        this.data.addProperty(PRESET_VERSION_KEY, PresetVersion.MODERN.name)
+        this.data.addProperty(PRESET_VERSION_KEY, PresetVersion.VANILLA.name)
     }
 
     @JvmStatic

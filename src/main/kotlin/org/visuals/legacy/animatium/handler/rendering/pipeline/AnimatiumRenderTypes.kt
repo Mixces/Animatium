@@ -23,26 +23,24 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.handler.rendering
+package org.visuals.legacy.animatium.handler.rendering.pipeline
 
-import net.minecraft.util.Mth
-import net.minecraft.world.entity.Entity
-import org.visuals.legacy.animatium.util.getLegacyBrightness
+import net.minecraft.client.renderer.feature.ItemFeatureRenderer
+import net.minecraft.client.renderer.rendertype.LayeringTransform
+import net.minecraft.client.renderer.rendertype.RenderSetup
+import net.minecraft.client.renderer.rendertype.RenderType
+import net.minecraft.client.renderer.rendertype.TextureTransform
 
-class LegacyFogDarkness {
-    companion object {
-        @JvmStatic
-        val instance = LegacyFogDarkness()
-    }
-
-    private var prevDarkness: Float = 0.0F
-    private var darkness: Float = 0.0F
-
-    fun tick(entity: Entity, viewDistance: Int) {
-        val brightness = entity.level().getLegacyBrightness(entity.blockPosition())
-        this.prevDarkness = this.darkness
-        this.darkness = Mth.lerp(0.1F, this.darkness, Mth.lerp(brightness, viewDistance / 32.0F, 1.0F))
-    }
-
-    fun getDarkness(tickDelta: Float) = Mth.lerp(tickDelta, this.prevDarkness, this.darkness)
+object AnimatiumRenderTypes {
+    // Glint
+    @JvmField
+    val ARMOR_GLINT = RenderType.create(
+        "animatium_armor_glint",
+        RenderSetup.builder(AnimatiumPipelines.ARMOR_GLINT)
+            .withTexture("Sampler0", ItemFeatureRenderer.ENCHANTED_GLINT_ARMOR)
+            .setTextureTransform(TextureTransform.ARMOR_ENTITY_GLINT_TEXTURING)
+            .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
+            .useOverlay()
+            .createRenderSetup()
+    )
 }
