@@ -29,7 +29,7 @@ import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.textures.GpuTexture
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.renderer.texture.OverlayTexture
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor
 
@@ -43,32 +43,32 @@ fun copyTextureToTexture(source: GpuTexture, destination: GpuTexture) =
         source.getWidth(0), source.getHeight(0)
     )
 
-fun GuiGraphicsExtractor.fillVerticalLine(
+fun GuiGraphics.fillVerticalLine(
     x: Int, y: Int,
     length: Int,
     color: Int
 ) = this.fill(x, y, x + 1, y + length, color)
 
-fun GuiGraphicsExtractor.fillVerticalGradientLine(
+fun GuiGraphics.fillVerticalGradientLine(
     x: Int, y: Int,
     length: Int,
     startColor: Int,
     endColor: Int
 ) = this.fillGradient(x, y, x + 1, y + length, startColor, endColor)
 
-fun GuiGraphicsExtractor.fillHorizontalLine(
+fun GuiGraphics.fillHorizontalLine(
     x: Int, y: Int,
     length: Int,
     color: Int
 ) = this.fill(x, y, x + length, y + 1, color)
 
-fun GuiGraphicsExtractor.fillRectangle(
+fun GuiGraphics.fillRectangle(
     x: Int, y: Int,
     width: Int, height: Int,
     color: Int
 ) = this.fill(x, y, x + width, y + height, color)
 
-fun GuiGraphicsExtractor.fillFrameGradient(
+fun GuiGraphics.fillFrameGradient(
     x: Int,
     y: Int,
     width: Int,
@@ -82,7 +82,7 @@ fun GuiGraphicsExtractor.fillFrameGradient(
     this.fillHorizontalLine(x, y - 1 + height - 1, width, endColor)
 }
 
-fun GuiGraphicsExtractor.drawScaledText(font: Font, text: String, x: Int, y: Int, scale: Float) {
+fun GuiGraphics.drawScaledText(font: Font, text: String, x: Int, y: Int, scale: Float) {
     val stack = this.pose()
     stack.pushMatrix()
     val originX = stack.m20
@@ -90,7 +90,7 @@ fun GuiGraphicsExtractor.drawScaledText(font: Font, text: String, x: Int, y: Int
     stack.setTranslation(0.0F, 0.0F)
     stack.scale(scale, scale)
     stack.setTranslation(originX, originY)
-    this.centeredText(font, text, (x / scale).toInt(), (y / scale).toInt(), 0xFFFFFFFF.toInt())
+    this.drawCenteredString(font, text, (x / scale).toInt(), (y / scale).toInt(), 0xFFFFFFFF.toInt())
     stack.popMatrix()
 }
 

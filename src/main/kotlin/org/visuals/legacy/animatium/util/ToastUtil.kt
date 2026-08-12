@@ -31,7 +31,7 @@ import net.minecraft.network.chat.Component
 
 object ToastUtil {
     fun send(message: Component) {
-        Minecraft.getInstance().gui.toastManager().addToast(
+        Minecraft.getInstance().toastManager.addToast(
             SystemToast(
                 SystemToast.SystemToastId.PERIODIC_NOTIFICATION,
                 Component.literal("Animatium"),

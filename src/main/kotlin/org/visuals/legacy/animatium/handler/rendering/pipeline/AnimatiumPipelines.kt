@@ -39,6 +39,12 @@ import org.visuals.legacy.animatium.Animatium.location
 import org.visuals.legacy.animatium.handler.rendering.clouds.CloudPipelineSet
 
 object AnimatiumPipelines {
+    @JvmField
+    val NO_DEPTH_WRITE = RenderPipeline.builder()
+        .withDepthTestFunction(DepthTestFunction.LEQUAL_DEPTH_TEST)
+        .withDepthWrite(false)
+        .buildSnippet()
+
     // Panorama
     @JvmField
     val PANORAMA_BLEND = BlendFunction(
@@ -49,7 +55,7 @@ object AnimatiumPipelines {
     )
 
     @JvmField
-    val TEXTURED_QUAD = RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
+    val TEXTURED_QUAD = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
         .withSampler("Sampler0")
         .buildSnippet()
 
@@ -57,7 +63,7 @@ object AnimatiumPipelines {
     val LEGACY_PANORAMA_SNIPPET = RenderPipeline.builder(TEXTURED_QUAD)
         .withVertexShader(location("core/legacy_panorama"))
         .withFragmentShader(location("core/legacy_panorama"))
-        .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+        .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST) // Required by 1.21.11 to render
         .withDepthWrite(false)
         .withCull(false)
         .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
@@ -86,10 +92,10 @@ object AnimatiumPipelines {
             .withLocation(location("pipeline/legacy_panorama_blur"))
             .withVertexShader(location("core/legacy_panorama_blur"))
             .withFragmentShader(location("core/legacy_panorama_blur"))
+            .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST) // Required by 1.21.11 to render
+            .withDepthWrite(false)
             .withBlend(PANORAMA_BLEND)
             .withColorWrite(true, false)
-            .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
-            .withDepthWrite(false)
             .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
             .build()
     )
@@ -97,10 +103,9 @@ object AnimatiumPipelines {
     // Sky
     @JvmField
     val VOID_BOX_SNIPPET =
-        RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
+        RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET, NO_DEPTH_WRITE)
             .withVertexShader("core/position_color")
             .withFragmentShader("core/position_color")
-            .withDepthWrite(false)
             .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS)
             .buildSnippet()
 
@@ -113,11 +118,10 @@ object AnimatiumPipelines {
 
     @JvmField
     val LEGACY_SKY_SNIPPET =
-        RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
+        RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET, NO_DEPTH_WRITE)
             .withLocation(location("pipeline/legacy_sky"))
             .withVertexShader(location("core/legacy_sky"))
             .withFragmentShader(location("core/legacy_sky"))
-            .withDepthWrite(false)
             .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
             .buildSnippet()
 
