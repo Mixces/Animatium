@@ -23,17 +23,23 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.config.bundle;
+package org.visuals.legacy.animatium.mixins.v1.rendering.outlines;
 
+import com.mojang.blaze3d.platform.Window;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-public final class ConfigBundles {
-    public static final EntryBundle MOVEMENT = AnimatiumConfig.instance().movement.bundle();
-    public static final EntryBundle ITEMS = AnimatiumConfig.instance().items.bundle();
-    public static final EntryBundle SCREEN = AnimatiumConfig.instance().screen.bundle();
-    public static final EntryBundle FIXES = AnimatiumConfig.instance().fixes.bundle();
-    public static final EntryBundle OTHER = AnimatiumConfig.instance().other.bundle();
-    public static final EntryBundle EXTRAS = AnimatiumConfig.instance().extras.bundle();
-
-    public static final EntryBundle[] ALL = new EntryBundle[]{MOVEMENT, ITEMS, SCREEN, FIXES, OTHER, EXTRAS};
+@Mixin(Window.class)
+public abstract class MixinWindow_BlockOutlineWidth {
+    @ModifyConstant(method = "getAppropriateLineWidth", constant = @Constant(floatValue = 2.5F))
+    private float animatium$oldBlockOutline(final float lineWidth) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.blockOutlineRendering) {
+            return 2.0F;
+        } else {
+            return lineWidth;
+        }
+    }
 }

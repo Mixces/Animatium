@@ -26,6 +26,7 @@
 package org.visuals.legacy.animatium.mixins.v1.entity;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,6 +34,7 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.enums.DamageTintSetting;
 
+@IfModAbsent("ichor")
 @Mixin(OverlayTexture.class)
 public abstract class MixinOverlayTexture_DamageTintStyle {
     @ModifyExpressionValue(method = "<init>", at = @At(value = "CONSTANT", args = "intValue=-1291911168"))
