@@ -26,10 +26,15 @@
 package org.visuals.legacy.animatium.util.enums
 
 import net.minecraft.util.ARGB
+import org.visuals.legacy.animatium.config.AnimatiumConfig
 
 enum class DamageTintSetting(private val colorGetter: (brightness: Float) -> Int) {
     V1_7({ brightness -> ARGB.colorFromFloat(0.6F, brightness, 0.0F, 0.0F) }),
     V1_8_ORANGE_MARSHALL(ARGB.colorFromFloat(0.5F, 1.0F, 0.0F, 0.0F)),
+    CUSTOM({ brightness ->
+        val color = AnimatiumConfig.instance().other.customTintColor
+        ARGB.colorFromFloat(color.alpha / 255.0F, color.red / 255.0F, color.green / 255.0F, color.blue / 255.0F)
+    }),
     VANILLA(-1);
 
     constructor(color: Int) : this({ color })

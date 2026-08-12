@@ -26,16 +26,15 @@
 package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.config.bundle.EntryBundle;
 import org.visuals.legacy.animatium.handler.compatibility.ModsKt;
+import org.visuals.legacy.animatium.handler.rendering.RenderUtilsKt;
 import org.visuals.legacy.animatium.handler.rendering.lighting.LegacyDiffuseLighting;
-import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor;
 import org.visuals.legacy.animatium.util.enums.DamageTintSetting;
 import org.visuals.legacy.animatium.util.enums.VoidFogSetting;
+
+import java.awt.*;
 
 public final class OtherConfigCategory extends Category {
     // Sky
@@ -49,6 +48,7 @@ public final class OtherConfigCategory extends Category {
     public boolean damageTintArmor = false;
     public boolean glintAffectsArmorTint = false;
     public DamageTintSetting damageTintStyle = DamageTintSetting.VANILLA;
+    public Color customTintColor = new Color(1.0F, 0.0F, 0.0F, 0.69F); // Vanilla color as of 26.2
     // Other
     public boolean restoreParticleBlending = false;
     public boolean lockBlockingArmRotation = false;
@@ -85,27 +85,23 @@ public final class OtherConfigCategory extends Category {
     public EntryBundle bundle() {
         final EntryBundle bundle = new EntryBundle(this, "other");
 
-        bundle.group((EntryBundle.Group) new EntryBundle.Group("sky")
+        bundle.group("sky")
                 .booleanEntry("oldCloudRendering")
                 .booleanEntry("cloudHeight")
                 .booleanEntry("blueVoidSky")
                 .booleanEntry("playerVoidBox")
                 .enumEntry("voidFog", VoidFogSetting.class)
-                .booleanEntry("planarSkyFog"));
+                .booleanEntry("planarSkyFog");
 
-        final EntryBundle.Group damageTintGroup = new EntryBundle.Group("damage_tint");
         if (!ModsKt.HAS_LUNAR_CLIENT) {
-            damageTintGroup.booleanEntry("damageTintArmor");
-            damageTintGroup.booleanEntry("glintAffectsArmorTint");
+            bundle.group("damage_tint")
+                    .booleanEntry("damageTintArmor")
+                    .booleanEntry("glintAffectsArmorTint")
+                    .enumEntry("damageTintStyle", DamageTintSetting.class, (option, value) -> RenderUtilsKt.reloadOverlayTexture())
+                    .colorEntry("customTintColor", (option, value) -> RenderUtilsKt.reloadOverlayTexture());
         }
-        damageTintGroup.enumEntry("damageTintStyle", DamageTintSetting.class, (option, event) -> {
-            final GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
-            gameRenderer.overlayTexture().close();
-            ((GameRendererAccessor) gameRenderer).animatium$setOverlayTexture(new OverlayTexture());
-        });
-        bundle.group(damageTintGroup);
 
-        bundle.group((EntryBundle.Group) new EntryBundle.Group("other")
+        bundle.group("other")
                 .booleanEntry("restoreParticleBlending")
                 .booleanEntry("lockBlockingArmRotation")
                 .booleanEntry("legacyBlockMiningProgress")
@@ -128,7 +124,7 @@ public final class OtherConfigCategory extends Category {
                 .booleanEntry("legacyDiffuseLighting", (option, value) -> LegacyDiffuseLighting.refresh())
                 .booleanEntry("legacyLightmap")
                 .booleanEntry("legacyFogDarkness")
-                .booleanEntry("legacySplashPosition"));
+                .booleanEntry("legacySplashPosition");
 
         return bundle;
     }

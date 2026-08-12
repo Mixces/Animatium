@@ -30,6 +30,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
+import org.visuals.legacy.animatium.Animatium
 import org.visuals.legacy.animatium.Animatium.location
 import org.visuals.legacy.animatium.config.AnimatiumConfig
 import java.util.function.Consumer
@@ -42,6 +43,11 @@ object AnimatiumKeybinds {
         "Open Mod Configuration",
         InputConstants.KEY_BACKSLASH
     ) { client -> client.setScreen(AnimatiumConfig.getConfigScreen(client.screen)) }
+
+    val RELOAD = create(
+        "Reload Mod",
+        InputConstants.KEY_END
+    ) { client -> Animatium.reload() }
 
     fun bootstrap() {
         ClientTickEvents.END_CLIENT_TICK.register { tick(it) }

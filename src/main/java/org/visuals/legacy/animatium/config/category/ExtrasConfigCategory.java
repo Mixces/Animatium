@@ -119,27 +119,25 @@ public final class ExtrasConfigCategory extends Category {
                 .intRange("bloodParticleMultiplier", 1, 40);
 
         // Damage Tint
-        bundle.group((EntryBundle.Group) new EntryBundle.Group("damage_tint")
+        bundle.group("damage_tint")
                 .booleanEntry("damageTintItems")
-                .booleanEntry("damageTintCape"));
+                .booleanEntry("damageTintCape");
 
-        bundle.group((EntryBundle.Group) new EntryBundle.Group("item_swing")
+        bundle.group("item_swing")
                 .booleanEntry("customSwingSpeed")
                 .floatRange("itemSwingSpeed", -2.0F, 1.0F, 0.1F)
                 .floatRange("hasteSwingSpeed", -2.0F, 1.0F, 0.1F)
                 .floatRange("miningFatigueSwingSpeed", -2.0F, 1.0F, 0.1F)
                 .booleanEntry("ignoreHasteSpeed")
-                .booleanEntry("ignoreMiningFatigueSpeed"));
+                .booleanEntry("ignoreMiningFatigueSpeed");
 
         {
-            final EntryBundle.Group serverFeatureGroup = new EntryBundle.Group("server_features");
+            final EntryBundle.Group serverFeatureGroup = bundle.group("server_features");
             for (final ServerFeature feature : ServerFeatures.allFeatures()) {
                 if (!ServerFeatures.ALL.equals(feature)) {
                     serverFeatureGroup.booleanEntry(feature.getIdentifier().getPath());
                 }
             }
-
-            bundle.group(serverFeatureGroup);
         }
 
         return bundle;

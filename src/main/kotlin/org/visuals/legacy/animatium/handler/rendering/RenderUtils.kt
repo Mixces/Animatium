@@ -27,8 +27,11 @@ package org.visuals.legacy.animatium.handler.rendering
 
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.textures.GpuTexture
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.renderer.texture.OverlayTexture
+import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor
 
 fun copyTextureToTexture(source: GpuTexture, destination: GpuTexture) =
     RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(
@@ -89,4 +92,10 @@ fun GuiGraphicsExtractor.drawScaledText(font: Font, text: String, x: Int, y: Int
     stack.setTranslation(originX, originY)
     this.centeredText(font, text, (x / scale).toInt(), (y / scale).toInt(), 0xFFFFFFFF.toInt())
     stack.popMatrix()
+}
+
+fun reloadOverlayTexture() {
+    val gameRenderer = Minecraft.getInstance().gameRenderer
+    gameRenderer.overlayTexture().close()
+    (gameRenderer as GameRendererAccessor).`animatium$setOverlayTexture`(OverlayTexture())
 }
