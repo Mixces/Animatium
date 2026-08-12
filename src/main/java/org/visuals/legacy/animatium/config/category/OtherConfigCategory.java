@@ -48,7 +48,7 @@ public final class OtherConfigCategory extends Category {
     public boolean damageTintArmor = false;
     public boolean glintAffectsArmorTint = false;
     public DamageTintSetting damageTintStyle = DamageTintSetting.VANILLA;
-    public Color customTintColor = new Color(1.0F, 0.0F, 0.0F, 0.69F); // Vanilla color as of 26.2
+    public Color customTintColor = new Color(1.0F, 0.0F, 0.0F, 0.3F); // Vanilla color as of 26.2
     // Other
     public boolean restoreParticleBlending = false;
     public boolean lockBlockingArmRotation = false;
