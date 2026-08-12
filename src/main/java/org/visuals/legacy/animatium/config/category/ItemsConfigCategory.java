@@ -72,25 +72,25 @@ public final class ItemsConfigCategory extends Category {
     public EntryBundle bundle() {
         final EntryBundle bundle = new EntryBundle(this, "items");
 
-        bundle.group((EntryBundle.Group) new EntryBundle.Group("glint")
+        bundle.group("glint")
                 .booleanEntry("legacyGlintSpeed")
                 .booleanEntry("glintOnItemDrops2D")
-                .booleanEntry("glintOnItemFramed2D"));
+                .booleanEntry("glintOnItemFramed2D");
 
-        bundle.group((EntryBundle.Group) new EntryBundle.Group("drops2d")
+        bundle.group("drops2d")
                 .booleanEntry("itemDropsFaceCamera")
                 .booleanEntry("itemDropsFaceCameraRotationFix")
                 .booleanEntry("itemDrops2D")
-                .booleanEntry("itemFramed2D"));
+                .booleanEntry("itemFramed2D");
 
-        bundle.group((EntryBundle.Group) new EntryBundle.Group("transformations")
+        bundle.group("transformations")
                 .booleanEntry("itemPositions")
                 .booleanEntry("itemPositionsInThirdPerson")
                 .booleanEntry("thinBlockPositions")
                 .booleanEntry("skullPosition")
-                .enumEntry("fishingRodVersion", FishingRodVersionSetting.class));
+                .enumEntry("fishingRodVersion", FishingRodVersionSetting.class);
 
-        bundle.group((EntryBundle.Group) new EntryBundle.Group("other")
+        bundle.group("other")
                 .booleanEntry("thinFishingRodLineThickness")
                 .booleanEntry("itemUsageSwinging")
                 .booleanEntry("disableSwingOnUse")
@@ -103,7 +103,7 @@ public final class ItemsConfigCategory extends Category {
                 .booleanEntry("heldItemVisibilityInBoat")
                 .booleanEntry("itemPickupPosition")
                 .booleanEntry("mobHeadIcons")
-                .booleanEntry("eggSnowballParticles"));
+                .booleanEntry("eggSnowballParticles");
 
         return bundle;
     }

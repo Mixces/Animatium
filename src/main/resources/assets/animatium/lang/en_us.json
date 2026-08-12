@@ -219,8 +219,11 @@
 	"animatium.glintAffectsArmorTint.description": "Applies the overlay damage tint to glint rendering on the armor like in 1.8-1.14.4.\n\nRequires the \"Damage Tint Armor\" setting to be enabled.",
 	"animatium.damageTintStyle": "[*] Damage Tint Style",
 	"animatium.damageTintStyle.description": "Changes the hurt tint color to match what it was in the selected version.",
+	"animatium.customTintColor": "[*] Custom Damage Color",
+	"animatium.customTintColor.description": "Applies a custom color to the damage tint when the CUSTOM tint style is selected.",
 	"animatium.enum.DamageTintSetting.V1_7": "1.7",
 	"animatium.enum.DamageTintSetting.V1_8_ORANGE_MARSHALL": "1.8 (Orange Marshall)",
+	"animatium.enum.DamageTintSetting.CUSTOM": "Custom",
 	"animatium.enum.DamageTintSetting.VANILLA": "Vanilla",
 
 	"animatium.category.other.group.other": "Other",
