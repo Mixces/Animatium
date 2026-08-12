@@ -25,7 +25,7 @@
 
 package org.visuals.legacy.animatium.handler.server_features
 
-import org.visuals.legacy.animatium.config.bundle.ConfigBundles
+import org.visuals.legacy.animatium.handler.config.bundle.ConfigBundles
 import org.visuals.legacy.animatium.util.isSingleplayer
 
 object ServerFeatureManager {
@@ -36,7 +36,7 @@ object ServerFeatureManager {
     fun isPresent(feature: ServerFeature): Boolean {
         if (isSingleplayer()) {
             for (entry in ConfigBundles.EXTRAS.entries()) {
-                if (entry.name.equals(feature.identifier.path)) {
+                if (entry.name().equals(feature.identifier.path)) {
                     return entry.value() as Boolean
                 }
             }

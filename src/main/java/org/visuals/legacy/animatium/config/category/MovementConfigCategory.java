@@ -61,14 +61,14 @@ public final class MovementConfigCategory extends Category {
     public EntryBundle bundle() {
         final EntryBundle bundle = new EntryBundle(this, "movement");
 
-        bundle.group((EntryBundle.Group) new EntryBundle.Group("cape")
+        bundle.group("cape")
                 .booleanEntry("oldCapeMovement")
                 .booleanEntry("disableCapeLean")
                 .booleanEntry("disableCapeSwingRotation")
                 .booleanEntry("capeChestplateTranslation")
-                .booleanEntry("capeSneakPosition"));
+                .booleanEntry("capeSneakPosition");
 
-        bundle.group((EntryBundle.Group) new EntryBundle.Group("other")
+        bundle.group("other")
                 .enumEntry("sneakAnimation", SneakAnimationSetting.class)
                 .booleanEntry("longUnsneak")
                 .booleanEntry("fakeOldSneakEyeHeight")
@@ -79,7 +79,7 @@ public final class MovementConfigCategory extends Category {
                 .booleanEntry("deathLimbs")
                 .booleanEntry("bowArmMovement")
                 .booleanEntry("legacyDamageTilt")
-                .booleanEntry("offsetHurtTiltTime"));
+                .booleanEntry("offsetHurtTiltTime");
 
         return bundle;
     }

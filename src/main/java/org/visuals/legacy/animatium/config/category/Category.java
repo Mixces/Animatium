@@ -34,6 +34,7 @@ import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.AnimatiumConstants;
 import org.visuals.legacy.animatium.config.bundle.EntryBundle;
 
+import java.awt.*;
 import java.lang.reflect.Field;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -43,7 +44,8 @@ public abstract class Category {
         BOOLEAN(false),
         INT(true),
         FLOAT(true),
-        ENUM(false);
+        ENUM(false),
+        COLOR(false);
 
         private final boolean sliderCapable;
 
@@ -54,11 +56,11 @@ public abstract class Category {
 
     public static class OptionBuilder<T> {
         private final String name;
-        private OptionType type = null;
-        private boolean instant = false;
+        private final OptionType type;
 
         private BiConsumer<Option<?>, ?> listener = null;
 
+        private boolean instant = false;
         private boolean slider = false;
         private Object min = null;
         private Object max = null;
@@ -66,24 +68,19 @@ public abstract class Category {
 
         private Class<?> enumClazz;
 
-        OptionBuilder(final String name) {
+        OptionBuilder(final String name, final OptionType type) {
             this.name = name;
+            this.type = type;
         }
 
-        public static <T> OptionBuilder<T> of(final String name) {
-            return new OptionBuilder<>(name);
+        public static <T> OptionBuilder<T> of(final String name, final OptionType type) {
+            return new OptionBuilder<>(name, type);
         }
 
         public static <S extends Enum<S>> OptionBuilder<Enum<S>> ofEnum(final String name, final Class<S> enumClazz) {
-            final OptionBuilder<Enum<S>> builder = new OptionBuilder<>(name);
-            builder.type = OptionType.ENUM;
+            final OptionBuilder<Enum<S>> builder = new OptionBuilder<>(name, OptionType.ENUM);
             builder.enumClazz = enumClazz;
             return builder;
-        }
-
-        public OptionBuilder<T> type(final OptionType type) {
-            this.type = type;
-            return this;
         }
 
         public <S> OptionBuilder<T> slider(final S min, final S max, final S step) {
@@ -140,6 +137,10 @@ public abstract class Category {
                                 .create((Option<? extends Enum>) opt)
                                 .enumClass(enumClazz)
                                 .formatValue(it -> Component.translatable(AnimatiumConstants.MOD_ID + ".enum." + enumClazz.getSimpleName() + "." + ((Enum<?>) it).name()));
+
+                case COLOR -> (opt) ->
+                        (ControllerBuilder<K>) ColorControllerBuilder.create((Option<Color>) opt)
+                                .allowAlpha(true);
             };
 
             final Reference<K> reference = Reference.get(this.name, defaults, current);
@@ -163,7 +164,6 @@ public abstract class Category {
             builder.name(Component.translatable(id));
             builder.description(OptionDescription.of(Component.translatable(id + ".description")));
             builder.controller(controllerBuilder);
-
             if (this.listener != null) {
                 builder.listener((BiConsumer<Option<K>, K>) (Object) this.listener);
             }
