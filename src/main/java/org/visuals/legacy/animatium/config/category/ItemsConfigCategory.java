@@ -27,7 +27,7 @@ package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.network.chat.Component;
-import org.visuals.legacy.animatium.config.bundle.EntryBundle;
+import org.visuals.legacy.animatium.handler.config.bundle.EntryBundle;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
 public final class ItemsConfigCategory extends Category {
@@ -43,6 +43,7 @@ public final class ItemsConfigCategory extends Category {
     // (Items) Transformations
     public boolean itemPositions = false;
     public boolean itemPositionsInThirdPerson = false;
+    public boolean onlyAffectWeaponsInThirdPerson = false;
     public boolean thinBlockPositions = false;
     public boolean skullPosition = false;
     public FishingRodVersionSetting fishingRodVersion = FishingRodVersionSetting.VANILLA;
@@ -86,6 +87,7 @@ public final class ItemsConfigCategory extends Category {
         bundle.group("transformations")
                 .booleanEntry("itemPositions")
                 .booleanEntry("itemPositionsInThirdPerson")
+                .booleanEntry("onlyAffectWeaponsInThirdPerson")
                 .booleanEntry("thinBlockPositions")
                 .booleanEntry("skullPosition")
                 .enumEntry("fishingRodVersion", FishingRodVersionSetting.class);

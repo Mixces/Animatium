@@ -32,7 +32,8 @@ import dev.isxander.yacl3.api.StateManager;
 import dev.isxander.yacl3.api.controller.*;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.AnimatiumConstants;
-import org.visuals.legacy.animatium.config.bundle.EntryBundle;
+import org.visuals.legacy.animatium.handler.config.bundle.EntryBundle;
+import org.visuals.legacy.animatium.handler.config.bundle.entry.EntryType;
 
 import java.awt.*;
 import java.lang.reflect.Field;
@@ -40,23 +41,9 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public abstract class Category {
-    public enum OptionType {
-        BOOLEAN(false),
-        INT(true),
-        FLOAT(true),
-        ENUM(false),
-        COLOR(false);
-
-        private final boolean sliderCapable;
-
-        OptionType(final boolean sliderCapable) {
-            this.sliderCapable = sliderCapable;
-        }
-    }
-
     public static class OptionBuilder<T> {
         private final String name;
-        private final OptionType type;
+        private final EntryType type;
 
         private BiConsumer<Option<?>, ?> listener = null;
 
@@ -68,17 +55,17 @@ public abstract class Category {
 
         private Class<?> enumClazz;
 
-        OptionBuilder(final String name, final OptionType type) {
+        OptionBuilder(final String name, final EntryType type) {
             this.name = name;
             this.type = type;
         }
 
-        public static <T> OptionBuilder<T> of(final String name, final OptionType type) {
+        public static <T> OptionBuilder<T> of(final String name, final EntryType type) {
             return new OptionBuilder<>(name, type);
         }
 
         public static <S extends Enum<S>> OptionBuilder<Enum<S>> ofEnum(final String name, final Class<S> enumClazz) {
-            final OptionBuilder<Enum<S>> builder = new OptionBuilder<>(name, OptionType.ENUM);
+            final OptionBuilder<Enum<S>> builder = new OptionBuilder<>(name, EntryType.ENUM);
             builder.enumClazz = enumClazz;
             return builder;
         }
@@ -95,8 +82,8 @@ public abstract class Category {
             }
         }
 
-        public OptionBuilder<T> listener(final BiConsumer<Option<?>, ?> listener) {
-            this.listener = listener;
+        public OptionBuilder<T> listener(final BiConsumer<Option<T>, T> listener) {
+            this.listener = (BiConsumer<Option<?>, ?>) (Object) listener;
             return this;
         }
 
