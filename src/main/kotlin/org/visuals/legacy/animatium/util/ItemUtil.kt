@@ -103,9 +103,13 @@ fun applyLegacyFirstPersonTransforms(poseStack: PoseStack, direction: Int, runna
     poseStack.mulPose(Axis.YP.rotationDegrees(direction * -45.0F))
 }
 
-fun shouldApplyItemPositionsInThirdPerson(armedEntityRenderState: ArmedEntityRenderState) =
+fun shouldApplyItemPositionsInThirdPerson(armedEntityRenderState: ArmedEntityRenderState, stack: ItemStack) =
     if (AnimatiumConfig.instance().items.itemPositionsInThirdPerson) {
-        true
+        if (AnimatiumConfig.instance().items.onlyAffectWeaponsInThirdPerson) {
+            isHandheldItem(stack)
+        } else {
+            true
+        }
     } else if (AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersionSetting.V1_7) {
         isFishingRodItem(armedEntityRenderState.mainHandItemStack)
     } else {

@@ -23,25 +23,23 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.config.bundle.entry;
+package org.visuals.legacy.animatium.handler.config.bundle.entry
 
-import dev.isxander.yacl3.api.Option;
-import org.visuals.legacy.animatium.config.category.Category;
+import dev.isxander.yacl3.api.Option
+import org.visuals.legacy.animatium.config.category.Category
+import java.util.*
+import java.util.function.BiConsumer
 
-import java.util.Optional;
-import java.util.function.BiConsumer;
-
-public record BooleanEntry(String name,
-                           Optional<BiConsumer<Option<Boolean>, Boolean>> listener) implements OptionEntrySupplier<Boolean> {
-    @Override
-    public Option<Boolean> create(final Category defaults, final Category config) {
-        final Category.OptionBuilder<Boolean> option = Category.OptionBuilder.of(this.name, Category.OptionType.BOOLEAN);
-        this.listener.ifPresent(it -> option.instant().listener((BiConsumer<Option<?>, ?>) (Object) it));
-        return option.build(defaults, config);
+data class EnumEntry<S : Enum<S>>(
+    val name: String,
+    val listener: Optional<BiConsumer<Option<Enum<S>>, Enum<S>>>,
+    val enumClass: Class<S>
+) : OptionEntrySupplier<Enum<S>> {
+    override fun create(defaults: Category, config: Category): Option<Enum<S>> {
+        val option = Category.OptionBuilder.ofEnum(this.name, this.enumClass)
+        this.listener.ifPresent { option.instant().listener(it) }
+        return option.build(defaults, config)
     }
 
-    @Override
-    public EntryType type() {
-        return EntryType.BOOLEAN;
-    }
+    override fun name() = this.name
 }

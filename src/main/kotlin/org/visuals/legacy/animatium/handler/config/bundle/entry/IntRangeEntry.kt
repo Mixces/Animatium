@@ -23,26 +23,26 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.config.bundle.entry;
+package org.visuals.legacy.animatium.handler.config.bundle.entry
 
-import dev.isxander.yacl3.api.Option;
-import org.visuals.legacy.animatium.config.category.Category;
+import dev.isxander.yacl3.api.Option
+import org.visuals.legacy.animatium.config.category.Category
+import java.util.*
+import java.util.function.BiConsumer
 
-import java.util.Optional;
-import java.util.function.BiConsumer;
-
-public record IntRangeEntry(String name, Optional<BiConsumer<Option<Integer>, Integer>> listener, int min, int max,
-                            int step) implements OptionEntrySupplier<Integer> {
-    @Override
-    public Option<Integer> create(final Category defaults, final Category config) {
-        final Category.OptionBuilder<Float> option = Category.OptionBuilder.of(this.name, Category.OptionType.INT);
-        option.slider(this.min, this.max, this.step);
-        this.listener.ifPresent(it -> option.instant().listener((BiConsumer<Option<?>, ?>) (Object) it));
-        return option.build(defaults, config);
+data class IntRangeEntry(
+    val name: String,
+    val listener: Optional<BiConsumer<Option<Int>, Int>>,
+    val min: Int,
+    val max: Int,
+    val step: Int
+) : OptionEntrySupplier<Int> {
+    override fun create(defaults: Category, config: Category): Option<Int> {
+        val option = Category.OptionBuilder.of<Int>(this.name, EntryType.INT)
+        option.slider(this.min, this.max, this.step)
+        this.listener.ifPresent { option.instant().listener(it) }
+        return option.build(defaults, config)
     }
 
-    @Override
-    public EntryType type() {
-        return EntryType.INT;
-    }
+    override fun name() = this.name
 }
