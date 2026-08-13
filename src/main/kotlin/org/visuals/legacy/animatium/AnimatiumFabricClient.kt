@@ -36,7 +36,6 @@ import net.fabricmc.loader.api.FabricLoader
 import org.visuals.legacy.animatium.command.AnimatiumCommand
 import org.visuals.legacy.animatium.handler.AnimatiumKeybinds
 import org.visuals.legacy.animatium.handler.AnimatiumNetworking
-import org.visuals.legacy.animatium.handler.AnimatiumParticles
 
 @Entrypoint
 class AnimatiumFabricClient : ClientModInitializer {
@@ -59,7 +58,6 @@ class AnimatiumFabricClient : ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ -> dispatcher.register(AnimatiumCommand.create()) }
 
         AnimatiumKeybinds.bootstrap()
-        AnimatiumParticles.bootstrap()
         AnimatiumNetworking.bootstrap()
     }
 }
