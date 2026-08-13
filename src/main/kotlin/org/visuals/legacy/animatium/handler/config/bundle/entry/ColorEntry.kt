@@ -23,12 +23,23 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.config.bundle.entry;
+package org.visuals.legacy.animatium.handler.config.bundle.entry
 
-public enum EntryType {
-    BOOLEAN,
-    INT,
-    FLOAT,
-    ENUM,
-    COLOR
+import dev.isxander.yacl3.api.Option
+import org.visuals.legacy.animatium.config.category.Category
+import java.awt.Color
+import java.util.*
+import java.util.function.BiConsumer
+
+data class ColorEntry(
+    val name: String,
+    val listener: Optional<BiConsumer<Option<Color>, Color>>
+) : OptionEntrySupplier<Color> {
+    override fun create(defaults: Category, config: Category): Option<Color> {
+        val option = Category.OptionBuilder.of<Color>(this.name, EntryType.COLOR)
+        this.listener.ifPresent { option.instant().listener(it) }
+        return option.build(defaults, config)
+    }
+
+    override fun name() = this.name
 }

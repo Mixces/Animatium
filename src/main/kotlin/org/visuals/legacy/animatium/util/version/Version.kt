@@ -31,7 +31,7 @@ import org.visuals.legacy.animatium.AnimatiumConstants
 import java.lang.Byte.parseByte
 
 data class Version(val major: Byte, val minor: Byte, val patch: Byte) {
-    val packedValue = pack()
+    val packedValue = (this.major.toInt() shl MAJOR) or (this.minor.toInt() shl MINOR) or this.patch.toInt()
 
     companion object {
         const val MAJOR = 8
@@ -41,19 +41,14 @@ data class Version(val major: Byte, val minor: Byte, val patch: Byte) {
 
         val STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,
-            Version::pack
-        ) { unpack(it) ?: BOGUS }
+            Version::packedValue
+        ) { unpack(it) }
 
-        fun unpack(value: Int): Version? {
-            try {
-                val major = ((value shr MAJOR) and 0xFF).toByte()
-                val minor = ((value shr MINOR) and 0xFF).toByte()
-                val patch = (value and 0xFF).toByte()
-                return Version(major, minor, patch)
-            } catch (_: Exception) {
-                return null
-            }
-        }
+        fun unpack(value: Int) = Version(
+            ((value shr MAJOR) and 0xFF).toByte(),
+            ((value shr MINOR) and 0xFF).toByte(),
+            (value and 0xFF).toByte()
+        )
 
         fun parse(input: String): Version? {
             if (input.isBlank()) return null
@@ -72,13 +67,9 @@ data class Version(val major: Byte, val minor: Byte, val patch: Byte) {
         }
     }
 
-    fun pack() = (this.major.toInt() shl MAJOR) or (this.minor.toInt() shl MINOR) or this.patch.toInt()
-
-    override fun toString(): String {
-        return if (this.patch > 0) {
-            "$major.$minor.$patch" + (if (AnimatiumConstants.IS_DEVELOPMENT) " (${this.packedValue})" else "")
-        } else {
-            "$major.$minor"
-        }
-    }
+    override fun toString() = if (this.patch > 0) {
+        "$major.$minor.$patch"
+    } else {
+        "$major.$minor"
+    } + (if (AnimatiumConstants.IS_DEVELOPMENT) " (${this.packedValue})" else "")
 }
