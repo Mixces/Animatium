@@ -27,11 +27,8 @@ package org.visuals.legacy.animatium.handler.particle
 
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.ClientLevel
-import net.minecraft.client.particle.Particle
-import net.minecraft.client.particle.ParticleProvider
 import net.minecraft.client.particle.TerrainParticle
 import net.minecraft.core.BlockPos
-import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.GameType
@@ -39,7 +36,6 @@ import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.RedStoneWireBlock
 import net.minecraft.world.phys.EntityHitResult
 import org.visuals.legacy.animatium.config.AnimatiumConfig
-import org.visuals.legacy.animatium.handler.AnimatiumParticles
 
 // Credit to Orange Marshalls 1.8 Mod "Vanilla Enhancements"
 class BloodParticle(
@@ -60,21 +56,9 @@ class BloodParticle(
         this.quadSize *= 0.8F
     }
 
-    class Provider : ParticleProvider<SimpleParticleType> {
-        override fun createParticle(
-            options: SimpleParticleType,
-            level: ClientLevel,
-            x: Double,
-            y: Double,
-            z: Double,
-            velocityX: Double,
-            velocityY: Double,
-            velocityZ: Double,
-            random: RandomSource
-        ): Particle = BloodParticle(level, x, y, z, velocityX, velocityY, velocityZ, random)
-    }
-
     companion object {
+        val RANDOM = RandomSource.createThreadLocalInstance()
+
         @JvmStatic
         fun canSpawn(): Boolean {
             val minecraft = Minecraft.getInstance()
@@ -91,17 +75,19 @@ class BloodParticle(
 
         @JvmStatic
         fun spawn(target: Entity) {
-            val eyePos = BlockPos.containing(target.x, target.y + 0.5, target.z)
-            val count = 5 * AnimatiumConfig.instance().extras.bloodParticleMultiplier
-            for (i in 0..<count) {
-                val x = eyePos.x.toDouble() + Math.random()
-                val y = eyePos.y.toDouble() + 0.3 + Math.random() * 1.3
-                val z = eyePos.z.toDouble() + Math.random()
-                val velocityX = Math.random() * 2.0 - 1.3
-                val velocityY = Math.random() * 0.8
-                val velocityZ = Math.random() * 2.0 - 1.3
-                target.level()
-                    .addParticle(AnimatiumParticles.BLOOD_PARTICLE_TYPE, x, y, z, velocityX, velocityY, velocityZ)
+            val level = target.level()
+            if (level is ClientLevel) {
+                val eyePos = BlockPos.containing(target.x, target.y + 0.5, target.z)
+                val count = 5 * AnimatiumConfig.instance().extras.bloodParticleMultiplier
+                for (i in 0..<count) {
+                    val x = eyePos.x.toDouble() + Math.random()
+                    val y = eyePos.y.toDouble() + 0.3 + Math.random() * 1.3
+                    val z = eyePos.z.toDouble() + Math.random()
+                    val velocityX = Math.random() * 2.0 - 1.3
+                    val velocityY = Math.random() * 0.8
+                    val velocityZ = Math.random() * 2.0 - 1.3
+                    Minecraft.getInstance().particleEngine.add(BloodParticle(level, x, y, z, velocityX, velocityY, velocityZ, RANDOM))
+                }
             }
         }
     }
