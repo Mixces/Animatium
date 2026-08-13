@@ -28,8 +28,9 @@ package org.visuals.legacy.animatium.config.category;
 import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import org.visuals.legacy.animatium.config.bundle.EntryBundle;
 import org.visuals.legacy.animatium.handler.compatibility.ModsKt;
+import org.visuals.legacy.animatium.handler.config.bundle.EntryBundle;
+import org.visuals.legacy.animatium.handler.config.bundle.GroupBundle;
 import org.visuals.legacy.animatium.handler.server_features.ServerFeature;
 import org.visuals.legacy.animatium.handler.server_features.ServerFeatures;
 
@@ -89,6 +90,7 @@ public final class ExtrasConfigCategory extends Category {
     @Override
     public EntryBundle bundle() {
         final EntryBundle bundle = new EntryBundle(this, "extras");
+
         bundle.booleanEntry("minimalViewBobbing")
                 .booleanEntry("showNameTagInThirdPerson")
                 .booleanEntry("hideNameTagBackground")
@@ -132,7 +134,7 @@ public final class ExtrasConfigCategory extends Category {
                 .booleanEntry("ignoreMiningFatigueSpeed");
 
         {
-            final EntryBundle.Group serverFeatureGroup = bundle.group("server_features");
+            final GroupBundle serverFeatureGroup = bundle.group("server_features");
             for (final ServerFeature feature : ServerFeatures.allFeatures()) {
                 if (!ServerFeatures.ALL.equals(feature)) {
                     serverFeatureGroup.booleanEntry(feature.getIdentifier().getPath());
