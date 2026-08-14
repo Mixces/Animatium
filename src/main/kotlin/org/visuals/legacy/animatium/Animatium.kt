@@ -59,7 +59,6 @@ object Animatium {
         val minecraft = Minecraft.getInstance()
         minecraft.levelExtractor.allChanged()
         LegacyDiffuseLighting.refresh()
-        (minecraft.gameRenderer as GameRendererAccessor).`animatium$setOverlayTexture`(OverlayTexture())
         reinitializeInventorySlots()
         ToastUtil.send(Component.literal("Mod reloaded.").withStyle(ChatFormatting.GREEN))
     }
