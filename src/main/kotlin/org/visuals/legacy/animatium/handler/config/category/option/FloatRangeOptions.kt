@@ -29,7 +29,7 @@ import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.controller.ControllerBuilder
 import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder
 
-class FloatRangeOptions(override val min: Float, override val max: Float, override val step: Float = 0.1F) : RangeOptions<Float>() {
+data class FloatRangeOptions(override val min: Float, override val max: Float, override val step: Float = 0.1F) : RangeOptions<Float>() {
     override fun createController(option: Option<Float>): ControllerBuilder<Float> = FloatSliderControllerBuilder.create(option)
         .range(this.min, this.max)
         .step(this.step)
