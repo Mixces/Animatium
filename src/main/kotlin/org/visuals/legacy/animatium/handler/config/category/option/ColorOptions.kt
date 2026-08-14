@@ -23,25 +23,18 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.handler.config.bundle.entry
+package org.visuals.legacy.animatium.handler.config.category.option
 
 import dev.isxander.yacl3.api.Option
-import org.visuals.legacy.animatium.handler.config.category.Category
-import org.visuals.legacy.animatium.handler.config.category.option.ColorOptions
-import org.visuals.legacy.animatium.handler.config.category.option.OptionBuilder
+import dev.isxander.yacl3.api.controller.ColorControllerBuilder
 import java.awt.Color
-import java.util.*
-import java.util.function.BiConsumer
 
-data class ColorEntry(
-    val name: String,
-    val listener: Optional<BiConsumer<Option<Color>, Color>>
-) : OptionEntrySupplier<Color> {
-    override fun create(defaults: Category, config: Category): Option<Color> {
-        val option = OptionBuilder(this.name, ColorOptions.WITH_ALPHA)
-        this.listener.ifPresent { option.instant().listener(it) }
-        return option.build(defaults, config)
+class ColorOptions(val allowAlpha: Boolean) : Options<Color>() {
+    companion object {
+        val WITH_ALPHA = ColorOptions(true)
+
+        val WITHOUT_ALPHA = ColorOptions(false)
     }
 
-    override fun name() = this.name
+    override fun createController(option: Option<Color>): ColorControllerBuilder = ColorControllerBuilder.create(option).allowAlpha(allowAlpha)
 }

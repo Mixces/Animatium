@@ -23,25 +23,14 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.handler.config.bundle.entry
+package org.visuals.legacy.animatium.handler.config.category.option
 
 import dev.isxander.yacl3.api.Option
-import org.visuals.legacy.animatium.handler.config.category.Category
-import org.visuals.legacy.animatium.handler.config.category.option.ColorOptions
-import org.visuals.legacy.animatium.handler.config.category.option.OptionBuilder
-import java.awt.Color
-import java.util.*
-import java.util.function.BiConsumer
+import dev.isxander.yacl3.api.controller.ControllerBuilder
+import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder
 
-data class ColorEntry(
-    val name: String,
-    val listener: Optional<BiConsumer<Option<Color>, Color>>
-) : OptionEntrySupplier<Color> {
-    override fun create(defaults: Category, config: Category): Option<Color> {
-        val option = OptionBuilder(this.name, ColorOptions.WITH_ALPHA)
-        this.listener.ifPresent { option.instant().listener(it) }
-        return option.build(defaults, config)
-    }
-
-    override fun name() = this.name
+class IntegerRangeOptions(override val min: Int, override val max: Int, override val step: Int = 1) : RangeOptions<Int>() {
+    override fun createController(option: Option<Int>): ControllerBuilder<Int> = IntegerSliderControllerBuilder.create(option)
+        .range(this.min, this.max)
+        .step(this.step)
 }

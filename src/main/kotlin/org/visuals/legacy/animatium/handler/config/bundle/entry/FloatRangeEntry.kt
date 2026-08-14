@@ -26,7 +26,9 @@
 package org.visuals.legacy.animatium.handler.config.bundle.entry
 
 import dev.isxander.yacl3.api.Option
-import org.visuals.legacy.animatium.config.category.Category
+import org.visuals.legacy.animatium.handler.config.category.Category
+import org.visuals.legacy.animatium.handler.config.category.option.FloatRangeOptions
+import org.visuals.legacy.animatium.handler.config.category.option.OptionBuilder
 import java.util.*
 import java.util.function.BiConsumer
 
@@ -38,8 +40,7 @@ data class FloatRangeEntry(
     val step: Float
 ) : OptionEntrySupplier<Float> {
     override fun create(defaults: Category, config: Category): Option<Float> {
-        val option = Category.OptionBuilder.of<Float>(this.name, EntryType.FLOAT)
-        option.slider(this.min, this.max, this.step)
+        val option = OptionBuilder(this.name, FloatRangeOptions(this.min, this.max, this.step))
         this.listener.ifPresent { option.instant().listener(it) }
         return option.build(defaults, config)
     }
