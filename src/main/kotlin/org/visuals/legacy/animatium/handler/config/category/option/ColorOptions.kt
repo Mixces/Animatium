@@ -29,7 +29,7 @@ import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder
 import java.awt.Color
 
-class ColorOptions(val allowAlpha: Boolean) : Options<Color>() {
+data class ColorOptions(val allowAlpha: Boolean) : Options<Color>() {
     companion object {
         val WITH_ALPHA = ColorOptions(true)
 
