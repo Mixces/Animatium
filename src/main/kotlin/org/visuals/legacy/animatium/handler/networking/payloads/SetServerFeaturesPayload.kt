@@ -23,7 +23,7 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.handler.payloads
+package org.visuals.legacy.animatium.handler.networking.payloads
 
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec

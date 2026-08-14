@@ -23,26 +23,25 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.handler.payloads
+package org.visuals.legacy.animatium.handler.command.subcommands
 
-import net.minecraft.network.codec.ByteBufCodecs
-import net.minecraft.network.codec.StreamCodec
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload
-import org.visuals.legacy.animatium.Animatium.location
-import org.visuals.legacy.animatium.util.version.Version
-import java.util.*
+import com.mojang.brigadier.Command
+import com.mojang.brigadier.context.CommandContext
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
+import net.minecraft.ChatFormatting
+import net.minecraft.network.chat.Component
+import org.visuals.legacy.animatium.Animatium
 
-data class InfoPayload(val version: Version, val developmentVersion: Optional<String>) : CustomPacketPayload {
+class ReloadSubCommand : Command<FabricClientCommandSource> {
     companion object {
-        val TYPE = CustomPacketPayload.Type<InfoPayload>(location("info"))
-
-        val STREAM_CODEC = StreamCodec.composite(
-            Version.STREAM_CODEC,
-            InfoPayload::version,
-            ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8),
-            InfoPayload::developmentVersion
-        ) { version, developmentVersion -> InfoPayload(version, developmentVersion) }
+        @JvmField
+        val UNIT = ReloadSubCommand()
     }
 
-    override fun type() = TYPE
+    override fun run(context: CommandContext<FabricClientCommandSource>): Int {
+        val source = context.getSource()
+        source.sendFeedback(Component.literal("Mod reloaded.").withStyle(ChatFormatting.GREEN))
+        Animatium.reload()
+        return Command.SINGLE_SUCCESS
+    }
 }

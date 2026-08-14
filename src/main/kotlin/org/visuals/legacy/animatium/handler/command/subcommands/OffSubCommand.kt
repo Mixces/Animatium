@@ -23,33 +23,31 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium
+package org.visuals.legacy.animatium.handler.command.subcommands
 
-import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey
-import net.minecraft.client.renderer.block.dispatch.BlockStateModel
-import org.visuals.legacy.animatium.handler.networking.payloads.InfoPayload
-import org.visuals.legacy.animatium.util.version.Version
-import java.lang.Boolean.parseBoolean
-import java.util.*
+import com.mojang.brigadier.Command
+import com.mojang.brigadier.context.CommandContext
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
+import net.minecraft.ChatFormatting
+import net.minecraft.network.chat.Component
+import org.visuals.legacy.animatium.Animatium
 
-object AnimatiumConstants {
-    const val MOD_ID = "@MODID@"
-    const val DEVELOPMENT_VERSION = "@COMMIT@"
+class OffSubCommand : Command<FabricClientCommandSource> {
+    companion object {
+        @JvmField
+        val UNIT = OffSubCommand()
+    }
 
-    @JvmField
-    val VERSION = Version.parse("@VERSION@") ?: Version.BOGUS
+    override fun run(context: CommandContext<FabricClientCommandSource>): Int {
+        val source = context.getSource()
+        if (!Animatium.isEnabled()) {
+            source.sendFeedback(Component.literal("Mod is already disabled!").withStyle(ChatFormatting.YELLOW))
+        } else {
+            source.sendFeedback(Component.literal("Mod disabled.").withStyle(ChatFormatting.RED))
+            Animatium.enabled = false
+            Animatium.reload()
+        }
 
-    @JvmField
-    val IS_DEVELOPMENT = parseBoolean("@DEVELOPMENT@")
-
-    @JvmField
-    val FAST_GRASS_MODEL_LOCATION = Animatium.location("block/fast_grass_block")
-
-    @JvmField
-    val FAST_GRASS_MODEL_KEY: ExtraModelKey<BlockStateModel> =
-        ExtraModelKey.create(FAST_GRASS_MODEL_LOCATION::toString)
-
-    @JvmField
-    val INFO_PAYLOAD =
-        InfoPayload(VERSION, if (IS_DEVELOPMENT) Optional.of(DEVELOPMENT_VERSION) else Optional.empty())
+        return Command.SINGLE_SUCCESS
+    }
 }
