@@ -275,11 +275,8 @@ val currentCommitHash: String by lazy {
 blossom {
     replaceToken("@MODID@", mod.id)
     replaceToken("@VERSION@", mod.version)
-    replaceToken(
-        "@COMMIT@",
-        if (mod.development) currentCommitHash else ""
-    ) // if development version, put currentCommitHash else put ""
     replaceToken("@DEVELOPMENT@", mod.development)
+    replaceToken("@COMMIT@", currentCommitHash)
 }
 
 if (stonecutter.current.isActive) {
