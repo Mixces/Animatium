@@ -26,7 +26,9 @@
 package org.visuals.legacy.animatium.handler.config.bundle.entry
 
 import dev.isxander.yacl3.api.Option
-import org.visuals.legacy.animatium.config.category.Category
+import org.visuals.legacy.animatium.handler.config.category.Category
+import org.visuals.legacy.animatium.handler.config.category.option.IntegerRangeOptions
+import org.visuals.legacy.animatium.handler.config.category.option.OptionBuilder
 import java.util.*
 import java.util.function.BiConsumer
 
@@ -38,8 +40,7 @@ data class IntRangeEntry(
     val step: Int
 ) : OptionEntrySupplier<Int> {
     override fun create(defaults: Category, config: Category): Option<Int> {
-        val option = Category.OptionBuilder.of<Int>(this.name, EntryType.INT)
-        option.slider(this.min, this.max, this.step)
+        val option = OptionBuilder(this.name, IntegerRangeOptions(this.min, this.max, this.step))
         this.listener.ifPresent { option.instant().listener(it) }
         return option.build(defaults, config)
     }

@@ -29,6 +29,7 @@ import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.handler.compatibility.ModsKt;
 import org.visuals.legacy.animatium.handler.config.bundle.EntryBundle;
+import org.visuals.legacy.animatium.handler.config.category.Category;
 
 public final class FixesConfigCategory extends Category {
     public boolean fixSneakingFeetPosition = true;
