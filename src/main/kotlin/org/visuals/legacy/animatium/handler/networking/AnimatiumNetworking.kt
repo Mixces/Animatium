@@ -23,14 +23,14 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.handler
+package org.visuals.legacy.animatium.handler.networking
 
 import net.fabricmc.fabric.api.client.networking.v1.*
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import org.visuals.legacy.animatium.AnimatiumConstants
-import org.visuals.legacy.animatium.handler.payloads.InfoPayload
-import org.visuals.legacy.animatium.handler.payloads.SetServerFeaturesPayload
+import org.visuals.legacy.animatium.handler.networking.payloads.InfoPayload
+import org.visuals.legacy.animatium.handler.networking.payloads.SetServerFeaturesPayload
 import org.visuals.legacy.animatium.handler.server_features.ServerFeatureManager
 
 object AnimatiumNetworking {

@@ -23,33 +23,26 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium
+package org.visuals.legacy.animatium.handler.networking.payloads
 
-import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey
-import net.minecraft.client.renderer.block.dispatch.BlockStateModel
-import org.visuals.legacy.animatium.handler.networking.payloads.InfoPayload
+import net.minecraft.network.codec.ByteBufCodecs
+import net.minecraft.network.codec.StreamCodec
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload
+import org.visuals.legacy.animatium.Animatium.location
 import org.visuals.legacy.animatium.util.version.Version
-import java.lang.Boolean.parseBoolean
 import java.util.*
 
-object AnimatiumConstants {
-    const val MOD_ID = "@MODID@"
-    const val DEVELOPMENT_VERSION = "@COMMIT@"
+data class InfoPayload(val version: Version, val developmentVersion: Optional<String>) : CustomPacketPayload {
+    companion object {
+        val TYPE = CustomPacketPayload.Type<InfoPayload>(location("info"))
 
-    @JvmField
-    val VERSION = Version.parse("@VERSION@") ?: Version.BOGUS
+        val STREAM_CODEC = StreamCodec.composite(
+            Version.STREAM_CODEC,
+            InfoPayload::version,
+            ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8),
+            InfoPayload::developmentVersion
+        ) { version, developmentVersion -> InfoPayload(version, developmentVersion) }
+    }
 
-    @JvmField
-    val IS_DEVELOPMENT = parseBoolean("@DEVELOPMENT@")
-
-    @JvmField
-    val FAST_GRASS_MODEL_LOCATION = Animatium.location("block/fast_grass_block")
-
-    @JvmField
-    val FAST_GRASS_MODEL_KEY: ExtraModelKey<BlockStateModel> =
-        ExtraModelKey.create(FAST_GRASS_MODEL_LOCATION::toString)
-
-    @JvmField
-    val INFO_PAYLOAD =
-        InfoPayload(VERSION, if (IS_DEVELOPMENT) Optional.of(DEVELOPMENT_VERSION) else Optional.empty())
+    override fun type() = TYPE
 }
