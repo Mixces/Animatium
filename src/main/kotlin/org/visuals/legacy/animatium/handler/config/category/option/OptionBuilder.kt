@@ -48,18 +48,18 @@ class OptionBuilder<T>(private val name: String, private val options: Options<T>
         return this
     }
 
-    fun <CategoryLike : Category> build(defaults: CategoryLike, current: CategoryLike): Option<T> {
-        val reference: Reference<T> = Reference.get(this.name, defaults, current)
+    fun <CategoryLike : Category> build(defaults: CategoryLike, config: CategoryLike): Option<T> {
+        val reference: Reference<T> = Reference.get(this.name, defaults, config)
         val binding: Binding<T> = Binding.generic(reference.defaultValue, {
             return@generic try {
-                reference.currentField?.get(current) as T
+                reference.currentField?.get(config) as T
             } catch (exception: IllegalAccessException) {
                 exception.printStackTrace()
                 reference.defaultValue
             }
         }, {
             try {
-                reference.currentField?.set(current, it)
+                reference.currentField?.set(config, it)
             } catch (exception: IllegalAccessException) {
                 exception.printStackTrace()
             }
