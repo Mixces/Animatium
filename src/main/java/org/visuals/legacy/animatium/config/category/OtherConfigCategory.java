@@ -119,7 +119,7 @@ public final class OtherConfigCategory extends Category {
                 .booleanEntry("maxGlintProperties")
                 .booleanEntry("flameOffset")
                 .booleanEntry("persistentBlockOutline")
-                .booleanEntry("fastGrass", (option, value) -> Minecraft.getInstance().levelExtractor.allChanged())
+                .booleanEntry("fastGrass", (option, value) -> Minecraft.getInstance().levelRenderer.allChanged())
                 .booleanEntry("oldY0Height")
                 .booleanEntry("oldWaterOverlayOpacity")
                 .booleanEntry("oldWaterColorFog")

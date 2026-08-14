@@ -38,7 +38,7 @@ class OnboardingSubCommand : Command<FabricClientCommandSource> {
 
     override fun run(context: CommandContext<FabricClientCommandSource>): Int {
         val minecraft = context.getSource().client
-        minecraft.schedule({ minecraft.gui.setScreen(OnboardingScreen(minecraft.gui.screen(), true)) })
+        minecraft.schedule({ minecraft.setScreen(OnboardingScreen(minecraft.screen, true)) })
         return Command.SINGLE_SUCCESS
     }
 }
