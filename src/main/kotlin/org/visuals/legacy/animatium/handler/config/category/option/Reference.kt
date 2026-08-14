@@ -3,9 +3,9 @@
  * The all-you-could-want legacy animations mod for modern minecraft versions.
  * Brings back animations from the 1.7/1.8 era and more.
  * <p>
- * Copyright (C) 2024-2025 lowercasebtw
- * Copyright (C) 2024-2025 mixces
- * Copyright (C) 2024-2025 Contributors to the project retain their copyright
+ * Copyright (C) 2024-2027 lowercasebtw
+ * Copyright (C) 2024-2027 mixces
+ * Copyright (C) 2024-2027 Contributors to the project retain their copyright
  * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
