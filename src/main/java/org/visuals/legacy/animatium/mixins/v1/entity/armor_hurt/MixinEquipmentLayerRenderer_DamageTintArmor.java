@@ -76,7 +76,11 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
 
     @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorCutoutNoCullGlint(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
     private RenderType animatium$disableVanillaGlint(final Identifier texture, final Operation<RenderType> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.damageTintArmor && AnimatiumConfig.instance().other.glintAffectsArmorTint) {
+        if (Animatium.isEnabled() &&
+                AnimatiumConfig.instance().other.damageTintArmor &&
+                AnimatiumConfig.instance().other.glintAffectsArmorTint &&
+                !Minecraft.getInstance().options.improvedTransparency().get()
+        ) {
             return RenderTypes.entityCutoutZOffset(texture);
         } else {
             return original.call(texture);
