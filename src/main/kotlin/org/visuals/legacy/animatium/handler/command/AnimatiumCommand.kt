@@ -28,7 +28,7 @@ package org.visuals.legacy.animatium.handler.command
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
-import net.fabricmc.fabric.api.client.command.v2.ClientCommands
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
@@ -49,7 +49,7 @@ class AnimatiumCommand : Command<FabricClientCommandSource> {
         )
 
         fun create(): LiteralArgumentBuilder<FabricClientCommandSource> {
-            val command = ClientCommands.literal("animatium").executes(AnimatiumCommand())
+            val command = ClientCommandManager.literal("animatium").executes(AnimatiumCommand())
             command.then(subCommand("on", OnSubCommand.UNIT))
             command.then(subCommand("off", OffSubCommand.UNIT))
             command.then(subCommand("reload", ReloadSubCommand.UNIT))

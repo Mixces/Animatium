@@ -41,12 +41,12 @@ class BirthdaySubCommand : Command<FabricClientCommandSource> {
         val UNIT = BirthdaySubCommand()
     }
 
-    private val random = RandomSource.createThreadLocalInstance()
+    private val random = RandomSource.createNewThreadLocalInstance()
 
     override fun run(context: CommandContext<FabricClientCommandSource>): Int {
         val entity = context.getSource().entity
         if (entity is Player) {
-            val level = context.getSource().level
+            val level = context.getSource().world
             val x = entity.blockX + this.random.nextDouble()
             val y = entity.blockY + this.random.nextDouble()
             val z = entity.blockZ + this.random.nextDouble()

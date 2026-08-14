@@ -57,7 +57,7 @@ class BloodParticle(
     }
 
     companion object {
-        val RANDOM = RandomSource.createThreadLocalInstance()
+        val RANDOM = RandomSource.createNewThreadLocalInstance()
 
         @JvmStatic
         fun canSpawn(): Boolean {

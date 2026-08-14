@@ -110,15 +110,17 @@ fun setOverlayColor(color: Int) {
     val overlayTexture = Minecraft.getInstance().gameRenderer.overlayTexture()
     val dynamicTexture = (overlayTexture as OverlayTextureAccessor).`animatium$getDynamicTexture`()
     val pixels = dynamicTexture.pixels
-    for (y in 0..<16) {
-        for (x in 0..<16) {
-            if (y < 8) {
-                pixels.setPixel(x, y, color)
+    if (pixels != null) {
+        for (y in 0..<16) {
+            for (x in 0..<16) {
+                if (y < 8) {
+                    pixels.setPixel(x, y, color)
+                }
             }
         }
-    }
 
-    dynamicTexture.upload()
+        dynamicTexture.upload()
+    }
 }
 
 fun updateOverlayTint(style: DamageTintSetting = AnimatiumConfig.instance().other.damageTintStyle) {
