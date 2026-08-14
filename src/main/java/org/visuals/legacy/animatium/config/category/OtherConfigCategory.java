@@ -28,6 +28,7 @@ package org.visuals.legacy.animatium.config.category;
 import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import org.jspecify.annotations.NonNull;
 import org.visuals.legacy.animatium.handler.compatibility.ModsKt;
 import org.visuals.legacy.animatium.handler.config.bundle.EntryBundle;
 import org.visuals.legacy.animatium.handler.config.category.Category;
@@ -84,7 +85,7 @@ public final class OtherConfigCategory extends Category {
     }
 
     @Override
-    public EntryBundle bundle() {
+    public @NonNull EntryBundle bundle() {
         final EntryBundle bundle = new EntryBundle(this, "other");
 
         bundle.group("sky")
@@ -99,8 +100,8 @@ public final class OtherConfigCategory extends Category {
             bundle.group("damage_tint")
                     .booleanEntry("damageTintArmor")
                     .booleanEntry("glintAffectsArmorTint")
-                    .enumEntry("damageTintStyle", DamageTintSetting.class, (option, value) -> RenderUtilsKt.reloadOverlayTexture())
-                    .colorEntry("customTintColor", (option, value) -> RenderUtilsKt.reloadOverlayTexture());
+                    .enumEntry("damageTintStyle", DamageTintSetting.class, (option, value) -> RenderUtilsKt.updateOverlayTint(value))
+                    .colorEntry("customTintColor", (option, value) -> RenderUtilsKt.updateOverlayTint(this.damageTintStyle));
         }
 
         bundle.group("other")

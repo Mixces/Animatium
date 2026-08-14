@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.visuals.legacy.animatium.config.category.*;
 
-import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -83,14 +83,15 @@ public final class AnimatiumConfig {
 
     public static void load() {
         final Path oldFilePath = YACLPlatform.getConfigDir().resolve("animatium.json");
-        final File oldFile = oldFilePath.toFile();
-
         final Path newFilePath = YACLPlatform.getConfigDir().resolve("animatium3.json");
-        final File newFile = newFilePath.toFile();
-
-        if (oldFile.exists()) {
-            if (newFile.exists()) {
-                newFile.delete();
+        if (Files.exists(oldFilePath)) {
+            if (Files.exists(newFilePath)) {
+                try {
+                    Files.delete(newFilePath);
+                } catch (final IOException ignored) {
+                    LOGGER.error("Failed to delete pre-existing new config file, skipping..");
+                    return;
+                }
             }
 
             try {
