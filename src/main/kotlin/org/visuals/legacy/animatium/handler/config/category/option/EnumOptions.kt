@@ -23,15 +23,16 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.handler.config.bundle.entry
+package org.visuals.legacy.animatium.handler.config.category.option
 
-enum class EntryType(
-    @JvmField
-    val sliderCapable: Boolean = false
-) {
-    BOOLEAN,
-    INT(true),
-    FLOAT(true),
-    ENUM,
-    COLOR
+import dev.isxander.yacl3.api.Option
+import dev.isxander.yacl3.api.controller.ControllerBuilder
+import dev.isxander.yacl3.api.controller.EnumControllerBuilder
+import net.minecraft.network.chat.Component
+import org.visuals.legacy.animatium.AnimatiumConstants
+
+class EnumOptions<S : Enum<S>>(private val enumClazz: Class<S>) : Options<S>() {
+    override fun createController(option: Option<S>): ControllerBuilder<S> = EnumControllerBuilder.create(option)
+        .enumClass(enumClazz)
+        .formatValue { Component.translatable("${AnimatiumConstants.MOD_ID}.enum.${enumClazz.getSimpleName()}.${it.name}") }
 }

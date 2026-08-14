@@ -27,7 +27,7 @@ package org.visuals.legacy.animatium.handler.config.bundle
 
 import dev.isxander.yacl3.api.ConfigCategory
 import dev.isxander.yacl3.api.OptionGroup
-import org.visuals.legacy.animatium.config.category.Category
+import org.visuals.legacy.animatium.handler.config.category.Category
 
 class GroupBundle(category: Category, name: String) : EntryBundle(category, name) {
     override fun install(builder: ConfigCategory.Builder, defaults: Category, config: Category) {

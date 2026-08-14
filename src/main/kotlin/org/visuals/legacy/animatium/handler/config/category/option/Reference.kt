@@ -23,34 +23,44 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.handler.config.bundle.entry
+package org.visuals.legacy.animatium.handler.config.category.option
 
-import dev.isxander.yacl3.api.Option
 import org.visuals.legacy.animatium.handler.config.category.Category
+import java.lang.reflect.Field
 
-interface OptionEntrySupplier<T> {
-    fun create(defaults: Category, config: Category): Option<T>
+data class Reference<S>(
+    @JvmField
+    val defaultField: Field?,
 
-    fun name(): String
+    @JvmField
+    val currentField: Field?,
 
-    fun value(): T? = throw UnsupportedOperationException("The supplier used has not been bootstrapped yet!")
-
+    @JvmField
+    val defaultValue: S?
+) {
     companion object {
         @JvmStatic
-        fun <T> bootstrap(clazz: Class<out Category>, category: Category, supplier: OptionEntrySupplier<T>): OptionEntrySupplier<T> {
-            return object : OptionEntrySupplier<T> {
-                override fun create(defaults: Category, config: Category) = supplier.create(defaults, config)
+        fun <T : Category, S> get(fieldName: String, defaults: T, current: T): Reference<S> {
+            var defaultField: Field? = null
+            var currentField: Field? = null
+            var defaultValue: S? = null
 
-                override fun name() = supplier.name()
-
-                override fun value(): T? {
-                    return try {
-                        clazz.getField(this.name()).get(category) as T
-                    } catch (_: Exception) {
-                        null
-                    }
-                }
+            val defaultsClazz = defaults::class.java
+            try {
+                defaultField = defaultsClazz.getField(fieldName)
+                defaultValue = defaultField?.get(defaults) as S?
+            } catch (exception: ReflectiveOperationException) {
+                exception.printStackTrace()
             }
+
+            val currentClazz = current::class.java
+            try {
+                currentField = currentClazz.getField(fieldName)
+            } catch (exception: ReflectiveOperationException) {
+                exception.printStackTrace()
+            }
+
+            return Reference(defaultField, currentField, defaultValue)
         }
     }
 }

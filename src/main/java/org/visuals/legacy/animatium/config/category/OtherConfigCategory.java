@@ -29,6 +29,7 @@ import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.handler.compatibility.ModsKt;
 import org.visuals.legacy.animatium.handler.config.bundle.EntryBundle;
+import org.visuals.legacy.animatium.handler.config.category.Category;
 import org.visuals.legacy.animatium.handler.rendering.RenderUtilsKt;
 import org.visuals.legacy.animatium.handler.rendering.lighting.LegacyDiffuseLighting;
 import org.visuals.legacy.animatium.util.enums.DamageTintSetting;

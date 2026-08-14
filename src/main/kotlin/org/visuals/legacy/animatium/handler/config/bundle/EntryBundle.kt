@@ -29,8 +29,8 @@ import dev.isxander.yacl3.api.ConfigCategory
 import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.OptionGroup
 import net.minecraft.network.chat.Component
-import org.visuals.legacy.animatium.config.category.Category
 import org.visuals.legacy.animatium.handler.config.bundle.entry.*
+import org.visuals.legacy.animatium.handler.config.category.Category
 import java.awt.Color
 import java.util.*
 import java.util.function.BiConsumer
