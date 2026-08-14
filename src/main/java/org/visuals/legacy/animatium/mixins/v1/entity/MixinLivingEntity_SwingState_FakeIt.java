@@ -32,7 +32,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.visuals.legacy.animatium.util.duck.SwingStateExt;
 
 @Mixin(LivingEntity.SwingState.class)
@@ -48,13 +47,8 @@ public abstract class MixinLivingEntity_SwingState_FakeIt implements SwingStateE
 
     @Override
     public void animatium$forceSwing(final @NotNull InteractionHand hand, final @NotNull SwingAnimation animation, final int duration) {
-        if (this.animatium$isNotSwinging(duration)) {
+        if (this.currentSwing == null || this.ticks >= duration / 2 || this.ticks < 0) {
             this.start(hand, animation, duration);
         }
-    }
-
-    @Unique
-    private boolean animatium$isNotSwinging(final int duration) {
-        return this.currentSwing == null || this.ticks >= duration / 2 || this.ticks < 0;
     }
 }
