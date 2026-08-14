@@ -35,6 +35,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
         BubblePopParticle.class,
         DragonBreathParticle.class,
         DustParticleBase.class,
+        EmissiveRisingParticle.class,
         ExplodeParticle.class,
         FallingDustParticle.class,
         GeyserPlumeParticle.class,
@@ -46,7 +47,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
         SculkChargePopParticle.class,
         SimpleAnimatedParticle.class,
         SnowflakeParticle.class,
-        SoulParticle.class,
         SpellParticle.class,
         TrialSpawnerDetectionParticle.class,
         WakeParticle.class
