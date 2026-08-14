@@ -23,33 +23,22 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium
+package org.visuals.legacy.animatium.handler.command.subcommands
 
-import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey
-import net.minecraft.client.renderer.block.dispatch.BlockStateModel
-import org.visuals.legacy.animatium.handler.networking.payloads.InfoPayload
-import org.visuals.legacy.animatium.util.version.Version
-import java.lang.Boolean.parseBoolean
-import java.util.*
+import com.mojang.brigadier.Command
+import com.mojang.brigadier.context.CommandContext
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
+import org.visuals.legacy.animatium.handler.screen.OnboardingScreen
 
-object AnimatiumConstants {
-    const val MOD_ID = "@MODID@"
-    const val DEVELOPMENT_VERSION = "@COMMIT@"
+class OnboardingSubCommand : Command<FabricClientCommandSource> {
+    companion object {
+        @JvmField
+        val UNIT = OnboardingSubCommand()
+    }
 
-    @JvmField
-    val VERSION = Version.parse("@VERSION@") ?: Version.BOGUS
-
-    @JvmField
-    val IS_DEVELOPMENT = parseBoolean("@DEVELOPMENT@")
-
-    @JvmField
-    val FAST_GRASS_MODEL_LOCATION = Animatium.location("block/fast_grass_block")
-
-    @JvmField
-    val FAST_GRASS_MODEL_KEY: ExtraModelKey<BlockStateModel> =
-        ExtraModelKey.create(FAST_GRASS_MODEL_LOCATION::toString)
-
-    @JvmField
-    val INFO_PAYLOAD =
-        InfoPayload(VERSION, if (IS_DEVELOPMENT) Optional.of(DEVELOPMENT_VERSION) else Optional.empty())
+    override fun run(context: CommandContext<FabricClientCommandSource>): Int {
+        val minecraft = context.getSource().client
+        minecraft.schedule({ minecraft.gui.setScreen(OnboardingScreen(minecraft.gui.screen(), true)) })
+        return Command.SINGLE_SUCCESS
+    }
 }

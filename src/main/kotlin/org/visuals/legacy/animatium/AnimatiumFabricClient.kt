@@ -33,9 +33,9 @@ import net.fabricmc.fabric.api.client.model.loading.v1.SimpleUnbakedExtraModel
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader
 import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType
 import net.fabricmc.loader.api.FabricLoader
-import org.visuals.legacy.animatium.command.AnimatiumCommand
 import org.visuals.legacy.animatium.handler.AnimatiumKeybinds
-import org.visuals.legacy.animatium.handler.AnimatiumNetworking
+import org.visuals.legacy.animatium.handler.networking.AnimatiumNetworking
+import org.visuals.legacy.animatium.handler.command.AnimatiumCommand
 
 @Entrypoint
 class AnimatiumFabricClient : ClientModInitializer {
