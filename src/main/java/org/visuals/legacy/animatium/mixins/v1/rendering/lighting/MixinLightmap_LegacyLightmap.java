@@ -23,35 +23,45 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.gui.centered_widgets;
+package org.visuals.legacy.animatium.mixins.v1.rendering.lighting;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractScrollArea;
-import net.minecraft.client.gui.components.AbstractSelectionList;
+import com.mojang.blaze3d.textures.GpuTextureView;
+import net.minecraft.client.renderer.Lightmap;
+import net.minecraft.client.renderer.state.LightmapRenderState;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.handler.rendering.lighting.lightmap.LegacyLightmapRenderer;
+import org.visuals.legacy.animatium.handler.rendering.lighting.lightmap.LightmapStateExtension;
 
-@Mixin(AbstractSelectionList.class)
-public abstract class MixinAbstractSelectionList<E extends AbstractSelectionList.Entry<E>> {
-    @Inject(method = "renderItem", at = @At("HEAD"))
-    private void animatium$updateScroll(final GuiGraphics graphics, final int mouseX, final int mouseY, final float tickDelta, final E entry, final CallbackInfo ci) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.centerScrollableListWidgets) {
-            ((AbstractScrollArea) (Object) this).refreshScrollAmount();
+@Mixin(Lightmap.class)
+public abstract class MixinLightmap_LegacyLightmap {
+    @Shadow
+    @Final
+    private GpuTextureView textureView;
+
+    @Unique
+    private final LegacyLightmapRenderer animatium$renderer = new LegacyLightmapRenderer();
+
+    @WrapMethod(method = "render")
+    private void animatium$legacyLightmap(final LightmapRenderState renderState, final Operation<Void> original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.legacyLightmap) {
+            this.animatium$renderer.render(((LightmapStateExtension) renderState).animatium$getState(), this.textureView);
+        } else {
+            original.call(renderState);
         }
     }
 
-    @WrapOperation(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/AbstractSelectionList;isFocused()Z"))
-    private boolean animatium$listWidgetSelectedBorderColor(AbstractSelectionList<?> instance, Operation<Boolean> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.listWidgetSelectedBorderColor) {
-            return false;
-        } else {
-            return original.call(instance);
-        }
+    @Inject(method = "close", at = @At("TAIL"))
+    private void animatium$legacyLightmap$close(final CallbackInfo ci) {
+        this.animatium$renderer.close();
     }
 }

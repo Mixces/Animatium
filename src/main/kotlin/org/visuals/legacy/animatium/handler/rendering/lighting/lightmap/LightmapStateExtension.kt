@@ -23,19 +23,10 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.nametag;
+package org.visuals.legacy.animatium.handler.rendering.lighting.lightmap
 
-import net.minecraft.client.renderer.feature.NameTagFeatureRenderer;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
+interface LightmapStateExtension {
+    fun `animatium$getState`(): LegacyLightmapState
 
-@Mixin(NameTagFeatureRenderer.class)
-public abstract class MixinNameTagFeatureRenderer_NameTagShadow {
-    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Font;drawInBatch(Lnet/minecraft/network/chat/Component;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)V"), index = 4)
-    private static boolean animatium$nameTagTextShadow(final boolean shadow) {
-        return (Animatium.isEnabled() && AnimatiumConfig.instance().extras.nameTagTextShadow) || shadow;
-    }
+    fun `animatium$setState`(state: LegacyLightmapState)
 }

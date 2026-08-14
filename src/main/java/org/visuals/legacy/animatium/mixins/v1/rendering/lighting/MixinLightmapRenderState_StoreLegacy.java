@@ -23,19 +23,26 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.nametag;
+package org.visuals.legacy.animatium.mixins.v1.rendering.lighting;
 
-import net.minecraft.client.renderer.feature.NameTagFeatureRenderer;
+import net.minecraft.client.renderer.state.LightmapRenderState;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.spongepowered.asm.mixin.Unique;
+import org.visuals.legacy.animatium.handler.rendering.lighting.lightmap.LegacyLightmapState;
+import org.visuals.legacy.animatium.handler.rendering.lighting.lightmap.LightmapStateExtension;
 
-@Mixin(NameTagFeatureRenderer.class)
-public abstract class MixinNameTagFeatureRenderer_NameTagShadow {
-    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Font;drawInBatch(Lnet/minecraft/network/chat/Component;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)V"), index = 4)
-    private static boolean animatium$nameTagTextShadow(final boolean shadow) {
-        return (Animatium.isEnabled() && AnimatiumConfig.instance().extras.nameTagTextShadow) || shadow;
+@Mixin(LightmapRenderState.class)
+public abstract class MixinLightmapRenderState_StoreLegacy implements LightmapStateExtension {
+    @Unique
+    private LegacyLightmapState animatium$legacyState;
+
+    @Override
+    public LegacyLightmapState animatium$getState() {
+        return this.animatium$legacyState;
+    }
+
+    @Override
+    public void animatium$setState(final LegacyLightmapState state) {
+        this.animatium$legacyState = state;
     }
 }
