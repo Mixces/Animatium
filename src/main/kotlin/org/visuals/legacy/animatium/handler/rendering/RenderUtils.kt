@@ -31,7 +31,10 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.renderer.texture.OverlayTexture
+import org.visuals.legacy.animatium.config.AnimatiumConfig
 import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor
+import org.visuals.legacy.animatium.mixins.accessor.OverlayTextureAccessor
+import org.visuals.legacy.animatium.util.enums.DamageTintSetting
 
 fun copyTextureToTexture(source: GpuTexture, destination: GpuTexture) =
     RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(
@@ -94,8 +97,34 @@ fun GuiGraphicsExtractor.drawScaledText(font: Font, text: String, x: Int, y: Int
     stack.popMatrix()
 }
 
-fun reloadOverlayTexture() {
+/**
+ * Please mojang, just make `overlay texture -> overlay color` and be a part of EntityRenderState :pray: :pray: :pray:
+ */
+fun resetOverlayTexture() {
     val gameRenderer = Minecraft.getInstance().gameRenderer
     gameRenderer.overlayTexture().close()
     (gameRenderer as GameRendererAccessor).`animatium$setOverlayTexture`(OverlayTexture())
+}
+
+fun setOverlayColor(color: Int) {
+    val overlayTexture = Minecraft.getInstance().gameRenderer.overlayTexture()
+    val dynamicTexture = (overlayTexture as OverlayTextureAccessor).`animatium$getDynamicTexture`()
+    val pixels = dynamicTexture.pixels
+    for (y in 0..<16) {
+        for (x in 0..<16) {
+            if (y < 8) {
+                pixels.setPixel(x, y, color)
+            }
+        }
+    }
+
+    dynamicTexture.upload()
+}
+
+fun updateOverlayTint(style: DamageTintSetting = AnimatiumConfig.instance().other.damageTintStyle) {
+    if (style == DamageTintSetting.VANILLA) {
+        resetOverlayTexture()
+    } else {
+        setOverlayColor(style.getColor(1.0F))
+    }
 }

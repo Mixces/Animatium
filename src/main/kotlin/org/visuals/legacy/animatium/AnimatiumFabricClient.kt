@@ -33,9 +33,11 @@ import net.fabricmc.fabric.api.client.model.loading.v1.SimpleUnbakedExtraModel
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader
 import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.client.Minecraft
 import org.visuals.legacy.animatium.handler.AnimatiumKeybinds
-import org.visuals.legacy.animatium.handler.networking.AnimatiumNetworking
 import org.visuals.legacy.animatium.handler.command.AnimatiumCommand
+import org.visuals.legacy.animatium.handler.networking.AnimatiumNetworking
+import org.visuals.legacy.animatium.handler.rendering.updateOverlayTint
 
 @Entrypoint
 class AnimatiumFabricClient : ClientModInitializer {
@@ -59,5 +61,9 @@ class AnimatiumFabricClient : ClientModInitializer {
 
         AnimatiumKeybinds.bootstrap()
         AnimatiumNetworking.bootstrap()
+
+        Minecraft.getInstance().execute {
+            updateOverlayTint() // Force update overlay for damageTintStyle
+        }
     }
 }

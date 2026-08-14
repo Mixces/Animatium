@@ -27,6 +27,7 @@ package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
 import net.minecraft.network.chat.Component;
+import org.jspecify.annotations.NonNull;
 import org.visuals.legacy.animatium.handler.config.bundle.EntryBundle;
 import org.visuals.legacy.animatium.handler.config.category.Category;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
@@ -71,7 +72,7 @@ public final class ItemsConfigCategory extends Category {
     }
 
     @Override
-    public EntryBundle bundle() {
+    public @NonNull EntryBundle bundle() {
         final EntryBundle bundle = new EntryBundle(this, "items");
 
         bundle.group("glint")

@@ -23,27 +23,15 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity;
+package org.visuals.legacy.animatium.mixins.accessor;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.moulberry.mixinconstraints.annotations.IfModAbsent;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.enums.DamageTintSetting;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-@IfModAbsent("ichor")
 @Mixin(OverlayTexture.class)
-public abstract class MixinOverlayTexture_DamageTintStyle {
-    @ModifyExpressionValue(method = "<init>", at = @At(value = "CONSTANT", args = "intValue=-1291911168"))
-    private int animatium$deepRedHurtTint(final int original) {
-        final DamageTintSetting style = AnimatiumConfig.instance().other.damageTintStyle;
-        if (Animatium.isEnabled() && style != DamageTintSetting.VANILLA) {
-            return style.getColor(1.0F); // TODO/NOTE: Figure out in the future how to get entity brightness for proper 1.7
-        } else {
-            return original;
-        }
-    }
+public interface OverlayTextureAccessor {
+    @Accessor("texture")
+    DynamicTexture animatium$getDynamicTexture();
 }
