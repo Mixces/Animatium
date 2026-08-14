@@ -28,7 +28,7 @@ package org.visuals.legacy.animatium.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -43,15 +43,20 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.AnimatiumConstants;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.handler.screen.OnboardingScreen;
 
 import java.util.Calendar;
 import java.util.Random;
+import java.util.UUID;
 
 public class AnimatiumCommand implements Command<FabricClientCommandSource> {
+    private static final UUID ONE_UUID = UUID.fromString("41ee11aa-bde8-40e2-8283-f51c23a9c817");
+    private static final UUID TWO_UUID = UUID.fromString("b0f27308-0a70-43bf-b025-45c12979b7ad");
+
     public static LiteralArgumentBuilder<FabricClientCommandSource> create() {
-        final LiteralArgumentBuilder<FabricClientCommandSource> command = ClientCommandManager.literal("animatium").executes(new AnimatiumCommand());
+        final LiteralArgumentBuilder<FabricClientCommandSource> command = ClientCommands.literal("animatium").executes(new AnimatiumCommand());
         command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("on").executes(On.UNIT));
         command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("off").executes(Off.UNIT));
         command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("reload").executes(Reload.UNIT));
@@ -60,6 +65,11 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
         final Calendar calendar = Calendar.getInstance();
         if (calendar.get(Calendar.MONTH) == Calendar.SEPTEMBER && calendar.get(Calendar.DAY_OF_MONTH) == 6) {
             command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("birthday").executes(Birthday.UNIT));
+        }
+
+        final UUID uuid = Minecraft.getInstance().getGameProfile().id();
+        if (uuid.equals(ONE_UUID) || uuid.equals(TWO_UUID)) {
+            command.then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("debug").executes(Debug.UNIT));
         }
 
         return command;
@@ -138,33 +148,31 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
     private static class Birthday implements Command<FabricClientCommandSource> {
         public static final Birthday UNIT = new Birthday();
 
-        private final RandomSource random = RandomSource.createNewThreadLocalInstance();
+        private final RandomSource random = RandomSource.createThreadLocalInstance();
 
         @Override
         public int run(final CommandContext<FabricClientCommandSource> context) {
             final Entity entity = context.getSource().getEntity();
-            final ClientLevel level = context.getSource().getWorld();
-            if (!(entity instanceof Player)) {
-                // Do nothing for non-players
-                return Command.SINGLE_SUCCESS;
-            }
+            if (entity instanceof Player) {
+                final ClientLevel level = context.getSource().getLevel();
+                final double x = entity.getBlockX() + this.random.nextDouble();
+                final double y = entity.getBlockY() + this.random.nextDouble();
+                final double z = entity.getBlockZ() + this.random.nextDouble();
+                for (int i = 0; i < 180; ++i) {
+                    SoundEvent sound;
+                    final int random = this.random.nextIntBetweenInclusive(0, 6);
+                    if (random > 3) {
+                        sound = SoundEvents.AMETHYST_BLOCK_CHIME;
+                    } else {
+                        sound = SoundEvents.FIREWORK_ROCKET_BLAST;
+                    }
 
-            final double x = entity.getBlockX() + this.random.nextDouble();
-            final double y = entity.getBlockY() + this.random.nextDouble();
-            final double z = entity.getBlockZ() + this.random.nextDouble();
-            for (int i = 0; i < 180; ++i) {
-                SoundEvent sound;
-                final int random = this.random.nextIntBetweenInclusive(0, 6);
-                if (random > 3) {
-                    sound = SoundEvents.AMETHYST_BLOCK_CHIME;
-                } else {
-                    sound = SoundEvents.FIREWORK_ROCKET_BLAST;
+                    level.playLocalSound(x, y, z, sound, SoundSource.AMBIENT, 20.0F, 0.95F + this.random.nextFloat() * 0.15F, true);
                 }
 
-                level.playLocalSound(x, y, z, sound, SoundSource.AMBIENT, 20.0F, 0.95F + this.random.nextFloat() * 0.15F, true);
+                context.getSource().sendFeedback(colorful("It's the creators birthday today!!! Wish them a happy birthday!"));
             }
 
-            context.getSource().sendFeedback(colorful("It's the creators birthday today!!! Wish them a happy birthday!"));
             return Command.SINGLE_SUCCESS;
         }
 
@@ -176,6 +184,19 @@ public class AnimatiumCommand implements Command<FabricClientCommandSource> {
             }
 
             return component;
+        }
+    }
+
+    private static class Debug implements Command<FabricClientCommandSource> {
+        public static final Debug UNIT = new Debug();
+
+        @Override
+        public int run(final CommandContext<FabricClientCommandSource> context) {
+            context.getSource().sendFeedback(Component.literal("Commit: " + AnimatiumConstants.DEVELOPMENT_VERSION));
+            context.getSource().sendFeedback(Component.literal("Version: " + AnimatiumConstants.VERSION));
+            context.getSource().sendFeedback(Component.literal("Packed Version: " + AnimatiumConstants.VERSION.getPackedValue()));
+            context.getSource().sendFeedback(Component.literal("Is Dev Build: " + AnimatiumConstants.IS_DEVELOPMENT));
+            return Command.SINGLE_SUCCESS;
         }
     }
 }
