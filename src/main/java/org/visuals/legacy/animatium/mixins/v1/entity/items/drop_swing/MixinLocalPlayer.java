@@ -40,8 +40,8 @@ import org.visuals.legacy.animatium.util.SwingUtilKt;
 public abstract class MixinLocalPlayer {
     @WrapOperation(method = "drop", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/component/SwingAnimation;Z)Z"))
     private boolean animatium$disableSwingOnDrop(final LocalPlayer instance, final InteractionHand hand, final SwingAnimation animation, final boolean sendToSwingingEntity, final Operation<Boolean> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.disableSwingOnDrop && instance instanceof LocalPlayer localPlayer) {
-            return SwingUtilKt.sendSwingPacket(localPlayer, hand);
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.disableSwingOnDrop) {
+            return SwingUtilKt.sendSwingPacket(instance, hand);
         } else {
             return original.call(instance, hand, animation, sendToSwingingEntity);
         }
