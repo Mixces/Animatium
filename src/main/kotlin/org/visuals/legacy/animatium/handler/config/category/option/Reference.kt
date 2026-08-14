@@ -40,22 +40,22 @@ data class Reference<S>(
 ) {
     companion object {
         @JvmStatic
-        fun <T : Category, S> get(fieldName: String, defaults: T, current: T): Reference<S> {
+        fun <T : Category, S> get(name: String, defaults: T, config: T): Reference<S> {
             var defaultField: Field? = null
             var currentField: Field? = null
             var defaultValue: S? = null
 
             val defaultsClazz = defaults::class.java
             try {
-                defaultField = defaultsClazz.getField(fieldName)
+                defaultField = defaultsClazz.getField(name)
                 defaultValue = defaultField?.get(defaults) as S?
             } catch (exception: ReflectiveOperationException) {
                 exception.printStackTrace()
             }
 
-            val currentClazz = current::class.java
+            val currentClazz = config::class.java
             try {
-                currentField = currentClazz.getField(fieldName)
+                currentField = currentClazz.getField(name)
             } catch (exception: ReflectiveOperationException) {
                 exception.printStackTrace()
             }
