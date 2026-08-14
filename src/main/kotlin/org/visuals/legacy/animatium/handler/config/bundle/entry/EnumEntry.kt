@@ -34,10 +34,10 @@ import java.util.function.BiConsumer
 
 data class EnumEntry<S : Enum<S>>(
     val name: String,
-    val listener: Optional<BiConsumer<Option<Enum<S>>, Enum<S>>>,
+    val listener: Optional<BiConsumer<Option<S>, S>>,
     val enumClass: Class<S>
-) : OptionEntrySupplier<Enum<S>> {
-    override fun create(defaults: Category, config: Category): Option<Enum<S>> {
+) : OptionEntrySupplier<S> {
+    override fun create(defaults: Category, config: Category): Option<S> {
         val option = OptionBuilder(this.name, EnumOptions(this.enumClass))
         this.listener.ifPresent { option.instant().listener(it) }
         return option.build(defaults, config)

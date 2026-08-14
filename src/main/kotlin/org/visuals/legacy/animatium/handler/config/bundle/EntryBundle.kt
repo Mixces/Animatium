@@ -68,7 +68,7 @@ open class EntryBundle(protected val category: Category, private val name: Strin
         return this
     }
 
-    override fun <S : Enum<S>> enumEntry(name: String, enumClazz: Class<S>, listener: BiConsumer<Option<Enum<S>>, Enum<S>>): Bundle {
+    override fun <S : Enum<S>> enumEntry(name: String, enumClazz: Class<S>, listener: BiConsumer<Option<S>, S>): Bundle {
         this.entries.add(this.bootstrap(EnumEntry(name, Optional.of(listener), enumClazz)))
         return this
     }

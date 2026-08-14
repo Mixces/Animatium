@@ -46,7 +46,7 @@ abstract class Bundle {
 
     fun floatRange(name: String, min: Float, max: Float) = this.floatRange(name, min, max, 0.1F)
 
-    abstract fun <S : Enum<S>> enumEntry(name: String, enumClazz: Class<S>, listener: BiConsumer<Option<Enum<S>>, Enum<S>>): Bundle
+    abstract fun <S : Enum<S>> enumEntry(name: String, enumClazz: Class<S>, listener: BiConsumer<Option<S>, S>): Bundle
 
     fun <S : Enum<S>> enumEntry(name: String, enumClazz: Class<S>) = this.enumEntry(name, enumClazz) { opt, value -> }
 
