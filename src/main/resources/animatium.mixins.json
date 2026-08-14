@@ -14,6 +14,7 @@
 		"accessor.PlayerAccessor",
 		"accessor.SlotAccessor",
 		"v1.entity.MixinHumanoidModel",
+		"v1.entity.MixinLivingEntity_SwingState_FakeIt",
 		"v1.entity.MixinLivingEntityRenderer",
 		"v1.entity.armor_hurt.MixinCustomHeadLayer_DamageTintArmor",
 		"v1.entity.armor_hurt.MixinEquipmentLayerRenderer_DamageTintArmor",

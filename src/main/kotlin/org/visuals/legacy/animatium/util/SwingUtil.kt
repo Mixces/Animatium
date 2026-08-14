@@ -39,6 +39,7 @@ import org.visuals.legacy.animatium.Animatium
 import org.visuals.legacy.animatium.config.AnimatiumConfig
 import org.visuals.legacy.animatium.mixins.accessor.LivingEntityAccessor
 import org.visuals.legacy.animatium.mixins.accessor.LivingEntity_SwingStateAccessor
+import org.visuals.legacy.animatium.util.duck.SwingStateExt
 import java.util.*
 import kotlin.math.exp
 import kotlin.math.max
@@ -53,11 +54,12 @@ fun swingingArm(livingEntity: LivingEntity) = activeSwing(livingEntity)?.hand
 
 // Fake Swinging, Doesn't Send A Packet
 fun Player.fakeHandSwing(hand: InteractionHand) {
-    val swingState = swingState(this)
-    if (!swingState.isSwinging) {
-        val animation = SwingAnimation.DEFAULT
-        swingState.startIfAble(hand, animation, (this as LivingEntityAccessor).`animatium$getModifiedSwingDuration`(animation))
-    }
+    val animation = SwingAnimation.DEFAULT
+    (swingState(this) as SwingStateExt).`animatium$forceSwing`(
+        hand,
+        animation,
+        (this as LivingEntityAccessor).`animatium$getModifiedSwingDuration`(animation)
+    )
 }
 
 // TODO: 26.3 / Check if this is proper/right and doesn't flag servers
