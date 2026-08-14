@@ -29,7 +29,7 @@ import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.controller.ControllerBuilder
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder
 
-class IntegerRangeOptions(override val min: Int, override val max: Int, override val step: Int = 1) : RangeOptions<Int>() {
+data class IntegerRangeOptions(override val min: Int, override val max: Int, override val step: Int = 1) : RangeOptions<Int>() {
     override fun createController(option: Option<Int>): ControllerBuilder<Int> = IntegerSliderControllerBuilder.create(option)
         .range(this.min, this.max)
         .step(this.step)

@@ -31,7 +31,7 @@ import dev.isxander.yacl3.api.controller.EnumControllerBuilder
 import net.minecraft.network.chat.Component
 import org.visuals.legacy.animatium.AnimatiumConstants
 
-class EnumOptions<S : Enum<S>>(private val enumClazz: Class<S>) : Options<S>() {
+data class EnumOptions<S : Enum<S>>(private val enumClazz: Class<S>) : Options<S>() {
     override fun createController(option: Option<S>): ControllerBuilder<S> = EnumControllerBuilder.create(option)
         .enumClass(enumClazz)
         .formatValue { Component.translatable("${AnimatiumConstants.MOD_ID}.enum.${enumClazz.getSimpleName()}.${it.name}") }
