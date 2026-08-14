@@ -23,23 +23,15 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.rendering;
+package org.visuals.legacy.animatium.mixins.accessor;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.minecraft.client.renderer.ScreenEffectRenderer;
+import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.visuals.legacy.animatium.Animatium;
-import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(ScreenEffectRenderer.class)
-public abstract class MixinScreenEffectRenderer_TextureOverlays {
-	@ModifyExpressionValue(method = "submitWater", at = @At(value = "CONSTANT", args = "floatValue=0.1"))
-	private static float animatium$useOldWaterOverlayOpacity(final float original) {
-		if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldWaterOverlayOpacity) {
-			return 0.5F;
-		} else {
-			return original;
-		}
-	}
+@Mixin(LivingEntity.SwingState.class)
+public interface LivingEntity_SwingStateAccessor {
+    @Accessor("currentSwing")
+    @Nullable LivingEntity.SwingDescription animatium$getCurrentSwing();
 }

@@ -23,24 +23,19 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.handler.rendering.pipeline
+package org.visuals.legacy.animatium.mixins.v1.entity.nametag;
 
-import net.minecraft.client.renderer.feature.ItemFeatureRenderer
-import net.minecraft.client.renderer.rendertype.LayeringTransform
-import net.minecraft.client.renderer.rendertype.RenderSetup
-import net.minecraft.client.renderer.rendertype.RenderType
-import net.minecraft.client.renderer.rendertype.TextureTransform
+import net.minecraft.client.renderer.SubmitNodeCollection;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-object AnimatiumRenderTypes {
-    // Glint
-    @JvmField
-    val ARMOR_GLINT = RenderType.create(
-        "animatium_armor_glint",
-        RenderSetup.builder(AnimatiumPipelines.ARMOR_GLINT)
-            .withTexture("Sampler0", ItemFeatureRenderer.ENCHANTED_GLINT_ARMOR)
-            .setTextureTransform(TextureTransform.ARMOR_ENTITY_GLINT_TEXTURING)
-            .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
-            .useOverlay()
-            .createRenderSetup()
-    )
+@Mixin(SubmitNodeCollection.class)
+public abstract class MixinSubmitNodeCollection_NameTagShadow {
+    @ModifyArg(method = "nameTag", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/feature/TextFeatureRenderer$Content$Text;<init>(FFLnet/minecraft/util/FormattedCharSequence;ZIII)V"), index = 3)
+    private static boolean animatium$nameTagTextShadow(final boolean shadow) {
+        return (Animatium.isEnabled() && AnimatiumConfig.instance().extras.nameTagTextShadow) || shadow;
+    }
 }

@@ -23,19 +23,23 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.nametag;
+package org.visuals.legacy.animatium.mixins.v1.rendering;
 
-import net.minecraft.client.renderer.feature.NameTagFeatureRenderer;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import net.minecraft.client.renderer.extract.LevelExtractor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-@Mixin(NameTagFeatureRenderer.class)
-public abstract class MixinNameTagFeatureRenderer_NameTagShadow {
-    @ModifyArg(method = "prepareText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Font;prepareText(Lnet/minecraft/util/FormattedCharSequence;FFIZZI)Lnet/minecraft/client/gui/Font$PreparedText;"), index = 4)
-    private static boolean animatium$nameTagTextShadow(final boolean shadow) {
-        return (Animatium.isEnabled() && AnimatiumConfig.instance().extras.nameTagTextShadow) || shadow;
+@Mixin(LevelExtractor.class)
+public abstract class MixinLevelExtractor_WaterTextureOverlay {
+    @ModifyExpressionValue(method = "extractPlayerState", at = @At(value = "CONSTANT", args = "floatValue=0.1"))
+    private static float animatium$useOldWaterOverlayOpacity(final float original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldWaterOverlayOpacity) {
+            return 0.5F;
+        } else {
+            return original;
+        }
     }
 }

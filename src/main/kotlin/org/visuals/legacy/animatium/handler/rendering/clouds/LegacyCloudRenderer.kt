@@ -225,10 +225,21 @@ class LegacyCloudRenderer : SimplePreparableReloadListener<Optional<TextureData>
         }
     }
 
-    fun render(cloudColor: Int, cloudStatus: CloudStatus, height: Float, cameraOffset: Vec3, ticks: Float) {
-        if (this.textureData != null) {
-            var x = cameraOffset.x + ticks * 0.030000001F
-            var z = cameraOffset.z + 3.96F
+    data class CloudRenderState(val color: Int, val cloudStatus: CloudStatus, val bottomY: Float, val cameraPosition: Vec3, val tickDelta: Float) {
+        fun shouldRender() = ARGB.alpha(color) > 0 && cloudStatus != CloudStatus.OFF
+    }
+
+    private var state: CloudRenderState? = null
+
+    fun prepare(cloudColor: Int, cloudStatus: CloudStatus, height: Float, cameraOffset: Vec3, ticks: Float) {
+        state = CloudRenderState(cloudColor, cloudStatus, height, cameraOffset, ticks)
+    }
+
+    fun render() {
+        val state = this.state ?: return
+        if (state.shouldRender() && this.textureData != null) {
+            var x = state.cameraPosition.x + state.tickDelta * 0.030000001F
+            var z = state.cameraPosition.z + 3.96F
             val scaledWidth = this.textureData!!.width() * 12.0
             val scaledHeight = this.textureData!!.height() * 12.0
             x -= Mth.floor(x / scaledWidth) * scaledWidth
@@ -236,20 +247,20 @@ class LegacyCloudRenderer : SimplePreparableReloadListener<Optional<TextureData>
             val cellX = Mth.floor(x / 12.0)
             val cellZ = Mth.floor(z / 12.0)
 
-            val offsetBottom = (height - cameraOffset.y).toFloat()
+            val offsetBottom = (state.bottomY - state.cameraPosition.y).toFloat()
             val offsetTop = offsetBottom + 4.0F
             val relativeCameraPos =
                 if (offsetTop < 0.0F) RelativeCameraPos.ABOVE_CLOUDS else (if (offsetBottom > 0.0F) RelativeCameraPos.BELOW_CLOUDS else RelativeCameraPos.INSIDE_CLOUDS)
 
             val pipelineSet = AnimatiumPipelines.getCloudsSet(AnimatiumConfig.instance().other.planarSkyFog)
-            val pipeline = pipelineSet.get(cloudStatus)
-            if (this.needsRebuild || cellX != this.prevCellX || cellZ != this.prevCellZ || relativeCameraPos != this.prevRelativeCameraPos || cloudStatus != this.prevType) {
+            val pipeline = pipelineSet.get(state.cloudStatus)
+            if (this.needsRebuild || cellX != this.prevCellX || cellZ != this.prevCellZ || relativeCameraPos != this.prevRelativeCameraPos || state.cloudStatus != this.prevType) {
                 this.needsRebuild = false
                 this.prevRelativeCameraPos = relativeCameraPos
-                this.prevType = cloudStatus
+                this.prevType = state.cloudStatus
                 this.prevCellX = cellX
                 this.prevCellZ = cellZ
-                this.setupMesh(cellX, cellZ, cloudStatus, relativeCameraPos)
+                this.setupMesh(cellX, cellZ, state.cloudStatus, relativeCameraPos)
             }
 
             if (this.indexCount != 0) {
@@ -257,10 +268,10 @@ class LegacyCloudRenderer : SimplePreparableReloadListener<Optional<TextureData>
                 val offsetZ = (z - cellZ * 12.0F).toFloat()
                 val offset = Vector3f(-offsetX, offsetBottom, -offsetZ)
                 if (pipeline != pipelineSet.flatPipeline) {
-                    this.draw(pipelineSet.depthOnlyPipeline, offset, cloudColor)
+                    this.draw(pipelineSet.depthOnlyPipeline, offset, state.color)
                 }
 
-                this.draw(pipeline, offset, cloudColor)
+                this.draw(pipeline, offset, state.color)
             }
         }
     }

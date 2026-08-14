@@ -28,14 +28,15 @@ package org.visuals.legacy.animatium.mixins.v1.entity.items;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.component.SwingAnimation;
 import org.spongepowered.asm.mixin.Mixin;
-import org.visuals.legacy.animatium.util.EntityUtilKt;
+import org.visuals.legacy.animatium.util.SwingUtilKt;
 
 // TODO/FIX: Should not affect swing code, only visual, currently matches Legacy Animatium tho
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity_ItemSwing {
-    @WrapMethod(method = "getCurrentSwingDuration")
-    private int animatium$customSwingAnimationSpeed(final Operation<Integer> original) {
-        return EntityUtilKt.getItemSwingSpeed((LivingEntity) (Object) this, original.call());
+    @WrapMethod(method = "getModifiedSwingDuration")
+    private int animatium$customSwingAnimationSpeed(final SwingAnimation animation, final Operation<Integer> original) {
+        return SwingUtilKt.getItemSwingSpeed((LivingEntity) (Object) this, animation, original.call(animation));
     }
 }

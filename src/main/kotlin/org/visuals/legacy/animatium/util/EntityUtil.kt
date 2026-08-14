@@ -29,18 +29,12 @@ import com.google.common.base.MoreObjects
 import net.minecraft.client.Minecraft
 import net.minecraft.client.model.HumanoidModel
 import net.minecraft.client.multiplayer.ClientLevel
-import net.minecraft.client.player.LocalPlayer
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState
 import net.minecraft.client.renderer.entity.state.AvatarRenderState
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.core.BlockPos
-import net.minecraft.network.protocol.game.ClientboundAnimatePacket
-import net.minecraft.network.protocol.game.ServerboundSwingPacket
-import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.Mth
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.effect.MobEffectUtil
-import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.HumanoidArm
 import net.minecraft.world.entity.LivingEntity
@@ -48,23 +42,22 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.LevelReader
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
-import org.visuals.legacy.animatium.Animatium
 import org.visuals.legacy.animatium.config.AnimatiumConfig
 import org.visuals.legacy.animatium.handler.server_features.ServerFeatureManager
 import org.visuals.legacy.animatium.handler.server_features.ServerFeatures
-import org.visuals.legacy.animatium.mixins.accessor.LivingEntityAccessor
 import java.util.*
-import kotlin.math.exp
-import kotlin.math.max
 
 fun getHandMultiplier(player: Player): Int {
-    val hand = MoreObjects.firstNonNull(player.swingingArm, InteractionHand.MAIN_HAND)
+    val hand = MoreObjects.firstNonNull(swingingArm(player), InteractionHand.MAIN_HAND)
     val direction = (if (Minecraft.getInstance().options.cameraType.isFirstPerson) 1 else -1)
     return direction * getHandMultiplier(player, hand)
 }
 
 fun getHandMultiplier(player: Player, hand: InteractionHand) =
     getArmMultiplier(if (hand == InteractionHand.MAIN_HAND) player.mainArm else player.mainArm.opposite)
+
+fun getHandMultiplier(state: AvatarRenderState, hand: InteractionHand) =
+    getArmMultiplier(if (hand == InteractionHand.MAIN_HAND) state.mainArm else state.mainArm.opposite)
 
 fun getArmMultiplier(arm: HumanoidArm) = if (arm == HumanoidArm.RIGHT) 1 else -1
 
@@ -74,30 +67,6 @@ fun Player.getPosWithEyeHeight(tickDelta: Float, eyeHeight: Double) =
 fun isBlockingArm(arm: HumanoidArm, armedEntityState: ArmedEntityRenderState) =
     (arm == HumanoidArm.LEFT && armedEntityState.leftArmPose == HumanoidModel.ArmPose.BLOCK) ||
             (arm == HumanoidArm.RIGHT && armedEntityState.rightArmPose == HumanoidModel.ArmPose.BLOCK)
-
-fun Player.fakeHandSwing(hand: InteractionHand) {
-    // Fake Swinging, Doesn't Send A Packet
-    if (this.isNotSwinging()) {
-        this.swingTime = -1
-        this.swinging = true
-        this.swingingArm = hand
-    }
-}
-
-// Sends necessary swing packets, without playing the player hand swing animation
-fun LocalPlayer.sendSwingPacket(hand: InteractionHand) {
-    val level = this.level()
-    if (this.isNotSwinging() && level is ServerLevel) {
-        val swingHand =
-            if (hand == InteractionHand.MAIN_HAND) ClientboundAnimatePacket.SWING_MAIN_HAND else ClientboundAnimatePacket.SWING_OFF_HAND
-        level.chunkSource.sendToTrackingPlayers(this, ClientboundAnimatePacket(this, swingHand))
-    }
-
-    this.connection.send(ServerboundSwingPacket(hand))
-}
-
-fun Player.isNotSwinging() =
-    !this.swinging || this.swingTime >= (this as LivingEntityAccessor).`animatium$getSwingDuration`() / 2 || this.swingTime < 0
 
 fun applySwingWhilstMining(level: ClientLevel?, player: Player, hitResult: HitResult?) {
     val activeHand = player.usedItemHand
@@ -134,37 +103,6 @@ fun Entity?.isSelf(): Boolean {
 fun LevelReader.getLegacyBrightness(blockPos: BlockPos): Float {
     val amount = this.getMaxLocalRawBrightness(blockPos) / 15.0F
     return Mth.lerp(this.dimensionType().ambientLight(), amount / (4.0F - 3.0F * amount), 1.0F)
-}
-
-/**
- * Code sourced from Animatium Legacy & Modified for Modern Use
- */
-fun LivingEntity.getItemSwingSpeed(fallback: Int): Int {
-    val extras = AnimatiumConfig.instance().extras
-    if (Animatium.isEnabled() && extras.customSwingSpeed) {
-        val swingingHand = if (this.swingingArm != null) this.swingingArm!! else InteractionHand.MAIN_HAND
-        val stack = this.getItemInHand(swingingHand)
-        val swingDuration = stack.swingAnimation.duration()
-
-        val itemSwingSpeed = extras.itemSwingSpeed
-        val hasteSwingSpeed = extras.hasteSwingSpeed
-        val miningFatigueSwingSpeed = extras.miningFatigueSwingSpeed
-        if (!(itemSwingSpeed == 0.0F && hasteSwingSpeed == 0.0F && miningFatigueSwingSpeed == 0.0F)) {
-            if (MobEffectUtil.hasDigSpeed(this) && !extras.ignoreHasteSpeed) {
-                val durationOffset =
-                    swingDuration - (1 + MobEffectUtil.getDigSpeedAmplification(this))
-                return max((durationOffset * exp(-hasteSwingSpeed)).toInt(), 1)
-            } else if (this.hasEffect(MobEffects.MINING_FATIGUE) && !extras.ignoreMiningFatigueSpeed) {
-                val durationOffset =
-                    swingDuration + (1 + Objects.requireNonNull(this.getEffect(MobEffects.MINING_FATIGUE))!!.amplifier) * 2
-                return max((durationOffset * exp(-miningFatigueSwingSpeed)).toInt(), 1)
-            } else {
-                return max((swingDuration * exp(-itemSwingSpeed)).toInt(), 1)
-            }
-        }
-    }
-
-    return fallback
 }
 
 fun Entity.getScale() = if (this is LivingEntity) this.scale else 1.0F

@@ -218,7 +218,7 @@
 	"animatium.damageTintArmor": "[1.7] Damage Tint Armor",
 	"animatium.damageTintArmor.description": "Applies damage hurt tint to armor like in <=1.7.x.",
 	"animatium.glintAffectsArmorTint": "[1.14.4] Glint Affects Armor Tint",
-	"animatium.glintAffectsArmorTint.description": "Applies the overlay damage tint to glint rendering on the armor like in 1.8-1.14.4.\n\nRequires the \"Damage Tint Armor\" setting to be enabled.",
+	"animatium.glintAffectsArmorTint.description": "Applies the overlay damage tint to glint rendering on the armor like in 1.8-1.14.4.\n\nRequires the \"Damage Tint Armor\" setting to be enabled.\n\nNOTE: Does not work with \"Improved Transparency\" enabled.",
 	"animatium.damageTintStyle": "[*] Damage Tint Style",
 	"animatium.damageTintStyle.description": "Changes the hurt tint color to match what it was in the selected version.",
 	"animatium.customTintColor": "[*] Custom Damage Color",

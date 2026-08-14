@@ -26,11 +26,16 @@
 package org.visuals.legacy.animatium.mixins.accessor;
 
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.component.SwingAnimation;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(LivingEntity.class)
 public interface LivingEntityAccessor {
-    @Invoker("getCurrentSwingDuration")
-    int animatium$getSwingDuration();
+    @Invoker("getModifiedSwingDuration")
+    int animatium$getModifiedSwingDuration(final SwingAnimation animation);
+
+    @Accessor("swingState")
+    LivingEntity.SwingState animatium$getSwingState();
 }

@@ -48,6 +48,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.EntityUtilKt;
+import org.visuals.legacy.animatium.util.SwingUtilKt;
 import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 
 import java.util.function.Function;
@@ -103,7 +104,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
 
     @WrapOperation(method = "setupAttackAnimation", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/model/geom/ModelPart;xRot:F", ordinal = 0))
     public void animatium$fixMirrorArmSwing$field(final ModelPart instance, final float value, final Operation<Void> original, @Local(argsOnly = true, name = "state") final T state) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixMirrorArmSwing && state.attackArm == HumanoidArm.LEFT) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixMirrorArmSwing && SwingUtilKt.attackArm(state) == HumanoidArm.LEFT) {
             this.rightArm.xRot -= this.body.yRot;
         } else {
             original.call(instance, value);
@@ -113,7 +114,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
     @ModifyExpressionValue(method = "setupAttackAnimation", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;sin(D)F", ordinal = 5))
     public float animatium$fixMirrorArmSwing$sin(final float original, @Local(argsOnly = true, name = "state") final T state) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixMirrorArmSwing) {
-            return original * EntityUtilKt.getArmMultiplier(state.attackArm);
+            return original * EntityUtilKt.getArmMultiplier(SwingUtilKt.attackArm(state));
         } else {
             return original;
         }
