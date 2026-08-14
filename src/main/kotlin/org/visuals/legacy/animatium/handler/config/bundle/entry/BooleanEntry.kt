@@ -26,7 +26,9 @@
 package org.visuals.legacy.animatium.handler.config.bundle.entry
 
 import dev.isxander.yacl3.api.Option
-import org.visuals.legacy.animatium.config.category.Category
+import org.visuals.legacy.animatium.handler.config.category.Category
+import org.visuals.legacy.animatium.handler.config.category.option.BooleanOptions
+import org.visuals.legacy.animatium.handler.config.category.option.OptionBuilder
 import java.util.*
 import java.util.function.BiConsumer
 
@@ -35,7 +37,7 @@ data class BooleanEntry(
     val listener: Optional<BiConsumer<Option<Boolean>, Boolean>>
 ) : OptionEntrySupplier<Boolean> {
     override fun create(defaults: Category, config: Category): Option<Boolean> {
-        val option = Category.OptionBuilder.of<Boolean>(this.name, EntryType.BOOLEAN)
+        val option = OptionBuilder(this.name, BooleanOptions.UNIT)
         this.listener.ifPresent { option.instant().listener(it) }
         return option.build(defaults, config)
     }

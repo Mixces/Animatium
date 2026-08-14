@@ -26,7 +26,9 @@
 package org.visuals.legacy.animatium.handler.config.bundle.entry
 
 import dev.isxander.yacl3.api.Option
-import org.visuals.legacy.animatium.config.category.Category
+import org.visuals.legacy.animatium.handler.config.category.Category
+import org.visuals.legacy.animatium.handler.config.category.option.EnumOptions
+import org.visuals.legacy.animatium.handler.config.category.option.OptionBuilder
 import java.util.*
 import java.util.function.BiConsumer
 
@@ -36,7 +38,7 @@ data class EnumEntry<S : Enum<S>>(
     val enumClass: Class<S>
 ) : OptionEntrySupplier<Enum<S>> {
     override fun create(defaults: Category, config: Category): Option<Enum<S>> {
-        val option = Category.OptionBuilder.ofEnum(this.name, this.enumClass)
+        val option = OptionBuilder(this.name, EnumOptions(this.enumClass))
         this.listener.ifPresent { option.instant().listener(it) }
         return option.build(defaults, config)
     }

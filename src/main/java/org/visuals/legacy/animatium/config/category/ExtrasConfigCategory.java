@@ -31,6 +31,7 @@ import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.handler.compatibility.ModsKt;
 import org.visuals.legacy.animatium.handler.config.bundle.EntryBundle;
 import org.visuals.legacy.animatium.handler.config.bundle.GroupBundle;
+import org.visuals.legacy.animatium.handler.config.category.Category;
 import org.visuals.legacy.animatium.handler.server_features.ServerFeature;
 import org.visuals.legacy.animatium.handler.server_features.ServerFeatures;
 
