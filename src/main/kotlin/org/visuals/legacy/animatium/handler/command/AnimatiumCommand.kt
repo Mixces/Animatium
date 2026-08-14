@@ -77,7 +77,7 @@ class AnimatiumCommand : Command<FabricClientCommandSource> {
         source.sendFeedback(Component.literal("Opening config menu...").withColor(Random().nextInt(0xFFFFFF)))
 
         val minecraft = source.client
-        minecraft.schedule({ minecraft.gui.setScreen(AnimatiumConfig.getConfigScreen(minecraft.gui.screen())) })
+        minecraft.schedule({ minecraft.setScreen(AnimatiumConfig.getConfigScreen(minecraft.screen)) })
 
         return Command.SINGLE_SUCCESS
     }
