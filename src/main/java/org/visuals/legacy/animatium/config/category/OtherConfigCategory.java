@@ -26,6 +26,7 @@
 package org.visuals.legacy.animatium.config.category;
 
 import dev.isxander.yacl3.api.ConfigCategory;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import org.visuals.legacy.animatium.handler.compatibility.ModsKt;
 import org.visuals.legacy.animatium.handler.config.bundle.EntryBundle;
@@ -117,7 +118,7 @@ public final class OtherConfigCategory extends Category {
                 .booleanEntry("maxGlintProperties")
                 .booleanEntry("flameOffset")
                 .booleanEntry("persistentBlockOutline")
-                .booleanEntry("fastGrass")
+                .booleanEntry("fastGrass", (option, value) -> Minecraft.getInstance().levelExtractor.allChanged())
                 .booleanEntry("oldY0Height")
                 .booleanEntry("oldWaterOverlayOpacity")
                 .booleanEntry("oldWaterColorFog")
