@@ -29,17 +29,16 @@ import dev.isxander.yacl3.api.Option
 import org.visuals.legacy.animatium.handler.config.category.Category
 import org.visuals.legacy.animatium.handler.config.category.option.EnumOptions
 import org.visuals.legacy.animatium.handler.config.category.option.OptionBuilder
-import java.util.*
 import java.util.function.BiConsumer
 
 data class EnumEntry<S : Enum<S>>(
     val name: String,
-    val listener: Optional<BiConsumer<Option<S>, S>>,
+    val listener: BiConsumer<Option<S>, S>?,
     val enumClass: Class<S>
 ) : OptionEntrySupplier<S> {
     override fun create(defaults: Category, config: Category): Option<S> {
         val option = OptionBuilder(this.name, EnumOptions(this.enumClass))
-        this.listener.ifPresent { option.instant().listener(it) }
+        this.listener?.let { option.instant().listener(it) }
         return option.build(defaults, config)
     }
 
