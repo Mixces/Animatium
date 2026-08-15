@@ -39,10 +39,10 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.ProjectionMatrixBuffer
 import net.minecraft.resources.Identifier
 import org.joml.Matrix4f
+import org.visuals.legacy.animatium.handler.compatibility.IrisPipeline
+import org.visuals.legacy.animatium.handler.compatibility.IrisUtil
 import org.visuals.legacy.animatium.renderer.buffer.Geometry
 import org.visuals.legacy.animatium.renderer.texture.TextureAndSampler
-import org.visuals.legacy.animatium.util.compatibility.IrisPipeline
-import org.visuals.legacy.animatium.util.compatibility.IrisUtil
 import java.util.function.Supplier
 
 class Renderer : AutoCloseable {
