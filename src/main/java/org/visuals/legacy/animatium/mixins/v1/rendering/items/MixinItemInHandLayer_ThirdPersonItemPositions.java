@@ -46,8 +46,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.EntityUtilKt;
 import org.visuals.legacy.animatium.util.ItemUtilKt;
+import org.visuals.legacy.animatium.util.SwingUtilKt;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
 @Mixin(ItemInHandLayer.class)
@@ -80,7 +80,7 @@ public abstract class MixinItemInHandLayer_ThirdPersonItemPositions<S extends Ar
     @Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/item/ItemStackRenderState;submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V"))
     private void animatium$itemPositionsThird(final S state, final ItemStackRenderState item, final ItemStack itemStack, final HumanoidArm arm, final PoseStack poseStack, final SubmitNodeCollector submitNodeCollector, final int lightCoords, final CallbackInfo ci) {
         if (Animatium.isEnabled()) {
-            final int direction = EntityUtilKt.getArmMultiplier(arm);
+            final int direction = SwingUtilKt.getArmMultiplier(arm);
             final ItemStack stack = state.animatium$getItemHeldByArm(arm);
             if (!stack.isEmpty() && !ItemUtilKt.isItemBlacklisted(stack)) {
                 final boolean isStickRod = Animatium.isEnabled() &&
@@ -112,7 +112,7 @@ public abstract class MixinItemInHandLayer_ThirdPersonItemPositions<S extends Ar
                             poseStack.translate(0.0F, -0.125F, 0.0F);
                         }
 
-                        if (EntityUtilKt.isBlockingArm(arm, state)) {
+                        if (SwingUtilKt.isBlockingArm(arm, state)) {
                             poseStack.translate(direction * 0.05F, 0.0F, -0.1F);
                             poseStack.mulPose(Axis.YP.rotationDegrees(direction * -50.0F));
                             poseStack.mulPose(Axis.XP.rotationDegrees(-10.0F));

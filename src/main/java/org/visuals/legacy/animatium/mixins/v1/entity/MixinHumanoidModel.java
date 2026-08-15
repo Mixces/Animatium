@@ -47,7 +47,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.EntityUtilKt;
+import org.visuals.legacy.animatium.util.SwingUtilKt;
 import org.visuals.legacy.animatium.util.enums.SneakAnimationSetting;
 
 import java.util.function.Function;
@@ -113,7 +113,7 @@ public abstract class MixinHumanoidModel<T extends HumanoidRenderState> extends 
     @ModifyExpressionValue(method = "setupAttackAnimation", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;sin(D)F", ordinal = 5))
     public float animatium$fixMirrorArmSwing$sin(final float original, @Local(argsOnly = true, ordinal = 0) final T state) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixMirrorArmSwing) {
-            return original * EntityUtilKt.getArmMultiplier(state.attackArm);
+            return original * SwingUtilKt.getArmMultiplier(state.attackArm);
         } else {
             return original;
         }

@@ -27,9 +27,7 @@ package org.visuals.legacy.animatium.mixins.v1.entity.rotations;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,7 +37,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.EntityUtilKt;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity {
@@ -81,16 +78,6 @@ public abstract class MixinLivingEntity extends Entity {
             return end;
         } else {
             return original.call(delta, start, end);
-        }
-    }
-
-    // TODO/MOVE
-    @WrapOperation(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;swing(Lnet/minecraft/world/InteractionHand;)V"))
-    private void animatium$swingOnDropInventory(final LivingEntity instance, final InteractionHand hand, final Operation<Void> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.disableSwingOnDrop && instance instanceof LocalPlayer localPlayer) {
-            EntityUtilKt.sendSwingPacket(localPlayer, hand);
-        } else {
-            original.call(instance, hand);
         }
     }
 }
