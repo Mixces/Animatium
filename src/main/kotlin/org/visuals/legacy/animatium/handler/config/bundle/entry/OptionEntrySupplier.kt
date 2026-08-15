@@ -36,7 +36,6 @@ interface OptionEntrySupplier<T> {
     fun value(): T? = throw UnsupportedOperationException("The supplier used has not been bootstrapped yet!")
 
     companion object {
-        @JvmStatic
         fun <T> bootstrap(clazz: Class<out Category>, category: Category, supplier: OptionEntrySupplier<T>): OptionEntrySupplier<T> {
             return object : OptionEntrySupplier<T> {
                 override fun create(defaults: Category, config: Category) = supplier.create(defaults, config)

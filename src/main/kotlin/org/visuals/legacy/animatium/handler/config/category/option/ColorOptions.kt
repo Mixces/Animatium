@@ -36,5 +36,5 @@ data class ColorOptions(val allowAlpha: Boolean) : Options<Color>() {
         val WITHOUT_ALPHA = ColorOptions(false)
     }
 
-    override fun createController(option: Option<Color>): ColorControllerBuilder = ColorControllerBuilder.create(option).allowAlpha(allowAlpha)
+    override fun createController(option: Option<Color>): ColorControllerBuilder = ColorControllerBuilder.create(option).allowAlpha(this.allowAlpha)
 }
