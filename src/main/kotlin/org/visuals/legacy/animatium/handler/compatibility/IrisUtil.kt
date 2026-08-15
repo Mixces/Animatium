@@ -25,7 +25,7 @@
 
 package org.visuals.legacy.animatium.handler.compatibility
 
-import com.mojang.blaze3d.pipeline.RenderPipeline
+import com.mojang.renderpearl.api.pipeline.RenderPipeline
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import java.lang.reflect.Method
 import java.util.*
