@@ -26,13 +26,10 @@
 package org.visuals.legacy.animatium.handler.config.bundle
 
 import dev.isxander.yacl3.api.ConfigCategory
-import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.OptionGroup
 import net.minecraft.network.chat.Component
-import org.visuals.legacy.animatium.handler.config.bundle.entry.*
+import org.visuals.legacy.animatium.handler.config.bundle.entry.OptionEntrySupplier
 import org.visuals.legacy.animatium.handler.config.category.Category
-import java.awt.Color
-import java.util.function.BiConsumer
 
 open class EntryBundle(protected val category: Category, private val name: String) : Bundle() {
     protected val entries = LinkedHashSet<OptionEntrySupplier<*>>()
@@ -51,21 +48,6 @@ open class EntryBundle(protected val category: Category, private val name: Strin
             builder.option(entry.create(defaults, config))
         }
     }
-
-    override fun booleanEntry(name: String, listener: BiConsumer<Option<Boolean>, Boolean>) =
-        this.entry(BooleanEntry(name, listener))
-
-    override fun intRange(name: String, min: Int, max: Int, step: Int) =
-        this.entry(IntRangeEntry(name, null, min, max, step))
-
-    override fun floatRange(name: String, min: Float, max: Float, step: Float) =
-        this.entry(FloatRangeEntry(name, null, min, max, step))
-
-    override fun <S : Enum<S>> enumEntry(name: String, enumClazz: Class<S>, listener: BiConsumer<Option<S>, S>) =
-        this.entry(EnumEntry(name, listener, enumClazz))
-
-    override fun colorEntry(name: String, listener: BiConsumer<Option<Color>, Color>) =
-        this.entry(ColorEntry(name, listener))
 
     override fun <T> entry(entry: OptionEntrySupplier<T>): Bundle {
         this.entries.add(this.bootstrap(entry))
