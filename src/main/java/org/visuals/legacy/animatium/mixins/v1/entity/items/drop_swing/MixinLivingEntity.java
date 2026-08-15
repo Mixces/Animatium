@@ -23,19 +23,27 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.entity.items;
+package org.visuals.legacy.animatium.mixins.v1.entity.items.drop_swing;
 
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.SwingUtilKt;
 
-// TODO/FIX: Should not affect swing code, only visual, currently matches Legacy Animatium tho
 @Mixin(LivingEntity.class)
-public abstract class MixinLivingEntity_ItemSwing {
-    @WrapMethod(method = "getCurrentSwingDuration")
-    private int animatium$customSwingAnimationSpeed(final Operation<Integer> original) {
-        return SwingUtilKt.getItemSwingSpeed((LivingEntity) (Object) this, original.call());
+public abstract class MixinLivingEntity {
+    @WrapOperation(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;swing(Lnet/minecraft/world/InteractionHand;)V"))
+    private void animatium$swingOnDropInventory(final LivingEntity instance, final InteractionHand hand, final Operation<Void> original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.disableSwingOnDrop && instance instanceof LocalPlayer localPlayer) {
+            SwingUtilKt.sendSwingPacket(localPlayer, hand);
+        } else {
+            original.call(instance, hand);
+        }
     }
 }
