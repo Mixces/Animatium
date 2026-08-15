@@ -28,39 +28,28 @@ package org.visuals.legacy.animatium.handler.config.category.option
 import org.visuals.legacy.animatium.handler.config.category.Category
 import java.lang.reflect.Field
 
-data class Reference<S>(
-    @JvmField
-    val defaultField: Field?,
-
-    @JvmField
-    val currentField: Field?,
-
-    @JvmField
-    val defaultValue: S?
-) {
+data class Reference<S>(val field: Field?, val defaultValue: S?) {
     companion object {
-        @JvmStatic
         fun <T : Category, S> get(name: String, defaults: T, config: T): Reference<S> {
-            var defaultField: Field? = null
-            var currentField: Field? = null
+            var field: Field? = null
             var defaultValue: S? = null
 
             val defaultsClazz = defaults::class.java
             try {
-                defaultField = defaultsClazz.getField(name)
-                defaultValue = defaultField?.get(defaults) as S?
+                val defaultField = defaultsClazz.getField(name)
+                defaultValue = defaultField.get(defaults) as S?
             } catch (exception: ReflectiveOperationException) {
                 exception.printStackTrace()
             }
 
             val currentClazz = config::class.java
             try {
-                currentField = currentClazz.getField(name)
+                field = currentClazz.getField(name)
             } catch (exception: ReflectiveOperationException) {
                 exception.printStackTrace()
             }
 
-            return Reference(defaultField, currentField, defaultValue)
+            return Reference(field, defaultValue)
         }
     }
 }
