@@ -32,7 +32,6 @@ import net.minecraft.network.chat.Component
 import org.visuals.legacy.animatium.handler.config.bundle.entry.*
 import org.visuals.legacy.animatium.handler.config.category.Category
 import java.awt.Color
-import java.util.*
 import java.util.function.BiConsumer
 
 open class EntryBundle(protected val category: Category, private val name: String) : Bundle() {
@@ -53,28 +52,23 @@ open class EntryBundle(protected val category: Category, private val name: Strin
         }
     }
 
-    override fun booleanEntry(name: String, listener: BiConsumer<Option<Boolean>, Boolean>): Bundle {
-        this.entries.add(this.bootstrap(BooleanEntry(name, Optional.of(listener))))
-        return this
-    }
+    override fun booleanEntry(name: String, listener: BiConsumer<Option<Boolean>, Boolean>) =
+        this.entry(BooleanEntry(name, listener))
 
-    override fun intRange(name: String, min: Int, max: Int, step: Int): Bundle {
-        this.entries.add(this.bootstrap(IntRangeEntry(name, Optional.empty(), min, max, step)))
-        return this
-    }
+    override fun intRange(name: String, min: Int, max: Int, step: Int) =
+        this.entry(IntRangeEntry(name, null, min, max, step))
 
-    override fun floatRange(name: String, min: Float, max: Float, step: Float): Bundle {
-        this.entries.add(this.bootstrap(FloatRangeEntry(name, Optional.empty(), min, max, step)))
-        return this
-    }
+    override fun floatRange(name: String, min: Float, max: Float, step: Float) =
+        this.entry(FloatRangeEntry(name, null, min, max, step))
 
-    override fun <S : Enum<S>> enumEntry(name: String, enumClazz: Class<S>, listener: BiConsumer<Option<S>, S>): Bundle {
-        this.entries.add(this.bootstrap(EnumEntry(name, Optional.of(listener), enumClazz)))
-        return this
-    }
+    override fun <S : Enum<S>> enumEntry(name: String, enumClazz: Class<S>, listener: BiConsumer<Option<S>, S>) =
+        this.entry(EnumEntry(name, listener, enumClazz))
 
-    override fun colorEntry(name: String, listener: BiConsumer<Option<Color>, Color>): Bundle {
-        this.entries.add(this.bootstrap(ColorEntry(name, Optional.of(listener))))
+    override fun colorEntry(name: String, listener: BiConsumer<Option<Color>, Color>) =
+        this.entry(ColorEntry(name, listener))
+
+    override fun <T> entry(entry: OptionEntrySupplier<T>): Bundle {
+        this.entries.add(this.bootstrap(entry))
         return this
     }
 
