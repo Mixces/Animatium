@@ -32,6 +32,7 @@
 		"v1.entity.items.MixinItemInHandRenderer_HeldItemArmLogic",
 		"v1.entity.items.MixinLivingEntity_ItemSwing",
 		"v1.entity.items.MixinPlayerItemInHandLayer_DamageTintArmor",
+		"v1.entity.items.drop_swing.MixinLivingEntity",
 		"v1.entity.nametag.MixinLivingEntityRenderer_ThirdPersonNameTag",
 		"v1.entity.nametag.MixinNameTagFeatureRenderer_NameTagShadow",
 		"v1.entity.nametag.MixinSubmitNodeCollection_NameTagBackground",

@@ -42,7 +42,7 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.handler.server_features.ServerFeatureManager;
 import org.visuals.legacy.animatium.handler.server_features.ServerFeatures;
-import org.visuals.legacy.animatium.util.EntityUtilKt;
+import org.visuals.legacy.animatium.util.SwingUtilKt;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft_MissPenalty {
@@ -57,7 +57,7 @@ public abstract class MixinMinecraft_MissPenalty {
     @Inject(method = "startAttack", at = @At(value = "RETURN", ordinal = 0))
     private void animatium$fakeMissPenaltySwing(final CallbackInfoReturnable<Boolean> cir) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.fakeMissPenaltySwing && this.player != null) {
-            EntityUtilKt.fakeHandSwing(this.player, InteractionHand.MAIN_HAND);
+            SwingUtilKt.fakeHandSwing(this.player, InteractionHand.MAIN_HAND);
         }
     }
 

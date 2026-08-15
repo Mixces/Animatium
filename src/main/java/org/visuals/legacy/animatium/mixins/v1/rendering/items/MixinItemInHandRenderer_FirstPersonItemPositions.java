@@ -56,8 +56,8 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.EntityUtilKt;
 import org.visuals.legacy.animatium.util.ItemUtilKt;
+import org.visuals.legacy.animatium.util.SwingUtilKt;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
 // TODO/NOTE: Why 500?
@@ -105,7 +105,7 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
 
     @WrapOperation(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V", ordinal = 1))
     private void animatium$postBowTransform(final PoseStack instance, final float xScale, final float yScale, final float zScale, final Operation<Void> original, @Local(argsOnly = true, name = "player") final AbstractClientPlayer player, @Local(argsOnly = true, name = "hand") final InteractionHand hand) {
-        final int direction = EntityUtilKt.getHandMultiplier(player, hand);
+        final int direction = SwingUtilKt.getHandMultiplier(player, hand);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemPositions) {
             instance.mulPose(Axis.ZP.rotationDegrees(direction * -335));
             instance.mulPose(Axis.YP.rotationDegrees(direction * -50.0F));
@@ -125,7 +125,7 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
     @ModifyExpressionValue(method = "submitArmWithItem", at = @At("MIXINEXTRAS:EXPRESSION"))
     private boolean animatium$oldFirstPersonSwordBlock(final boolean original, @Local(argsOnly = true, name = "player") final AbstractClientPlayer player, @Local(argsOnly = true, name = "hand") final InteractionHand hand, @Local(argsOnly = true, name = "itemStack") final ItemStack itemStack, @Local(argsOnly = true, name = "poseStack") final PoseStack poseStack) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemPositions && !(itemStack.getItem() instanceof ShieldItem)) {
-            final int direction = EntityUtilKt.getHandMultiplier(player, hand);
+            final int direction = SwingUtilKt.getHandMultiplier(player, hand);
             // We do this to fix a rounding error in Mojangs code.
             ItemUtilKt.applyLegacyFirstPersonTransforms(poseStack, direction, () -> {
                 poseStack.translate(direction * -0.5F, 0.2F, 0.0F);
@@ -141,7 +141,7 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
 
     @Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V"))
     private void animatium$itemPositions(final AbstractClientPlayer player, final float tickDelta, final float pitch, final InteractionHand hand, final float swingProgress, final ItemStack itemStack, final float equippedProgress, final PoseStack poseStack, final SubmitNodeCollector submitNodeCollector, final int lightCoords, final CallbackInfo ci) {
-        final int direction = EntityUtilKt.getHandMultiplier(player, hand);
+        final int direction = SwingUtilKt.getHandMultiplier(player, hand);
         if (Animatium.isEnabled()) {
             if (AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersionSetting.V1_7 && ItemUtilKt.isFishingRodItem(itemStack)) {
                 poseStack.mulPose(Axis.YP.rotationDegrees(direction * 180.0F));

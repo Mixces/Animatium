@@ -32,8 +32,7 @@ import org.visuals.legacy.animatium.renderer.vertex.VertexLayouts
 
 interface Geometry : AutoCloseable {
     companion object {
-        @JvmStatic
-        fun texturedScreenQuad(pose: Matrix3x2f, width: Int, height: Int): IndexedGeometry =
+        fun texturedScreenQuad(pose: Matrix3x2f, width: Int, height: Int) =
             IndexedGeometry.compile(VertexLayouts.POSITION_TEX_QUAD, 4) { vertexConsumer ->
                 vertexConsumer.apply {
                     addVertexWith2DPose(pose, width.toFloat(), height.toFloat()).setUv(0.0F, 1.0F)

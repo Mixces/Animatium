@@ -49,6 +49,7 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.mixins.accessor.CameraAccessor;
 import org.visuals.legacy.animatium.util.EntityUtilKt;
+import org.visuals.legacy.animatium.util.SwingUtilKt;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
 @Mixin(FishingHookRenderer.class)
@@ -135,7 +136,7 @@ public abstract class MixinFishingHookRenderer extends EntityRenderer<FishingHoo
     private float animatium$fixCastLineSwing(final float original, @Local(argsOnly = true, name = "entity") final FishingHook entity) {
         final Player player = entity.getPlayerOwner();
         if (Animatium.isEnabled() && AnimatiumConfig.instance().fixes.fixCastLineSwing && player != null) {
-            return original * EntityUtilKt.getHandMultiplier(player);
+            return original * SwingUtilKt.getHandMultiplier(player);
         } else {
             return original;
         }

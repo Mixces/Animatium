@@ -62,14 +62,12 @@ data class IndexedGeometry(
                 }
             }
 
-        @JvmStatic
         fun compile(
             vertexLayout: VertexLayout,
             vertexCount: Int,
             vertexConsumer: Consumer<VertexConsumer>
         ) = compile(vertexLayout, vertexCount, vertexConsumer, false)
 
-        @JvmStatic
         fun compilePersistent(
             vertexLayout: VertexLayout,
             vertexCount: Int,
