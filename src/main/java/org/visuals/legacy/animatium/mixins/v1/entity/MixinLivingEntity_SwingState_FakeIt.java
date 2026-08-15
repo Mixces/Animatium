@@ -47,7 +47,7 @@ public abstract class MixinLivingEntity_SwingState_FakeIt implements SwingStateE
 
     @Override
     public void animatium$forceSwing(final @NotNull InteractionHand hand, final @NotNull SwingAnimation animation, final int duration) {
-        if (this.currentSwing == null || this.ticks >= duration / 2 || this.ticks < 0) {
+        if (this.currentSwing == null || this.ticks > duration / 2 || this.ticks < 0) {
             this.start(hand, animation, duration);
         }
     }
