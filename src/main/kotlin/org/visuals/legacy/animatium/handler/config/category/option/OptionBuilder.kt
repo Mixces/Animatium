@@ -52,14 +52,14 @@ class OptionBuilder<T>(private val name: String, private val options: Options<T>
         val reference: Reference<T> = Reference.get(this.name, defaults, config)
         val binding: Binding<T> = Binding.generic(reference.defaultValue, {
             return@generic try {
-                reference.currentField?.get(config) as T
+                reference.field?.get(config) as T
             } catch (exception: IllegalAccessException) {
                 exception.printStackTrace()
                 reference.defaultValue
             }
         }, {
             try {
-                reference.currentField?.set(config, it)
+                reference.field?.set(config, it)
             } catch (exception: IllegalAccessException) {
                 exception.printStackTrace()
             }
