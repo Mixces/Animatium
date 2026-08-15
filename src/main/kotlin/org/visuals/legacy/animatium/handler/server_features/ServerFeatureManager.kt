@@ -36,7 +36,7 @@ object ServerFeatureManager {
     fun isPresent(feature: ServerFeature): Boolean {
         if (isSingleplayer()) {
             for (entry in ConfigBundles.EXTRAS.entries()) {
-                if (entry.name().equals(feature.identifier.path)) {
+                if (entry.name() == feature.identifier.path) {
                     return entry.value() as Boolean
                 }
             }
