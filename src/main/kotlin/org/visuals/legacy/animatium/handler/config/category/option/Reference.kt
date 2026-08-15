@@ -33,18 +33,15 @@ data class Reference<S>(val field: Field?, val defaultValue: S?) {
         fun <T : Category, S> get(name: String, defaults: T, config: T): Reference<S> {
             var field: Field? = null
             var defaultValue: S? = null
-
-            val defaultsClazz = defaults::class.java
             try {
-                val defaultField = defaultsClazz.getField(name)
+                val defaultField = defaults::class.java.getField(name)
                 defaultValue = defaultField.get(defaults) as S?
             } catch (exception: ReflectiveOperationException) {
                 exception.printStackTrace()
             }
 
-            val currentClazz = config::class.java
             try {
-                field = currentClazz.getField(name)
+                field = config::class.java.getField(name)
             } catch (exception: ReflectiveOperationException) {
                 exception.printStackTrace()
             }
