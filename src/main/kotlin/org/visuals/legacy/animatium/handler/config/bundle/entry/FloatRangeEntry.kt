@@ -29,19 +29,18 @@ import dev.isxander.yacl3.api.Option
 import org.visuals.legacy.animatium.handler.config.category.Category
 import org.visuals.legacy.animatium.handler.config.category.option.FloatRangeOptions
 import org.visuals.legacy.animatium.handler.config.category.option.OptionBuilder
-import java.util.*
 import java.util.function.BiConsumer
 
 data class FloatRangeEntry(
     val name: String,
-    val listener: Optional<BiConsumer<Option<Float>, Float>>,
+    val listener: BiConsumer<Option<Float>, Float>?,
     val min: Float,
     val max: Float,
     val step: Float
 ) : OptionEntrySupplier<Float> {
     override fun create(defaults: Category, config: Category): Option<Float> {
         val option = OptionBuilder(this.name, FloatRangeOptions(this.min, this.max, this.step))
-        this.listener.ifPresent { option.instant().listener(it) }
+        this.listener?.let { option.instant().listener(it) }
         return option.build(defaults, config)
     }
 

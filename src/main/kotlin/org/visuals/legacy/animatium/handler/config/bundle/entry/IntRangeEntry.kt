@@ -29,19 +29,18 @@ import dev.isxander.yacl3.api.Option
 import org.visuals.legacy.animatium.handler.config.category.Category
 import org.visuals.legacy.animatium.handler.config.category.option.IntegerRangeOptions
 import org.visuals.legacy.animatium.handler.config.category.option.OptionBuilder
-import java.util.*
 import java.util.function.BiConsumer
 
 data class IntRangeEntry(
     val name: String,
-    val listener: Optional<BiConsumer<Option<Int>, Int>>,
+    val listener: BiConsumer<Option<Int>, Int>?,
     val min: Int,
     val max: Int,
     val step: Int
 ) : OptionEntrySupplier<Int> {
     override fun create(defaults: Category, config: Category): Option<Int> {
         val option = OptionBuilder(this.name, IntegerRangeOptions(this.min, this.max, this.step))
-        this.listener.ifPresent { option.instant().listener(it) }
+        this.listener?.let { option.instant().listener(it) }
         return option.build(defaults, config)
     }
 

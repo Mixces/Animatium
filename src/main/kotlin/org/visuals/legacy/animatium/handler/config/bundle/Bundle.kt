@@ -27,6 +27,7 @@ package org.visuals.legacy.animatium.handler.config.bundle
 
 import dev.isxander.yacl3.api.ConfigCategory
 import dev.isxander.yacl3.api.Option
+import org.visuals.legacy.animatium.handler.config.bundle.entry.OptionEntrySupplier
 import org.visuals.legacy.animatium.handler.config.category.Category
 import java.awt.Color
 import java.util.function.BiConsumer
@@ -53,4 +54,6 @@ abstract class Bundle {
     abstract fun colorEntry(name: String, listener: BiConsumer<Option<Color>, Color>): Bundle
 
     fun colorEntry(name: String) = this.colorEntry(name) { opt, value -> }
+
+    abstract fun <T> entry(entry: OptionEntrySupplier<T>): Bundle
 }
