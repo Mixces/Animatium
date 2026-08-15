@@ -119,7 +119,7 @@
 		"v1.rendering.fog.MixinGameRenderer_TickDarkness",
 		"v1.rendering.fog.MixinSkyRenderer_PlanarFogSky",
 		"v1.rendering.fog.MixinWaterFogEnvironment_OldWaterColor",
-		"v1.rendering.items.MixinFirstPersonHandsAndItems",
+		"v1.rendering.items.MixinFirstPersonHandsAndItems_EquipAnimationChecks",
 		"v1.rendering.items.MixinFirstPersonHandsAndItemsRenderer_FirstPersonItemPositions",
 		"v1.rendering.items.MixinItem_DurabilityBarColor",
 		"v1.rendering.items.MixinItemInHandLayer_ThirdPersonItemPositions",
@@ -149,6 +149,7 @@
 		"v1.rendering.sky.the_void.MixinLevelRenderer_VoidBox",
 		"v1.rendering.states.MixinArmedEntityRenderState",
 		"v1.rendering.states.MixinCameraRenderState",
+		"v1.rendering.states.MixinFirstPersonHandsAndItemsRenderState",
 		"v1.rendering.states.MixinGameRenderer",
 		"v1.rendering.states.MixinItemStackRenderState"
 	],

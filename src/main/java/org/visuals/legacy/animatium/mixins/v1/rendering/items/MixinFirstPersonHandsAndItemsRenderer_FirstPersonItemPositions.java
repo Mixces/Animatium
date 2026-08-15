@@ -50,12 +50,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.EntityUtilKt;
 import org.visuals.legacy.animatium.util.ItemUtilKt;
+import org.visuals.legacy.animatium.util.duck.FirstPersonHandsAndItemsRenderStateExt;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
 // TODO/NOTE: Why 500?
@@ -165,18 +167,18 @@ public abstract class MixinFirstPersonHandsAndItemsRenderer_FirstPersonItemPosit
         }
     }
 
+    @ModifyArg(method = "submitHandsWithItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer;submitArmWithItem(Lnet/minecraft/client/renderer/state/level/PlayerRenderState;Lnet/minecraft/client/renderer/state/level/FirstPersonHandsAndItemsRenderState;FFLnet/minecraft/world/InteractionHand;FLnet/minecraft/world/item/ItemStack;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V", ordinal = 0), index = 6)
+    private ItemStack animatium$useCopyStackFieldForRender(final ItemStack original, @Local(argsOnly = true, name = "state") final FirstPersonHandsAndItemsRenderState state) {
+        // TODO/NOTE: 26.2 makes the item persist in hand even when empty (temp check added)
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.equipAnimationItemCheck && !original.isEmpty()) {
+            // Use our copied stack field for hand animations
+            return ((FirstPersonHandsAndItemsRenderStateExt) state).animatium$getMainHandItem();
+        } else {
+            return original;
+        }
+    }
+
     // TODO: 26.3 (@Mixces 394394)
-//    @ModifyArg(method = "submitHandsWithItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;submitArmWithItem(Lnet/minecraft/client/player/AbstractClientPlayer;FFLnet/minecraft/world/InteractionHand;FLnet/minecraft/world/item/ItemStack;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V", ordinal = 0), index = 5)
-//    private ItemStack animatium$useCopyStackFieldForRender(final ItemStack original) {
-//        // TODO/NOTE: 26.2 makes the item persist in hand even when empty (temp check added)
-//        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.equipAnimationItemCheck && !original.isEmpty()) {
-//            // Use our copied stack field for hand animations
-//            return this.animatium$mainHandItem;
-//        } else {
-//            return original;
-//        }
-//    }
-//
 //    @ModifyArg(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V"), index = 1)
 //    private ItemStack animatium$useActualStackForRender(final ItemStack original) {
 //        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.equipAnimationItemCheck) {

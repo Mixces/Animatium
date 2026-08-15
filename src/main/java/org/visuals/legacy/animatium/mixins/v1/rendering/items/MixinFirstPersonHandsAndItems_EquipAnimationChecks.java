@@ -33,6 +33,7 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.client.player.FirstPersonHandsAndItems;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.state.level.FirstPersonHandsAndItemsRenderState;
 import net.minecraft.world.item.ItemStack;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -45,9 +46,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.util.ItemUtilKt;
+import org.visuals.legacy.animatium.util.duck.FirstPersonHandsAndItemsRenderStateExt;
 
 @Mixin(FirstPersonHandsAndItems.class)
-public abstract class MixinFirstPersonHandsAndItems {
+public abstract class MixinFirstPersonHandsAndItems_EquipAnimationChecks {
     @Shadow
     protected abstract boolean shouldInstantlyReplaceVisibleItem(final ItemStack currentlyVisibleItem, final ItemStack expectedItem, final LocalPlayer player);
 
@@ -138,4 +140,12 @@ public abstract class MixinFirstPersonHandsAndItems {
         }
     }
 
+    /**
+     * @Mixces TODO/NOTE: Should we just override mainHandItem in the vanilla state instead or?
+     * Me (lowercasebtw) tried porting what we had prior to the new code, might be possible to cleanup/make better
+     */
+    @Inject(method = "extractRenderState", at = @At("TAIL"))
+    private void animatium$injectMainHandItem(final LocalPlayer player, final float partialTicks, final FirstPersonHandsAndItemsRenderState state, final CallbackInfo ci) {
+        ((FirstPersonHandsAndItemsRenderStateExt) state).animatium$setMainHandItem(this.animatium$mainHandItem);
+    }
 }
