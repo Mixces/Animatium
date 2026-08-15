@@ -2,7 +2,8 @@
 
 ## Changes
 
-- New setting to only tilt weapons in third-person when the "Tilt Third Person Items" setting is enabled.
+- New setting "strictItemPositionsInThirdPerson" to only tilt specific items in third-person when the "Tilt Third Person
+  Items" setting is enabled.
 - Lessen overlay texture allocation when changing damage tint style
 
 ## Fixes
