@@ -26,17 +26,14 @@
 package org.visuals.legacy.animatium.handler.config.bundle
 
 import dev.isxander.yacl3.api.ConfigCategory
-import dev.isxander.yacl3.api.OptionGroup
+import dev.isxander.yacl3.api.OptionAddable
 import org.visuals.legacy.animatium.handler.config.category.Category
 
 class GroupBundle(category: Category, name: String) : EntryBundle(category, name) {
-    override fun install(builder: ConfigCategory.Builder, defaults: Category, config: Category) {
-        for (entry in this.entries) {
-            builder.option(entry.create(defaults, config))
-        }
-    }
+    override fun install(builder: ConfigCategory.Builder, defaults: Category, config: Category) =
+        this.install(builder as OptionAddable, defaults, config)
 
-    fun install(builder: OptionGroup.Builder, defaults: Category, config: Category) {
+    fun install(builder: OptionAddable, defaults: Category, config: Category) {
         for (entry in this.entries) {
             builder.option(entry.create(defaults, config))
         }
