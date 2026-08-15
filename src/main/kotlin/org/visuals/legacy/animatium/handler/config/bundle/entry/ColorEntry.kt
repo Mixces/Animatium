@@ -30,16 +30,15 @@ import org.visuals.legacy.animatium.handler.config.category.Category
 import org.visuals.legacy.animatium.handler.config.category.option.ColorOptions
 import org.visuals.legacy.animatium.handler.config.category.option.OptionBuilder
 import java.awt.Color
-import java.util.*
 import java.util.function.BiConsumer
 
 data class ColorEntry(
     val name: String,
-    val listener: Optional<BiConsumer<Option<Color>, Color>>
+    val listener: BiConsumer<Option<Color>, Color>?
 ) : OptionEntrySupplier<Color> {
     override fun create(defaults: Category, config: Category): Option<Color> {
         val option = OptionBuilder(this.name, ColorOptions.WITH_ALPHA)
-        this.listener.ifPresent { option.instant().listener(it) }
+        this.listener?.let { option.instant().listener(it) }
         return option.build(defaults, config)
     }
 
