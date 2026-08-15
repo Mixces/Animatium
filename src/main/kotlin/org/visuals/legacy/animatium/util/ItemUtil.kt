@@ -103,13 +103,9 @@ fun applyLegacyFirstPersonTransforms(poseStack: PoseStack, direction: Int, runna
     poseStack.mulPose(Axis.YP.rotationDegrees(direction * -45.0F))
 }
 
-fun shouldApplyItemPositionsInThirdPerson(armedEntityRenderState: ArmedEntityRenderState, stack: ItemStack) =
+fun shouldApplyItemPositionsInThirdPerson(armedEntityRenderState: ArmedEntityRenderState, stack: ItemStack, useBlockLight: Boolean) =
     if (AnimatiumConfig.instance().items.itemPositionsInThirdPerson) {
-        if (AnimatiumConfig.instance().items.onlyAffectWeaponsInThirdPerson) {
-            isHandheldItem(stack)
-        } else {
-            true
-        }
+        hasLegacyThirdPersonTransform(stack, useBlockLight)
     } else if (AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersionSetting.V1_7) {
         isFishingRodItem(armedEntityRenderState.mainHandItemStack)
     } else {
@@ -118,6 +114,12 @@ fun shouldApplyItemPositionsInThirdPerson(armedEntityRenderState: ArmedEntityRen
             armedEntityRenderState
         )
     }
+
+fun hasLegacyThirdPersonTransform(stack: ItemStack, usesBlockLight: Boolean) =
+    !AnimatiumConfig.instance().items.strictItemPositionsInThirdPerson ||
+            isBlock3d(stack, usesBlockLight) ||
+            stack.`is`(Items.BOW) ||
+            isHandheldItem(stack)
 
 fun getLegacyDurabilityColorValue(stack: ItemStack): Int {
     val value = (255.0 - stack.damageValue.toDouble() * 255.0 / stack.maxDamage.toDouble())
