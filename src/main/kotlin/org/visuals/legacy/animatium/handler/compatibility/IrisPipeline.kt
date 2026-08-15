@@ -23,10 +23,9 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.util.compatibility;
+package org.visuals.legacy.animatium.handler.compatibility
 
-// NOTE: Enum values fetched from Iris mod
-public enum IrisPipeline {
+enum class IrisPipeline {
     BASIC,
     TEXTURED,
     TERRAIN,
@@ -49,16 +48,16 @@ public enum IrisPipeline {
     BEACON_BEAM,
     LINES;
 
-    public static final IrisPipeline[] VALUES = values();
-
-    private Enum<?> value = null;
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public void initialize(Class<? extends Enum> clazz) {
-        this.value = Enum.valueOf(clazz, this.name());
+    companion object {
+        @JvmField
+        val VALUES = entries.toTypedArray()
     }
 
-    public Enum<?> internal() {
-        return this.value;
+    private var value: Enum<*>? = null
+
+    fun <S : Enum<S>> initialize(clazz: Class<S>) {
+        this.value = java.lang.Enum.valueOf(clazz, this.name)
     }
+
+    fun internal() = this.value
 }
