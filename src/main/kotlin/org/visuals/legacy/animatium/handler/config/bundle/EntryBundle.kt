@@ -50,7 +50,7 @@ open class EntryBundle(protected val category: Category, private val name: Strin
     }
 
     override fun <T> entry(entry: OptionEntrySupplier<T>): Bundle {
-        this.entries.add(this.bootstrap(entry))
+        this.entries.add(OptionEntrySupplier.bootstrap(this.categoryClass, this.category, entry))
         return this
     }
 
@@ -70,6 +70,4 @@ open class EntryBundle(protected val category: Category, private val name: Strin
     }
 
     fun name() = this.name
-
-    private fun <T> bootstrap(supplier: OptionEntrySupplier<T>) = OptionEntrySupplier.bootstrap(this.categoryClass, this.category, supplier)
 }
