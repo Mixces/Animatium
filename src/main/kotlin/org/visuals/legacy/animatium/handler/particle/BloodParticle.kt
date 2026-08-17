@@ -33,7 +33,7 @@ import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.RedStoneWireBlock
+import net.minecraft.world.level.block.RedstoneWireBlock
 import net.minecraft.world.phys.EntityHitResult
 import org.visuals.legacy.animatium.config.AnimatiumConfig
 
@@ -47,7 +47,7 @@ class BloodParticle(
     level,
     x, y, z,
     velocityX, velocityY, velocityZ,
-    Blocks.REDSTONE_WIRE.defaultBlockState().setValue(RedStoneWireBlock.POWER, 15)
+    Blocks.REDSTONE_WIRE.defaultBlockState().setValue(RedstoneWireBlock.POWER, 15)
 ) {
     init {
         this.rCol = random.nextFloat() * 0.25F + 0.3F
