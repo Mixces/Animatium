@@ -4,6 +4,9 @@
 
 - New setting "strictItemPositionsInThirdPerson" to only tilt specific items in third-person when the "Tilt Third Person
   Items" setting is enabled.
+- New "Item Modification" settings which include scale/offset, and new "Disable Swing Translate" setting.
+    - Found in extras tab
+    - Feature requested by someone.
 - Lessen overlay texture allocation when changing damage tint style
 
 ## Fixes

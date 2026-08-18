@@ -28,6 +28,7 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.items;
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -56,6 +57,7 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
+import org.visuals.legacy.animatium.config.category.ExtrasConfigCategory;
 import org.visuals.legacy.animatium.util.ItemUtilKt;
 import org.visuals.legacy.animatium.util.SwingUtilKt;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
@@ -88,6 +90,15 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
 
     @Unique
     private ItemStack animatium$mainHandItem = ItemStack.EMPTY;
+
+    @WrapWithCondition(method = "swingArm", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V"))
+    private boolean animatium$disableSwingTranslate(final PoseStack instance, final float x, final float y, final float z) {
+        if (Animatium.isEnabled()) {
+            return !AnimatiumConfig.instance().extras.disableSwingTranslate;
+        } else {
+            return true;
+        }
+    }
 
     @WrapOperation(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;isUsingItem()Z"))
     private boolean animatium$fixDoubleBlockingVisual$itemUsageVisualInGUI(final AbstractClientPlayer instance, final Operation<Boolean> original) {
@@ -157,7 +168,9 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
                     player,
                     lightCoords
             ); // TODO/NOTE: Might be wrong
-            if (AnimatiumConfig.instance().items.itemPositions && !ItemUtilKt.isBlock3d(itemStack, itemStackRenderState.usesBlockLight()) && !ItemUtilKt.isItemBlacklisted(itemStack)) {
+
+            final boolean isNotBlock3d = !ItemUtilKt.isBlock3d(itemStack, itemStackRenderState.usesBlockLight());
+            if (AnimatiumConfig.instance().items.itemPositions && isNotBlock3d && !ItemUtilKt.isItemBlacklisted(itemStack)) {
                 final float radians = 0.4363323129985824F;
 
                 poseStack.scale(0.6F, 0.6F, 0.6F);
@@ -179,6 +192,12 @@ public abstract class MixinItemInHandRenderer_FirstPersonItemPositions {
                 poseStack.mulPose(Axis.YP.rotationDegrees(-180.0F));
                 poseStack.translate(0.0F, 0.25F, 0.0F);
                 poseStack.scale(1.125F, 1.125F, 1.125F);
+            }
+
+            final ExtrasConfigCategory extras = AnimatiumConfig.instance().extras;
+            if (isNotBlock3d) {
+                poseStack.translate(extras.itemOffsetX * 0.05F, extras.itemOffsetY * 0.05F, extras.itemOffsetZ * 0.05F);
+                poseStack.scale(extras.itemScaleX, extras.itemScaleY, extras.itemScaleZ);
             }
         }
     }
