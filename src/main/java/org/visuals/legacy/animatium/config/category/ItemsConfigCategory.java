@@ -30,6 +30,7 @@ import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
 import org.visuals.legacy.animatium.handler.config.bundle.EntryBundle;
 import org.visuals.legacy.animatium.handler.config.category.Category;
+import org.visuals.legacy.animatium.util.enums.EquipAnimationVersionSetting;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
 public final class ItemsConfigCategory extends Category {
@@ -56,7 +57,7 @@ public final class ItemsConfigCategory extends Category {
     public boolean disableSwingOnDrop = false;
     public boolean disableSwingOnEntityInteract = false;
     public boolean disableItemUsingTextureInGUI = false;
-    public boolean equipAnimationItemCheck = false;
+    public EquipAnimationVersionSetting equipAnimationVersion = EquipAnimationVersionSetting.VANILLA;
     public boolean durabilityBarColors = false;
     public boolean legacyItemRarities = false;
     public boolean heldItemVisibilityInBoat = false;
@@ -101,7 +102,7 @@ public final class ItemsConfigCategory extends Category {
                 .booleanEntry("disableSwingOnDrop")
                 .booleanEntry("disableSwingOnEntityInteract")
                 .booleanEntry("disableItemUsingTextureInGUI")
-                .booleanEntry("equipAnimationItemCheck")
+                .enumEntry("equipAnimationVersion", EquipAnimationVersionSetting.class)
                 .booleanEntry("durabilityBarColors")
                 .booleanEntry("legacyItemRarities")
                 .booleanEntry("heldItemVisibilityInBoat")

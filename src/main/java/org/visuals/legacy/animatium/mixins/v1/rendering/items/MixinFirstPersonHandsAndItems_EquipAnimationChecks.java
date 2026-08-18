@@ -26,35 +26,30 @@
 package org.visuals.legacy.animatium.mixins.v1.rendering.items;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.Share;
-import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.client.player.FirstPersonHandsAndItems;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.state.level.FirstPersonHandsAndItemsRenderState;
 import net.minecraft.world.item.ItemStack;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
-import org.visuals.legacy.animatium.util.ItemUtilKt;
 import org.visuals.legacy.animatium.util.duck.FirstPersonHandsAndItemsRenderStateExt;
+import org.visuals.legacy.animatium.util.enums.EquipAnimationVersionSetting;
 
 @Mixin(FirstPersonHandsAndItems.class)
 public abstract class MixinFirstPersonHandsAndItems_EquipAnimationChecks {
     @Shadow
-    protected abstract boolean shouldInstantlyReplaceVisibleItem(final ItemStack currentlyVisibleItem, final ItemStack expectedItem, final LocalPlayer player);
+    private float mainHandHeight;
 
     @Shadow
-    private float mainHandHeight;
+    private ItemStack mainHandItem;
 
     @Unique
     private int animatium$currentSlot = -1;
@@ -62,80 +57,48 @@ public abstract class MixinFirstPersonHandsAndItems_EquipAnimationChecks {
     @Unique
     private ItemStack animatium$mainHandItem = ItemStack.EMPTY;
 
-    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isHandsBusy()Z"))
-    private boolean animatium$heldItemVisibilityInBoat(final LocalPlayer instance, final Operation<Boolean> original) {
-        return (!Animatium.isEnabled() || !AnimatiumConfig.instance().items.heldItemVisibilityInBoat) && original.call(instance);
+    @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/FirstPersonHandsAndItems;shouldInstantlyReplaceVisibleItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/player/LocalPlayer;)Z", ordinal = 0))
+    private boolean animatium$disableEquipConstraint(final boolean original) {
+        return (!Animatium.isEnabled() || AnimatiumConfig.instance().items.equipAnimationVersion == EquipAnimationVersionSetting.VANILLA) && original;
     }
 
-    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getOffhandItem()Lnet/minecraft/world/item/ItemStack;"))
-    private void animatium$createCopyStack(final CallbackInfo ci, @Local(argsOnly = true, name = "player") final LocalPlayer player, @Local(name = "nextMainHand") final ItemStack nextMainHand, @Share("copyStack") final LocalRef<ItemStack> copyStack) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.equipAnimationItemCheck) {
-            // Initialize our copied stack
-            copyStack.set(nextMainHand.copy());
+    // Fixes MC-262560
+    @ModifyArg(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F", ordinal = 2), index = 0)
+    private float animatium$handleEquipLogic(final float value, @Local(argsOnly = true, name = "player") final LocalPlayer player) {
+        final EquipAnimationVersionSetting setting = AnimatiumConfig.instance().items.equipAnimationVersion;
+        if (Animatium.isEnabled() && setting != EquipAnimationVersionSetting.VANILLA) {
+            final float attackAnim = player.getItemSwapScale(1.0F);
+            final float scale = (float) Math.pow(attackAnim, 3);
+            final ItemStack stackCopy = player.getInventory().getSelectedItem().copy();
 
-            final boolean slotsMatch = this.animatium$currentSlot == player.getInventory().getSelectedSlot();
+            float mainHandTargetHeight = stackCopy == this.animatium$mainHandItem ? scale : 0;
 
-            // Equip logic fix
-            final boolean shouldSwap1_8 = ItemUtilKt.shouldInstantlyReplaceVisibleItem1_8(this.animatium$mainHandItem, copyStack.get());
-
-            // Original equip logic
-            final boolean shouldSwap = this.shouldInstantlyReplaceVisibleItem(this.animatium$mainHandItem, copyStack.get(), player);
-
-            if ((slotsMatch && shouldSwap1_8) || shouldSwap) {
-                this.animatium$mainHandItem = copyStack.get();
+            if (this.animatium$mainHandItem.isEmpty() && stackCopy.isEmpty()) {
+                mainHandTargetHeight = scale;
             }
-        }
-    }
 
-    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/FirstPersonHandsAndItems;shouldInstantlyReplaceVisibleItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/player/LocalPlayer;)Z", ordinal = 0))
-    private boolean animatium$equipAnimationItemCheck$mainHand(final FirstPersonHandsAndItems instance, final ItemStack currentlyVisibleItem, final ItemStack expectedItem, final LocalPlayer player, final Operation<Boolean> original) {
-        final boolean value = original.call(instance, currentlyVisibleItem, expectedItem, player);
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.equipAnimationItemCheck) {
-            // Apply our equip logic fix to offhand items
-            final boolean slotsMatch = this.animatium$currentSlot == player.getInventory().getSelectedSlot();
-            return (slotsMatch && ItemUtilKt.shouldInstantlyReplaceVisibleItem1_8(currentlyVisibleItem, expectedItem)) || value;
+            if (!stackCopy.isEmpty() && !this.animatium$mainHandItem.isEmpty() &&
+                    stackCopy != this.animatium$mainHandItem && stackCopy.getItem() == this.animatium$mainHandItem.getItem() &&
+                    stackCopy.getDamageValue() == this.animatium$mainHandItem.getDamageValue()) {
+                this.animatium$mainHandItem = stackCopy;
+                mainHandTargetHeight = scale;
+            }
+
+            if (setting == EquipAnimationVersionSetting.V1_7 && this.animatium$currentSlot != player.getInventory().getSelectedSlot()) {
+                mainHandTargetHeight = 0;
+            }
+
+            return mainHandTargetHeight - this.mainHandHeight;
         } else {
             return value;
         }
     }
 
-    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/FirstPersonHandsAndItems;shouldInstantlyReplaceVisibleItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/player/LocalPlayer;)Z", ordinal = 1))
-    private boolean animatium$equipAnimationItemCheck$offHand(final FirstPersonHandsAndItems instance, final ItemStack currentlyVisibleItem, final ItemStack expectedItem, final LocalPlayer player, final Operation<Boolean> original) {
-        final boolean value = original.call(instance, currentlyVisibleItem, expectedItem, player);
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.equipAnimationItemCheck) {
-            // Apply our equip logic fix to offhand items
-            return ItemUtilKt.shouldInstantlyReplaceVisibleItem1_8(currentlyVisibleItem, expectedItem) || value;
-        } else {
-            return value;
-        }
-    }
-
-    @ModifyExpressionValue(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/player/FirstPersonHandsAndItems;mainHandItem:Lnet/minecraft/world/item/ItemStack;"))
-    private ItemStack animatium$useCopyStackField(final ItemStack original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.equipAnimationItemCheck) {
-            // Use the copy stack field for the stack comparison
-            return this.animatium$mainHandItem;
-        } else {
-            return original;
-        }
-    }
-
-    @ModifyVariable(method = "tick", at = @At(value = "LOAD", ordinal = 2), name = "nextMainHand")
-    private ItemStack animatium$useLocalCopyStack(final ItemStack nextMainHand, @Share("copyStack") final LocalRef<ItemStack> copyStack) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.equipAnimationItemCheck) {
-            // Use the local copied stack for the stack comparison
-            return copyStack.get();
-        } else {
-            return nextMainHand;
-        }
-    }
-
-    @Inject(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/player/FirstPersonHandsAndItems;mainHandHeight:F", ordinal = 4))
-    private void animatium$setCurrentSlotAndCopyStack(final CallbackInfo ci, @Local(argsOnly = true, name = "player") final LocalPlayer player, @Share("copyStack") final LocalRef<ItemStack> copyStack) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.equipAnimationItemCheck && this.mainHandHeight < 0.1F) {
-            // Update our copied stack
-            this.animatium$mainHandItem = copyStack.get();
-            // Cache the previous slot item to use in our comparison above
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void animatium$updateFakeItem(final LocalPlayer player, final CallbackInfo ci) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.equipAnimationVersion != EquipAnimationVersionSetting.VANILLA &&
+                this.mainHandHeight < 0.1F) {
+            this.animatium$mainHandItem = this.mainHandItem.copy();
             this.animatium$currentSlot = player.getInventory().getSelectedSlot();
         }
     }

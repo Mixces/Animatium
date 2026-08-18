@@ -87,7 +87,7 @@ enum class PresetVersion(private val applier: Runnable) {
         items.skullPosition = true
         items.fishingRodVersion = FishingRodVersionSetting.V1_7
         items.itemUsageSwinging = true
-        items.equipAnimationItemCheck = true
+        items.equipAnimationVersion = EquipAnimationVersionSetting.V1_7
         items.disableSwingOnUse = true
         items.disableSwingOnDrop = true
         items.disableSwingOnEntityInteract = true
@@ -187,7 +187,7 @@ enum class PresetVersion(private val applier: Runnable) {
         items.skullPosition = true
         items.fishingRodVersion = FishingRodVersionSetting.V1_8
         items.itemUsageSwinging = false
-        items.equipAnimationItemCheck = true
+        items.equipAnimationVersion = EquipAnimationVersionSetting.V1_8
         items.disableSwingOnUse = true
         items.disableSwingOnDrop = true
         items.disableSwingOnEntityInteract = true
@@ -287,7 +287,7 @@ enum class PresetVersion(private val applier: Runnable) {
         items.skullPosition = false
         items.fishingRodVersion = FishingRodVersionSetting.VANILLA
         items.itemUsageSwinging = false
-        items.equipAnimationItemCheck = false
+        items.equipAnimationVersion = EquipAnimationVersionSetting.VANILLA
         items.disableSwingOnUse = false
         items.disableSwingOnDrop = false
         items.disableSwingOnEntityInteract = false
