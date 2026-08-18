@@ -71,6 +71,14 @@ public final class ExtrasConfigCategory extends Category {
     public float miningFatigueSwingSpeed = 0.0F;
     public boolean ignoreHasteSpeed = false;
     public boolean ignoreMiningFatigueSpeed = false;
+    public boolean disableSwingTranslate = false;
+    // Item Modifications
+    public float itemScaleX = 1.0F;
+    public float itemScaleY = 1.0F;
+    public float itemScaleZ = 1.0F;
+    public float itemOffsetX = 0.0F;
+    public float itemOffsetY = 0.0F;
+    public float itemOffsetZ = 0.0F;
     // Server Features (Singleplayer Only)
     public boolean miss_penalty = false;
     public boolean left_click_item_usage = false;
@@ -122,7 +130,6 @@ public final class ExtrasConfigCategory extends Category {
                 .booleanEntry("damageBloodParticles")
                 .intRange("bloodParticleMultiplier", 1, 40);
 
-        // Damage Tint
         bundle.group("damage_tint")
                 .booleanEntry("damageTintItems")
                 .booleanEntry("damageTintCape");
@@ -133,7 +140,16 @@ public final class ExtrasConfigCategory extends Category {
                 .floatRange("hasteSwingSpeed", -2.0F, 1.0F, 0.1F)
                 .floatRange("miningFatigueSwingSpeed", -2.0F, 1.0F, 0.1F)
                 .booleanEntry("ignoreHasteSpeed")
-                .booleanEntry("ignoreMiningFatigueSpeed");
+                .booleanEntry("ignoreMiningFatigueSpeed")
+                .booleanEntry("disableSwingTranslate");
+
+        bundle.group("item_modifications")
+                .floatRange("itemScaleX", 0.5F, 2.0F, 0.1F)
+                .floatRange("itemScaleY", 0.5F, 2.0F, 0.1F)
+                .floatRange("itemScaleZ", 0.5F, 2.0F, 0.1F)
+                .floatEntry("itemOffsetX")
+                .floatEntry("itemOffsetY")
+                .floatEntry("itemOffsetZ");
 
         {
             final GroupBundle serverFeatureGroup = bundle.group("server_features");

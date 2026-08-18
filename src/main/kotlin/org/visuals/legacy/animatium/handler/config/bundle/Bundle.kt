@@ -50,6 +50,9 @@ abstract class Bundle {
 
     fun floatRange(name: String, min: Float, max: Float) = this.floatRange(name, min, max, 0.1F)
 
+    open fun floatEntry(name: String) =
+        this.entry(FloatEntry(name, null))
+
     open fun <S : Enum<S>> enumEntry(name: String, enumClazz: Class<S>, listener: BiConsumer<Option<S>, S>) =
         this.entry(EnumEntry(name, listener, enumClazz))
 
