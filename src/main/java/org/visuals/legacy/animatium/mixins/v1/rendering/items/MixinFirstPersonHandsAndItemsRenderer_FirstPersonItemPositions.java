@@ -60,6 +60,7 @@ import org.visuals.legacy.animatium.config.category.ExtrasConfigCategory;
 import org.visuals.legacy.animatium.util.EntityUtilKt;
 import org.visuals.legacy.animatium.util.ItemUtilKt;
 import org.visuals.legacy.animatium.util.duck.FirstPersonHandsAndItemsRenderStateExt;
+import org.visuals.legacy.animatium.util.enums.EquipAnimationVersionSetting;
 import org.visuals.legacy.animatium.util.enums.FishingRodVersionSetting;
 
 // TODO/NOTE: Why 500?
@@ -189,24 +190,13 @@ public abstract class MixinFirstPersonHandsAndItemsRenderer_FirstPersonItemPosit
     @ModifyArg(method = "submitHandsWithItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer;submitArmWithItem(Lnet/minecraft/client/renderer/state/level/PlayerRenderState;Lnet/minecraft/client/renderer/state/level/FirstPersonHandsAndItemsRenderState;FFLnet/minecraft/world/InteractionHand;FLnet/minecraft/world/item/ItemStack;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V", ordinal = 0), index = 6)
     private ItemStack animatium$useCopyStackFieldForRender(final ItemStack original, @Local(argsOnly = true, name = "state") final FirstPersonHandsAndItemsRenderState state) {
         // TODO/NOTE: 26.2 makes the item persist in hand even when empty (temp check added)
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.equipAnimationItemCheck && !original.isEmpty()) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.equipAnimationVersion != EquipAnimationVersionSetting.VANILLA && !original.isEmpty()) {
             // Use our copied stack field for hand animations
             return ((FirstPersonHandsAndItemsRenderStateExt) state).animatium$getMainHandItem();
         } else {
             return original;
         }
     }
-
-    // TODO: 26.3 (@Mixces 394394)
-//    @ModifyArg(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V"), index = 1)
-//    private ItemStack animatium$useActualStackForRender(final ItemStack original) {
-//        if (Animatium.isEnabled() && AnimatiumConfig.instance().items.equipAnimationItemCheck) {
-//            // Use the original stack for rendering to avoid rendering issues
-//            return original == this.animatium$mainHandItem && !this.mainHandItem.isEmpty() ? this.mainHandItem : original;
-//        } else {
-//            return original;
-//        }
-//    }
 
     @ModifyExpressionValue(method = {"renderOneHandedMap", "renderTwoHandedMap", "submitArmWithItem"}, at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;isInvisible:Z", opcode = Opcodes.GETFIELD))
     private boolean animatium$showArmWhileInvisible(final boolean original) {
