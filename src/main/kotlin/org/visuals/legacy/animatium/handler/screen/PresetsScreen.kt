@@ -26,7 +26,7 @@
 package org.visuals.legacy.animatium.handler.screen
 
 import net.minecraft.ChatFormatting
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.screens.Screen
@@ -58,9 +58,13 @@ class PresetsScreen(private val original: Screen?) :
             if (this.presetVersion != GeneralConfigUtil.getEnum(GeneralConfigUtil.PRESET_VERSION_KEY, PresetVersion.VANILLA)) {
                 GeneralConfigUtil.put(GeneralConfigUtil.PRESET_VERSION_KEY, this.presetVersion)
                 this.presetVersion.apply()
-                this.minecraft.gui.chat.addMessage(Component.literal("Applied preset " + this@PresetsScreen.presetVersion.name + "!").withColor(-0xFF0100))
+                this.minecraft.gui.chat.addClientSystemMessage(
+                    Component.literal("Applied preset " + this@PresetsScreen.presetVersion.name + "!").withColor(-0xFF0100)
+                )
             } else {
-                this.minecraft.gui.chat.addMessage(Component.literal("No preset applied as it already matches what you have!").withStyle(ChatFormatting.GOLD))
+                this.minecraft.gui.chat.addClientSystemMessage(
+                    Component.literal("No preset applied as it already matches what you have!").withStyle(ChatFormatting.GOLD)
+                )
             }
 
             this.minecraft.setScreen(this.original)
@@ -104,11 +108,11 @@ class PresetsScreen(private val original: Screen?) :
         this.updateVersionButtonState()
     }
 
-    override fun render(graphics: GuiGraphics, mouseX: Int, mouseY: Int, tickDelta: Float) {
-        this.original?.render(graphics, -999, -999, tickDelta)
+    override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, tickDelta: Float) {
+        this.original?.extractRenderState(graphics, -999, -999, tickDelta)
 
         graphics.fill(0, 0, this.width, this.height, ARGB.color(0.35F, 0))
-        super.render(graphics, mouseX, mouseY, tickDelta)
+        super.extractRenderState(graphics, mouseX, mouseY, tickDelta)
 
         graphics.drawScaledText(
             this.font,
@@ -117,21 +121,21 @@ class PresetsScreen(private val original: Screen?) :
             this.height / 4,
             2.0F
         )
-        graphics.drawCenteredString(
+        graphics.centeredText(
             this.font,
             "Hello! Thank you for downloading Animatium!",
             this.width / 2,
             (this.height / 2.8).toInt(),
             ARGB.white(0xD6D6D6)
         )
-        graphics.drawCenteredString(
+        graphics.centeredText(
             this.font,
             "Please select the version of visuals you would like to use!",
             this.width / 2,
             (this.height / 2.4).toInt(),
             ARGB.white(0xD6D6D6)
         )
-        graphics.drawCenteredString(
+        graphics.centeredText(
             this.font,
             "Current saved version: " + GeneralConfigUtil.getEnum(
                 GeneralConfigUtil.PRESET_VERSION_KEY,
