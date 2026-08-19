@@ -61,7 +61,7 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
     private static final int animatium$DAMAGE_UV = 196608;
 
     @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorCutoutNoCull(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
-    private <S> RenderType animatium$renderLayerArmorTint(final Identifier texture, final Operation<RenderType> original, @Local(argsOnly = true, ordinal = 0) final S state) {
+    private <S> RenderType animatium$renderLayerArmorTint(final Identifier texture, final Operation<RenderType> original, @Local(argsOnly = true, name = "state") final S state) {
         if (this.animatium$isArmorHurt(state) && this.animatium$isVanillaProportions(texture)) {
             return RenderTypes.entityCutoutZOffset(texture);
         } else {
@@ -70,7 +70,7 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
     }
 
     @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorTrim(Lnet/minecraft/resources/Identifier;Z)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
-    private <S> RenderType animatium$renderLayerArmorTrimTint(final Identifier texture, final boolean decal, final Operation<RenderType> original, @Local(ordinal = 0) final TextureAtlasSprite sprite, @Local(argsOnly = true, ordinal = 0) final S state) {
+    private <S> RenderType animatium$renderLayerArmorTrimTint(final Identifier texture, final boolean decal, final Operation<RenderType> original, @Local(name = "sprite") final TextureAtlasSprite sprite, @Local(argsOnly = true, name = "state") final S state) {
         if (this.animatium$isArmorHurt(state) && !decal) {
             return RenderTypes.entityCutoutZOffset(sprite.atlasLocation());
         } else {
@@ -79,7 +79,7 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
     }
 
     @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorCutoutNoCullGlint(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
-    private <S> RenderType animatium$disableVanillaGlint(final Identifier texture, final Operation<RenderType> original, @Local(argsOnly = true, ordinal = 0) final S state) {
+    private <S> RenderType animatium$disableVanillaGlint(final Identifier texture, final Operation<RenderType> original, @Local(argsOnly = true, name = "state") final S state) {
         if (Animatium.isEnabled() &&
                 AnimatiumConfig.instance().other.damageTintArmor &&
                 AnimatiumConfig.instance().other.glintAffectsArmorTint &&
@@ -104,7 +104,7 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
     }
 
     @ModifyExpressionValue(method = RENDER_LAYERS_TARGET, at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/texture/OverlayTexture;NO_OVERLAY:I", opcode = Opcodes.GETSTATIC))
-    private <S> int animatium$applyOverlayUV(final int original, @Local(argsOnly = true, ordinal = 0) final S state) {
+    private <S> int animatium$applyOverlayUV(final int original, @Local(argsOnly = true, name = "state") final S state) {
         return this.animatium$isArmorHurt(state) ? animatium$DAMAGE_UV : original;
     }
 
