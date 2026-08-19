@@ -58,16 +58,16 @@ class PresetsScreen(private val original: Screen?) :
             if (this.presetVersion != GeneralConfigUtil.getEnum(GeneralConfigUtil.PRESET_VERSION_KEY, PresetVersion.VANILLA)) {
                 GeneralConfigUtil.put(GeneralConfigUtil.PRESET_VERSION_KEY, this.presetVersion)
                 this.presetVersion.apply()
-                this.minecraft.gui.chat.addClientSystemMessage(
+                this.minecraft.gui.hud.chat.addClientSystemMessage(
                     Component.literal("Applied preset " + this@PresetsScreen.presetVersion.name + "!").withColor(-0xFF0100)
                 )
             } else {
-                this.minecraft.gui.chat.addClientSystemMessage(
+                this.minecraft.gui.hud.chat.addClientSystemMessage(
                     Component.literal("No preset applied as it already matches what you have!").withStyle(ChatFormatting.GOLD)
                 )
             }
 
-            this.minecraft.setScreen(this.original)
+            this.minecraft.gui.setScreen(this.original)
         }
         this.addRenderableWidget(
             doneButton
