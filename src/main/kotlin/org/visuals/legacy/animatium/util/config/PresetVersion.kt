@@ -333,9 +333,11 @@ enum class PresetVersion(private val applier: Runnable) {
         other.legacySplashPosition = false
     });
 
-    fun apply() {
+    fun apply(reload: Boolean = true) {
         this.applier.run()
         AnimatiumConfig.save()
-        Animatium.reload()
+        if (reload) {
+            Animatium.reload()
+        }
     }
 }

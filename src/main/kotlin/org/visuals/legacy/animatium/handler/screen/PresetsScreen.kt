@@ -26,7 +26,7 @@
 package org.visuals.legacy.animatium.handler.screen
 
 import net.minecraft.ChatFormatting
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.screens.Screen
@@ -38,63 +38,35 @@ import org.visuals.legacy.animatium.handler.rendering.drawScaledText
 import org.visuals.legacy.animatium.util.config.GeneralConfigUtil
 import org.visuals.legacy.animatium.util.config.PresetVersion
 
-class OnboardingScreen(private val original: Screen?, private val accessedViaCommands: Boolean) :
-    Screen(Component.literal("Onboarding")) {
+class PresetsScreen(private val original: Screen?) :
+    Screen(Component.literal("Presets")) {
     private var v1_7Button: Button? = null
     private var v1_8Button: Button? = null
     private var modernButton: Button? = null
 
     private var presetVersion = PresetVersion.VANILLA
 
-    override fun init() {
-        if (!GeneralConfigUtil.getBoolean(GeneralConfigUtil.ONBOARDING_KEY) && !this.accessedViaCommands) {
-            this.minecraft.gui.setScreen(this.original)
-            return
-        }
+    private val BUTTON_WIDTH = 100
 
+    override fun init() {
         this.original?.init(this.width, this.height)
         this.presetVersion = GeneralConfigUtil.getEnum(GeneralConfigUtil.PRESET_VERSION_KEY, PresetVersion.VANILLA)
 
-        val buttonWidth = 100
-        this.v1_7Button = this.addRenderableWidget(
-            Button.builder(Component.literal("1.7")) { _: Button -> this.presetVersion = PresetVersion.V1_7 }
-                .bounds(
-                    ((this.width / 2) - (buttonWidth / 2) - (buttonWidth + Button.DEFAULT_SPACING)),
-                    this.height / 2,
-                    buttonWidth,
-                    Button.DEFAULT_HEIGHT
-                )
-                .build()
-        )
-        this.v1_8Button = this.addRenderableWidget(
-            Button.builder(Component.literal("1.8")) { _: Button -> this.presetVersion = PresetVersion.V1_8 }
-                .bounds((this.width / 2) - (buttonWidth / 2), this.height / 2, buttonWidth, Button.DEFAULT_HEIGHT)
-                .build())
-        this.modernButton = this.addRenderableWidget(
-            Button.builder(Component.literal("Modern")) { _: Button -> this.presetVersion = PresetVersion.VANILLA }
-                .bounds(
-                    ((this.width / 2) - (buttonWidth / 2) + (buttonWidth + Button.DEFAULT_SPACING)),
-                    this.height / 2,
-                    buttonWidth,
-                    Button.DEFAULT_HEIGHT
-                )
-                .build()
-        )
-        this.updateVersionButtonState()
+        this.setupVersionButtons()
 
-        this.addRenderableWidget(
-            Button.builder(CommonComponents.GUI_DONE) { _: Button ->
-                GeneralConfigUtil.put(GeneralConfigUtil.ONBOARDING_KEY, false)
-                GeneralConfigUtil.put(GeneralConfigUtil.PRESET_VERSION_KEY, this.presetVersion.name)
-
+        val doneButton = Button.builder(CommonComponents.GUI_DONE) { _: Button ->
+            if (this.presetVersion != GeneralConfigUtil.getEnum(GeneralConfigUtil.PRESET_VERSION_KEY, PresetVersion.VANILLA)) {
+                GeneralConfigUtil.put(GeneralConfigUtil.PRESET_VERSION_KEY, this.presetVersion)
                 this.presetVersion.apply()
-                if (this.minecraft.player != null) {
-                    this.minecraft.showDebugChat(
-                        Component.literal("Applied preset " + this.presetVersion.name + "!").withColor(-0xff0100)
-                    )
-                }
-                this.minecraft.gui.setScreen(this.original)
+                this.minecraft.gui.chat.addMessage(Component.literal("Applied preset " + this@PresetsScreen.presetVersion.name + "!").withColor(-0xFF0100))
+            } else {
+                this.minecraft.gui.chat.addMessage(Component.literal("No preset applied as it already matches what you have!").withStyle(ChatFormatting.GOLD))
             }
+
+            this.minecraft.setScreen(this.original)
+        }
+        this.addRenderableWidget(
+            doneButton
                 .pos((this.width / 2) - (Button.DEFAULT_WIDTH / 2), (this.height / 1.2f).toInt())
                 .tooltip(
                     Tooltip.create(
@@ -104,61 +76,71 @@ class OnboardingScreen(private val original: Screen?, private val accessedViaCom
         )
     }
 
-    override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, tickDelta: Float) {
-        this.original?.extractRenderState(graphics, -999, -999, tickDelta)
+    private fun setupVersionButtons() {
+        this.v1_7Button = this.addRenderableWidget(
+            Button.builder(Component.literal("1.7")) { _: Button -> this.presetVersion = PresetVersion.V1_7 }
+                .bounds(
+                    ((this.width / 2) - (BUTTON_WIDTH / 2) - (BUTTON_WIDTH + Button.DEFAULT_SPACING)),
+                    this.height / 2,
+                    BUTTON_WIDTH,
+                    Button.DEFAULT_HEIGHT
+                )
+                .build()
+        )
+        this.v1_8Button = this.addRenderableWidget(
+            Button.builder(Component.literal("1.8")) { _: Button -> this.presetVersion = PresetVersion.V1_8 }
+                .bounds((this.width / 2) - (BUTTON_WIDTH / 2), this.height / 2, BUTTON_WIDTH, Button.DEFAULT_HEIGHT)
+                .build())
+        this.modernButton = this.addRenderableWidget(
+            Button.builder(Component.literal("Modern")) { _: Button -> this.presetVersion = PresetVersion.VANILLA }
+                .bounds(
+                    ((this.width / 2) - (BUTTON_WIDTH / 2) + (BUTTON_WIDTH + Button.DEFAULT_SPACING)),
+                    this.height / 2,
+                    BUTTON_WIDTH,
+                    Button.DEFAULT_HEIGHT
+                )
+                .build()
+        )
+        this.updateVersionButtonState()
+    }
 
-        graphics.fill(0, 0, this.width, this.height, ARGB.color(if (this.accessedViaCommands) 0.35F else 0.72F, 0))
-        super.extractRenderState(graphics, mouseX, mouseY, tickDelta)
+    override fun render(graphics: GuiGraphics, mouseX: Int, mouseY: Int, tickDelta: Float) {
+        this.original?.render(graphics, -999, -999, tickDelta)
+
+        graphics.fill(0, 0, this.width, this.height, ARGB.color(0.35F, 0))
+        super.render(graphics, mouseX, mouseY, tickDelta)
 
         graphics.drawScaledText(
             this.font,
-            "Welcome to Animatium Onboarding!",
+            "Welcome to Animatium!",
             this.width / 2,
             this.height / 4,
             2.0F
         )
-        graphics.centeredText(
+        graphics.drawCenteredString(
             this.font,
             "Hello! Thank you for downloading Animatium!",
             this.width / 2,
             (this.height / 2.8).toInt(),
             ARGB.white(0xD6D6D6)
         )
-        graphics.centeredText(
+        graphics.drawCenteredString(
             this.font,
             "Please select the version of visuals you would like to use!",
             this.width / 2,
             (this.height / 2.4).toInt(),
             ARGB.white(0xD6D6D6)
         )
-
-        if (!this.accessedViaCommands) {
-            graphics.centeredText(
-                this.font,
-                "NOTE: If you have already went through this,",
-                this.width / 2,
-                (this.height / 1.4F).toInt(),
-                ARGB.white(0xFFA600)
-            )
-            graphics.centeredText(
-                this.font,
-                "ask for help in the discord before continuing!",
-                this.width / 2,
-                (this.height / 1.3F).toInt(),
-                ARGB.white(0xFFA600)
-            )
-        } else {
-            graphics.centeredText(
-                this.font,
-                "Current saved version: " + GeneralConfigUtil.getEnum(
-                    GeneralConfigUtil.PRESET_VERSION_KEY,
-                    this.presetVersion
-                ),
-                this.width / 2,
-                (this.height / 1.3F).toInt(),
-                ARGB.white(0.625F)
-            )
-        }
+        graphics.drawCenteredString(
+            this.font,
+            "Current saved version: " + GeneralConfigUtil.getEnum(
+                GeneralConfigUtil.PRESET_VERSION_KEY,
+                this.presetVersion
+            ),
+            this.width / 2,
+            (this.height / 1.3F).toInt(),
+            ARGB.white(0.625F)
+        )
     }
 
     override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean =
@@ -171,14 +153,6 @@ class OnboardingScreen(private val original: Screen?, private val accessedViaCom
         } else {
             super.mouseClicked(event, doubleClick)
         }
-
-    override fun onClose() {
-        // NOTE: Only allow escaping if you used the ``/animatium onboarding`` command
-        if (this.original == null) {
-            GeneralConfigUtil.put(GeneralConfigUtil.ONBOARDING_KEY, false)
-            super.onClose()
-        }
-    }
 
     private fun updateVersionButtonState() {
         this.v1_7Button?.active = this.presetVersion != PresetVersion.V1_7
