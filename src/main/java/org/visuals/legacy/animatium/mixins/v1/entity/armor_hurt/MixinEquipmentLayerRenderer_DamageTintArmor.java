@@ -41,6 +41,7 @@ import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.UvMapping;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -79,10 +80,7 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
 
     @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorCutoutNoCullGlint(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
     private <S> RenderType animatium$disableVanillaGlint(final Identifier texture, final Operation<RenderType> original, @Local(argsOnly = true, name = "state") final S state) {
-        if (this.animatium$isArmorHurt(state) &&
-                AnimatiumConfig.instance().other.glintAffectsArmorTint &&
-                !Minecraft.getInstance().options.improvedTransparency().get()
-        ) {
+        if (this.animatium$isArmorHurt(state) && AnimatiumConfig.instance().other.glintAffectsArmorTint && !Minecraft.getInstance().options.improvedTransparency().get()) {
             return RenderTypes.entityCutoutZOffset(texture);
         } else {
             return original.call(texture);
@@ -90,12 +88,9 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
     }
 
     @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/OrderedSubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/texture/UvMapping;I)V", ordinal = 0))
-    private <S> void animatium$useOverlayArmorGlint(final OrderedSubmitNodeCollector instance, final Model<? super S> model, final S state, final PoseStack poseStack, final RenderType renderType, final int lightCoords, final int overlayCoords, final int color, final @Nullable UvMapping uvMapping, final int outlineColor, final Operation<Void> original, @Local(name = "renderShaderGlint") final boolean renderShaderGlint) {
+    private <S> void animatium$useOverlayArmorGlint(final OrderedSubmitNodeCollector instance, final Model<? super S> model, final S state, final PoseStack poseStack, final RenderType renderType, final int lightCoords, final int overlayCoords, final int color, final @Nullable UvMapping uvMapping, final int outlineColor, final Operation<Void> original, @Local(argsOnly = true, name = "itemStack") final ItemStack itemStack) {
         original.call(instance, model, state, poseStack, renderType, lightCoords, overlayCoords, color, uvMapping, outlineColor);
-        if (this.animatium$isArmorHurt(state) &&
-                AnimatiumConfig.instance().other.glintAffectsArmorTint &&
-                !Minecraft.getInstance().options.improvedTransparency().get() &&
-                renderShaderGlint) {
+        if (this.animatium$isArmorHurt(state) && AnimatiumConfig.instance().other.glintAffectsArmorTint && !Minecraft.getInstance().options.improvedTransparency().get() && itemStack.hasFoil()) {
             original.call(instance, model, state, poseStack, AnimatiumRenderTypes.ARMOR_GLINT, lightCoords, overlayCoords, color, uvMapping, outlineColor);
         }
     }
