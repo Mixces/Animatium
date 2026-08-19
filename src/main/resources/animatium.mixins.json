@@ -93,7 +93,6 @@
 		"v1.gui.remove_recipe_book.MixinRecipeBookComponent_HideRecipeBookUI",
 		"v1.gui.screen_tweaks.MixinAbstractSelectionList_ListGradientBackground",
 		"v1.gui.screen_tweaks.MixinFontPreparedTextBuilder_FixStrikethroughStyle",
-		"v1.gui.screen_tweaks.MixinGui_OnboardingScreen",
 		"v1.gui.screen_tweaks.MixinHud_OldCrosshairPosition",
 		"v1.gui.screen_tweaks.MixinInventoryMenu_OldCraftingSlots",
 		"v1.gui.screen_tweaks.MixinInventoryScreen_ModifyTitlePosition",
