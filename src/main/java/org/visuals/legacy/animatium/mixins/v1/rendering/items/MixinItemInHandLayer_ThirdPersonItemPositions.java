@@ -69,9 +69,9 @@ public abstract class MixinItemInHandLayer_ThirdPersonItemPositions<S extends Ar
     private boolean animatium$removeTransformMultiply(
             final PoseStack instance,
             final Quaternionfc by,
-            @Local(argsOnly = true, name = "state") final S state,
+            @Local(argsOnly = true, ordinal = 0) final S state,
             @Local(argsOnly = true, name = "item") final ItemStackRenderState item,
-            @Local(argsOnly = true, name = "arm") final HumanoidArm arm
+            @Local(argsOnly = true, ordinal = 0) final HumanoidArm arm
     ) {
         final ItemStack stack = state.animatium$getItemHeldByArm(arm);
         return !Animatium.isEnabled() || !ItemUtilKt.shouldApplyItemPositionsInThirdPerson(state, stack, item.usesBlockLight()) || ItemUtilKt.isItemBlacklisted(stack);

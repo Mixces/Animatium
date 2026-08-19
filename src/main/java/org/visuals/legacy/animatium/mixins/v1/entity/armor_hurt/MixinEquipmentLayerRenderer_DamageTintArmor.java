@@ -30,7 +30,9 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.textures.GpuTexture;
 import com.moulberry.mixinconstraints.annotations.IfModAbsent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
@@ -38,7 +40,6 @@ import net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.UvMapping;
 import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.Nullable;
@@ -56,9 +57,12 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
     @Unique
     private static final String RENDER_LAYERS_TARGET = "renderLayers(Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/world/item/ItemStack;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/resources/Identifier;II)V";
 
+    @Unique
+    private static final int animatium$DAMAGE_UV = 196608;
+
     @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorCutoutNoCull(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
-    private RenderType animatium$renderLayerArmorTint(final Identifier texture, final Operation<RenderType> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.damageTintArmor) {
+    private <S> RenderType animatium$renderLayerArmorTint(final Identifier texture, final Operation<RenderType> original, @Local(argsOnly = true, ordinal = 0) final S state) {
+        if (this.animatium$isArmorHurt(state) && this.animatium$isVanillaProportions(texture)) {
             return RenderTypes.entityCutoutZOffset(texture);
         } else {
             return original.call(texture);
@@ -66,16 +70,16 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
     }
 
     @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorTrim(Lnet/minecraft/resources/Identifier;Z)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
-    private RenderType animatium$renderLayerArmorTrimTint(final Identifier texture, final boolean decal, final Operation<RenderType> original) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.damageTintArmor) {
-            return RenderTypes.entityCutoutZOffset(texture);
+    private <S> RenderType animatium$renderLayerArmorTrimTint(final Identifier texture, final boolean decal, final Operation<RenderType> original, @Local(ordinal = 0) final TextureAtlasSprite sprite, @Local(argsOnly = true, ordinal = 0) final S state) {
+        if (this.animatium$isArmorHurt(state) && !decal) {
+            return RenderTypes.entityCutoutZOffset(sprite.atlasLocation());
         } else {
             return original.call(texture, decal);
         }
     }
 
     @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorCutoutNoCullGlint(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
-    private RenderType animatium$disableVanillaGlint(final Identifier texture, final Operation<RenderType> original) {
+    private <S> RenderType animatium$disableVanillaGlint(final Identifier texture, final Operation<RenderType> original, @Local(argsOnly = true, ordinal = 0) final S state) {
         if (Animatium.isEnabled() &&
                 AnimatiumConfig.instance().other.damageTintArmor &&
                 AnimatiumConfig.instance().other.glintAffectsArmorTint &&
@@ -100,11 +104,24 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
     }
 
     @ModifyExpressionValue(method = RENDER_LAYERS_TARGET, at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/texture/OverlayTexture;NO_OVERLAY:I", opcode = Opcodes.GETSTATIC))
-    private <S> int animatium$applyOverlayUV(final int original, @Local(argsOnly = true, name = "state") final S entityRenderState) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.damageTintArmor && entityRenderState instanceof LivingEntityRenderState livingEntityRenderState) {
-            return OverlayTexture.pack(0, OverlayTexture.v(livingEntityRenderState.hasRedOverlay));
-        } else {
-            return original;
-        }
+    private <S> int animatium$applyOverlayUV(final int original, @Local(argsOnly = true, ordinal = 0) final S state) {
+        return this.animatium$isArmorHurt(state) ? animatium$DAMAGE_UV : original;
+    }
+
+    @Unique
+    private <S> boolean animatium$isArmorHurt(final S state) {
+        return Animatium.isEnabled() &&
+                AnimatiumConfig.instance().other.damageTintArmor &&
+                state instanceof LivingEntityRenderState livingEntityRenderState &&
+                livingEntityRenderState.hasRedOverlay;
+    }
+
+    // Patches (https://github.com/Legacy-Visuals-Project/Animatium/issues/76) temporarily
+    // Prevents damage tint on armor if the respective armor texture proportions do not match vanilla.
+    // TODO/Revisit to patch better/nicer as it currently disables the overlay entirely which is not ideal
+    @Unique
+    private boolean animatium$isVanillaProportions(final Identifier location) {
+        final GpuTexture texture = Minecraft.getInstance().getTextureManager().getTexture(location).getTexture();
+        return texture.getWidth(0) == texture.getHeight(0) * 2;
     }
 }
