@@ -8,6 +8,7 @@
     - Found in extras tab
     - Feature requested by someone.
 - Lessen overlay texture allocation when changing damage tint style
+- Improve/fix armor damage tint handling (Courtesy of Wyvest)
 
 ## Fixes
 
