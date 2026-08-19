@@ -189,12 +189,21 @@ publishMods {
     if (curseforgeId != null) {
         curseforge {
             projectId = curseforgeId
+            projectSlug = mod.id
             accessToken = findProperty("curseforge.token").toString()
             minecraftVersions.addAll(mod.minecraftVersionRange.split(' '))
+            client = true
 
             requires("fabric-api")
             requires("yacl")
             optional("modmenu")
+        }
+    }
+
+    val discordWebhookUrl = findProperty("discord.webhook")?.toString()?.takeIf { it.isNotBlank() }
+    if (discordWebhookUrl != null) {
+        discord {
+            webhookUrl = discordWebhookUrl
         }
     }
 }
