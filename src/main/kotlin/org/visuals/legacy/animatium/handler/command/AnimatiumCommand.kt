@@ -53,7 +53,7 @@ class AnimatiumCommand : Command<FabricClientCommandSource> {
             command.then(subCommand("on", OnSubCommand.UNIT))
             command.then(subCommand("off", OffSubCommand.UNIT))
             command.then(subCommand("reload", ReloadSubCommand.UNIT))
-            command.then(subCommand("onboarding", OnboardingSubCommand.UNIT))
+            command.then(subCommand("presets", PresetsSubCommand.UNIT))
 
             val calendar = Calendar.getInstance()
             if (calendar.get(Calendar.MONTH) == Calendar.SEPTEMBER && calendar.get(Calendar.DAY_OF_MONTH) == 6) {

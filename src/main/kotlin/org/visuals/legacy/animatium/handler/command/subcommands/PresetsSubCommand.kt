@@ -28,17 +28,17 @@ package org.visuals.legacy.animatium.handler.command.subcommands
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.context.CommandContext
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
-import org.visuals.legacy.animatium.handler.screen.OnboardingScreen
+import org.visuals.legacy.animatium.handler.screen.PresetsScreen
 
-class OnboardingSubCommand : Command<FabricClientCommandSource> {
+class PresetsSubCommand : Command<FabricClientCommandSource> {
     companion object {
         @JvmField
-        val UNIT = OnboardingSubCommand()
+        val UNIT = PresetsSubCommand()
     }
 
     override fun run(context: CommandContext<FabricClientCommandSource>): Int {
         val minecraft = context.getSource().client
-        minecraft.schedule({ minecraft.gui.setScreen(OnboardingScreen(minecraft.gui.screen(), true)) })
+        minecraft.schedule({ minecraft.setScreen(PresetsScreen(minecraft.screen)) })
         return Command.SINGLE_SUCCESS
     }
 }

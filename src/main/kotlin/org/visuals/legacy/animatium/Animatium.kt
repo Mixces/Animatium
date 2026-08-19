@@ -30,13 +30,11 @@ import net.minecraft.ChatFormatting
 import net.minecraft.SharedConstants
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.debug.DebugScreenEntries
-import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import org.visuals.legacy.animatium.config.AnimatiumConfig
 import org.visuals.legacy.animatium.handler.rendering.lighting.LegacyDiffuseLighting
 import org.visuals.legacy.animatium.handler.screen.debug.AnimatiumDebugEntry
-import org.visuals.legacy.animatium.mixins.accessor.GameRendererAccessor
 import org.visuals.legacy.animatium.util.ToastUtil
 import org.visuals.legacy.animatium.util.config.GeneralConfigUtil
 import org.visuals.legacy.animatium.util.reinitializeInventorySlots

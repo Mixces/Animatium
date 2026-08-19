@@ -41,13 +41,11 @@ object GeneralConfigUtil {
     private var data = JsonObject()
 
     const val ENABLED_KEY = "enabled"
-    const val ONBOARDING_KEY = "onboarding"
     const val PRESET_VERSION_KEY = "preset_version"
 
     init {
         // Defaults
         this.data.addProperty(ENABLED_KEY, true)
-        this.data.addProperty(ONBOARDING_KEY, true)
         this.data.addProperty(PRESET_VERSION_KEY, PresetVersion.VANILLA.name)
     }
 
@@ -76,7 +74,7 @@ object GeneralConfigUtil {
         } catch (_: Throwable) {
         }
 
-        this.put(key, fallback.name)
+        this.put(key, fallback)
         return fallback
     }
 
@@ -90,6 +88,11 @@ object GeneralConfigUtil {
     fun put(key: String, value: String): GeneralConfigUtil {
         this.data.addProperty(key, value)
         return this.save()
+    }
+
+    @JvmStatic
+    fun <T : Enum<T>> put(key: String, value: T): GeneralConfigUtil {
+        return this.put(key, value.name)
     }
 
     @JvmStatic

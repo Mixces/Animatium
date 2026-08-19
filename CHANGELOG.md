@@ -9,6 +9,7 @@
     - Feature requested by someone.
 - Lessen overlay texture allocation when changing damage tint style
 - Improve/fix armor damage tint handling (Courtesy of Wyvest)
+- Removed Onboarding Screen on Initial Launch (Still accessible via ``/animatium presets``)
 
 ## Fixes
 
