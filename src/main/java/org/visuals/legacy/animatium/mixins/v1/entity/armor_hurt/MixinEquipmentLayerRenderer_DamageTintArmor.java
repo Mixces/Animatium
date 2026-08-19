@@ -30,9 +30,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.textures.GpuTexture;
+import com.mojang.renderpearl.api.textures.GpuTexture;
 import com.moulberry.mixinconstraints.annotations.IfModAbsent;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
@@ -70,9 +69,9 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
     }
 
     @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorTrim(Lnet/minecraft/resources/Identifier;Z)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
-    private <S> RenderType animatium$renderLayerArmorTrimTint(final Identifier texture, final boolean decal, final Operation<RenderType> original, @Local(name = "sprite") final TextureAtlasSprite sprite, @Local(argsOnly = true, name = "state") final S state) {
+    private <S> RenderType animatium$renderLayerArmorTrimTint(final Identifier texture, final boolean decal, final Operation<RenderType> original, @Local(argsOnly = true, name = "state") final S state) {
         if (this.animatium$isArmorHurt(state) && !decal) {
-            return RenderTypes.entityCutoutZOffset(sprite.atlasLocation());
+            return RenderTypes.entityCutoutZOffset(texture);
         } else {
             return original.call(texture, decal);
         }
@@ -80,8 +79,7 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
 
     @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorCutoutNoCullGlint(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
     private <S> RenderType animatium$disableVanillaGlint(final Identifier texture, final Operation<RenderType> original, @Local(argsOnly = true, name = "state") final S state) {
-        if (Animatium.isEnabled() &&
-                AnimatiumConfig.instance().other.damageTintArmor &&
+        if (this.animatium$isArmorHurt(state) &&
                 AnimatiumConfig.instance().other.glintAffectsArmorTint &&
                 !Minecraft.getInstance().options.improvedTransparency().get()
         ) {
@@ -94,8 +92,7 @@ public abstract class MixinEquipmentLayerRenderer_DamageTintArmor {
     @WrapOperation(method = RENDER_LAYERS_TARGET, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/OrderedSubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/texture/UvMapping;I)V", ordinal = 0))
     private <S> void animatium$useOverlayArmorGlint(final OrderedSubmitNodeCollector instance, final Model<? super S> model, final S state, final PoseStack poseStack, final RenderType renderType, final int lightCoords, final int overlayCoords, final int color, final @Nullable UvMapping uvMapping, final int outlineColor, final Operation<Void> original, @Local(name = "renderShaderGlint") final boolean renderShaderGlint) {
         original.call(instance, model, state, poseStack, renderType, lightCoords, overlayCoords, color, uvMapping, outlineColor);
-        if (Animatium.isEnabled() &&
-                AnimatiumConfig.instance().other.damageTintArmor &&
+        if (this.animatium$isArmorHurt(state) &&
                 AnimatiumConfig.instance().other.glintAffectsArmorTint &&
                 !Minecraft.getInstance().options.improvedTransparency().get() &&
                 renderShaderGlint) {
