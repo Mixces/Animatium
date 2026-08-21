@@ -27,9 +27,9 @@ package org.visuals.legacy.animatium.mixins.v1.entity.cape;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.CapeLayer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -41,7 +41,7 @@ public abstract class MixinCapeLayer_DamageTintCape {
     @ModifyExpressionValue(method = "submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/client/renderer/entity/state/AvatarRenderState;FF)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/texture/OverlayTexture;NO_OVERLAY:I", opcode = Opcodes.GETSTATIC))
     private int animatium$damageTintItems(final int original, @Local(argsOnly = true, name = "state") final AvatarRenderState state) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.damageTintCape) {
-            return OverlayTexture.pack(0, OverlayTexture.v(state.hasRedOverlay));
+            return LivingEntityRenderer.getOverlayCoords(state, 0.0F);
         } else {
             return original;
         }
