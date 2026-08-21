@@ -23,22 +23,14 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.handler.rendering
+package org.visuals.legacy.animatium.mixins.accessor;
 
-import net.minecraft.util.Mth
-import net.minecraft.world.entity.Entity
+import net.minecraft.world.level.Level;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-object LegacyFogDarkness {
-    private var prevDarkness: Float = 0.0F
-    private var darkness: Float = 0.0F
-
-    @JvmStatic
-    fun tick(entity: Entity, renderDistance: Int) {
-        val brightness = entity.level().getLightLevelDependentMagicValue(entity.blockPosition())
-        this.prevDarkness = this.darkness
-        this.darkness = Mth.lerp(0.1F, this.darkness, Mth.lerp(renderDistance / 32.0F, brightness, 1.0F))
-    }
-
-    @JvmStatic
-    fun getDarkness(tickDelta: Float) = Mth.lerp(tickDelta, this.prevDarkness, this.darkness)
+@Mixin(Level.class)
+public interface LevelAccessor {
+    @Accessor("skyDarken")
+    void animatium$setSkyDarken(final int darken);
 }

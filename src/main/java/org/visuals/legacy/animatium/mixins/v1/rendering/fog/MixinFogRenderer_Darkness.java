@@ -44,8 +44,8 @@ public abstract class MixinFogRenderer_Darkness {
     private int animatium$fogDarkness(final FogEnvironment instance, final ClientLevel level, final Camera camera, final int renderDistance, final float tickDelta, final Operation<Integer> original) {
         final int color = original.call(instance, level, camera, renderDistance, tickDelta);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.legacyFogDarkness) {
-            final float darkness = LegacyFogDarkness.getInstance().getDarkness(tickDelta);
-            return ARGB.multiply(color, ARGB.colorFromFloat(1.0F, darkness, darkness, darkness));
+            // TODO: Fix night vision flickering bs
+            return ARGB.scaleRGB(color, LegacyFogDarkness.getDarkness(tickDelta));
         } else {
             return color;
         }

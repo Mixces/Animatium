@@ -32,14 +32,11 @@ import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState
 import net.minecraft.client.renderer.entity.state.AvatarRenderState
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
-import net.minecraft.core.BlockPos
-import net.minecraft.util.Mth
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.HumanoidArm
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.level.LevelReader
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
 import org.visuals.legacy.animatium.config.AnimatiumConfig
@@ -100,9 +97,7 @@ fun Entity?.isSelf(): Boolean {
     return player != null && this != null && this.id == player.id
 }
 
-fun LevelReader.getLegacyBrightness(blockPos: BlockPos): Float {
-    val amount = this.getMaxLocalRawBrightness(blockPos) / 15.0F
-    return Mth.lerp(this.dimensionType().ambientLight(), amount / (4.0F - 3.0F * amount), 1.0F)
-}
+fun Player.getPosWithEyeHeight(tickDelta: Float, eyeHeight: Double) =
+    this.getPosition(tickDelta).add(0.0, eyeHeight, 0.0)
 
 fun Entity.getScale() = if (this is LivingEntity) this.scale else 1.0F
