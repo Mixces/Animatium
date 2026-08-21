@@ -30,9 +30,9 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HeadedModel;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -44,7 +44,7 @@ public abstract class MixinPlayerItemInHandLayer_DamageTintArmor<S extends Avata
     @ModifyExpressionValue(method = "renderItemHeldToEye", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/texture/OverlayTexture;NO_OVERLAY:I", opcode = Opcodes.GETSTATIC))
     private int animatium$damageTintItems(final int original, @Local(argsOnly = true, name = "state") final S state) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().extras.damageTintItems) {
-            return OverlayTexture.pack(0, OverlayTexture.v(state.hasRedOverlay));
+            return LivingEntityRenderer.getOverlayCoords(state, 0.0F);
         } else {
             return original;
         }
