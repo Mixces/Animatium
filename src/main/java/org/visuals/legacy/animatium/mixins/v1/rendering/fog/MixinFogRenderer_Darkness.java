@@ -27,11 +27,8 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.fog;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.Camera;
-import net.minecraft.client.multiplayer.ClientLevel;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.renderer.fog.FogRenderer;
-import net.minecraft.client.renderer.fog.environment.FogEnvironment;
-import net.minecraft.util.ARGB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.visuals.legacy.animatium.Animatium;
@@ -40,14 +37,17 @@ import org.visuals.legacy.animatium.handler.rendering.LegacyFogDarkness;
 
 @Mixin(FogRenderer.class)
 public abstract class MixinFogRenderer_Darkness {
-    @WrapOperation(method = "computeFogColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/fog/environment/FogEnvironment;getBaseColor(Lnet/minecraft/client/multiplayer/ClientLevel;Lnet/minecraft/client/Camera;IF)I"))
-    private int animatium$fogDarkness(final FogEnvironment instance, final ClientLevel level, final Camera camera, final int renderDistance, final float tickDelta, final Operation<Integer> original) {
-        final int color = original.call(instance, level, camera, renderDistance, tickDelta);
+    @WrapOperation(method = "computeFogColor", at = {
+            @At(value = "INVOKE", target = "Lnet/minecraft/util/ARGB;redFloat(I)F"),
+            @At(value = "INVOKE", target = "Lnet/minecraft/util/ARGB;greenFloat(I)F"),
+            @At(value = "INVOKE", target = "Lnet/minecraft/util/ARGB;blueFloat(I)F")
+    })
+    private float animatium$applyFogDarkness(final int color, final Operation<Float> original, @Local(argsOnly = true, name = "partialTicks") final float tickDelta) {
+        float component = original.call(color);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().other.legacyFogDarkness) {
-            // TODO: Fix night vision flickering bs
-            return ARGB.scaleRGB(color, LegacyFogDarkness.getDarkness(tickDelta));
-        } else {
-            return color;
+            component *= LegacyFogDarkness.getDarkness(tickDelta);
         }
+
+        return component;
     }
 }
