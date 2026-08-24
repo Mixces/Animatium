@@ -31,20 +31,23 @@ import com.mojang.blaze3d.textures.GpuTextureView
 import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumPipelines
 import org.visuals.legacy.animatium.renderer.Renderer
 import org.visuals.legacy.animatium.renderer.buffer.BasicGeometry
+import org.visuals.legacy.animatium.util.profile
 
 object ColorBoostRenderer {
     private val GEOMETRY = BasicGeometry(0, 3)
 
     @JvmStatic
     fun render(colorAttachment: GpuTextureView, depthAttachment: GpuTextureView) {
-        Renderer.of({ "Color Boost Blit" }, colorAttachment, depthAttachment).use { renderer ->
-            renderer.setPipeline(AnimatiumPipelines.COLOR_BOOST_BLIT)
-            renderer.setTexture(
-                "Sampler0",
-                colorAttachment,
-                RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST)
-            )
-            renderer.draw(GEOMETRY)
+        profile("color_boost") {
+            Renderer.of({ "Color Boost Blit" }, colorAttachment, depthAttachment).use { renderer ->
+                renderer.setPipeline(AnimatiumPipelines.COLOR_BOOST_BLIT)
+                renderer.setTexture(
+                    "Sampler0",
+                    colorAttachment,
+                    RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST)
+                )
+                renderer.draw(GEOMETRY)
+            }
         }
     }
 }

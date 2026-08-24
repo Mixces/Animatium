@@ -38,6 +38,7 @@ import org.visuals.legacy.animatium.renderer.DynamicTransforms
 import org.visuals.legacy.animatium.renderer.Renderer
 import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry
 import org.visuals.legacy.animatium.renderer.vertex.VertexLayouts
+import org.visuals.legacy.animatium.util.profile
 
 object LegacySkyRenderer {
     private val GET_VOID_BOX_GEOMETRY = { offset: Float ->
@@ -97,34 +98,36 @@ object LegacySkyRenderer {
 
     @JvmStatic
     fun renderBlueVoid(skyColor: Int, depth: Double) {
-        Renderer.of { "Blue void sky disc" }.use { renderer ->
-            val matrix = RenderSystem.getModelViewMatrixCopy().translate(
-                0.0F,
-                if (AnimatiumConfig.instance().extras.dontMoveBlueVoid) 12.0F else -((depth - 16.0).toFloat()),
-                0.0F
-            )
+        profile("blue_void") {
+            Renderer.of { "Blue void sky disc" }.use { renderer ->
+                val matrix = RenderSystem.getModelViewMatrixCopy().translate(
+                    0.0F,
+                    if (AnimatiumConfig.instance().extras.dontMoveBlueVoid) 12.0F else -((depth - 16.0).toFloat()),
+                    0.0F
+                )
 
-            val color = Vector4f(
-                ARGB.redFloat(skyColor) * 0.2F + 0.04F,
-                ARGB.greenFloat(skyColor) * 0.2F + 0.04F,
-                ARGB.blueFloat(skyColor) * 0.6F + 0.1F,
-                1.0F
-            )
+                val color = Vector4f(
+                    ARGB.redFloat(skyColor) * 0.2F + 0.04F,
+                    ARGB.greenFloat(skyColor) * 0.2F + 0.04F,
+                    ARGB.blueFloat(skyColor) * 0.6F + 0.1F,
+                    1.0F
+                )
 
-            renderer.setPipeline(
-                AnimatiumPipelines.getSkyPipeline(AnimatiumConfig.instance().other.planarSkyFog),
-                IrisPipeline.SKY_BASIC
-            )
+                renderer.setPipeline(
+                    AnimatiumPipelines.getSkyPipeline(AnimatiumConfig.instance().other.planarSkyFog),
+                    IrisPipeline.SKY_BASIC
+                )
 
-            renderer.setUniform(
-                DynamicTransforms.KEY,
-                DynamicTransforms.builder()
-                    .withModelViewMatrix(matrix)
-                    .withShaderColor(color)
-                    .build()
-            )
+                renderer.setUniform(
+                    DynamicTransforms.KEY,
+                    DynamicTransforms.builder()
+                        .withModelViewMatrix(matrix)
+                        .withShaderColor(color)
+                        .build()
+                )
 
-            renderer.draw(BOTTOM_GEOMETRY)
+                renderer.draw(BOTTOM_GEOMETRY)
+            }
         }
     }
 
@@ -135,9 +138,11 @@ object LegacySkyRenderer {
     // TODO/NOTE: Figure out why its rendering differently than in 18w07a (last snapshot to have it)
     @JvmStatic
     fun renderVoidBox(depth: Double) {
-        Renderer.of { "Player Void Box" }.use { renderer ->
-            renderer.setPipeline(AnimatiumPipelines.VOID_BOX)
-            renderer.draw(GET_VOID_BOX_GEOMETRY(-((depth + 65.0).toFloat())))
+        profile("player_void_box") {
+            Renderer.of { "Player Void Box" }.use { renderer ->
+                renderer.setPipeline(AnimatiumPipelines.VOID_BOX)
+                renderer.draw(GET_VOID_BOX_GEOMETRY(-((depth + 65.0).toFloat())))
+            }
         }
     }
 

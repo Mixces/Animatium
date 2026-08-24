@@ -26,12 +26,12 @@
 package org.visuals.legacy.animatium.handler.rendering.lighting.lightmap
 
 import com.mojang.blaze3d.textures.GpuTextureView
-import net.minecraft.util.profiling.Profiler
 import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumPipelines
 import org.visuals.legacy.animatium.renderer.Renderer
 import org.visuals.legacy.animatium.renderer.buffer.BasicGeometry
 import org.visuals.legacy.animatium.renderer.uniform.DynamicUniformStorage
 import org.visuals.legacy.animatium.renderer.uniform.UniformKey
+import org.visuals.legacy.animatium.util.profile
 
 class LegacyLightmapRenderer : AutoCloseable {
     companion object {
@@ -56,26 +56,23 @@ class LegacyLightmapRenderer : AutoCloseable {
 
     fun render(state: LegacyLightmapState, textureView: GpuTextureView) {
         if (state.needsUpdate) {
-            val profiler = Profiler.get()
-            profiler.push("lightmap")
-
-            Renderer.of({ "Legacy Lightmap Update" }, textureView).use { renderer ->
-                renderer.setPipeline(AnimatiumPipelines.LEGACY_LIGHTMAP)
-                renderer.setUniform(
-                    "LightmapInfo",
-                    this.lightmapInfoUniform
-                        .set(SkyDarken, state.skyDarken)
-                        .set(SkyDarkness, state.skyDarkness)
-                        .set(BlockLightRed, state.blockLightRed)
-                        .set(NightVisionScale, state.nightVisionScale)
-                        .set(Gamma, state.gamma)
-                        .set(UseBrightLightmap, state.useBrightLightmap)
-                        .upload()
-                )
-                renderer.draw(BASE_GEOMETRY)
+            profile("lightmap") {
+                Renderer.of({ "Legacy Lightmap Update" }, textureView).use { renderer ->
+                    renderer.setPipeline(AnimatiumPipelines.LEGACY_LIGHTMAP)
+                    renderer.setUniform(
+                        "LightmapInfo",
+                        this.lightmapInfoUniform
+                            .set(SkyDarken, state.skyDarken)
+                            .set(SkyDarkness, state.skyDarkness)
+                            .set(BlockLightRed, state.blockLightRed)
+                            .set(NightVisionScale, state.nightVisionScale)
+                            .set(Gamma, state.gamma)
+                            .set(UseBrightLightmap, state.useBrightLightmap)
+                            .upload()
+                    )
+                    renderer.draw(BASE_GEOMETRY)
+                }
             }
-
-            profiler.pop()
         }
     }
 

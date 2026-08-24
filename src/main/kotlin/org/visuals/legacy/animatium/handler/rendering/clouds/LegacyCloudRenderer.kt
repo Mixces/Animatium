@@ -50,6 +50,7 @@ import org.visuals.legacy.animatium.renderer.DynamicTransforms
 import org.visuals.legacy.animatium.renderer.Renderer
 import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry
 import org.visuals.legacy.animatium.renderer.vertex.VertexLayouts
+import org.visuals.legacy.animatium.util.profile
 import java.io.IOException
 import java.util.*
 import kotlin.math.abs
@@ -253,14 +254,16 @@ class LegacyCloudRenderer : SimplePreparableReloadListener<Optional<TextureData>
             }
 
             if (this.indexCount != 0) {
-                val offsetX = (x - cellX * 12.0F).toFloat()
-                val offsetZ = (z - cellZ * 12.0F).toFloat()
-                val offset = Vector3f(-offsetX, offsetBottom, -offsetZ)
-                if (pipeline != pipelineSet.flatPipeline) {
-                    this.draw(pipelineSet.depthOnlyPipeline, offset, cloudColor)
-                }
+                profile("cloud_rendering") {
+                    val offsetX = (x - cellX * 12.0F).toFloat()
+                    val offsetZ = (z - cellZ * 12.0F).toFloat()
+                    val offset = Vector3f(-offsetX, offsetBottom, -offsetZ)
+                    if (pipeline != pipelineSet.flatPipeline) {
+                        this.draw(pipelineSet.depthOnlyPipeline, offset, cloudColor)
+                    }
 
-                this.draw(pipeline, offset, cloudColor)
+                    this.draw(pipeline, offset, cloudColor)
+                }
             }
         }
     }
