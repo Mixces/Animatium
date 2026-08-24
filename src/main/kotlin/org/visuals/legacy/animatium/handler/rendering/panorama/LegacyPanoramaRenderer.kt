@@ -39,14 +39,15 @@ import net.minecraft.util.Mth
 import org.joml.Matrix3x2f
 import org.joml.Matrix4f
 import org.joml.Vector4f
-import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumPipelines
 import org.visuals.legacy.animatium.handler.rendering.copyTextureToTexture
+import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumPipelines
 import org.visuals.legacy.animatium.renderer.DynamicTransforms
 import org.visuals.legacy.animatium.renderer.RenderDescriptor
 import org.visuals.legacy.animatium.renderer.Renderer
 import org.visuals.legacy.animatium.renderer.buffer.Geometry
 import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry
 import org.visuals.legacy.animatium.renderer.vertex.VertexLayouts
+import org.visuals.legacy.animatium.util.profile
 import org.visuals.legacy.animatium.util.toRadians
 import java.util.*
 
@@ -111,10 +112,12 @@ class LegacyPanoramaRenderer : AutoCloseable {
 
     fun render() {
         this.state?.let {
-            val xRot = Mth.sin(it.spin / 400.0) * 25.0F + 20.0F
-            val yRot = -it.spin * 0.1F
-            this.renderCubeMap(xRot, yRot)
-            this.rotateAndBlurCubeMap(it.pose, it.width, it.height)
+            profile("panorama") {
+                val xRot = Mth.sin(it.spin / 400.0) * 25.0F + 20.0F
+                val yRot = -it.spin * 0.1F
+                this.renderCubeMap(xRot, yRot)
+                this.rotateAndBlurCubeMap(it.pose, it.width, it.height)
+            }
         }
     }
 

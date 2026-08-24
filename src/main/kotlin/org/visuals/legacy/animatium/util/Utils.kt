@@ -27,11 +27,13 @@ package org.visuals.legacy.animatium.util
 
 import net.minecraft.client.Minecraft
 import net.minecraft.util.Mth
+import net.minecraft.util.profiling.Profiler
 import net.minecraft.world.inventory.InventoryMenu
 import net.minecraft.world.level.GameType
 import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
+import org.visuals.legacy.animatium.AnimatiumConstants
 import org.visuals.legacy.animatium.mixins.accessor.PlayerAccessor
 
 fun toRadians(angle: Float) = angle * Mth.DEG_TO_RAD
@@ -61,4 +63,11 @@ fun reinitializeInventorySlots() {
             )
         )
     }
+}
+
+fun profile(name: String, lambda: () -> Unit) {
+    val profiler = Profiler.get()
+    profiler.push("${AnimatiumConstants.MOD_ID}_$name")
+    lambda()
+    profiler.pop()
 }
