@@ -34,7 +34,6 @@ import net.minecraft.client.resources.model.geometry.ItemQuads;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -112,7 +111,7 @@ public abstract class MixinItemStackRenderLayerState {
 
                     localPose.translate(x, y, z);
                     if (ordinal == FishingRodVersionSetting.V1_7.ordinal()) {
-                        localPose.mulPose(Axis.YP.rotationDegrees(180).get(new Matrix4f()));
+                        localPose.rotate(Axis.YP.rotationDegrees(180));
                     }
 
                     localPose.translate(-x, -y, -z);
@@ -129,9 +128,9 @@ public abstract class MixinItemStackRenderLayerState {
                 // TODO/NEED TO FIX
                 if (AnimatiumConfig.instance().items.skullPosition && ItemUtilKt.isSkullBlock(stack) && isGui && !AnimatiumConfig.instance().items.mobHeadIcons) {
                     localPose.translate(x, y, z);
-                    localPose.mulPose(Axis.XP.rotationDegrees(UtilsKt.toRadians(this.itemTransform.rotation().x())).get(new Matrix4f()));
-                    localPose.mulPose(Axis.YP.rotationDegrees(UtilsKt.toRadians(this.itemTransform.rotation().y())).get(new Matrix4f()));
-                    localPose.mulPose(Axis.ZP.rotationDegrees(UtilsKt.toRadians(this.itemTransform.rotation().x())).get(new Matrix4f()));
+                    localPose.rotate(Axis.XP.rotationDegrees(UtilsKt.toRadians(this.itemTransform.rotation().x())));
+                    localPose.rotate(Axis.YP.rotationDegrees(UtilsKt.toRadians(this.itemTransform.rotation().y())));
+                    localPose.rotate(Axis.ZP.rotationDegrees(UtilsKt.toRadians(this.itemTransform.rotation().x())));
                     localPose.scale(0.9F, 0.9F, 0.9F);
                     localPose.scale(this.itemTransform.scale().x(), this.itemTransform.scale().y(), this.itemTransform.scale().z());
                     animatium$doInverseTransformations(localPose);
@@ -143,9 +142,9 @@ public abstract class MixinItemStackRenderLayerState {
     @Unique
     private void animatium$doInverseTransformations(final PoseStack.Pose localPose) {
         localPose.scale(1 / this.itemTransform.scale().x(), 1 / this.itemTransform.scale().y(), 1 / this.itemTransform.scale().z());
-        localPose.mulPose(Axis.ZP.rotationDegrees(-UtilsKt.toRadians(this.itemTransform.rotation().x())).get(new Matrix4f()));
-        localPose.mulPose(Axis.YP.rotationDegrees(-UtilsKt.toRadians(this.itemTransform.rotation().y())).get(new Matrix4f()));
-        localPose.mulPose(Axis.XP.rotationDegrees(-UtilsKt.toRadians(this.itemTransform.rotation().z())).get(new Matrix4f()));
+        localPose.rotate(Axis.ZP.rotationDegrees(-UtilsKt.toRadians(this.itemTransform.rotation().x())));
+        localPose.rotate(Axis.YP.rotationDegrees(-UtilsKt.toRadians(this.itemTransform.rotation().y())));
+        localPose.rotate(Axis.XP.rotationDegrees(-UtilsKt.toRadians(this.itemTransform.rotation().z())));
         localPose.translate(-this.itemTransform.translation().x(), -this.itemTransform.translation().y(), -this.itemTransform.translation().z());
     }
 

@@ -100,14 +100,14 @@ public abstract class MixinFirstPersonHandsAndItemsRenderer_FirstPersonItemPosit
     private void animatium$postBowTransform(final PoseStack instance, final float xScale, final float yScale, final float zScale, final Operation<Void> original, @Local(argsOnly = true, name = "playerState") final PlayerRenderState playerState, @Local(argsOnly = true, name = "hand") final InteractionHand hand) {
         final int direction = playerState.avatarRenderState != null ? EntityUtilKt.getHandMultiplier(playerState.avatarRenderState, hand) : 1;
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemPositions) {
-            instance.mulPose(Axis.ZP.rotationDegrees(direction * -335));
-            instance.mulPose(Axis.YP.rotationDegrees(direction * -50.0F));
+            instance.rotate(Axis.ZP.rotationDegrees(direction * -335));
+            instance.rotate(Axis.YP.rotationDegrees(direction * -50.0F));
         }
 
         original.call(instance, xScale, yScale, zScale);
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemPositions) {
-            instance.mulPose(Axis.YP.rotationDegrees(direction * 50.0F));
-            instance.mulPose(Axis.ZP.rotationDegrees(direction * 335));
+            instance.rotate(Axis.YP.rotationDegrees(direction * 50.0F));
+            instance.rotate(Axis.ZP.rotationDegrees(direction * 335));
         }
     }
 
@@ -122,9 +122,9 @@ public abstract class MixinFirstPersonHandsAndItemsRenderer_FirstPersonItemPosit
             // We do this to fix a rounding error in Mojangs code.
             ItemUtilKt.applyLegacyFirstPersonTransforms(poseStack, direction, () -> {
                 poseStack.translate(direction * -0.5F, 0.2F, 0.0F);
-                poseStack.mulPose(Axis.YP.rotationDegrees(direction * 30.0F));
-                poseStack.mulPose(Axis.XP.rotationDegrees(-80.0F));
-                poseStack.mulPose(Axis.YP.rotationDegrees(direction * 60.0F));
+                poseStack.rotate(Axis.YP.rotationDegrees(direction * 30.0F));
+                poseStack.rotate(Axis.XP.rotationDegrees(-80.0F));
+                poseStack.rotate(Axis.YP.rotationDegrees(direction * 60.0F));
             });
             return true; // Cancels the vanilla blocking code
         } else {
@@ -137,7 +137,7 @@ public abstract class MixinFirstPersonHandsAndItemsRenderer_FirstPersonItemPosit
         if (Animatium.isEnabled() && playerState.avatarRenderState != null) {
             final int direction = EntityUtilKt.getHandMultiplier(playerState.avatarRenderState, hand);
             if (AnimatiumConfig.instance().items.fishingRodVersion == FishingRodVersionSetting.V1_7 && ItemUtilKt.isFishingRodItem(itemStack)) {
-                poseStack.mulPose(Axis.YP.rotationDegrees(direction * 180.0F));
+                poseStack.rotate(Axis.YP.rotationDegrees(direction * 180.0F));
             }
 
             final ItemStackRenderState itemStackRenderState = hand == InteractionHand.MAIN_HAND ? state.mainHandRenderState : state.offHandRenderState;
@@ -147,22 +147,22 @@ public abstract class MixinFirstPersonHandsAndItemsRenderer_FirstPersonItemPosit
                 final float radians = 0.4363323129985824F;
 
                 poseStack.scale(0.6F, 0.6F, 0.6F);
-                poseStack.mulPose(Axis.YP.rotationDegrees(direction * 275.0F));
-                poseStack.mulPose(Axis.ZP.rotationDegrees(direction * 25.0F));
+                poseStack.rotate(Axis.YP.rotationDegrees(direction * 275.0F));
+                poseStack.rotate(Axis.ZP.rotationDegrees(direction * 25.0F));
                 poseStack.translate(direction * (-0.2F * Math.sin(radians) + 0.4375F), -0.2F * Math.cos(radians) + 0.4375F, 0.03125F);
 
                 poseStack.scale(1 / 0.68F, 1 / 0.68F, 1 / 0.68F);
-                poseStack.mulPose(Axis.ZP.rotationDegrees(direction * -25.0F));
-                poseStack.mulPose(Axis.YP.rotationDegrees(direction * 90.0F));
+                poseStack.rotate(Axis.ZP.rotationDegrees(direction * -25.0F));
+                poseStack.rotate(Axis.YP.rotationDegrees(direction * 90.0F));
                 poseStack.translate(direction * -1.13 * 0.0625F, -3.2 * 0.0625F, -1.13 * 0.0625F);
             }
 
             if (AnimatiumConfig.instance().items.skullPosition && ItemUtilKt.isSkullBlock(itemStack) && !AnimatiumConfig.instance().items.mobHeadIcons) {
-                poseStack.mulPose(Axis.YP.rotationDegrees(45.0F));
+                poseStack.rotate(Axis.YP.rotationDegrees(45.0F));
                 poseStack.scale(0.4F, 0.4F, 0.4F);
 
                 // TODO: This is not quite right... (@Mixces)
-                poseStack.mulPose(Axis.YP.rotationDegrees(-180.0F));
+                poseStack.rotate(Axis.YP.rotationDegrees(-180.0F));
                 poseStack.translate(0.0F, 0.25F, 0.0F);
                 poseStack.scale(1.125F, 1.125F, 1.125F);
             }

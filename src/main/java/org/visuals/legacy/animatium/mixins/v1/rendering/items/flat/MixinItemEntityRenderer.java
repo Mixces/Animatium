@@ -53,10 +53,10 @@ public abstract class MixinItemEntityRenderer {
         }
     }
 
-    @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/ItemEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lorg/joml/Quaternionfc;)V", shift = At.Shift.AFTER))
+    @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/ItemEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;rotate(Lcom/mojang/math/Axis;F)V", shift = At.Shift.AFTER))
     private void animatium$fixItemDrops2dRotation(final ItemEntityRenderState state, final PoseStack poseStack, final SubmitNodeCollector submitNodeCollector, final CameraRenderState camera, final CallbackInfo ci) {
         if (Animatium.isEnabled() && AnimatiumConfig.instance().items.itemDropsFaceCamera && AnimatiumConfig.instance().items.itemDropsFaceCameraRotationFix && !state.item.usesBlockLight()) {
-            poseStack.mulPose(Axis.XP.rotationDegrees(-camera.animatium$getXRot()));
+            poseStack.rotate(Axis.XP.rotationDegrees(-camera.animatium$getXRot()));
         }
     }
 }

@@ -23,12 +23,14 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.mixins.v1.rendering.sky.the_void;
+package org.visuals.legacy.animatium.mixins.v1.rendering.sky;
 
 import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.state.level.SkyRenderState;
+import net.minecraft.util.ARGB;
+import net.minecraft.world.level.dimension.DimensionType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -38,14 +40,24 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.handler.rendering.LegacySkyRenderer;
 
 @Mixin(LevelRenderer.class)
-public abstract class MixinLevelRenderer_VoidBox {
-    @Inject(method = "lambda$addSkyPass$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SkyRenderer;renderDarkDisc()V", shift = At.Shift.AFTER))
-    private static void animatium$renderVoidBox(final GpuBufferSlice skyFog, final SkyRenderState state, final CallbackInfo ci) {
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.playerVoidBox) {
-            final Minecraft minecraft = Minecraft.getInstance();
-            final float tickDelta = minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true);
-            assert minecraft.level != null;
-            LegacySkyRenderer.renderVoidBox(LegacySkyRenderer.getHorizonEyeHeight(minecraft.level, tickDelta));
+public abstract class MixinLevelRenderer_SkyAdditions {
+    @Inject(method = "lambda$addSkyPass$0", at = @At("TAIL"))
+    private static void animatium$skyAdditions(final GpuBufferSlice skyFog, final SkyRenderState state, final CallbackInfo ci) {
+        final Minecraft minecraft = Minecraft.getInstance();
+        if (Animatium.isEnabled() && minecraft.level != null) {
+            final double horizonEyeHeight = LegacySkyRenderer.getHorizonEyeHeight(minecraft.level, minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true));
+            if (state.shouldRenderDarkDisc) {
+                LegacySkyRenderer.renderVoidBox(horizonEyeHeight);
+            }
+
+            if (AnimatiumConfig.instance().other.blueVoidSky && state.skybox != DimensionType.Skybox.END) {
+                LegacySkyRenderer.renderBlueVoid(ARGB.colorFromVector3f(state.skyColor), horizonEyeHeight);
+            }
         }
+    }
+
+    @Inject(method = "close", at = @At("TAIL"))
+    private void animatium$closeSkyRenderUtility(final CallbackInfo ci) {
+        LegacySkyRenderer.close();
     }
 }
