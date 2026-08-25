@@ -97,7 +97,4 @@ fun Entity?.isSelf(): Boolean {
     return player != null && this != null && this.id == player.id
 }
 
-fun Player.getPosWithEyeHeight(tickDelta: Float, eyeHeight: Double) =
-    this.getPosition(tickDelta).add(0.0, eyeHeight, 0.0)
-
 fun Entity.getScale() = if (this is LivingEntity) this.scale else 1.0F
