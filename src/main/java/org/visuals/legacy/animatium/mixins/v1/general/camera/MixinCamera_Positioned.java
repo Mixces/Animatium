@@ -51,7 +51,7 @@ public abstract class MixinCamera_Positioned {
     @Inject(method = "alignWithEntity", at = @At(value = "TAIL"))
     private void animatium$cameraVersion(final float partialTicks, final CallbackInfo ci) {
         // TODO: Fix bed/sleeping position
-        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.cameraVersion != CameraVersionSetting.VANILLA && !this.detached && !(entity instanceof LivingEntity && ((LivingEntity) entity).isSleeping())) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().screen.cameraVersion != CameraVersionSetting.VANILLA && !this.detached && !(this.entity instanceof LivingEntity && ((LivingEntity) this.entity).isSleeping())) {
             final int ordinal = AnimatiumConfig.instance().screen.cameraVersion.ordinal();
             if (ordinal <= CameraVersionSetting.V1_14_TO_V1_14_3.ordinal()) {
                 // <= 1.14.3
