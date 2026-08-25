@@ -42,12 +42,8 @@ public final class ExtrasConfigCategory extends Category {
     public boolean hideNameTagBackground = false;
     public boolean nameTagTextShadow = false;
     public boolean debugHudTextColor = false;
-    public boolean offhandUsageSwinging = false;
-    public boolean alwaysUsageSwing = false;
-    public boolean alwaysSharpParticles = false;
     public boolean disableRecipeAndTutorialToasts = false;
     public boolean showArmWhileInvisible = false;
-    public boolean fakeMissPenaltySwing = false;
     public boolean dontMoveBlueVoid = false;
     public boolean disableEntityDeathTopple = false;
     public boolean disableParticlePhysics = false;
@@ -59,6 +55,7 @@ public final class ExtrasConfigCategory extends Category {
     public boolean alwaysBlockingHeadCap = false;
     public boolean hideRecipeBook = false;
     public boolean legacyLoadingScreenProgressBar = false;
+    public boolean alwaysSharpParticles = false;
     public boolean damageBloodParticles = false;
     public int bloodParticleMultiplier = 1;
     // Damage Tint
@@ -71,6 +68,9 @@ public final class ExtrasConfigCategory extends Category {
     public float miningFatigueSwingSpeed = 0.0F;
     public boolean ignoreHasteSpeed = false;
     public boolean ignoreMiningFatigueSpeed = false;
+    public boolean offhandUsageSwinging = false;
+    public boolean alwaysUsageSwing = false;
+    public boolean fakeMissPenaltySwing = false;
     public boolean disableSwingTranslate = false;
     // Item Modifications
     public float itemScaleX = 1.0F;
@@ -105,17 +105,13 @@ public final class ExtrasConfigCategory extends Category {
                 .booleanEntry("showNameTagInThirdPerson")
                 .booleanEntry("hideNameTagBackground")
                 .booleanEntry("nameTagTextShadow")
-                .booleanEntry("debugHudTextColor")
-                .booleanEntry("offhandUsageSwinging")
-                .booleanEntry("alwaysUsageSwing")
-                .booleanEntry("alwaysSharpParticles");
+                .booleanEntry("debugHudTextColor");
         if (!ModsKt.HAS_SODIUM_EXTRAS) {
             bundle.booleanEntry("disableRecipeAndTutorialToasts");
         }
 
         final Minecraft minecraft = Minecraft.getInstance();
         bundle.booleanEntry("showArmWhileInvisible")
-                .booleanEntry("fakeMissPenaltySwing")
                 .booleanEntry("dontMoveBlueVoid")
                 .booleanEntry("disableEntityDeathTopple")
                 .booleanEntry("disableParticlePhysics")
@@ -127,6 +123,7 @@ public final class ExtrasConfigCategory extends Category {
                 .booleanEntry("alwaysBlockingHeadCap")
                 .booleanEntry("hideRecipeBook")
                 .booleanEntry("legacyLoadingScreenProgressBar")
+                .booleanEntry("alwaysSharpParticles")
                 .booleanEntry("damageBloodParticles")
                 .intRange("bloodParticleMultiplier", 1, 40);
 
@@ -141,6 +138,9 @@ public final class ExtrasConfigCategory extends Category {
                 .floatRange("miningFatigueSwingSpeed", -2.0F, 1.0F, 0.1F)
                 .booleanEntry("ignoreHasteSpeed")
                 .booleanEntry("ignoreMiningFatigueSpeed")
+                .booleanEntry("offhandUsageSwinging")
+                .booleanEntry("alwaysUsageSwing")
+                .booleanEntry("fakeMissPenaltySwing")
                 .booleanEntry("disableSwingTranslate");
 
         bundle.group("item_modifications")
