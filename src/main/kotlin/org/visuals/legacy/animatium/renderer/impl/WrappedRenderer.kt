@@ -23,31 +23,23 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.handler.rendering
+package org.visuals.legacy.animatium.renderer.impl
 
+import com.mojang.blaze3d.systems.RenderPass
 import com.mojang.blaze3d.systems.RenderSystem
-import com.mojang.blaze3d.textures.FilterMode
-import com.mojang.blaze3d.textures.GpuTextureView
-import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumPipelines
-import org.visuals.legacy.animatium.renderer.buffer.BasicGeometry
-import org.visuals.legacy.animatium.renderer.impl.DeferredRenderer
-import org.visuals.legacy.animatium.util.profile
+import org.visuals.legacy.animatium.renderer.DynamicTransforms
+import org.visuals.legacy.animatium.renderer.buffer.Geometry
 
-object ColorBoostRenderer {
-    private val GEOMETRY = BasicGeometry(0, 3)
+class WrappedRenderer(private val pass: RenderPass) : AbstractRenderer() {
+    companion object {
+        @JvmStatic
+        fun of(pass: RenderPass) = WrappedRenderer(pass)
+    }
 
-    @JvmStatic
-    fun render(colorAttachment: GpuTextureView, depthAttachment: GpuTextureView) {
-        profile("color_boost") {
-            DeferredRenderer.of("Color Boost Blit", colorAttachment, depthAttachment).use { renderer ->
-                renderer.setPipeline(AnimatiumPipelines.COLOR_BOOST_BLIT)
-                renderer.setTexture(
-                    "Sampler0",
-                    colorAttachment,
-                    RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST)
-                )
-                renderer.draw(GEOMETRY)
-            }
-        }
+    override fun draw(geometry: Geometry) {
+        val pipeline = this.pipeline ?: throw RuntimeException("Cannot draw, pipeline is null!")
+        val dynamicTransforms = this.uniforms.getOrDefault(DynamicTransforms.KEY, DynamicTransforms.current())
+        val autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.primitiveTopology)
+        this.render(this.pass, geometry, dynamicTransforms, autoStorageIndexBuffer)
     }
 }

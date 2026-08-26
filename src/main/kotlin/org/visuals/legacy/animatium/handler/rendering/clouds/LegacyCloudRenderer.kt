@@ -47,8 +47,8 @@ import org.joml.Vector3f
 import org.visuals.legacy.animatium.config.AnimatiumConfig
 import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumPipelines
 import org.visuals.legacy.animatium.renderer.DynamicTransforms
-import org.visuals.legacy.animatium.renderer.Renderer
 import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry
+import org.visuals.legacy.animatium.renderer.impl.DeferredRenderer
 import org.visuals.legacy.animatium.renderer.vertex.VertexLayouts
 import org.visuals.legacy.animatium.util.profile
 import java.io.IOException
@@ -274,7 +274,7 @@ class LegacyCloudRenderer : SimplePreparableReloadListener<Optional<TextureData>
             cloudsTarget = Minecraft.getInstance().gameRenderer.mainRenderTarget()
         }
 
-        Renderer.of({ "Legacy Clouds (${pipeline.location})" }, cloudsTarget).use { renderer ->
+        DeferredRenderer.of("Legacy Clouds (${pipeline.location})", cloudsTarget).use { renderer ->
             renderer.setPipeline(pipeline)
             renderer.setUniform(
                 DynamicTransforms.KEY, DynamicTransforms.builder()

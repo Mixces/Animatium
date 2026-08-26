@@ -43,9 +43,9 @@ import org.visuals.legacy.animatium.handler.rendering.copyTextureToTexture
 import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumPipelines
 import org.visuals.legacy.animatium.renderer.DynamicTransforms
 import org.visuals.legacy.animatium.renderer.RenderDescriptor
-import org.visuals.legacy.animatium.renderer.Renderer
 import org.visuals.legacy.animatium.renderer.buffer.Geometry
 import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry
+import org.visuals.legacy.animatium.renderer.impl.DeferredRenderer
 import org.visuals.legacy.animatium.renderer.vertex.VertexLayouts
 import org.visuals.legacy.animatium.util.profile
 import org.visuals.legacy.animatium.util.toRadians
@@ -134,7 +134,7 @@ class LegacyPanoramaRenderer : AutoCloseable {
     }
 
     private fun renderCubeMap(xRot: Float, yRot: Float) {
-        Renderer.of({ "Legacy Panorama Cubemap" }, this.panoramaTarget, VIEWPORT).use { renderer ->
+        DeferredRenderer.of(descriptor("Legacy Panorama Cubemap")).use { renderer ->
             renderer.setPipeline(AnimatiumPipelines.LEGACY_PANORAMA_1)
             renderer.setTexture("Sampler0", CUBE_MAP_LOCATION)
             renderer.setProjectionMatrix(CUBE_MAP_PROJECTION)
@@ -169,7 +169,7 @@ class LegacyPanoramaRenderer : AutoCloseable {
                 this.backgroundTexture
             )
 
-            Renderer.of({ "Legacy Panorama Blur" }, this.panoramaTarget, VIEWPORT).use { renderer ->
+            DeferredRenderer.of(descriptor("Legacy Panorama Blur")).use { renderer ->
                 renderer.setPipeline(AnimatiumPipelines.LEGACY_PANORAMA_BLUR)
                 renderer.setTexture(
                     "Sampler0",
@@ -180,6 +180,11 @@ class LegacyPanoramaRenderer : AutoCloseable {
             }
         }
     }
+
+    private fun descriptor(name: String) = RenderDescriptor.builder({ name })
+        .withRenderTarget(this.panoramaTarget)
+        .withArea(VIEWPORT)
+        .build()
 
     override fun close() {
         CUBE_MAP_GEOMETRY.close()

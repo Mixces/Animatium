@@ -27,8 +27,8 @@ package org.visuals.legacy.animatium.handler.rendering.lighting.lightmap
 
 import com.mojang.blaze3d.textures.GpuTextureView
 import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumPipelines
-import org.visuals.legacy.animatium.renderer.Renderer
 import org.visuals.legacy.animatium.renderer.buffer.BasicGeometry
+import org.visuals.legacy.animatium.renderer.impl.DeferredRenderer
 import org.visuals.legacy.animatium.renderer.uniform.DynamicUniformStorage
 import org.visuals.legacy.animatium.renderer.uniform.UniformKey
 import org.visuals.legacy.animatium.util.profile
@@ -57,7 +57,7 @@ class LegacyLightmapRenderer : AutoCloseable {
     fun render(state: LegacyLightmapState, textureView: GpuTextureView) {
         if (state.needsUpdate) {
             profile("lightmap") {
-                Renderer.of({ "Legacy Lightmap Update" }, textureView).use { renderer ->
+                DeferredRenderer.of("Legacy Lightmap Update", textureView, null).use { renderer ->
                     renderer.setPipeline(AnimatiumPipelines.LEGACY_LIGHTMAP)
                     renderer.setUniform(
                         "LightmapInfo",
