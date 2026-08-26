@@ -35,8 +35,8 @@ import org.visuals.legacy.animatium.config.AnimatiumConfig
 import org.visuals.legacy.animatium.handler.compatibility.IrisPipeline
 import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumPipelines
 import org.visuals.legacy.animatium.renderer.DynamicTransforms
-import org.visuals.legacy.animatium.renderer.Renderer
 import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry
+import org.visuals.legacy.animatium.renderer.impl.DeferredRenderer
 import org.visuals.legacy.animatium.renderer.vertex.VertexLayouts
 import org.visuals.legacy.animatium.util.profile
 
@@ -99,7 +99,7 @@ object LegacySkyRenderer {
     @JvmStatic
     fun renderBlueVoid(skyColor: Int, depth: Double) {
         profile("blue_void") {
-            Renderer.of { "Blue void sky disc" }.use { renderer ->
+            DeferredRenderer.of("Lower Sky Disc").use { renderer ->
                 val matrix = RenderSystem.getModelViewMatrixCopy().translate(
                     0.0F,
                     if (AnimatiumConfig.instance().extras.dontMoveBlueVoid) 12.0F else -((depth - 16.0).toFloat()),
@@ -139,7 +139,7 @@ object LegacySkyRenderer {
     @JvmStatic
     fun renderVoidBox(depth: Double) {
         profile("player_void_box") {
-            Renderer.of { "Player Void Box" }.use { renderer ->
+            DeferredRenderer.of("Player Void Box").use { renderer ->
                 renderer.setPipeline(AnimatiumPipelines.VOID_BOX)
                 renderer.draw(GET_VOID_BOX_GEOMETRY(-((depth + 65.0).toFloat())))
             }
