@@ -151,7 +151,8 @@
 		"v1.rendering.states.MixinCameraRenderState",
 		"v1.rendering.states.MixinFirstPersonHandsAndItemsRenderState",
 		"v1.rendering.states.MixinGameRenderer",
-		"v1.rendering.states.MixinItemStackRenderState"
+		"v1.rendering.states.MixinItemStackRenderState",
+		"v1.rendering.states.MixinSkyRenderState"
 	],
 	"injectors": {
 		"defaultRequire": 1

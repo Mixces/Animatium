@@ -27,6 +27,7 @@ package org.visuals.legacy.animatium.handler.rendering
 
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.VertexConsumer
+import com.mojang.renderpearl.api.commands.RenderPass
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.util.ARGB
@@ -36,7 +37,7 @@ import org.visuals.legacy.animatium.handler.compatibility.IrisPipeline
 import org.visuals.legacy.animatium.handler.rendering.pipeline.AnimatiumPipelines
 import org.visuals.legacy.animatium.renderer.DynamicTransforms
 import org.visuals.legacy.animatium.renderer.buffer.IndexedGeometry
-import org.visuals.legacy.animatium.renderer.impl.DeferredRenderer
+import org.visuals.legacy.animatium.renderer.impl.WrappedRenderer
 import org.visuals.legacy.animatium.renderer.vertex.VertexLayouts
 import org.visuals.legacy.animatium.util.profile
 
@@ -97,9 +98,10 @@ object LegacySkyRenderer {
     }
 
     @JvmStatic
-    fun renderBlueVoid(skyColor: Int, depth: Double) {
+    fun renderBlueVoid(pass: RenderPass, skyColor: Int, depth: Double) {
         profile("blue_void") {
-            DeferredRenderer.of("Lower Sky Disc").use { renderer ->
+            WrappedRenderer.of(pass).use { renderer ->
+                pass.pushDebugGroup({ "Lower Sky Disc" })
                 val matrix = RenderSystem.getModelViewMatrixCopy().translate(
                     0.0F,
                     if (AnimatiumConfig.instance().extras.dontMoveBlueVoid) 12.0F else -((depth - 16.0).toFloat()),
@@ -127,6 +129,7 @@ object LegacySkyRenderer {
                 )
 
                 renderer.draw(BOTTOM_GEOMETRY)
+                pass.popDebugGroup()
             }
         }
     }
@@ -137,11 +140,13 @@ object LegacySkyRenderer {
 
     // TODO/NOTE: Figure out why its rendering differently than in 18w07a (last snapshot to have it)
     @JvmStatic
-    fun renderVoidBox(depth: Double) {
+    fun renderVoidBox(pass: RenderPass, depth: Double) {
         profile("player_void_box") {
-            DeferredRenderer.of("Player Void Box").use { renderer ->
+            WrappedRenderer.of(pass).use { renderer ->
+                pass.pushDebugGroup({ "Player Void Box" })
                 renderer.setPipeline(AnimatiumPipelines.VOID_BOX)
                 renderer.draw(GET_VOID_BOX_GEOMETRY(-((depth + 65.0).toFloat())))
+                pass.popDebugGroup()
             }
         }
     }

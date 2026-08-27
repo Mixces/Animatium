@@ -25,12 +25,14 @@
 
 package org.visuals.legacy.animatium.mixins.v1.rendering.sky;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
-import net.minecraft.client.Minecraft;
+import com.mojang.renderpearl.api.commands.RenderPass;
+import net.minecraft.client.Camera;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.SkyRenderer;
 import net.minecraft.client.renderer.state.level.SkyRenderState;
 import net.minecraft.util.ARGB;
-import net.minecraft.world.level.dimension.DimensionType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -38,21 +40,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.handler.rendering.LegacySkyRenderer;
+import org.visuals.legacy.animatium.util.states.SkyUtilityState;
 
 @Mixin(SkyRenderer.class)
 public abstract class MixinSkyRenderer_SkyAdditions {
-    @Inject(method = "render", at = @At("TAIL"))
-    private static void animatium$skyAdditions(final GpuBufferSlice skyFog, final SkyRenderState state, final CallbackInfo ci) {
-        final Minecraft minecraft = Minecraft.getInstance();
-        if (Animatium.isEnabled() && minecraft.level != null) {
-            final double horizonEyeHeight = LegacySkyRenderer.getHorizonEyeHeight(minecraft.level, minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(true));
-            if (state.shouldRenderDarkDisc) {
-                LegacySkyRenderer.renderVoidBox(horizonEyeHeight);
-            }
+    @Inject(method = "extractRenderState", at = @At("TAIL"))
+    private void animatium$extractHorizonHeight(final ClientLevel level, final float tickDelta, final Camera camera, final SkyRenderState state, final CallbackInfo ci) {
+        ((SkyUtilityState) state).animatium$setHorizonHeight(LegacySkyRenderer.getHorizonEyeHeight(level, tickDelta));
+    }
 
-            if (AnimatiumConfig.instance().other.blueVoidSky && state.skybox != DimensionType.Skybox.END) {
-                LegacySkyRenderer.renderBlueVoid(ARGB.colorFromVector3f(state.skyColor), horizonEyeHeight);
-            }
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SkyRenderer;renderDarkDisc(Lcom/mojang/renderpearl/api/commands/RenderPass;)V", shift = At.Shift.AFTER))
+    private void animatium$voidBox(final GpuBufferSlice skyFog, final SkyRenderState state, final CallbackInfo ci, @Local(name = "renderPass") final RenderPass pass) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.playerVoidBox) {
+            LegacySkyRenderer.renderVoidBox(pass, ((SkyUtilityState) state).animatium$getHorizonHeight());
+        }
+    }
+
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/renderpearl/api/commands/RenderPass;close()V"))
+    private static void animatium$blueVoid(final GpuBufferSlice skyFog, final SkyRenderState state, final CallbackInfo ci, @Local(name = "renderPass") final RenderPass pass) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.blueVoidSky) {
+            LegacySkyRenderer.renderBlueVoid(pass, ARGB.colorFromVector3f(state.skyColor), ((SkyUtilityState) state).animatium$getHorizonHeight());
         }
     }
 
