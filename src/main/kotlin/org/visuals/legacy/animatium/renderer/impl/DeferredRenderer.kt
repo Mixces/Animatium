@@ -89,13 +89,17 @@ class DeferredRenderer(private val descriptor: RenderDescriptor) : AbstractRende
             }
 
             RenderSystem.backupProjectionMatrix()
-            RenderSystem.setProjectionMatrix(
-                this.projectionMatrixBuffer!!.getBuffer(this.projectionMatrix!!),
-                projectionType
-            )
+            RenderSystem.setProjectionMatrix(this.projectionMatrixBuffer!!.getBuffer(this.projectionMatrix!!), projectionType)
         }
 
-        WrappedRenderer.of(this.descriptor.createPass()).draw(geometry)
+        this.descriptor.createPass().use { pass ->
+            val dynamicTransforms = this.uniforms.getOrDefault(DynamicTransforms.KEY, DynamicTransforms.current())
+            this.render(pass, geometry, dynamicTransforms)
+            if (!geometry.persistent()) {
+                geometry.close()
+            }
+        }
+
         if (hasProjectionModifier) {
             RenderSystem.restoreProjectionMatrix()
         }
