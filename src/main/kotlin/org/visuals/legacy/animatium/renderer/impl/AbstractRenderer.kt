@@ -82,7 +82,7 @@ abstract class AbstractRenderer : AutoCloseable {
 
     abstract fun draw(geometry: Geometry)
 
-    protected fun render(pass: RenderPass, geometry: Geometry, dynamicTransforms: GpuBufferSlice, indexBuffer: RenderSystem.AutoStorageIndexBuffer) {
+    protected fun render(pass: RenderPass, geometry: Geometry, dynamicTransforms: GpuBufferSlice) {
         val pipeline = this.pipeline ?: throw RuntimeException("Cannot render, pipeline is null!")
         if (geometry.isClosed()) {
             throw RuntimeException("Cannot render, the provided geometry has already been closed!")
@@ -95,6 +95,7 @@ abstract class AbstractRenderer : AutoCloseable {
                 .map(BindGroupLayout.UniformDescription::name)
                 .toList()
 
+            val indexBuffer = RenderSystem.getSequentialBuffer(pipeline.primitiveTopology)
             RenderSystem.bindDefaultUniforms(pass)
             pass.setUniform(DynamicTransforms.KEY, dynamicTransforms)
             for (entry in this.uniforms) {

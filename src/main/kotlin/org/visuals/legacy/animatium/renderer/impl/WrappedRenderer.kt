@@ -26,7 +26,6 @@
 package org.visuals.legacy.animatium.renderer.impl
 
 import com.mojang.blaze3d.systems.RenderPass
-import com.mojang.blaze3d.systems.RenderSystem
 import org.visuals.legacy.animatium.renderer.DynamicTransforms
 import org.visuals.legacy.animatium.renderer.buffer.Geometry
 
@@ -37,9 +36,10 @@ class WrappedRenderer(private val pass: RenderPass) : AbstractRenderer() {
     }
 
     override fun draw(geometry: Geometry) {
-        val pipeline = this.pipeline ?: throw RuntimeException("Cannot draw, pipeline is null!")
         val dynamicTransforms = this.uniforms.getOrDefault(DynamicTransforms.KEY, DynamicTransforms.current())
-        val autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.primitiveTopology)
-        this.render(this.pass, geometry, dynamicTransforms, autoStorageIndexBuffer)
+        this.render(this.pass, geometry, dynamicTransforms)
+        if (!geometry.persistent()) {
+            geometry.close()
+        }
     }
 }

@@ -79,8 +79,8 @@ class DeferredRenderer(private val descriptor: RenderDescriptor) : AbstractRende
     }
 
     override fun draw(geometry: Geometry) {
-        val pipeline = this.pipeline ?: throw RuntimeException("Cannot draw, pipeline is null!")
-        if (this.projectionMatrixBuffer != null && this.projectionMatrix != null) {
+        val hasProjectionModifier = this.projectionMatrixBuffer != null && this.projectionMatrix != null
+        if (hasProjectionModifier) {
             val properties = this.projectionMatrix!!.properties()
             val projectionType = if ((properties and Matrix4f.PROPERTY_PERSPECTIVE.toInt()) != 0) {
                 ProjectionType.PERSPECTIVE
@@ -95,16 +95,8 @@ class DeferredRenderer(private val descriptor: RenderDescriptor) : AbstractRende
             )
         }
 
-        val dynamicTransforms = this.uniforms.getOrDefault(DynamicTransforms.KEY, DynamicTransforms.current())
-        val autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(pipeline.primitiveTopology)
-        this.descriptor.createPass().use { pass ->
-            this.render(pass, geometry, dynamicTransforms, autoStorageIndexBuffer)
-        }
-        if (!geometry.persistent()) {
-            geometry.close()
-        }
-
-        if (this.projectionMatrixBuffer != null && this.projectionMatrix != null) {
+        WrappedRenderer.of(this.descriptor.createPass()).draw(geometry)
+        if (hasProjectionModifier) {
             RenderSystem.restoreProjectionMatrix()
         }
     }
