@@ -138,16 +138,17 @@
 		"v1.rendering.outlines.MixinWindow_BlockOutlineWidth",
 		"v1.rendering.sky.MixinLevelRenderer_OldCloudRendering",
 		"v1.rendering.sky.MixinLevelRenderer_OldSkyRenderingCheck",
+		"v1.rendering.sky.MixinLevelRenderer_SkyAdditions",
 		"v1.rendering.sky.MixinMinecraft_LoadLegacyClouds",
+		"v1.rendering.sky.MixinSkyRenderer_ExtractState",
 		"v1.rendering.sky.cloud_height.MixinLevelExtractor_LegacyCloudHeight",
 		"v1.rendering.sky.horizon_height.MixinClientLevel_ClientLevelData_OldMinY",
 		"v1.rendering.sky.the_void.MixinClientLevel_VoidParticles",
-		"v1.rendering.sky.the_void.MixinLevelRenderer_BlueVoidDisc",
-		"v1.rendering.sky.the_void.MixinLevelRenderer_VoidBox",
 		"v1.rendering.states.MixinArmedEntityRenderState",
 		"v1.rendering.states.MixinCameraRenderState",
 		"v1.rendering.states.MixinGameRenderer",
-		"v1.rendering.states.MixinItemStackRenderState"
+		"v1.rendering.states.MixinItemStackRenderState",
+		"v1.rendering.states.MixinSkyRenderState"
 	],
 	"injectors": {
 		"defaultRequire": 1
