@@ -28,7 +28,7 @@ package org.visuals.legacy.animatium.renderer.impl
 import com.mojang.blaze3d.ProjectionType
 import com.mojang.blaze3d.pipeline.RenderTarget
 import com.mojang.blaze3d.systems.RenderSystem
-import com.mojang.blaze3d.textures.GpuTextureView
+import com.mojang.renderpearl.api.textures.GpuTextureView
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.ProjectionMatrixBuffer
 import org.joml.Matrix4f
@@ -56,7 +56,7 @@ class DeferredRenderer(private val descriptor: RenderDescriptor) : AbstractRende
         @JvmStatic
         fun of(name: String, renderTarget: RenderTarget) =
             of(RenderDescriptor.builder { name }
-                .withRenderTarget(renderTarget, false)
+                .withRenderTarget(renderTarget)
                 .withArea(RenderDescriptor.Area(renderTarget))
                 .build())
 

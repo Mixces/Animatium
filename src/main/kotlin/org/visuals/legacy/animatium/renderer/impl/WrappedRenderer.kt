@@ -25,7 +25,7 @@
 
 package org.visuals.legacy.animatium.renderer.impl
 
-import com.mojang.blaze3d.systems.RenderPass
+import com.mojang.renderpearl.api.commands.RenderPass
 import org.visuals.legacy.animatium.renderer.DynamicTransforms
 import org.visuals.legacy.animatium.renderer.buffer.Geometry
 

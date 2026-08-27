@@ -25,14 +25,15 @@
 
 package org.visuals.legacy.animatium.renderer.impl
 
-import com.mojang.blaze3d.buffers.GpuBuffer
-import com.mojang.blaze3d.buffers.GpuBufferSlice
-import com.mojang.blaze3d.pipeline.BindGroupLayout
-import com.mojang.blaze3d.pipeline.RenderPipeline
-import com.mojang.blaze3d.systems.RenderPass
 import com.mojang.blaze3d.systems.RenderSystem
-import com.mojang.blaze3d.textures.GpuSampler
-import com.mojang.blaze3d.textures.GpuTextureView
+import com.mojang.renderpearl.api.buffers.GpuBuffer
+import com.mojang.renderpearl.api.buffers.GpuBufferSlice
+import com.mojang.renderpearl.api.commands.RenderPass
+import com.mojang.renderpearl.api.pipeline.BindGroupLayout
+import com.mojang.renderpearl.api.pipeline.RenderPipeline
+import com.mojang.renderpearl.api.pipeline.UniformType
+import com.mojang.renderpearl.api.textures.GpuSampler
+import com.mojang.renderpearl.api.textures.GpuTextureView
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import net.minecraft.resources.Identifier
 import org.visuals.legacy.animatium.handler.compatibility.IrisPipeline
@@ -42,6 +43,16 @@ import org.visuals.legacy.animatium.renderer.buffer.Geometry
 import org.visuals.legacy.animatium.renderer.texture.TextureAndSampler
 
 abstract class AbstractRenderer : AutoCloseable {
+    companion object {
+        private fun flattenSamplers(groups: List<BindGroupLayout>): List<String> {
+            return BindGroupLayout.flattenUniforms(groups)
+                .stream()
+                .filter { it.type == UniformType.COMBINED_IMAGE_SAMPLER }
+                .map(BindGroupLayout.UniformDescription::name)
+                .toList()
+        }
+    }
+
     protected var pipeline: RenderPipeline? = null
     protected val textures = Object2ObjectOpenHashMap<String, TextureAndSampler>()
     protected val uniforms = Object2ObjectOpenHashMap<String, GpuBufferSlice>()
@@ -53,7 +64,7 @@ abstract class AbstractRenderer : AutoCloseable {
     }
 
     fun setPipeline(pipeline: RenderPipeline): AbstractRenderer {
-        val samplers = BindGroupLayout.flattenSamplers(pipeline.bindGroupLayouts)
+        val samplers = flattenSamplers(pipeline.bindGroupLayouts)
         return this.setPipeline(
             pipeline,
             if (samplers.contains("Sampler0")) {
@@ -87,11 +98,12 @@ abstract class AbstractRenderer : AutoCloseable {
         if (geometry.isClosed()) {
             throw RuntimeException("Cannot render, the provided geometry has already been closed!")
         } else {
-            pass.setPipeline(pipeline)
+            pass.setPipeline(RenderSystem.getCompiledPipeline(pipeline))
 
             val bindGroupLayouts = pipeline.bindGroupLayouts
             val descriptions = BindGroupLayout.flattenUniforms(bindGroupLayouts)
                 .stream()
+                .filter { it.type == UniformType.UNIFORM_BUFFER }
                 .map(BindGroupLayout.UniformDescription::name)
                 .toList()
 
@@ -109,11 +121,11 @@ abstract class AbstractRenderer : AutoCloseable {
                 }
             }
 
-            val samplers = BindGroupLayout.flattenSamplers(bindGroupLayouts)
+            val samplers = flattenSamplers(bindGroupLayouts)
             for (entry in this.textures) {
                 val name = entry.key
                 if (samplers.contains(name)) {
-                    pass.bindTexture(name, entry.value.textureView, entry.value.sampler)
+                    pass.setUniform(name, entry.value.textureView, entry.value.sampler)
                 }
             }
 

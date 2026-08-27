@@ -23,23 +23,23 @@
  * "MINECRAFT" LINKING EXCEPTION TO THE GPL
  */
 
-package org.visuals.legacy.animatium.renderer.impl
+package org.visuals.legacy.animatium.mixins.v1.rendering;
 
-import com.mojang.blaze3d.systems.RenderPass
-import org.visuals.legacy.animatium.renderer.DynamicTransforms
-import org.visuals.legacy.animatium.renderer.buffer.Geometry
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import net.minecraft.client.renderer.extract.LevelExtractor;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.visuals.legacy.animatium.Animatium;
+import org.visuals.legacy.animatium.config.AnimatiumConfig;
 
-class WrappedRenderer(private val pass: RenderPass) : AbstractRenderer() {
-    companion object {
-        @JvmStatic
-        fun of(pass: RenderPass) = WrappedRenderer(pass)
-    }
-
-    override fun draw(geometry: Geometry) {
-        val dynamicTransforms = this.uniforms.getOrDefault(DynamicTransforms.KEY, DynamicTransforms.current())
-        this.render(this.pass, geometry, dynamicTransforms)
-        if (!geometry.persistent()) {
-            geometry.close()
+@Mixin(LevelExtractor.class)
+public abstract class MixinLevelExtractor_WaterTextureOverlay {
+    @ModifyExpressionValue(method = "extractPlayerState", at = @At(value = "CONSTANT", args = "floatValue=0.1"))
+    private static float animatium$useOldWaterOverlayOpacity(final float original) {
+        if (Animatium.isEnabled() && AnimatiumConfig.instance().other.oldWaterOverlayOpacity) {
+            return 0.5F;
+        } else {
+            return original;
         }
     }
 }

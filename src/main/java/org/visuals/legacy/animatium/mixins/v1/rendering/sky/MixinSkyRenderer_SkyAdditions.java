@@ -27,7 +27,7 @@ package org.visuals.legacy.animatium.mixins.v1.rendering.sky;
 
 import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.SkyRenderer;
 import net.minecraft.client.renderer.state.level.SkyRenderState;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.level.dimension.DimensionType;
@@ -39,9 +39,9 @@ import org.visuals.legacy.animatium.Animatium;
 import org.visuals.legacy.animatium.config.AnimatiumConfig;
 import org.visuals.legacy.animatium.handler.rendering.LegacySkyRenderer;
 
-@Mixin(LevelRenderer.class)
-public abstract class MixinLevelRenderer_SkyAdditions {
-    @Inject(method = "lambda$addSkyPass$0", at = @At("TAIL"))
+@Mixin(SkyRenderer.class)
+public abstract class MixinSkyRenderer_SkyAdditions {
+    @Inject(method = "render", at = @At("TAIL"))
     private static void animatium$skyAdditions(final GpuBufferSlice skyFog, final SkyRenderState state, final CallbackInfo ci) {
         final Minecraft minecraft = Minecraft.getInstance();
         if (Animatium.isEnabled() && minecraft.level != null) {
